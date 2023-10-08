@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://mr0nb3pemylk"]
+
+[ext_resource type="Script" path="res://src/head_property.gd" id="1_yno0w"]
+
+[node name="HeadProperty" type="VBoxContainer"]
+offset_right = 116.0
+offset_bottom = 73.0
+script = ExtResource("1_yno0w")
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "property name"
+
+[node name="PropertyEdit" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Content" type="HBoxContainer" parent="PropertyEdit"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PropertyEdit/Content"]
+layout_mode = 2
+text = "Data Type"
+
+[node name="LineEdit" type="LineEdit" parent="PropertyEdit/Content"]
+layout_mode = 2
+expand_to_text_length = true
+
+[node name="Controls" type="HBoxContainer" parent="PropertyEdit"]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="PropertyEdit/Controls"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Save" type="Button" parent="PropertyEdit/Controls"]
+layout_mode = 2
+text = "Save"

@@ -14,6 +14,10 @@ config/name="Dialog-editor"
 config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Pages="*res://autoload/pages.tscn"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
