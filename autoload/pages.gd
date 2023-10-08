@@ -19,11 +19,14 @@ var page_data := {}
 
 #var page_count := 0
 
+
+signal pages_modified
+
 func get_page_count() -> int:
 	return page_data.size()
 
-func create_page(number:int):
-	if page_data.keys().has(number):
+func create_page(number:int, overwrite_existing:= false):
+	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
 	prints("creating page ", number)
@@ -32,6 +35,8 @@ func create_page(number:int):
 		"page_key":"",
 		"lines": []
 	}
+	
+	emit_signal("pages_modified")
 
 func get_lines(page_number: int):
 	return page_data.get(page_number).get("lines")
@@ -50,13 +55,15 @@ func key_exists(key: String) -> bool:
 
 func insert_page(at: int):
 	# reindex all after at
-	for i in range(get_page_count() - 1, at, -1):
+	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
-		data["number"] = data.get("number") + 1
-		page_data[i] = data
+		var new_number = i + 1#data.get("number") + 1
+		prints("reindexing ", i, " to ", new_number)
+		data["number"] = new_number
+		page_data[new_number] = data
 	
 	# insert page
-	create_page(at)
+	create_page(at, true)
 
 func delete_page(at: int):
 	if not page_data.keys().has(at):
@@ -71,3 +78,5 @@ func delete_page(at: int):
 	
 	# the last page is now a duplicate
 	page_data.erase(get_page_count())
+	
+	emit_signal("pages_modified")

@@ -60,9 +60,22 @@ layout_mode = 2
 focus_mode = 0
 text = ">|"
 
-[node name="Add" type="Button" parent="Core/PageControl/PageNav"]
+[node name="AddAfter" type="Button" parent="Core/PageControl/PageNav"]
 layout_mode = 2
-text = "+"
+focus_mode = 0
+text = "+>"
+
+[node name="Positional" type="VBoxContainer" parent="Core/PageControl/PageNav"]
+layout_mode = 2
+
+[node name="AddLast" type="Button" parent="Core/PageControl/PageNav/Positional"]
+layout_mode = 2
+text = "+>>"
+
+[node name="DeleteCurrent" type="Button" parent="Core/PageControl/PageNav/Positional"]
+layout_mode = 2
+focus_mode = 0
+text = "-"
 
 [node name="PageContainer" type="VBoxContainer" parent="Core"]
 layout_mode = 2
@@ -74,4 +87,6 @@ layout_mode = 2
 [connection signal="pressed" from="Core/PageControl/PageNav/Prev" to="." method="_on_prev_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Next" to="." method="_on_next_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Last" to="." method="_on_last_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/AddAfter" to="." method="_on_add_after_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/Positional/AddLast" to="." method="_on_add_last_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]

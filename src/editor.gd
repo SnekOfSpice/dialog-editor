@@ -6,6 +6,9 @@ var current_page: Page
 
 func _ready() -> void:
 	add_empty_page()
+	
+	Pages.connect("pages_modified", update_controls)
+	update_controls()
 
 func load_page(number: int):
 	if number < 0 or number > Pages.get_page_count():
@@ -27,6 +30,7 @@ func load_page(number: int):
 	current_page = page
 	
 	update_controls()
+	
 
 func update_controls():
 	if not current_page:
@@ -45,9 +49,13 @@ func add_empty_page():
 	load_page(page_count)
 	
 
+func get_current_page_number() -> int:
+	if not current_page:
+		return 0
+	
+	return current_page.number
 
-func _on_add_pressed() -> void:
-	add_empty_page()
+
 
 
 func _on_first_pressed() -> void:
@@ -65,3 +73,24 @@ func _on_next_pressed() -> void:
 
 func _on_last_pressed() -> void:
 	load_page(Pages.get_page_count() - 1)
+
+
+func _on_add_last_pressed() -> void:
+	add_empty_page()
+
+func _on_delete_current_pressed() -> void:
+	if Pages.get_page_count() <= 1:
+		push_warning("you cannot delete the last page")
+		return
+	
+	Pages.delete_page(get_current_page_number())
+
+
+func _on_add_after_pressed() -> void:
+	var at = get_current_page_number() + 1
+	if at >= Pages.get_page_count():
+		add_empty_page()
+		return
+	Pages.insert_page(at)
+	
+	load_page(at)
