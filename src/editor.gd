@@ -11,6 +11,8 @@ func _ready() -> void:
 	
 	Pages.connect("pages_modified", update_controls)
 	update_controls()
+	
+	set_current_page_changeable(false)
 
 func load_page(number: int):
 	if number < 0 or number > Pages.get_page_count():
@@ -27,7 +29,7 @@ func load_page(number: int):
 	
 	prints("loading ", number)
 	var page = _page.instantiate()
-	get_node("Core/PageContainer").add_child(page)
+	$Core/PageContainer.add_child(page)
 	page.init(number)
 	current_page = page
 	
@@ -42,8 +44,8 @@ func update_controls():
 	find_child("Prev").disabled = current_page.number <= 0
 	find_child("Next").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
-	get_node("Core/PageControl/PageNav/PageCount/Current").text = str(current_page.number)
-	get_node("Core/PageControl/PageNav/PageCount/Count").text = str(Pages.get_page_count() - 1)
+	find_child("PageCountCurrent").text = str(current_page.number)
+	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
 
 func add_empty_page():
 	var page_count = Pages.get_page_count()
@@ -131,8 +133,23 @@ func _on_fd_open_file_selected(path: String) -> void:
 	var int_data := {}
 	for i in data.size():
 		int_data[int(i)] = data.get(str(i))
+	
 	Pages.page_data = int_data
 	load_page(0)
 
 
 
+func set_current_page_changeable(value:bool):
+	find_child("PageCountSpinCounter").visible = value
+	find_child("PageCountSpinCounter").max_value = Pages.get_page_count() - 1
+	find_child("PageCountSpinCounter").get_line_edit().text = find_child("PageCountCurrent").text
+	find_child("PageCountSpinCounter").apply()
+	find_child("PageCountCurrent").visible = not value
+
+func _on_change_page_button_pressed() -> void:
+	
+	
+	if find_child("PageCountSpinCounter").visible:
+		load_page(find_child("PageCountSpinCounter").value)
+	
+	set_current_page_changeable(find_child("PageCountCurrent").visible)

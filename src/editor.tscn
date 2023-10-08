@@ -1,7 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=6 format=3 uid="uid://bjaj8aln7f08r"]
 
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://src/page.tscn" id="2_kbraj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
+bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.847059, 0, 0.631373, 1)
+border_blend = true
+
+[sub_resource type="Theme" id="Theme_bik72"]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_1frgx")
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -10,6 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_nb6ej")
 script = ExtResource("1_r2t7d")
 
 [node name="Core" type="VBoxContainer" parent="."]
@@ -39,53 +54,80 @@ layout_mode = 2
 [node name="PageNav" type="HBoxContainer" parent="Core/PageControl"]
 layout_mode = 2
 
-[node name="First" type="Button" parent="Core/PageControl/PageNav"]
+[node name="PanelContainer" type="MarginContainer" parent="Core/PageControl/PageNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_bik72")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/PageControl/PageNav/PanelContainer"]
+layout_mode = 2
+
+[node name="First" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "|<"
 
-[node name="Prev" type="Button" parent="Core/PageControl/PageNav"]
+[node name="Prev" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "<"
 
-[node name="PageCount" type="VBoxContainer" parent="Core/PageControl/PageNav"]
+[node name="PageCount" type="VBoxContainer" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
-[node name="Current" type="Label" parent="Core/PageControl/PageNav/PageCount"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount"]
+layout_mode = 2
+
+[node name="ChangePageButton" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "jump"
+
+[node name="PageCountCurrent" type="Label" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
 layout_mode = 2
 text = "40"
 horizontal_alignment = 1
 
-[node name="Count" type="Label" parent="Core/PageControl/PageNav/PageCount"]
+[node name="PageCountSpinCounter" type="SpinBox" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
+layout_mode = 2
+update_on_text_changed = true
+select_all_on_focus = true
+
+[node name="PageCountMax" type="Label" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount"]
 layout_mode = 2
 text = "200"
 horizontal_alignment = 1
 
-[node name="Next" type="Button" parent="Core/PageControl/PageNav"]
+[node name="Next" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = ">"
 
-[node name="Last" type="Button" parent="Core/PageControl/PageNav"]
+[node name="Last" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = ">|"
 
-[node name="AddAfter" type="Button" parent="Core/PageControl/PageNav"]
+[node name="JumpContainer" type="MarginContainer" parent="Core/PageControl/PageNav"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/PageControl/PageNav/JumpContainer"]
+layout_mode = 2
+
+[node name="AddAfter" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "+>"
 
-[node name="Positional" type="VBoxContainer" parent="Core/PageControl/PageNav"]
+[node name="Positional" type="VBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="AddLast" type="Button" parent="Core/PageControl/PageNav/Positional"]
+[node name="AddLast" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 text = "+>>"
 
-[node name="DeleteCurrent" type="Button" parent="Core/PageControl/PageNav/Positional"]
+[node name="DeleteCurrent" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 focus_mode = 0
 text = "-"
@@ -113,12 +155,13 @@ filters = PackedStringArray("*.json")
 
 [connection signal="pressed" from="Core/FileControl/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/FileControl/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/First" to="." method="_on_first_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Prev" to="." method="_on_prev_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Next" to="." method="_on_next_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Last" to="." method="_on_last_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/AddAfter" to="." method="_on_add_after_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Positional/AddLast" to="." method="_on_add_last_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer/ChangePageButton" to="." method="_on_change_page_button_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Last" to="." method="_on_last_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/AddLast" to="." method="_on_add_last_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
