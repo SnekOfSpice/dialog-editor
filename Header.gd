@@ -18,3 +18,9 @@ func load_defaults():
 
 func change_header(property, value):
 	printt(property, value)
+
+func serialize() -> Dictionary:
+	return {}
+
+func deserialize(data: Dictionary):
+	prints("deserializing header ", data)

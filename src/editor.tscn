@@ -14,8 +14,11 @@ script = ExtResource("1_r2t7d")
 
 [node name="Core" type="VBoxContainer" parent="."]
 layout_mode = 1
-offset_right = 176.0
-offset_bottom = 60.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -61,17 +64,11 @@ text = ">|"
 layout_mode = 2
 text = "+"
 
-[node name="PageContainer" type="Control" parent="Core"]
+[node name="PageContainer" type="VBoxContainer" parent="Core"]
 layout_mode = 2
 
 [node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_top = -4.0
-offset_right = 176.0
-offset_bottom = -4.0
 
 [connection signal="pressed" from="Core/PageControl/PageNav/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Prev" to="." method="_on_prev_pressed"]

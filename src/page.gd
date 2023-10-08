@@ -4,23 +4,20 @@ class_name Page
 var number := 0
 var page_key := ""
 
+@onready var lines = find_child("Lines")
 
 func init(n:=number):
 	var data = Pages.page_data.get(n)
 	set_page_key(data.get("page_key"))
 	number = n
 	$Info/Number.text = str(n)
-	deserialize(data.get("data"))
+	deserialize(data.get("lines"))
 
 func set_page_key(key: String):
 	page_key = key
 	$Info/PageKey.text = page_key
 
-func deserialize(page_data: Dictionary):
-	# instantiate lines
-	print(page_data)
-	
-	enable_page_key_edit(false)
+
 
 func clear():
 	for c in get_children():
@@ -35,10 +32,23 @@ func serlialize() -> Dictionary:
 	data["number"] = number
 	data["page_key"] = page_key
 	
-	var lines_data := {}
-	data["data"] = lines_data
+	var lines_data := []
+	for c in lines.get_children():
+		lines_data.append(c.serialize())
+	data["lines"] = lines_data
 	
 	return data
+
+func deserialize(lines_data: Array):
+	# instantiate lines
+	prints("lines: ", lines_data)
+	
+	for data in lines_data:
+		var line = preload("res://src/line.tscn").instantiate()
+		lines.add_child(line)
+		line.deserialize(data)
+	
+	enable_page_key_edit(false)
 
 func _on_page_key_edit_pressed() -> void:
 	pass # Replace with function body.
@@ -61,3 +71,12 @@ func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
 
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
 	$Info/PageKeyEditButton.disabled = Pages.key_exists(new_text)
+
+
+func _on_add_pressed() -> void:
+	add_line()
+
+
+func add_line():
+	var line = preload("res://src/line.tscn").instantiate()
+	lines.add_child(line)

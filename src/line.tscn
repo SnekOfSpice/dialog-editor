@@ -3,18 +3,34 @@
 [ext_resource type="Script" path="res://src/line.gd" id="1_6i1bg"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://src/header.tscn" id="2_qs17t"]
 
-[node name="Line" type="HBoxContainer"]
+[node name="Line" type="VBoxContainer"]
 offset_right = 216.0
-offset_bottom = 8.0
+offset_bottom = 43.0
 script = ExtResource("1_6i1bg")
 
-[node name="HeadVisibilityToggle" type="Button" parent="."]
+[node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Header" parent="." instance=ExtResource("2_qs17t")]
+[node name="Delete" type="Button" parent="Controls"]
+layout_mode = 2
+text = "delete"
+
+[node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="TextContent" type="TextEdit" parent="."]
-custom_minimum_size = Vector2(200, 0)
+[node name="HeadVisibilityToggle" type="CheckButton" parent="Content"]
 layout_mode = 2
+text = "header"
+
+[node name="Header" parent="Content" instance=ExtResource("2_qs17t")]
+layout_mode = 2
+
+[node name="TextContent" type="TextEdit" parent="Content"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "hello thzj fgh gj gjjghk jjjjjjjjjj"
 wrap_mode = 1
+autowrap_mode = 2
+
+[connection signal="toggled" from="Content/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]

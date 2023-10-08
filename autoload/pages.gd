@@ -13,7 +13,7 @@ var head_data_types := {
 }
 
 
-# {"number":1, "page_key":"lmao", "data": {}}
+# {"number":1, "page_key":"lmao", "lines": []}
 # data: {}
 var page_data := {}
 
@@ -30,11 +30,11 @@ func create_page(number:int):
 	page_data[number] = {
 		"number":number,
 		"page_key":"",
-		"data": {}
+		"lines": []
 	}
 
 func get_lines(page_number: int):
-	return page_data.get(page_number).get("data")
+	return page_data.get(page_number).get("lines")
 
 
 func key_exists(key: String) -> bool:
@@ -46,3 +46,28 @@ func key_exists(key: String) -> bool:
 			return true
 	
 	return false
+
+
+func insert_page(at: int):
+	# reindex all after at
+	for i in range(get_page_count() - 1, at, -1):
+		var data = page_data.get(i)
+		data["number"] = data.get("number") + 1
+		page_data[i] = data
+	
+	# insert page
+	create_page(at)
+
+func delete_page(at: int):
+	if not page_data.keys().has(at):
+		push_warning(str("could not delete page ", at, " because it doesn't exist"))
+		return
+	
+	# reindex all after at, this automatically overwrites the page at at
+	for i in range(at + 1, get_page_count()):
+		var data = page_data.get(i)
+		data["number"] = data.get("number") - 1
+		page_data[i] = data
+	
+	# the last page is now a duplicate
+	page_data.erase(get_page_count())
