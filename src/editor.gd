@@ -83,7 +83,10 @@ func _on_delete_current_pressed() -> void:
 		push_warning("you cannot delete the last page")
 		return
 	
-	Pages.delete_page(get_current_page_number())
+	var a = get_current_page_number()
+	load_page(a - 1)
+	Pages.delete_page(a)
+	
 
 
 func _on_add_after_pressed() -> void:

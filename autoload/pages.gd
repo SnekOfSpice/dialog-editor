@@ -58,7 +58,6 @@ func insert_page(at: int):
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
 		var new_number = i + 1#data.get("number") + 1
-		prints("reindexing ", i, " to ", new_number)
 		data["number"] = new_number
 		page_data[new_number] = data
 	
@@ -66,6 +65,7 @@ func insert_page(at: int):
 	create_page(at, true)
 
 func delete_page(at: int):
+	print("a")
 	if not page_data.keys().has(at):
 		push_warning(str("could not delete page ", at, " because it doesn't exist"))
 		return
@@ -73,10 +73,13 @@ func delete_page(at: int):
 	# reindex all after at, this automatically overwrites the page at at
 	for i in range(at + 1, get_page_count()):
 		var data = page_data.get(i)
-		data["number"] = data.get("number") - 1
+		var new_number = data.get("number") - 1
+		data["number"] = new_number
 		page_data[i] = data
+		#prints("reindexing ", i, " to ", new_number)
 	
 	# the last page is now a duplicate
-	page_data.erase(get_page_count())
-	
+	print(page_data.size())
+	page_data.erase(get_page_count() - 1)
+	print(page_data.size())
 	emit_signal("pages_modified")
