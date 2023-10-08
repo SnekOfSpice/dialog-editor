@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=3 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://src/line.gd" id="1_6i1bg"]
+[ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://src/header.tscn" id="2_qs17t"]
 
 [node name="Line" type="HBoxContainer"]
 offset_right = 216.0
@@ -10,7 +11,7 @@ script = ExtResource("1_6i1bg")
 [node name="HeadVisibilityToggle" type="Button" parent="."]
 layout_mode = 2
 
-[node name="HeadEditor" type="VBoxContainer" parent="."]
+[node name="Header" parent="." instance=ExtResource("2_qs17t")]
 layout_mode = 2
 
 [node name="TextContent" type="TextEdit" parent="."]

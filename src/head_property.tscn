@@ -7,7 +7,7 @@ offset_right = 116.0
 offset_bottom = 73.0
 script = ExtResource("1_yno0w")
 
-[node name="Label" type="Label" parent="."]
+[node name="PropertyName" type="Label" parent="."]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "property name"
@@ -18,7 +18,8 @@ layout_mode = 2
 [node name="Content" type="HBoxContainer" parent="PropertyEdit"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="PropertyEdit/Content"]
+[node name="DataType" type="Button" parent="PropertyEdit/Content"]
+visible = false
 layout_mode = 2
 text = "Data Type"
 
@@ -36,3 +37,5 @@ text = "Cancel"
 [node name="Save" type="Button" parent="PropertyEdit/Controls"]
 layout_mode = 2
 text = "Save"
+
+[connection signal="pressed" from="PropertyEdit/Controls/Save" to="." method="_on_save_pressed"]

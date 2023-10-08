@@ -13,7 +13,8 @@ var head_data_types := {
 }
 
 
-# {number:1, "page_key":"lmao", "data": {}}
+# {"number":1, "page_key":"lmao", "data": {}}
+# data: {}
 var page_data := {}
 
 #var page_count := 0
@@ -21,12 +22,16 @@ var page_data := {}
 func get_page_count() -> int:
 	return page_data.size()
 
-func create_page(number:=get_page_count()):
+func create_page(number:int):
 	if page_data.keys().has(number):
 		push_warning(str("page_data already has page with number ", number))
 		return
-	
+	prints("creating page ", number)
 	page_data[number] = {
-		"head": head_defaults,
-		"body": {}
+		"number":number,
+		"page_key":"",
+		"data": {}
 	}
+
+func get_lines(page_number: int):
+	return page_data.get(page_number).get("data")

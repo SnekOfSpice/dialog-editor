@@ -13,9 +13,9 @@ grow_vertical = 2
 script = ExtResource("1_r2t7d")
 
 [node name="Core" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+offset_right = 176.0
+offset_bottom = 60.0
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -73,4 +73,8 @@ offset_top = -4.0
 offset_right = 176.0
 offset_bottom = -4.0
 
+[connection signal="pressed" from="Core/PageControl/PageNav/First" to="." method="_on_first_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/Prev" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/Last" to="." method="_on_last_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Add" to="." method="_on_add_pressed"]

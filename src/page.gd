@@ -6,12 +6,16 @@ var page_key := ""
 
 
 func init(n:=number):
-	page_key = Pages.page_data.get(n).get("page_key")
-	load_data(Pages.page_data.get(n).get("data"))
+	var data = Pages.page_data.get(n)
+	page_key = data.get("page_key")
+	number = n
+	$Info/Number.text = str(n)
+	$Info/PageKey.text = str(page_key)
+	deserialize(data.get("data"))
 
-func load_data(page_data: Dictionary):
+func deserialize(page_data: Dictionary):
 	# instantiate lines
-	pass
+	print(page_data)
 
 func clear():
 	for c in get_children():

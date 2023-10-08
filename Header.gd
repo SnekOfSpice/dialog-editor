@@ -14,7 +14,7 @@ func load_defaults():
 		add_child(p)
 		p.property_name = prop
 		p._default = Pages.head_defaults.get(prop)
-		p.connect("property_changed", change_page_header)
+		p.connect("property_changed", change_header)
 
-func change_page_header(property, value):
+func change_header(property, value):
 	printt(property, value)

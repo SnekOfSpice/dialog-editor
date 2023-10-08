@@ -9,3 +9,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2lug2")
+
+[node name="Info" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Number" type="Label" parent="Info"]
+layout_mode = 2
+text = "0"
+
+[node name="PageKey" type="LineEdit" parent="Info"]
+layout_mode = 2
