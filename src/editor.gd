@@ -4,6 +4,8 @@ extends Control
 var _page = preload("res://src/page.tscn")
 var current_page: Page
 
+var active_dir := ""
+
 func _ready() -> void:
 	add_empty_page()
 	
@@ -97,3 +99,40 @@ func _on_add_after_pressed() -> void:
 	Pages.insert_page(at)
 	
 	load_page(at)
+
+
+func _on_save_button_pressed() -> void:
+	if active_dir != "":
+		get_node("FDSave").current_dir = active_dir
+	find_child("FDSave").popup()
+	#find_child("FDSave").size = get_window().size - Vector2i(30, 80)
+
+func _on_open_button_pressed() -> void:
+	if active_dir != "":
+		get_node("FDSave").current_dir = active_dir
+	find_child("FDOpen").popup()
+	#find_child("FDOpen").size = get_window().size - Vector2i(30, 80)
+
+func _on_fd_save_file_selected(path: String) -> void:
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(Pages.page_data))
+	file.close()
+	active_dir = path
+
+
+func _on_fd_open_file_selected(path: String) -> void:
+	var file = FileAccess.open(path, FileAccess.READ)
+	var data : Dictionary = JSON.parse_string(file.get_as_text())
+	file.close()
+	
+	active_dir = path
+	
+	# all keys are now strings instead of ints
+	var int_data := {}
+	for i in data.size():
+		int_data[int(i)] = data.get(str(i))
+	Pages.page_data = int_data
+	load_page(0)
+
+
+

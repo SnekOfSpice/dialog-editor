@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 Pages="*res://autoload/pages.tscn"
 
+[display]
+
+window/subwindows/embed_subwindows=false
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

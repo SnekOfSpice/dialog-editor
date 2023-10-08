@@ -20,6 +20,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="FileControl" type="HBoxContainer" parent="Core"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Core/FileControl"]
+layout_mode = 2
+focus_mode = 0
+text = "save"
+
+[node name="OpenButton" type="Button" parent="Core/FileControl"]
+layout_mode = 2
+focus_mode = 0
+text = "open"
+
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
 
@@ -83,6 +96,23 @@ layout_mode = 2
 [node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
 
+[node name="FDSave" type="FileDialog" parent="."]
+initial_position = 2
+size = Vector2i(827, 377)
+access = 2
+filters = PackedStringArray("*.json")
+
+[node name="FDOpen" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(827, 377)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json")
+
+[connection signal="pressed" from="Core/FileControl/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Core/FileControl/OpenButton" to="." method="_on_open_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Prev" to="." method="_on_prev_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Next" to="." method="_on_next_pressed"]
@@ -90,3 +120,5 @@ layout_mode = 2
 [connection signal="pressed" from="Core/PageControl/PageNav/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Positional/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
+[connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
+[connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
