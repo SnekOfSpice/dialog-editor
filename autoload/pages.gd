@@ -35,3 +35,14 @@ func create_page(number:int):
 
 func get_lines(page_number: int):
 	return page_data.get(page_number).get("data")
+
+
+func key_exists(key: String) -> bool:
+	if key == "":
+		return false
+	
+	for i in page_data.size():
+		if page_data.get(i).get("page_key") == key:
+			return true
+	
+	return false

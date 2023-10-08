@@ -2,7 +2,7 @@ extends Control
 
 
 var _page = preload("res://src/page.tscn")
-var current_page
+var current_page: Page
 
 func _ready() -> void:
 	add_empty_page()
@@ -13,6 +13,11 @@ func load_page(number: int):
 		return
 	
 	for c in $Core/PageContainer.get_children():
+		if not c is Page:
+			push_warning(str("PageContainer has a child that's not a page: ", c))
+			continue
+		
+		c.save()
 		c.queue_free()
 	
 	prints("loading ", number)
