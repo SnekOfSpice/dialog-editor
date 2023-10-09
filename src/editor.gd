@@ -196,4 +196,5 @@ func _on_next_visited_pressed() -> void:
 
 func _on_edit_header_button_pressed() -> void:
 	#refresh()
+	Pages.page_data[current_page.number] = current_page.serialize()
 	$HeaderPopup.popup()
