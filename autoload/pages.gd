@@ -28,6 +28,7 @@ var head_data_types := {
 	"emotion": DataTypes._String,
 }
 
+var editor
 
 # {"number":1, "page_key":"lmao", "lines": []}
 # data: {}
@@ -119,23 +120,62 @@ func apply_new_header_schema(new_schema: Array):
 		#print(lines)
 		
 		for line in lines:
-			print(new_schema)
-			line["header"] = transform_header(line.get("header"), new_schema)
+			print(Pages.page_data)
+			prints("PRETRANSFORM-", line["header"], " SCHEMA-> ", new_schema)
+			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
+			prints("POSTRTRANSFORM-", line["header"])
 	
 	
+	editor.refresh()
 	head_defaults = new_schema
 
 
-func transform_header(old: Array, new: Array):
-	printt(old, new)
+func transform_header(header_to_transform: Array, new_schema: Array, old_schema):
+	# TODO: use sort_custom and add an index to each head property to make this flexible when changing head defaults
+	var transformed = []
+	transformed.resize(new_schema.size())
 	
-	# transpose all with same property_name
-	for old_prop in old:
-		var old_name = old_prop.get("property_name")
-		for new_prop in new:
-			var new_name = new_prop.get("property_name")
-			if new_name == old_name:
-				print(new_name)
+#	# transpose all with same property_name
+#	for old_prop in old:
+#		var old_name = old_prop.get("property_name")
+#		var old_value = old_prop.get("value")
+#		var old_type = old_prop.get("data_type")
+#
+#		for new_prop in new:
+#			var new_name = new_prop.get("property_name")
+#			var new_value = new_prop.get("value")
+#			var new_type = new_prop.get("data_type")
+#
+#			if new_name == old_name:
+#				if new_type == old_type:
+#					# preserve old if it differs from the default value
+#			else:
+#				transformed.append(new_prop)
+	
+	for i in min(old_schema.size(), new_schema.size()):
+		var old_name = header_to_transform[i].get("property_name")
+		var old_value = header_to_transform[i].get("value")
+		var old_type = header_to_transform[i].get("data_type")
+		var old_default = old_schema[i].get("value")
+		
+		var new_name = new_schema[i].get("property_name")
+		var new_value = new_schema[i].get("value")
+		var new_type = new_schema[i].get("data_type")
+		
+		if old_value == old_default:
+			transformed[i] = new_schema[i]
+		else:
+			if old_name == new_name:
+				if old_type == new_type:
+					# preserve when defaults have been overridden
+					transformed[i] = header_to_transform[i]
+				
+				# TODO: handle type conversions, for now lets just assume everything is a string
 	
 	
-	return old
+	# idk this seems bad
+	for j in transformed.size():
+		if transformed[j] == null:
+			transformed[j] = new_schema[j]
+	
+	return transformed

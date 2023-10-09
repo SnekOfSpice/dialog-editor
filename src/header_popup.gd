@@ -20,7 +20,7 @@ func fill():
 #			"value": Pages.get_defaults(prop).get("value")
 #		}
 		p.editable_name = true
-		p.deserlialize(prop)
+		p.deserialize(prop)
 		p.connect("property_default_changed", change_header_default)
 		p.connect("erase_property", erase_property_from_temp)
 
@@ -39,7 +39,7 @@ func add_empty_property():
 	new_header.append(start_data)
 	
 	p.editable_name = true
-	p.deserlialize(start_data)
+	p.deserialize(start_data)
 	p.connect("property_default_changed", change_header_default)
 	p.connect("erase_property", erase_property_from_temp)
 	
@@ -52,6 +52,7 @@ func change_header_default(property_name, old_property_name, new_default_value):
 	printt(property_name, old_property_name, new_default_value)
 
 func save():
+	#get_parent().current_page.deserialize(Pages.page_data.get(get_parent().current_page.number).get("lines"))
 	Pages.apply_new_header_schema(new_header)
 
 

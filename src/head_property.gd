@@ -5,6 +5,7 @@ extends Control
 var property_name := ""
 
 var _old_property_name := ""
+var _old_value
 var editable_name := false
 
 var value
@@ -24,7 +25,7 @@ func serialize() -> Dictionary:
 	
 	return d
 
-func deserlialize(data: Dictionary):
+func deserialize(data: Dictionary):
 	property_name = data.get("property_name")
 	var defaults = Pages.get_defaults(property_name)
 	#_default = defaults.get("value")
@@ -38,7 +39,8 @@ func deserlialize(data: Dictionary):
 	
 	if editable_name:
 		_old_property_name = property_name
-		find_child("OldDefaults").text = str("changing from: ", _old_property_name, "|", defaults.get(_old_property_name))
+		_old_value = value
+		find_child("OldDefaults").text = str("changing from: ", _old_property_name, "|", _old_value)
 	
 	
 	find_child("DefaultChangingContainer").visible = editable_name

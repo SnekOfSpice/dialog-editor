@@ -24,9 +24,9 @@ func clear():
 		c.queue_free()
 
 func save():
-	Pages.page_data[number] = serlialize()
+	Pages.page_data[number] = serialize()
 
-func serlialize() -> Dictionary:
+func serialize() -> Dictionary:
 	var data := {}
 	
 	data["number"] = number
@@ -42,6 +42,8 @@ func serlialize() -> Dictionary:
 func deserialize(lines_data: Array):
 	# instantiate lines
 	prints("lines: ", lines_data)
+	for l in lines.get_children():
+		l.queue_free()
 	
 	for data in lines_data:
 		var line = preload("res://src/line.tscn").instantiate()

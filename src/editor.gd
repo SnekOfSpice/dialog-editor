@@ -9,13 +9,21 @@ var active_dir := ""
 var page_trail := []
 var trail_idx := 0
 
+func refresh():
+	var cpn = current_page.number
+	#Pages.page_data[cpn] = current_page.serialize()
+	current_page.deserialize(Pages.page_data.get(cpn).get("lines"))
+
 func _ready() -> void:
 	add_empty_page()
 	
 	Pages.connect("pages_modified", update_controls)
+	Pages.editor = self
 	update_controls()
 	
 	set_current_page_changeable(false)
+	
+	#$HeaderPopup.connect("close_requested", load_page, current_page.number)
 
 func load_page(number: int):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -187,4 +195,5 @@ func _on_next_visited_pressed() -> void:
 
 
 func _on_edit_header_button_pressed() -> void:
+	#refresh()
 	$HeaderPopup.popup()

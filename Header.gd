@@ -10,7 +10,7 @@ func add_property(data: Dictionary):
 	#p.property_name = prop
 	#Pages.head_defaults.get(prop)
 	
-	p.deserlialize(data)
+	p.deserialize(data)
 	p.connect("property_changed", change_header)
 
 func load_defaults():
@@ -18,11 +18,6 @@ func load_defaults():
 		c.queue_free()
 	
 	for prop in Pages.head_defaults:
-#		var start_data = {
-#		"property_name":prop,
-#		"value": Pages.get_defaults(prop).get("value")
-#		}
-	
 		add_property(prop)
 
 func change_header(property, value):
