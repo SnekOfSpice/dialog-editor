@@ -21,6 +21,8 @@ func set_page_key(key: String):
 
 func clear():
 	for c in get_children():
+		if not c is Line:
+			continue
 		c.queue_free()
 
 func save():
@@ -34,6 +36,8 @@ func serialize() -> Dictionary:
 	
 	var lines_data := []
 	for c in lines.get_children():
+		if not c is Line:
+			continue
 		lines_data.append(c.serialize())
 	data["lines"] = lines_data
 	
@@ -43,6 +47,8 @@ func deserialize(lines_data: Array):
 	# instantiate lines
 	prints("lines: ", lines_data)
 	for l in lines.get_children():
+		if not l is Line:
+			continue
 		l.queue_free()
 	
 	for data in lines_data:

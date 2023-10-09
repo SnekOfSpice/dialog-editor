@@ -1,5 +1,5 @@
 extends Control
-
+class_name Line
 
 
 
@@ -52,3 +52,9 @@ func deserialize(data: Dictionary):
 	
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 	set_head_editable(button_pressed)
+
+
+func _on_delete_pressed() -> void:
+	# I'm not 100% on this
+	# but I think since page serialization steps over every child, when this doesn't exist anymore, it'll just won't be part of that serialization anymore
+	queue_free()
