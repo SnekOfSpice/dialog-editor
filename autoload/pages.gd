@@ -1,12 +1,28 @@
 extends Node
 
 
-var head_defaults := {
-	"speaker":"narrator",
-	"emotion":"happy",
-}
+var head_defaults := [
+	{
+		"property_name": "speaker",
+		"value":"narrator",
+		"data_type": DataTypes._String
+	},
+	{
+		"property_name": "emotion",
+		"value":"happy",
+		"data_type": DataTypes._String
+	},
+]
 
 enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary}
+const DATA_TYPE_STRINGS := {
+	DataTypes._String : "String",
+	DataTypes._Integer : "Integer",
+	DataTypes._Float : "Float",
+	DataTypes._Array : "Array",
+	DataTypes._Dictionary : "Dictionary",
+}
+
 var head_data_types := {
 	"speaker": DataTypes._String,
 	"emotion": DataTypes._String,
@@ -83,3 +99,43 @@ func delete_page(at: int):
 	page_data.erase(get_page_count() - 1)
 	print(page_data.size())
 	emit_signal("pages_modified")
+
+
+func get_defaults(property_key:String):
+	for p in head_defaults:
+		if p.get("property_name") == property_key:
+			return p
+	
+	return {
+		"property_name": "defaultproperty",
+		"value":"defaultvalue",
+		"data_type":DataTypes._String
+	}
+
+# new schema with keys and values
+func apply_new_header_schema(new_schema: Array):
+	for i in page_data:
+		var lines = page_data.get(i).get("lines")
+		#print(lines)
+		
+		for line in lines:
+			print(new_schema)
+			line["header"] = transform_header(line.get("header"), new_schema)
+	
+	
+	head_defaults = new_schema
+
+
+func transform_header(old: Array, new: Array):
+	printt(old, new)
+	
+	# transpose all with same property_name
+	for old_prop in old:
+		var old_name = old_prop.get("property_name")
+		for new_prop in new:
+			var new_name = new_prop.get("property_name")
+			if new_name == old_name:
+				print(new_name)
+	
+	
+	return old

@@ -15,14 +15,19 @@ layout_mode = 2
 layout_mode = 2
 text = "delete"
 
-[node name="Content" type="HBoxContainer" parent="."]
+[node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="HeadVisibilityToggle" type="CheckButton" parent="Content"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
 layout_mode = 2
+
+[node name="HeadVisibilityToggle" type="CheckButton" parent="Content/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
 text = "header"
 
-[node name="Header" parent="Content" instance=ExtResource("2_qs17t")]
+[node name="Header" parent="Content/HBoxContainer" instance=ExtResource("2_qs17t")]
 layout_mode = 2
 
 [node name="TextContent" type="TextEdit" parent="Content"]
@@ -33,4 +38,4 @@ text = "hello thzj fgh gj gjjghk jjjjjjjjjj"
 wrap_mode = 1
 autowrap_mode = 2
 
-[connection signal="toggled" from="Content/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[connection signal="toggled" from="Content/HBoxContainer/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]

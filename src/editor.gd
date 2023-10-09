@@ -184,3 +184,7 @@ func _on_last_visited_pressed() -> void:
 func _on_next_visited_pressed() -> void:
 	set_trail_idx(clamp(trail_idx + 1, 0, page_trail.size()))
 	if page_trail.size() > 1: load_page(page_trail[trail_idx])
+
+
+func _on_edit_header_button_pressed() -> void:
+	$HeaderPopup.popup()

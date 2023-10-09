@@ -3,39 +3,85 @@
 [ext_resource type="Script" path="res://src/head_property.gd" id="1_yno0w"]
 
 [node name="HeadProperty" type="VBoxContainer"]
-offset_right = 116.0
+offset_right = 421.0
 offset_bottom = 73.0
 script = ExtResource("1_yno0w")
 
-[node name="PropertyName" type="Label" parent="."]
+[node name="DefaultChangingContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SaveNewDefaultsButton" type="Button" parent="DefaultChangingContainer"]
+layout_mode = 2
+text = "save new defaults"
+
+[node name="OldDefaults" type="Label" parent="DefaultChangingContainer"]
+layout_mode = 2
+
+[node name="DeleteButton" type="Button" parent="DefaultChangingContainer"]
+layout_mode = 2
+text = "delete"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="HeadProperty" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="EditableNameContainer" type="HBoxContainer" parent="HeadProperty"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DataType" type="Button" parent="HeadProperty/EditableNameContainer"]
+layout_mode = 2
+text = "Data Type"
+
+[node name="PropertyNameEdit" type="LineEdit" parent="HeadProperty/EditableNameContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+expand_to_text_length = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HeadProperty"]
+layout_mode = 2
+
+[node name="PropertyName" type="Label" parent="HeadProperty/VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "property name"
 
-[node name="PropertyEdit" type="VBoxContainer" parent="."]
+[node name="DataTypeName" type="Label" parent="HeadProperty/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "property name"
+
+[node name="VSeparator" type="VSeparator" parent="HeadProperty"]
 layout_mode = 2
 
-[node name="Content" type="HBoxContainer" parent="PropertyEdit"]
+[node name="PropertyEdit" type="VBoxContainer" parent="HeadProperty"]
 layout_mode = 2
 
-[node name="DataType" type="Button" parent="PropertyEdit/Content"]
-visible = false
-layout_mode = 2
-text = "Data Type"
-
-[node name="LineEdit" type="LineEdit" parent="PropertyEdit/Content"]
+[node name="ValueLineEdit" type="LineEdit" parent="HeadProperty/PropertyEdit"]
 layout_mode = 2
 expand_to_text_length = true
 
-[node name="Controls" type="HBoxContainer" parent="PropertyEdit"]
+[node name="Controls" type="HBoxContainer" parent="HeadProperty/PropertyEdit"]
 layout_mode = 2
 
-[node name="Cancel" type="Button" parent="PropertyEdit/Controls"]
+[node name="Cancel" type="Button" parent="HeadProperty/PropertyEdit/Controls"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="Save" type="Button" parent="PropertyEdit/Controls"]
+[node name="Save" type="Button" parent="HeadProperty/PropertyEdit/Controls"]
 layout_mode = 2
 text = "Save"
 
-[connection signal="pressed" from="PropertyEdit/Controls/Save" to="." method="_on_save_pressed"]
+[node name="HSeparator2" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="."]
+layout_mode = 2
+
+[connection signal="pressed" from="DefaultChangingContainer/SaveNewDefaultsButton" to="." method="_on_save_new_defaults_button_pressed"]
+[connection signal="pressed" from="DefaultChangingContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="pressed" from="HeadProperty/PropertyEdit/Controls/Save" to="HeadProperty" method="_on_save_pressed"]

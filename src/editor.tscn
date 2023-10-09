@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=8 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" path="res://src/LineTypeButton.gd" id="3_2h0gj"]
+[ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://src/header_popup.tscn" id="5_k116e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -39,17 +40,32 @@ grow_vertical = 2
 [node name="FileControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="Core/FileControl"]
+[node name="MarginContainer" type="MarginContainer" parent="Core/FileControl"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/FileControl/MarginContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Core/FileControl/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "save"
 
-[node name="OpenButton" type="Button" parent="Core/FileControl"]
+[node name="OpenButton" type="Button" parent="Core/FileControl/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "open"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Core/FileControl"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="EditHeaderButton" type="Button" parent="Core/FileControl/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "edit header"
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -199,8 +215,13 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.json")
 
-[connection signal="pressed" from="Core/FileControl/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="Core/FileControl/OpenButton" to="." method="_on_open_button_pressed"]
+[node name="HeaderPopup" parent="." instance=ExtResource("5_k116e")]
+visible = false
+content_scale_aspect = 1
+
+[connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
+[connection signal="pressed" from="Core/FileControl/MarginContainer2/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
