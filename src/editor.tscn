@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=7 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://src/page.tscn" id="2_kbraj"]
+[ext_resource type="Script" path="res://src/LineTypeButton.gd" id="3_2h0gj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -39,11 +40,13 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="SaveButton" type="Button" parent="Core/FileControl"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "save"
 
 [node name="OpenButton" type="Button" parent="Core/FileControl"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "open"
@@ -62,12 +65,26 @@ theme = SubResource("Theme_bik72")
 [node name="HBoxContainer" type="HBoxContainer" parent="Core/PageControl/PageNav/PanelContainer"]
 layout_mode = 2
 
+[node name="LastVisited" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "backward"
+
+[node name="NextVisited" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "forward"
+
 [node name="First" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "|<"
 
 [node name="Prev" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "<"
@@ -132,6 +149,35 @@ layout_mode = 2
 focus_mode = 0
 text = "-"
 
+[node name="VSeparator" type="VSeparator" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LineTypes" type="HBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="TypeText" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Text"
+script = ExtResource("3_2h0gj")
+
+[node name="TypeChoice" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Choice"
+script = ExtResource("3_2h0gj")
+line_type = 1
+
+[node name="TypeInstruction" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Instr"
+script = ExtResource("3_2h0gj")
+line_type = 2
+
 [node name="PageContainer" type="VBoxContainer" parent="Core"]
 layout_mode = 2
 
@@ -155,6 +201,8 @@ filters = PackedStringArray("*.json")
 
 [connection signal="pressed" from="Core/FileControl/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/FileControl/OpenButton" to="." method="_on_open_button_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer/ChangePageButton" to="." method="_on_change_page_button_pressed"]

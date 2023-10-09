@@ -6,6 +6,9 @@ var current_page: Page
 
 var active_dir := ""
 
+var page_trail := []
+var trail_idx := 0
+
 func _ready() -> void:
 	add_empty_page()
 	
@@ -15,9 +18,18 @@ func _ready() -> void:
 	set_current_page_changeable(false)
 
 func load_page(number: int):
-	if number < 0 or number > Pages.get_page_count():
-		push_warning(str("page number ", number, " outside page count"))
-		return
+	number = clamp(number, 0, Pages.get_page_count() - 1)
+#		push_warning(str("page number ", number, " outside page count"))
+#		return
+	
+	
+	# broken, do this later
+#	if page_trail.size() > 1 and trail_idx < page_trail.size():
+#		if page_trail[trail_idx + 1] != number:
+#			# erase remaining trail
+#			page_trail = page_trail.slice(0, trail_idx + 1)
+#
+#		set_trail_idx(page_trail.size() - 1)
 	
 	for c in $Core/PageContainer.get_children():
 		if not c is Page:
@@ -32,6 +44,7 @@ func load_page(number: int):
 	$Core/PageContainer.add_child(page)
 	page.init(number)
 	current_page = page
+	page_trail.append(number)
 	
 	update_controls()
 	
@@ -46,6 +59,8 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("PageCountCurrent").text = str(current_page.number)
 	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
+	
+	set_trail_idx(trail_idx)
 
 func add_empty_page():
 	var page_count = Pages.get_page_count()
@@ -146,6 +161,12 @@ func set_current_page_changeable(value:bool):
 	find_child("PageCountSpinCounter").apply()
 	find_child("PageCountCurrent").visible = not value
 
+func set_trail_idx(value: int):
+	trail_idx = value
+	
+	find_child("LastVisited").disabled = trail_idx <= page_trail.size() or page_trail.is_empty()
+	find_child("NextVisited").disabled = trail_idx > 0 or page_trail.is_empty()
+
 func _on_change_page_button_pressed() -> void:
 	
 	
@@ -153,3 +174,13 @@ func _on_change_page_button_pressed() -> void:
 		load_page(find_child("PageCountSpinCounter").value)
 	
 	set_current_page_changeable(find_child("PageCountCurrent").visible)
+
+
+func _on_last_visited_pressed() -> void:
+	#set_trail_idx(clamp(trail_idx - 1, 0, page_trail.size()))
+	if page_trail.size() > 1: load_page(page_trail[trail_idx])
+
+
+func _on_next_visited_pressed() -> void:
+	set_trail_idx(clamp(trail_idx + 1, 0, page_trail.size()))
+	if page_trail.size() > 1: load_page(page_trail[trail_idx])

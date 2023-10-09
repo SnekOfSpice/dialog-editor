@@ -1,24 +1,22 @@
 extends Control
 
 
-enum LineType {
-	Text, Choice, Instruction
-}
 
 
-var line_type := LineType.Text
+
+var line_type := Data.LineType.Text
 
 func _ready() -> void:
-	set_line_type(LineType.Text)
+	set_line_type(Data.of("editor.selected_line_type"))
 	set_head_editable(false)
 
 func set_line_type(value: int):
 	line_type = value
 	match line_type:
-		LineType.Text:
+		Data.LineType.Text:
 			pass
 	
-	find_child("TextContent").visible = line_type == LineType.Text
+	find_child("TextContent").visible = line_type == Data.LineType.Text
 
 func set_head_editable(value: bool):
 	find_child("Header").visible = value
@@ -44,11 +42,11 @@ func deserialize(data: Dictionary):
 	
 	# content (based on line type)
 	match line_type:
-		LineType.Text:
+		Data.LineType.Text:
 			find_child("TextContent").text = data.get("content")
-		LineType.Choice:
+		Data.LineType.Choice:
 			pass
-		LineType.Instruction:
+		Data.LineType.Instruction:
 			pass
 	
 	
