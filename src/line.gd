@@ -17,6 +17,7 @@ func set_line_type(value: int):
 			pass
 	
 	find_child("TextContent").visible = line_type == Data.LineType.Text
+	find_child("ChoiceContainer").visible = line_type == Data.LineType.Choice
 
 func set_head_editable(value: bool):
 	find_child("Header").visible = value
@@ -29,7 +30,13 @@ func serialize() -> Dictionary:
 	data["header"] = find_child("Header").serialize()
 	
 	# content match
-	data["content"] = find_child("TextContent").text
+	match line_type:
+		Data.LineType.Text:
+			data["content"] = find_child("TextContent").text
+		Data.LineType.Choice:
+			data["content"] = find_child("ChoiceContainer").serialize()
+		Data.LineType.Instruction:
+			pass
 	
 	return data
 
@@ -45,7 +52,7 @@ func deserialize(data: Dictionary):
 		Data.LineType.Text:
 			find_child("TextContent").text = data.get("content")
 		Data.LineType.Choice:
-			pass
+			find_child("ChoiceContainer").deserialize(data.get("content"))
 		Data.LineType.Instruction:
 			pass
 	

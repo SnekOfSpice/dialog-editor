@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://btcdvjuk2ku18"]
+
+[ext_resource type="Script" path="res://src/choice_container.gd" id="1_22qh4"]
+
+[node name="ChoiceContainer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_22qh4")
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="AddButton" type="Button" parent="Controls"]
+layout_mode = 2
+text = "add choice"
+
+[node name="ChoiceList" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]

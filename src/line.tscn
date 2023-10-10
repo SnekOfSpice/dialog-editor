@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=4 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://src/line.gd" id="1_6i1bg"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://src/header.tscn" id="2_qs17t"]
+[ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://src/choice_container.tscn" id="3_jjtdq"]
 
 [node name="Line" type="VBoxContainer"]
 anchors_preset = 15
@@ -14,23 +15,40 @@ script = ExtResource("1_6i1bg")
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Delete" type="Button" parent="Controls"]
-layout_mode = 2
-text = "delete"
-
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
+[node name="MoveUp" type="Button" parent="Controls/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "^"
+
+[node name="MoveDown" type="Button" parent="Controls/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "v"
+
+[node name="HeaderContainer" type="HBoxContainer" parent="Controls"]
 layout_mode = 2
 
-[node name="HeadVisibilityToggle" type="CheckButton" parent="Content/HBoxContainer"]
+[node name="HeadVisibilityToggle" type="CheckButton" parent="Controls/HeaderContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = "header"
 
-[node name="Header" parent="Content/HBoxContainer" instance=ExtResource("2_qs17t")]
+[node name="Header" parent="Controls/HeaderContainer" instance=ExtResource("2_qs17t")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Controls"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Delete" type="Button" parent="Controls/MarginContainer"]
+layout_mode = 2
+text = "delete"
+
+[node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="TextContent" type="TextEdit" parent="Content"]
@@ -41,5 +59,8 @@ text = "hello thzj fgh gj gjjghk jjjjjjjjjj"
 wrap_mode = 1
 autowrap_mode = 2
 
-[connection signal="pressed" from="Controls/Delete" to="." method="_on_delete_pressed"]
-[connection signal="toggled" from="Content/HBoxContainer/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[node name="ChoiceContainer" parent="Content" instance=ExtResource("3_jjtdq")]
+layout_mode = 2
+
+[connection signal="toggled" from="Controls/HeaderContainer/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[connection signal="pressed" from="Controls/MarginContainer/Delete" to="." method="_on_delete_pressed"]

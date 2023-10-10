@@ -166,16 +166,41 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 		printt(old_default)
 		printt(new_name, new_value, new_type)
 		
+		
+		
+		# if the header was the default value here, just apply the new default schema
 		if old_value == old_default:
 			transformed[i] = new_schema[i]
+		# the old value wasn't the default...
 		else:
-			if old_name == new_name:
-				if old_type == new_type:
-					# preserve when defaults have been overridden
-					transformed[i] = header_to_transform[i]
-				
-				# TODO: handle type conversions, for now lets just assume everything is a string
+			# if the data type stayed the same, we assume the rest to also be adjusted accordingly
+			var converted_value 
+			
+			
+			# BIG TODO LMAO
+			# TODO: handle type conversions,
+			# for now lets just assume everything is a string
 	
+			match old_type:
+				Pages.DataTypes._String:
+					match new_type:
+						Pages.DataTypes._Array:
+							pass
+						Pages.DataTypes._String:
+							converted_value = header_to_transform[i].get("value")
+						Pages.DataTypes._Dictionary:
+							pass
+						Pages.DataTypes._Float:
+							pass
+						Pages.DataTypes._Integer:
+							pass
+			
+			
+			transformed[i] = {
+					"property_name": new_name,
+					"value": converted_value,
+					"data_type": new_type
+				}
 	
 	# idk this seems bad
 	for j in transformed.size():
