@@ -162,6 +162,10 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 		var new_value = new_schema[i].get("value")
 		var new_type = new_schema[i].get("data_type")
 		
+		printt(old_name, old_value, old_type)
+		printt(old_default)
+		printt(new_name, new_value, new_type)
+		
 		if old_value == old_default:
 			transformed[i] = new_schema[i]
 		else:

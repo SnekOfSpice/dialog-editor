@@ -59,11 +59,16 @@ func update():
 
 func _on_save_pressed() -> void:
 	emit_signal("property_changed", property_name, find_child("ValueLineEdit").text)
+	value = find_child("ValueLineEdit").text
 	update()
 
 
 func _on_save_new_defaults_button_pressed() -> void:
+	save_new_defaults()
+	
+func save_new_defaults():
 	emit_signal("property_default_changed", property_name, _old_property_name, find_child("ValueLineEdit").text)
+	value = find_child("ValueLineEdit").text
 	update()
 
 

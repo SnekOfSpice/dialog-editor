@@ -49,9 +49,25 @@ func erase_property_from_temp(property):
 
 
 func change_header_default(property_name, old_property_name, new_default_value):
-	printt(property_name, old_property_name, new_default_value)
+	#print("CHANGING HEADER DEFAULT ( NOT ACTUALLY )")
+	#printt(property_name, old_property_name, new_default_value)
+	# not working atm
+	print(new_header)
+	
+	for i in new_header.size():
+		if new_header[i].get("property_name") == old_property_name:
+			new_header[i] = {
+				"property_name" : property_name,
+				"value" : new_default_value,
+				"data_type": Pages.DataTypes._String
+			}
+			break
+	print(new_header)
+	#new_header[old_property_name] = new_default_value
 
 func save():
+	for c in find_child("HeadPropertyContainer").get_children():
+		c.save_new_defaults()
 	#get_parent().current_page.deserialize(Pages.page_data.get(get_parent().current_page.number).get("lines"))
 	Pages.apply_new_header_schema(new_header)
 
