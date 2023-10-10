@@ -9,7 +9,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-size_flags_vertical = 2
 script = ExtResource("1_2lug2")
 
 [node name="Info" type="HBoxContainer" parent="."]
@@ -48,13 +47,11 @@ focus_mode = 0
 text = "add line"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="Lines" type="VBoxContainer" parent="ScrollContainer"]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

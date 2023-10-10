@@ -84,4 +84,4 @@ layout_mode = 2
 
 [connection signal="pressed" from="DefaultChangingContainer/SaveNewDefaultsButton" to="." method="_on_save_new_defaults_button_pressed"]
 [connection signal="pressed" from="DefaultChangingContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
-[connection signal="pressed" from="HeadProperty/PropertyEdit/Controls/Save" to="HeadProperty" method="_on_save_pressed"]
+[connection signal="pressed" from="HeadProperty/PropertyEdit/Controls/Save" to="." method="_on_save_pressed"]

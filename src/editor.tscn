@@ -29,17 +29,20 @@ grow_vertical = 2
 theme = ExtResource("1_nb6ej")
 script = ExtResource("1_r2t7d")
 
-[node name="Core" type="VBoxContainer" parent="."]
+[node name="Core" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = 139.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="FileControl" type="HBoxContainer" parent="Core"]
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 37.0
+grow_horizontal = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Core/FileControl"]
 layout_mode = 2
@@ -70,6 +73,10 @@ text = "edit header"
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
+offset_top = 41.0
+offset_right = 512.0
+offset_bottom = 113.0
+grow_horizontal = 2
 
 [node name="PageNav" type="HBoxContainer" parent="Core/PageControl"]
 layout_mode = 2
@@ -195,8 +202,17 @@ text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
 
-[node name="PageContainer" type="VBoxContainer" parent="Core"]
-layout_mode = 2
+[node name="PageContainer" type="MarginContainer" parent="Core"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.218
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -8.26401
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 2
 
 [node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
