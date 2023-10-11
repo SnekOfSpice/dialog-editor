@@ -52,6 +52,7 @@ func change_header_default(property_name, old_property_name, new_default_value):
 	#print("CHANGING HEADER DEFAULT ( NOT ACTUALLY )")
 	#printt(property_name, old_property_name, new_default_value)
 	# not working atm
+	print(old_header)
 	print(new_header)
 	
 	for i in new_header.size():
@@ -62,10 +63,16 @@ func change_header_default(property_name, old_property_name, new_default_value):
 				"data_type": Pages.DataTypes._String
 			}
 			break
+	
+	# trim excess
+#	var overshoot = old_header.size() - new_header.size()
+#	if overshoot > 0:
+#
 	print(new_header)
 	#new_header[old_property_name] = new_default_value
 
 func save():
+	new_header.resize(find_child("HeadPropertyContainer").get_children().size())
 	for c in find_child("HeadPropertyContainer").get_children():
 		c.save_new_defaults()
 	#get_parent().current_page.deserialize(Pages.page_data.get(get_parent().current_page.number).get("lines"))

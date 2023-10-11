@@ -140,7 +140,11 @@ func _on_open_button_pressed() -> void:
 
 func _on_fd_save_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(JSON.stringify(Pages.page_data))
+	var data_to_save = {
+		"head_defaults" : Pages.head_defaults,
+		"page_data" : Pages.page_data
+	}
+	file.store_string(JSON.stringify(data_to_save))
 	file.close()
 	active_dir = path
 
@@ -153,11 +157,14 @@ func _on_fd_open_file_selected(path: String) -> void:
 	active_dir = path
 	
 	# all keys are now strings instead of ints
-	var int_data := {}
-	for i in data.size():
-		int_data[int(i)] = data.get(str(i))
+	var int_data = {}
+	var page_data = data.get("page_data")
+	for i in page_data.size():
+		int_data[int(i)] = page_data.get(str(i))
 	
 	Pages.page_data = int_data
+	Pages.head_defaults = data.get("head_defaults")
+	
 	load_page(0)
 
 
