@@ -21,7 +21,10 @@ func load_defaults():
 		add_property(prop)
 
 func change_header(property, value):
-	printt(property, value)
+	for c in get_children():
+		if c.property_name == property:
+			c.value = value
+			c.update()
 
 func serialize() -> Array:
 	var result = []
@@ -35,3 +38,10 @@ func deserialize(data: Array):
 	
 	for d in data:
 		add_property(d)
+
+func short_form() -> String:
+	var result = ""
+	for c in get_children():
+		result += str(c.value, ", ")
+	result = result.trim_suffix(", ")
+	return result

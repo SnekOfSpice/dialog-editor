@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://co4e6yj2ed45f"]
+
+[ext_resource type="Script" path="res://src/instruction_container.gd" id="1_mqxig"]
+
+[node name="InstructionContainer" type="HBoxContainer"]
+offset_right = 128.0
+offset_bottom = 37.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_mqxig")
+
+[node name="TemplateList" type="ItemList" parent="."]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+allow_reselect = true
+auto_height = true
+
+[node name="ArgContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="item_selected" from="TemplateList" to="." method="_on_template_list_item_selected"]

@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7k2h1p5qalaa"]
+
+[ext_resource type="Script" path="res://src/text_content.gd" id="1_uudox"]
+
+[node name="TextContent" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = ExtResource("1_uudox")
+
+[node name="TextBox" type="TextEdit" parent="."]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "enter text here"
+wrap_mode = 1
+autowrap_mode = 2
+caret_blink = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PauseAutoCont" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "add pause (auto continue)"
+
+[node name="PauseClickCont" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "add pause (click continue)"
+
+[node name="LineClear" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "add line clear"
+
+[connection signal="pressed" from="HBoxContainer/PauseAutoCont" to="." method="_on_pause_auto_cont_pressed"]
+[connection signal="pressed" from="HBoxContainer/PauseClickCont" to="." method="_on_pause_click_cont_pressed"]
+[connection signal="pressed" from="HBoxContainer/LineClear" to="." method="_on_line_clear_pressed"]

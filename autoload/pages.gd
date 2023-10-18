@@ -14,6 +14,23 @@ var head_defaults := [
 	},
 ]
 
+
+# TODO: code highlighting
+# true / false take precedent
+# only numerical input gets converted to int
+# if exactly one period in numerical, convert to float
+# else string
+# also convert to string if in single or double quotes
+var instruction_templates := [
+	{
+		"name": "show-character",
+		"args": [
+			"character-name",
+			"clear-others"
+		]
+	}
+]
+
 enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
@@ -108,10 +125,17 @@ func get_defaults(property_key:String):
 			return p
 	
 	return {
-		"property_name": "defaultproperty",
+		"name": "empty-instruction",
 		"value":"defaultvalue",
 		"data_type":DataTypes._String
 	}
+
+func get_instruction_args(instruction_name: String):
+	for p in instruction_templates:
+		if p.get("name") == instruction_name:
+			return p.get("args")
+	
+	return []
 
 # new schema with keys and values
 func apply_new_header_schema(new_schema: Array):

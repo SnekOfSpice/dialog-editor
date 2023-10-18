@@ -6,7 +6,6 @@ var new_header := []
 
 
 func fill():
-	print("fillin")
 	old_header = Pages.head_defaults.duplicate(true)
 	new_header = Pages.head_defaults.duplicate(true)
 	for c in find_child("HeadPropertyContainer").get_children():

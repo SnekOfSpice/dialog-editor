@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=9 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" path="res://src/LineTypeButton.gd" id="3_2h0gj"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://src/header_popup.tscn" id="5_k116e"]
+[ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://src/instruction_popup.tscn" id="6_m88mr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -66,16 +67,24 @@ text = "open"
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="EditHeaderButton" type="Button" parent="Core/FileControl/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Core/FileControl/MarginContainer2"]
+layout_mode = 2
+
+[node name="EditHeaderButton" type="Button" parent="Core/FileControl/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "edit header"
 
+[node name="EditInstructionButton" type="Button" parent="Core/FileControl/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "edit instructions"
+
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
-offset_top = 41.0
+offset_top = 78.0
 offset_right = 512.0
-offset_bottom = 113.0
+offset_bottom = 150.0
 grow_horizontal = 2
 
 [node name="PageNav" type="HBoxContainer" parent="Core/PageControl"]
@@ -204,12 +213,11 @@ line_type = 2
 
 [node name="PageContainer" type="MarginContainer" parent="Core"]
 layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.218
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = -8.26401
+offset_top = 164.0
+offset_bottom = 164.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 2
@@ -226,19 +234,25 @@ filters = PackedStringArray("*.json")
 [node name="FDOpen" type="FileDialog" parent="."]
 title = "Open a File"
 initial_position = 2
-size = Vector2i(827, 377)
+size = Vector2i(827, 507)
+visible = true
 ok_button_text = "Open"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.json")
 
 [node name="HeaderPopup" parent="." instance=ExtResource("5_k116e")]
+title = "Edit Header Defaults"
 visible = false
 content_scale_aspect = 1
 
+[node name="InstructionPopup" parent="." instance=ExtResource("6_m88mr")]
+visible = false
+
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/FileControl/MarginContainer2/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/FileControl/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/FileControl/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

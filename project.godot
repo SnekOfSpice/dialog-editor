@@ -22,6 +22,7 @@ Pages="*res://autoload/pages.tscn"
 
 [display]
 
+window/size/mode=2
 window/subwindows/embed_subwindows=false
 
 [rendering]

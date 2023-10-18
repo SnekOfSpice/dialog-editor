@@ -55,6 +55,7 @@ func deserialize(lines_data: Array):
 		var line = preload("res://src/line.tscn").instantiate()
 		lines.add_child(line)
 		line.deserialize(data)
+		line.connect("move_line", move_line)
 	
 	enable_page_key_edit(false)
 
@@ -88,3 +89,15 @@ func _on_add_pressed() -> void:
 func add_line():
 	var line = preload("res://src/line.tscn").instantiate()
 	lines.add_child(line)
+	line.connect("move_line", move_line)
+
+func move_line(line, dir):
+	var idx = line.get_index()
+	if idx <= 0 and dir == -1:
+		return
+	
+	if idx == lines.get_child_count() - 1 and dir == 1:
+		return
+	
+	lines.move_child(line, idx+dir)
+	#$ScrollContainer/Lines.queue_sort()

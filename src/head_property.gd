@@ -67,11 +67,12 @@ func _on_save_new_defaults_button_pressed() -> void:
 	save_new_defaults()
 	
 func save_new_defaults():
+	value = find_child("ValueLineEdit").text
+	property_name = find_child("PropertyNameEdit").text
 	if get_index() < Pages.head_defaults.size():
 		_old_property_name = Pages.head_defaults[get_index()].get("property_name")
-	update()
+	#update()
 	emit_signal("property_default_changed", property_name, _old_property_name, find_child("ValueLineEdit").text)
-	value = find_child("ValueLineEdit").text
 	update()
 
 

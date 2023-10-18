@@ -23,7 +23,6 @@ func _ready() -> void:
 	
 	set_current_page_changeable(false)
 	
-	#$HeaderPopup.connect("close_requested", load_page, current_page.number)
 
 func load_page(number: int):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -142,7 +141,8 @@ func _on_fd_save_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var data_to_save = {
 		"head_defaults" : Pages.head_defaults,
-		"page_data" : Pages.page_data
+		"page_data" : Pages.page_data,
+		"instruction_templates": Pages.instruction_templates,
 	}
 	file.store_string(JSON.stringify(data_to_save))
 	file.close()
@@ -160,10 +160,14 @@ func _on_fd_open_file_selected(path: String) -> void:
 	var int_data = {}
 	var page_data = data.get("page_data")
 	for i in page_data.size():
-		int_data[int(i)] = page_data.get(str(i))
+		var where = int(page_data.get(str(i)).get("number"))
+		int_data[where] = page_data.get(str(i)).duplicate()
+		print(page_data.get(str(i)))
 	
-	Pages.page_data = int_data
+	Pages.page_data.clear()
+	Pages.page_data = int_data.duplicate()
 	Pages.head_defaults = data.get("head_defaults")
+	Pages.instruction_templates = data.get("instruction_templates")
 	
 	load_page(0)
 
@@ -205,3 +209,8 @@ func _on_edit_header_button_pressed() -> void:
 	#refresh()
 	Pages.page_data[current_page.number] = current_page.serialize()
 	$HeaderPopup.popup()
+
+
+func _on_edit_instruction_button_pressed() -> void:
+	Pages.page_data[current_page.number] = current_page.serialize()
+	$InstructionPopup.popup()
