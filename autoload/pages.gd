@@ -72,10 +72,31 @@ func create_page(number:int, overwrite_existing:= false):
 	}
 	
 	emit_signal("pages_modified")
+	
+	change_page_references(number, 1)
 
 func get_lines(page_number: int):
 	return page_data.get(page_number).get("lines")
 
+func change_page_references(changed_page: int, operation:int):
+	
+	# this works for everything but the currently loaded pages
+	for page in page_data.values():
+		var next = page.get("next")
+		if next >= changed_page:
+			page["next"] = next + operation
+		
+		
+		for line in page.get("lines"):
+			if line.get("line_type") == Data.LineType.Choice:
+				var content = line.get("content")
+				for choice in content:
+					if choice.get("target_page") >= changed_page:
+						choice["target_page"] = choice.get("target_page") + operation
+	
+	# idk what this is but it doesn't work. doesn't matter tho lmao
+#	if editor:
+#		editor.refresh()
 
 func key_exists(key: String) -> bool:
 	if key == "":
@@ -117,6 +138,8 @@ func delete_page(at: int):
 	page_data.erase(get_page_count() - 1)
 	print(page_data.size())
 	emit_signal("pages_modified")
+	
+	change_page_references(at, -1)
 
 
 func get_defaults(property_key:String):

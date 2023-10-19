@@ -37,7 +37,17 @@ layout_mode = 2
 focus_mode = 0
 text = "edit page key"
 
-[node name="NextLabel" type="Label" parent="Info"]
+[node name="NextContainer" type="HBoxContainer" parent="Info"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Info/NextContainer"]
+layout_mode = 2
+text = "->"
+
+[node name="NextLineEdit" type="SpinBox" parent="Info/NextContainer"]
+layout_mode = 2
+
+[node name="NextKey" type="Label" parent="Info/NextContainer"]
 layout_mode = 2
 text = "-> 1 | pagekey"
 

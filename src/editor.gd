@@ -12,7 +12,7 @@ var trail_idx := 0
 func refresh():
 	var cpn = current_page.number
 	#Pages.page_data[cpn] = current_page.serialize()
-	current_page.deserialize(Pages.page_data.get(cpn).get("lines"))
+	current_page.deserialize(Pages.page_data.get(cpn))
 
 func _ready() -> void:
 	add_empty_page()

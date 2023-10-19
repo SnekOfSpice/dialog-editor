@@ -5,7 +5,7 @@ var number := 0
 var page_key := ""
 var next := 1
 
-@onready var lines = find_child("Lines")
+#@onready var lines = find_child("Lines")
 
 func init(n:=number):
 	var data = Pages.page_data.get(n)
@@ -34,10 +34,10 @@ func serialize() -> Dictionary:
 	
 	data["number"] = number
 	data["page_key"] = page_key
-	data["next"] = next
+	data["next"] = find_child("NextLineEdit").value
 	
 	var lines_data := []
-	for c in lines.get_children():
+	for c in find_child("Lines").get_children():
 		if not c is Line:
 			continue
 		lines_data.append(c.serialize())
@@ -48,19 +48,18 @@ func serialize() -> Dictionary:
 func set_next(next_page: int):
 	next = next_page
 	var next_exists = Pages.page_data.keys().has(next)
-	find_child("NextLabel").visible = next_exists
+	find_child("NextContainer").visible = next_exists
 	
 	if not next_exists:
 		return
 	
 	var next_key = Pages.page_data.get(next).get("page_key")
-	find_child("NextLabel").text = str(
-		"-> ",
-		next,
-		" | " if next_key != "" else "",
-		next_key
-	)
 	
+	find_child("NextLineEdit").max_value = Pages.get_page_count()
+	find_child("NextLineEdit").value = next
+	find_child("NextKey").text = next_key
+
+
 
 func deserialize(data: Dictionary):
 	set_page_key(data.get("page_key"))
@@ -71,14 +70,14 @@ func deserialize(data: Dictionary):
 
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
-	for l in lines.get_children():
-		if not l is Line:
-			continue
+	for l in find_child("Lines").get_children():
+#		if not l is Line:
+#			continue
 		l.queue_free()
 	
 	for data in lines_data:
 		var line = preload("res://src/line.tscn").instantiate()
-		lines.add_child(line)
+		find_child("Lines").add_child(line)
 		line.deserialize(data)
 		line.connect("move_line", move_line)
 	
@@ -113,7 +112,7 @@ func _on_add_pressed() -> void:
 
 func add_line():
 	var line = preload("res://src/line.tscn").instantiate()
-	lines.add_child(line)
+	find_child("Lines").add_child(line)
 	line.connect("move_line", move_line)
 
 func move_line(line, dir):
@@ -121,8 +120,8 @@ func move_line(line, dir):
 	if idx <= 0 and dir == -1:
 		return
 	
-	if idx == lines.get_child_count() - 1 and dir == 1:
+	if idx == find_child("Lines").get_child_count() - 1 and dir == 1:
 		return
 	
-	lines.move_child(line, idx+dir)
+	find_child("Lines").move_child(line, idx+dir)
 	#$ScrollContainer/Lines.queue_sort()
