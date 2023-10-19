@@ -99,7 +99,6 @@ func insert_page(at: int):
 	create_page(at, true)
 
 func delete_page(at: int):
-	print("a")
 	if not page_data.keys().has(at):
 		push_warning(str("could not delete page ", at, " because it doesn't exist"))
 		return

@@ -1,0 +1,33 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://dlvqsstudstck"
+path="res://.godot/imported/TT Chocolates Trial Regular.otf-68d02dc4dc3c3b4ba67c6b3978a394ce.fontdata"
+
+[deps]
+
+source_file="res://visuals/fonts/TT Chocolates Trial Regular.otf"
+dest_files=["res://.godot/imported/TT Chocolates Trial Regular.otf-68d02dc4dc3c3b4ba67c6b3978a394ce.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=2
+subpixel_positioning=1
+oversampling=3.1
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[]
+language_support={}
+script_support={}
+opentype_features={}

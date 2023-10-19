@@ -114,12 +114,14 @@ text = "forward"
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 23
 text = "|<"
 
 [node name="Prev" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 23
 text = "<"
 
 [node name="PageCount" type="VBoxContainer" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
@@ -152,11 +154,13 @@ horizontal_alignment = 1
 [node name="Next" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 23
 text = ">"
 
 [node name="Last" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 23
 text = ">|"
 
 [node name="JumpContainer" type="MarginContainer" parent="Core/PageControl/PageNav"]
@@ -175,11 +179,13 @@ layout_mode = 2
 
 [node name="AddLast" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 23
 text = "+>>"
 
 [node name="DeleteCurrent" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 23
 text = "-"
 
 [node name="VSeparator" type="VSeparator" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
@@ -234,8 +240,7 @@ filters = PackedStringArray("*.json")
 [node name="FDOpen" type="FileDialog" parent="."]
 title = "Open a File"
 initial_position = 2
-size = Vector2i(827, 507)
-visible = true
+size = Vector2i(312, 162)
 ok_button_text = "Open"
 file_mode = 0
 access = 2

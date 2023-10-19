@@ -51,8 +51,7 @@ func change_header_default(property_name, old_property_name, new_default_value):
 	#print("CHANGING HEADER DEFAULT ( NOT ACTUALLY )")
 	#printt(property_name, old_property_name, new_default_value)
 	# not working atm
-	print(old_header)
-	print(new_header)
+	# I think it is now?
 	
 	for i in new_header.size():
 		if new_header[i].get("property_name") == old_property_name:
@@ -67,7 +66,6 @@ func change_header_default(property_name, old_property_name, new_default_value):
 #	var overshoot = old_header.size() - new_header.size()
 #	if overshoot > 0:
 #
-	print(new_header)
 	#new_header[old_property_name] = new_default_value
 
 func save():

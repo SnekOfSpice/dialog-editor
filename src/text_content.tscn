@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7k2h1p5qalaa"]
+[gd_scene load_steps=3 format=3 uid="uid://c7k2h1p5qalaa"]
 
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_6al0s"]
 [ext_resource type="Script" path="res://src/text_content.gd" id="1_uudox"]
 
 [node name="TextContent" type="VBoxContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 size_flags_horizontal = 3
+theme = ExtResource("1_6al0s")
 script = ExtResource("1_uudox")
 
 [node name="TextBox" type="TextEdit" parent="."]

@@ -69,7 +69,6 @@ func _on_save_button_pressed() -> void:
 func save():
 	new_instructions = find_child("CodeEdit").text
 	Pages.instruction_templates = text2templates(new_instructions)
-	print(Pages.instruction_templates)
 
 func _on_save_close_button_pressed() -> void:
 	save()

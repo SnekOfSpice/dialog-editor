@@ -1,7 +1,48 @@
-[gd_resource type="Theme" format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://jddhsc4auo55"]
+
+[ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://visuals/fonts/Fragmentcore.otf" id="1_2td53"]
+[ext_resource type="FontFile" uid="uid://cj0gnvw2fkuo" path="res://visuals/fonts/TT Chocolates Trial Light.otf" id="2_0vdkv"]
+[ext_resource type="FontFile" uid="uid://dlvqsstudstck" path="res://visuals/fonts/TT Chocolates Trial Regular.otf" id="3_wucuv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41heh"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f0tga"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.709804)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.827451, 0.619608, 0.509804, 1)
+border_blend = true
 
 [resource]
+Button/colors/font_color = Color(0.988235, 0.682353, 0.894118, 1)
+Button/colors/font_disabled_color = Color(0.839216, 0.462745, 0.733333, 0.470588)
+Button/colors/font_focus_color = Color(0.886275, 0.207843, 0.894118, 1)
+Button/colors/font_hover_color = Color(0.764706, 0.682353, 0.894118, 1)
+Button/colors/font_outline_color = Color(1, 0.662745, 0.984314, 0.6)
+Button/constants/outline_size = 1
+Button/font_sizes/font_size = 18
+Button/fonts/font = ExtResource("1_2td53")
+Button/styles/normal = SubResource("StyleBoxFlat_41heh")
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
+Label/constants/outline_size = 1
+Label/fonts/font = ExtResource("2_0vdkv")
 MarginContainer/constants/margin_bottom = 3
 MarginContainer/constants/margin_left = 3
 MarginContainer/constants/margin_right = 3
 MarginContainer/constants/margin_top = 3
+TextEdit/fonts/font = ExtResource("3_wucuv")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_f0tga")

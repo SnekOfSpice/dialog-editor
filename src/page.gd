@@ -45,7 +45,6 @@ func serialize() -> Dictionary:
 
 func deserialize(lines_data: Array):
 	# instantiate lines
-	prints("lines: ", lines_data)
 	for l in lines.get_children():
 		if not l is Line:
 			continue
