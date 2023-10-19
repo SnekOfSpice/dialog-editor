@@ -24,7 +24,7 @@ func _ready() -> void:
 	set_current_page_changeable(false)
 	
 
-func load_page(number: int):
+func load_page(number: int, initial_load:=false):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 #		push_warning(str("page number ", number, " outside page count"))
 #		return
@@ -43,7 +43,8 @@ func load_page(number: int):
 			push_warning(str("PageContainer has a child that's not a page: ", c))
 			continue
 		
-		c.save()
+		if not initial_load:
+			c.save()
 		c.queue_free()
 	
 	prints("loading ", number)
@@ -162,14 +163,16 @@ func _on_fd_open_file_selected(path: String) -> void:
 	for i in page_data.size():
 		var where = int(page_data.get(str(i)).get("number"))
 		int_data[where] = page_data.get(str(i)).duplicate()
-		print(page_data.get(str(i)))
+		#print(page_data.get(str(i)))
+		
+		prints("lines ", int_data.get(i).get("lines").size())
 	
 	Pages.page_data.clear()
 	Pages.page_data = int_data.duplicate()
 	Pages.head_defaults = data.get("head_defaults")
 	Pages.instruction_templates = data.get("instruction_templates")
 	
-	load_page(0)
+	load_page(0, true)
 
 
 
