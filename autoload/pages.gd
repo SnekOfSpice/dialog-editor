@@ -63,11 +63,12 @@ func create_page(number:int, overwrite_existing:= false):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
-	prints("creating page ", number)
+	#prints("creating page ", number)
 	page_data[number] = {
-		"number":number,
-		"page_key":"",
-		"lines": []
+		"number": number,
+		"page_key": "",
+		"lines": [],
+		"next": number + 1
 	}
 	
 	emit_signal("pages_modified")

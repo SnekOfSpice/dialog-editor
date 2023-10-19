@@ -3,15 +3,16 @@ class_name Page
 
 var number := 0
 var page_key := ""
+var next := 1
 
 @onready var lines = find_child("Lines")
 
 func init(n:=number):
 	var data = Pages.page_data.get(n)
-	set_page_key(data.get("page_key"))
 	number = n
 	$Info/Number.text = str(n)
-	deserialize(data.get("lines"))
+	set_next(n+1)
+	deserialize(data)
 
 func set_page_key(key: String):
 	page_key = key
@@ -33,6 +34,7 @@ func serialize() -> Dictionary:
 	
 	data["number"] = number
 	data["page_key"] = page_key
+	data["next"] = next
 	
 	var lines_data := []
 	for c in lines.get_children():
@@ -43,7 +45,31 @@ func serialize() -> Dictionary:
 	
 	return data
 
-func deserialize(lines_data: Array):
+func set_next(next_page: int):
+	next = next_page
+	var next_exists = Pages.page_data.keys().has(next)
+	find_child("NextLabel").visible = next_exists
+	
+	if not next_exists:
+		return
+	
+	var next_key = Pages.page_data.get(next).get("page_key")
+	find_child("NextLabel").text = str(
+		"-> ",
+		next,
+		" | " if next_key != "" else "",
+		next_key
+	)
+	
+
+func deserialize(data: Dictionary):
+	set_page_key(data.get("page_key"))
+	if not data.get("next"):
+		data["next"] = number+1
+	set_next(int(data.get("next")))
+	deserialize_lines(data.get("lines"))
+
+func deserialize_lines(lines_data: Array):
 	# instantiate lines
 	for l in lines.get_children():
 		if not l is Line:

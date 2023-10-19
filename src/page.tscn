@@ -37,6 +37,10 @@ layout_mode = 2
 focus_mode = 0
 text = "edit page key"
 
+[node name="NextLabel" type="Label" parent="Info"]
+layout_mode = 2
+text = "-> 1 | pagekey"
+
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
