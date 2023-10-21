@@ -51,6 +51,12 @@ layout_mode = 2
 layout_mode = 2
 text = "-> 1 | pagekey"
 
+[node name="TerminateCheck" type="CheckBox" parent="Info"]
+layout_mode = 2
+tooltip_text = "terminates the page, stopping the parser from reading the next one automatically. you should still set the next page index, as when you start reading dialog again, you may want to not have to set that page index manually."
+focus_mode = 0
+text = "terminate"
+
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0

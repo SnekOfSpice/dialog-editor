@@ -35,6 +35,7 @@ func serialize() -> Dictionary:
 	data["number"] = number
 	data["page_key"] = page_key
 	data["next"] = find_child("NextLineEdit").value
+	data["terminate"] = find_child("TerminateCheck").button_pressed
 	
 	var lines_data := []
 	for c in find_child("Lines").get_children():
@@ -66,6 +67,7 @@ func deserialize(data: Dictionary):
 	if not data.get("next"):
 		data["next"] = number+1
 	set_next(int(data.get("next")))
+	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines"))
 
 func deserialize_lines(lines_data: Array):
