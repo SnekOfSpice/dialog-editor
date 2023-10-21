@@ -142,6 +142,9 @@ func _on_open_button_pressed() -> void:
 	#find_child("FDOpen").size = get_window().size - Vector2i(30, 80)
 
 func _on_fd_save_file_selected(path: String) -> void:
+	if current_page:
+		current_page.save()
+	
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var data_to_save = {
 		"head_defaults" : Pages.head_defaults,
