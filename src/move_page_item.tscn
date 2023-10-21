@@ -41,5 +41,15 @@ layout_mode = 2
 focus_mode = 0
 text = "v"
 
+[node name="DirectSwapButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+text = "o"
+
+[node name="DirectStartedLabel" type="Label" parent="MarginContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(24.635, 0)
+layout_mode = 2
+text = ">>"
+
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/DirectSwapButton" to="." method="_on_direct_swap_button_pressed"]

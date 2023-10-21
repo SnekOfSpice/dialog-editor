@@ -4,6 +4,11 @@ var number := 0
 
 signal move_page (page_number, current_n, new_n)
 
+signal on_direct_swap (page_number)
+
+func _ready() -> void:
+	find_child("DirectStartedLabel").text = ""
+
 func set_number(n: int):
 	if not Pages.page_data.keys().has(n):
 		return
@@ -23,3 +28,8 @@ func _on_up_button_pressed() -> void:
 
 func _on_down_button_pressed() -> void:
 	emit_signal("move_page", number, number - 1)
+
+
+func _on_direct_swap_button_pressed() -> void:
+	emit_signal("on_direct_swap", number)
+	find_child("DirectStartedLabel").text = ">>"
