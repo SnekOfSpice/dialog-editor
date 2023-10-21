@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpuqu3kymqlwb"]
+
+[ext_resource type="Script" path="res://src/conditionals.gd" id="1_jnmdf"]
+
+[node name="Conditionals" type="MarginContainer"]
+script = ExtResource("1_jnmdf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="AddConditionButton" type="Button" parent="VBoxContainer/Controls"]
+layout_mode = 2
+text = "add conditional"
+
+[connection signal="pressed" from="VBoxContainer/Controls/AddConditionButton" to="." method="_on_add_condition_button_pressed"]

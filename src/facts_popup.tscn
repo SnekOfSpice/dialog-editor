@@ -17,6 +17,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "yea tbh this doesn't do much atm"
+
 [node name="Facts" type="ItemList" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3

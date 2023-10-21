@@ -300,3 +300,18 @@ func register_facts():
 					facts.append(fact)
 		
 	# step over every fact in page data and save its name
+
+func lines_referencing_fact(fact_name: String):
+	var ref_pages := []
+	var ref_lines := []
+	for page in page_data.values():
+		for i in page.get("lines", []).size():
+			var line = page.get("lines")[i]
+			for fact in line.get("facts", {}).keys():
+				if fact == fact_name: #also untested atm
+					if not ref_pages.has(page.get("number")):
+						ref_pages.append(page.get("number"))
+					ref_lines.append(str(page.get("number"), ".", i))
+			if line.get("line_type") == Data.LineType.Choice:
+				pass
+				# TODO: iterate over every choice referencing the line

@@ -12,6 +12,7 @@ func _ready() -> void:
 	set_line_type(Data.of("editor.selected_line_type"))
 	set_head_editable(false)
 	find_child("Facts").visible = false
+	find_child("Conditionals").visible = false
 
 func set_line_type(value: int):
 	line_type = value
@@ -36,6 +37,7 @@ func serialize() -> Dictionary:
 	data["line_type"] = line_type
 	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
+	data["conditionals"] = find_child("Conditionals").serialize()
 	
 	# content match
 	match line_type:
@@ -55,6 +57,7 @@ func deserialize(data: Dictionary):
 	# header
 	find_child("Header").deserialize(data.get("header"))
 	find_child("Facts").deserialize(data.get("facts", {}))
+	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	
 	# content (based on line type)
 	match line_type:
@@ -91,3 +94,7 @@ func _on_move_down_pressed() -> void:
 
 func _on_facts_visibility_toggle_toggled(button_pressed: bool) -> void:
 	find_child("Facts").visible = button_pressed
+
+
+func _on_conditionals_visibility_toggle_toggled(button_pressed: bool) -> void:
+	find_child("Conditionals").visible = button_pressed
