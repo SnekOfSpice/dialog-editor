@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4nhcwdgxbrlm"]
+
+[ext_resource type="Script" path="res://src/move_page_popup.gd" id="1_nrsai"]
+
+[node name="MovePagePopup" type="Window"]
+initial_position = 2
+wrap_controls = true
+exclusive = true
+content_scale_aspect = 1
+script = ExtResource("1_nrsai")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="Items" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

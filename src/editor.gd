@@ -25,6 +25,7 @@ func _ready() -> void:
 	
 	find_child("FDOpen").size = get_window().size * 0.75
 	find_child("FDSave").size = get_window().size * 0.75
+	find_child("MovePagePopup").size = get_window().size * 0.75
 	
 
 func load_page(number: int, initial_load:=false):
@@ -212,11 +213,18 @@ func _on_next_visited_pressed() -> void:
 
 
 func _on_edit_header_button_pressed() -> void:
-	#refresh()
-	Pages.page_data[current_page.number] = current_page.serialize()
+	current_page.save()
+	load_page(current_page.number)
 	$HeaderPopup.popup()
 
 
 func _on_edit_instruction_button_pressed() -> void:
-	Pages.page_data[current_page.number] = current_page.serialize()
+	current_page.save()
+	load_page(current_page.number)
 	$InstructionPopup.popup()
+
+
+func _on_move_pages_button_pressed() -> void:
+	current_page.save()
+	#load_page(current_page.number)
+	$MovePagePopup.popup()

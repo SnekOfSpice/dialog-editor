@@ -47,7 +47,7 @@ var head_data_types := {
 
 var editor
 
-# {"number":1, "page_key":"lmao", "lines": []}
+# {"number":1, "page_key":"lmao", "lines": [], "terminate": false}
 # data: {}
 var page_data := {}
 
@@ -73,12 +73,45 @@ func create_page(number:int, overwrite_existing:= false):
 	
 	emit_signal("pages_modified")
 	
-	change_page_references(number, 1)
+	change_page_references_dir(number, 1)
+
+func swap_pages(page_a: int, page_b: int):
+	if not (page_data.keys().has(page_a) and page_data.keys().has(page_b)):
+		return
+	
+	swap_page_references(page_a, page_b)
+	
+	var data_a = page_data.get(page_a)
+	var data_b = page_data.get(page_b)
+	data_b["number"] = page_a
+	data_a["number"] = page_b
+	page_data[page_a] = data_b
+	page_data[page_b] = data_a
+	
+	
+
+func swap_page_references(from: int, to: int):
+	for page in page_data.values():
+		var next = page.get("next")
+		if next == from:
+			page["next"] = to
+		elif next == to:
+			page["next"] = from
+		
+		for line in page.get("lines"):
+			if line.get("line_type") == Data.LineType.Choice:
+				var content = line.get("content")
+				for choice in content:
+					if choice.get("target_page") == from:
+						choice["target_page"] = to
+					elif choice.get("target_page") == to:
+						choice["target_page"] = from
+	
 
 func get_lines(page_number: int):
 	return page_data.get(page_number).get("lines")
 
-func change_page_references(changed_page: int, operation:int):
+func change_page_references_dir(changed_page: int, operation:int):
 	
 	# this works for everything but the currently loaded pages
 	for page in page_data.values():
@@ -139,7 +172,7 @@ func delete_page(at: int):
 	print(page_data.size())
 	emit_signal("pages_modified")
 	
-	change_page_references(at, -1)
+	change_page_references_dir(at, -1)
 
 
 func get_defaults(property_key:String):

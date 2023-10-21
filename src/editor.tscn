@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=10 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://src/LineTypeButton.gd" id="3_2h0gj"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://src/instruction_popup.tscn" id="6_m88mr"]
+[ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://src/move_page_popup.tscn" id="7_w8mdv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -63,22 +64,35 @@ layout_mode = 2
 focus_mode = 0
 text = "open"
 
-[node name="MarginContainer2" type="MarginContainer" parent="Core/FileControl"]
-layout_mode = 2
+[node name="MarginContainer2" type="MarginContainer" parent="Core"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -129.0
+offset_bottom = 58.0
+grow_horizontal = 0
 size_flags_horizontal = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core/FileControl/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Core/MarginContainer2"]
 layout_mode = 2
 
-[node name="EditHeaderButton" type="Button" parent="Core/FileControl/MarginContainer2/VBoxContainer"]
+[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "edit header"
 
-[node name="EditInstructionButton" type="Button" parent="Core/FileControl/MarginContainer2/VBoxContainer"]
+[node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "edit instructions"
+
+[node name="MovePagesButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+text = "move pages"
+alignment = 2
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -254,10 +268,15 @@ content_scale_aspect = 1
 [node name="InstructionPopup" parent="." instance=ExtResource("6_m88mr")]
 visible = false
 
+[node name="MovePagePopup" parent="." instance=ExtResource("7_w8mdv")]
+size = Vector2i(300, 270)
+visible = false
+
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/FileControl/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
-[connection signal="pressed" from="Core/FileControl/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/MovePagesButton" to="." method="_on_move_pages_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
