@@ -15,6 +15,8 @@ var head_defaults := [
 ]
 
 
+var facts := []
+
 # TODO: code highlighting
 # true / false take precedent
 # only numerical input gets converted to int
@@ -288,3 +290,13 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 			transformed[j] = new_schema[j]
 	
 	return transformed
+
+
+func register_facts():
+	for page in page_data.values():
+		for line in page.get("lines", []):
+			for fact in line.get("facts", {}).keys():
+				if not facts.has(fact):
+					facts.append(fact)
+		
+	# step over every fact in page data and save its name

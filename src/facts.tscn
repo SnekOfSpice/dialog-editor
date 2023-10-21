@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgvfjindfxypf"]
+
+[ext_resource type="Script" path="res://src/facts.gd" id="1_7jlfu"]
+
+[node name="Facts" type="MarginContainer"]
+custom_minimum_size = Vector2(183.315, 0)
+script = ExtResource("1_7jlfu")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="AddFactButton" type="Button" parent="VBox/Controls"]
+layout_mode = 2
+text = "Add Fact"
+
+[node name="FactsContainer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[connection signal="pressed" from="VBox/Controls/AddFactButton" to="." method="_on_add_fact_button_pressed"]

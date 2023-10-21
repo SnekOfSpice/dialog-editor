@@ -26,6 +26,7 @@ func _ready() -> void:
 	find_child("FDOpen").size = get_window().size * 0.75
 	find_child("FDSave").size = get_window().size * 0.75
 	find_child("MovePagePopup").size = get_window().size * 0.75
+	find_child("FactsPopup").size = get_window().size * 0.75
 	
 
 func load_page(number: int, initial_load:=false):
@@ -151,6 +152,7 @@ func _on_fd_save_file_selected(path: String) -> void:
 		"head_defaults" : Pages.head_defaults,
 		"page_data" : Pages.page_data,
 		"instruction_templates": Pages.instruction_templates,
+		"facts": Pages.facts
 	}
 	file.store_string(JSON.stringify(data_to_save))
 	file.close()
@@ -173,8 +175,9 @@ func _on_fd_open_file_selected(path: String) -> void:
 	
 	Pages.page_data.clear()
 	Pages.page_data = int_data.duplicate()
-	Pages.head_defaults = data.get("head_defaults")
-	Pages.instruction_templates = data.get("instruction_templates")
+	Pages.head_defaults = data.get("head_defaults", [])
+	Pages.instruction_templates = data.get("instruction_templates", [])
+	Pages.facts = data.get("facts", [])
 	
 	load_page(0, true)
 
@@ -228,3 +231,8 @@ func _on_move_pages_button_pressed() -> void:
 	current_page.save()
 	#load_page(current_page.number)
 	$MovePagePopup.popup()
+
+
+func _on_edit_facts_button_pressed() -> void:
+	current_page.save()
+	$FactsPopup.popup()

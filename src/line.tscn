@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=7 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://src/line.gd" id="1_6i1bg"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://src/header.tscn" id="2_qs17t"]
+[ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://src/facts.tscn" id="3_01wq6"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://src/choice_container.tscn" id="3_jjtdq"]
 [ext_resource type="PackedScene" uid="uid://c7k2h1p5qalaa" path="res://src/text_content.tscn" id="3_ty44c"]
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://src/instruction_container.tscn" id="4_phdce"]
@@ -30,20 +31,40 @@ layout_mode = 2
 focus_mode = 0
 text = "v"
 
-[node name="HeaderContainer" type="HBoxContainer" parent="Controls"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Controls"]
 layout_mode = 2
 
-[node name="HeadVisibilityToggle" type="CheckButton" parent="Controls/HeaderContainer"]
+[node name="HeadVisibilityToggle" type="CheckButton" parent="Controls/VBoxContainer2"]
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
 focus_mode = 0
 text = "header"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Controls/VBoxContainer2"]
+layout_mode = 2
+
+[node name="FactsVisibilityToggle" type="CheckButton" parent="Controls/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+text = "facts"
+
+[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="Controls/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+text = "conditionals"
+
+[node name="HeaderContainer" type="HBoxContainer" parent="Controls"]
+layout_mode = 2
 
 [node name="Header" parent="Controls/HeaderContainer" instance=ExtResource("2_qs17t")]
 layout_mode = 2
 
 [node name="HeaderShort" type="Label" parent="Controls/HeaderContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="Controls"]
 layout_mode = 2
@@ -53,19 +74,28 @@ size_flags_horizontal = 10
 layout_mode = 2
 text = "delete"
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="TextContent" parent="Content" instance=ExtResource("3_ty44c")]
+[node name="Facts" parent="HBoxContainer" instance=ExtResource("3_01wq6")]
 layout_mode = 2
 
-[node name="ChoiceContainer" parent="Content" instance=ExtResource("3_jjtdq")]
+[node name="Content" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextContent" parent="HBoxContainer/Content" instance=ExtResource("3_ty44c")]
 layout_mode = 2
 
-[node name="InstructionContainer" parent="Content" instance=ExtResource("4_phdce")]
+[node name="ChoiceContainer" parent="HBoxContainer/Content" instance=ExtResource("3_jjtdq")]
+layout_mode = 2
+
+[node name="InstructionContainer" parent="HBoxContainer/Content" instance=ExtResource("4_phdce")]
 layout_mode = 2
 
 [connection signal="pressed" from="Controls/VBoxContainer/MoveUp" to="." method="_on_move_up_pressed"]
 [connection signal="pressed" from="Controls/VBoxContainer/MoveDown" to="." method="_on_move_down_pressed"]
-[connection signal="toggled" from="Controls/HeaderContainer/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[connection signal="toggled" from="Controls/VBoxContainer2/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[connection signal="toggled" from="Controls/VBoxContainer2/HBoxContainer/FactsVisibilityToggle" to="." method="_on_facts_visibility_toggle_toggled"]
+[connection signal="toggled" from="Controls/VBoxContainer2/HBoxContainer/ConditionalsVisibilityToggle" to="." method="_on_facts_visibility_toggle_toggled"]
 [connection signal="pressed" from="Controls/MarginContainer/Delete" to="." method="_on_delete_pressed"]

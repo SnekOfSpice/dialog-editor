@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://src/move_page_popup.gd" id="1_nrsai"]
 
 [node name="MovePagePopup" type="Window"]
+title = "Move Pages"
 initial_position = 2
 size = Vector2i(455, 100)
 wrap_controls = true
