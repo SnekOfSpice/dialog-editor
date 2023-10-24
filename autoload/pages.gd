@@ -303,7 +303,9 @@ func register_facts():
 
 func lines_referencing_fact(fact_name: String):
 	var ref_pages := []
-	var ref_lines := []
+	var ref_lines_declare := []
+	var ref_lines_condition := []
+	var ref_lines_choice := []
 	for page in page_data.values():
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
@@ -311,7 +313,26 @@ func lines_referencing_fact(fact_name: String):
 				if fact == fact_name: #also untested atm
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))
-					ref_lines.append(str(page.get("number"), ".", i))
+					ref_lines_declare.append(str(page.get("number"), ".", i))
 			if line.get("line_type") == Data.LineType.Choice:
-				pass
+				var options = line.get("content")
+				for option in options:
+					for fact in option.get("facts", {}).keys():
+						if fact == fact_name: #also untested atm
+							if not ref_pages.has(page.get("number")):
+								ref_pages.append(page.get("number"))
+							ref_lines_choice.append(str(page.get("number"), ".", i))
 				# TODO: iterate over every choice referencing the line
+			for fact in line.get("conditionals", {}).get("facts", {}):
+				if fact == fact_name:
+					if not ref_pages.has(page.get("number")):
+						ref_pages.append(page.get("number"))
+					ref_lines_condition.append(str(page.get("number"), ".", i))
+	
+	var all_refs := {
+		"ref_pages": ref_pages,
+		"ref_lines_declare": ref_lines_declare,
+		"ref_lines_condition": ref_lines_condition,
+		"ref_lines_choice": ref_lines_choice
+	}
+	return all_refs

@@ -32,3 +32,7 @@ func _on_fact_name_text_changed(new_text: String) -> void:
 func _on_register_button_pressed() -> void:
 	Pages.facts.append(find_child("FactName").text)
 	find_child("RegisterContainer").visible = false
+
+
+func _on_delete_button_pressed() -> void:
+	queue_free()

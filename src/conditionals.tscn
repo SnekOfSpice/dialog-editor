@@ -15,4 +15,21 @@ layout_mode = 2
 layout_mode = 2
 text = "add conditional"
 
+[node name="OperandContainer" type="HBoxContainer" parent="VBoxContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OperandOptionButton" type="OptionButton" parent="VBoxContainer/Controls/OperandContainer"]
+layout_mode = 2
+
+[node name="OperandArg1" type="SpinBox" parent="VBoxContainer/Controls/OperandContainer"]
+layout_mode = 2
+
+[node name="OperandArg2" type="SpinBox" parent="VBoxContainer/Controls/OperandContainer"]
+layout_mode = 2
+
+[node name="FactsContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
 [connection signal="pressed" from="VBoxContainer/Controls/AddConditionButton" to="." method="_on_add_condition_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/Controls/OperandContainer/OperandOptionButton" to="." method="_on_operand_option_button_item_selected"]
