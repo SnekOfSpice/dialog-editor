@@ -14,9 +14,11 @@ script = ExtResource("1_uudox")
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 placeholder_text = "enter text here"
 wrap_mode = 1
 autowrap_mode = 2
+scroll_fit_content_height = true
 caret_blink = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
