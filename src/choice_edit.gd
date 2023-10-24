@@ -4,6 +4,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	find_child("PageSelect").max_value = Pages.get_page_count() - 1
+	find_child("Facts").visible = false
 
 
 func deserialize(data:Dictionary):

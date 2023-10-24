@@ -97,6 +97,9 @@ layout_mode = 2
 [node name="InstructionContainer" parent="HBoxContainer/Content" instance=ExtResource("4_phdce")]
 layout_mode = 2
 
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
 [connection signal="pressed" from="Controls/VBoxContainer/MoveUp" to="." method="_on_move_up_pressed"]
 [connection signal="pressed" from="Controls/VBoxContainer/MoveDown" to="." method="_on_move_down_pressed"]
 [connection signal="toggled" from="Controls/VBoxContainer2/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
