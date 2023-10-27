@@ -13,6 +13,7 @@ func _ready() -> void:
 	set_head_editable(false)
 	find_child("Facts").visible = false
 	find_child("Conditionals").visible = false
+	set_non_meta_parts_visible(true)
 
 func set_line_type(value: int):
 	line_type = value
@@ -38,6 +39,7 @@ func serialize() -> Dictionary:
 	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
+	data["visible"] = find_child("VisibleToggle").button_pressed
 	
 	# content match
 	match line_type:
@@ -67,6 +69,8 @@ func deserialize(data: Dictionary):
 			find_child("ChoiceContainer").deserialize(data.get("content"))
 		Data.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content"))
+	
+	set_non_meta_parts_visible(data.get("visible", true))
 	
 	
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
@@ -98,3 +102,26 @@ func _on_facts_visibility_toggle_toggled(button_pressed: bool) -> void:
 
 func _on_conditionals_visibility_toggle_toggled(button_pressed: bool) -> void:
 	find_child("Conditionals").visible = button_pressed
+
+func getNonMetaParts() -> Array:
+	var parts := []
+	for control in find_child("Controls").get_children():
+		if control.name != "MetaControls" and control.name != "DeleteContainer":
+			parts.append(control)
+	
+	parts.append(find_child("Content"))
+	
+	return parts
+
+
+func set_non_meta_parts_visible(value: bool):
+	find_child("VisibleToggle").button_pressed = value
+	for p in getNonMetaParts():
+		p.visible = value
+
+func _on_lock_toggle_toggled(button_pressed: bool) -> void:
+	pass # Replace with function body.
+
+
+func _on_visible_toggle_toggled(button_pressed: bool) -> void:
+	set_non_meta_parts_visible(button_pressed)
