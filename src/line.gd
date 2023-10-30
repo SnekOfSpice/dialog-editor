@@ -14,6 +14,7 @@ func _ready() -> void:
 	find_child("Facts").visible = false
 	find_child("Conditionals").visible = false
 	set_non_meta_parts_visible(true)
+	update()
 
 func set_line_type(value: int):
 	line_type = value
@@ -29,6 +30,7 @@ func set_head_editable(value: bool):
 	find_child("Header").visible = value
 	find_child("HeaderShort").visible = not value
 	find_child("HeaderShort").text = find_child("Header").short_form()
+	print(find_child("HeaderShort").text)
 	
 
 
@@ -71,6 +73,7 @@ func deserialize(data: Dictionary):
 			find_child("InstructionContainer").deserialize(data.get("content"))
 	
 	set_non_meta_parts_visible(data.get("visible", true))
+	set_head_editable(false)
 	
 	
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
@@ -84,6 +87,9 @@ func _on_delete_pressed() -> void:
 
 func move(dir: int):
 	emit_signal("move_line", self, dir)
+
+func update():
+	find_child("IndexLabel").text = str(get_index())
 
 func _on_move_up_pressed() -> void:
 	move(-1)

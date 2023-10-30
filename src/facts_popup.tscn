@@ -45,7 +45,11 @@ fit_content = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RefChoice" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="RefChoiceDeclare" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RefChoiceCondition" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 

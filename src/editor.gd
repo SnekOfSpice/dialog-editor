@@ -152,7 +152,8 @@ func _on_fd_save_file_selected(path: String) -> void:
 		"head_defaults" : Pages.head_defaults,
 		"page_data" : Pages.page_data,
 		"instruction_templates": Pages.instruction_templates,
-		"facts": Pages.facts
+		"facts": Pages.facts,
+		"characters": Pages.characters,
 	}
 	file.store_string(JSON.stringify(data_to_save))
 	file.close()
@@ -178,6 +179,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 	Pages.head_defaults = data.get("head_defaults", [])
 	Pages.instruction_templates = data.get("instruction_templates", [])
 	Pages.facts = data.get("facts", [])
+	Pages.characters = data.get("characters", [])
 	
 	load_page(0, true)
 
@@ -236,3 +238,14 @@ func _on_move_pages_button_pressed() -> void:
 func _on_edit_facts_button_pressed() -> void:
 	current_page.save()
 	$FactsPopup.popup()
+
+
+func _on_add_line_button_pressed() -> void:
+	if not current_page:
+		add_empty_page()
+	current_page.add_line()
+
+
+func _on_edit_characters_button_pressed() -> void:
+	current_page.save()
+	$CharactersPopup.popup()

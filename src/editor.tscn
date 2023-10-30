@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=12 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://src/facts_popup.tscn" id="8_3kqv2"]
+[ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://src/characters_popup.tscn" id="9_i203b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -78,10 +79,21 @@ size_flags_horizontal = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="Core/MarginContainer2"]
 layout_mode = 2
 
-[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "edit header"
+
+[node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+text = "edit characters"
+alignment = 2
 
 [node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
@@ -214,17 +226,20 @@ text = "-"
 [node name="VSeparator" type="VSeparator" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="LineTypes" type="HBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="TypeText" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+[node name="LineTypes" type="HBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeText" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Text"
 script = ExtResource("3_2h0gj")
 
-[node name="TypeChoice" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+[node name="TypeChoice" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -232,13 +247,17 @@ text = "Choice"
 script = ExtResource("3_2h0gj")
 line_type = 1
 
-[node name="TypeInstruction" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/LineTypes"]
+[node name="TypeInstruction" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
+
+[node name="AddLineButton" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "add line"
 
 [node name="PageContainer" type="MarginContainer" parent="Core"]
 layout_mode = 1
@@ -284,9 +303,13 @@ visible = false
 [node name="FactsPopup" parent="." instance=ExtResource("8_3kqv2")]
 visible = false
 
+[node name="CharactersPopup" parent="." instance=ExtResource("9_i203b")]
+visible = false
+
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditCharactersButton" to="." method="_on_edit_characters_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/MovePagesButton" to="." method="_on_move_pages_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditFactsButton" to="." method="_on_edit_facts_button_pressed"]
@@ -300,5 +323,6 @@ visible = false
 [connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
+[connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]

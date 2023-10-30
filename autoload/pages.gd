@@ -2,18 +2,19 @@ extends Node
 
 
 var head_defaults := [
-	{
-		"property_name": "speaker",
-		"value":"narrator",
-		"data_type": DataTypes._String
-	},
-	{
-		"property_name": "emotion",
-		"value":"happy",
-		"data_type": DataTypes._String
-	},
+#	{
+#		"property_name": "speaker",
+#		"value":"narrator",
+#		"data_type": DataTypes._String
+#	},
+#	{
+#		"property_name": "emotion",
+#		"value":"happy",
+#		"data_type": DataTypes._String
+#	},
 ]
 
+var characters := []
 
 var facts := []
 
@@ -33,7 +34,7 @@ var instruction_templates := [
 	}
 ]
 
-enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary}
+enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _CharacterDropDown}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
 	DataTypes._Integer : "Integer",
@@ -43,7 +44,7 @@ const DATA_TYPE_STRINGS := {
 }
 
 var head_data_types := {
-	"speaker": DataTypes._String,
+	"speaker": DataTypes._CharacterDropDown,
 	"emotion": DataTypes._String,
 }
 
@@ -276,6 +277,8 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 							pass
 						Pages.DataTypes._Integer:
 							pass
+						Pages.DataTypes._CharacterDropDown:
+							print("a")
 			
 			
 			transformed[i] = {
@@ -305,7 +308,8 @@ func lines_referencing_fact(fact_name: String):
 	var ref_pages := []
 	var ref_lines_declare := []
 	var ref_lines_condition := []
-	var ref_lines_choice := []
+	var ref_lines_choice_declare := []
+	var ref_lines_choice_condition := []
 	for page in page_data.values():
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
@@ -317,12 +321,16 @@ func lines_referencing_fact(fact_name: String):
 			if line.get("line_type") == Data.LineType.Choice:
 				var options = line.get("content")
 				for option in options:
+					for fact in option.get("conditionals", {}).get("facts", {}):
+						if fact == fact_name:
+							if not ref_pages.has(page.get("number")):
+								ref_pages.append(page.get("number"))
+							ref_lines_choice_condition.append(str(page.get("number"), ".", i))
 					for fact in option.get("facts", {}).keys():
 						if fact == fact_name: #also untested atm
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
-							ref_lines_choice.append(str(page.get("number"), ".", i))
-				# TODO: iterate over every choice referencing the line
+							ref_lines_choice_declare.append(str(page.get("number"), ".", i))
 			for fact in line.get("conditionals", {}).get("facts", {}):
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
@@ -333,6 +341,12 @@ func lines_referencing_fact(fact_name: String):
 		"ref_pages": ref_pages,
 		"ref_lines_declare": ref_lines_declare,
 		"ref_lines_condition": ref_lines_condition,
-		"ref_lines_choice": ref_lines_choice
+		"ref_lines_choice_declare": ref_lines_choice_declare,
+		"ref_lines_choice_condition": ref_lines_choice_condition
 	}
 	return all_refs
+
+func characters_on_page(page_number: int) -> Array:
+	var result = []
+	
+	return result

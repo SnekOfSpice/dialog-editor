@@ -68,6 +68,8 @@ func _on_save_button_pressed() -> void:
 
 func save():
 	new_instructions = find_child("CodeEdit").text
+	if not new_instructions.ends_with("\n"):
+		new_instructions += "\n"
 	Pages.instruction_templates = text2templates(new_instructions)
 
 func _on_save_close_button_pressed() -> void:

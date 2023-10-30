@@ -6,8 +6,8 @@ var fact_name := ""
 func _ready() -> void:
 	find_child("RegisterContainer").visible = false
 
-func set_fact(fact_name: String, default_value: bool):
-	self.fact_name = fact_name
+func set_fact(new_fact_name: String, default_value: bool):
+	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
 	find_child("FactValue").button_pressed = default_value
 	_on_fact_name_text_changed(fact_name)
@@ -19,7 +19,6 @@ func get_fact_name():
 	return find_child("FactName").text
 
 func _on_fact_name_text_changed(new_text: String) -> void:
-	printt(new_text, Pages.facts.has(new_text))
 	find_child("RegisterContainer").visible = not Pages.facts.has(new_text)
 	if find_child("RegisterContainer").visible:
 		find_child("RegisterLabel").text = str(

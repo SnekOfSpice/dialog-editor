@@ -37,6 +37,13 @@ func deserialize(data: Dictionary):
 	
 	update()
 	
+	set_data_type(data_type)
+	find_child("CharacterOptionButton").clear()
+	for c in Pages.characters:
+		find_child("CharacterOptionButton").add_item(c)
+	set_selected_character(data.get("selected_character", -1))
+	
+	
 	if editable_name:
 		_old_property_name = property_name
 		_old_value = value
@@ -62,10 +69,22 @@ func _on_save_pressed() -> void:
 	value = find_child("ValueLineEdit").text
 	update()
 
+func set_selected_character(index:= int(value)):
+	#update()
+	value = index
+	find_child("CharacterOptionButton").select(value)
 
 func _on_save_new_defaults_button_pressed() -> void:
 	save_new_defaults()
+
+func stringify_value():
+	if data_type == Pages.DataTypes._CharacterDropDown:
+		if value != -1:
+			return str(Pages.characters[value])
 	
+	return str(value)
+		
+
 func save_new_defaults():
 	value = find_child("ValueLineEdit").text
 	property_name = find_child("PropertyNameEdit").text
@@ -79,3 +98,20 @@ func save_new_defaults():
 func _on_delete_button_pressed() -> void:
 	emit_signal("erase_property", property_name)
 	queue_free()
+
+func set_data_type(new_type: int):
+	data_type = new_type
+	find_child("ValueLineEdit").visible = data_type == Pages.DataTypes._String
+	find_child("CharacterOptionButton").visible = data_type == Pages.DataTypes._CharacterDropDown
+	
+
+func _on_data_type_button_pressed() -> void:
+	if data_type == Pages.DataTypes._CharacterDropDown:
+		set_data_type(Pages.DataTypes._String)
+	else:
+		set_data_type(Pages.DataTypes._CharacterDropDown)
+
+
+func _on_character_option_button_item_selected(index: int) -> void:
+	set_selected_character(index)
+	#print(index)

@@ -27,24 +27,34 @@ func _on_close_requested() -> void:
 func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	var f = find_child("Facts").get_item_text(index)
 	var references = Pages.lines_referencing_fact(f)
+	
 	var s = "Pages containing fact:\n"
 	for r in references.get("ref_pages"):
 		s += str(r, "\t\t\t\t(", Pages.page_data.get(int(r)).get("page_key"), ")")
 		s += "\n"
 	find_child("RefPages").text = s
+	
 	s = "Conditionals referencing fact:\n"
 	for r in references.get("ref_lines_condition"):
 		s += str(r)
 		s += "\n"
 	find_child("RefDeclare").text = s
+	
 	s = "Lines declaring fact:\n"
 	for r in references.get("ref_lines_declare"):
 		s += str(r)
 		s += "\n"
-	find_child("RefChoice").text = s
+	find_child("RefChoiceDeclare").text = s
+	
 	s = "Choice Items declaring fact:\n"
-	for r in references.get("ref_lines_choice"):
+	for r in references.get("ref_lines_choice_declare"):
 		s += str(r)
 		s += "\n"
 	find_child("RefCondition").text = s
+	
+	s = "Choice Items referencing fact as conditional:\n"
+	for r in references.get("ref_lines_choice_condition"):
+		s += str(r)
+		s += "\n"
+	find_child("RefChoiceCondition").text = s
 		

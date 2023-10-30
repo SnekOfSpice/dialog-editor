@@ -42,6 +42,6 @@ func deserialize(data: Array):
 func short_form() -> String:
 	var result = ""
 	for c in get_children():
-		result += str(c.value, ", ")
+		result += str(c.stringify_value(), ", ")
 	result = result.trim_suffix(", ")
 	return result

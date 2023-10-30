@@ -126,4 +126,6 @@ func move_line(line, dir):
 		return
 	
 	find_child("Lines").move_child(line, idx+dir)
-	#$ScrollContainer/Lines.queue_sort()
+	
+	for l in find_child("Lines").get_children():
+		l.update()

@@ -59,6 +59,7 @@ focus_mode = 0
 text = "terminate"
 
 [node name="Controls" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://visuals/fonts/Fragmentcore.otf" id="1_2td53"]
 [ext_resource type="FontFile" uid="uid://cj0gnvw2fkuo" path="res://visuals/fonts/TT Chocolates Trial Light.otf" id="2_0vdkv"]
@@ -31,6 +31,25 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_diu3x"]
+bg_color = Color(0.537255, 0.988235, 0.85098, 0.0745098)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.521569, 0.313726, 0.211765, 0.678431)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+shadow_color = Color(0, 0, 0, 0.45098)
+shadow_size = 2
+shadow_offset = Vector2(5.275, 9.4)
 
 [sub_resource type="Gradient" id="Gradient_7koe6"]
 offsets = PackedFloat32Array(0, 0.221429, 0.446429, 1)
@@ -71,6 +90,7 @@ MarginContainer/constants/margin_bottom = 3
 MarginContainer/constants/margin_left = 3
 MarginContainer/constants/margin_right = 3
 MarginContainer/constants/margin_top = 3
+Panel/styles/panel = SubResource("StyleBoxFlat_diu3x")
 SpinBox/icons/updown = SubResource("GradientTexture2D_acwas")
 TextEdit/fonts/font = ExtResource("3_8wpuc")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_f0tga")

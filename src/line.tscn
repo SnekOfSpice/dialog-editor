@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=9 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://src/line.gd" id="1_6i1bg"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_viyfr"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://src/header.tscn" id="2_qs17t"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://src/facts.tscn" id="3_01wq6"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://src/choice_container.tscn" id="3_jjtdq"]
@@ -9,11 +10,14 @@
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://src/instruction_container.tscn" id="4_phdce"]
 
 [node name="Line" type="VBoxContainer"]
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.369
+offset_bottom = -0.112015
 grow_horizontal = 2
-grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme = ExtResource("1_viyfr")
 script = ExtResource("1_6i1bg")
 
 [node name="Controls" type="HBoxContainer" parent="."]
@@ -40,6 +44,9 @@ layout_mode = 2
 layout_mode = 2
 focus_mode = 0
 text = "^"
+
+[node name="IndexLabel" type="Label" parent="Controls/VBoxContainer"]
+layout_mode = 2
 
 [node name="MoveDown" type="Button" parent="Controls/VBoxContainer"]
 layout_mode = 2

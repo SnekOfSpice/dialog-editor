@@ -8,7 +8,7 @@ script = ExtResource("1_jnmdf")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Controls" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Controls" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
 [node name="AddConditionButton" type="Button" parent="VBoxContainer/Controls"]
@@ -28,8 +28,19 @@ layout_mode = 2
 [node name="OperandArg2" type="SpinBox" parent="VBoxContainer/Controls/OperandContainer"]
 layout_mode = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "behavior on true conditions"
+
+[node name="BehaviorButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
 [node name="FactsContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
 [connection signal="pressed" from="VBoxContainer/Controls/AddConditionButton" to="." method="_on_add_condition_button_pressed"]
 [connection signal="item_selected" from="VBoxContainer/Controls/OperandContainer/OperandOptionButton" to="." method="_on_operand_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/BehaviorButton" to="." method="_on_behavior_button_item_selected"]
