@@ -15,8 +15,11 @@ var head_defaults := [
 ]
 
 var characters := []
-var dropdowns := {}
-var dropdown_titles := []
+var dropdowns := {
+	"cum" : ["a", "b"],
+	"piss" : ["c", "d"]
+}
+var dropdown_titles := ["cum", "piss"]
 
 var facts := []
 

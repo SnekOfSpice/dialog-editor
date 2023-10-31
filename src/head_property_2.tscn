@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2equl4umuelj"]
+
+[ext_resource type="Script" path="res://src/head_property_2.gd" id="1_sdsq2"]
+
+[node name="HeadProperty2" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sdsq2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="DataTypeButton" type="OptionButton" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="PropertyNameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "property name"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="DropDownContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="DropDownButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
+layout_mode = 2
+
+[node name="DropDownValueButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
+layout_mode = 2
+
+[connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_item_selected"]
