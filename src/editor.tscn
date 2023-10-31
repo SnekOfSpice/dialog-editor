@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://src/facts_popup.tscn" id="8_3kqv2"]
-[ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://src/characters_popup.tscn" id="9_i203b"]
+[ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://src/dropdowns_popup.tscn" id="9_i203b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -92,7 +92,7 @@ text = "edit header"
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
-text = "edit characters"
+text = "edit drop downs"
 alignment = 2
 
 [node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]

@@ -15,6 +15,8 @@ var head_defaults := [
 ]
 
 var characters := []
+var dropdowns := {}
+var dropdown_titles := []
 
 var facts := []
 
