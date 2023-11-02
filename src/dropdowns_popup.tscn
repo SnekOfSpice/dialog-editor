@@ -74,4 +74,3 @@ size_flags_vertical = 3
 [connection signal="pressed" from="VBoxContainer/Controls/HBoxContainer2/SaveNameButton" to="." method="_on_save_name_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Controls/HBoxContainer2/SaveContentButton" to="." method="_on_save_content_button_pressed"]
 [connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
-[connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_tab_container_tab_selected"]
