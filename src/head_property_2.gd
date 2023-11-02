@@ -72,22 +72,33 @@ func set_data_type(new_type: int):
 		find_child("UndefinedDropDownsLabel").visible = false
 	
 	if data_type == Pages.DataTypes._DropDown:
-		if typeof(values[0]) != typeof(0): values[0] = 0
-		if typeof(values[1]) != typeof(0): values[1] = 0
+		if typeof(values[0]) == TYPE_FLOAT: values[0] = int(values[0])
+		if typeof(values[1]) == TYPE_FLOAT: values[1] = int(values[1])
+		if typeof(values[0]) != TYPE_INT: values[0] = 0
+		if typeof(values[1]) != TYPE_INT: values[1] = 0
 
 func serialize() -> Dictionary:
 	var result := {}
 	
 	result["property_name"] = property_name
-	result["values"] = values.duplicate(true)#[values[0], values[1]]
+	result["values"] = values#.duplicate(true)#[values[0], values[1]]
 	result["data_type"] = data_type
 	
 	return result
 
 func deserialize(data: Dictionary):
-	values = data.get("values", [null, null])
-	values = values.duplicate(true)
-	_old_values = values.duplicate(true)
+	printt(data.get("property_name"), data.get("values"))
+	#values = data.get("values", [null, null])
+	#values = values.duplicate(true)
+	var killme = []
+	for v in data.get("values"):
+		prints("------ ", v)
+		killme.append(v)
+	printt(property_name, values, killme)
+	values = killme
+	printt(property_name, values, killme)
+	#values = [data.get("values")[0], data.get("values")[1]]
+	_old_values = values#.duplicate(true)
 	
 	set_property_name(data.get("property_name", "property"))
 	_old_property_name = property_name
@@ -98,8 +109,8 @@ func deserialize(data: Dictionary):
 		Pages.DataTypes._String:
 			find_child("StringValueEdit").text = str(values[0])
 		Pages.DataTypes._DropDown:
-			var first = int(values[0]) if values.front() != null else 0
-			var second = int(values[1]) if values.back() != null else 0
+			var first = int(killme[0]) if killme.front() != null else 0
+			var second = int(killme[1]) if killme.back() != null else 0
 			#prints("selecting dd ", values.front(), "-", values.back(), " in ", get_index())
 			update_drop_downs(first, second)
 
@@ -110,11 +121,13 @@ func _on_drop_down_button_item_selected(index: int) -> void:
 	
 	values[0] = index
 	values = values.duplicate(true)
+	print("A")
 
 
 func _on_drop_down_value_button_item_selected(index: int) -> void:
 	values[1] = index
 	values = values.duplicate(true)
+	print("B")
 
 
 func _on_line_edit_text_changed(new_text: String) -> void:
@@ -127,13 +140,10 @@ func _on_data_type_button_item_selected(index: int) -> void:
 
 func stringify_value() -> String:
 	if data_type == Pages.DataTypes._DropDown:
-#		and typeof(values[0]) == typeof(0)
-#		and typeof(values[1]) == typeof(0)
-#		):
-#		var title = Pages.dropdown_titles[values[0]]
-#		return str(
-#			title, "/", Pages.dropdowns.get(title)[values[1]]
-#		)
+		var title = Pages.dropdown_titles[values[0]]
+		return str(
+			title, "/", Pages.dropdowns.get(title)[values[1]]
+		)
 		return str(values.front(), "-", values.back())
 	return str(values.front())
 

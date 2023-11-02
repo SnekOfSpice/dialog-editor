@@ -15,15 +15,9 @@ func fill():
 	for prop in Pages.head_defaults:
 		var p = preload("res://src/head_property_2.tscn").instantiate()
 		find_child("HeadPropertyContainer").add_child(p)
-#		var start_data = {
-#			"property_name":prop,
-#			"value": Pages.get_defaults(prop).get("value")
-#		}
 		
 		p.deserialize(prop)
 		p.set_is_editing_default(true)
-		#p.connect("property_default_changed", change_header_default)
-		#p.connect("erase_property", erase_property_from_temp)
 
 
 func add_empty_property():

@@ -73,6 +73,9 @@ func update_controls():
 	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
 	
 	set_trail_idx(trail_idx)
+	
+	await get_tree().process_frame
+	current_page.update()
 
 func add_empty_page():
 	var page_count = Pages.get_page_count()
