@@ -78,7 +78,7 @@ func _on_save_new_defaults_button_pressed() -> void:
 	save_new_defaults()
 
 func stringify_value():
-	if data_type == Pages.DataTypes._CharacterDropDown:
+	if data_type == Pages.DataTypes._DropDown:
 		if value != -1:
 			return str(Pages.characters[value])
 	
@@ -102,16 +102,15 @@ func _on_delete_button_pressed() -> void:
 func set_data_type(new_type: int):
 	data_type = new_type
 	find_child("ValueLineEdit").visible = data_type == Pages.DataTypes._String
-	find_child("CharacterOptionButton").visible = data_type == Pages.DataTypes._CharacterDropDown
+	find_child("CharacterOptionButton").visible = data_type == Pages.DataTypes._DropDown
 	
 
 func _on_data_type_button_pressed() -> void:
-	if data_type == Pages.DataTypes._CharacterDropDown:
+	if data_type == Pages.DataTypes._DropDown:
 		set_data_type(Pages.DataTypes._String)
 	else:
-		set_data_type(Pages.DataTypes._CharacterDropDown)
+		set_data_type(Pages.DataTypes._DropDown)
 
 
 func _on_character_option_button_item_selected(index: int) -> void:
 	set_selected_character(index)
-	#print(index)

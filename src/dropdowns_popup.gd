@@ -5,19 +5,27 @@ var working_memory_dropdowns := {}
 var working_memory_titles := []
 
 func fill():
+	printt(Pages.dropdowns, Pages.dropdown_titles)
 	working_memory_dropdowns = Pages.dropdowns
 	working_memory_titles = Pages.dropdown_titles
-	var s = ""
-	for c in Pages.characters:
-		s += str(c)
-		s += "\n"
+	
+	for t in working_memory_titles:
+		add_code_edit(t)
+	
+	fill_code_edit(working_memory_titles.back())
+	
+	#find_child("TabContainer").set_current_tab(working_memory_titles.back())
+	#find_child("TabContainer").set_tab_title(find_child("TabContainer").current_tab, working_memory_titles.back())
 
 func fill_code_edit(tab_title: String):
 	var s = ""
 	for c in working_memory_dropdowns.get(tab_title, []):
 		s += str(c)
 		s += "\n"
+	find_child("TabContainer").set_current_tab(working_memory_titles.find(tab_title))
 	find_child("TabContainer").get_current_tab_control().text = s
+	
+	
 
 
 func save_dropdowns():
@@ -31,10 +39,8 @@ func _on_close_requested() -> void:
 	#Pages.characters = text2arr()
 	hide()
 
-
-func _on_add_button_pressed() -> void:
+func add_code_edit(tab_title: String):
 	var bar = find_child("TabContainer")
-	var tab_title = str("untitled", bar.get_tab_count()-1)
 	var ce = CodeEdit.new()
 	bar.add_child(ce)
 	
@@ -46,8 +52,13 @@ func _on_add_button_pressed() -> void:
 	
 	save_tab_name()
 	
-	fill_code_edit(tab_title)
+	find_child("SaveNameButton").visible = working_memory_titles.size() > 0
+	find_child("SaveContentButton").visible = working_memory_titles.size() > 0
 
+func _on_add_button_pressed() -> void:
+	var tab_title = str("untitled", find_child("TabContainer").get_tab_count()-1)
+	add_code_edit(tab_title)
+	fill_code_edit(tab_title)
 
 
 
@@ -67,7 +78,8 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 	#working_memory_titles[find_child("TabContainer").get_previous_tab()] = find_child("NameEdit").text
 	find_child("NameEdit").text = find_child("TabContainer").get_tab_title(tab)
 	
-	fill_code_edit(find_child("TabContainer").get_tab_title(tab))
+#	if tab == find_child("TabContainer").get_previous_tab():
+#		fill_code_edit(find_child("TabContainer").get_tab_title(tab))
 
 
 func _on_tab_container_tab_selected(tab: int) -> void:
@@ -97,12 +109,18 @@ func save_tab_name():
 
 
 func _on_remove_button_pressed() -> void:
+	if not find_child("TabContainer").get_current_tab_control():
+		return 
+	
 	working_memory_dropdowns.erase(working_memory_titles[find_child("TabContainer").current_tab])
 	working_memory_titles.erase(working_memory_titles[find_child("TabContainer").current_tab])
 	find_child("TabContainer").get_current_tab_control().queue_free()
 	
 	if find_child("TabContainer").get_tab_count() <= 0:
 		find_child("NameEdit").text = ""
+		
+	find_child("SaveNameButton").visible = working_memory_titles.size() > 0
+	find_child("SaveContentButton").visible = working_memory_titles.size() > 0
 
 func get_current_title():
 	return find_child("TabContainer").get_tab_title(find_child("TabContainer").current_tab)

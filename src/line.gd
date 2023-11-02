@@ -5,6 +5,7 @@ class_name Line
 
 
 var line_type := Data.LineType.Text
+var is_head_editable := false
 
 signal move_line (child, dir)
 
@@ -27,10 +28,10 @@ func set_line_type(value: int):
 	find_child("InstructionContainer").visible = line_type == Data.LineType.Instruction
 
 func set_head_editable(value: bool):
-	find_child("Header").visible = value
-	find_child("HeaderShort").visible = not value
+	is_head_editable = value
+	find_child("Header").visible = is_head_editable
+	find_child("HeaderShort").visible = not is_head_editable
 	find_child("HeaderShort").text = find_child("Header").short_form()
-	print(find_child("HeaderShort").text)
 	
 
 
@@ -90,6 +91,7 @@ func move(dir: int):
 
 func update():
 	find_child("IndexLabel").text = str(get_index())
+	set_head_editable(is_head_editable)
 
 func _on_move_up_pressed() -> void:
 	move(-1)

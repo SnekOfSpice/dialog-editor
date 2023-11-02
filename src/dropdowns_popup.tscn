@@ -50,11 +50,13 @@ placeholder_text = "dropdown name"
 expand_to_text_length = true
 
 [node name="SaveNameButton" type="Button" parent="VBoxContainer/Controls/HBoxContainer2"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "save name"
 
 [node name="SaveContentButton" type="Button" parent="VBoxContainer/Controls/HBoxContainer2"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "save content"

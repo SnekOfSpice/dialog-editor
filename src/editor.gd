@@ -52,7 +52,6 @@ func load_page(number: int, initial_load:=false):
 			c.save()
 		c.queue_free()
 	
-	prints("loading ", number)
 	var page = _page.instantiate()
 	$Core/PageContainer.add_child(page)
 	page.init(number)
@@ -153,7 +152,8 @@ func _on_fd_save_file_selected(path: String) -> void:
 		"page_data" : Pages.page_data,
 		"instruction_templates": Pages.instruction_templates,
 		"facts": Pages.facts,
-		"characters": Pages.characters,
+		"dropdowns": Pages.dropdowns,
+		"dropdown_titles": Pages.dropdown_titles,
 	}
 	file.store_string(JSON.stringify(data_to_save))
 	file.close()
@@ -179,11 +179,10 @@ func _on_fd_open_file_selected(path: String) -> void:
 	Pages.head_defaults = data.get("head_defaults", [])
 	Pages.instruction_templates = data.get("instruction_templates", [])
 	Pages.facts = data.get("facts", [])
-	Pages.characters = data.get("characters", [])
+	Pages.dropdowns = data.get("dropdowns", {})
+	Pages.dropdown_titles = data.get("dropdown_titles", [])
 	
 	load_page(0, true)
-
-
 
 func set_current_page_changeable(value:bool):
 	find_child("PageCountSpinCounter").visible = value
@@ -248,4 +247,9 @@ func _on_add_line_button_pressed() -> void:
 
 func _on_edit_characters_button_pressed() -> void:
 	current_page.save()
-	$CharactersPopup.popup()
+	$DropdownPopup.popup()
+
+
+func _on_header_popup_update() -> void:
+	await get_tree().process_frame
+	current_page.update()

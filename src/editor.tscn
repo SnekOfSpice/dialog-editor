@@ -303,7 +303,7 @@ visible = false
 [node name="FactsPopup" parent="." instance=ExtResource("8_3kqv2")]
 visible = false
 
-[node name="CharactersPopup" parent="." instance=ExtResource("9_i203b")]
+[node name="DropdownPopup" parent="." instance=ExtResource("9_i203b")]
 visible = false
 
 [connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
@@ -326,3 +326,4 @@ visible = false
 [connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
+[connection signal="update" from="HeaderPopup" to="." method="_on_header_popup_update"]

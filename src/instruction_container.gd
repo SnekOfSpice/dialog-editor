@@ -48,7 +48,6 @@ func deserialize(data):
 	else:
 		fill_args(data.get("content").get("args"))
 	
-	#print(data.get("content").get("name"))
 	
 		
 

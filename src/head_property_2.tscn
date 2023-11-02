@@ -3,11 +3,10 @@
 [ext_resource type="Script" path="res://src/head_property_2.gd" id="1_sdsq2"]
 
 [node name="HeadProperty2" type="VBoxContainer"]
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 66.0
 grow_horizontal = 2
-grow_vertical = 2
 script = ExtResource("1_sdsq2")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -16,12 +15,35 @@ layout_mode = 2
 [node name="DataTypeButton" type="OptionButton" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer"]
+[node name="DataTypeLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="NameEditContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer"]
+custom_minimum_size = Vector2(121.325, 0)
+layout_mode = 2
+
+[node name="PropertyNameLabel2" type="Label" parent="HBoxContainer/NameEditContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "property name"
 
 [node name="PropertyNameLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "property name"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="DeleteButton" type="Button" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+text = "X"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -29,7 +51,7 @@ layout_mode = 2
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer2"]
+[node name="StringValueEdit" type="LineEdit" parent="MarginContainer/HBoxContainer2"]
 layout_mode = 2
 
 [node name="DropDownContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer2"]
@@ -41,4 +63,14 @@ layout_mode = 2
 [node name="DropDownValueButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
 layout_mode = 2
 
+[node name="UndefinedDropDownsLabel" type="Label" parent="MarginContainer/HBoxContainer2"]
+visible = false
+layout_mode = 2
+text = "undefined dropdowns"
+
+[connection signal="item_selected" from="HBoxContainer/DataTypeButton" to="." method="_on_data_type_button_item_selected"]
+[connection signal="text_changed" from="HBoxContainer/NameEditContainer/PropertyNameEdit" to="." method="_on_property_name_edit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/MarginContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="text_changed" from="MarginContainer/HBoxContainer2/StringValueEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_item_selected"]
+[connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownValueButton" to="." method="_on_drop_down_value_button_item_selected"]

@@ -14,12 +14,9 @@ var head_defaults := [
 #	},
 ]
 
-var characters := []
-var dropdowns := {
-	"cum" : ["a", "b"],
-	"piss" : ["c", "d"]
-}
-var dropdown_titles := ["cum", "piss"]
+
+var dropdowns := {"dropdown1": ["0", "1"]}
+var dropdown_titles := ["dropdown1"]
 
 var facts := []
 
@@ -39,17 +36,18 @@ var instruction_templates := [
 	}
 ]
 
-enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _CharacterDropDown}
+enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _DropDown}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
 	DataTypes._Integer : "Integer",
 	DataTypes._Float : "Float",
 	DataTypes._Array : "Array",
 	DataTypes._Dictionary : "Dictionary",
+	DataTypes._DropDown : "Drop Down",
 }
 
 var head_data_types := {
-	"speaker": DataTypes._CharacterDropDown,
+	"speaker": DataTypes._DropDown,
 	"emotion": DataTypes._String,
 }
 
@@ -71,7 +69,6 @@ func create_page(number:int, overwrite_existing:= false):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
-	#prints("creating page ", number)
 	page_data[number] = {
 		"number": number,
 		"page_key": "",
@@ -172,12 +169,9 @@ func delete_page(at: int):
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
 		page_data[i] = data
-		#prints("reindexing ", i, " to ", new_number)
 	
 	# the last page is now a duplicate
-	print(page_data.size())
 	page_data.erase(get_page_count() - 1)
-	print(page_data.size())
 	emit_signal("pages_modified")
 	
 	change_page_references_dir(at, -1)
@@ -205,13 +199,12 @@ func get_instruction_args(instruction_name: String):
 func apply_new_header_schema(new_schema: Array):
 	for i in page_data:
 		var lines = page_data.get(i).get("lines")
-		#print(lines)
 		
 		for line in lines:
 			print(Pages.page_data)
 			prints("PRETRANSFORM-", line["header"], " SCHEMA-> ", new_schema)
 			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
-			prints("POSTRTRANSFORM-", line["header"])
+			prints("POSTTRANSFORM-", line["header"])
 	
 	
 	editor.refresh()
@@ -223,31 +216,16 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	var transformed = []
 	transformed.resize(new_schema.size())
 	
-#	# transpose all with same property_name
-#	for old_prop in old:
-#		var old_name = old_prop.get("property_name")
-#		var old_value = old_prop.get("value")
-#		var old_type = old_prop.get("data_type")
-#
-#		for new_prop in new:
-#			var new_name = new_prop.get("property_name")
-#			var new_value = new_prop.get("value")
-#			var new_type = new_prop.get("data_type")
-#
-#			if new_name == old_name:
-#				if new_type == old_type:
-#					# preserve old if it differs from the default value
-#			else:
-#				transformed.append(new_prop)
+#	
 	
 	for i in min(old_schema.size(), new_schema.size()):
 		var old_name = header_to_transform[i].get("property_name")
-		var old_value = header_to_transform[i].get("value")
+		var old_value = header_to_transform[i].get("values", [header_to_transform[i].get("value", null), null])
 		var old_type = header_to_transform[i].get("data_type")
-		var old_default = old_schema[i].get("value")
+		var old_default = old_schema[i].get("values")
 		
 		var new_name = new_schema[i].get("property_name")
-		var new_value = new_schema[i].get("value")
+		var new_value = new_schema[i].get("values", [header_to_transform[i].get("value", null), null])
 		var new_type = new_schema[i].get("data_type")
 		
 		printt(old_name, old_value, old_type)
@@ -257,40 +235,24 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 		
 		
 		# if the header was the default value here, just apply the new default schema
-		if old_value == old_default:
+		if old_value[0] == old_default[0] and old_value[1] == old_default[1]:
 			transformed[i] = new_schema[i]
 		# the old value wasn't the default...
 		else:
-			# if the data type stayed the same, we assume the rest to also be adjusted accordingly
-			var converted_value 
+			
+			var a = new_value
+			if new_value[0] != old_value[0] or new_value[1] != old_value[1]:
+				a = old_value
+			
+			var converted_value = {
+				"property_name": new_name,
+				"values": a,
+				"data_type": new_type,
+			}
+			prints("converting ", header_to_transform[i], " to ", converted_value)
+			transformed[i] = converted_value
 			
 			
-			# BIG TODO LMAO
-			# TODO: handle type conversions,
-			# for now lets just assume everything is a string
-	
-			match old_type:
-				Pages.DataTypes._String:
-					match new_type:
-						Pages.DataTypes._Array:
-							pass
-						Pages.DataTypes._String:
-							converted_value = header_to_transform[i].get("value")
-						Pages.DataTypes._Dictionary:
-							pass
-						Pages.DataTypes._Float:
-							pass
-						Pages.DataTypes._Integer:
-							pass
-						Pages.DataTypes._CharacterDropDown:
-							print("a")
-			
-			
-			transformed[i] = {
-					"property_name": new_name,
-					"value": converted_value,
-					"data_type": new_type
-				}
 	
 	# idk this seems bad
 	for j in transformed.size():
@@ -351,7 +313,7 @@ func lines_referencing_fact(fact_name: String):
 	}
 	return all_refs
 
-func characters_on_page(page_number: int) -> Array:
-	var result = []
-	
-	return result
+#func characters_on_page(page_number: int) -> Array:
+#	var result = []
+#
+#	return result
