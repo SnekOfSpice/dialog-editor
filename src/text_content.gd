@@ -12,14 +12,14 @@ func _input(event: InputEvent) -> void:
 	pass
 
 func insert(control_sequence: String):
-	var tb = find_child("TextBox")
+	var tb : TextEdit = find_child("TextBox")
 	match control_sequence:
 		"autopause":
-			tb.text = tb.text + "[ap]"
+			tb.insert_text_at_caret("<ap>")
 		"manualpause":
-			tb.text = tb.text + "[mp]"
+			tb.insert_text_at_caret("<mp>")
 		"lineclear":
-			tb.text = tb.text + "[lc]"
+			tb.insert_text_at_caret("<lc>")
 
 func _on_pause_auto_cont_pressed() -> void:
 	insert("autopause")

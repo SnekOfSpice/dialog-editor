@@ -1,11 +1,14 @@
 extends Control
 
+var do_jump_page := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	find_child("PageSelect").max_value = Pages.get_page_count() - 1
 	find_child("Facts").visible = false
 	find_child("Conditionals").visible = false
+	
+	set_do_jump_page(false)
 
 
 func deserialize(data:Dictionary):
@@ -14,6 +17,8 @@ func deserialize(data:Dictionary):
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	
+	set_do_jump_page(data.get("do_jump_page", false))
+	
 	update()
 
 func serialize():
@@ -21,7 +26,8 @@ func serialize():
 		"choice_text": find_child("LineEdit").text,
 		"target_page": find_child("PageSelect").value,
 		"facts": find_child("Facts").serialize(),
-		"conditionals": find_child("Conditionals").serialize()
+		"conditionals": find_child("Conditionals").serialize(),
+		"do_jump_page": do_jump_page
 	}
 
 func _on_page_select_value_changed(value: float) -> void:
@@ -38,6 +44,10 @@ func update():
 func _on_delete_pressed() -> void:
 	queue_free()
 
+func set_do_jump_page(do: bool):
+	do_jump_page = do
+	find_child("JumpPageContainer").visible = do_jump_page
+	find_child("JumpPageToggle").button_pressed = do_jump_page
 
 func _on_facts_visibility_toggle_pressed() -> void:
 	find_child("Facts").visible = not find_child("Facts").visible
@@ -45,3 +55,7 @@ func _on_facts_visibility_toggle_pressed() -> void:
 
 func _on_conditional_visibility_toggle_pressed() -> void:
 	find_child("Conditionals").visible = not find_child("Conditionals").visible
+
+
+func _on_jump_page_toggle_pressed() -> void:
+	set_do_jump_page(find_child("JumpPageToggle").button_pressed)

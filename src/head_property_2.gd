@@ -51,7 +51,7 @@ func set_is_editing_default(value: bool):
 	find_child("NameEditContainer").visible = is_editing_default
 	find_child("PropertyNameLabel").visible = not is_editing_default
 	find_child("DataTypeButton").visible = is_editing_default
-	find_child("DataTypeLabel").visible = not is_editing_default
+	find_child("DataTypeLabelContainer").visible = not is_editing_default
 	find_child("DeleteButton").visible = is_editing_default
 
 func set_property_name(new_name: String):
@@ -92,7 +92,6 @@ func deserialize(data: Dictionary):
 	#values = values.duplicate(true)
 	var killme = []
 	for v in data.get("values"):
-		prints("------ ", v)
 		killme.append(v)
 	printt(property_name, values, killme)
 	values = killme

@@ -158,7 +158,7 @@ func _on_fd_save_file_selected(path: String) -> void:
 		"dropdowns": Pages.dropdowns,
 		"dropdown_titles": Pages.dropdown_titles,
 	}
-	file.store_string(JSON.stringify(data_to_save))
+	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	active_dir = path
 

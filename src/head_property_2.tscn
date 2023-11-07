@@ -15,27 +15,36 @@ layout_mode = 2
 [node name="DataTypeButton" type="OptionButton" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="DataTypeLabel" type="Label" parent="HBoxContainer"]
+[node name="NameEditContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/NameEditContainer"]
 layout_mode = 2
 
-[node name="NameEditContainer" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-
-[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer"]
+[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer/VBoxContainer"]
 custom_minimum_size = Vector2(121.325, 0)
 layout_mode = 2
 
-[node name="PropertyNameLabel2" type="Label" parent="HBoxContainer/NameEditContainer"]
+[node name="PropertyNameLabel2" type="Label" parent="HBoxContainer/NameEditContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "property name"
 
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/NameEditContainer"]
+layout_mode = 2
+
 [node name="PropertyNameLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "property name"
+
+[node name="DataTypeLabelContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/DataTypeLabelContainer"]
+layout_mode = 2
+
+[node name="DataTypeLabel" type="Label" parent="HBoxContainer/DataTypeLabelContainer"]
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -69,7 +78,7 @@ layout_mode = 2
 text = "undefined dropdowns"
 
 [connection signal="item_selected" from="HBoxContainer/DataTypeButton" to="." method="_on_data_type_button_item_selected"]
-[connection signal="text_changed" from="HBoxContainer/NameEditContainer/PropertyNameEdit" to="." method="_on_property_name_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/NameEditContainer/VBoxContainer/PropertyNameEdit" to="." method="_on_property_name_edit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/MarginContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="text_changed" from="MarginContainer/HBoxContainer2/StringValueEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_item_selected"]

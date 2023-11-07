@@ -73,8 +73,8 @@ func deserialize(data: Dictionary):
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
 	for l in find_child("Lines").get_children():
-#		if not l is Line:
-#			continue
+		if not l is Line:
+			continue
 		l.queue_free()
 	
 	for data in lines_data:
@@ -82,6 +82,7 @@ func deserialize_lines(lines_data: Array):
 		find_child("Lines").add_child(line)
 		line.deserialize(data)
 		line.connect("move_line", move_line)
+		line.connect("line_deleted", on_line_deleted)
 	
 	enable_page_key_edit(false)
 
@@ -116,6 +117,7 @@ func add_line():
 	var line = preload("res://src/line.tscn").instantiate()
 	find_child("Lines").add_child(line)
 	line.connect("move_line", move_line)
+	line.connect("line_deleted", on_line_deleted)
 
 func move_line(line, dir):
 	var idx = line.get_index()
@@ -128,6 +130,14 @@ func move_line(line, dir):
 	find_child("Lines").move_child(line, idx+dir)
 	update()
 
+func on_line_deleted():
+	await get_tree().process_frame
+	update()
+
 func update():
 	for l in find_child("Lines").get_children():
 		l.update()
+
+
+func _on_next_line_edit_value_changed(value: float) -> void:
+	set_next(int(value))

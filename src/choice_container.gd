@@ -1,20 +1,34 @@
 extends VBoxContainer
 
+var do_jump_page := true
 
-func serialize() -> Array:
-	var result = []
+func serialize() -> Dictionary:
+	var result = {}
 	
+	var choices = []
 	for c in $ChoiceList.get_children():
-		result.append(c.serialize())
+		choices.append(c.serialize())
+	result["choices"] = choices
+	
+	result["meta.do_jump_page"] = do_jump_page
 	
 	return result
 
-func deserialize(data: Array):
+func deserialize(data):
 	for c in $ChoiceList.get_children():
 		c.queue_free()
 	
-	for d in data:
+	var choices
+	if data is Array: # backwards compat
+		choices = data
+	else:
+		choices = data.get("choices", [])
+		set_do_jump_page(data.get("meta.do_jump_page"))
+	
+	for d in choices:
 		add_choice(d)
+	
+	
 
 func add_choice(choice_data:={
 		"choice_text": "choice label",
@@ -26,3 +40,12 @@ func add_choice(choice_data:={
 
 func _on_add_button_pressed() -> void:
 	add_choice()
+
+func set_do_jump_page(do: bool):
+	do_jump_page = do
+	find_child("JumpPageButton").button_pressed = do_jump_page
+	for c in find_child("ChoiceList").get_children():
+		c.set_do_jump_page(find_child("JumpPageButton").button_pressed)
+
+func _on_jump_page_button_pressed() -> void:
+	set_do_jump_page(find_child("JumpPageButton").button_pressed)

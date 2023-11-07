@@ -24,20 +24,25 @@ caret_blink = true
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Add"
+vertical_alignment = 1
+
 [node name="PauseAutoCont" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "add pause (auto continue)"
+text = "auto continue"
 
 [node name="PauseClickCont" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "add pause (click continue)"
+text = "click continue"
 
 [node name="LineClear" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "add line clear"
+text = "line clear"
 
 [connection signal="pressed" from="HBoxContainer/PauseAutoCont" to="." method="_on_pause_auto_cont_pressed"]
 [connection signal="pressed" from="HBoxContainer/PauseClickCont" to="." method="_on_pause_click_cont_pressed"]

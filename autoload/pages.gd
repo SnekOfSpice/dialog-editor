@@ -128,7 +128,8 @@ func change_page_references_dir(changed_page: int, operation:int):
 		for line in page.get("lines"):
 			if line.get("line_type") == Data.LineType.Choice:
 				var content = line.get("content")
-				for choice in content:
+				var choices = content.get("choices")
+				for choice in choices:
 					if choice.get("target_page") >= changed_page:
 						choice["target_page"] = choice.get("target_page") + operation
 	

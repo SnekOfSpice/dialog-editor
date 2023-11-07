@@ -8,10 +8,11 @@ var line_type := Data.LineType.Text
 var is_head_editable := false
 
 signal move_line (child, dir)
+signal line_deleted
 
 func _ready() -> void:
 	set_line_type(Data.of("editor.selected_line_type"))
-	set_head_editable(false)
+	set_head_editable(true)
 	find_child("Facts").visible = false
 	find_child("Conditionals").visible = false
 	set_non_meta_parts_visible(true)
@@ -33,6 +34,7 @@ func set_head_editable(value: bool):
 	find_child("HeaderShort").visible = not is_head_editable
 	find_child("HeaderShort").text = find_child("Header").short_form()
 	
+	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
 
 
 func serialize() -> Dictionary:
@@ -42,7 +44,8 @@ func serialize() -> Dictionary:
 	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
-	data["visible"] = find_child("VisibleToggle").button_pressed
+	data["meta.visible"] = find_child("VisibleToggle").button_pressed
+	data["meta.is_head_editable"] = is_head_editable
 	
 	# content match
 	match line_type:
@@ -73,8 +76,8 @@ func deserialize(data: Dictionary):
 		Data.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content"))
 	
-	set_non_meta_parts_visible(data.get("visible", true))
-	set_head_editable(false)
+	set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
+	set_head_editable(data.get("meta.is_head_editable", false))
 	
 	
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
@@ -84,6 +87,7 @@ func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 func _on_delete_pressed() -> void:
 	# I'm not 100% on this
 	# but I think since page serialization steps over every child, when this doesn't exist anymore, it'll just won't be part of that serialization anymore
+	emit_signal("line_deleted")
 	queue_free()
 
 func move(dir: int):
