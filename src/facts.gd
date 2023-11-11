@@ -20,4 +20,4 @@ func add_fact(fact_name: String, fact_value: bool):
 	f.set_fact(fact_name, fact_value)
 
 func _on_add_fact_button_pressed() -> void:
-	add_fact(str("newfact", Pages.facts.size()), true)
+	add_fact(str("newfact", Pages.facts.keys().size()), true)

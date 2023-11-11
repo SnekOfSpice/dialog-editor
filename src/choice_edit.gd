@@ -12,10 +12,12 @@ func _ready() -> void:
 
 
 func deserialize(data:Dictionary):
-	find_child("LineEdit").text = data.get("choice_text")
+	find_child("LineEditEnabled").text = data.get("choice_text.enabled", data.get("choice_text", ""))
+	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page")
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
+	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
 	
 	set_do_jump_page(data.get("do_jump_page", false))
 	
@@ -23,7 +25,9 @@ func deserialize(data:Dictionary):
 
 func serialize():
 	return {
-		"choice_text": find_child("LineEdit").text,
+		"choice_text.enabled": find_child("LineEditEnabled").text,
+		"choice_text.disabled": find_child("LineEditDisabled").text,
+		"choice_text.enabled_as_default": find_child("DefaultButtonEnabled").button_pressed,
 		"target_page": find_child("PageSelect").value,
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),

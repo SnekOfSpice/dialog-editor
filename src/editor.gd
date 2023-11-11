@@ -181,7 +181,13 @@ func _on_fd_open_file_selected(path: String) -> void:
 	Pages.page_data = int_data.duplicate()
 	Pages.head_defaults = data.get("head_defaults", [])
 	Pages.instruction_templates = data.get("instruction_templates", [])
-	Pages.facts = data.get("facts", [])
+	if data.get("facts") is Array:
+		var compat_facts := {}
+		for f in data.get("facts"):
+			compat_facts[f] = true
+		Pages.facts = compat_facts
+	else:
+		Pages.facts = data.get("facts", {})
 	Pages.dropdowns = data.get("dropdowns", {})
 	Pages.dropdown_titles = data.get("dropdown_titles", [])
 	

@@ -3,8 +3,9 @@ extends Window
 #
 func fill():
 	find_child("Facts").clear()
-	for fact in Pages.facts:
-		find_child("Facts").add_item(fact)
+	for fact in Pages.facts.keys():
+		var fact_reg = str(fact, ": ", Pages.facts.get(fact))
+		find_child("Facts").add_item(fact_reg)
 	
 #	find_child("FactsTree").clear()
 #	var root = find_child("FactsTree").create_item()

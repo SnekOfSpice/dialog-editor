@@ -49,6 +49,8 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 text = "register"
 
+[connection signal="pressed" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_pressed"]
+[connection signal="toggled" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_toggled"]
 [connection signal="text_changed" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_text_changed"]
 [connection signal="pressed" from="FactItem/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="RegisterContainer/RegisterButton" to="." method="_on_register_button_pressed"]

@@ -18,7 +18,7 @@ var head_defaults := [
 var dropdowns := {"dropdown1": ["0", "1"]}
 var dropdown_titles := ["dropdown1"]
 
-var facts := []
+var facts := {}
 
 # TODO: code highlighting
 # true / false take precedent
@@ -263,12 +263,12 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	return transformed
 
 
-func register_facts():
-	for page in page_data.values():
-		for line in page.get("lines", []):
-			for fact in line.get("facts", {}).keys():
-				if not facts.has(fact):
-					facts.append(fact)
+#func register_facts():
+#	for page in page_data.values():
+#		for line in page.get("lines", []):
+#			for fact in line.get("facts", {}).keys():
+#				if not facts.has(fact):
+#					facts.append(fact)
 		
 	# step over every fact in page data and save its name
 

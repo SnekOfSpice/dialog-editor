@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=5 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" path="res://src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://src/conditionals.tscn" id="2_6aqyr"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://src/facts.tscn" id="2_bcn4k"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ennve"]
 
 [node name="ChoiceEdit" type="HBoxContainer"]
 offset_right = 1152.0
@@ -54,7 +56,32 @@ size_flags_vertical = 3
 [node name="Conditionals" parent="VBoxContainer2/HBoxContainer" instance=ExtResource("2_6aqyr")]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer"]
+[node name="TextLines" type="GridContainer" parent="VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="DefaultButtonEnabled" type="CheckBox" parent="VBoxContainer2/HBoxContainer/TextLines"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+button_group = SubResource("ButtonGroup_ennve")
+text = "default: enabled"
+
+[node name="LineEditEnabled" type="LineEdit" parent="VBoxContainer2/HBoxContainer/TextLines"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="DefaultButtonDisabled" type="CheckBox" parent="VBoxContainer2/HBoxContainer/TextLines"]
+layout_mode = 2
+focus_mode = 0
+button_group = SubResource("ButtonGroup_ennve")
+text = "default: disabled"
+
+[node name="LineEditDisabled" type="LineEdit" parent="VBoxContainer2/HBoxContainer/TextLines"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0

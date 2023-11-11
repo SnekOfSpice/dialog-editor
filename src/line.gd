@@ -46,6 +46,7 @@ func serialize() -> Dictionary:
 	data["conditionals"] = find_child("Conditionals").serialize()
 	data["meta.visible"] = find_child("VisibleToggle").button_pressed
 	data["meta.is_head_editable"] = is_head_editable
+	data["meta.line_index"] = get_index()
 	
 	# content match
 	match line_type:
