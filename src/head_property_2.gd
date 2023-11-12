@@ -64,6 +64,7 @@ func set_data_type(new_type: int):
 	
 	find_child("StringValueEdit").visible = data_type == Pages.DataTypes._String
 	find_child("DropDownContainer").visible = data_type == Pages.DataTypes._DropDown
+	find_child("BooleanButton").visible = data_type == Pages.DataTypes._Boolean
 	
 	find_child("DataTypeLabel").text = Pages.DATA_TYPE_STRINGS.get(data_type)
 	find_child("DataTypeButton").select(data_type)
@@ -112,6 +113,13 @@ func deserialize(data: Dictionary):
 			var second = int(killme[1]) if killme.back() != null else 0
 			#prints("selecting dd ", values.front(), "-", values.back(), " in ", get_index())
 			update_drop_downs(first, second)
+		Pages.DataTypes._Boolean:
+			var new_value = values[0]
+			if values[0] is float or values[0] is bool or values[0] is int:
+				new_value = bool(values[0])
+			else:
+				new_value = true
+			find_child("BooleanButton").button_pressed = bool(new_value)
 
 func _on_drop_down_button_item_selected(index: int) -> void:
 	find_child("DropDownValueButton").clear()
@@ -153,3 +161,8 @@ func _on_property_name_edit_text_changed(new_text: String) -> void:
 
 func _on_delete_button_pressed() -> void:
 	queue_free()
+
+
+func _on_boolean_button_pressed() -> void:
+	values[0] = find_child("BooleanButton").button_pressed
+	find_child("BooleanButton").text = str(values[0])

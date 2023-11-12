@@ -72,6 +72,11 @@ layout_mode = 2
 [node name="DropDownValueButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
 layout_mode = 2
 
+[node name="BooleanButton" type="CheckBox" parent="MarginContainer/HBoxContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "boolean"
+
 [node name="UndefinedDropDownsLabel" type="Label" parent="MarginContainer/HBoxContainer2"]
 visible = false
 layout_mode = 2
@@ -83,3 +88,4 @@ text = "undefined dropdowns"
 [connection signal="text_changed" from="MarginContainer/HBoxContainer2/StringValueEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_item_selected"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownValueButton" to="." method="_on_drop_down_value_button_item_selected"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer2/BooleanButton" to="." method="_on_boolean_button_pressed"]

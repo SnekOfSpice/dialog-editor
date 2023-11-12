@@ -36,7 +36,7 @@ var instruction_templates := [
 	}
 ]
 
-enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _DropDown}
+enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
 	DataTypes._Integer : "Integer",
@@ -44,6 +44,7 @@ const DATA_TYPE_STRINGS := {
 	DataTypes._Array : "Array",
 	DataTypes._Dictionary : "Dictionary",
 	DataTypes._DropDown : "Drop Down",
+	DataTypes._Boolean : "Boolean",
 }
 
 var head_data_types := {
