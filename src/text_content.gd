@@ -2,11 +2,11 @@ extends Control
 
 
 
-func serialize():
-	return find_child("TextBox").text
+func serialize() -> Dictionary:
+	return {"content": find_child("TextBox").text}
 
-func deserialize(data: String):
-	find_child("TextBox").text = data
+func deserialize(data: Dictionary):
+	find_child("TextBox").text = data.get("content")
 
 func _input(event: InputEvent) -> void:
 	pass

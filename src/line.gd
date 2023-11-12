@@ -71,7 +71,12 @@ func deserialize(data: Dictionary):
 	# content (based on line type)
 	match line_type:
 		Data.LineType.Text:
-			find_child("TextContent").deserialize(data.get("content"))
+			if data.get("content") is String:
+				var compat_data = {}
+				compat_data["content"] = data.get("content")
+				find_child("TextContent").deserialize(compat_data)
+			else:
+				find_child("TextContent").deserialize(data.get("content"))
 		Data.LineType.Choice:
 			find_child("ChoiceContainer").deserialize(data.get("content"))
 		Data.LineType.Instruction:
