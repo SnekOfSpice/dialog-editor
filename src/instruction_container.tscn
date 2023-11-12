@@ -3,8 +3,10 @@
 [ext_resource type="Script" path="res://src/instruction_container.gd" id="1_mqxig"]
 
 [node name="InstructionContainer" type="HBoxContainer"]
-offset_right = 128.0
-offset_bottom = 37.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 35.0
+grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_mqxig")
@@ -17,7 +19,24 @@ focus_mode = 0
 allow_reselect = true
 auto_height = true
 
-[node name="ArgContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(291, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DelayContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/DelayContainer"]
+layout_mode = 2
+text = "Delay"
+
+[node name="DelaySpinBox" type="SpinBox" parent="VBoxContainer/DelayContainer"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.01
+
+[node name="ArgContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 

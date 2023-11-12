@@ -19,6 +19,7 @@ func serialize():
 	var result = {}
 	
 	result["name"] = instruction_name
+	result["delay"] = find_child("DelaySpinBox").value
 	
 	var content = []
 	for c in find_child("ArgContainer").get_children():
@@ -48,6 +49,7 @@ func deserialize(data):
 	else:
 		fill_args(data.get("content").get("args"))
 	
+	find_child("DelaySpinBox").value = float(data.get("delay", 0.0))
 	
 		
 
