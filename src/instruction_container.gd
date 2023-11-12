@@ -19,7 +19,8 @@ func serialize():
 	var result = {}
 	
 	result["name"] = instruction_name
-	result["delay"] = find_child("DelaySpinBox").value
+	result["delay.before"] = find_child("DelayBeforeSpinBox").value
+	result["delay.after"] = find_child("DelayAfterSpinBox").value
 	
 	var content = []
 	for c in find_child("ArgContainer").get_children():
@@ -30,6 +31,10 @@ func serialize():
 
 
 func deserialize(data):
+	instruction_name = data.get("name", "")
+	if not instruction_name == "":
+		set_selected_instruction(instruction_name)
+	
 	if data.get("content") is Array: # deserializing with {name, value}
 		for c in find_child("ArgContainer").get_children():
 			c.queue_free()
@@ -49,9 +54,9 @@ func deserialize(data):
 	else:
 		fill_args(data.get("content").get("args"))
 	
-	find_child("DelaySpinBox").value = float(data.get("delay", 0.0))
+	find_child("DelayBeforeSpinBox").value = float(data.get("delay.before", data.get("delay", 0.0)))
+	find_child("DelayAfterSpinBox").value = float(data.get("delay.after", 0.0))
 	
-		
 
 func fill_args(args: Array):
 	for c in find_child("ArgContainer").get_children():
@@ -75,3 +80,14 @@ func set_selected_instruction(instr_name : String):
 	instruction_name = instr_name
 	var args = Pages.get_instruction_args(instruction_name)
 	fill_args(args)
+	
+	var i := 0
+	for template in Pages.instruction_templates:
+		if template.get("name") == instruction_name:
+			break
+		
+		i += 1
+	
+	
+	if find_child("TemplateList").is_item_selectable(i):
+		find_child("TemplateList").select(i)

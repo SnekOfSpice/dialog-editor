@@ -24,14 +24,34 @@ custom_minimum_size = Vector2(291, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DelayContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/DelayContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2
-text = "Delay"
 
-[node name="DelaySpinBox" type="SpinBox" parent="VBoxContainer/DelayContainer"]
+[node name="Label2" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Delay & Input Lock"
+
+[node name="DelayContainer" type="GridContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Before" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+layout_mode = 2
+text = "Before Execution"
+
+[node name="DelayBeforeSpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.01
+
+[node name="After" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+layout_mode = 2
+text = "After Execution"
+
+[node name="DelayAfterSpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
