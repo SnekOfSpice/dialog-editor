@@ -1,6 +1,7 @@
 extends HBoxContainer
 
 var instruction_name := ""
+var selected_index := 0
 
 func _ready() -> void:
 	var list : ItemList = find_child("TemplateList")
@@ -21,6 +22,7 @@ func serialize():
 	result["name"] = instruction_name
 	result["delay.before"] = find_child("DelayBeforeSpinBox").value
 	result["delay.after"] = find_child("DelayAfterSpinBox").value
+	result["meta.selected_index"] = selected_index
 	
 	var content = []
 	for c in find_child("ArgContainer").get_children():
@@ -33,6 +35,10 @@ func serialize():
 func deserialize(data):
 	instruction_name = data.get("name", "")
 	if not instruction_name == "":
+		var i = data.get("meta.selected_index", 0)
+		if i == null:
+			i = 0
+		selected_index = i
 		set_selected_instruction(instruction_name)
 	
 	if data.get("content") is Array: # deserializing with {name, value}
@@ -74,6 +80,7 @@ func fill_args(args: Array):
 
 func _on_template_list_item_selected(index: int) -> void:
 	set_selected_instruction(find_child("TemplateList").get_item_text(index))
+	selected_index = index
 	
 
 func set_selected_instruction(instr_name : String):
@@ -81,13 +88,15 @@ func set_selected_instruction(instr_name : String):
 	var args = Pages.get_instruction_args(instruction_name)
 	fill_args(args)
 	
-	var i := 0
-	for template in Pages.instruction_templates:
-		if template.get("name") == instruction_name:
-			break
-		
-		i += 1
+#	var i := 0
+#	for template in Pages.instruction_templates:
+#
+#		if template.get("name") == instruction_name:
+#			break
+#		i += 1
+#	print(i)
 	
 	
-	if find_child("TemplateList").is_item_selectable(i):
-		find_child("TemplateList").select(i)
+	
+	if find_child("TemplateList").is_item_selectable(selected_index):
+		find_child("TemplateList").select(selected_index)
