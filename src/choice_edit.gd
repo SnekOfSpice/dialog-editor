@@ -18,6 +18,7 @@ func deserialize(data:Dictionary):
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
+	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
 	
 	set_do_jump_page(data.get("do_jump_page", false))
 	
