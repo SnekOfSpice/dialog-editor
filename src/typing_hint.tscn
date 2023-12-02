@@ -1,13 +1,13 @@
 [gd_scene load_steps=2 format=3 uid="uid://bgbnqa4jqrx7w"]
 
-[ext_resource type="Script" path="res://src/dialog_actor_hint.gd" id="1_bvx15"]
+[ext_resource type="Script" path="res://src/typing_hint.gd" id="1_g04h5"]
 
-[node name="DialogActorHint" type="Window"]
+[node name="TypingHint" type="Window"]
 wrap_controls = true
 transient = true
 borderless = true
 popup_window = true
-script = ExtResource("1_bvx15")
+script = ExtResource("1_g04h5")
 
 [node name="ItemList" type="ItemList" parent="."]
 anchors_preset = 15
@@ -15,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
 [connection signal="item_selected" from="ItemList" to="." method="_on_item_list_item_selected"]

@@ -1,13 +1,13 @@
 extends Window
 
-signal actor_chosen(actor_name)
+signal item_chosen(item_name)
 
-func build(actor_names: Array):
+func build(items: Array):
 	find_child("ItemList").clear()
-	for n in actor_names:
+	for n in items:
 		find_child("ItemList").add_item(n)
 	
-	if actor_names.size() == 0:
+	if items.size() == 0:
 		return
 	
 	find_child("ItemList").call_deferred("grab_focus")
@@ -18,7 +18,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		emit_signal("close_requested")
 	if event.is_action_pressed("ui_accept"):
-		emit_signal("actor_chosen", find_child("ItemList").get_item_text(selected_index))
+		emit_signal("item_chosen", find_child("ItemList").get_item_text(selected_index))
 		emit_signal("close_requested")
 
 func _on_close_requested() -> void:

@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_6al0s"]
 [ext_resource type="Script" path="res://src/text_content.gd" id="1_uudox"]
-[ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://src/dialog_actor_hint.tscn" id="3_8xrow"]
+[ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://src/typing_hint.tscn" id="3_8xrow"]
 
 [node name="TextContent" type="VBoxContainer"]
 offset_right = 40.0
@@ -79,4 +79,4 @@ visible = false
 [connection signal="pressed" from="HBoxContainer/PauseAutoCont" to="." method="_on_pause_auto_cont_pressed"]
 [connection signal="pressed" from="HBoxContainer/PauseClickCont" to="." method="_on_pause_click_cont_pressed"]
 [connection signal="pressed" from="HBoxContainer/LineClear" to="." method="_on_line_clear_pressed"]
-[connection signal="actor_chosen" from="DialogActorHint" to="." method="_on_dialog_actor_hint_actor_chosen"]
+[connection signal="item_chosen" from="DialogActorHint" to="." method="_on_dialog_actor_hint_item_chosen"]

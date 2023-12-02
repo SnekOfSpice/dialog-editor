@@ -22,6 +22,14 @@ func text2templates(text: String):
 			continue
 		
 		var instr_name = line.split("(")[0]
+		if "()" in line:
+			result.append(
+				{
+					"name": instr_name,
+					"args": []
+				}
+			)
+			continue
 		var arg_string = line.replace(instr_name, "")
 		arg_string = arg_string.replace(")", "")
 		arg_string = arg_string.replace("(", "")

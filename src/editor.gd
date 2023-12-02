@@ -232,8 +232,8 @@ func _on_edit_header_button_pressed() -> void:
 
 
 func _on_edit_instruction_button_pressed() -> void:
-	current_page.save()
-	load_page(current_page.number)
+	#current_page.save()
+	#load_page(current_page.number)
 	$InstructionPopup.popup()
 
 

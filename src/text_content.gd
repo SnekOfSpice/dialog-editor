@@ -115,10 +115,10 @@ func _on_drop_down_for_actors_item_selected(index: int) -> void:
 	selected_actor_dropdown_index = index
 
 
-func _on_dialog_actor_hint_actor_chosen(actor_name) -> void:
-	find_child("TextBox").insert_text_at_caret(str(actor_name, ":"))
-
-
 func _on_text_box_focus_entered() -> void:
 	if find_child("TextBox").text.is_empty() and use_dialog_syntax:
 		build_actor_hint()
+
+
+func _on_dialog_actor_hint_item_chosen(item_name) -> void:
+	find_child("TextBox").insert_text_at_caret(str(item_name, ":"))

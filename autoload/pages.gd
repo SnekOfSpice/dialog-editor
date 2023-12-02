@@ -190,10 +190,17 @@ func get_defaults(property_key:String):
 		"data_type":DataTypes._String
 	}
 
-func get_instruction_args(instruction_name: String):
+func get_all_instruction_names() -> Array:
+	var result := []
 	for p in instruction_templates:
-		if p.get("name") == instruction_name:
-			return p.get("args")
+		result.append(p.get("name", ""))
+	
+	return result
+
+func get_instruction_args(instruction_name: String) -> Array:
+	for p in instruction_templates:
+		if p.get("name", "") == instruction_name:
+			return p.get("args", [])
 	
 	return []
 
