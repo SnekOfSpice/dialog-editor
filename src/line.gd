@@ -8,6 +8,8 @@ var line_type := Data.LineType.Text
 var is_head_editable := false
 
 signal move_line (child, dir)
+signal insert_line (at)
+signal move_to (child, idx)
 signal line_deleted
 
 func _ready() -> void:
@@ -102,6 +104,7 @@ func move(dir: int):
 func update():
 	find_child("IndexLabel").text = str(get_index())
 	set_head_editable(is_head_editable)
+	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 
 func _on_move_up_pressed() -> void:
 	move(-1)
@@ -143,3 +146,15 @@ func _on_lock_toggle_toggled(button_pressed: bool) -> void:
 
 func _on_visible_toggle_toggled(button_pressed: bool) -> void:
 	set_non_meta_parts_visible(button_pressed)
+
+
+func _on_insert_line_above_pressed() -> void:
+	emit_signal("insert_line", get_index())
+
+
+func _on_insert_line_below_pressed() -> void:
+	emit_signal("insert_line", get_index() + 1)
+
+
+func _on_move_to_index_button_pressed() -> void:
+	emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)

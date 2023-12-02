@@ -112,12 +112,34 @@ func _on_page_key_line_edit_text_changed(new_text: String) -> void:
 func _on_add_pressed() -> void:
 	add_line()
 
-
-func add_line():
+func add_line(at_index:int=find_child("Lines").get_child_count()):
 	var line = preload("res://src/line.tscn").instantiate()
 	find_child("Lines").add_child(line)
 	line.connect("move_line", move_line)
 	line.connect("line_deleted", on_line_deleted)
+	line.connect("insert_line", add_line)
+	line.connect("move_to", move_line_to)
+	
+	var idx = line.get_index()
+	while idx > at_index:
+		find_child("Lines").move_child(line, idx-1)
+		idx = line.get_index()
+	
+	update()
+
+func swap_lines(index0:int, index1:int):
+	if index0 == index1:
+		return
+	if find_child("Lines").get_child_count() - 1 < max(index0, index1):
+		return
+	
+	var line0 = find_child("Lines").get_child(index0)
+	var line1 = find_child("Lines").get_child(index1)
+	
+	find_child("Lines").move_child(line0, index1)
+	find_child("Lines").move_child(line1, index0)
+	
+	update()
 
 func move_line(line, dir):
 	var idx = line.get_index()
@@ -128,6 +150,10 @@ func move_line(line, dir):
 		return
 	
 	find_child("Lines").move_child(line, idx+dir)
+	update()
+
+func move_line_to(line, target_idx):
+	find_child("Lines").move_child(line, target_idx)
 	update()
 
 func on_line_deleted():
