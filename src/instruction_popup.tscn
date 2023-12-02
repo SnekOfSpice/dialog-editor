@@ -8,7 +8,7 @@ function_color = Color(0.658824, 0.341176, 0.898039, 1)
 
 [node name="InstructionPopup" type="Window"]
 initial_position = 2
-size = Vector2i(300, 455)
+size = Vector2i(450, 455)
 wrap_controls = true
 exclusive = true
 content_scale_aspect = 1

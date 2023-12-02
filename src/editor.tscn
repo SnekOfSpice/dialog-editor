@@ -41,30 +41,48 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FileControl" type="HBoxContainer" parent="Core"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Core"]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 37.0
+anchors_preset = -1
+anchor_right = 0.704
+offset_right = -0.00805664
+offset_bottom = 30.0
 grow_horizontal = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Core/FileControl"]
+[node name="FileControl" type="HBoxContainer" parent="Core/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Core/HBoxContainer/FileControl"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/FileControl/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer/FileControl/MarginContainer"]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="Core/FileControl/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
 focus_mode = 0
 text = "save"
 
-[node name="OpenButton" type="Button" parent="Core/FileControl/MarginContainer/HBoxContainer"]
+[node name="OpenButton" type="Button" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
 focus_mode = 0
 text = "open"
+
+[node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ErrorTextBox" type="RichTextLabel" parent="Core/HBoxContainer/FileControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="Core"]
 layout_mode = 1
@@ -307,8 +325,15 @@ visible = false
 [node name="DropdownPopup" parent="." instance=ExtResource("9_i203b")]
 visible = false
 
-[connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="Core/FileControl/MarginContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
+[node name="AutoSaveTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="InstructionDefinitionTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditCharactersButton" to="." method="_on_edit_characters_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
@@ -328,3 +353,5 @@ visible = false
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="update" from="HeaderPopup" to="." method="_on_header_popup_update"]
+[connection signal="timeout" from="AutoSaveTimer" to="." method="_on_auto_save_timer_timeout"]
+[connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]

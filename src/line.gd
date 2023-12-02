@@ -105,6 +105,7 @@ func update():
 	find_child("IndexLabel").text = str(get_index())
 	set_head_editable(is_head_editable)
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
+	#find_child("MoveToIndexSpinBox").value = get_index()
 
 func _on_move_up_pressed() -> void:
 	move(-1)

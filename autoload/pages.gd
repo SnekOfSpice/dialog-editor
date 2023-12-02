@@ -204,6 +204,50 @@ func get_instruction_args(instruction_name: String) -> Array:
 	
 	return []
 
+func get_all_invalid_instructions() -> String:
+	var warning := ""
+	
+	var overdefined_instructions := []
+	var underdefined_instructions := []
+	for i in page_data:
+		var lines = page_data.get(i).get("lines")
+		var j = 0
+		for l in lines:
+			if l.get("line_type") != Data.LineType.Instruction:
+				j += 1
+				continue
+			
+			var content = l.get("content", {})
+			var instruction_name = content.get("name")
+			var instruction_args : Array = content.get("content")
+			
+			for arg in instruction_args:
+				if arg.get("value", "").begins_with("underdefined"):
+			#if instruction_args.size() != get_instruction_args(instruction_name).size():
+					underdefined_instructions.append(str(i, ".", j))
+				elif arg.get("name", "").begins_with("overdefined"):
+					overdefined_instructions.append(str(i, ".", j))
+			j += 1
+
+	if not underdefined_instructions.is_empty():
+		warning = "Warning: underdefined instructions at: "
+		for inv in underdefined_instructions:
+			warning += inv
+			warning += ", "
+		warning = warning.trim_suffix(", ")
+	
+	if not warning.is_empty():
+		warning += "\n"
+	
+	if not overdefined_instructions.is_empty():
+		warning += "Warning: overdefined instructions at: "
+		for inv in overdefined_instructions:
+			warning += inv
+			warning += ", "
+		warning = warning.trim_suffix(", ")
+	
+	return warning
+
 # new schema with keys and values
 func apply_new_header_schema(new_schema: Array):
 	for i in page_data:

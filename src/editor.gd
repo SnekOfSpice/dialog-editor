@@ -1,5 +1,6 @@
 extends Control
 
+const AUTO_SAVE_INTERVAL := 30.0
 
 var _page = preload("res://src/page.tscn")
 var current_page: Page
@@ -28,6 +29,7 @@ func _ready() -> void:
 	find_child("MovePagePopup").size = get_window().size * 0.75
 	find_child("FactsPopup").size = get_window().size * 0.75
 	
+	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 
 func load_page(number: int, initial_load:=false):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -60,6 +62,11 @@ func load_page(number: int, initial_load:=false):
 	
 	update_controls()
 	
+	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
+
+func _process(delta: float) -> void:
+	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
+	find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
 
 func update_controls():
 	if not current_page:
@@ -262,3 +269,12 @@ func _on_edit_characters_button_pressed() -> void:
 func _on_header_popup_update() -> void:
 	await get_tree().process_frame
 	current_page.update()
+
+
+
+func _on_instruction_definition_timer_timeout() -> void:
+	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
+
+
+func _on_auto_save_timer_timeout() -> void:
+	current_page.save()
