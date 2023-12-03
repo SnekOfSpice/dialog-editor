@@ -72,11 +72,17 @@ text = "line clear"
 position = Vector2i(0, 36)
 visible = false
 
+[node name="ControlSequenceHint" parent="." instance=ExtResource("3_8xrow")]
+position = Vector2i(0, 36)
+visible = false
+
 [connection signal="toggled" from="HBoxContainer2/UseDialogSyntaxButton" to="." method="_on_use_dialog_syntax_button_toggled"]
 [connection signal="item_selected" from="HBoxContainer2/DialogSyntaxControls/HBoxContainer/DropDownForActors" to="." method="_on_drop_down_for_actors_item_selected"]
 [connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]
+[connection signal="text_changed" from="TextBox" to="." method="_on_text_box_text_changed"]
 [connection signal="pressed" from="HBoxContainer/PauseAutoCont" to="." method="_on_pause_auto_cont_pressed"]
 [connection signal="pressed" from="HBoxContainer/PauseClickCont" to="." method="_on_pause_click_cont_pressed"]
 [connection signal="pressed" from="HBoxContainer/LineClear" to="." method="_on_line_clear_pressed"]
 [connection signal="item_chosen" from="DialogActorHint" to="." method="_on_dialog_actor_hint_item_chosen"]
+[connection signal="item_chosen" from="ControlSequenceHint" to="." method="_on_control_sequence_hint_item_chosen"]

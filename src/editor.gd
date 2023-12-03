@@ -278,3 +278,7 @@ func _on_instruction_definition_timer_timeout() -> void:
 
 func _on_auto_save_timer_timeout() -> void:
 	current_page.save()
+
+
+func _on_instruction_popup_validate_saved_instructions() -> void:
+	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()

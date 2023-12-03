@@ -353,5 +353,6 @@ autostart = true
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="update" from="HeaderPopup" to="." method="_on_header_popup_update"]
+[connection signal="validate_saved_instructions" from="InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
 [connection signal="timeout" from="AutoSaveTimer" to="." method="_on_auto_save_timer_timeout"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]

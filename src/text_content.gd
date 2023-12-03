@@ -5,6 +5,15 @@ var active_actors := [] # list of character names
 var active_actors_title := ""
 var selected_actor_dropdown_index := 0
 
+var control_sequences := ["lc", "ap", "mp", "var", "func"]
+var control_sequence_hints := {
+	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
+	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
+	"mp": "Manual Pause: Pauses the reading of text until the player clicks.",
+	"var": "vars",
+	"func": "evaluator func",
+}
+
 func _ready() -> void:
 	find_child("DropDownForActors").clear()
 	for title in Pages.dropdown_titles:
@@ -122,3 +131,35 @@ func _on_text_box_focus_entered() -> void:
 
 func _on_dialog_actor_hint_item_chosen(item_name) -> void:
 	find_child("TextBox").insert_text_at_caret(str(item_name, ":"))
+
+
+func _on_text_box_text_changed() -> void:
+	var tb: TextEdit = find_child("TextBox")
+	var line_index = tb.get_caret_line()
+	var col_index = tb.get_caret_column()
+	var line = tb.get_line(line_index)
+	var last_char : String
+	if col_index > 0:
+		last_char = line[col_index-1]
+	else:
+		last_char = ""
+	
+	if last_char == "<":
+		find_child("ControlSequenceHint").build(control_sequences, control_sequence_hints)
+		find_child("ControlSequenceHint").popup()
+		var caret_pos = (
+			get_window().position +
+			Vector2i(find_child("TextBox").global_position) +
+			Vector2i(find_child("TextBox").get_caret_draw_pos())
+			)
+		caret_pos.x += 40
+		find_child("ControlSequenceHint").position = caret_pos
+		
+
+
+func _on_control_sequence_hint_item_chosen(item_name) -> void:
+	if item_name == "var" or item_name == "func":
+		find_child("TextBox").insert_text_at_caret(str(item_name, ":>"))
+		find_child("TextBox").set_caret_column(find_child("TextBox").get_caret_column() - 1)
+	else:
+		find_child("TextBox").insert_text_at_caret(str(item_name, ">"))

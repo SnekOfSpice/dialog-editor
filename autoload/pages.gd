@@ -209,6 +209,7 @@ func get_all_invalid_instructions() -> String:
 	
 	var overdefined_instructions := []
 	var underdefined_instructions := []
+	var malformed_instructions := []
 	for i in page_data:
 		var lines = page_data.get(i).get("lines")
 		var j = 0
@@ -220,6 +221,9 @@ func get_all_invalid_instructions() -> String:
 			var content = l.get("content", {})
 			var instruction_name = content.get("name")
 			var instruction_args : Array = content.get("content")
+			
+			if instruction_args.size() != get_instruction_args(instruction_name).size():
+				malformed_instructions.append(str(i, ".", j))
 			
 			for arg in instruction_args:
 				if arg.get("value", "").begins_with("underdefined"):
@@ -242,6 +246,16 @@ func get_all_invalid_instructions() -> String:
 	if not overdefined_instructions.is_empty():
 		warning += "Warning: overdefined instructions at: "
 		for inv in overdefined_instructions:
+			warning += inv
+			warning += ", "
+		warning = warning.trim_suffix(", ")
+	
+	if not warning.is_empty():
+		warning += "\n"
+	
+	if not malformed_instructions.is_empty():
+		warning += "Warning: malformed instructions at: "
+		for inv in malformed_instructions:
 			warning += inv
 			warning += ", "
 		warning = warning.trim_suffix(", ")

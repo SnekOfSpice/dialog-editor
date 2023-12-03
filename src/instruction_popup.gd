@@ -3,6 +3,8 @@ extends Window
 var old_instructions
 var new_instructions
 
+signal validate_saved_instructions()
+
 func _ready() -> void:
 	fill()
 
@@ -81,6 +83,7 @@ func save():
 	Pages.instruction_templates = text2templates(new_instructions)
 
 func _on_save_close_button_pressed() -> void:
+	emit_signal("validate_saved_instructions")
 	save()
 	hide()
 
