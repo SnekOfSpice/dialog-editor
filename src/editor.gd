@@ -164,6 +164,7 @@ func _on_fd_save_file_selected(path: String) -> void:
 		"facts": Pages.facts,
 		"dropdowns": Pages.dropdowns,
 		"dropdown_titles": Pages.dropdown_titles,
+		"dropdown_dialog_arguments": Pages.dropdown_dialog_arguments,
 	}
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
@@ -197,6 +198,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 		Pages.facts = data.get("facts", {})
 	Pages.dropdowns = data.get("dropdowns", {})
 	Pages.dropdown_titles = data.get("dropdown_titles", [])
+	Pages.dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
 	
 	load_page(0, true)
 

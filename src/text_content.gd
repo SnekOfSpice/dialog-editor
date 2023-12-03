@@ -10,8 +10,8 @@ var control_sequence_hints := {
 	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
 	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
 	"mp": "Manual Pause: Pauses the reading of text until the player clicks.",
-	"var": "vars",
-	"func": "evaluator func",
+	"var": "<var:var_name>\n\nEvaluate any variable (will get inserted as its String representation).",
+	"func": "<func:func_name>\n<func:func_name,arg0,arg1>\n\nCall a function (It should return a String). Can take in arbitrary amounts of arguments, but the arguments must match the function signature of the respective func in the evaluator (obv).",
 }
 
 func _ready() -> void:
@@ -99,16 +99,12 @@ func _on_text_box_caret_changed() -> void:
 			build_actor_hint()
 
 func build_actor_hint():
+	used_arguments.clear()
+	entered_arguments = 0
 	find_child("TextBox").insert_text_at_caret("[]>")
 	find_child("DialogActorHint").build(active_actors)
 	find_child("DialogActorHint").popup()
-	var caret_pos = (
-		get_window().position +
-		Vector2i(find_child("TextBox").global_position) +
-		Vector2i(find_child("TextBox").get_caret_draw_pos())
-		)
-	caret_pos.x += 40
-	find_child("DialogActorHint").position = caret_pos # - canvas_position
+	position_hint_at_caret(find_child("DialogActorHint"))
 
 func fill_active_actors():
 	var title = find_child("DropDownForActors").get_item_text(find_child("DropDownForActors").get_selected_id())
@@ -131,6 +127,11 @@ func _on_text_box_focus_entered() -> void:
 
 func _on_dialog_actor_hint_item_chosen(item_name) -> void:
 	find_child("TextBox").insert_text_at_caret(str(item_name, ":"))
+	if not Pages.dropdown_dialog_arguments.is_empty():
+		find_child("TextBox").set_caret_column(find_child("TextBox").get_caret_column() - 1)
+		find_child("DialogArgumentHint").popup()
+		find_child("DialogArgumentHint").build(Pages.dropdown_dialog_arguments)
+		position_hint_at_caret(find_child("DialogArgumentHint"))
 
 
 func _on_text_box_text_changed() -> void:
@@ -147,14 +148,16 @@ func _on_text_box_text_changed() -> void:
 	if last_char == "<":
 		find_child("ControlSequenceHint").build(control_sequences, control_sequence_hints)
 		find_child("ControlSequenceHint").popup()
-		var caret_pos = (
+		position_hint_at_caret(find_child("ControlSequenceHint"))
+
+func position_hint_at_caret(hint: Window):
+	var caret_pos = (
 			get_window().position +
 			Vector2i(find_child("TextBox").global_position) +
 			Vector2i(find_child("TextBox").get_caret_draw_pos())
 			)
-		caret_pos.x += 40
-		find_child("ControlSequenceHint").position = caret_pos
-		
+	caret_pos.x += 40
+	hint.position = caret_pos
 
 
 func _on_control_sequence_hint_item_chosen(item_name) -> void:
@@ -163,3 +166,56 @@ func _on_control_sequence_hint_item_chosen(item_name) -> void:
 		find_child("TextBox").set_caret_column(find_child("TextBox").get_caret_column() - 1)
 	else:
 		find_child("TextBox").insert_text_at_caret(str(item_name, ">"))
+
+func move_caret(amount: int):
+	find_child("TextBox").set_caret_column(find_child("TextBox").get_caret_column() + amount)
+
+var entered_arguments := 0
+var used_arguments := []
+func _on_dialog_argument_hint_item_chosen(item_name) -> void:
+	if entered_arguments == 0:
+		find_child("TextBox").insert_text_at_caret(str("{",item_name, "}"))
+		move_caret(-1)
+	elif entered_arguments > 0 and entered_arguments < Pages.dropdown_dialog_arguments.size():
+		move_caret(1)
+		find_child("TextBox").insert_text_at_caret(str(",", item_name))
+	elif entered_arguments > 0:
+		move_caret(1)
+		find_child("TextBox").insert_text_at_caret(str(item_name))
+	
+	find_child("DialogArgumentValueHint").popup()
+	find_child("DialogArgumentValueHint").build(Pages.dropdowns.get(item_name, []))
+	position_hint_at_caret(find_child("DialogArgumentValueHint"))
+	
+	used_arguments.append(item_name)
+#	if entered_arguments < Pages.dropdown_dialog_arguments.size():
+#		if used_arguments.size() >= Pages.dropdown_dialog_arguments.size():
+#			return
+#		var available_arguments := []
+#		for a in Pages.dropdown_dialog_arguments:
+#			if not used_arguments.has(a):
+#				available_arguments.append(a)
+#		prints("AVAIALBL", available_arguments)
+		
+		
+	
+	entered_arguments += 1
+
+
+func _on_dialog_argument_value_hint_item_chosen(item_name) -> void:
+	find_child("TextBox").insert_text_at_caret(str("|",item_name))
+	move_caret(-1)
+	if entered_arguments < Pages.dropdown_dialog_arguments.size():
+		if used_arguments.size() >= Pages.dropdown_dialog_arguments.size():
+			return
+		var available_arguments := []
+		for a in Pages.dropdown_dialog_arguments:
+			if not used_arguments.has(a):
+				available_arguments.append(a)
+			find_child("DialogArgumentHint").popup()
+			find_child("DialogArgumentHint").build(available_arguments)
+			position_hint_at_caret(find_child("DialogArgumentHint"))
+
+func type_hint_about_to_close():
+	# move caret to end of line
+	find_child("TextBox").set_caret_column(find_child("TextBox").get_line(find_child("TextBox").get_caret_line()).length())
