@@ -31,7 +31,10 @@ func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index
 	
 	var s = "Pages containing fact:\n"
 	for r in references.get("ref_pages"):
-		s += str(r, "\t\t\t\t(", Pages.page_data.get(int(r)).get("page_key"), ")")
+		var page_key : String = Pages.page_data.get(int(r)).get("page_key")
+		s += str(r)
+		if not page_key.is_empty():
+			s += str("\t\t\t\t(", page_key, ")")
 		s += "\n"
 	find_child("RefPages").text = s
 	

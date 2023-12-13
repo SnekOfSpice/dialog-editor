@@ -2,6 +2,7 @@ extends Control
 
 
 var fact_name := ""
+var entered_text := ""
 
 func _ready() -> void:
 	find_child("RegisterContainer").visible = false
@@ -19,7 +20,7 @@ func get_fact_name():
 	return find_child("FactName").text
 
 func update_unregsitered_prompt():
-	var new_text = find_child("FactName").text
+	var new_text = entered_text
 	var is_unregistered = (not Pages.facts.keys().has(new_text)
 		or Pages.facts.get(new_text) == find_child("FactValue").button_pressed
 	)
@@ -35,11 +36,12 @@ func update_unregsitered_prompt():
 		)
 
 func _on_fact_name_text_changed(new_text: String) -> void:
+	entered_text = new_text
 	update_unregsitered_prompt()
 
 
 func _on_register_button_pressed() -> void:
-	Pages.facts[find_child("FactName").text] = not(find_child("FactValue").button_pressed)
+	Pages.facts[entered_text] = not(find_child("FactValue").button_pressed)
 	find_child("RegisterContainer").visible = false
 
 

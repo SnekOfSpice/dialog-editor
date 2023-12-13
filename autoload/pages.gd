@@ -340,6 +340,7 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	# step over every fact in page data and save its name
 
 func lines_referencing_fact(fact_name: String):
+	fact_name = fact_name.split(":")[0]
 	var ref_pages := []
 	var ref_lines_declare := []
 	var ref_lines_condition := []
@@ -355,7 +356,7 @@ func lines_referencing_fact(fact_name: String):
 					ref_lines_declare.append(str(page.get("number"), ".", i))
 			if line.get("line_type") == Data.LineType.Choice:
 				var options = line.get("content")
-				for option in options:
+				for option in options.get("choices", {}):
 					for fact in option.get("conditionals", {}).get("facts", {}):
 						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
