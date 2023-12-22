@@ -382,7 +382,49 @@ func lines_referencing_fact(fact_name: String):
 	}
 	return all_refs
 
-#func characters_on_page(page_number: int) -> Array:
+
+func character_count_on_page_approx(page_number: int) -> int:
+	var count := 0
+	for line in page_data.get(page_number, {}).get("lines", []):
+		var line_type = line.get("line_type")
+		var content = line.get("content")
+		match line_type:
+			Data.LineType.Choice:
+				for choice in content.get("choices"):
+					count += str(choice.get("choice_text.enabled")).length()
+					count += str(choice.get("choice_text.disabled")).length()
+			Data.LineType.Text:
+				count += str(content.get("content")).length()
+	return count
+
+func word_count_on_page_approx(page_number: int) -> int:
+	var count := 0
+	for line in page_data.get(page_number, {}).get("lines", []):
+		var line_type = line.get("line_type")
+		var content = line.get("content")
+		match line_type:
+			Data.LineType.Choice:
+				for choice in content.get("choices"):
+					count += str(choice.get("choice_text.enabled")).count(" ") + 1
+					count += str(choice.get("choice_text.disabled")).count(" ") + 1
+			Data.LineType.Text:
+				count += str(content.get("content")).count(" ") + 1
+	return count
+
+func character_count_total_approx() -> int:
+	var sum := 0
+	for i in page_data.keys():
+		sum += character_count_on_page_approx(i)
+	
+	return sum
+func word_count_total_approx() -> int:
+	var sum := 0
+	for i in page_data.keys():
+		sum += word_count_on_page_approx(i)
+	
+	return sum
+
+#func speaking_characters_on_page(page_number: int) -> Array:
 #	var result = []
 #
 #	return result

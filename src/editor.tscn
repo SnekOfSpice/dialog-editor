@@ -97,21 +97,16 @@ size_flags_horizontal = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="Core/MarginContainer2"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 9
-
-[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer/HBoxContainer"]
+[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "edit header"
 
-[node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer/HBoxContainer"]
+[node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 text = "edit drop downs"
-alignment = 2
 
 [node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
@@ -123,13 +118,20 @@ layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 text = "move pages"
-alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="Core/MarginContainer2/VBoxContainer"]
+layout_mode = 2
 
 [node name="EditFactsButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 focus_mode = 0
 text = "view facts"
+alignment = 2
+
+[node name="WordCountButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "word & char count"
 alignment = 2
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
@@ -275,6 +277,7 @@ line_type = 2
 
 [node name="AddLineButton" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "add line"
 
 [node name="PageContainer" type="MarginContainer" parent="Core"]
@@ -334,8 +337,8 @@ autostart = true
 
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/HBoxContainer/EditCharactersButton" to="." method="_on_edit_characters_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditCharactersButton" to="." method="_on_edit_characters_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/MovePagesButton" to="." method="_on_move_pages_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditFactsButton" to="." method="_on_edit_facts_button_pressed"]
