@@ -16,6 +16,7 @@ layout_mode = 2
 
 [node name="UseDialogSyntaxButton" type="CheckBox" parent="HBoxContainer2"]
 layout_mode = 2
+focus_mode = 0
 text = "Use dialog syntaxing"
 
 [node name="DialogSyntaxControls" type="PanelContainer" parent="HBoxContainer2"]

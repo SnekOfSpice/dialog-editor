@@ -21,18 +21,23 @@ func get_fact_name():
 
 func update_unregsitered_prompt():
 	var new_text = entered_text
-	var is_unregistered = (not Pages.facts.keys().has(new_text)
-		or Pages.facts.get(new_text) == find_child("FactValue").button_pressed
-	)
-	find_child("RegisterContainer").visible = is_unregistered
-	if find_child("RegisterContainer").visible:
+	var is_unregistered = (not Pages.facts.keys().has(new_text))
+#		or Pages.facts.get(new_text) == find_child("FactValue").button_pressed
+#	)
+	find_child("RegisterContainer").visible = true
+	if not Pages.facts.keys().has(new_text):
 		find_child("RegisterLabel").text = str(
 			"Fact \"",
 			new_text,
 			"\" isn't registered in global scope with default value ",
 			not find_child("FactValue").button_pressed,
 			". Would you like to register it?",
-			"(Facts are registered with the inverse of the value that registered them.)",
+			" (Facts are registered with the inverse of the value that registered them.)",
+		)
+	else:
+		find_child("RegisterLabel").text = str(
+			"Registered as ",
+			Pages.facts.get(new_text)
 		)
 
 func _on_fact_name_text_changed(new_text: String) -> void:

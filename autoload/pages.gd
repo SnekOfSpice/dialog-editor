@@ -17,7 +17,7 @@ var head_defaults := [
 
 var dropdowns := {"dropdown1": ["0", "1"], "dropdown2": ["a", "b"]}
 var dropdown_titles := ["dropdown1", "dropdown2"]
-var dropdown_dialog_arguments := ["dropdown1", "dropdown2"]
+var dropdown_dialog_arguments := []
 
 var facts := {}
 
@@ -108,7 +108,7 @@ func swap_page_references(from: int, to: int):
 		for line in page.get("lines"):
 			if line.get("line_type") == Data.LineType.Choice:
 				var content = line.get("content")
-				for choice in content:
+				for choice in content.get("choices"):
 					if choice.get("target_page") == from:
 						choice["target_page"] = to
 					elif choice.get("target_page") == to:

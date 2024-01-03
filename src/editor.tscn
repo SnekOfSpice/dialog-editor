@@ -99,25 +99,27 @@ layout_mode = 2
 
 [node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
+focus_mode = 0
 text = "edit header"
+alignment = 2
 
 [node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 focus_mode = 0
 text = "edit drop downs"
+alignment = 2
 
 [node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
+focus_mode = 0
 text = "edit instructions"
+alignment = 2
 
 [node name="MovePagesButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 focus_mode = 0
 text = "move pages"
+alignment = 2
 
 [node name="HSeparator" type="HSeparator" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2

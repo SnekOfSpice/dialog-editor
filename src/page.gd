@@ -35,6 +35,7 @@ func serialize() -> Dictionary:
 	data["number"] = number
 	data["page_key"] = page_key
 	data["next"] = find_child("NextLineEdit").value
+	print(data.get("next"))
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	
 	var lines_data := []
@@ -49,7 +50,7 @@ func serialize() -> Dictionary:
 func set_next(next_page: int):
 	next = next_page
 	var next_exists = Pages.page_data.keys().has(next)
-	find_child("NextContainer").visible = next_exists
+	find_child("NextKey").visible = next_exists
 	
 	if not next_exists:
 		return

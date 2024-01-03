@@ -69,6 +69,11 @@ func _on_add_button_pressed() -> void:
 
 
 func _on_save_button_pressed() -> void:
+	var cleaned_dropdowns := {}
+	for dd in working_memory_dropdowns.keys():
+		if working_memory_titles.has(dd):
+			cleaned_dropdowns[dd] = working_memory_dropdowns.get(dd)
+	working_memory_dropdowns = cleaned_dropdowns
 	Pages.dropdowns = working_memory_dropdowns.duplicate(true)
 	Pages.dropdown_titles = working_memory_titles.duplicate(true)
 

@@ -19,7 +19,7 @@ func _ready() -> void:
 	for title in Pages.dropdown_titles:
 		find_child("DropDownForActors").add_item(title)
 	find_child("DropDownForActors").select(find_child("DropDownForActors").get_selectable_item())
-	set_use_dialog_syntax(false)
+	set_use_dialog_syntax(true)
 	
 func serialize() -> Dictionary:
 	var result := {}
