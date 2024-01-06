@@ -1,6 +1,6 @@
 extends Control
 
-const AUTO_SAVE_INTERVAL := 30.0
+const AUTO_SAVE_INTERVAL := 30000.0
 
 var _page = preload("res://src/page.tscn")
 var current_page: Page

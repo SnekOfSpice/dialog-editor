@@ -168,3 +168,7 @@ func update():
 
 func _on_next_line_edit_value_changed(value: float) -> void:
 	set_next(int(value))
+
+
+func _on_delete_page_button_pressed() -> void:
+	pass # Replace with function body.

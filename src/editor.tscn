@@ -331,7 +331,6 @@ visible = false
 visible = false
 
 [node name="AutoSaveTimer" type="Timer" parent="."]
-autostart = true
 
 [node name="InstructionDefinitionTimer" type="Timer" parent="."]
 wait_time = 5.0
