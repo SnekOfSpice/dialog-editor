@@ -45,6 +45,8 @@ func update():
 	find_child("PageKeyLabel").text = Pages.page_data.get(default_target).get("page_key")
 	find_child("PageSelect").value = default_target
 
+func set_text_lines_visible(value:bool):
+	find_child("TextLines").visible = value
 
 func _on_delete_pressed() -> void:
 	queue_free()

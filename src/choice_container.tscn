@@ -22,8 +22,14 @@ layout_mode = 2
 focus_mode = 0
 text = "jump page (override)"
 
+[node name="AutoSwitchButton" type="CheckBox" parent="Controls"]
+layout_mode = 2
+focus_mode = 0
+text = "auto switch"
+
 [node name="ChoiceList" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="Controls/JumpPageButton" to="." method="_on_jump_page_button_pressed"]
+[connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]
