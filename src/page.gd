@@ -84,6 +84,8 @@ func deserialize_lines(lines_data: Array):
 		line.deserialize(data)
 		line.connect("move_line", move_line)
 		line.connect("line_deleted", on_line_deleted)
+		line.connect("insert_line", add_line)
+		line.connect("move_to", move_line_to)
 	
 	enable_page_key_edit(false)
 

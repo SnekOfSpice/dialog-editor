@@ -51,6 +51,7 @@ func serialize() -> Dictionary:
 
 func set_operand(value: int):
 	operand = value
+	find_child("OperandOptionButton").select(operand)
 	find_child("OperandArg1").visible = (
 		operand == ConditionalOperand.nOrLess or 
 		operand == ConditionalOperand.nOrMore or 
