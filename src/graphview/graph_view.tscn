@@ -11,17 +11,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_oesl8")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="EdgeContainer" type="Node2D" parent="."]
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-size = Vector2i(1920, 1080)
+[node name="NodeContainer" type="Node2D" parent="."]
 
-[node name="EdgeContainer" type="Node2D" parent="SubViewportContainer/SubViewport"]
-
-[node name="NodeContainer" type="Node2D" parent="SubViewportContainer/SubViewport"]
+[node name="Camera" type="Camera2D" parent="."]

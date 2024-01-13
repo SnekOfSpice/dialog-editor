@@ -2,10 +2,64 @@ extends Control
 
 var nodes := {}
 
+var leftKeyDown := false
+var rightKeyDown := false
+var upKeyDown := false
+var downKeyDown := false
+
 func _ready() -> void:
 	connect("visibility_changed", on_visibility_changed)
 
+func _process(delta: float) -> void:
+	var md := Vector2()
+	if leftKeyDown:
+		md.x -= 1
+	if rightKeyDown:
+		md.x += 1
+	if upKeyDown:
+		md.y -= 1
+	if downKeyDown:
+		md.y += 1
+	
+	var zoom_change := 0.0
+	if Input.is_action_just_pressed("mouse_wheel_up"):
+		zoom_change += 0.1
+	if Input.is_action_just_pressed("mouse_wheel_down"):
+		zoom_change -= 0.1
+	$Camera.zoom.x += zoom_change
+	$Camera.zoom.x = clamp($Camera.zoom.x, 0.2, 5)
+	$Camera.zoom.y += zoom_change
+	$Camera.zoom.y = clamp($Camera.zoom.y, 0.2, 5)
+	
+	$Camera.position += md.normalized() * delta * 350 * (1.0 / float($Camera.zoom.x))
+
+func _input(event: InputEvent) -> void:
+	if pressed(event, "ui_left"):
+		leftKeyDown = true
+	elif pressed(event, "ui_right"):
+		rightKeyDown = true
+	elif pressed(event, "ui_up"):
+		upKeyDown = true
+	elif pressed(event, "ui_down"):
+		downKeyDown = true
+	elif released(event, "ui_left"):
+		leftKeyDown = false
+	elif released(event, "ui_right"):
+		rightKeyDown = false
+	elif released(event, "ui_up"):
+		upKeyDown = false
+	elif released(event, "ui_down"):
+		downKeyDown = false
+
+func pressed(event, actionName:String) -> bool:
+	return InputMap.event_is_action(event, actionName) and event.pressed
+
+func released(event, actionName:String) -> bool:
+	return InputMap.event_is_action(event, actionName) and not event.pressed
+
 func on_visibility_changed():
+	var cam : Camera2D = find_child("Camera")
+	cam.enabled = visible
 	if not visible:
 		return
 	
@@ -39,8 +93,8 @@ func add_node(page_index:int):
 		graph_node.set_page_index(page_index)
 	
 	var pos:=Vector2.ZERO
-	var origin := Vector2(1920, 1080) * 0.5
-	var radius = 400
+	var origin := Vector2.ZERO
+	var radius = Pages.get_page_count() * 50
 	pos.x = origin.x + radius * float(cos(2 * page_index * PI / Pages.get_page_count()))
 	pos.y = origin.y + radius * float(sin(2 * page_index * PI / Pages.get_page_count()))
 	graph_node.position = pos
