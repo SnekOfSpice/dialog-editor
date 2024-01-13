@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=13 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" path="res://src/LineTypeButton.gd" id="3_2h0gj"]
+[ext_resource type="PackedScene" uid="uid://thtw7bxvvc4f" path="res://src/graphview/graph_view.tscn" id="5_bks01"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://src/move_page_popup.tscn" id="7_w8mdv"]
@@ -296,6 +297,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
+
+[node name="GraphView" parent="." instance=ExtResource("5_bks01")]
+layout_mode = 1
 
 [node name="FDSave" type="FileDialog" parent="."]
 initial_position = 2

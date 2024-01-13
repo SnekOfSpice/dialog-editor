@@ -149,6 +149,31 @@ func key_exists(key: String) -> bool:
 	
 	return false
 
+func get_page_key(page_index:int) -> String:
+	return str(page_data.get(page_index, {}).get("page_key", ""))
+
+func get_page_references(page_index:int) -> Array:
+	if not page_data.has(page_index):
+		push_warning(str("cannot get page reference on non-existent page ", page_index))
+		return []
+	var references := []
+	var page : Dictionary = page_data.get(page_index)
+	
+	for line in page.get("lines"):
+		var line_type = line.get("line_type")
+		if not line_type == Data.LineType.Choice:
+			continue
+		var content = line.get("content")
+		
+		for choice in content.get("choices"):
+			var jump_page :bool=choice.get("do_jump_page", false)
+			if jump_page:
+				references.append(choice.get("target_page", 0))
+	
+	if not page.get("terminate", false):
+		references.append(page.get("next", 0))
+	
+	return references
 
 func insert_page(at: int):
 	# reindex all after at

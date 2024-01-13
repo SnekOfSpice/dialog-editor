@@ -30,6 +30,8 @@ func _ready() -> void:
 	find_child("FactsPopup").size = get_window().size * 0.75
 	
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
+	$Core.visible = true
+	$GraphView.visible = false
 
 func load_page(number: int, initial_load:=false):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -67,7 +69,14 @@ func load_page(number: int, initial_load:=false):
 func _process(delta: float) -> void:
 	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
 	find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
+	
+	if Input.is_action_just_pressed("f1"):
+		set_graph_view_visible(not $GraphView.visible)
 
+func set_graph_view_visible(value:bool):
+	$Core.visible = not value
+	$GraphView.visible = value
+	
 func update_controls():
 	if not current_page:
 		return
