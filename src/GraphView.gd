@@ -27,9 +27,9 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("mouse_wheel_down"):
 		zoom_change -= 0.1
 	$Camera.zoom.x += zoom_change
-	$Camera.zoom.x = clamp($Camera.zoom.x, 0.2, 5)
+	$Camera.zoom.x = clamp($Camera.zoom.x, 0.2, 50)
 	$Camera.zoom.y += zoom_change
-	$Camera.zoom.y = clamp($Camera.zoom.y, 0.2, 5)
+	$Camera.zoom.y = clamp($Camera.zoom.y, 0.2, 50)
 	
 	$Camera.position += md.normalized() * delta * 350 * (1.0 / float($Camera.zoom.x))
 
@@ -62,7 +62,7 @@ func on_visibility_changed():
 	cam.enabled = visible
 	if not visible:
 		return
-	
+	cam.position = Vector2.ZERO
 	for c in find_child("NodeContainer").get_children():
 		c.queue_free()
 	for c in find_child("EdgeContainer").get_children():
