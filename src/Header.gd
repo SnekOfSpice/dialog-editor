@@ -1,7 +1,8 @@
+@tool
 extends VBoxContainer
 
 
-func _ready() -> void:
+func init() -> void:
 	load_defaults()
 
 func add_property(data: Dictionary):

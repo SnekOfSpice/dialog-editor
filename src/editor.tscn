@@ -79,6 +79,7 @@ text = "open"
 
 [node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
+text = "Autosave in: 0"
 
 [node name="ErrorTextBox" type="RichTextLabel" parent="Core/HBoxContainer/FileControl"]
 layout_mode = 2
@@ -299,6 +300,7 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 
 [node name="GraphView" parent="." instance=ExtResource("5_bks01")]
+visible = false
 layout_mode = 1
 
 [node name="FDSave" type="FileDialog" parent="."]

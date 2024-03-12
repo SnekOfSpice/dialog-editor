@@ -1,3 +1,4 @@
+@tool
 extends VBoxContainer
 
 var do_jump_page := true
@@ -39,6 +40,7 @@ func add_choice(choice_data:={
 	):
 	var choice = preload("res://src/choice_edit.tscn").instantiate()
 	$ChoiceList.add_child(choice)
+	choice.init()
 	choice.deserialize(choice_data)
 
 func _on_add_button_pressed() -> void:

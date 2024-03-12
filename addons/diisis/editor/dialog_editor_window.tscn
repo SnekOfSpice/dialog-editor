@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://u1pd7cjv38qc"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
+[ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://src/editor.tscn" id="2_4owra"]
+[ext_resource type="Texture2D" uid="uid://vvvuc4ewukes" path="res://icon.svg" id="3_xkpx7"]
+
+[node name="DialogEditorWindow" type="Window"]
+initial_position = 2
+size = Vector2i(795, 242)
+transient = true
+script = ExtResource("1_d4u1q")
+
+[node name="Control" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Editor" parent="." instance=ExtResource("2_4owra")]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+visible = false
+offset_left = -397.5
+offset_top = -436.0
+offset_right = 374.5
+offset_bottom = 106.0
+focus_mode = 0
+mouse_filter = 0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(795, 872)
+render_target_update_mode = 0
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(731, 0)
+texture = ExtResource("3_xkpx7")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_xkpx7")
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="size_changed" from="." to="." method="_on_size_changed"]

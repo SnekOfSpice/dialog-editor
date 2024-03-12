@@ -1,3 +1,4 @@
+@tool
 extends Control
 class_name Page
 
@@ -81,6 +82,7 @@ func deserialize_lines(lines_data: Array):
 	for data in lines_data:
 		var line = preload("res://src/line.tscn").instantiate()
 		find_child("Lines").add_child(line)
+		line.init()
 		line.deserialize(data)
 		line.connect("move_line", move_line)
 		line.connect("line_deleted", on_line_deleted)
@@ -118,6 +120,7 @@ func _on_add_pressed() -> void:
 func add_line(at_index:int=find_child("Lines").get_child_count()):
 	var line = preload("res://src/line.tscn").instantiate()
 	find_child("Lines").add_child(line)
+	line.init()
 	line.connect("move_line", move_line)
 	line.connect("line_deleted", on_line_deleted)
 	line.connect("insert_line", add_line)

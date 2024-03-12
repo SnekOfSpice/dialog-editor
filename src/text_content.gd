@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 var use_dialog_syntax := false
@@ -14,7 +15,7 @@ var control_sequence_hints := {
 	"func": "<func:func_name>\n<func:func_name,arg0,arg1>\n\nCall a function (It should return a String). Can take in arbitrary amounts of arguments, but the arguments must match the function signature of the respective func in the evaluator (obv).",
 }
 
-func _ready() -> void:
+func init() -> void:
 	find_child("DropDownForActors").clear()
 	for title in Pages.dropdown_titles:
 		find_child("DropDownForActors").add_item(title)

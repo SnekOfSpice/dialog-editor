@@ -1,3 +1,4 @@
+@tool
 extends Window
 
 signal item_chosen(item_name)

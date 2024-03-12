@@ -1,9 +1,11 @@
+@tool
 extends Control
 
 var do_jump_page := false
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func init() -> void:
+	find_child("Conditionals").init()
 	find_child("PageSelect").max_value = Pages.get_page_count() - 1
 	find_child("Facts").visible = false
 	find_child("Conditionals").visible = false

@@ -34,6 +34,8 @@ func _process(delta: float) -> void:
 	$Camera.position += md.normalized() * delta * 350 * (1.0 / float($Camera.zoom.x))
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadMotion:
+		return
 	if pressed(event, "ui_left"):
 		leftKeyDown = true
 	elif pressed(event, "ui_right"):

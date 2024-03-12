@@ -1,3 +1,4 @@
+@tool
 extends Facts
 
 enum ConditionalOperand {
@@ -13,7 +14,7 @@ enum Behavior {
 var operand:= ConditionalOperand.AND
 var selected_behavior := Behavior.Show
 
-func _ready() -> void:
+func init() -> void:
 	for a in ConditionalOperand:
 		find_child("OperandOptionButton").add_item(a)
 	

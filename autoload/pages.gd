@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 
@@ -237,7 +238,7 @@ func get_all_invalid_instructions() -> String:
 	var underdefined_instructions := []
 	var malformed_instructions := []
 	for i in page_data:
-		var lines = page_data.get(i).get("lines")
+		var lines = page_data.get(i).get("lines", [])
 		var j = 0
 		for l in lines:
 			if l.get("line_type") != Data.LineType.Instruction:

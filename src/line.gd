@@ -1,3 +1,4 @@
+@tool
 extends Control
 class_name Line
 
@@ -12,7 +13,10 @@ signal insert_line (at)
 signal move_to (child, idx)
 signal line_deleted
 
-func _ready() -> void:
+func init() -> void:
+	find_child("Header").init()
+	find_child("Conditionals").init()
+	find_child("TextContent").init()
 	set_line_type(Data.of("editor.selected_line_type"))
 	set_head_editable(true)
 	find_child("Facts").visible = false

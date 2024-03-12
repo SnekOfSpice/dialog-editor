@@ -1,3 +1,4 @@
+@tool
 extends MarginContainer
 class_name Facts
 

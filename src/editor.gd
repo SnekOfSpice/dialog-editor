@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 const AUTO_SAVE_INTERVAL := 30000.0
@@ -15,7 +16,8 @@ func refresh():
 	#Pages.page_data[cpn] = current_page.serialize()
 	current_page.deserialize(Pages.page_data.get(cpn))
 
-func _ready() -> void:
+func init() -> void:
+	print("init editor")
 	add_empty_page()
 	
 	Pages.connect("pages_modified", update_controls)
@@ -32,6 +34,7 @@ func _ready() -> void:
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	$Core.visible = true
 	$GraphView.visible = false
+	print("init editor successful")
 
 func load_page(number: int, initial_load:=false):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -70,8 +73,8 @@ func _process(delta: float) -> void:
 	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
 	find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
 	
-	if Input.is_action_just_pressed("f1"):
-		set_graph_view_visible(not $GraphView.visible)
+	#if Input.is_action_just_pressed("f1"):
+		#set_graph_view_visible(not $GraphView.visible)
 
 func set_graph_view_visible(value:bool):
 	$Core.visible = not value
@@ -267,6 +270,7 @@ func _on_edit_facts_button_pressed() -> void:
 
 
 func _on_add_line_button_pressed() -> void:
+	print("hi")
 	if not current_page:
 		add_empty_page()
 	current_page.add_line()
@@ -280,8 +284,6 @@ func _on_edit_characters_button_pressed() -> void:
 func _on_header_popup_update() -> void:
 	await get_tree().process_frame
 	current_page.update()
-
-
 
 func _on_instruction_definition_timer_timeout() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()

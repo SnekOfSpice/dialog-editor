@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 var instruction_name := ""
