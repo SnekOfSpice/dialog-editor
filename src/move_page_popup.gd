@@ -1,3 +1,4 @@
+@tool
 extends Window
 
 var direct_swap_start := -1

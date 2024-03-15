@@ -1,3 +1,4 @@
+@tool
 extends Window
 
 var old_instructions

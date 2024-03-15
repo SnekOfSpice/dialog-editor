@@ -1,3 +1,4 @@
+@tool
 extends CheckBox
 
 signal labeled_pressed(label: String, pressed:bool)

@@ -161,6 +161,7 @@ func _on_save_button_pressed() -> void:
 func _on_open_button_pressed() -> void:
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
+	find_child("FDOpen").size = size
 	find_child("FDOpen").popup()
 	#find_child("FDOpen").size = get_window().size - Vector2i(30, 80)
 

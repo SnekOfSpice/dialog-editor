@@ -1,4 +1,5 @@
-extends VBoxContainer
+@tool
+extends Control
 
 
 var is_editing_default := false

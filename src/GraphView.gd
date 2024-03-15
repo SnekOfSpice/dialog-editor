@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 var nodes := {}
@@ -11,6 +12,7 @@ func _ready() -> void:
 	connect("visibility_changed", on_visibility_changed)
 
 func _process(delta: float) -> void:
+	return
 	var md := Vector2()
 	if leftKeyDown:
 		md.x -= 1

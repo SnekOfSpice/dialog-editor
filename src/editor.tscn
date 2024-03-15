@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=16 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://src/editor.gd" id="1_r2t7d"]
@@ -23,6 +23,12 @@ border_blend = true
 
 [sub_resource type="Theme" id="Theme_bik72"]
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_1frgx")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_seml8"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_r7ou1"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_1gv23"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -260,6 +266,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_seml8")
 text = "Text"
 script = ExtResource("3_2h0gj")
 
@@ -267,6 +276,8 @@ script = ExtResource("3_2h0gj")
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_r7ou1")
 text = "Choice"
 script = ExtResource("3_2h0gj")
 line_type = 1
@@ -275,6 +286,8 @@ line_type = 1
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_1gv23")
 text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
