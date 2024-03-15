@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Data="*res://autoload/data.tscn"
-Pages="*res://autoload/pages.tscn"
+Data="*res://addons/diisis/editor/autoload/data.tscn"
+Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 
 [display]
 

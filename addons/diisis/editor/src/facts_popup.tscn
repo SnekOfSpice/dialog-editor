@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1kjr8wvf4qtt"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/facts_popup.gd" id="1_ohmwo"]
+
+[node name="FactsPopup" type="Window"]
+title = "Facts"
+initial_position = 2
+size = Vector2i(446, 100)
+wrap_controls = true
+exclusive = true
+script = ExtResource("1_ohmwo")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "yea tbh this doesn't do much atm"
+
+[node name="Facts" type="ItemList" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="RefPages" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+
+[node name="RefDeclare" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RefChoiceDeclare" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RefChoiceCondition" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RefCondition" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="item_clicked" from="VBoxContainer/Facts" to="." method="_on_facts_item_clicked"]

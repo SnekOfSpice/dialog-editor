@@ -1,7 +1,6 @@
 @tool
 extends EditorPlugin
 
-var plugin
 var dia_editor_window:Window
 var toolbar_button
 
@@ -9,8 +8,8 @@ const AUTOLOAD_DATA = "Data"
 const AUTOLOAD_PAGES = "Pages"
 
 func add_singletons():
-	add_autoload_singleton(AUTOLOAD_DATA, "res://autoload/data.tscn")
-	add_autoload_singleton(AUTOLOAD_PAGES, "res://autoload/pages.tscn")
+	add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
+	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 
 func remove_singletons():
 	remove_autoload_singleton(AUTOLOAD_DATA)

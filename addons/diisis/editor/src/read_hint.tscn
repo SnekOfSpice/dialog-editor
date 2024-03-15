@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://unnyq1pkgbh"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/read_hint.gd" id="1_3il64"]
+
+[node name="ReadHint" type="Window"]
+gui_disable_input = true
+size = Vector2i(400, 100)
+wrap_controls = true
+borderless = true
+unfocusable = true
+mouse_passthrough = true
+script = ExtResource("1_3il64")
+
+[node name="TextLabel" type="RichTextLabel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

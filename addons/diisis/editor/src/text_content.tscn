@@ -1,0 +1,103 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7k2h1p5qalaa"]
+
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_6al0s"]
+[ext_resource type="Script" path="res://addons/diisis/editor/src/text_content.gd" id="1_uudox"]
+[ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="3_8xrow"]
+
+[node name="TextContent" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+theme = ExtResource("1_6al0s")
+script = ExtResource("1_uudox")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="UseDialogSyntaxButton" type="CheckBox" parent="HBoxContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "Use dialog syntaxing"
+
+[node name="DialogSyntaxControls" type="PanelContainer" parent="HBoxContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2/DialogSyntaxControls"]
+layout_mode = 2
+
+[node name="DropDownForActors" type="OptionButton" parent="HBoxContainer2/DialogSyntaxControls/HBoxContainer"]
+layout_mode = 2
+allow_reselect = true
+
+[node name="ActiveActorsContainer" type="VBoxContainer" parent="HBoxContainer2/DialogSyntaxControls/HBoxContainer"]
+layout_mode = 2
+
+[node name="ActiveActorsLabel" type="Label" parent="HBoxContainer2/DialogSyntaxControls/HBoxContainer/ActiveActorsContainer"]
+layout_mode = 2
+
+[node name="TextBox" type="TextEdit" parent="."]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "enter text here"
+wrap_mode = 1
+autowrap_mode = 2
+scroll_fit_content_height = true
+caret_blink = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Add"
+vertical_alignment = 1
+
+[node name="PauseAutoCont" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "auto continue"
+
+[node name="PauseClickCont" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "click continue"
+
+[node name="LineClear" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "line clear"
+
+[node name="DialogActorHint" parent="." instance=ExtResource("3_8xrow")]
+position = Vector2i(0, 36)
+visible = false
+
+[node name="ControlSequenceHint" parent="." instance=ExtResource("3_8xrow")]
+position = Vector2i(0, 36)
+visible = false
+
+[node name="DialogArgumentHint" parent="." instance=ExtResource("3_8xrow")]
+position = Vector2i(0, 36)
+visible = false
+
+[node name="DialogArgumentValueHint" parent="." instance=ExtResource("3_8xrow")]
+position = Vector2i(0, 36)
+visible = false
+
+[connection signal="toggled" from="HBoxContainer2/UseDialogSyntaxButton" to="." method="_on_use_dialog_syntax_button_toggled"]
+[connection signal="item_selected" from="HBoxContainer2/DialogSyntaxControls/HBoxContainer/DropDownForActors" to="." method="_on_drop_down_for_actors_item_selected"]
+[connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
+[connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]
+[connection signal="text_changed" from="TextBox" to="." method="_on_text_box_text_changed"]
+[connection signal="pressed" from="HBoxContainer/PauseAutoCont" to="." method="_on_pause_auto_cont_pressed"]
+[connection signal="pressed" from="HBoxContainer/PauseClickCont" to="." method="_on_pause_click_cont_pressed"]
+[connection signal="pressed" from="HBoxContainer/LineClear" to="." method="_on_line_clear_pressed"]
+[connection signal="about_to_close" from="DialogActorHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="DialogActorHint" to="." method="_on_dialog_actor_hint_item_chosen"]
+[connection signal="item_chosen" from="ControlSequenceHint" to="." method="_on_control_sequence_hint_item_chosen"]
+[connection signal="about_to_close" from="DialogArgumentHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="DialogArgumentHint" to="." method="_on_dialog_argument_hint_item_chosen"]
+[connection signal="about_to_close" from="DialogArgumentValueHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="DialogArgumentValueHint" to="." method="_on_dialog_argument_value_hint_item_chosen"]

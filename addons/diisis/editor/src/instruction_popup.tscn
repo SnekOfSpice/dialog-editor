@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://csyhxfuwxrtah"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_popup.gd" id="1_1xy4c"]
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_hv7t4"]
+symbol_color = Color(0.984314, 0.835294, 0.890196, 1)
+function_color = Color(0.658824, 0.341176, 0.898039, 1)
+
+[node name="InstructionPopup" type="Window"]
+initial_position = 2
+size = Vector2i(450, 455)
+wrap_controls = true
+exclusive = true
+content_scale_aspect = 1
+script = ExtResource("1_1xy4c")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Controls" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="DiscardButton" type="Button" parent="VBoxContainer/Controls"]
+layout_mode = 2
+focus_mode = 0
+text = "discard"
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/Controls"]
+layout_mode = 2
+focus_mode = 0
+text = "save"
+
+[node name="SaveCloseButton" type="Button" parent="VBoxContainer/Controls"]
+layout_mode = 2
+focus_mode = 0
+text = "save&close"
+
+[node name="HelpButton" type="Button" parent="VBoxContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+text = "?"
+
+[node name="CodeEdit" type="CodeEdit" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 2
+highlight_current_line = true
+syntax_highlighter = SubResource("CodeHighlighter_hv7t4")
+line_folding = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="VBoxContainer/Controls/DiscardButton" to="." method="_on_discard_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Controls/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Controls/SaveCloseButton" to="." method="_on_save_close_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Controls/HelpButton" to="." method="_on_help_button_pressed"]

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://2s5khh51jhpr"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_argument.gd" id="1_jblii"]
+
+[node name="InstructionArgument" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jblii")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 2

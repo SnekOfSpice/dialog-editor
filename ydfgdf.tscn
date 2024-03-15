@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cmvnr1yej2y0m"]
 
-[ext_resource type="PackedScene" uid="uid://b53i8f73mqi3r" path="res://src/line.tscn" id="1_6r8n7"]
+[ext_resource type="PackedScene" uid="uid://b53i8f73mqi3r" path="res://addons/diisis/editor/src/line.tscn" id="1_6r8n7"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
