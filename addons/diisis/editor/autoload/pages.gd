@@ -107,7 +107,7 @@ func swap_page_references(from: int, to: int):
 			page["next"] = from
 		
 		for line in page.get("lines"):
-			if line.get("line_type") == Data.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				for choice in content.get("choices"):
 					if choice.get("target_page") == from:
@@ -129,7 +129,7 @@ func change_page_references_dir(changed_page: int, operation:int):
 		
 		
 		for line in page.get("lines"):
-			if line.get("line_type") == Data.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				var choices = content.get("choices")
 				for choice in choices:
@@ -162,7 +162,7 @@ func get_page_references(page_index:int) -> Array:
 	
 	for line in page.get("lines"):
 		var line_type = line.get("line_type")
-		if not line_type == Data.LineType.Choice:
+		if not line_type == DIISIS.LineType.Choice:
 			continue
 		var content = line.get("content")
 		
@@ -241,7 +241,7 @@ func get_all_invalid_instructions() -> String:
 		var lines = page_data.get(i).get("lines", [])
 		var j = 0
 		for l in lines:
-			if l.get("line_type") != Data.LineType.Instruction:
+			if l.get("line_type") != DIISIS.LineType.Instruction:
 				j += 1
 				continue
 			
@@ -380,7 +380,7 @@ func lines_referencing_fact(fact_name: String):
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))
 					ref_lines_declare.append(str(page.get("number"), ".", i))
-			if line.get("line_type") == Data.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
 				for option in options.get("choices", {}):
 					for fact in option.get("conditionals", {}).get("facts", {}):
@@ -415,11 +415,11 @@ func character_count_on_page_approx(page_number: int) -> int:
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		match line_type:
-			Data.LineType.Choice:
+			DIISIS.LineType.Choice:
 				for choice in content.get("choices"):
 					count += str(choice.get("choice_text.enabled")).length()
 					count += str(choice.get("choice_text.disabled")).length()
-			Data.LineType.Text:
+			DIISIS.LineType.Text:
 				count += str(content.get("content")).length()
 	return count
 
@@ -429,11 +429,11 @@ func word_count_on_page_approx(page_number: int) -> int:
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		match line_type:
-			Data.LineType.Choice:
+			DIISIS.LineType.Choice:
 				for choice in content.get("choices"):
 					count += str(choice.get("choice_text.enabled")).count(" ") + 1
 					count += str(choice.get("choice_text.disabled")).count(" ") + 1
-			Data.LineType.Text:
+			DIISIS.LineType.Text:
 				count += str(content.get("content")).count(" ") + 1
 	return count
 

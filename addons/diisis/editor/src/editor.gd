@@ -271,7 +271,6 @@ func _on_edit_facts_button_pressed() -> void:
 
 
 func _on_add_line_button_pressed() -> void:
-	print("hi")
 	if not current_page:
 		add_empty_page()
 	current_page.add_line()

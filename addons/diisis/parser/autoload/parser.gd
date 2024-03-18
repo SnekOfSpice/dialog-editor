@@ -32,10 +32,6 @@ var max_line_index_on_page := 0
 
 const MAX_LINE_LENGTH := 10
 
-enum LineType {
-	Text, Choice, Instruction
-}
-
 enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _DropDown, _Boolean}
 
 signal read_new_line(line)

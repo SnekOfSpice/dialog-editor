@@ -6,8 +6,6 @@ var number := 0
 var page_key := ""
 var next := 1
 
-#@onready var lines = find_child("Lines")
-
 func init(n:=number):
 	var data = Pages.page_data.get(n)
 	number = n
@@ -18,8 +16,6 @@ func init(n:=number):
 func set_page_key(key: String):
 	page_key = key
 	$Info/PageKey.text = page_key
-
-
 
 func clear():
 	for c in get_children():
@@ -36,7 +32,7 @@ func serialize() -> Dictionary:
 	data["number"] = number
 	data["page_key"] = page_key
 	data["next"] = find_child("NextLineEdit").value
-	print(data.get("next"))
+	data["meta.scroll_vertical"] = find_child("ScrollContainer").scroll_vertical
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	
 	var lines_data := []
@@ -48,22 +44,6 @@ func serialize() -> Dictionary:
 	
 	return data
 
-func set_next(next_page: int):
-	next = next_page
-	var next_exists = Pages.page_data.keys().has(next)
-	find_child("NextKey").visible = next_exists
-	
-	if not next_exists:
-		return
-	
-	var next_key = Pages.page_data.get(next).get("page_key")
-	
-	find_child("NextLineEdit").max_value = Pages.get_page_count()
-	find_child("NextLineEdit").value = next
-	find_child("NextKey").text = next_key
-
-
-
 func deserialize(data: Dictionary):
 	set_page_key(data.get("page_key"))
 	if not data.get("next"):
@@ -71,6 +51,9 @@ func deserialize(data: Dictionary):
 	set_next(int(data.get("next")))
 	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines"))
+	
+	await get_tree().process_frame
+	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
 
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
@@ -90,6 +73,20 @@ func deserialize_lines(lines_data: Array):
 		line.connect("move_to", move_line_to)
 	
 	enable_page_key_edit(false)
+
+func set_next(next_page: int):
+	next = next_page
+	var next_exists = Pages.page_data.keys().has(next)
+	find_child("NextKey").visible = next_exists
+	
+	if not next_exists:
+		return
+	
+	var next_key = Pages.page_data.get(next).get("page_key")
+	
+	find_child("NextLineEdit").max_value = Pages.get_page_count()
+	find_child("NextLineEdit").value = next
+	find_child("NextKey").text = next_key
 
 func _on_page_key_edit_pressed() -> void:
 	pass # Replace with function body.

@@ -6,7 +6,6 @@ var working_memory_dropdowns := {}
 var working_memory_titles := []
 
 func fill():
-	printt(Pages.dropdowns, Pages.dropdown_titles)
 	working_memory_dropdowns = Pages.dropdowns.duplicate(true)
 	working_memory_titles = Pages.dropdown_titles.duplicate(true)
 	
@@ -112,7 +111,6 @@ func save_tab_name():
 		return
 	
 	var current_tab = find_child("DropDownTabContainer").current_tab
-	printt(current_tab, working_memory_titles)
 	find_child("DropDownTabContainer").set_tab_title(find_child("DropDownTabContainer").current_tab, find_child("NameEdit").text)
 #	while current_tab > working_memory_titles.size():
 #		working_memory_titles.append(str("whatever", working_memory_titles.size()))

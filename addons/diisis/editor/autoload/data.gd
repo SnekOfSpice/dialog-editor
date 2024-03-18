@@ -1,14 +1,9 @@
 @tool
 extends Node
 
-
-enum LineType {
-	Text, Choice, Instruction
-}
-
 var property_listeners := {}
 var properties := {
-	"editor.selected_line_type": LineType.Text,
+	"editor.selected_line_type": DIISIS.LineType.Text,
 }
 
 func listen(listener, property: String, immediate_callback:=false):

@@ -5,7 +5,7 @@ class_name Line
 
 
 
-var line_type := Data.LineType.Text
+var line_type := DIISIS.LineType.Text
 var is_head_editable := false
 
 signal move_line (child, dir)
@@ -27,12 +27,12 @@ func init() -> void:
 func set_line_type(value: int):
 	line_type = value
 	match line_type:
-		Data.LineType.Text:
+		DIISIS.LineType.Text:
 			pass
 	
-	find_child("TextContent").visible = line_type == Data.LineType.Text
-	find_child("ChoiceContainer").visible = line_type == Data.LineType.Choice
-	find_child("InstructionContainer").visible = line_type == Data.LineType.Instruction
+	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
+	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
+	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
 
 func set_head_editable(value: bool):
 	is_head_editable = value
@@ -56,11 +56,11 @@ func serialize() -> Dictionary:
 	
 	# content match
 	match line_type:
-		Data.LineType.Text:
+		DIISIS.LineType.Text:
 			data["content"] = find_child("TextContent").serialize()
-		Data.LineType.Choice:
+		DIISIS.LineType.Choice:
 			data["content"] = find_child("ChoiceContainer").serialize()
-		Data.LineType.Instruction:
+		DIISIS.LineType.Instruction:
 			data["content"] = find_child("InstructionContainer").serialize()
 	
 	return data
@@ -76,16 +76,16 @@ func deserialize(data: Dictionary):
 	
 	# content (based on line type)
 	match line_type:
-		Data.LineType.Text:
+		DIISIS.LineType.Text:
 			if data.get("content") is String:
 				var compat_data = {}
 				compat_data["content"] = data.get("content")
 				find_child("TextContent").deserialize(compat_data)
 			else:
 				find_child("TextContent").deserialize(data.get("content"))
-		Data.LineType.Choice:
+		DIISIS.LineType.Choice:
 			find_child("ChoiceContainer").deserialize(data.get("content"))
-		Data.LineType.Instruction:
+		DIISIS.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content"))
 	
 	set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))

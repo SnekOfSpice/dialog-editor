@@ -185,7 +185,7 @@ func deserialize(data: Dictionary):
 		return
 	line_data = data.get("line_data", {})
 	line_index = int(data.get("line_index", 0))
-	line_type = int(data.get("line_type", Parser.LineType.Text))
+	line_type = int(data.get("line_type", DIISIS.LineType.Text))
 	remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
 	is_input_locked = data.get("is_input_locked")
 	showing_text = data.get("showing_text")
@@ -203,11 +203,11 @@ func deserialize(data: Dictionary):
 	if data.get("name_map"):
 		name_map = data.get("name_map")
 	
-	text_container.visible = line_type == Parser.LineType.Text or (line_type == Parser.LineType.Choice and show_text_during_choices)
-	showing_text = line_type == Parser.LineType.Text
-	choice_container.visible = line_type == Parser.LineType.Choice
+	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
+	showing_text = line_type == DIISIS.LineType.Text
+	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
-	if line_type == Parser.LineType.Choice:
+	if line_type == DIISIS.LineType.Choice:
 		var raw_content = line_data.get("content")
 		var content = line_data.get("content").get("content")
 		var choices = line_data.get("content").get("choices")
@@ -360,13 +360,13 @@ func read_new_line(new_line: Dictionary):
 	var raw_content = line_data.get("content")
 	var content = line_data.get("content").get("content")
 	var choices
-	if line_type == Parser.LineType.Choice:
+	if line_type == DIISIS.LineType.Choice:
 		choices = line_data.get("content").get("choices")
 	var content_name = line_data.get("content").get("name") # wtf is this
 	
-	text_container.visible = line_type == Parser.LineType.Text or (line_type == Parser.LineType.Choice and show_text_during_choices)
-	showing_text = line_type == Parser.LineType.Text
-	choice_container.visible = line_type == Parser.LineType.Choice
+	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
+	showing_text = line_type == DIISIS.LineType.Text
+	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
 	# register facts
 	var facts = line_data.get("facts")
@@ -375,7 +375,7 @@ func read_new_line(new_line: Dictionary):
 		Parser.change_fact(f, facts.get(f))
 	
 	match line_type:
-		Parser.LineType.Text:
+		DIISIS.LineType.Text:
 			using_dialog_syntax = line_data.get("content").get("use_dialog_syntax", false)
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
@@ -399,10 +399,10 @@ func read_new_line(new_line: Dictionary):
 				dialog_actors.clear()
 			set_dialog_line_index(0)
 			start_showing_text()
-		Parser.LineType.Choice:
+		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
 			build_choices(choices, auto_switch)
-		Parser.LineType.Instruction:
+		DIISIS.LineType.Instruction:
 			if not instruction_handler:
 				push_error("No InsutrctionHandler as child of LineReader.")
 				return
@@ -490,7 +490,7 @@ func _process(delta: float) -> void:
 	last_visible_ratio = text_content.visible_ratio
 #	prints("auto pause dir ", remaining_auto_pause_duration)
 	if auto_continue:
-		if not line_type == Parser.LineType.Text:
+		if not line_type == DIISIS.LineType.Text:
 			return
 		if pause_types.is_empty() or next_pause_position_index < 0:
 			return

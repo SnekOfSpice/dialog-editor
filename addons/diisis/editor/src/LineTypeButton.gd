@@ -5,14 +5,14 @@ extends Button
 # tscn autoloads break enum exports, either use this workaround or autoload the gd script alone
 # I'm using the workaround
 # https://github.com/godotengine/godot/issues/73109#issuecomment-1714885562
-@export var line_type := Data.LineType.Text
+@export var line_type := DIISIS.LineType.Text
 
 func _ready() -> void:
 	Data.listen(self, "editor.selected_line_type")
 	
 	toggle_mode = true
 	connect("pressed", set_selected)
-	button_pressed = line_type == Data.LineType.Text
+	button_pressed = line_type == DIISIS.LineType.Text
 
 
 func set_selected():
