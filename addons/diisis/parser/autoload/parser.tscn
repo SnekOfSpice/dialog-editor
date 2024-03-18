@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4ny85mdnxwoy"]
+
+[ext_resource type="Script" path="res://addons/diisis/parser/autoload/parser.gd" id="1_0uufo"]
+
+[node name="Parser" type="Node"]
+script = ExtResource("1_0uufo")
+source_file = "res://io/queer-vampires.json"

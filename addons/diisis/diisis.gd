@@ -6,14 +6,25 @@ var toolbar_button
 
 const AUTOLOAD_DATA = "Data"
 const AUTOLOAD_PAGES = "Pages"
+const AUTOLOAD_PARSER = "Parser"
+const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
+const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
-func add_singletons():
+func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 
-func remove_singletons():
+func add_parser_singletons():
+	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
+	add_autoload_singleton(AUTOLOAD_PARSER_EVENTS, "res://addons/diisis/parser/autoload/parser_events.tscn")
+
+func remove_editor_singletons():
 	remove_autoload_singleton(AUTOLOAD_DATA)
 	remove_autoload_singleton(AUTOLOAD_PAGES)
+
+func remove_parser_singletons():
+	remove_autoload_singleton(AUTOLOAD_PARSER)
+	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
 	toolbar_button = Button.new()
@@ -22,14 +33,17 @@ func _enter_tree():
 	toolbar_button.focus_mode = Control.FOCUS_NONE
 	toolbar_button.visible = true
 	toolbar_button.pressed.connect(open_editor)
-	add_singletons()
+	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
+	add_editor_singletons()
+	add_parser_singletons()
+	add_custom_type("LineReader", "CanvasLayer", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"))
 
 func open_editor():
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.grab_focus()
 	else:
-		remove_singletons()
-		add_singletons()
+		remove_editor_singletons()
+		add_editor_singletons()
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child(dia_editor_window)
 		dia_editor_window.popup()
@@ -43,7 +57,9 @@ func _process(delta: float) -> void:
 #		print(dia_editor_window.get_children())
 
 func _exit_tree():
-	remove_singletons()
+	remove_editor_singletons()
+	remove_parser_singletons()
+	remove_autoload_singleton(AUTOLOAD_SHARED_DIISIS)
 	if dia_editor_window:
 		dia_editor_window.queue_free()
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
