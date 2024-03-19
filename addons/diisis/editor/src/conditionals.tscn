@@ -8,6 +8,10 @@ script = ExtResource("1_jnmdf")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
+[node name="VisibilityToggleButton" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+text = "Visible"
+
 [node name="Controls" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -28,14 +32,14 @@ layout_mode = 2
 [node name="OperandArg2" type="SpinBox" parent="VBoxContainer/Controls/OperandContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="BehaviorContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/BehaviorContainer"]
 layout_mode = 2
 text = "behavior on true conditions"
 
-[node name="BehaviorButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="BehaviorButton" type="OptionButton" parent="VBoxContainer/BehaviorContainer"]
 layout_mode = 2
 
 [node name="FactsContainer" type="VBoxContainer" parent="VBoxContainer"]
@@ -43,4 +47,4 @@ layout_mode = 2
 
 [connection signal="pressed" from="VBoxContainer/Controls/AddConditionButton" to="." method="_on_add_condition_button_pressed"]
 [connection signal="item_selected" from="VBoxContainer/Controls/OperandContainer/OperandOptionButton" to="." method="_on_operand_option_button_item_selected"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/BehaviorButton" to="." method="_on_behavior_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/BehaviorContainer/BehaviorButton" to="." method="_on_behavior_button_item_selected"]

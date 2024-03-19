@@ -14,7 +14,7 @@ script = ExtResource("1_d4u1q")
 
 [node name="QuitDialog" type="ConfirmationDialog" parent="."]
 title = "Close DIISIS?"
-initial_position = 2
+initial_position = 4
 transient = false
 popup_window = true
 ok_button_text = "Close"

@@ -375,7 +375,7 @@ func lines_referencing_fact(fact_name: String):
 	for page in page_data.values():
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
-			for fact in line.get("facts", {}).keys():
+			for fact in line.get("facts", {}).get("values", {}).keys():
 				if fact == fact_name: #also untested atm
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))
@@ -388,7 +388,7 @@ func lines_referencing_fact(fact_name: String):
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
 							ref_lines_choice_condition.append(str(page.get("number"), ".", i))
-					for fact in option.get("facts", {}).keys():
+					for fact in option.get("facts", {}).get("values", {}).keys():
 						if fact == fact_name: #also untested atm
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))

@@ -369,7 +369,7 @@ func read_new_line(new_line: Dictionary):
 	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
 	# register facts
-	var facts = line_data.get("facts")
+	var facts = line_data.get("facts", {}).get("values", {})
 #	printt(line_type, facts)
 	for f in facts.keys():
 		Parser.change_fact(f, facts.get(f))
@@ -744,7 +744,7 @@ func build_choices(choices, auto_switch:bool):
 			option_text = option.get("choice_text.disabled")
 		
 		# give to option to signal
-		var facts = option.get("facts")
+		var facts = option.get("facts").get("values", {})
 		var do_jump_page = option.get("do_jump_page")
 		var target_page = option.get("target_page")
 		
@@ -775,14 +775,12 @@ func choice_pressed(do_jump_page, target_page):
 	emit_signal("line_finished", line_index)
 	
 
-# returns an array of size 2.
-# index 0 is if the conditionals are satisfied
-# index 1 is the behavior if it's true
+## returns an array of size 2. index 0 is if the conditionals are satisfied. index 1 is the behavior if it's true
 func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
 	var behavior = line_data.get("conditionals").get("behavior_key")
 	var args = conditionals.get("operand_args")
-	var facts_to_check = conditionals.get("facts")
+	var facts_to_check = conditionals.get("facts").get("values")
 	if facts_to_check.keys().size() == 0:
 		var default_key = "Enable" if enabled_as_default else "Disable"
 		return [true, default_key]

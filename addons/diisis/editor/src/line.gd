@@ -14,13 +14,17 @@ signal move_to (child, idx)
 signal line_deleted
 
 func init() -> void:
+	find_child("ConditionalsVisibilityToggle").button_pressed = true
+	find_child("FactsVisibilityToggle").button_pressed = true
 	find_child("Header").init()
 	find_child("Conditionals").init()
+	find_child("Facts").init()
 	find_child("TextContent").init()
 	set_line_type(Data.of("editor.selected_line_type"))
+	await get_tree().process_frame
+	find_child("ConditionalsVisibilityToggle").button_pressed = false
+	find_child("FactsVisibilityToggle").button_pressed = false
 	set_head_editable(true)
-	find_child("Facts").visible = false
-	find_child("Conditionals").visible = false
 	set_non_meta_parts_visible(true)
 	update()
 
