@@ -54,7 +54,7 @@ func serialize() -> Dictionary:
 	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
-	data["meta.visible"] = find_child("VisibleToggle").button_pressed
+	#data["meta.visible"] = find_child("VisibleToggle").button_pressed
 	data["meta.is_head_editable"] = is_head_editable
 	data["meta.line_index"] = get_index()
 	
@@ -92,7 +92,7 @@ func deserialize(data: Dictionary):
 		DIISIS.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content"))
 	
-	set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
+	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
 	
 	

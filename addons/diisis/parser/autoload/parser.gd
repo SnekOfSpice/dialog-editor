@@ -153,6 +153,11 @@ func read_page(number: int, starting_line_index := 0):
 	max_line_index_on_page = lines.size() - 1
 	
 	line_index = starting_line_index
+	
+	var page_bound_facts : Dictionary = page_data.get(page_index).get("facts", {}).get("values", {})
+	for fact in page_bound_facts:
+		change_fact(fact, page_bound_facts.get(fact))
+	
 	read_line(line_index)
 
 func get_saved_game_progress(file_path: String) -> float:

@@ -12,6 +12,7 @@ func init():
 		visibility_toggle_button.connect("pressed", toggle_visibility)
 	else:
 		find_child("VisibilityToggleButton").connect("pressed", toggle_visibility)
+		find_child("VisibilityToggleButton").button_pressed = find_child("Controls").visible
 
 func set_visibility(value:bool):
 	if visibility_toggle_button:
@@ -20,6 +21,7 @@ func set_visibility(value:bool):
 	else:
 		find_child("Controls").visible = value
 		find_child("FactsContainer").visible = value
+		find_child("VisibilityToggleButton").button_pressed = value
 
 func toggle_visibility():
 	if visibility_toggle_button:
@@ -33,10 +35,14 @@ func serialize() -> Dictionary:
 	for fact in find_child("FactsContainer").get_children():
 		facts[fact.get_fact_name()] = fact.get_fact_value()
 	result["values"] = facts
-	result["meta.visible"] = find_child("Controls").visible
+	if visibility_toggle_button:
+		result["meta.visible"] = visible
+	else:
+		result["meta.visible"] = find_child("Controls").visible
 	return result
 
 func deserialize(data: Dictionary):
+	printt("des", data)
 	for fact_name in data.get("values", {}).keys():
 		add_fact(fact_name, data.get("values", {}).get(fact_name))
 	set_visibility(data.get("meta.visible", false))

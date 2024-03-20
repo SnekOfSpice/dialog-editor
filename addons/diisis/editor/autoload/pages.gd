@@ -369,11 +369,16 @@ func lines_referencing_fact(fact_name: String):
 	#prints("searching for ", fact_name)
 	#fact_name = fact_name.split(":")[0]
 	var ref_pages := []
+	var ref_pages_page_bound := []
 	var ref_lines_declare := []
 	var ref_lines_condition := []
 	var ref_lines_choice_declare := []
 	var ref_lines_choice_condition := []
 	for page in page_data.values():
+		for fact in page.get("facts", {}).get("values", {}).keys():
+			if fact == fact_name:
+				ref_pages.append(page.get("number"))
+				ref_pages_page_bound.append(page.get("number"))
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
 			for fact in line.get("facts", {}).get("values", {}).keys():
@@ -402,6 +407,7 @@ func lines_referencing_fact(fact_name: String):
 	
 	var all_refs := {
 		"ref_pages": ref_pages,
+		"ref_pages_page_bound": ref_pages_page_bound,
 		"ref_lines_declare": ref_lines_declare,
 		"ref_lines_condition": ref_lines_condition,
 		"ref_lines_choice_declare": ref_lines_choice_declare,

@@ -11,6 +11,7 @@ func init(n:=number):
 	number = n
 	$Info/Number.text = str(n)
 	set_next(n+1)
+	find_child("Facts").init()
 	deserialize(data)
 
 func set_page_key(key: String):
@@ -34,6 +35,7 @@ func serialize() -> Dictionary:
 	data["next"] = find_child("NextLineEdit").value
 	data["meta.scroll_vertical"] = find_child("ScrollContainer").scroll_vertical
 	data["terminate"] = find_child("TerminateCheck").button_pressed
+	data["facts"] = find_child("Facts").serialize()
 	
 	var lines_data := []
 	for c in find_child("Lines").get_children():
@@ -51,6 +53,7 @@ func deserialize(data: Dictionary):
 	set_next(int(data.get("next")))
 	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines"))
+	find_child("Facts").deserialize(data.get("facts", {}))
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -174,3 +177,7 @@ func _on_next_line_edit_value_changed(value: float) -> void:
 
 func _on_delete_page_button_pressed() -> void:
 	pass # Replace with function body.
+
+
+func _on_terminate_check_toggled(toggled_on: bool) -> void:
+	find_child("NextContainer").visible = not toggled_on

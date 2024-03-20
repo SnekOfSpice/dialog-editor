@@ -11,6 +11,8 @@ layout_mode = 2
 
 [node name="VisibilityToggleButton" type="CheckButton" parent="VBox"]
 layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
 text = "Visible"
 
 [node name="Controls" type="HBoxContainer" parent="VBox"]
