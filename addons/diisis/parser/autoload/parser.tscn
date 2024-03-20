@@ -4,4 +4,4 @@
 
 [node name="Parser" type="Node"]
 script = ExtResource("1_0uufo")
-source_file = "res://io/queer-vampires.json"
+source_file = "res://io/factsample.json"

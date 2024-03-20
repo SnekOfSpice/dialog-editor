@@ -208,7 +208,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 			compat_facts[f] = true
 		Pages.facts = compat_facts
 	else:
-		Pages.facts = data.get("facts", {}).get("values", {})
+		Pages.facts = data.get("facts", {})
 	Pages.dropdowns = data.get("dropdowns", {})
 	Pages.dropdown_titles = data.get("dropdown_titles", [])
 	Pages.dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])

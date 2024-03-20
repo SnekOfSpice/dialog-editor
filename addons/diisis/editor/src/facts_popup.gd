@@ -5,8 +5,13 @@ extends Window
 func fill():
 	find_child("Facts").clear()
 	for fact in Pages.facts.keys():
-		var fact_reg = str(fact, ": ", Pages.facts.get(fact))
-		find_child("Facts").add_item(fact_reg)
+		var fact_reg = fact#str(fact, ": ", Pages.facts.get(fact))
+		var texture:Texture2D
+		if Pages.facts.get(fact):
+			texture = load("res://addons/diisis/editor/visuals/true.png")
+		else:
+			texture = load("res://addons/diisis/editor/visuals/false.png")
+		find_child("Facts").add_item(fact_reg, texture)
 	
 #	find_child("FactsTree").clear()
 #	var root = find_child("FactsTree").create_item()

@@ -1,0 +1,79 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqrm52wm8b1cu"]
+
+[ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_bva4l"]
+[ext_resource type="Script" path="res://sample/sample_scene.gd" id="1_df3e1"]
+[ext_resource type="Script" path="res://sample/Handler.gd" id="2_kv7jx"]
+
+[node name="SampleScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_df3e1")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/TextContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/TextContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/TextContainer/MarginContainer/VBoxContainer/Panel"]
+custom_minimum_size = Vector2(500, 200)
+layout_mode = 2
+
+[node name="ChoiceContainer" type="PanelContainer" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ChoiceContainer"]
+layout_mode = 2
+
+[node name="Handler" type="Node" parent="."]
+script = ExtResource("2_kv7jx")
+
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bva4l")
+choice_container = NodePath("../Control/ChoiceContainer")
+choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
+instruction_handler = NodePath("../Handler")
+text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
+text_container = NodePath("../Control/TextContainer")
+name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
+name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")

@@ -40,7 +40,6 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-focus_mode = 0
 placeholder_text = "enter text here"
 wrap_mode = 1
 autowrap_mode = 2

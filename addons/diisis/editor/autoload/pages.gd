@@ -366,7 +366,8 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	# step over every fact in page data and save its name
 
 func lines_referencing_fact(fact_name: String):
-	fact_name = fact_name.split(":")[0]
+	#prints("searching for ", fact_name)
+	#fact_name = fact_name.split(":")[0]
 	var ref_pages := []
 	var ref_lines_declare := []
 	var ref_lines_condition := []
@@ -383,7 +384,7 @@ func lines_referencing_fact(fact_name: String):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
 				for option in options.get("choices", {}):
-					for fact in option.get("conditionals", {}).get("facts", {}):
+					for fact in option.get("conditionals", {}).get("facts", {}).get("values", {}):
 						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
@@ -393,7 +394,7 @@ func lines_referencing_fact(fact_name: String):
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
 							ref_lines_choice_declare.append(str(page.get("number"), ".", i))
-			for fact in line.get("conditionals", {}).get("facts", {}):
+			for fact in line.get("conditionals", {}).get("facts", {}).get("values", {}):
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))

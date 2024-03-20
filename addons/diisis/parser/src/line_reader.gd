@@ -1,6 +1,6 @@
 @icon("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg")
 @tool
-extends CanvasLayer
+extends Control
 class_name LineReader
 
 @export_group("UX")
@@ -17,9 +17,14 @@ var auto_continue_duration:= auto_continue_delay
 @export var button_scene:ChoiceButton
 
 @export_subgroup("Advance")
-@export var show_advance_available := true
+@export var show_advance_available := false:
+	set(value):
+		show_advance_available = value
+		notify_property_list_changed()
+		update_configuration_warnings()
 @export_range(0.0, 1.0) var advance_available_lerp_weight := 0.1
 @export_range(0.0, 10.0) var advance_available_delay := 0.5
+@export var next_prompt_container: Control
 var remaining_advance_delay := advance_available_delay
 
 @export_group("Name Setup")
@@ -32,7 +37,7 @@ var name_for_blank_name := ""
 @export var name_map := {}
 @export var name_colors := {}
 
-@export_group("Mandatory Children")
+@export_group("Mandatory References")
 ## The Control holding Choice Option Container. Should have its mouse_filter set to Stop and FullRect Layout.
 @export var choice_container:PanelContainer:
 	get:
@@ -94,8 +99,7 @@ var name_container: Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
-@export_group("Optional Children")
-@export var next_prompt_container: Control
+@export_group("Optional References")
 ## Node that has vars and funcs to evaluate in dynamic Strings.
 @export var inline_evaluator: Node
 
@@ -153,6 +157,11 @@ var characters_visible_so_far := ""
 var last_visible_ratio := 0.0
 
 signal line_reader_ready
+
+func _validate_property(property: Dictionary):
+	if not show_advance_available:
+		if property.name in ["advance_available_delay", "advance_available_lerp_weight", "next_prompt_container"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -235,6 +244,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Name Label is null")
 	if not name_container:
 		warnings.append("Name Container is null")
+	if show_advance_available:
+		warnings.append("Next Prompt Container is null")
 	
 	return warnings
 
@@ -281,7 +292,7 @@ func apply_preferences(prefs:Dictionary):
 	auto_continue = prefs.get("auto_continue", false)
 	auto_continue_delay = prefs.get("auto_continue_delay", 2.0)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
 		return
 	
