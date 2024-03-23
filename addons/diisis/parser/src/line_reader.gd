@@ -351,23 +351,31 @@ func close(_terminating_page):
 func read_new_line(new_line: Dictionary):
 	line_data = new_line
 	line_index = new_line.get("meta.line_index")
+	line_type = int(line_data.get("line_type"))
 	terminated = false
 	
 	var eval = evaluate_conditionals(line_data.get("conditionals"))
 	var conditional_is_true = eval[0]
 	var behavior = eval[1]
+	
+	var last_line_index:int
+	if line_type == DIISIS.LineType.Folder:
+		var range = line_data.get("content", {}).get("range", 0)
+		last_line_index + range
+	else:
+		last_line_index = line_index
+	
 	if behavior == "Show" or behavior == "Enable":
 		if not conditional_is_true:
-			emit_signal("line_finished", line_index)
+			emit_signal("line_finished", last_line_index)
 			return
 	if behavior == "Hide" or behavior == "Disable":
 		if conditional_is_true:
-			emit_signal("line_finished", line_index)
+			emit_signal("line_finished", last_line_index)
 			return
 	
 	handle_header(line_data.get("header"))
 	
-	line_type = int(line_data.get("line_type"))
 	var raw_content = line_data.get("content")
 	var content = line_data.get("content").get("content")
 	var choices
@@ -432,7 +440,10 @@ func read_new_line(new_line: Dictionary):
 			var delay_after = new_line.get("content").get("delay.after")
 			
 			instruction_handler.wrapper_execute(instruction_name, args, delay_before, delay_after)
-			
+		DIISIS.LineType.Folder:
+			if not line_data.get("content", {}).get("meta.contents_visible", true):
+				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
+			emit_signal("line_finished", line_index)
 			
 	
 	

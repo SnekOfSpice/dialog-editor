@@ -259,8 +259,9 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="LineTypes" type="HBoxContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
+[node name="LineTypes" type="GridContainer" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+columns = 2
 
 [node name="TypeText" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
 unique_name_in_owner = true
@@ -291,6 +292,16 @@ button_group = SubResource("ButtonGroup_1gv23")
 text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
+
+[node name="TypeFolder" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_1gv23")
+text = "Folder"
+script = ExtResource("3_2h0gj")
+line_type = 3
 
 [node name="AddLineButton" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2

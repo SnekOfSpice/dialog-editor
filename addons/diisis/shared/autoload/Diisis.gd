@@ -2,5 +2,5 @@
 extends Node
 
 enum LineType {
-	Text, Choice, Instruction
+	Text, Choice, Instruction, Folder
 }

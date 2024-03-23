@@ -57,6 +57,7 @@ func deserialize(data: Dictionary):
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
+	update()
 
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
@@ -118,6 +119,12 @@ func _on_add_pressed() -> void:
 	add_line()
 
 func add_line(at_index:int=find_child("Lines").get_child_count()):
+	for l in find_child("Lines").get_children():
+		if l.line_type == DIISIS.LineType.Folder:
+			var range : Vector2 = l.get_folder_range()
+			if at_index >= range.x and at_index <= range.y:
+				l.change_folder_range(1)
+			# if at_index iss within range (index to index + max value), increase range by 1
 	var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
 	find_child("Lines").add_child(line)
 	line.init()
@@ -158,7 +165,7 @@ func move_line(line, dir):
 	find_child("Lines").move_child(line, idx+dir)
 	update()
 
-func move_line_to(line, target_idx):
+func move_line_to(line : Line, target_idx):
 	find_child("Lines").move_child(line, target_idx)
 	update()
 
@@ -166,9 +173,38 @@ func on_line_deleted():
 	await get_tree().process_frame
 	update()
 
+func get_max_reach_after_indented_index(index: int):
+	var line = find_child("Lines").get_child(index)
+	var reach := 0
+	for l in find_child("Lines").get_children():
+		if l.get_index() <= index:
+			continue
+		if l.indent_level < line.indent_level:
+			break
+		reach += 1
+	
+	return reach
+
 func update():
 	for l in find_child("Lines").get_children():
+		l.set_indent_level(0)
+		l.visible = true
+	
+	
+	var folders_found := 0
+	for l in find_child("Lines").get_children():
 		l.update()
+	
+		if l.line_type == DIISIS.LineType.Folder:
+			# all after that in range of the folder line get indented l.indent_level + 1
+			var folder_range : Vector2 = l.get_folder_range()
+			if folder_range.x == folder_range.y:
+				continue
+			for i in range(folder_range.x, folder_range.y + 1):
+				find_child("Lines").get_child(i).change_indent_level(1)
+				if i > folder_range.x: # if beyond the folder itself
+					find_child("Lines").get_child(i).visible = l.get_folder_contents_visible()
+			folders_found += 1
 
 
 func _on_next_line_edit_value_changed(value: float) -> void:

@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://dt4yhnj3n5k5m"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/folder_container.gd" id="1_k5xft"]
+
+[node name="FolderContainer" type="VBoxContainer"]
+script = ExtResource("1_k5xft")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="FolderVisibilityCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "folder vis"
+
+[node name="FolderRangeSpinContainer" type="SpinBox" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="PanelContainer/HBoxContainer/FolderVisibilityCheckBox" to="." method="_on_folder_visibility_check_box_pressed"]
+[connection signal="value_changed" from="PanelContainer/HBoxContainer/FolderRangeSpinContainer" to="." method="_on_folder_range_spin_container_value_changed"]

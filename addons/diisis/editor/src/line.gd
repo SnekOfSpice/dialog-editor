@@ -7,6 +7,7 @@ class_name Line
 
 var line_type := DIISIS.LineType.Text
 var is_head_editable := false
+var indent_level := 0
 
 signal move_line (child, dir)
 signal insert_line (at)
@@ -28,6 +29,32 @@ func init() -> void:
 	set_non_meta_parts_visible(true)
 	update()
 
+func set_indent_level(to:int):
+	indent_level = to
+	find_child("IndentContainer").custom_minimum_size.x = 60 * indent_level
+	if line_type == DIISIS.LineType.Folder and indent_level > 0:
+		find_child("IndentContainer").custom_minimum_size.x -= 30
+
+func change_indent_level(by:int):
+	set_indent_level(indent_level + by)
+
+func get_folder_contents_visible() -> bool:
+	if not line_type == DIISIS.LineType.Folder:
+		push_warning(str("Trying to get folder visibility of non-folder line ", get_index()))
+	return find_child("FolderContainer").get_folder_contents_visible()
+
+func get_folder_range() -> Vector2:
+	if not line_type == DIISIS.LineType.Folder:
+		push_warning(str("Trying to get folder range of non-folder line ", get_index()))
+		return Vector2.ZERO
+	return Vector2(get_index(), get_index() + find_child("FolderContainer").get_included_count())
+
+func change_folder_range(by:int):
+	if not line_type == DIISIS.LineType.Folder:
+		push_warning(str("Trying to change folder range of non-folder line ", get_index()))
+		return
+	find_child("FolderContainer").change_folder_range(by)
+
 func set_line_type(value: int):
 	line_type = value
 	match line_type:
@@ -37,6 +64,7 @@ func set_line_type(value: int):
 	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
 	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
 	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
+	find_child("FolderContainer").visible = line_type == DIISIS.LineType.Folder
 
 func set_head_editable(value: bool):
 	is_head_editable = value
@@ -66,6 +94,8 @@ func serialize() -> Dictionary:
 			data["content"] = find_child("ChoiceContainer").serialize()
 		DIISIS.LineType.Instruction:
 			data["content"] = find_child("InstructionContainer").serialize()
+		DIISIS.LineType.Folder:
+			data["content"] = find_child("FolderContainer").serialize()
 	
 	return data
 
@@ -91,6 +121,8 @@ func deserialize(data: Dictionary):
 			find_child("ChoiceContainer").deserialize(data.get("content"))
 		DIISIS.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content"))
+		DIISIS.LineType.Folder:
+			find_child("FolderContainer").deserialize(data.get("content"))
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
@@ -113,7 +145,9 @@ func update():
 	find_child("IndexLabel").text = str(get_index())
 	set_head_editable(is_head_editable)
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
-	#find_child("MoveToIndexSpinBox").value = get_index()
+	
+	if line_type == DIISIS.LineType.Folder:
+		find_child("FolderContainer").update(get_index())
 
 func _on_move_up_pressed() -> void:
 	move(-1)

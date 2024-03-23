@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=13 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_viyfr"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="3_pymyd"]
 [ext_resource type="PackedScene" uid="uid://c7k2h1p5qalaa" path="res://addons/diisis/editor/src/text_content.tscn" id="3_ty44c"]
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://addons/diisis/editor/src/instruction_container.tscn" id="4_phdce"]
+[ext_resource type="PackedScene" uid="uid://dt4yhnj3n5k5m" path="res://addons/diisis/editor/src/folder_container.tscn" id="9_23thg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5f2i"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -41,6 +42,9 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k5f2i")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="IndentContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
@@ -197,6 +201,9 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="InstructionContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("4_phdce")]
+layout_mode = 2
+
+[node name="FolderContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("9_23thg")]
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]

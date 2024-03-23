@@ -233,6 +233,7 @@ func read_next_line(finished_line_index: int):
 				ParserEvents.start("terminate_page", {"page_index": page_index})
 				push_warning(str("tried to read non-existent page ", next, " after non-terminating page ", page_index))
 		return
+	
 	read_line(finished_line_index + 1)
 
 
