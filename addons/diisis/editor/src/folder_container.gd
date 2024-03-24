@@ -5,8 +5,8 @@ func update(line_index:int):
 	var page_size : int = Pages.page_data.get(Pages.editor.current_page.number).get("lines", []).size()
 	var max_reach = Pages.editor.current_page.get_max_reach_after_indented_index(line_index)
 	find_child("FolderRangeSpinContainer").max_value = max_reach# - line_index
-	prints("page size ", Pages.editor.current_page.number, " is ", page_size)
-	prints("folder at ", line_index, " reaches ", find_child("FolderRangeSpinContainer").max_value)
+	#prints("page size ", Pages.editor.current_page.number, " is ", page_size)
+	#prints("folder at ", line_index, " reaches ", find_child("FolderRangeSpinContainer").max_value)
 	find_child("Label").text = str(
 		"spans: (", line_index, " - ", line_index + find_child("FolderRangeSpinContainer").value,")", "\n",
 		"max span: ", max_reach + line_index

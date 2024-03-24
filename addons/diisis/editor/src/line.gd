@@ -12,7 +12,7 @@ var indent_level := 0
 signal move_line (child, dir)
 signal insert_line (at)
 signal move_to (child, idx)
-signal line_deleted
+signal delete_line
 
 func init() -> void:
 	find_child("ConditionalsVisibilityToggle").button_pressed = true
@@ -55,11 +55,27 @@ func change_folder_range(by:int):
 		return
 	find_child("FolderContainer").change_folder_range(by)
 
+func set_line_move_controls_visible(value:bool):
+	if value:
+		find_child("MoveToIndexControls").modulate.a = 1.0
+		find_child("MoveUp").modulate.a = 1.0
+		find_child("MoveDown").modulate.a = 1.0
+		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
+		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
+		find_child("MoveUp").mouse_filter = MOUSE_FILTER_STOP
+		find_child("MoveDown").mouse_filter = MOUSE_FILTER_STOP
+	else:
+		find_child("MoveToIndexControls").modulate.a = 0.0
+		find_child("MoveUp").modulate.a = 0.0
+		find_child("MoveDown").modulate.a = 0.0
+		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
+		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
+		find_child("MoveUp").mouse_filter = MOUSE_FILTER_IGNORE
+		find_child("MoveDown").mouse_filter = MOUSE_FILTER_IGNORE
+
 func set_line_type(value: int):
 	line_type = value
-	match line_type:
-		DIISIS.LineType.Text:
-			pass
+	set_line_move_controls_visible(line_type != DIISIS.LineType.Folder)
 	
 	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
 	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
@@ -133,13 +149,13 @@ func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 
 
 func _on_delete_pressed() -> void:
-	# I'm not 100% on this
-	# but I think since page serialization steps over every child, when this doesn't exist anymore, it'll just won't be part of that serialization anymore
-	emit_signal("line_deleted")
-	queue_free()
+	emit_signal("delete_line", get_index())
 
 func move(dir: int):
-	emit_signal("move_line", self, dir)
+	if line_type == DIISIS.LineType.Folder:
+		emit_signal("move_line_range", get_index(), get_index() + dir, find_child("FolderContainer").get_included_count())
+	else:
+		emit_signal("move_line", self, dir)
 
 func update():
 	find_child("IndexLabel").text = str(get_index())

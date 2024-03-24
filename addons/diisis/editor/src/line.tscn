@@ -109,17 +109,17 @@ size_flags_vertical = 10
 focus_mode = 0
 text = "+v+"
 
-[node name="VBoxContainer3" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="MoveToIndexControls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="MoveToIndexButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer3"]
+[node name="MoveToIndexButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/MoveToIndexControls"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = ">>"
 
-[node name="MoveToIndexSpinBox" type="SpinBox" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer3"]
+[node name="MoveToIndexSpinBox" type="SpinBox" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/MoveToIndexControls"]
 layout_mode = 2
 size_flags_vertical = 0
 
@@ -215,6 +215,6 @@ layout_mode = 2
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/MoveDown" to="." method="_on_move_down_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InsertLineBelow" to="." method="_on_insert_line_below_pressed"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer3/MoveToIndexButton" to="." method="_on_move_to_index_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/MoveToIndexControls/MoveToIndexButton" to="." method="_on_move_to_index_button_pressed"]
 [connection signal="toggled" from="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer/Delete" to="." method="_on_delete_pressed"]

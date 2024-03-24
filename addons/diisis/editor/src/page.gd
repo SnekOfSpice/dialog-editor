@@ -72,7 +72,7 @@ func deserialize_lines(lines_data: Array):
 		line.init()
 		line.deserialize(data)
 		line.connect("move_line", move_line)
-		line.connect("line_deleted", on_line_deleted)
+		line.connect("delete_line", delete_line)
 		line.connect("insert_line", add_line)
 		line.connect("move_to", move_line_to)
 	
@@ -118,6 +118,15 @@ func _on_page_key_line_edit_text_changed(new_text: String) -> void:
 func _on_add_pressed() -> void:
 	add_line()
 
+func delete_line(at_index):
+	for l in find_child("Lines").get_children():
+		if l.line_type == DIISIS.LineType.Folder:
+			var range : Vector2 = l.get_folder_range()
+			if at_index >= range.x and at_index <= range.y:
+				l.change_folder_range(-1)
+	find_child("Lines").get_child(at_index).queue_free()
+	on_line_deleted()
+
 func add_line(at_index:int=find_child("Lines").get_child_count()):
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
@@ -129,8 +138,8 @@ func add_line(at_index:int=find_child("Lines").get_child_count()):
 	find_child("Lines").add_child(line)
 	line.init()
 	line.connect("move_line", move_line)
-	line.connect("line_deleted", on_line_deleted)
 	line.connect("insert_line", add_line)
+	line.connect("delete_line", delete_line)
 	line.connect("move_to", move_line_to)
 	
 	var idx = line.get_index()
