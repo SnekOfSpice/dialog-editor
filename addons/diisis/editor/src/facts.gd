@@ -42,7 +42,6 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary):
-	printt("des", data)
 	for fact_name in data.get("values", {}).keys():
 		add_fact(fact_name, data.get("values", {}).get(fact_name))
 	set_visibility(data.get("meta.visible", false))

@@ -43,7 +43,13 @@ func get_folder_contents_visible() -> bool:
 		push_warning(str("Trying to get folder visibility of non-folder line ", get_index()))
 	return find_child("FolderContainer").get_folder_contents_visible()
 
-func get_folder_range() -> Vector2:
+## Returns the distance that the folder covers.
+func get_folder_range_i() -> int:
+	var range = get_folder_range_v()
+	return range.y - range.x
+
+## Returns the start (x) and end (y) indices of the folder.
+func get_folder_range_v() -> Vector2:
 	if not line_type == DIISIS.LineType.Folder:
 		push_warning(str("Trying to get folder range of non-folder line ", get_index()))
 		return Vector2.ZERO
@@ -56,6 +62,7 @@ func change_folder_range(by:int):
 	find_child("FolderContainer").change_folder_range(by)
 
 func set_line_move_controls_visible(value:bool):
+	return
 	if value:
 		find_child("MoveToIndexControls").modulate.a = 1.0
 		find_child("MoveUp").modulate.a = 1.0
@@ -152,13 +159,23 @@ func _on_delete_pressed() -> void:
 	emit_signal("delete_line", get_index())
 
 func move(dir: int):
+	#if line_type == DIISIS.LineType.Folder:
+		#emit_signal("move_line_range", get_index(), get_index() + dir, find_child("FolderContainer").get_included_count())
+	#else:
+	emit_signal("move_line", self, dir)
+
+func get_next_index() -> int:
+	if get_index() == get_parent().get_child_count() - 1:
+		return get_index()
 	if line_type == DIISIS.LineType.Folder:
-		emit_signal("move_line_range", get_index(), get_index() + dir, find_child("FolderContainer").get_included_count())
-	else:
-		emit_signal("move_line", self, dir)
+		return get_index() + get_folder_range_i() + 1
+	return get_index() + 1
 
 func update():
-	find_child("IndexLabel").text = str(get_index())
+	var indent := ""
+	for i in range(1, indent_level + 1):
+		indent += ">"
+	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 	

@@ -121,7 +121,7 @@ func _on_add_pressed() -> void:
 func delete_line(at_index):
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range()
+			var range : Vector2 = l.get_folder_range_v()
 			if at_index >= range.x and at_index <= range.y:
 				l.change_folder_range(-1)
 	find_child("Lines").get_child(at_index).queue_free()
@@ -130,7 +130,7 @@ func delete_line(at_index):
 func add_line(at_index:int=find_child("Lines").get_child_count()):
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range()
+			var range : Vector2 = l.get_folder_range_v()
 			if at_index >= range.x and at_index <= range.y:
 				l.change_folder_range(1)
 			# if at_index iss within range (index to index + max value), increase range by 1
@@ -163,16 +163,116 @@ func swap_lines(index0:int, index1:int):
 	
 	update()
 
-func move_line(line, dir):
-	var idx = line.get_index()
+func move_line(line: Line, dir:int):
+	var idx := line.get_index()
+	var lines = find_child("Lines")
 	if idx <= 0 and dir == -1:
 		return
 	
-	if idx == find_child("Lines").get_child_count() - 1 and dir == 1:
+	if idx == lines.get_child_count() - 1 and dir == 1:
 		return
 	
-	find_child("Lines").move_child(line, idx+dir)
+	if Input.is_key_pressed(KEY_SHIFT):
+		lines.move_child(line, idx+dir)
+		update()
+		return
+	if line.line_type == DIISIS.LineType.Folder:
+		if dir == -1:
+			move_folder_up(line)
+		elif dir == 1:
+			move_folder_down(line)
+	else:
+		
+		if dir == -1:
+			var previous_line:Line = lines.get_child(idx - 1)
+			
+			if previous_line.line_type == DIISIS.LineType.Folder:
+				update()
+				push_warning("Use Shift to move outside of folder boundaries.")
+				return
+			var bump := idx+dir
+			if previous_line.indent_level > line.indent_level:
+				# the line before this is in a folder, jump to before the folder
+				var previous_range = range(idx)
+				previous_range.reverse()
+				
+				for i in previous_range:
+					var l:Line = lines.get_child(i)
+					
+					if l.indent_level <= line.indent_level:
+						break
+					bump = i
+			lines.move_child(line, bump)
+		elif dir == 1:
+			var next_line:Line = lines.get_child(idx + 1)
+			printt(next_line.get_index(), line.get_index(), next_line.indent_level, line.indent_level)
+			if next_line.indent_level < line.indent_level:
+				update()
+				push_warning("Use Shift to move outside of folder boundaries.")
+				return
+			
+			var bump := next_line.get_next_index() - 1
+			lines.move_child(line, bump)
 	update()
+
+func move_folder_up(line:Line):
+	var idx = line.get_index()
+	var lines = find_child("Lines")
+	var previous_line:Line = find_child("Lines").get_child(idx - 1)
+	if previous_line.line_type != DIISIS.LineType.Folder and previous_line.indent_level <= line.indent_level:
+		lines.move_child(previous_line, idx + max(1, line.get_folder_range_i()))
+	else:
+		#look before until you find start of page or something with less indentation
+		var previous_indices = range(idx)
+		previous_indices.reverse()
+		var bump:=0
+		for i in previous_indices:
+			bump = i
+			var l : Line = lines.get_child(i)
+			if l.indent_level < line.indent_level:
+				prints("bump at ", i)
+				break
+		#if start of page: move to 0
+		var lines_in_folder := [line]
+		for i in range(idx, line.get_folder_range_i() + 1):
+			lines_in_folder.append(lines.get_child(i))
+		lines_in_folder.reverse()
+		if bump == 0:
+			for l in lines_in_folder:
+				prints("moving from ", l.get_index(), "to 0")
+				lines.move_child(l, 0)
+		else:
+			for l in lines_in_folder:
+				prints("moving from ", l.get_index(), "to", bump+1)
+				lines.move_child(l, bump + 1)
+		#else: move to found line idx + 1
+
+func move_folder_down(line:Line):
+	var idx = line.get_index()
+	var lines = find_child("Lines")
+	var lines_in_folder := []
+	var index_after_folder = line.get_next_index()# TODO: should als oaccount for folders directly after
+	
+	var line_after_folder : Line = lines.get_child(index_after_folder)
+	for i in range(idx, index_after_folder):
+		lines_in_folder.append(lines.get_child(i))
+	index_after_folder = line_after_folder.get_next_index()
+	prints("moving to ", index_after_folder)
+	
+	#lines_in_folder.reverse()
+	for l in lines_in_folder:
+		prints("moving ", l.get_index(), " to ", index_after_folder)
+		lines.move_child(l, index_after_folder)
+	#var lines_after := []
+	#for i in range(idx + line.get_folder_range_i(), lines.get_child_count()):
+		#var l :Line= lines.get_child(i)
+		#
+		#if l.indent_level > line.indent_level:
+			#break
+		#lines_after.append(lines.get_child(i))
+	#lines_after.reverse()
+	#for l in lines_after:
+		#lines.move_child(l, idx)
 
 func move_line_to(line : Line, target_idx):
 	find_child("Lines").move_child(line, target_idx)
@@ -206,7 +306,7 @@ func update():
 	
 		if l.line_type == DIISIS.LineType.Folder:
 			# all after that in range of the folder line get indented l.indent_level + 1
-			var folder_range : Vector2 = l.get_folder_range()
+			var folder_range : Vector2 = l.get_folder_range_v()
 			if folder_range.x == folder_range.y:
 				continue
 			for i in range(folder_range.x, folder_range.y + 1):
