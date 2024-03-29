@@ -119,13 +119,25 @@ func _on_add_pressed() -> void:
 	add_line()
 
 func delete_line(at_index):
+	var line_to_delete : Line = find_child("Lines").get_child(at_index)
+	var lines_to_delete := [line_to_delete]
+	
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
 			var range : Vector2 = l.get_folder_range_v()
 			if at_index >= range.x and at_index <= range.y:
 				l.change_folder_range(-1)
-	find_child("Lines").get_child(at_index).queue_free()
-	on_line_deleted()
+	
+	var folder_range : Vector2 = line_to_delete.get_folder_range_v()
+	if Input.is_key_pressed(KEY_SHIFT) and line_to_delete.line_type == DIISIS.LineType.Folder:
+		for i in range(at_index + 1, folder_range.y + 2): # I wish I knew why +2
+			lines_to_delete.append(find_child("Lines").get_child(i))
+	
+	for l in lines_to_delete:
+		l.queue_free()
+	
+	await get_tree().process_frame
+	update()
 
 func add_line(at_index:int=find_child("Lines").get_child_count()):
 	for l in find_child("Lines").get_children():
@@ -276,10 +288,6 @@ func move_folder_down(line:Line):
 
 func move_line_to(line : Line, target_idx):
 	find_child("Lines").move_child(line, target_idx)
-	update()
-
-func on_line_deleted():
-	await get_tree().process_frame
 	update()
 
 func get_max_reach_after_indented_index(index: int):

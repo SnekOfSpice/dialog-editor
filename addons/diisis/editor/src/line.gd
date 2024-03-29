@@ -62,23 +62,14 @@ func change_folder_range(by:int):
 	find_child("FolderContainer").change_folder_range(by)
 
 func set_line_move_controls_visible(value:bool):
-	return
 	if value:
 		find_child("MoveToIndexControls").modulate.a = 1.0
-		find_child("MoveUp").modulate.a = 1.0
-		find_child("MoveDown").modulate.a = 1.0
 		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
 		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
-		find_child("MoveUp").mouse_filter = MOUSE_FILTER_STOP
-		find_child("MoveDown").mouse_filter = MOUSE_FILTER_STOP
 	else:
 		find_child("MoveToIndexControls").modulate.a = 0.0
-		find_child("MoveUp").modulate.a = 0.0
-		find_child("MoveDown").modulate.a = 0.0
 		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
 		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
-		find_child("MoveUp").mouse_filter = MOUSE_FILTER_IGNORE
-		find_child("MoveDown").mouse_filter = MOUSE_FILTER_IGNORE
 
 func set_line_type(value: int):
 	line_type = value
@@ -88,6 +79,10 @@ func set_line_type(value: int):
 	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
 	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
 	find_child("FolderContainer").visible = line_type == DIISIS.LineType.Folder
+	
+	if line_type == DIISIS.LineType.Folder:
+		find_child("DeleteButton").tooltip_text = "Click to delete folder.\nShift + Click to delete folder + contents."
+			
 
 func set_head_editable(value: bool):
 	is_head_editable = value
