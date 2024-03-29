@@ -1,7 +1,10 @@
 @tool
 extends Control
+class_name ChoiceEdit
 
 var do_jump_page := false
+
+signal move_choice_edit(choice_edit, direction)
 
 # Called when the node enters the scene tree for the first time.
 func init() -> void:
@@ -48,12 +51,21 @@ func update():
 	
 	find_child("PageKeyLabel").text = Pages.page_data.get(default_target).get("page_key")
 	find_child("PageSelect").value = default_target
+	
+	find_child("IndexLabel").text = str(get_index())
+	find_child("UpButton").disabled = get_index() <= 0
+	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
+
+
 
 func set_text_lines_visible(value:bool):
 	find_child("TextLines").visible = value
 
 func _on_delete_pressed() -> void:
 	queue_free()
+
+func set_jump_page_toggle_visible(value:bool):
+	find_child("JumpPageToggle").visible = value
 
 func set_do_jump_page(do: bool):
 	do_jump_page = do
@@ -70,3 +82,11 @@ func set_do_jump_page(do: bool):
 
 func _on_jump_page_toggle_pressed() -> void:
 	set_do_jump_page(find_child("JumpPageToggle").button_pressed)
+
+
+func _on_up_button_pressed() -> void:
+	emit_signal("move_choice_edit", self, -1)
+
+
+func _on_down_button_pressed() -> void:
+	emit_signal("move_choice_edit", self, 1)

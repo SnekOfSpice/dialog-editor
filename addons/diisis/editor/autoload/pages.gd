@@ -382,23 +382,25 @@ func lines_referencing_fact(fact_name: String):
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
 			for fact in line.get("facts", {}).get("values", {}).keys():
-				if fact == fact_name: #also untested atm
+				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))
 					ref_lines_declare.append(str(page.get("number"), ".", i))
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
+				var choice_index := 0
 				for option in options.get("choices", {}):
 					for fact in option.get("conditionals", {}).get("facts", {}).get("values", {}):
 						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
-							ref_lines_choice_condition.append(str(page.get("number"), ".", i))
+							ref_lines_choice_condition.append(str(page.get("number"), ".", i, ".", choice_index))
 					for fact in option.get("facts", {}).get("values", {}).keys():
-						if fact == fact_name: #also untested atm
+						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
-							ref_lines_choice_declare.append(str(page.get("number"), ".", i))
+							ref_lines_choice_declare.append(str(page.get("number"), ".", i, ".", choice_index))
+					choice_index += 1
 			for fact in line.get("conditionals", {}).get("facts", {}).get("values", {}):
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):

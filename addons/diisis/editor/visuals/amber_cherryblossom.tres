@@ -1,11 +1,14 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://addons/diisis/editor/visuals/fonts/Fragmentcore.otf" id="1_2td53"]
 [ext_resource type="FontFile" uid="uid://cj0gnvw2fkuo" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Light.otf" id="2_0vdkv"]
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/fonts/textfont.tres" id="3_8wpuc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5foo6"]
+bg_color = Color(0.0794575, 0.0327925, 0.0782667, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41heh"]
-bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+bg_color = Color(0.129558, 0.129558, 0.129558, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -16,6 +19,15 @@ expand_margin_left = 2.0
 expand_margin_top = 1.0
 expand_margin_right = 2.0
 expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m062"]
+bg_color = Color(0.12, 0.054, 0.054, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.549997, 0.278107, 0.108411, 1)
+border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3qqo"]
 content_margin_left = 5.0
@@ -79,7 +91,9 @@ Button/colors/font_outline_color = Color(1, 0.662745, 0.984314, 0.6)
 Button/constants/outline_size = 1
 Button/font_sizes/font_size = 18
 Button/fonts/font = ExtResource("1_2td53")
+Button/styles/hover = SubResource("StyleBoxFlat_5foo6")
 Button/styles/normal = SubResource("StyleBoxFlat_41heh")
+Button/styles/pressed = SubResource("StyleBoxFlat_1m062")
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
 Label/constants/outline_size = 1

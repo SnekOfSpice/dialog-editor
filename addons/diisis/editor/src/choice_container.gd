@@ -33,6 +33,8 @@ func deserialize(data):
 	find_child("AutoSwitchButton").button_pressed = data.get("auto_switch", false)
 	set_auto_switch(find_child("AutoSwitchButton").button_pressed)
 	
+	update()
+	
 
 func add_choice(choice_data:={
 		"choice_text": "choice label",
@@ -42,6 +44,19 @@ func add_choice(choice_data:={
 	$ChoiceList.add_child(choice)
 	choice.init()
 	choice.deserialize(choice_data)
+	choice.connect("move_choice_edit", move_choice_edit)
+	if find_child("JumpPageButton").button_pressed: # override
+		choice.set_do_jump_page(true)
+		choice.set_jump_page_toggle_visible(false)
+	update()
+
+func move_choice_edit(choice_edit: ChoiceEdit, direction:int):
+	$ChoiceList.move_child(choice_edit, choice_edit.get_index() + direction)
+	update()
+
+func update():
+	for c : ChoiceEdit in $ChoiceList.get_children():
+		c.update()
 
 func _on_add_button_pressed() -> void:
 	add_choice()
@@ -51,6 +66,7 @@ func set_do_jump_page(do: bool):
 	find_child("JumpPageButton").button_pressed = do_jump_page
 	for c in find_child("ChoiceList").get_children():
 		c.set_do_jump_page(find_child("JumpPageButton").button_pressed)
+		c.set_jump_page_toggle_visible(not do_jump_page)
 
 func _on_jump_page_button_pressed() -> void:
 	set_do_jump_page(find_child("JumpPageButton").button_pressed)

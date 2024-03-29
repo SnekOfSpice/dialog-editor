@@ -14,16 +14,20 @@ script = ExtResource("1_22qh4")
 layout_mode = 2
 
 [node name="AddButton" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "add choice"
+theme_override_font_sizes/font_size = 23
+text = "+"
 
 [node name="JumpPageButton" type="CheckBox" parent="Controls"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "jump page (override)"
 
 [node name="AutoSwitchButton" type="CheckBox" parent="Controls"]
 layout_mode = 2
+tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices. Needs \"jump page\" enabled to work."
 focus_mode = 0
 text = "auto switch"
 

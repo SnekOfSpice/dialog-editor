@@ -17,9 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+DIISIS="*res://addons/diisis/shared/autoload/Diisis.tscn"
 Parser="*res://addons/diisis/parser/autoload/parser.tscn"
 ParserEvents="*res://addons/diisis/parser/autoload/parser_events.tscn"
-DIISIS="*res://addons/diisis/shared/autoload/Diisis.tscn"
 Data="*res://addons/diisis/editor/autoload/data.tscn"
 Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 
