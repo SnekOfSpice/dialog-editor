@@ -375,14 +375,15 @@ func lines_referencing_fact(fact_name: String):
 	var ref_lines_choice_declare := []
 	var ref_lines_choice_condition := []
 	for page in page_data.values():
-		print(page.get("number", 0))
-		prints("page facts", page.get("facts", {}).get("values", {}).keys())
+		
 		
 		var page_facts:Dictionary
 		if page.get("facts", {}).has("values"):
 			page_facts = page.get("facts", {}).get("values", {})
 		else:
 			page_facts = page.get("facts", {})
+		print(page.get("number", 0))
+		prints("page facts", page_facts)
 		for fact in page_facts.keys():
 			if fact == fact_name:
 				ref_pages.append(page.get("number"))
@@ -395,6 +396,8 @@ func lines_referencing_fact(fact_name: String):
 				line_facts = line.get("facts", {}).get("values", {})
 			else:
 				line_facts = line.get("facts", {})
+			
+			prints(i, "line_facts", line_facts)
 			for fact in line_facts.keys():
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
@@ -403,9 +406,10 @@ func lines_referencing_fact(fact_name: String):
 			
 			var line_conditionals:Dictionary
 			if line.get("conditionals", {}).get("facts", {}).has("values"):
-				line_facts = line.get("conditionals", {}).get("facts", {}).get("values", {})
+				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("values", {})
 			else:
-				line_facts = line.get("conditionals", {}).get("facts", {})
+				line_conditionals = line.get("conditionals", {}).get("facts", {})
+			prints(i, "line_facts", line_conditionals)
 			for fact in line_conditionals:
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
@@ -493,6 +497,71 @@ func word_count_total_approx() -> int:
 		sum += word_count_on_page_approx(i)
 	
 	return sum
+
+func rename_fact(from:String, to:String):
+	for page in page_data.values():
+		
+		var page_facts:Dictionary
+		if page.get("facts", {}).has("values"):
+			page_facts = page.get("facts", {}).get("values", {})
+		else:
+			page_facts = page.get("facts", {})
+		for fact in page_facts.keys():
+			if fact == from:
+				page_facts[to] = page_facts[from]
+				page_facts.erase(from)
+		
+		for i in page.get("lines", []).size():
+			var line = page.get("lines")[i]
+			var line_facts:Dictionary
+			if line.get("facts", {}).has("values"):
+				line_facts = line.get("facts", {}).get("values", {})
+			else:
+				line_facts = line.get("facts", {})
+			for fact in line_facts.keys():
+				if fact == from:
+					line_facts[to] = line_facts[from]
+					line_facts.erase(from)
+			
+			var line_conditionals:Dictionary
+			if line.get("conditionals", {}).get("facts", {}).has("values"):
+				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("values", {})
+			else:
+				line_conditionals = line.get("conditionals", {}).get("facts", {})
+			for fact in line_conditionals:
+				if fact == from:
+					line_conditionals[to] = line_conditionals[from]
+					line_conditionals.erase(from)
+			
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var options = line.get("content")
+				var choice_index := 0
+				for option in options.get("choices", {}):
+					var option_conditionals:Dictionary
+					if option.get("conditionals", {}).get("facts", {}).has("values"):
+						option_conditionals = option.get("conditionals", {}).get("facts", {}).get("values", {})
+					else:
+						option_conditionals = option.get("conditionals", {}).get("facts", {})
+					for fact in option_conditionals:
+						if fact == from:
+							option_conditionals[to] = option_conditionals[from]
+							option_conditionals.erase(from)
+					
+					var option_facts:Dictionary
+					if option.get("facts", {}).has("values"):
+						option_facts = option.get("facts", {}).get("values", {})
+					else:
+						option_facts = option.get("facts", {})
+					for fact in option_facts:
+						if fact == from:
+							option_facts[to] = option_facts[from]
+							option_facts.erase(from)
+					choice_index += 1
+	
+	facts[to] = facts.get(from)
+	facts.erase(from)
+	
+	editor.refresh(false)
 
 #func speaking_characters_on_page(page_number: int) -> Array:
 #	var result = []

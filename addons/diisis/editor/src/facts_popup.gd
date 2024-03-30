@@ -12,7 +12,10 @@ func fill():
 		else:
 			texture = load("res://addons/diisis/editor/visuals/false.png")
 		find_child("Facts").add_item(fact_reg, texture)
-	
+	find_child("RenameFactButton").visible = true
+	find_child("FactRenameEditContainer").visible = false
+	find_child("CancelRenameButton").visible = false
+	find_child("FactDuplicateLabel").visible = false
 #	find_child("FactsTree").clear()
 #	var root = find_child("FactsTree").create_item()
 #	for fact in Pages.facts:
@@ -33,6 +36,7 @@ func _on_close_requested() -> void:
 
 func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	var f = find_child("Facts").get_item_text(index)
+	find_child("FactNameLabel").text = f
 	var references = Pages.lines_referencing_fact(f)
 	
 	var s = "Pages containing fact:\n"
@@ -71,3 +75,27 @@ func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index
 		s += "\n"
 	find_child("RefChoiceCondition").text = s
 		
+
+
+func _on_rename_fact_button_pressed() -> void:
+	find_child("FactRenameEditContainer").visible = true
+	find_child("CancelRenameButton").visible = true
+	find_child("RenameFactButton").visible = false
+
+func _on_cancel_rename_button_pressed() -> void:
+	find_child("RenameFactButton").visible = true
+	find_child("FactRenameEditContainer").visible = false
+	find_child("CancelRenameButton").visible = false
+
+
+func _on_confirm_rename_button_pressed() -> void:
+	hide()
+	Pages.rename_fact(find_child("FactNameLabel").text, find_child("NewNameEdit").text)
+	
+	await get_tree().process_frame
+	popup()
+
+
+func _on_new_name_edit_text_changed(new_text: String) -> void:
+	find_child("ConfirmRenameButton").disabled = Pages.facts.has(new_text)
+	find_child("FactDuplicateLabel").visible = Pages.facts.has(new_text)

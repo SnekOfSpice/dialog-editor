@@ -5,7 +5,7 @@
 [node name="FactsPopup" type="Window"]
 title = "Facts"
 initial_position = 2
-size = Vector2i(446, 100)
+size = Vector2i(446, 101)
 wrap_controls = true
 transient = true
 script = ExtResource("1_ohmwo")
@@ -25,7 +25,39 @@ text = "yea tbh this doesn't do much atm"
 [node name="Facts" type="ItemList" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-mouse_force_pass_scroll_events = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RenameFactButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Edit"
+
+[node name="CancelRenameButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="FactNameLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="FactRenameEditContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmRenameButton" type="Button" parent="VBoxContainer/VBoxContainer/FactRenameEditContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="NewNameEdit" type="LineEdit" parent="VBoxContainer/VBoxContainer/FactRenameEditContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="FactDuplicateLabel" type="Label" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Fact is already declared."
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -62,3 +94,7 @@ size_flags_horizontal = 3
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
 [connection signal="item_clicked" from="VBoxContainer/Facts" to="." method="_on_facts_item_clicked"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/RenameFactButton" to="." method="_on_rename_fact_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/CancelRenameButton" to="." method="_on_cancel_rename_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/FactRenameEditContainer/ConfirmRenameButton" to="." method="_on_confirm_rename_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/VBoxContainer/FactRenameEditContainer/NewNameEdit" to="." method="_on_new_name_edit_text_changed"]
