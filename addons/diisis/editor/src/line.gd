@@ -15,16 +15,16 @@ signal move_to (child, idx)
 signal delete_line
 
 func init() -> void:
-	find_child("ConditionalsVisibilityToggle").button_pressed = true
-	find_child("FactsVisibilityToggle").button_pressed = true
+	#find_child("ConditionalsVisibilityToggle").button_pressed = true
+	#find_child("FactsVisibilityToggle").button_pressed = true
 	find_child("Header").init()
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("TextContent").init()
 	set_line_type(Data.of("editor.selected_line_type"))
 	await get_tree().process_frame
-	find_child("ConditionalsVisibilityToggle").button_pressed = false
-	find_child("FactsVisibilityToggle").button_pressed = false
+	#find_child("ConditionalsVisibilityToggle").button_pressed = false
+	#find_child("FactsVisibilityToggle").button_pressed = false
 	set_head_editable(true)
 	set_non_meta_parts_visible(true)
 	update()
@@ -103,6 +103,8 @@ func serialize() -> Dictionary:
 	#data["meta.visible"] = find_child("VisibleToggle").button_pressed
 	data["meta.is_head_editable"] = is_head_editable
 	data["meta.line_index"] = get_index()
+	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
+	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
 	
 	# content match
 	match line_type:
@@ -122,6 +124,9 @@ func deserialize(data: Dictionary):
 	set_line_type(data.get("line_type"))
 	
 	# header
+	find_child("FactsVisibilityToggle").button_pressed = data.get("meta.facts_visible", false)
+	find_child("ConditionalsVisibilityToggle").button_pressed = data.get("meta.conditionals_visible", false)
+	
 	find_child("Header").deserialize(data.get("header"))
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))

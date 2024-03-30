@@ -29,10 +29,29 @@ func set_visibility(value:bool):
 	find_child("BehaviorContainer").visible = value
 
 func toggle_visibility():
-	if visibility_toggle_button:
+	if visibility_toggle_button != find_child("VisibilityToggleButton"):
 		set_visibility(not visible)
 	else:
 		set_visibility(not find_child("Controls").visible)
+
+func serialize() -> Dictionary:
+	var result = {}
+	result["facts"] = super.serialize()
+	result["operand"] = operand
+	result["operand_key"] = ConditionalOperand.keys()[operand]
+	result["behavior_key"] = Behavior.keys()[selected_behavior]
+	result["behavior"] = selected_behavior
+	if visibility_toggle_button != find_child("VisibilityToggleButton"):
+		result["meta.visible"] = visible
+	else:
+		result["meta.visible"] = find_child("Controls").visible
+	
+	var args = []
+	if find_child("OperandArg1").visible: args.append(find_child("OperandArg1").value)
+	if find_child("OperandArg2").visible: args.append(find_child("OperandArg2").value)
+	result["operand_args"] = args
+	
+	return result
 
 func deserialize(data: Dictionary):
 	super.deserialize(data.get("facts", {}))
@@ -46,22 +65,9 @@ func deserialize(data: Dictionary):
 			find_child("OperandArg2").value = args[1]
 	
 	set_visibility(data.get("meta.visible", false))
-
-func serialize() -> Dictionary:
-	var result = {}
-	result["facts"] = super.serialize()
-	result["operand"] = operand
-	result["operand_key"] = ConditionalOperand.keys()[operand]
-	result["behavior_key"] = Behavior.keys()[selected_behavior]
-	result["behavior"] = selected_behavior
-	result["meta.visible"] = find_child("Controls").visible
 	
-	var args = []
-	if find_child("OperandArg1").visible: args.append(find_child("OperandArg1").value)
-	if find_child("OperandArg2").visible: args.append(find_child("OperandArg2").value)
-	result["operand_args"] = args
+	visibility_toggle_button.button_pressed = data.get("meta.visible", false)
 	
-	return result
 
 func set_operand(value: int):
 	operand = value

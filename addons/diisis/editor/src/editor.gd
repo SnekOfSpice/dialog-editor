@@ -11,9 +11,11 @@ var active_dir := ""
 var page_trail := []
 var trail_idx := 0
 
-func refresh():
+func refresh(serialize_before_load:=true):
 	var cpn = current_page.number
-	#Pages.page_data[cpn] = current_page.serialize()
+	if serialize_before_load:
+		current_page.save()
+	await get_tree().process_frame
 	current_page.deserialize(Pages.page_data.get(cpn))
 
 func init() -> void:
@@ -266,7 +268,7 @@ func _on_move_pages_button_pressed() -> void:
 
 
 func _on_edit_facts_button_pressed() -> void:
-	current_page.save()
+	refresh()
 	$FactsPopup.popup()
 
 

@@ -6,22 +6,24 @@ class_name Facts
 @export var visibility_toggle_button:Button
 
 func init():
-	set_visibility(false)
+	
 	if visibility_toggle_button:
 		find_child("VisibilityToggleButton").visible = false
 		visibility_toggle_button.connect("pressed", toggle_visibility)
+		set_visibility(visibility_toggle_button.button_pressed)
 	else:
 		find_child("VisibilityToggleButton").connect("pressed", toggle_visibility)
-		find_child("VisibilityToggleButton").button_pressed = find_child("Controls").visible
+		#find_child("VisibilityToggleButton").button_pressed = find_child("Controls").visible
+		set_visibility(find_child("VisibilityToggleButton").button_pressed)
 
 func set_visibility(value:bool):
 	if visibility_toggle_button:
-		visibility_toggle_button.button_pressed = value
+		#visibility_toggle_button.button_pressed = value
 		visible = value
 	else:
 		find_child("Controls").visible = value
 		find_child("FactsContainer").visible = value
-		find_child("VisibilityToggleButton").button_pressed = value
+		#find_child("VisibilityToggleButton").button_pressed = value
 
 func toggle_visibility():
 	if visibility_toggle_button:
@@ -45,6 +47,10 @@ func deserialize(data: Dictionary):
 	for fact_name in data.get("values", {}).keys():
 		add_fact(fact_name, data.get("values", {}).get(fact_name))
 	set_visibility(data.get("meta.visible", false))
+	if visibility_toggle_button:
+		visibility_toggle_button.button_pressed = data.get("meta.visible", false)
+	else:
+		find_child("VisibilityToggleButton").button_pressed = data.get("meta.visible", false)
 
 func add_fact(fact_name: String, fact_value: bool):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()

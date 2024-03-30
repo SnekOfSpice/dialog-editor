@@ -366,7 +366,7 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	# step over every fact in page data and save its name
 
 func lines_referencing_fact(fact_name: String):
-	#prints("searching for ", fact_name)
+	prints("searching for ", fact_name, "", page_data.keys())
 	#fact_name = fact_name.split(":")[0]
 	var ref_pages := []
 	var ref_pages_page_bound := []
@@ -375,37 +375,71 @@ func lines_referencing_fact(fact_name: String):
 	var ref_lines_choice_declare := []
 	var ref_lines_choice_condition := []
 	for page in page_data.values():
-		for fact in page.get("facts", {}).get("values", {}).keys():
+		print(page.get("number", 0))
+		prints("page facts", page.get("facts", {}).get("values", {}).keys())
+		
+		var page_facts:Dictionary
+		if page.get("facts", {}).has("values"):
+			page_facts = page.get("facts", {}).get("values", {})
+		else:
+			page_facts = page.get("facts", {})
+		for fact in page_facts.keys():
 			if fact == fact_name:
 				ref_pages.append(page.get("number"))
 				ref_pages_page_bound.append(page.get("number"))
+		
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
-			for fact in line.get("facts", {}).get("values", {}).keys():
+			var line_facts:Dictionary
+			if line.get("facts", {}).has("values"):
+				line_facts = line.get("facts", {}).get("values", {})
+			else:
+				line_facts = line.get("facts", {})
+			for fact in line_facts.keys():
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
 						ref_pages.append(page.get("number"))
 					ref_lines_declare.append(str(page.get("number"), ".", i))
+			
+			var line_conditionals:Dictionary
+			if line.get("conditionals", {}).get("facts", {}).has("values"):
+				line_facts = line.get("conditionals", {}).get("facts", {}).get("values", {})
+			else:
+				line_facts = line.get("conditionals", {}).get("facts", {})
+			for fact in line_conditionals:
+				if fact == fact_name:
+					if not ref_pages.has(page.get("number")):
+						ref_pages.append(page.get("number"))
+					ref_lines_condition.append(str(page.get("number"), ".", i))
+			
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
 				var choice_index := 0
 				for option in options.get("choices", {}):
-					for fact in option.get("conditionals", {}).get("facts", {}).get("values", {}):
+					var option_conditionals:Dictionary
+					if option.get("conditionals", {}).get("facts", {}).has("values"):
+						option_conditionals = option.get("conditionals", {}).get("facts", {}).get("values", {})
+					else:
+						option_conditionals = option.get("conditionals", {}).get("facts", {})
+					for fact in option_conditionals:
 						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
 							ref_lines_choice_condition.append(str(page.get("number"), ".", i, ".", choice_index))
-					for fact in option.get("facts", {}).get("values", {}).keys():
+					
+					var option_facts:Dictionary
+					if option.get("facts", {}).has("values"):
+						option_facts = option.get("facts", {}).get("values", {})
+					else:
+						option_facts = option.get("facts", {})
+					for fact in option_facts:
 						if fact == fact_name:
 							if not ref_pages.has(page.get("number")):
 								ref_pages.append(page.get("number"))
 							ref_lines_choice_declare.append(str(page.get("number"), ".", i, ".", choice_index))
 					choice_index += 1
-			for fact in line.get("conditionals", {}).get("facts", {}).get("values", {}):
-				if fact == fact_name:
-					if not ref_pages.has(page.get("number")):
-						ref_pages.append(page.get("number"))
-					ref_lines_condition.append(str(page.get("number"), ".", i))
+			
+			
 	
 	var all_refs := {
 		"ref_pages": ref_pages,
@@ -415,6 +449,7 @@ func lines_referencing_fact(fact_name: String):
 		"ref_lines_choice_declare": ref_lines_choice_declare,
 		"ref_lines_choice_condition": ref_lines_choice_condition
 	}
+	
 	return all_refs
 
 

@@ -7,7 +7,7 @@ title = "Facts"
 initial_position = 2
 size = Vector2i(446, 100)
 wrap_controls = true
-exclusive = true
+transient = true
 script = ExtResource("1_ohmwo")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -18,12 +18,14 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "yea tbh this doesn't do much atm"
 
 [node name="Facts" type="ItemList" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_force_pass_scroll_events = false
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
