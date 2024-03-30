@@ -64,9 +64,9 @@ func _on_add_button_pressed() -> void:
 func set_do_jump_page(do: bool):
 	do_jump_page = do
 	find_child("JumpPageButton").button_pressed = do_jump_page
-	for c in find_child("ChoiceList").get_children():
-		c.set_do_jump_page(find_child("JumpPageButton").button_pressed)
-		c.set_jump_page_toggle_visible(not do_jump_page)
+	#for c in find_child("ChoiceList").get_children():
+		#c.set_do_jump_page(find_child("JumpPageButton").button_pressed)
+		#c.set_jump_page_toggle_visible(not do_jump_page)
 
 func _on_jump_page_button_pressed() -> void:
 	set_do_jump_page(find_child("JumpPageButton").button_pressed)

@@ -250,6 +250,7 @@ layout_mode = 2
 
 [node name="AddAfter" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Add page after"
 focus_mode = 0
 text = "+>"
 
@@ -258,11 +259,13 @@ layout_mode = 2
 
 [node name="AddLast" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
+tooltip_text = "Add page to end"
 theme_override_font_sizes/font_size = 23
 text = "+>>"
 
 [node name="DeleteCurrent" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
+tooltip_text = "Delete current page"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "-"
@@ -375,6 +378,7 @@ visible = false
 visible = false
 
 [node name="WordCountDialog" parent="." instance=ExtResource("12_icedl")]
+visible = false
 
 [node name="AutoSaveTimer" type="Timer" parent="."]
 

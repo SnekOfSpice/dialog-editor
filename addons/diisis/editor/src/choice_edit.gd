@@ -64,8 +64,8 @@ func set_text_lines_visible(value:bool):
 func _on_delete_pressed() -> void:
 	queue_free()
 
-func set_jump_page_toggle_visible(value:bool):
-	find_child("JumpPageToggle").visible = value
+#func set_jump_page_toggle_visible(value:bool):
+	#find_child("JumpPageToggle").visible = value
 
 func set_do_jump_page(do: bool):
 	do_jump_page = do

@@ -143,6 +143,7 @@ func _on_delete_current_pressed() -> void:
 	
 	var a = get_current_page_number()
 	load_page(a - 1)
+	await get_tree().process_frame
 	Pages.delete_page(a)
 	
 
