@@ -297,3 +297,9 @@ func _on_auto_save_timer_timeout() -> void:
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
+
+
+func _on_word_count_button_pressed() -> void:
+	print(
+		"Total Character Count (approx): ", Pages.character_count_total_approx(), "\n",
+		"Total Word Count (approx): ", Pages.word_count_total_approx(), "\n")

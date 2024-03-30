@@ -462,27 +462,26 @@ func character_count_on_page_approx(page_number: int) -> int:
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
-		match line_type:
-			DIISIS.LineType.Choice:
-				for choice in content.get("choices"):
-					count += str(choice.get("choice_text.enabled")).length()
-					count += str(choice.get("choice_text.disabled")).length()
-			DIISIS.LineType.Text:
-				count += str(content.get("content")).length()
+		if line_type ==	DIISIS.LineType.Choice:
+			for choice in content.get("choices"):
+				count += str(choice.get("choice_text.enabled")).length()
+				count += str(choice.get("choice_text.disabled")).length()
+		elif line_type ==	DIISIS.LineType.Text:
+			count += str(content.get("content")).length()
 	return count
 
 func word_count_on_page_approx(page_number: int) -> int:
 	var count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
-		var line_type = line.get("line_type")
+		var line_type = line.get("line_type", null)
 		var content = line.get("content")
-		match line_type:
-			DIISIS.LineType.Choice:
-				for choice in content.get("choices"):
-					count += str(choice.get("choice_text.enabled")).count(" ") + 1
-					count += str(choice.get("choice_text.disabled")).count(" ") + 1
-			DIISIS.LineType.Text:
-				count += str(content.get("content")).count(" ") + 1
+		if line_type ==	DIISIS.LineType.Choice:
+			for choice in content.get("choices"):
+				count += str(choice.get("choice_text.enabled")).count(" ") + 1
+				count += str(choice.get("choice_text.disabled")).count(" ") + 1
+		elif line_type == DIISIS.LineType.Text:
+			count += str(content.get("content")).count(" ") + 1
+				
 	return count
 
 func character_count_total_approx() -> int:

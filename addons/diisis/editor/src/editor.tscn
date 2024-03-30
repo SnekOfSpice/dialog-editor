@@ -373,6 +373,7 @@ autostart = true
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/MovePagesButton" to="." method="_on_move_pages_button_pressed"]
 [connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditFactsButton" to="." method="_on_edit_facts_button_pressed"]
+[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/WordCountButton" to="." method="_on_word_count_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

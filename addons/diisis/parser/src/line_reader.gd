@@ -361,7 +361,7 @@ func read_new_line(new_line: Dictionary):
 	var last_line_index:int
 	if line_type == DIISIS.LineType.Folder:
 		var range = line_data.get("content", {}).get("range", 0)
-		last_line_index + range
+		last_line_index = line_index + range
 	else:
 		last_line_index = line_index
 	
