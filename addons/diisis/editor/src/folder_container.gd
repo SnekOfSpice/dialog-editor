@@ -31,7 +31,7 @@ func deserialize(data:Dictionary):
 	find_child("FolderRangeSpinContainer").value = data.get("range", 0)
 	find_child("FolderVisibilityCheckBox").button_pressed = data.get("meta.contents_visible")
 	
-	Pages.editor.current_page.update()
+	#Pages.editor.current_page.update()
 
 func get_folder_contents_visible() -> bool:
 	return find_child("FolderVisibilityCheckBox").button_pressed

@@ -1,15 +1,17 @@
-[gd_scene load_steps=16 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=18 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://addons/diisis/editor/src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/LineTypeButton.gd" id="3_2h0gj"]
+[ext_resource type="Script" path="res://addons/diisis/editor/src/editor_popup_button.gd" id="3_u6k32"]
 [ext_resource type="PackedScene" uid="uid://thtw7bxvvc4f" path="res://addons/diisis/editor/src/graphview/graph_view.tscn" id="5_bks01"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://addons/diisis/editor/src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
 [ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
+[ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -105,44 +107,56 @@ size_flags_horizontal = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="Core/MarginContainer2"]
 layout_mode = 2
 
-[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="EditHeaderButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit header"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../HeaderPopup")
 
-[node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="EditCharactersButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit drop downs"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../DropdownPopup")
 
-[node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="EditInstructionButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit instructions"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../InstructionPopup")
 
-[node name="MovePagesButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="MovePagesButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "move pages"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../MovePagePopup")
 
 [node name="HSeparator" type="HSeparator" parent="Core/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="EditFactsButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="EditFactsButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "view facts"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../FactsPopup")
 
-[node name="WordCountButton" type="Button" parent="Core/MarginContainer2/VBoxContainer"]
+[node name="WordCountButton" type="Button" parent="Core/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "word & char count"
 alignment = 2
+script = ExtResource("3_u6k32")
+popup = NodePath("../../../../WordCountDialog")
 
 [node name="PageControl" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -360,6 +374,8 @@ visible = false
 [node name="DropdownPopup" parent="." instance=ExtResource("9_i203b")]
 visible = false
 
+[node name="WordCountDialog" parent="." instance=ExtResource("12_icedl")]
+
 [node name="AutoSaveTimer" type="Timer" parent="."]
 
 [node name="InstructionDefinitionTimer" type="Timer" parent="."]
@@ -368,12 +384,6 @@ autostart = true
 
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditHeaderButton" to="." method="_on_edit_header_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditCharactersButton" to="." method="_on_edit_characters_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditInstructionButton" to="." method="_on_edit_instruction_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/MovePagesButton" to="." method="_on_move_pages_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/EditFactsButton" to="." method="_on_edit_facts_button_pressed"]
-[connection signal="pressed" from="Core/MarginContainer2/VBoxContainer/WordCountButton" to="." method="_on_word_count_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

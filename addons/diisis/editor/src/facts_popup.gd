@@ -16,20 +16,11 @@ func fill():
 	find_child("FactRenameEditContainer").visible = false
 	find_child("CancelRenameButton").visible = false
 	find_child("FactDuplicateLabel").visible = false
-#	find_child("FactsTree").clear()
-#	var root = find_child("FactsTree").create_item()
-#	for fact in Pages.facts:
-#		var f = find_child("FactsTree").create_item(root)
-#		f.set_text(0, fact)
-	
+	find_child("FactNameLabel").text = ""
 
-
-
-#
 func _on_about_to_popup() -> void:
 	fill()
-#
-#
+
 func _on_close_requested() -> void:
 	hide()
 

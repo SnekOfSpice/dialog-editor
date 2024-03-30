@@ -16,7 +16,7 @@ func refresh(serialize_before_load:=true):
 	if serialize_before_load:
 		current_page.save()
 	await get_tree().process_frame
-	current_page.deserialize(Pages.page_data.get(cpn))
+	load_page(cpn, not serialize_before_load)
 
 func init() -> void:
 	print("init editor")
@@ -33,12 +33,15 @@ func init() -> void:
 	find_child("MovePagePopup").size = get_window().size * 0.75
 	find_child("FactsPopup").size = get_window().size * 0.75
 	
+	for c in get_tree().get_nodes_in_group("editor_popup_button"):
+		c.init()
+	
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	$Core.visible = true
 	$GraphView.visible = false
 	print("init editor successful")
 
-func load_page(number: int, initial_load:=false):
+func load_page(number: int, discard_without_saving:=false):
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 #		push_warning(str("page number ", number, " outside page count"))
 #		return
@@ -57,7 +60,7 @@ func load_page(number: int, initial_load:=false):
 			push_warning(str("PageContainer has a child that's not a page: ", c))
 			continue
 		
-		if not initial_load:
+		if not discard_without_saving:
 			c.save()
 		c.queue_free()
 	
@@ -298,8 +301,3 @@ func _on_auto_save_timer_timeout() -> void:
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 
-
-func _on_word_count_button_pressed() -> void:
-	print(
-		"Total Character Count (approx): ", Pages.character_count_total_approx(), "\n",
-		"Total Word Count (approx): ", Pages.word_count_total_approx(), "\n")
