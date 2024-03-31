@@ -62,7 +62,7 @@ layout_mode = 2
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("2_kv7jx")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container")]
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -70,6 +70,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bva4l")
+max_text_line_count = 2
 choice_container = NodePath("../Control/ChoiceContainer")
 choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")
@@ -77,3 +78,4 @@ text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/
 text_container = NodePath("../Control/TextContainer")
 name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
 name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
+inline_evaluator = NodePath("../Handler")

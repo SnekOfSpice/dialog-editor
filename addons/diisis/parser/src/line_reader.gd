@@ -3,13 +3,22 @@
 extends Control
 class_name LineReader
 
+const MAX_TEXT_SPEED := 101
+
 @export_group("UX")
-@export_subgroup("Timing")
-@export_range(1.0, 101.0, 1.0) var text_speed := 60.0
+@export_subgroup("Text Behavior")
+@export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
+## The delay that <ap> tags imply, in seconds.
 @export var auto_pause_duration := 0.2
-@export var auto_continue := false
+## Disables input-based calls of [code]avance()[/code]. Instead, when hitting the end of a line or <mp> tag, LineReader will wait [code]auto_continue_delay[/code] seconds until continuing automatically.
+@export var auto_continue := false:
+	set(value):
+		auto_continue = value
+		notify_property_list_changed()
+## 
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
 var auto_continue_duration:= auto_continue_delay
+@export var max_text_line_count:=0
 
 @export_subgroup("Choices")
 @export var show_text_during_choices := false
@@ -119,9 +128,6 @@ var name_container: Control:
 	"~",
 ]
 
-const MAX_TEXT_SPEED := 101
-
-
 signal line_finished(line_index: int)
 signal jump_to_page(page_index: int)
 signal is_input_locked_changed(new_value: bool)
@@ -161,6 +167,9 @@ signal line_reader_ready
 func _validate_property(property: Dictionary):
 	if not show_advance_available:
 		if property.name in ["advance_available_delay", "advance_available_lerp_weight", "next_prompt_container"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	if not auto_continue:
+		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
@@ -416,6 +425,10 @@ func read_new_line(new_line: Dictionary):
 			else:
 				dialog_lines = [content]
 				dialog_actors.clear()
+			
+			dialog_lines = replace_var_func_tags(dialog_lines)
+			update_limit_line_count(dialog_lines)
+			
 			set_dialog_line_index(0)
 			start_showing_text()
 		DIISIS.LineType.Choice:
@@ -447,7 +460,51 @@ func read_new_line(new_line: Dictionary):
 			
 	
 	
-	
+func update_limit_line_count(lines: Array):
+	if max_text_line_count <= 0:
+		return
+	var font : FontFile = text_content.get_theme_font("font", "RichTextLabel")
+	var font_size : int = text_content.get_theme_font_size("font_size", "RichTextLabel")
+	var label_width : float = text_content.size.x
+	var new_actors := []
+	var new_lines := []
+	var i := 0
+	while i < lines.size():
+		var line:String = lines[i]
+		var words := Array(line.split(" "))
+		#words.reverse()
+		var subline : String = ""
+		
+		var line_height : int = font.get_string_size(line, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size).y
+		printt(words, line_height)
+		while not words.is_empty():
+			var line_size : Vector2 = font.get_multiline_string_size(subline, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
+			var next_word = ""
+			while line_size.y <= line_height * max_text_line_count:
+				next_word = words.pop_front() + " "
+				line_size = font.get_multiline_string_size(subline + next_word, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
+				
+				if line_size.y > line_height * max_text_line_count:
+					new_lines.append(subline)
+					new_actors.append(dialog_actors[i])
+					subline = next_word
+					break
+				if words.is_empty():
+					if line_size.y <= line_height * max_text_line_count:
+						subline += next_word
+					else:
+						subline = next_word
+					new_lines.append(subline)
+					new_actors.append(dialog_actors[i])
+					subline = ""
+					break
+				subline += next_word
+		i += 1
+		#printt(line_size, line_height)
+	#printt(font_size, font)
+	dialog_lines = new_lines
+	dialog_actors = new_actors
+
 func get_end_of_chunk_position() -> int:
 	if pause_positions.size() == 0:
 		return text_content.text.length()
@@ -596,7 +653,66 @@ func start_showing_text():
 	chunk_index = -1
 	read_next_chunk()
 
-
+func replace_var_func_tags(lines):
+	if not inline_evaluator:
+		push_warning("No InlineEvaluator has been set. Calls to <var:> and <func:> won't be parsed.")
+		return lines
+	var i := 0
+	var result := []
+	while i < lines.size():
+		var new_text:String = lines[i]
+		# replace var and func calls
+		var scan_index := 0
+		var text_length := new_text.length()
+		while scan_index < text_length:
+			if new_text[scan_index] == "<":
+				if new_text.find("<var:", scan_index) == scan_index:
+					var local_scan_index := scan_index
+					var control_to_replace := ""
+					var var_name := ""
+					var start_reading_var_name := false
+					while new_text[local_scan_index] != ">":
+						control_to_replace += new_text[local_scan_index]
+						if start_reading_var_name:
+							var_name += new_text[local_scan_index]
+						if new_text[local_scan_index] == ":":
+							start_reading_var_name = true
+						local_scan_index += 1
+					var_name = var_name.trim_suffix(">")
+					control_to_replace += ">"
+					new_text = new_text.replace(control_to_replace, str(inline_evaluator.get(var_name)))
+				elif new_text.find("<func:", scan_index) == scan_index:
+					var local_scan_index := scan_index
+					var control_to_replace := ""
+					var func_name := ""
+					var start_reading_func_name := false
+					while new_text[local_scan_index] != ">":
+						if new_text[local_scan_index] == ",":
+							start_reading_func_name = false
+						control_to_replace += new_text[local_scan_index]
+						if start_reading_func_name:
+							func_name += new_text[local_scan_index]
+						if new_text[local_scan_index] == ":":
+							start_reading_func_name = true
+						
+						local_scan_index += 1
+					#func_name = func_name.trim_suffix(">")
+					control_to_replace += ">"
+					
+					var control_prepared_for_split = control_to_replace.trim_prefix(str("<func:", func_name))
+					control_prepared_for_split = control_prepared_for_split.trim_suffix(">")
+					var packed_func_args := control_prepared_for_split.split(",")
+					var func_args = []
+					for a in packed_func_args:
+						if not a.is_empty():
+							func_args.append(a)
+					new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
+			
+			text_length = new_text.length()
+			scan_index += 1
+		result.append(new_text)
+		i += 1
+	return result
 
 func read_next_chunk():
 	chunk_index += 1
@@ -626,59 +742,11 @@ func read_next_chunk():
 	while new_text.ends_with("<mp>"):
 		new_text = new_text.trim_suffix("<mp>")
 	
-	# replace var and func calls
-	var scan_index := 0
-	var text_length := new_text.length()
-	while scan_index < text_length and inline_evaluator:
-		if new_text[scan_index] == "<":
-			if new_text.find("<var:", scan_index) == scan_index:
-				var local_scan_index := scan_index
-				var control_to_replace := ""
-				var var_name := ""
-				var start_reading_var_name := false
-				while new_text[local_scan_index] != ">":
-					control_to_replace += new_text[local_scan_index]
-					if start_reading_var_name:
-						var_name += new_text[local_scan_index]
-					if new_text[local_scan_index] == ":":
-						start_reading_var_name = true
-					local_scan_index += 1
-				var_name = var_name.trim_suffix(">")
-				control_to_replace += ">"
-				new_text = new_text.replace(control_to_replace, str(inline_evaluator.get(var_name)))
-			elif new_text.find("<func:", scan_index) == scan_index:
-				var local_scan_index := scan_index
-				var control_to_replace := ""
-				var func_name := ""
-				var start_reading_func_name := false
-				while new_text[local_scan_index] != ">":
-					if new_text[local_scan_index] == ",":
-						start_reading_func_name = false
-					control_to_replace += new_text[local_scan_index]
-					if start_reading_func_name:
-						func_name += new_text[local_scan_index]
-					if new_text[local_scan_index] == ":":
-						start_reading_func_name = true
-					
-					local_scan_index += 1
-				#func_name = func_name.trim_suffix(">")
-				control_to_replace += ">"
-				
-				var control_prepared_for_split = control_to_replace.trim_prefix(str("<func:", func_name))
-				control_prepared_for_split = control_prepared_for_split.trim_suffix(">")
-				var packed_func_args := control_prepared_for_split.split(",")
-				var func_args = []
-				for a in packed_func_args:
-					if not a.is_empty():
-						func_args.append(a)
-				new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
-		
-		text_length = new_text.length()
-		scan_index += 1
 	
+	var scan_index := 0
 	pause_positions.clear()
 	pause_types.clear()
-	scan_index = 0
+	#scan_index = 0
 	
 	while scan_index < new_text.length():
 		if new_text[scan_index] == "<":
