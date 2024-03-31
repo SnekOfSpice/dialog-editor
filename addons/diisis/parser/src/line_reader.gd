@@ -15,10 +15,11 @@ const MAX_TEXT_SPEED := 101
 	set(value):
 		auto_continue = value
 		notify_property_list_changed()
-## 
+## Time before the line reader automatically continues, in seconds.
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
 var auto_continue_duration:= auto_continue_delay
 @export var max_text_line_count:=0
+@export var block_advance_during_choices:=true
 
 @export_subgroup("Choices")
 @export var show_text_during_choices := false
@@ -47,7 +48,7 @@ var name_for_blank_name := ""
 @export var name_colors := {}
 
 @export_group("Mandatory References")
-## The Control holding Choice Option Container. Should have its mouse_filter set to Stop and FullRect Layout.
+## The Control holding [code]choice_option_container[/code]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
 @export var choice_container:PanelContainer:
 	get:
 		return choice_container
@@ -81,7 +82,7 @@ var instruction_handler: InstructionHandler:
 		text_content = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The Control holding ALL text; Name Label & Text Content.
+## The Control holding ALL text; [code]name_label[/code] & [code]text_content[/code].
 @export var text_container: Control:
 	get:
 		return text_container
@@ -89,7 +90,7 @@ var instruction_handler: InstructionHandler:
 		text_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## A label that displays a currently speaking character's name.
+## A [code]Label[/code] that displays a currently speaking character's name.
 @export
 var name_label: Label:
 	get:
@@ -98,7 +99,7 @@ var name_label: Label:
 		name_label = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The Control holding the Name Label. Has its visiblity toggled by name_for_blank_name.
+## The Control holding [code]name_label[/code]. Has its visiblity toggled by [code]name_for_blank_name[/code]. May be the same Node as [code]name_label[/code].
 @export
 var name_container: Control:
 	get:
@@ -114,7 +115,7 @@ var name_container: Control:
 
 
 @export_group("Parser Event Configurations")
-## List of characters that will not be part of the read_word parser event and instead be treated as spaces.
+## List of characters that will not be part of the [code]read_word[/code] Parser event and instead be treated as spaces.
 @export var non_word_characters := [
 	".",
 	",",
@@ -243,6 +244,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Choice Container is null")
 	if not choice_option_container:
 		warnings.append("Choice Option Container is null")
+	elif not (
+			choice_option_container is HBoxContainer or 
+			choice_option_container is VBoxContainer or 
+			choice_option_container is GridContainer 
+			):
+			warnings.append("Choice Option Container is not HBoxContainer, VBoxContainer, or GridContainer")
 	if not instruction_handler:
 		warnings.append("Instruction Handler is null")
 	if not text_content:
@@ -276,17 +283,19 @@ func _ready() -> void:
 	
 	instruction_handler.connect("set_input_lock", set_is_input_locked)
 	instruction_handler.connect("instruction_wrapped_completed", instruction_completed)
+	text_content.visible_ratio = 0
 	
 	if not show_advance_available and next_prompt_container:
 		next_prompt_container.modulate.a = 0
 	
 	emit_signal("line_reader_ready")
-	
+
 func handle_event(event_name: String, event_args: Dictionary):
 	match event_name:
 		"word_read":
 			pass
 
+## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
 func get_preferences() -> Dictionary:
 	var prefs = {}
 	
@@ -296,28 +305,33 @@ func get_preferences() -> Dictionary:
 	
 	return prefs
 
+## Applies the preferences that are usually set by the user. Includes keys:\n[code]text_speed[/code] (float)\n[code]auto_continue[/code] (bool)\n[code]auto_continue_delay[/code] (float)
 func apply_preferences(prefs:Dictionary):
 	text_speed = prefs.get("text_speed", 60.0)
 	auto_continue = prefs.get("auto_continue", false)
 	auto_continue_delay = prefs.get("auto_continue_delay", 2.0)
 
-func _gui_input(event: InputEvent) -> void:
-	if Engine.is_editor_hint():
-		return
-	
+## Advances the interpreting of lines from the input file if possible. Will push an appropriate warning if not possible.
+func request_advance():
 	if Parser.paused:
+		push_warning("Cannot advance because Parser.paused is true.")
+		return
+	if is_input_locked:
+		push_warning("Cannot advance because is_input_locked is true.")
+		return
+	if terminated:
+		push_warning("Cannot advance because terminated is true.")
+		return
+	if auto_continue:
+		push_warning("Cannot advance because auto_continue is true.")
+		return
+	if is_choice_presented() and block_advance_during_choices:
+		push_warning("Cannot advance because is_choice_presented() and block_advance_during_choices is true.")
 		return
 	
-	if event is InputEventMouseButton:
-		if is_input_locked:
-			return
-		if terminated:
-			return
-		if auto_continue:
-			return
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			advance()
+	advance()
 
+## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
 	if auto_continue:
 		auto_continue_duration = auto_continue_delay
@@ -590,7 +604,6 @@ func _process(delta: float) -> void:
 #			"length", text_content.text.length()
 #			)
 		if text_content.visible_characters >= pause_positions[next_pause_position_index] - 4 * next_pause_position_index or text_content.visible_characters == -1:
-#			printt("hi ", auto_continue_duration)
 			auto_continue_duration -= delta
 			if auto_continue_duration <= 0.0:
 				
@@ -858,7 +871,12 @@ func build_choices(choices, auto_switch:bool):
 		})
 	ParserEvents.start("choices_presented", {"choices": built_choices})
 
+func is_choice_presented():
+	return not choice_option_container.get_children().is_empty()
+
 func choice_pressed(do_jump_page, target_page):
+	for c in choice_option_container.get_children():
+		c.queue_free()
 	if do_jump_page:
 		emit_signal("jump_to_page", target_page)
 		return

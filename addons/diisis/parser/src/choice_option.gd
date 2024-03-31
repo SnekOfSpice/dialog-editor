@@ -8,7 +8,7 @@ var target_page := 0
 signal choice_pressed(do_jump_page, target_page)
 
 func _ready() -> void:
-	connect("button_pressed", on_pressed)
+	connect("pressed", on_pressed)
 
 func on_pressed() -> void:
 	# apply facts

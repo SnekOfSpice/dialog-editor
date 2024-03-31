@@ -11,7 +11,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 script = ExtResource("1_df3e1")
 
 [node name="Control" type="Control" parent="."]
@@ -21,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="TextContainer" type="CenterContainer" parent="Control"]
 layout_mode = 1
@@ -69,6 +69,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_bva4l")
 max_text_line_count = 2
 choice_container = NodePath("../Control/ChoiceContainer")
