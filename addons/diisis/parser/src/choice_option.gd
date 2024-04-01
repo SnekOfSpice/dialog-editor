@@ -16,9 +16,9 @@ func on_pressed() -> void:
 		Parser.change_fact(f, facts.get(f))
 	
 	emit_signal("choice_pressed", do_jump_page, target_page)
-	ParserEvents.start("choice_pressed",{
-		"do_jump_page":do_jump_page,
-		"target_page":target_page,
-		"choice_text": text,
-	})
+	ParserEvents.choice_pressed.emit(
+		do_jump_page,
+		target_page,
+		text,
+	)
 	visible = false

@@ -6,9 +6,9 @@ var date_string := ""
 const LOG_DIR = "user://choice_logs/"
 
 func _ready() -> void:
-	ParserEvents.listen(self, "choice_pressed")
-	ParserEvents.listen(self, "choices_presented")
-	ParserEvents.listen(self, "fact_changed")
+	ParserEvents.choice_pressed.connect(on_choice_pressed)
+	ParserEvents.choices_presented.connect(on_choices_presented)
+	ParserEvents.fact_changed.connect(on_fact_changed)
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -22,40 +22,44 @@ func deserialize(data:Dictionary):
 	date_string = data.get("date_string", get_new_date_string())
 	load_log_history(date_string)
 
-func handle_event(event_name: String, event_args: Dictionary):
-	match event_name:
-		"choice_pressed":
-			var choice := "Choice: "
-			choice += event_args.get("choice_text", "")
-			if event_args.get("do_jump_page", false):
-				choice += " -> "
-				choice += str(event_args.get("target_page"))
-			append_to_history(choice)
-			
-			save_log_history()
-		"choices_presented":
-			log_history.append("-----")
-			var facts = Parser.get_facts_of_value(true)
-			var fs := "True Facts: "
-			for fact in facts:
-				fs += str(fact, ", ")
-			fs.trim_suffix(", ")
-			append_to_history(fs)
-			
-			var choices = event_args.get("choices", [])
-			var cs := "Presented: "
-			for choice in choices:
-				cs += str(choice.get("option_text"), ", ")
-			cs.trim_suffix(", ")
-			append_to_history(cs)
-			
-			save_log_history()
-		"fact_changed":
-			var fact = event_args.get("fact_name", "")
-			var new_val = event_args.get("new_value")
-			append_to_history(str("== Fact: ", fact, " -> ", new_val))
-			
-			save_log_history()
+func on_fact_changed(
+	fact_name:String,
+	old_value:bool,
+	new_value:bool,
+):
+	append_to_history(str("== Fact: ", fact_name, " -> ", new_value, " (was ", old_value, ")"))
+	save_log_history()
+
+func on_choice_pressed(
+	do_jump_page:bool,
+	target_page:int,
+	choice_text:String
+):
+	var choice := "Choice: "
+	choice += choice_text
+	if do_jump_page:
+		choice += " -> "
+		choice += str(target_page)
+	append_to_history(choice)
+	
+	save_log_history()
+
+func on_choices_presented(choices:Array):
+	log_history.append("-----")
+	var facts = Parser.get_facts_of_value(true)
+	var fs := "True Facts: "
+	for fact in facts:
+		fs += str(fact, ", ")
+	fs.trim_suffix(", ")
+	append_to_history(fs)
+	
+	var cs := "Presented: "
+	for choice in choices:
+		cs += str(choice.get("option_text"), ", ")
+	cs.trim_suffix(", ")
+	append_to_history(cs)
+	
+	save_log_history()
 
 func append_to_history(log:String):
 	log_history.append(str(log, " | ", Parser.get_line_position_string()))

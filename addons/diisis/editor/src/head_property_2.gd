@@ -7,7 +7,7 @@ var property_name := ""
 var _old_property_name := ""
 var values := [null, null]
 var _old_values := [null, null]
-var data_type := Pages.DataTypes._String
+var data_type :int= Pages.DataTypes._String
 #var drop_down_title := ""
 
 func init() -> void:

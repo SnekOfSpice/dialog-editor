@@ -270,11 +270,11 @@ func _ready() -> void:
 		return
 	
 	Parser.connect("read_new_line", read_new_line)
-	Parser.connect("terminate_page", close)
+	Parser.connect("page_terminated", close)
 	
 	Parser.open_connection(self)
 	
-	ParserEvents.listen(self, "word_read")
+	ParserEvents.fact_changed.connect(on_fact_change)
 	remaining_auto_pause_duration = auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
 	if not instruction_handler:
@@ -290,10 +290,13 @@ func _ready() -> void:
 	
 	emit_signal("line_reader_ready")
 
+func on_fact_change(fact_name:String, old:bool, new:bool):
+	printt(fact_name, old, new)
+
 func handle_event(event_name: String, event_args: Dictionary):
 	match event_name:
-		"word_read":
-			pass
+		"fact_changed":
+			print(event_args)
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
 func get_preferences() -> Dictionary:
@@ -611,7 +614,7 @@ func _process(delta: float) -> void:
 
 func remove_spaces_and_send_word_read_event(word: String):
 	word = word.replace(" ", "")
-	ParserEvents.start("word_read", {"word": word})
+	ParserEvents.word_read.emit(word)
 
 func remove_symbols(from: String, symbols:=non_word_characters) -> String:
 	var s = from
@@ -792,7 +795,7 @@ func read_next_chunk():
 		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
 	
-	ParserEvents.start("text_content_text_changed", {"old_text": text_content.text, "new_text": cleaned_text})
+	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text)
 	set_text_content_text(cleaned_text)
 
 func set_text_content_text(text: String):
@@ -863,13 +866,14 @@ func build_choices(choices, auto_switch:bool):
 		
 		choice_option_container.add_child(new_option)
 		built_choices.append({
+			"button": new_option,
 			"disabled": not enable_option,
 			"option_text": option_text,
 			"facts": facts,
 			"do_jump_page": do_jump_page,
 			"target_page": target_page,
 		})
-	ParserEvents.start("choices_presented", {"choices": built_choices})
+	ParserEvents.choices_presented.emit(built_choices)
 
 func is_choice_presented():
 	return not choice_option_container.get_children().is_empty()
@@ -925,17 +929,17 @@ func handle_header(header: Array):
 		if property_name == property_for_name:
 			update_name_label(values[1])
 	
-	ParserEvents.start("new_header", {"header":header})
+	ParserEvents.new_header.emit(header)
 
 
 func set_dialog_line_index(value: int):
 	dialog_line_index = value
 	if using_dialog_syntax:
 		var raw_name : String = dialog_actors[dialog_line_index]
-		var actual_name: String
+		var actor_name: String
 		var dialog_line_arg_dict := {}
 		if "{" in raw_name:
-			actual_name = raw_name.split("{")[0]
+			actor_name = raw_name.split("{")[0]
 			var dialog_line_args = raw_name.split("{")[1]
 			dialog_line_args = dialog_line_args.trim_suffix("}")
 			dialog_line_args = dialog_line_args.split(",")
@@ -945,13 +949,11 @@ func set_dialog_line_index(value: int):
 				var arg_value = arg.split("|")[1]
 				dialog_line_arg_dict[arg_key] = arg_value
 		else:
-			actual_name = raw_name
-		var e = {
-			"actual_name": actual_name,
-			"dialog_line_arg_dict": dialog_line_arg_dict
-		}
-		ParserEvents.start("dialog_line_args_passed", e)
-		update_name_label(actual_name)
+			actor_name = raw_name
+		
+		update_name_label(actor_name)
+		
+		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 
 func update_name_label(actor_name: String):
 	current_raw_name = actor_name
@@ -967,8 +969,8 @@ func update_name_label(actor_name: String):
 	else:
 		name_container.modulate.a = 1.0
 	
-	ParserEvents.start("name_label_updated", {"actor_name": display_name, "is_name_container_visible": name_container.modulate.a > 0.0})
-	ParserEvents.start("new_actor_speaking", {"actor_name": actor_name, "is_name_container_visible": name_container.modulate.a > 0.0})
+	ParserEvents.display_name_changed.emit(display_name, name_container.modulate.a > 0.0)
+	ParserEvents.actor_name_changed.emit(actor_name, name_container.modulate.a > 0.0)
 
 func _on_finished_button_pressed() -> void:
 	emit_signal("line_finished", line_index)

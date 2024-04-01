@@ -35,7 +35,7 @@ const MAX_LINE_LENGTH := 10
 enum DataTypes {_String, _Integer, _Float, _Array, _Dictionary, _DropDown, _Boolean}
 
 signal read_new_line(line)
-signal terminate_page(page_index: int)
+signal page_terminated(page_index: int)
 signal page_finished(page_index: int)
 signal read_new_page(page_index: int)
 
@@ -71,9 +71,9 @@ func _ready() -> void:
 	if show_demo:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	
-	ParserEvents.listen(self, "name_label_updated")
+	ParserEvents.display_name_changed.connect(on_name_label_updated)
 	ParserEvents.listen(self, "text_content_text_changed")
-	ParserEvents.listen(self, "choice_pressed")
+	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index:=0):
@@ -110,15 +110,24 @@ func append_to_history(text:String):
 
 func handle_event(event_name: String, event_args: Dictionary):
 	match event_name:
-		"name_label_updated":
-			currently_speaking_name = event_args.get("actor_name")
-			currently_speaking_visible = event_args.get("is_name_container_visible")
 		"text_content_text_changed":
 			var text = event_args.get("new_text")
 			call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", text)))
-		"choice_pressed":
-			if append_choices_to_history:
-				call_deferred("append_to_history", str(choice_appendation_string, " ", event_args.get("choice_text")))
+
+func on_choice_pressed(
+	do_jump_page:bool,
+	target_page:int,
+	choice_text:String
+):
+	if append_choices_to_history:
+		call_deferred("append_to_history", str(choice_appendation_string, " ", choice_text))
+
+func on_name_label_updated(
+	actor_name: String,
+	is_name_container_visible: bool
+):
+	currently_speaking_name = actor_name
+	currently_speaking_visible = is_name_container_visible
 
 func build_history_string(separator_string:="\n") -> String:
 	var result  := ""
@@ -147,7 +156,7 @@ func read_page(number: int, starting_line_index := 0):
 		return
 	
 	#emit_signal("read_new_page", number)
-	ParserEvents.start("read_new_page", {"number":number})
+	ParserEvents.read_new_page.emit(number)
 	page_index = number
 	lines = page_data.get(page_index).get("lines")
 	max_line_index_on_page = lines.size() - 1
@@ -219,18 +228,18 @@ func read_next_line(finished_line_index: int):
 	if finished_line_index >= max_line_index_on_page:
 		var do_terminate = bool(page_data.get(page_index).get("terminate"))
 		if do_terminate:
-			ParserEvents.start("terminate_page", {"page_index": page_index})
-			emit_signal("terminate_page", page_index)
+			ParserEvents.page_terminated.emit(page_index)
+			emit_signal("page_terminated", page_index)
 		else:
 			var next = int(page_data.get(page_index).get("next"))
 			if page_data.keys().has(next):
 				emit_signal("page_finished", page_index)
-				ParserEvents.start("page_finished", {"page_index": page_index})
+				ParserEvents.page_finished.emit(page_index)
 				read_page(next)
 			else:
-				emit_signal("terminate_page", page_index)
-				ParserEvents.start("page_finished", {"page_index": page_index})
-				ParserEvents.start("terminate_page", {"page_index": page_index})
+				emit_signal("page_terminated", page_index)
+				ParserEvents.page_finished.emit(page_index)
+				ParserEvents.page_terminated.emit(page_index)
 				push_warning(str("tried to read non-existent page ", next, " after non-terminating page ", page_index))
 		return
 	
@@ -245,13 +254,9 @@ func open_connection(new_lr: LineReader):
 	
 
 func change_fact(fact_name: String, new_value: bool):
-	var e = {
-		"old_value" : facts[fact_name],
-		"fact_name": fact_name,
-		"new_value": new_value
-	}
+	var old_value = facts[fact_name]
 	facts[fact_name] = new_value
-	ParserEvents.start("fact_changed", e)
+	ParserEvents.fact_changed.emit(fact_name, old_value, new_value)
 
 func apply_facts(f: Dictionary):
 	for fact in f.keys():
