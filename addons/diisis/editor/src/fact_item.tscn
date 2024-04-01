@@ -3,11 +3,9 @@
 [ext_resource type="Script" path="res://addons/diisis/editor/src/fact_item.gd" id="1_kk40s"]
 
 [node name="Fact" type="VBoxContainer"]
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 35.0
-grow_horizontal = 2
-size_flags_horizontal = 3
+offset_right = 289.0
+offset_bottom = 104.0
+size_flags_horizontal = 0
 script = ExtResource("1_kk40s")
 
 [node name="FactItem" type="HBoxContainer" parent="."]
@@ -35,6 +33,7 @@ size_flags_vertical = 8
 text = "x"
 
 [node name="RegisterContainer" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 
 [node name="RegisterLabel" type="RichTextLabel" parent="RegisterContainer"]

@@ -13,7 +13,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
-text = "Visible"
+text = "Facts"
 
 [node name="Controls" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
