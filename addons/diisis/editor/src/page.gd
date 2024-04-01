@@ -115,9 +115,6 @@ func _on_page_key_line_edit_text_changed(new_text: String) -> void:
 	$Info/PageKeyEditButton.disabled = Pages.key_exists(new_text)
 
 
-func _on_add_pressed() -> void:
-	add_line()
-
 func delete_line(at_index):
 	var line_to_delete : Line = find_child("Lines").get_child(at_index)
 	var lines_to_delete := [line_to_delete]
@@ -128,8 +125,8 @@ func delete_line(at_index):
 			if at_index >= range.x and at_index <= range.y:
 				l.change_folder_range(-1)
 	
-	var folder_range : Vector2 = line_to_delete.get_folder_range_v()
 	if Input.is_key_pressed(KEY_SHIFT) and line_to_delete.line_type == DIISIS.LineType.Folder:
+		var folder_range : Vector2 = line_to_delete.get_folder_range_v()
 		for i in range(at_index + 1, folder_range.y + 2): # I wish I knew why +2
 			lines_to_delete.append(find_child("Lines").get_child(i))
 	
@@ -139,7 +136,10 @@ func delete_line(at_index):
 	await get_tree().process_frame
 	update()
 
-func add_line(at_index:int=find_child("Lines").get_child_count()):
+func get_line_count():
+	return find_child("Lines").get_child_count()
+
+func add_line(at_index:int):
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
 			var range : Vector2 = l.get_folder_range_v()

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfci2vklbcx15"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/autoload/diisis_editor_actions.gd" id="1_nenly"]
+
+[node name="DiisisEditorActions" type="Node"]
+script = ExtResource("1_nenly")

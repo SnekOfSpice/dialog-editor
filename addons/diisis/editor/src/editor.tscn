@@ -85,6 +85,16 @@ size_flags_vertical = 0
 focus_mode = 0
 text = "open"
 
+[node name="UndoButton" type="Button" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Undo"
+
+[node name="RedoButton" type="Button" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Redo"
+
 [node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Autosave in: 0"
@@ -388,6 +398,8 @@ autostart = true
 
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
+[connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="Core/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

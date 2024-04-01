@@ -72,7 +72,7 @@ func _ready() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	
 	ParserEvents.display_name_changed.connect(on_name_label_updated)
-	ParserEvents.listen(self, "text_content_text_changed")
+	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
 ## Call this one for a blank, new game.
@@ -108,11 +108,9 @@ func append_to_history(text:String):
 			history.pop_back()
 			history.reverse()
 
-func handle_event(event_name: String, event_args: Dictionary):
-	match event_name:
-		"text_content_text_changed":
-			var text = event_args.get("new_text")
-			call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", text)))
+func on_text_content_text_changed(old_text: String,
+	new_text: String):
+	call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", new_text)))
 
 func on_choice_pressed(
 	do_jump_page:bool,

@@ -276,12 +276,14 @@ func _on_edit_facts_button_pressed() -> void:
 	refresh()
 	$FactsPopup.popup()
 
+var undo_redo = UndoRedo.new()
 
 func _on_add_line_button_pressed() -> void:
-	if not current_page:
-		add_empty_page()
-	current_page.add_line()
-
+	undo_redo.create_action("Add Line")
+	var line_count = current_page.get_line_count()
+	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
+	undo_redo.commit_action()
 
 func _on_edit_characters_button_pressed() -> void:
 	current_page.save()
@@ -303,3 +305,9 @@ func _on_auto_save_timer_timeout() -> void:
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 
+
+func _on_undo_button_pressed() -> void:
+	undo_redo.undo()
+
+func _on_redo_button_pressed() -> void:
+	undo_redo.redo()
