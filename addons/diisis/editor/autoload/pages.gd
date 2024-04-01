@@ -54,7 +54,7 @@ var head_data_types := {
 	"emotion": DataTypes._String,
 }
 
-var editor
+var editor:DiisisEditor
 
 # {"number":1, "page_key":"lmao", "lines": [], "terminate": false}
 # data: {}

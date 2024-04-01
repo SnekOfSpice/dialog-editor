@@ -2,9 +2,6 @@
 extends Control
 class_name Line
 
-
-
-
 var line_type := DIISIS.LineType.Text
 var is_head_editable := false
 var indent_level := 0

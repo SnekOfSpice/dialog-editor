@@ -10,7 +10,7 @@ var _old_values := [null, null]
 var data_type := Pages.DataTypes._String
 #var drop_down_title := ""
 
-func _ready() -> void:
+func init() -> void:
 	find_child("DataTypeButton").clear()
 	for dt in Pages.DataTypes:
 		find_child("DataTypeButton").add_item(dt)

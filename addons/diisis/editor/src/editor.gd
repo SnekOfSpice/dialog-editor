@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name DiisisEditor
 
 const AUTO_SAVE_INTERVAL := 30000.0
 

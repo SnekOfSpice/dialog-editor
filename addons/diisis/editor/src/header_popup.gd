@@ -16,7 +16,7 @@ func fill():
 	for prop in Pages.head_defaults:
 		var p = preload("res://addons/diisis/editor/src/head_property_2.tscn").instantiate()
 		find_child("HeadPropertyContainer").add_child(p)
-		
+		p.init()
 		p.deserialize(prop)
 		p.set_is_editing_default(true)
 
@@ -24,6 +24,7 @@ func fill():
 func add_empty_property():
 	var p = preload("res://addons/diisis/editor/src/head_property_2.tscn").instantiate()
 	find_child("HeadPropertyContainer").add_child(p)
+	p.init()
 	var new_key = str("property", new_header.size())
 	#var new_value = str("value", new_header.size())
 	var start_data = {
