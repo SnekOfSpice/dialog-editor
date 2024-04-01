@@ -80,8 +80,6 @@ func create_page(number:int, overwrite_existing:= false):
 	}
 	
 	emit_signal("pages_modified")
-	
-	change_page_references_dir(number, 1)
 
 func swap_pages(page_a: int, page_b: int):
 	if not (page_data.keys().has(page_a) and page_data.keys().has(page_b)):
@@ -122,7 +120,6 @@ func get_lines(page_number: int):
 	return page_data.get(page_number).get("lines")
 
 func change_page_references_dir(changed_page: int, operation:int):
-	# this works for everything but the currently loaded pages
 	for page in page_data.values():
 		var next = page.get("next")
 		if next >= changed_page:
@@ -175,7 +172,7 @@ func get_page_references(page_index:int) -> Array:
 	
 	return references
 
-func insert_page(at: int):
+func insert_page_data(at: int):
 	# reindex all after at
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
@@ -186,9 +183,12 @@ func insert_page(at: int):
 	# insert page
 	create_page(at, true)
 
-func delete_page(at: int):
+func delete_page_data(at: int):
 	if not page_data.keys().has(at):
 		push_warning(str("could not delete page ", at, " because it doesn't exist"))
+		return
+	if page_data.keys().size() <= 1:
+		push_warning(str("cannot delete last page"))
 		return
 	
 	# reindex all after at, this automatically overwrites the page at at

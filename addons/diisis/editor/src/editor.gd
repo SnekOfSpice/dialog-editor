@@ -13,7 +13,11 @@ var page_trail := []
 var trail_idx := 0
 
 func refresh(serialize_before_load:=true):
-	var cpn = current_page.number
+	var cpn:int
+	if current_page:
+		cpn = current_page.number
+	else:
+		cpn = 0
 	if serialize_before_load:
 		current_page.save()
 	await get_tree().process_frame
@@ -21,10 +25,13 @@ func refresh(serialize_before_load:=true):
 
 func init() -> void:
 	print("init editor")
-	add_empty_page()
-	
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
+	
+	#add_empty_page()
+	insert_page(0)
+	
+	
 	update_controls()
 	
 	set_current_page_changeable(false)
@@ -102,10 +109,24 @@ func update_controls():
 	await get_tree().process_frame
 	current_page.update()
 
-func add_empty_page():
-	var page_count = Pages.get_page_count()
-	Pages.create_page(page_count)
-	load_page(page_count)
+#func add_empty_page():
+	#var page_count = Pages.get_page_count()
+	#var cpn:int
+	#if current_page:
+		#cpn = current_page.number
+	#else:
+		#cpn = 0
+	#undo_redo.create_action("")
+#
+	#undo_redo.add_do_method(DiisisEditorActions.create_page.bind(page_count, true))
+	#undo_redo.add_do_method(DiisisEditorActions.change_page.bind(page_count))
+	#undo_redo.add_do_method(DiisisEditorActions.change_page_references_dir.bind(page_count, 1))
+	#undo_redo.add_undo_method(DiisisEditorActions.change_page_references_dir.bind(page_count, -1))
+	#undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
+	#undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(page_count))
+	#
+	#undo_redo.commit_action()
+	#Pages.create_page(page_count)
 	
 
 func get_current_page_number() -> int:
@@ -118,24 +139,20 @@ func get_current_page_number() -> int:
 
 
 func _on_first_pressed() -> void:
-	load_page(0)
+	move_to_page(0, "Move to first page")
 
 
 func _on_prev_pressed() -> void:
-	if current_page.number > 0:
-		load_page(current_page.number - 1)
+	move_to_page(current_page.number - 1, "Move to previous page")
 
 func _on_next_pressed() -> void:
-	if current_page.number < Pages.get_page_count() - 1:
-		load_page(current_page.number + 1)
-
+	move_to_page(current_page.number + 1, "Move to next page")
 
 func _on_last_pressed() -> void:
-	load_page(Pages.get_page_count() - 1)
-
+	move_to_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
-	add_empty_page()
+	insert_page(Pages.get_page_count())
 
 func _on_delete_current_pressed() -> void:
 	if Pages.get_page_count() <= 1:
@@ -150,13 +167,17 @@ func _on_delete_current_pressed() -> void:
 
 
 func _on_add_after_pressed() -> void:
-	var at = get_current_page_number() + 1
-	if at >= Pages.get_page_count():
-		add_empty_page()
-		return
-	Pages.insert_page(at)
 	
-	load_page(at)
+	insert_page(get_current_page_number() + 1)
+	
+
+func insert_page(at):
+	var cpn = get_current_page_number()
+	undo_redo.create_action("Insert page")
+	undo_redo.add_do_method(DiisisEditorActions.insert_page.bind(at))
+	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
+	undo_redo.commit_action()
 
 
 func _on_save_button_pressed() -> void:
@@ -235,11 +256,16 @@ func set_trail_idx(value: int):
 	find_child("LastVisited").disabled = trail_idx <= page_trail.size() or page_trail.is_empty()
 	find_child("NextVisited").disabled = trail_idx > 0 or page_trail.is_empty()
 
+func move_to_page(number:int, action_message:String):
+	undo_redo.create_action(action_message)
+	var cpn = current_page.number
+	undo_redo.add_do_method(DiisisEditorActions.change_page.bind(number))
+	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
+	undo_redo.commit_action()
+
 func _on_change_page_button_pressed() -> void:
-	
-	
 	if find_child("PageCountSpinCounter").visible:
-		load_page(find_child("PageCountSpinCounter").value)
+		move_to_page(find_child("PageCountSpinCounter").value, "Jump to page")
 	
 	set_current_page_changeable(find_child("PageCountCurrent").visible)
 
