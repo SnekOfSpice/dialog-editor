@@ -2,13 +2,23 @@
 extends Node
 
 
-func add_line(at):
+func add_line(at, data:={}):
 	if not Pages.editor.current_page:
 		Pages.editor.insert_page(0)
-	Pages.editor.current_page.add_line(at)
+	Pages.editor.current_page.add_line(at, data)
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
 func delete_line(at):
 	Pages.editor.current_page.delete_line(at)
+func delete_single_line(at):
+	Pages.editor.current_page.delete_single_line(at)
+
+func add_lines(at:int, line_data:Array):
+	await get_tree().process_frame
+	Pages.editor.current_page.add_lines(at, line_data)
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
 func change_page(to):
 	# prepare current page to change

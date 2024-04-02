@@ -29,7 +29,7 @@ func serialize() -> Dictionary:
 
 func deserialize(data:Dictionary):
 	find_child("FolderRangeSpinContainer").value = data.get("range", 0)
-	find_child("FolderVisibilityCheckBox").button_pressed = data.get("meta.contents_visible")
+	find_child("FolderVisibilityCheckBox").button_pressed = data.get("meta.contents_visible", true)
 	
 	#Pages.editor.current_page.update()
 

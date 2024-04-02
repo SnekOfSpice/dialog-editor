@@ -29,8 +29,8 @@ func init() -> void:
 func set_indent_level(to:int):
 	indent_level = to
 	find_child("IndentContainer").custom_minimum_size.x = 60 * indent_level
-	if line_type == DIISIS.LineType.Folder and indent_level > 0:
-		find_child("IndentContainer").custom_minimum_size.x -= 30
+	if line_type == DIISIS.LineType.Folder:# and indent_level > 0:
+		find_child("IndentContainer").custom_minimum_size.x -= find_child("FolderContainer").get_included_count() * 60
 
 func change_indent_level(by:int):
 	set_indent_level(indent_level + by)

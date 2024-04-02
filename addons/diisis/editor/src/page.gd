@@ -72,8 +72,8 @@ func deserialize_lines(lines_data: Array):
 		line.init()
 		line.deserialize(data)
 		line.connect("move_line", move_line)
-		line.connect("delete_line", delete_line)
-		line.connect("insert_line", add_line)
+		line.connect("delete_line", request_line_deletion)
+		line.connect("insert_line", request_add_line)
 		line.connect("move_to", move_line_to)
 	
 	enable_page_key_edit(false)
@@ -114,32 +114,92 @@ func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
 	$Info/PageKeyEditButton.disabled = Pages.key_exists(new_text)
 
-
-func delete_line(at_index):
+func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = find_child("Lines").get_child(at_index)
-	var lines_to_delete := [line_to_delete]
+	var lines_to_delete : Array[Line] = [line_to_delete]
 	
-	for l in find_child("Lines").get_children():
-		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range_v()
-			if at_index >= range.x and at_index <= range.y:
-				l.change_folder_range(-1)
 	
 	if Input.is_key_pressed(KEY_SHIFT) and line_to_delete.line_type == DIISIS.LineType.Folder:
 		var folder_range : Vector2 = line_to_delete.get_folder_range_v()
 		for i in range(at_index + 1, folder_range.y + 2): # I wish I knew why +2
 			lines_to_delete.append(find_child("Lines").get_child(i))
 	
-	for l in lines_to_delete:
-		l.queue_free()
+	return lines_to_delete
+
+func delete_line(at_index):
+	print("deleting")
+	for l in find_child("Lines").get_children():
+		if l.line_type == DIISIS.LineType.Folder:
+			var range : Vector2 = l.get_folder_range_v()
+			if at_index >= range.x and at_index <= range.y:
+				l.change_folder_range(-1)
 	
-	await get_tree().process_frame
-	update()
+	for l in get_lines_to_delete(at_index):
+		l.queue_free()
+
+var lines_to_add := []
+func request_line_deletion(at_index:int):
+	
+	#for l in get_lines_to_delete(at_index):
+		#line_data_to_delete.append(l.serialize())
+	
+	var indices_to_delete = get_indices_to_delete(at_index, Input.is_key_pressed(KEY_SHIFT))
+	var line_data_to_delete := {}
+	var lines = find_child("Lines")
+	for i in indices_to_delete:
+		line_data_to_delete[i] = (lines.get_child(i).serialize())
+	
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Delete Line")
+	# delete in reverse
+	indices_to_delete.reverse()
+	for i in indices_to_delete:
+		undo_redo.add_do_method(DiisisEditorActions.delete_single_line.bind(i))
+	
+	# restore in ascending index order
+	indices_to_delete.reverse()
+	for i in indices_to_delete:
+		undo_redo.add_undo_method(DiisisEditorActions.add_line.bind(i, line_data_to_delete[i]))
+	
+	#undo_redo.add_do_method(DiisisEditorActions.delete_line.bind(at_index))
+	#undo_redo.add_undo_property(self, "lines_to_add", line_data_to_delete)
+	#undo_redo.add_undo_method(DiisisEditorActions.add_line.bind(at_index))#s.bind(at_index).bind(line_data_to_delete))
+	undo_redo.commit_action()
+
+func delete_single_line(at:int):
+	find_child("Lines").get_child(at).queue_free()
+
+func get_indices_to_delete(start_index:int, consider_folder:=false):
+	if not consider_folder:
+		return [start_index]
+	
+	var result := []
+	var line_to_delete : Line = find_child("Lines").get_child(start_index)
+	
+	if line_to_delete.line_type == DIISIS.LineType.Folder:
+		var folder_range : Vector2 = line_to_delete.get_folder_range_v()
+		for i in range(start_index, folder_range.y + 1): # I wish I knew why +2
+			result.append(i)
+	
+	return result
+
+func add_lines(start_index,data):
+	var i := 0
+	while i < data.size():
+		add_line(start_index + i, data[i])
+		i += 1
 
 func get_line_count():
 	return find_child("Lines").get_child_count()
 
-func add_line(at_index:int):
+func request_add_line(at_index:int):
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Add Line")
+	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(at_index))
+	undo_redo.commit_action()
+
+func add_line(at_index:int, data := {}):
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
 			var range : Vector2 = l.get_folder_range_v()
@@ -150,16 +210,18 @@ func add_line(at_index:int):
 	find_child("Lines").add_child(line)
 	line.init()
 	line.connect("move_line", move_line)
-	line.connect("insert_line", add_line)
-	line.connect("delete_line", delete_line)
+	line.connect("insert_line", request_add_line)
+	line.connect("delete_line", request_line_deletion)
 	line.connect("move_to", move_line_to)
+	if data != {}:
+		line.deserialize(data)
 	
 	var idx = line.get_index()
 	while idx > at_index:
 		find_child("Lines").move_child(line, idx-1)
 		idx = line.get_index()
 	
-	update()
+	
 
 func swap_lines(index0:int, index1:int):
 	if index0 == index1:
