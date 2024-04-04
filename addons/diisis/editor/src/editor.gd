@@ -308,7 +308,7 @@ func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
 	var line_count = current_page.get_line_count()
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count))
-	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_single_line.bind(line_count))
 	undo_redo.commit_action()
 
 func _on_edit_characters_button_pressed() -> void:

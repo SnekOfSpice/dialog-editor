@@ -37,6 +37,9 @@ size_flags_vertical = 0
 theme = ExtResource("1_viyfr")
 script = ExtResource("1_6i1bg")
 
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k5f2i")

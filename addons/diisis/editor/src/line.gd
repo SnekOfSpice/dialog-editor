@@ -24,13 +24,13 @@ func init() -> void:
 	#find_child("FactsVisibilityToggle").button_pressed = false
 	set_head_editable(true)
 	set_non_meta_parts_visible(true)
-	update()
+	#update()
 
 func set_indent_level(to:int):
 	indent_level = to
 	find_child("IndentContainer").custom_minimum_size.x = 60 * indent_level
 	if line_type == DIISIS.LineType.Folder:# and indent_level > 0:
-		find_child("IndentContainer").custom_minimum_size.x -= find_child("FolderContainer").get_included_count() * 60
+		find_child("IndentContainer").custom_minimum_size.x -= 60
 
 func change_indent_level(by:int):
 	set_indent_level(indent_level + by)
@@ -102,6 +102,7 @@ func serialize() -> Dictionary:
 	data["meta.line_index"] = get_index()
 	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
+	data["meta.indent_level"] = indent_level
 	
 	# content match
 	match line_type:
@@ -140,9 +141,12 @@ func deserialize(data: Dictionary):
 		DIISIS.LineType.Choice:
 			find_child("ChoiceContainer").deserialize(data.get("content"))
 		DIISIS.LineType.Instruction:
+			# could it be this?? deserializing without value or sth
+			# but it sgizld get overridden
 			find_child("InstructionContainer").deserialize(data.get("content"))
 		DIISIS.LineType.Folder:
 			find_child("FolderContainer").deserialize(data.get("content"))
+			set_indent_level(data.get("meta.indent_level", 0))
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
@@ -175,9 +179,11 @@ func update():
 	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
-	
+
+func update_folder(max_folder_range):
+	$Label.text += str(max_folder_range)
 	if line_type == DIISIS.LineType.Folder:
-		find_child("FolderContainer").update(get_index())
+		find_child("FolderContainer").update(get_index(), max_folder_range)
 
 func _on_move_up_pressed() -> void:
 	move(-1)

@@ -126,8 +126,13 @@ func get_lines_to_delete(at_index) -> Array[Line]:
 	
 	return lines_to_delete
 
+func get_line_data(at_index):
+	return find_child("Lines").get_child(at_index).serialize()
+
+
+# we delete bottom up
+# so when we deserialize folders to delete, we deserialize a version with shortened ranged
 func delete_line(at_index):
-	print("deleting")
 	for l in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
 			var range : Vector2 = l.get_folder_range_v()
@@ -139,11 +144,7 @@ func delete_line(at_index):
 
 var lines_to_add := []
 func request_line_deletion(at_index:int):
-	
-	#for l in get_lines_to_delete(at_index):
-		#line_data_to_delete.append(l.serialize())
-	
-	var indices_to_delete = get_indices_to_delete(at_index, Input.is_key_pressed(KEY_SHIFT))
+	var indices_to_delete := get_indices_to_delete(at_index, Input.is_key_pressed(KEY_SHIFT))
 	var line_data_to_delete := {}
 	var lines = find_child("Lines")
 	for i in indices_to_delete:
@@ -169,7 +170,7 @@ func request_line_deletion(at_index:int):
 func delete_single_line(at:int):
 	find_child("Lines").get_child(at).queue_free()
 
-func get_indices_to_delete(start_index:int, consider_folder:=false):
+func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 	if not consider_folder:
 		return [start_index]
 	
@@ -196,15 +197,11 @@ func request_add_line(at_index:int):
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Add Line")
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index))
-	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(at_index))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_single_line.bind(at_index))
 	undo_redo.commit_action()
 
 func add_line(at_index:int, data := {}):
-	for l in find_child("Lines").get_children():
-		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range_v()
-			if at_index >= range.x and at_index <= range.y:
-				l.change_folder_range(1)
+	
 			# if at_index iss within range (index to index + max value), increase range by 1
 	var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
 	find_child("Lines").add_child(line)
@@ -215,6 +212,12 @@ func add_line(at_index:int, data := {}):
 	line.connect("move_to", move_line_to)
 	if data != {}:
 		line.deserialize(data)
+	
+	for l : Line in find_child("Lines").get_children():
+		if l.line_type == DIISIS.LineType.Folder:
+			var range : Vector2 = l.get_folder_range_v()
+			if at_index >= range.x and at_index <= range.y:
+				l.change_folder_range(1)
 	
 	var idx = line.get_index()
 	while idx > at_index:
@@ -355,10 +358,15 @@ func move_line_to(line : Line, target_idx):
 func get_max_reach_after_indented_index(index: int):
 	var line = find_child("Lines").get_child(index)
 	var reach := 0
-	for l in find_child("Lines").get_children():
-		if l.get_index() <= index:
-			continue
-		if l.indent_level < line.indent_level:
+	var i = index + 1
+	while i < find_child("Lines").get_children().size():
+		var l : Line = find_child("Lines").get_child(i)
+		i += 1
+	#for l in find_child("Lines").get_children():
+		#if l.get_index() <= index:
+			#continue
+		# line is the folder itself, which has its own ident level of 1, so all lines that are one level lower are still valid
+		if l.indent_level < line.indent_level - 1:
 			break
 		reach += 1
 	
@@ -370,20 +378,30 @@ func update():
 		l.visible = true
 	
 	
-	var folders_found := 0
-	for l in find_child("Lines").get_children():
-		l.update()
-	
+	var i = 0
+	for l : Line in find_child("Lines").get_children():
 		if l.line_type == DIISIS.LineType.Folder:
+			l.update_folder(get_max_reach_after_indented_index(i))
+		i += 1
+	
+	#var folders_found := 0
+	for l : Line in find_child("Lines").get_children():
+		l.update()
+		var idx = l.get_index()
+		if l.line_type == DIISIS.LineType.Folder:
+			var is_folder_content_visible := l.get_folder_contents_visible()
 			# all after that in range of the folder line get indented l.indent_level + 1
 			var folder_range : Vector2 = l.get_folder_range_v()
-			if folder_range.x == folder_range.y:
+			var folder_range_i : int = l.get_folder_range_i()
+			if folder_range_i == 0:
 				continue
-			for i in range(folder_range.x, folder_range.y + 1):
-				find_child("Lines").get_child(i).change_indent_level(1)
-				if i > folder_range.x: # if beyond the folder itself
-					find_child("Lines").get_child(i).visible = l.get_folder_contents_visible()
-			folders_found += 1
+			for j in range(idx, idx + folder_range_i + 1):
+				find_child("Lines").get_child(j).change_indent_level(1)
+				if j > idx: # if beyond the folder itself
+					find_child("Lines").get_child(j).visible = is_folder_content_visible
+			#folders_found += 1
+	
+	
 
 
 func _on_next_line_edit_value_changed(value: float) -> void:
