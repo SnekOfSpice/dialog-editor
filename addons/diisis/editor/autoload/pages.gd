@@ -482,6 +482,7 @@ func word_count_on_page_approx(page_number: int) -> int:
 				count += str(choice.get("choice_text.disabled")).count(" ") + 1
 		elif line_type == DIISIS.LineType.Text:
 			count += str(content.get("content")).count(" ") + 1
+			count -= str(content.get("content")).count("[]>")
 				
 	return count
 

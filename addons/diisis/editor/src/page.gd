@@ -74,16 +74,6 @@ func deserialize_lines(lines_data: Array):
 	
 	add_lines(data_by_index.keys(), data_by_index)
 	
-	#for data in lines_data:
-		#var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
-		#find_child("Lines").add_child(line)
-		#line.init()
-		#line.deserialize(data)
-		#line.connect("move_line", move_line)
-		#line.connect("delete_line", request_delete_line)
-		#line.connect("insert_line", request_add_line)
-		#line.connect("move_to", move_line_to)
-	
 	enable_page_key_edit(false)
 
 func set_next(next_page: int):
@@ -267,22 +257,25 @@ func move_line(line: Line, dir:int):
 	var idx := line.get_index()
 	var lines = find_child("Lines")
 	if idx <= 0 and dir == -1:
+		print("1")
 		return
 	
 	if idx == lines.get_child_count() - 1 and dir == 1:
+		print("4")
 		return
 	
 	if Input.is_key_pressed(KEY_SHIFT):
 		lines.move_child(line, idx+dir)
 		update()
+		print("2")
 		return
 	if line.line_type == DIISIS.LineType.Folder:
+		print("filder")
 		if dir == -1:
 			move_folder_up(line)
 		elif dir == 1:
 			move_folder_down(line)
 	else:
-		
 		if dir == -1:
 			var previous_line:Line = lines.get_child(idx - 1)
 			
@@ -305,13 +298,15 @@ func move_line(line: Line, dir:int):
 			lines.move_child(line, bump)
 		elif dir == 1:
 			var next_line:Line = lines.get_child(idx + 1)
-			printt(next_line.get_index(), line.get_index(), next_line.indent_level, line.indent_level)
+			var line_to_move:Line = lines.get_child(idx)
+			printt("HGJ2", next_line.get_index(), line.get_index(), next_line.indent_level, line.indent_level)
 			if next_line.indent_level < line.indent_level:
 				update()
 				push_warning("Use Shift to move outside of folder boundaries.")
 				return
 			
-			var bump := next_line.get_next_index() - 1
+			var bump := line_to_move.get_next_index()
+			
 			lines.move_child(line, bump)
 	update()
 
@@ -356,23 +351,10 @@ func move_folder_down(line:Line):
 	var line_after_folder : Line = lines.get_child(index_after_folder)
 	for i in range(idx, index_after_folder):
 		lines_in_folder.append(lines.get_child(i))
-	index_after_folder = line_after_folder.get_next_index()
-	prints("moving to ", index_after_folder)
+	index_after_folder = line_after_folder.get_index()
 	
-	#lines_in_folder.reverse()
 	for l in lines_in_folder:
-		prints("moving ", l.get_index(), " to ", index_after_folder)
 		lines.move_child(l, index_after_folder)
-	#var lines_after := []
-	#for i in range(idx + line.get_folder_range_i(), lines.get_child_count()):
-		#var l :Line= lines.get_child(i)
-		#
-		#if l.indent_level > line.indent_level:
-			#break
-		#lines_after.append(lines.get_child(i))
-	#lines_after.reverse()
-	#for l in lines_after:
-		#lines.move_child(l, idx)
 
 func move_line_to(line : Line, target_idx):
 	find_child("Lines").move_child(line, target_idx)
