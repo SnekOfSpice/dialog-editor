@@ -564,7 +564,26 @@ func rename_fact(from:String, to:String):
 	
 	editor.refresh(false)
 
-#func speaking_characters_on_page(page_number: int) -> Array:
-#	var result = []
-#
-#	return result
+func does_address_exist(address:String) -> bool:
+	var parts := address.split(".")
+	if parts.size() <= 0 or parts.size() > 3:
+		return false
+	
+	var p := []
+	for part in parts:
+		p.append(int(part))
+	parts = p
+	
+	if parts.size() == 1: # page
+		return page_data.has(parts[0])
+	elif parts.size() == 2: # line
+		return page_data.get(parts[0], {}).get("lines", []).size() < parts[1]
+	elif parts.size() == 3: # choice item
+		if page_data.get(parts[0], {}).get("lines", []).size() >= parts[1]:
+			return false
+		var line = page_data.get(parts[0], {}).get("lines", [])[parts[1]]
+		if line.get("line_type") != DIISIS.LineType.Choice:
+			return false
+		return line.get("content", {}).get("choices", []).size() < parts[2]
+	
+	return false
