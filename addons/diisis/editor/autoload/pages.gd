@@ -172,7 +172,7 @@ func get_page_references(page_index:int) -> Array:
 	
 	return references
 
-func insert_page_data(at: int):
+func add_page_data(at: int):
 	# reindex all after at
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)

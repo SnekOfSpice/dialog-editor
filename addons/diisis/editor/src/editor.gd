@@ -29,7 +29,7 @@ func init() -> void:
 	Pages.editor = self
 	
 	#add_empty_page()
-	insert_page(0)
+	add_page(0)
 	
 	
 	update_controls()
@@ -152,7 +152,7 @@ func _on_last_pressed() -> void:
 	move_to_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
-	insert_page(Pages.get_page_count())
+	add_page(Pages.get_page_count())
 
 func _on_delete_current_pressed() -> void:
 	if Pages.get_page_count() <= 1:
@@ -168,13 +168,13 @@ func _on_delete_current_pressed() -> void:
 
 func _on_add_after_pressed() -> void:
 	
-	insert_page(get_current_page_number() + 1)
+	add_page(get_current_page_number() + 1)
 	
 
-func insert_page(at):
+func add_page(at):
 	var cpn = get_current_page_number()
 	undo_redo.create_action("Insert page")
-	undo_redo.add_do_method(DiisisEditorActions.insert_page.bind(at))
+	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at))
 	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
@@ -308,7 +308,7 @@ func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
 	var line_count = current_page.get_line_count()
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count))
-	undo_redo.add_undo_method(DiisisEditorActions.delete_single_line.bind(line_count))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
 	undo_redo.commit_action()
 
 func _on_edit_characters_button_pressed() -> void:

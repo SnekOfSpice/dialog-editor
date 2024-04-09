@@ -181,7 +181,6 @@ func update():
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 
 func update_folder(max_folder_range):
-	$Label.text += str(max_folder_range)
 	if line_type == DIISIS.LineType.Folder:
 		find_child("FolderContainer").update(get_index(), max_folder_range)
 

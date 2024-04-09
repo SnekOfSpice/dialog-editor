@@ -66,15 +66,23 @@ func deserialize_lines(lines_data: Array):
 			continue
 		l.queue_free()
 	
-	for data in lines_data:
-		var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
-		find_child("Lines").add_child(line)
-		line.init()
-		line.deserialize(data)
-		line.connect("move_line", move_line)
-		line.connect("delete_line", request_line_deletion)
-		line.connect("insert_line", request_add_line)
-		line.connect("move_to", move_line_to)
+	var data_by_index := {}
+	var i := 0
+	while i < lines_data.size():
+		data_by_index[i] = lines_data[i]
+		i += 1
+	
+	add_lines(data_by_index.keys(), data_by_index)
+	
+	#for data in lines_data:
+		#var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
+		#find_child("Lines").add_child(line)
+		#line.init()
+		#line.deserialize(data)
+		#line.connect("move_line", move_line)
+		#line.connect("delete_line", request_delete_line)
+		#line.connect("insert_line", request_add_line)
+		#line.connect("move_to", move_line_to)
 	
 	enable_page_key_edit(false)
 
@@ -129,7 +137,6 @@ func get_lines_to_delete(at_index) -> Array[Line]:
 func get_line_data(at_index):
 	return find_child("Lines").get_child(at_index).serialize()
 
-
 # we delete bottom up
 # so when we deserialize folders to delete, we deserialize a version with shortened ranged
 func delete_line(at_index):
@@ -143,7 +150,7 @@ func delete_line(at_index):
 		l.queue_free()
 
 var lines_to_add := []
-func request_line_deletion(at_index:int):
+func request_delete_line(at_index:int):
 	var indices_to_delete := get_indices_to_delete(at_index, Input.is_key_pressed(KEY_SHIFT))
 	var line_data_to_delete := {}
 	var lines = find_child("Lines")
@@ -154,21 +161,32 @@ func request_line_deletion(at_index:int):
 	undo_redo.create_action("Delete Line")
 	# delete in reverse
 	indices_to_delete.reverse()
-	for i in indices_to_delete:
-		undo_redo.add_do_method(DiisisEditorActions.delete_single_line.bind(i))
+	undo_redo.add_do_method(DiisisEditorActions.delete_lines.bind(indices_to_delete))
 	
 	# restore in ascending index order
 	indices_to_delete.reverse()
-	for i in indices_to_delete:
-		undo_redo.add_undo_method(DiisisEditorActions.add_line.bind(i, line_data_to_delete[i]))
+	undo_redo.add_undo_method(DiisisEditorActions.add_lines.bind(indices_to_delete, line_data_to_delete))
 	
 	#undo_redo.add_do_method(DiisisEditorActions.delete_line.bind(at_index))
 	#undo_redo.add_undo_property(self, "lines_to_add", line_data_to_delete)
 	#undo_redo.add_undo_method(DiisisEditorActions.add_line.bind(at_index))#s.bind(at_index).bind(line_data_to_delete))
 	undo_redo.commit_action()
 
-func delete_single_line(at:int):
-	find_child("Lines").get_child(at).queue_free()
+func delete_lines(indices:Array):
+	# sort in descending order
+	indices.sort()
+	indices.reverse()
+	
+	# delete bottom up
+	for i in indices:
+		# handle folder shrinking
+		for l in find_child("Lines").get_children():
+			if l.line_type == DIISIS.LineType.Folder:
+				var range : Vector2 = l.get_folder_range_v()
+				if i >= range.x and i <= range.y:
+					l.change_folder_range(-1)
+		
+		find_child("Lines").get_child(i).queue_free()
 
 func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 	if not consider_folder:
@@ -184,11 +202,11 @@ func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 	
 	return result
 
-func add_lines(start_index,data):
-	var i := 0
-	while i < data.size():
-		add_line(start_index + i, data[i])
-		i += 1
+#func add_lines(start_index,data):
+	#var i := 0
+	#while i < data.size():
+		#add_line(start_index + i, data[i])
+		#i += 1
 
 func get_line_count():
 	return find_child("Lines").get_child_count()
@@ -197,32 +215,37 @@ func request_add_line(at_index:int):
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Add Line")
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index))
-	undo_redo.add_undo_method(DiisisEditorActions.delete_single_line.bind(at_index))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(at_index))
 	undo_redo.commit_action()
 
+func add_lines(indices:Array, data_by_index:={}):
+	for at_index in indices:
+		var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
+		var line_data = data_by_index.get(at_index, {})
+		find_child("Lines").add_child(line)
+		line.init()
+		line.connect("move_line", move_line)
+		line.connect("insert_line", request_add_line)
+		line.connect("delete_line", request_delete_line)
+		line.connect("move_to", move_line_to)
+		if line_data != {}:
+			line.deserialize(line_data)
+		
+		for l : Line in find_child("Lines").get_children():
+			if l.line_type == DIISIS.LineType.Folder:
+				var range : Vector2 = l.get_folder_range_v()
+				if at_index >= range.x and at_index <= range.y:
+					l.change_folder_range(1)
+		
+		var idx = line.get_index()
+		while idx > at_index:
+			find_child("Lines").move_child(line, idx-1)
+			idx = line.get_index()
+
 func add_line(at_index:int, data := {}):
-	
+	add_lines([at_index], {at_index: data})
 			# if at_index iss within range (index to index + max value), increase range by 1
-	var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
-	find_child("Lines").add_child(line)
-	line.init()
-	line.connect("move_line", move_line)
-	line.connect("insert_line", request_add_line)
-	line.connect("delete_line", request_line_deletion)
-	line.connect("move_to", move_line_to)
-	if data != {}:
-		line.deserialize(data)
 	
-	for l : Line in find_child("Lines").get_children():
-		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range_v()
-			if at_index >= range.x and at_index <= range.y:
-				l.change_folder_range(1)
-	
-	var idx = line.get_index()
-	while idx > at_index:
-		find_child("Lines").move_child(line, idx-1)
-		idx = line.get_index()
 	
 	
 
@@ -406,11 +429,6 @@ func update():
 
 func _on_next_line_edit_value_changed(value: float) -> void:
 	set_next(int(value))
-
-
-func _on_delete_page_button_pressed() -> void:
-	pass # Replace with function body.
-
 
 func _on_terminate_check_toggled(toggled_on: bool) -> void:
 	find_child("NextContainer").visible = not toggled_on

@@ -47,7 +47,7 @@ func add_choice(choice_data:={
 	choice.connect("move_choice_edit", move_choice_edit)
 	if find_child("JumpPageButton").button_pressed: # override
 		choice.set_do_jump_page(true)
-		choice.set_jump_page_toggle_visible(false)
+		#choice.set_jump_page_toggle_visible(false)
 	update()
 
 func move_choice_edit(choice_edit: ChoiceEdit, direction:int):
