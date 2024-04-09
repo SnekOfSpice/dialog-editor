@@ -323,17 +323,20 @@ func _on_header_popup_update() -> void:
 func _on_instruction_definition_timer_timeout() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 
-
 func _on_auto_save_timer_timeout() -> void:
 	current_page.save()
-
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 
+func update_undo_redo_buttons():
+	find_child("UndoButton").disabled = not undo_redo.has_undo()
+	find_child("RedoButton").disabled = not undo_redo.has_redo()
 
 func _on_undo_button_pressed() -> void:
 	undo_redo.undo()
+	update_undo_redo_buttons()
 
 func _on_redo_button_pressed() -> void:
 	undo_redo.redo()
+	update_undo_redo_buttons()

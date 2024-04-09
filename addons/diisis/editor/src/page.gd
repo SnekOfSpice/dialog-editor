@@ -304,7 +304,6 @@ func move_line(line: Line, dir:int):
 	elif dir == 1:
 		var next_line:Line = lines.get_child(idx + 1)
 		var line_to_move:Line = lines.get_child(idx)
-		printt("HGJ2", next_line.get_index(), line.get_index(), next_line.indent_level, line.indent_level)
 		if next_line.indent_level < line.indent_level:
 			update()
 			push_warning("Use Shift to move outside of folder boundaries.")

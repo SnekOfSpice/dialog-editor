@@ -4,11 +4,13 @@ extends Window
 var direct_swap_start := -1
 
 func swap_pages(page_a: int, page_b: int):
-	Pages.swap_pages(page_a, page_b)
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Move Pages")
+	undo_redo.add_do_method(DiisisEditorActions.swap_pages.bind(page_a, page_b))
+	undo_redo.add_undo_method(DiisisEditorActions.swap_pages.bind(page_b, page_a))
+	undo_redo.commit_action()
 	
 	fill()
-	
-	
 
 
 func fill():

@@ -70,3 +70,10 @@ func add_page(at:int):
 
 func move_line(line:Line, dir:int):
 	Pages.editor.current_page.move_line(line, dir)
+
+func swap_pages(page_a:int, page_b:int):
+	Pages.swap_pages(page_a, page_b)
+
+
+func rename_fact(from:String, to:String):
+	Pages.rename_fact(from, to)

@@ -81,7 +81,12 @@ func _on_cancel_rename_button_pressed() -> void:
 
 func _on_confirm_rename_button_pressed() -> void:
 	hide()
-	Pages.rename_fact(find_child("FactNameLabel").text, find_child("NewNameEdit").text)
+	
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Rename Fact")
+	undo_redo.add_do_method(DiisisEditorActions.rename_fact.bind(find_child("FactNameLabel").text, find_child("NewNameEdit").text))
+	undo_redo.add_undo_method(DiisisEditorActions.rename_fact.bind(find_child("NewNameEdit").text, find_child("FactNameLabel").text))
+	undo_redo.commit_action()
 	
 	await get_tree().process_frame
 	popup()
