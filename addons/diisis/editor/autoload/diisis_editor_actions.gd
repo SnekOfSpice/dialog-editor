@@ -66,3 +66,7 @@ func add_page(at:int):
 	Pages.add_page_data(at)
 	Pages.change_page_references_dir(at, 1)
 	Pages.editor.load_page(at)
+
+
+func move_line(line:Line, dir:int):
+	Pages.editor.current_page.move_line(line, dir)
