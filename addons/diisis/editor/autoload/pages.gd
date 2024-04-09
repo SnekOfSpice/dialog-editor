@@ -564,8 +564,8 @@ func rename_fact(from:String, to:String):
 	
 	editor.refresh(false)
 
-func does_address_exist(address:String) -> bool:
-	var parts := address.split(".")
+func does_adress_exist(adress:String) -> bool:
+	var parts := adress.split(".")
 	if parts.size() <= 0 or parts.size() > 3:
 		return false
 	

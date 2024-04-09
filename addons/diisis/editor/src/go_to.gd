@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-signal go_to(address:String)
+signal go_to(adress:String)
 
 
 
@@ -11,20 +11,20 @@ func set_current_page_count(value):
 func set_page_count(value):
 	find_child("PageCountLabel").text = str(value)
 
-func _on_address_bar_text_changed(new_text: String) -> void:
-	var address_exists:bool=Pages.does_address_exist($GridContainer/AddressBar.text)
+func _on_adress_bar_text_changed(new_text: String) -> void:
+	var adress_exists:bool=Pages.does_adress_exist($GridContainer/AddressBar.text)
 	
-	if address_exists:
-		var address_string := ""
+	if adress_exists:
+		var adress_string := ""
 		# TODO: [page name or number if no name] / line type / choice text (concat)
-		find_child("ErrorLabel").text = address_string
+		find_child("ErrorLabel").text = adress_string
 	else:
-		find_child("ErrorLabel").text = str("Address does not exist.")
-	$GridContainer/GoToButton.disabled = not address_exists
+		find_child("ErrorLabel").text = str("Adress does not exist.")
+	$GridContainer/GoToButton.disabled = not adress_exists
 
 
-func _on_address_bar_text_submitted(new_text: String) -> void:
-	if not Pages.does_address_exist($GridContainer/AddressBar.text):
-		push_warning("Address does not exist.")
+func _on_adress_bar_text_submitted(new_text: String) -> void:
+	if not Pages.does_adress_exist($GridContainer/AdressBar.text):
+		push_warning("Adress does not exist.")
 		return
-	emit_signal("go_to", $GridContainer/AddressBar.text)
+	emit_signal("go_to", $GridContainer/AdressBar.text)
