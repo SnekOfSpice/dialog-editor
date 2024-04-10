@@ -82,9 +82,6 @@ func set_operand(value: int):
 		operand == ConditionalOperand.betweenNMincl 
 		)
 
-func _on_add_condition_button_pressed() -> void:
-	add_fact(str("newfact", Pages.facts.keys().size()), true)
-
 
 func _on_operand_option_button_item_selected(index: int) -> void:
 	set_operand(index)

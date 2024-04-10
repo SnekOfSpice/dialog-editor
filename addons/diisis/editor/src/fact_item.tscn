@@ -21,6 +21,7 @@ size_flags_horizontal = 2
 size_flags_vertical = 8
 
 [node name="FactName" type="LineEdit" parent="FactItem/HBoxContainer"]
+custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 placeholder_text = "fact name"

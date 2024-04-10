@@ -175,8 +175,9 @@ func add_page(at):
 	var cpn = get_current_page_number()
 	undo_redo.create_action("Insert page")
 	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at))
-	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
-	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
+	if current_page: # only enable deleting of the newly created page if we already were on a page, aka this isn't the first one
+		undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
+		undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
 
 

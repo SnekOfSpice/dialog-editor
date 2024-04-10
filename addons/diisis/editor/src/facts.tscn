@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/facts.gd" id="1_7jlfu"]
 
-[node name="Facts" type="MarginContainer"]
+[node name="Facts" type="MarginContainer" node_paths=PackedStringArray("add_button", "facts_container")]
 custom_minimum_size = Vector2(183.315, 0)
 script = ExtResource("1_7jlfu")
+add_button = NodePath("VBox/Controls/AddFactButton")
+facts_container = NodePath("VBox/FactsContainer")
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -24,5 +26,3 @@ text = "Add Fact"
 
 [node name="FactsContainer" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
-
-[connection signal="pressed" from="VBox/Controls/AddFactButton" to="." method="_on_add_fact_button_pressed"]

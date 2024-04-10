@@ -6,7 +6,11 @@ class_name Facts
 @export var visibility_toggle_button:Button
 @export_enum("Page", "Line", "Choice Item") var address_depth := 0
 
+@export var add_button:Button
+@export var facts_container:VBoxContainer
+
 func init():
+	add_button.pressed.connect(request_add_fact)
 	if visibility_toggle_button:
 		find_child("VisibilityToggleButton").visible = false
 		if not visibility_toggle_button.pressed.is_connected(toggle_visibility):
@@ -24,7 +28,7 @@ func set_visibility(value:bool):
 		visible = value
 	else:
 		find_child("Controls").visible = value
-		find_child("FactsContainer").visible = value
+		facts_container.visible = value
 		#find_child("VisibilityToggleButton").button_pressed = value
 
 func toggle_visibility():
@@ -56,7 +60,7 @@ func deserialize(data: Dictionary):
 
 func add_fact(fact_name: String, fact_value: bool):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
-	find_child("FactsContainer").add_child(f)
+	facts_container.add_child(f)
 	f.set_fact(fact_name, fact_value)
 	f.request_delete_fact.connect(request_delete_fact)
 
@@ -64,7 +68,7 @@ func request_delete_fact(fact_name:String):
 	var address := get_address_suffixed()
 	var undo_redo = Pages.editor.undo_redo
 	var fact_value:bool
-	for c : FactItem in find_child("FactsContainer").get_children():
+	for c : FactItem in facts_container.get_children():
 		if c.get_fact_name() == fact_name:
 			fact_value = c.get_fact_value()
 			break
@@ -74,7 +78,7 @@ func request_delete_fact(fact_name:String):
 	undo_redo.commit_action()
 
 func delete_fact(fact_name:String):
-	for c : FactItem in find_child("FactsContainer").get_children():
+	for c : FactItem in facts_container.get_children():
 		if c.get_fact_name() == fact_name:
 			c.queue_free()
 			return
@@ -114,7 +118,7 @@ func get_address_suffixed() -> String:
 	
 	return address
 
-func _on_add_fact_button_pressed() -> void:
+func request_add_fact():
 	var fact_name = str("newfact", Pages.facts.keys().size())
 	var address := get_address_suffixed()
 	var undo_redo = Pages.editor.undo_redo
