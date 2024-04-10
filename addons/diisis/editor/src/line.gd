@@ -141,8 +141,6 @@ func deserialize(data: Dictionary):
 		DIISIS.LineType.Choice:
 			find_child("ChoiceContainer").deserialize(data.get("content"))
 		DIISIS.LineType.Instruction:
-			# could it be this?? deserializing without value or sth
-			# but it sgizld get overridden
 			find_child("InstructionContainer").deserialize(data.get("content"))
 		DIISIS.LineType.Folder:
 			find_child("FolderContainer").deserialize(data.get("content"))
@@ -151,7 +149,13 @@ func deserialize(data: Dictionary):
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
 	
-	
+
+func get_choice_item(at_index:int) -> ChoiceEdit:
+	if line_type != DIISIS.LineType.Choice:
+		push_warning("Trying to get choice item from non-choice line.")
+		return null
+	return find_child("ChoiceContainer").get_item(at_index)
+
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 	set_head_editable(button_pressed)
 
@@ -160,9 +164,6 @@ func _on_delete_pressed() -> void:
 	emit_signal("delete_line", get_index())
 
 func move(dir: int):
-	#if line_type == DIISIS.LineType.Folder:
-		#emit_signal("move_line_range", get_index(), get_index() + dir, find_child("FolderContainer").get_included_count())
-	#else:
 	emit_signal("move_line", self, dir)
 
 func get_next_index() -> int:
@@ -184,16 +185,28 @@ func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:
 		find_child("FolderContainer").update(get_index(), max_folder_range)
 
+func add_fact(fact_name: String, fact_value: bool):
+	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Facts
+	facts.add_fact(fact_name, fact_value)
+
+func add_conditional(fact_name: String, fact_value: bool):
+	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
+	facts.add_fact(fact_name, fact_value)
+
+func delete_fact(fact_name:String):
+	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Facts
+	facts.delete_fact(fact_name)
+
+func delete_conditional(fact_name:String):
+	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
+	facts.delete_fact(fact_name)
+
 func _on_move_up_pressed() -> void:
 	move(-1)
 
 
 func _on_move_down_pressed() -> void:
 	move(1)
-
-
-
-
 
 func _on_facts_visibility_toggle_toggled(button_pressed: bool) -> void:
 	find_child("Facts").visible = button_pressed

@@ -1,6 +1,13 @@
 @tool
 extends Node
 
+enum AddressTargets {
+	Facts, Conditionals
+}
+enum AddressDepths {
+	Page, Line, ChoiceItem
+}
+
 var cached_lines := {}
 
 func add_lines(indices:Array, data_by_index:={}):
@@ -77,3 +84,70 @@ func swap_pages(page_a:int, page_b:int):
 
 func rename_fact(from:String, to:String):
 	Pages.rename_fact(from, to)
+
+## action should be either "add" or "delete"
+func operate_local_fact(address:String, target:int, action:String, fact_name:String, fact_value:=true):
+	var conditional = address.ends_with("c")
+	var level = address.count(".")
+	address = address.trim_suffix("c" if conditional else "f")
+	var address_parts = address.split(".")
+	var int_parts := []
+	for part in address_parts:
+		int_parts.append(int(part))
+	var func_name := str(action, "_", "conditional" if conditional else "fact")
+	
+	if Pages.editor.current_page.number != int_parts[0]:
+		push_warning("Current page is not the page of the address")
+		return
+	if level == AddressDepths.Page:
+		if conditional:
+			push_warning("Cannot add conditional to page")
+			return
+		if action == "add":
+			Pages.editor.current_page.call(func_name, fact_name, fact_value)
+		elif action == "delete":
+			Pages.editor.current_page.call(func_name, fact_name)
+	elif level == AddressDepths.Line:
+		if action == "add":
+			Pages.editor.current_page.get_line(int_parts[1]).call(func_name, fact_name, fact_value)
+		elif action == "delete":
+			Pages.editor.current_page.get_line(int_parts[1]).call(func_name, fact_name)
+	elif level == AddressDepths.ChoiceItem:
+		if action == "add":
+			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).call(func_name, fact_name, fact_value)
+		elif action == "delete":
+			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).call(func_name, fact_name)
+
+
+func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
+	operate_local_fact(address, target, "add", fact_name, fact_value)
+	return
+	var conditional = address.ends_with("c")
+	var level = address.count(".")
+	address = address.trim_suffix("c" if conditional else "f")
+	var address_parts = address.split(".")
+	var int_parts := []
+	for part in address_parts:
+		int_parts.append(int(part))
+	
+	if Pages.editor.current_page.number != int_parts[0]:
+		push_warning("Current page is not the page of the address")
+		return
+	if level == AddressDepths.Page:
+		if conditional:
+			push_warning("Cannot add conditional to page")
+			return
+		Pages.editor.current_page.add_fact(fact_name, fact_value)
+	elif level == AddressDepths.Line:
+		if conditional:
+			Pages.editor.current_page.get_line(int_parts[1]).add_conditional(fact_name, fact_value)
+		else:
+			Pages.editor.current_page.get_line(int_parts[1]).add_fact(fact_name, fact_value)
+	elif level == AddressDepths.ChoiceItem:
+		if conditional:
+			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).add_conditional(fact_name, fact_value)
+		else:
+			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).add_fact(fact_name, fact_value)
+
+func delete_fact_local(address:String, target:int, fact_name:String):
+	operate_local_fact(address, target, "delete", fact_name)

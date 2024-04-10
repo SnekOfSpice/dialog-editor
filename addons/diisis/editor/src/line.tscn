@@ -185,10 +185,12 @@ layout_mode = 2
 [node name="Conditionals" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_pymyd")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../Controls/VBoxContainer2/HBoxContainer/ConditionalsVisibilityToggle")
+address_depth = 1
 
 [node name="Facts" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_01wq6")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../Controls/VBoxContainer2/HBoxContainer/FactsVisibilityToggle")
+address_depth = 1
 
 [node name="Content" type="VBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
 layout_mode = 2

@@ -1,5 +1,6 @@
 @tool
 extends Facts
+class_name Conditionals
 
 enum ConditionalOperand {
 	AND, OR, nOrMore, nOrLess, betweenNMincl

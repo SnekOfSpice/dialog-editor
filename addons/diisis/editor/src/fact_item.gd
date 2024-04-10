@@ -1,6 +1,8 @@
 @tool
 extends Control
+class_name FactItem
 
+signal request_delete_fact(fact_name:String)
 
 var fact_name := ""
 var entered_text := ""
@@ -52,7 +54,7 @@ func _on_register_button_pressed() -> void:
 
 
 func _on_delete_button_pressed() -> void:
-	queue_free()
+	emit_signal("request_delete_fact", get_fact_name())
 
 
 func _on_fact_value_pressed() -> void:

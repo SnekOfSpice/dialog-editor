@@ -58,6 +58,9 @@ func update():
 	for c : ChoiceEdit in $ChoiceList.get_children():
 		c.update()
 
+func get_item(at_index:int) -> ChoiceEdit:
+	return find_child("ChoiceList").get_child(at_index)
+
 func _on_add_button_pressed() -> void:
 	add_choice()
 

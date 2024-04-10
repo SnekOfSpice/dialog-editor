@@ -24,6 +24,14 @@ func clear():
 			continue
 		c.queue_free()
 
+func add_fact(fact_name: String, fact_value: bool):
+	var facts = $Facts
+	facts.add_fact(fact_name, fact_value)
+
+func delete_fact(fact_name:String):
+	var facts = $Facts
+	facts.delete_fact(fact_name)
+
 func save():
 	Pages.page_data[number] = serialize()
 
@@ -124,7 +132,10 @@ func get_lines_to_delete(at_index) -> Array[Line]:
 	
 	return lines_to_delete
 
-func get_line_data(at_index):
+func get_line(at_index:int) -> Line:
+	return find_child("Lines").get_child(at_index)
+
+func get_line_data(at_index:int) -> Dictionary:
 	return find_child("Lines").get_child(at_index).serialize()
 
 # we delete bottom up

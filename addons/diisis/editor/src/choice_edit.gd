@@ -56,7 +56,21 @@ func update():
 	find_child("UpButton").disabled = get_index() <= 0
 	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
 
+func add_fact(fact_name: String, fact_value: bool):
+	var facts = $VBoxContainer2/HBoxContainer/Facts
+	facts.add_fact(fact_name, fact_value)
 
+func add_conditional(fact_name: String, fact_value: bool):
+	var facts = $VBoxContainer2/HBoxContainer/Conditionals
+	facts.add_fact(fact_name, fact_value)
+
+func delete_fact(fact_name:String):
+	var facts = $VBoxContainer2/HBoxContainer/Facts
+	facts.delete_fact(fact_name)
+
+func delete_conditional(fact_name:String):
+	var facts = $VBoxContainer2/HBoxContainer/Conditionals
+	facts.delete_fact(fact_name)
 
 func set_text_lines_visible(value:bool):
 	find_child("TextLines").visible = value
