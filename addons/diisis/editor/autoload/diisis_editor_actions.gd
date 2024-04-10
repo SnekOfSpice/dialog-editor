@@ -51,14 +51,14 @@ func delete_line(at):
 	Pages.editor.current_page.update()
 
 
-func change_page(to):
+func load_page(at:int):
 	# prepare current page to change
 	if Pages.editor.current_page:
 		Pages.editor.current_page.set_page_key(Pages.editor.current_page.find_child("PageKeyLineEdit").text)
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
-	Pages.editor.load_page(to)
+	Pages.editor.load_page(at)
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
@@ -73,12 +73,14 @@ func create_page(at, overwrite_existing:= false):
 	Pages.editor.current_page.update()
 
 func delete_page(at:int):
+	prints("pages before deletion: ", Pages.page_data.keys())
 	#if at == Pages.editor.current_page.number:
 	cached_lines[at] = Pages.page_data.get(at)#Pages.editor.current_page.serialize()
 	Pages.delete_page_data(at)
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
+	prints("pages after deletion: ", Pages.page_data.keys())
 
 func add_page(at:int):
 	var data : Dictionary = cached_lines.get(at, {})
@@ -89,9 +91,6 @@ func add_page(at:int):
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
-
-func load_page(at:int):
-	Pages.editor.load_page(at)
 
 func move_line(line:Line, dir:int):
 	Pages.editor.current_page.move_line(line, dir)

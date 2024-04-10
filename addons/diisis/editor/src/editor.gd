@@ -151,8 +151,8 @@ func _on_add_after_pressed() -> void:
 func request_add_page(at:int):
 	undo_redo.create_action("Insert page")
 	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at))
-	undo_redo.add_do_method(DiisisEditorActions.change_page.bind(at))
-	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(get_current_page_number()))
+	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(at))
+	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(get_current_page_number()))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
 
@@ -229,9 +229,8 @@ func set_current_page_changeable(value:bool):
 
 func move_to_page(number:int, action_message:String):
 	undo_redo.create_action(action_message)
-	var cpn = current_page.number
-	undo_redo.add_do_method(DiisisEditorActions.change_page.bind(number))
-	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
+	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(number))
+	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(get_current_page_number()))
 	undo_redo.commit_action()
 
 func _on_change_page_button_pressed() -> void:

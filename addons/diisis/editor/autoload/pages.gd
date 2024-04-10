@@ -203,11 +203,10 @@ func delete_page_data(at: int):
 		var data = page_data.get(i)
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
-		page_data[i] = data
+		page_data[new_number] = data
 	
 	# the last page is now a duplicate
 	page_data.erase(get_page_count() - 1)
-	
 	
 	change_page_references_dir(at, -1)
 	
