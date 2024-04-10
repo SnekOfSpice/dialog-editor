@@ -62,8 +62,10 @@ tooltip_text = "terminates the page, stopping the parser from reading the next o
 focus_mode = 0
 text = "terminate"
 
-[node name="Facts" parent="." instance=ExtResource("2_eeb01")]
+[node name="Facts" parent="." node_paths=PackedStringArray("add_button", "facts_container") instance=ExtResource("2_eeb01")]
 layout_mode = 2
+add_button = NodePath("VBox/Controls/AddFactButton")
+facts_container = NodePath("VBox/FactsContainer")
 
 [node name="Controls" type="HBoxContainer" parent="."]
 visible = false

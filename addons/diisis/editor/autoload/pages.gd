@@ -68,7 +68,7 @@ signal pages_modified
 func get_page_count() -> int:
 	return page_data.size()
 
-func create_page(number:int, overwrite_existing:= false):
+func create_page(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
@@ -77,6 +77,13 @@ func create_page(number:int, overwrite_existing:= false):
 		"page_key": "",
 		"lines": [],
 		"next": number + 1
+	}
+	if overwrite_existing:
+		page_data[number] = {
+		"number": overwrite_data.get("number", number),
+		"page_key": overwrite_data.get("page_key", ""),
+		"lines": overwrite_data.get("lines", []),
+		"next": overwrite_data.get("next", number + 1)
 	}
 	
 	emit_signal("pages_modified")
@@ -172,7 +179,7 @@ func get_page_references(page_index:int) -> Array:
 	
 	return references
 
-func add_page_data(at: int):
+func add_page_data(at: int, new_data := {}):
 	# reindex all after at
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
@@ -181,7 +188,7 @@ func add_page_data(at: int):
 		page_data[new_number] = data
 	
 	# insert page
-	create_page(at, true)
+	create_page(at, true, new_data)
 
 func delete_page_data(at: int):
 	if not page_data.keys().has(at):

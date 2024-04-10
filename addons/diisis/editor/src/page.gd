@@ -3,7 +3,6 @@ extends Control
 class_name Page
 
 var number := 0
-var page_key := ""
 var next := 1
 
 func init(n:=number):
@@ -14,9 +13,11 @@ func init(n:=number):
 	find_child("Facts").init()
 	deserialize(data)
 
-func set_page_key(key: String):
-	page_key = key
-	$Info/PageKey.text = page_key
+func get_page_key() -> String:
+	return str($Info/PageKey.text)
+
+func set_page_key(value:String):
+	$Info/PageKey.text = value
 
 func clear():
 	for c in get_children():
@@ -39,7 +40,7 @@ func serialize() -> Dictionary:
 	var data := {}
 	
 	data["number"] = number
-	data["page_key"] = page_key
+	data["page_key"] = get_page_key()
 	data["next"] = find_child("NextLineEdit").value
 	data["meta.scroll_vertical"] = find_child("ScrollContainer").scroll_vertical
 	data["terminate"] = find_child("TerminateCheck").button_pressed
@@ -104,9 +105,9 @@ func _on_page_key_edit_pressed() -> void:
 func enable_page_key_edit(value: bool):
 	$Info/PageKey.visible = not value
 	$Info/PageKeyLineEdit.visible = value
-	$Info/PageKeyLineEdit.text = page_key
+	$Info/PageKeyLineEdit.text = get_page_key()
 	
-	$Info/Seperator.visible = page_key != ""
+	$Info/Seperator.visible = get_page_key() != ""
 
 func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
 	if not button_pressed:

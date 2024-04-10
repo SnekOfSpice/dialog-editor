@@ -59,21 +59,39 @@ func change_page(to):
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
 	Pages.editor.load_page(to)
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
 func change_page_references_dir(changed_page: int, operation:int):
 	Pages.change_page_references_dir(changed_page, operation)
 
 func create_page(at, overwrite_existing:= false):
 	Pages.create_page(at, overwrite_existing)
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
-func delete_page(at):
+func delete_page(at:int):
+	#if at == Pages.editor.current_page.number:
+	cached_lines[at] = Pages.page_data.get(at)#Pages.editor.current_page.serialize()
 	Pages.delete_page_data(at)
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
 func add_page(at:int):
-	Pages.add_page_data(at)
+	var data : Dictionary = cached_lines.get(at, {})
+	Pages.add_page_data(at, data)
+	await get_tree().process_frame
 	Pages.change_page_references_dir(at, 1)
 	Pages.editor.load_page(at)
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
+func load_page(at:int):
+	Pages.editor.load_page(at)
 
 func move_line(line:Line, dir:int):
 	Pages.editor.current_page.move_line(line, dir)

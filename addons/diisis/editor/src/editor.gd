@@ -6,11 +6,9 @@ const AUTO_SAVE_INTERVAL := 30000.0
 
 var _page = preload("res://addons/diisis/editor/src/page.tscn")
 var current_page: Page
+var undo_redo = UndoRedo.new()
 
 var active_dir := ""
-
-var page_trail := []
-var trail_idx := 0
 
 func refresh(serialize_before_load:=true):
 	var cpn:int
@@ -29,7 +27,7 @@ func init() -> void:
 	Pages.editor = self
 	
 	#add_empty_page()
-	add_page(0)
+	request_add_page(0)
 	
 	
 	update_controls()
@@ -47,21 +45,14 @@ func init() -> void:
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	$Core.visible = true
 	$GraphView.visible = false
+	undo_redo.clear_history()
+	undo_redo.version_changed.connect(update_undo_redo_buttons)
+	update_undo_redo_buttons()
 	print("init editor successful")
 
 func load_page(number: int, discard_without_saving:=false):
+	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
-#		push_warning(str("page number ", number, " outside page count"))
-#		return
-	
-	
-	# broken, do this later
-#	if page_trail.size() > 1 and trail_idx < page_trail.size():
-#		if page_trail[trail_idx + 1] != number:
-#			# erase remaining trail
-#			page_trail = page_trail.slice(0, trail_idx + 1)
-#
-#		set_trail_idx(page_trail.size() - 1)
 	
 	for c in $Core/PageContainer.get_children():
 		if not c is Page:
@@ -76,11 +67,11 @@ func load_page(number: int, discard_without_saving:=false):
 	$Core/PageContainer.add_child(page)
 	page.init(number)
 	current_page = page
-	page_trail.append(number)
 	
 	update_controls()
 	
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
+	await get_tree().process_frame
 
 func _process(delta: float) -> void:
 	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
@@ -104,29 +95,8 @@ func update_controls():
 	find_child("PageCountCurrent").text = str(current_page.number)
 	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
 	
-	set_trail_idx(trail_idx)
-	
 	await get_tree().process_frame
 	current_page.update()
-
-#func add_empty_page():
-	#var page_count = Pages.get_page_count()
-	#var cpn:int
-	#if current_page:
-		#cpn = current_page.number
-	#else:
-		#cpn = 0
-	#undo_redo.create_action("")
-#
-	#undo_redo.add_do_method(DiisisEditorActions.create_page.bind(page_count, true))
-	#undo_redo.add_do_method(DiisisEditorActions.change_page.bind(page_count))
-	#undo_redo.add_do_method(DiisisEditorActions.change_page_references_dir.bind(page_count, 1))
-	#undo_redo.add_undo_method(DiisisEditorActions.change_page_references_dir.bind(page_count, -1))
-	#undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
-	#undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(page_count))
-	#
-	#undo_redo.commit_action()
-	#Pages.create_page(page_count)
 	
 
 func get_current_page_number() -> int:
@@ -152,32 +122,38 @@ func _on_last_pressed() -> void:
 	move_to_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
-	add_page(Pages.get_page_count())
+	request_add_page(Pages.get_page_count())
 
 func _on_delete_current_pressed() -> void:
+	request_delete_page(get_current_page_number())
+
+func request_delete_page(number:int):
 	if Pages.get_page_count() <= 1:
 		push_warning("you cannot delete the last page")
 		return
 	
 	var a = get_current_page_number()
-	load_page(a - 1)
-	await get_tree().process_frame
-	Pages.delete_page(a)
-	
+	undo_redo.create_action("Delete Page")
+	if a == 0:
+		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(a + 1))
+	else:
+		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(a - 1))
+	undo_redo.add_do_method(DiisisEditorActions.delete_page.bind(a))
+	undo_redo.add_undo_method(DiisisEditorActions.add_page.bind(a))
+	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(a))
+	undo_redo.commit_action()
 
 
 func _on_add_after_pressed() -> void:
-	
-	add_page(get_current_page_number() + 1)
+	request_add_page(get_current_page_number() + 1)
 	
 
-func add_page(at):
-	var cpn = get_current_page_number()
+func request_add_page(at:int):
 	undo_redo.create_action("Insert page")
 	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at))
-	if current_page: # only enable deleting of the newly created page if we already were on a page, aka this isn't the first one
-		undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(cpn))
-		undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
+	undo_redo.add_do_method(DiisisEditorActions.change_page.bind(at))
+	undo_redo.add_undo_method(DiisisEditorActions.change_page.bind(get_current_page_number()))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
 
 
@@ -251,12 +227,6 @@ func set_current_page_changeable(value:bool):
 	find_child("PageCountSpinCounter").apply()
 	find_child("PageCountCurrent").visible = not value
 
-func set_trail_idx(value: int):
-	trail_idx = value
-	
-	find_child("LastVisited").disabled = trail_idx <= page_trail.size() or page_trail.is_empty()
-	find_child("NextVisited").disabled = trail_idx > 0 or page_trail.is_empty()
-
 func move_to_page(number:int, action_message:String):
 	undo_redo.create_action(action_message)
 	var cpn = current_page.number
@@ -270,40 +240,6 @@ func _on_change_page_button_pressed() -> void:
 	
 	set_current_page_changeable(find_child("PageCountCurrent").visible)
 
-
-func _on_last_visited_pressed() -> void:
-	#set_trail_idx(clamp(trail_idx - 1, 0, page_trail.size()))
-	if page_trail.size() > 1: load_page(page_trail[trail_idx])
-
-
-func _on_next_visited_pressed() -> void:
-	set_trail_idx(clamp(trail_idx + 1, 0, page_trail.size()))
-	if page_trail.size() > 1: load_page(page_trail[trail_idx])
-
-
-func _on_edit_header_button_pressed() -> void:
-	current_page.save()
-	load_page(current_page.number)
-	$HeaderPopup.popup()
-
-
-func _on_edit_instruction_button_pressed() -> void:
-	#current_page.save()
-	#load_page(current_page.number)
-	$InstructionPopup.popup()
-
-
-func _on_move_pages_button_pressed() -> void:
-	current_page.save()
-	#load_page(current_page.number)
-	$MovePagePopup.popup()
-
-
-func _on_edit_facts_button_pressed() -> void:
-	refresh()
-	$FactsPopup.popup()
-
-var undo_redo = UndoRedo.new()
 
 func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
