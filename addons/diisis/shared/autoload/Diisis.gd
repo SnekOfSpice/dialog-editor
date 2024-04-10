@@ -5,6 +5,6 @@ enum LineType {
 	Text, Choice, Instruction, Folder
 }
 
-enum AdressTargets {
+enum AddressTargets {
 	Facts, Conditionals
 }

@@ -23,12 +23,12 @@ text = ">>"
 layout_mode = 2
 text = "40"
 
-[node name="AdressBar" type="LineEdit" parent="GridContainer"]
+[node name="AddressBar" type="LineEdit" parent="GridContainer"]
 layout_mode = 2
 
 [node name="PageCountLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 text = "200"
 
-[connection signal="text_changed" from="GridContainer/AdressBar" to="." method="_on_adress_bar_text_changed"]
-[connection signal="text_submitted" from="GridContainer/AdressBar" to="." method="_on_adress_bar_text_submitted"]
+[connection signal="text_changed" from="GridContainer/AddressBar" to="." method="_on_adress_bar_text_changed"]
+[connection signal="text_submitted" from="GridContainer/AddressBar" to="." method="_on_adress_bar_text_submitted"]
