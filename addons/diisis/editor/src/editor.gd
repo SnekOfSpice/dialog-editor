@@ -143,10 +143,8 @@ func request_delete_page(number:int):
 	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(number))
 	undo_redo.commit_action()
 
-
 func _on_add_after_pressed() -> void:
 	request_add_page(get_current_page_number() + 1)
-	
 
 func request_add_page(at:int):
 	undo_redo.create_action("Insert page")
@@ -156,19 +154,16 @@ func request_add_page(at:int):
 	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
 
-
 func _on_save_button_pressed() -> void:
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
 	find_child("FDSave").popup()
-	#find_child("FDSave").size = get_window().size - Vector2i(30, 80)
 
 func _on_open_button_pressed() -> void:
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
 	find_child("FDOpen").size = size
 	find_child("FDOpen").popup()
-	#find_child("FDOpen").size = get_window().size - Vector2i(30, 80)
 
 func _on_fd_save_file_selected(path: String) -> void:
 	if current_page:

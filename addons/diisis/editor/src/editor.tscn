@@ -270,6 +270,7 @@ layout_mode = 2
 [node name="AddLast" type="Button" parent="Core/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 tooltip_text = "Add page to end"
+focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "+>>"
 
