@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxr1r0c3qd0tr"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/autoload/diisis_editor_util.gd" id="1_m3xd4"]
+
+[node name="DiisisEditorUtil" type="Node"]
+script = ExtResource("1_m3xd4")

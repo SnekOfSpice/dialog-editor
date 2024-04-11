@@ -8,12 +8,14 @@ const AUTOLOAD_DATA = "Data"
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
+const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
 
 func add_parser_singletons():
@@ -23,6 +25,7 @@ func add_parser_singletons():
 func remove_editor_singletons():
 	remove_autoload_singleton(AUTOLOAD_DATA)
 	remove_autoload_singleton(AUTOLOAD_PAGES)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
 
 func remove_parser_singletons():
@@ -48,7 +51,8 @@ func open_editor():
 		remove_editor_singletons()
 		add_editor_singletons()
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
-		get_editor_interface().get_base_control().add_child(dia_editor_window)
+		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+		await get_tree().process_frame
 		dia_editor_window.popup()
 		#dia_editor_window.close_requested.connect(dia_editor_window.hide)
 		#dia_editor_window.close_requested.connect(dia_editor_window.queue_free)

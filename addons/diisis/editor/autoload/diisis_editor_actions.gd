@@ -1,13 +1,6 @@
 @tool
 extends Node
 
-enum AddressTargets {
-	Facts, Conditionals
-}
-enum AddressDepths {
-	Page, Line, ChoiceItem
-}
-
 var cached_lines := {}
 
 func add_lines(indices:Array, data_by_index:={}):
@@ -116,7 +109,7 @@ func operate_local_fact(address:String, target:int, action:String, fact_name:Str
 	if Pages.editor.current_page.number != int_parts[0]:
 		push_warning("Current page is not the page of the address")
 		return
-	if level == AddressDepths.Page:
+	if level == DiisisEditorUtil.AddressDepth.Page:
 		if conditional:
 			push_warning("Cannot add conditional to page")
 			return
@@ -124,12 +117,12 @@ func operate_local_fact(address:String, target:int, action:String, fact_name:Str
 			Pages.editor.current_page.call(func_name, fact_name, fact_value)
 		elif action == "delete":
 			Pages.editor.current_page.call(func_name, fact_name)
-	elif level == AddressDepths.Line:
+	elif level == DiisisEditorUtil.AddressDepth.Line:
 		if action == "add":
 			Pages.editor.current_page.get_line(int_parts[1]).call(func_name, fact_name, fact_value)
 		elif action == "delete":
 			Pages.editor.current_page.get_line(int_parts[1]).call(func_name, fact_name)
-	elif level == AddressDepths.ChoiceItem:
+	elif level == DiisisEditorUtil.AddressDepth.ChoiceItem:
 		if action == "add":
 			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).call(func_name, fact_name, fact_value)
 		elif action == "delete":
@@ -150,17 +143,17 @@ func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
 	if Pages.editor.current_page.number != int_parts[0]:
 		push_warning("Current page is not the page of the address")
 		return
-	if level == AddressDepths.Page:
+	if level == DiisisEditorUtil.AddressDepth.Page:
 		if conditional:
 			push_warning("Cannot add conditional to page")
 			return
 		Pages.editor.current_page.add_fact(fact_name, fact_value)
-	elif level == AddressDepths.Line:
+	elif level == DiisisEditorUtil.AddressDepth.Line:
 		if conditional:
 			Pages.editor.current_page.get_line(int_parts[1]).add_conditional(fact_name, fact_value)
 		else:
 			Pages.editor.current_page.get_line(int_parts[1]).add_fact(fact_name, fact_value)
-	elif level == AddressDepths.ChoiceItem:
+	elif level == DiisisEditorUtil.AddressDepth.ChoiceItem:
 		if conditional:
 			Pages.editor.current_page.get_line(int_parts[1]).get_choice_item(int_parts[2]).add_conditional(fact_name, fact_value)
 		else:

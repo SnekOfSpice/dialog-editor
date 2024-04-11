@@ -84,30 +84,7 @@ func delete_fact(fact_name:String):
 			return
 
 func get_address_suffixed() -> String:
-	var address := ""
-	
-	if address_depth == DiisisEditorActions.AddressDepths.Page:
-		address = str(get_parent().get("number"))
-	elif address_depth == DiisisEditorActions.AddressDepths.Line:
-		var parent_line = get_parent()
-		while not parent_line is Line:
-			parent_line = parent_line.get_parent()
-		var parent_page = parent_line.get_parent()
-		while not parent_page is Page:
-			parent_page = parent_page.get_parent()
-		address = str(parent_page.get("number"), ".", parent_line.get_index())
-	elif address_depth == DiisisEditorActions.AddressDepths.ChoiceItem:
-		var parent_choice = get_parent()
-		while not parent_choice is ChoiceEdit:
-			parent_choice = parent_choice.get_parent()
-		var parent_line = parent_choice.get_parent()
-		while not parent_line is Line:
-			parent_line = parent_line.get_parent()
-		var parent_page = parent_line.get_parent()
-		while not parent_page is Page:
-			parent_page = parent_page.get_parent()
-		address = str(parent_page.get("number"), ".", parent_line.get_index(), ".", parent_choice.get_index())
-		
+	var address = DiisisEditorUtil.get_address(self, address_depth)
 	
 	if self is Conditionals: # proxy for if conditional
 		prints("added con at ", address)
