@@ -153,13 +153,6 @@ func deserialize(data: Dictionary):
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
-	
-
-func get_choice_item(at_index:int) -> ChoiceEdit:
-	if line_type != DIISIS.LineType.Choice:
-		push_warning("Trying to get choice item from non-choice line.")
-		return null
-	return find_child("ChoiceContainer").get_item(at_index)
 
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 	set_head_editable(button_pressed)
@@ -206,9 +199,28 @@ func delete_conditional(fact_name:String):
 	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
 	facts.delete_fact(fact_name)
 
+func add_choice_item(choice_data:={
+		"choice_text": "choice label",
+		"target_page": 0,}):
+	if line_type != DIISIS.LineType.Choice:
+		push_warning("Trying to add choice to nonchoice line")
+		return
+	find_child("ChoiceContainer").add_choice(choice_data)
+
+func get_choice_item(at_index:int) -> ChoiceEdit:
+	if line_type != DIISIS.LineType.Choice:
+		push_warning("Trying to get choice item from non-choice line.")
+		return null
+	return find_child("ChoiceContainer").get_item(at_index)
+
+func delete_choice_item(at_index:int):
+	find_child("ChoiceContainer").get_child(at_index).queue_free()
+
+func get_choice_item_count() -> int:
+	return find_child("ChoiceContainer").get_choice_item_count()
+
 func _on_move_up_pressed() -> void:
 	move(-1)
-
 
 func _on_move_down_pressed() -> void:
 	move(1)

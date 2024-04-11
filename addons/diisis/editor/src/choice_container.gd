@@ -50,6 +50,15 @@ func add_choice(choice_data:={
 		#choice.set_jump_page_toggle_visible(false)
 	update()
 
+func request_add_choice():
+	var undo_redo = Pages.editor.undo_redo
+	var address := DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	var item_address := str(address, ".", get_choice_item_count())
+	undo_redo.create_action("Add Choice")
+	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(address))
+	undo_redo.add_undo_method(DiisisEditorActions.delete_choice_item.bind(item_address))
+	undo_redo.commit_action()
+
 func request_move_choice_edit(choice_edit: ChoiceEdit, direction:int):
 	var undo_redo = Pages.editor.undo_redo
 	var address = DiisisEditorUtil.get_address(choice_edit, DiisisEditorUtil.AddressDepth.ChoiceItem)
@@ -59,6 +68,9 @@ func request_move_choice_edit(choice_edit: ChoiceEdit, direction:int):
 	undo_redo.add_do_method(DiisisEditorActions.move_choice_item.bind(address, direction))
 	undo_redo.add_undo_method(DiisisEditorActions.move_choice_item.bind(switched_address, -direction))
 	undo_redo.commit_action()
+
+func get_choice_item_count() -> int:
+	return find_child("ChoiceList").get_child_count()
 
 func move_choice_item_by_index(at_index:int, direction:int):
 	var choice = $ChoiceList.get_child(at_index)
@@ -73,7 +85,7 @@ func get_item(at_index:int) -> ChoiceEdit:
 	return find_child("ChoiceList").get_child(at_index)
 
 func _on_add_button_pressed() -> void:
-	add_choice()
+	request_add_choice()
 
 func set_do_jump_page(do: bool):
 	do_jump_page = do
