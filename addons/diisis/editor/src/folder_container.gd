@@ -19,8 +19,8 @@ func update(line_index:int, max_reach):
 	$PanelContainer/HBoxContainer/DebugLabel.text = str("updated ", deserialized_range, " ", deserialized_range == null, "\n", Time.get_unix_time_from_system(), "\n", "max reach", max_reach)
 
 func change_folder_range(by:int):
-	find_child("FolderRangeSpinContainer").max_value += by
 	find_child("FolderRangeSpinContainer").value += by
+	find_child("FolderRangeSpinContainer").max_value += by
 
 func get_included_count() -> int:
 	if deserialized_range != null:

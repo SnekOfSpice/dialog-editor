@@ -134,6 +134,8 @@ func get_lines_to_delete(at_index) -> Array[Line]:
 	return lines_to_delete
 
 func get_line(at_index:int) -> Line:
+	if at_index < 0 or at_index >= find_child("Lines").get_child_count():
+		return null
 	return find_child("Lines").get_child(at_index)
 
 func get_line_data(at_index:int) -> Dictionary:
@@ -278,11 +280,45 @@ func move_line(line: Line, dir:int):
 	if idx <= 0 and dir == -1:
 		return
 	
-	if idx == lines.get_child_count() - 1 and dir == 1:
+	if idx == lines.get_child_count() - 1 and dir == 1 and not Input.is_key_pressed(KEY_SHIFT):
 		return
 	
 	if Input.is_key_pressed(KEY_SHIFT):
-		lines.move_child(line, idx+dir)
+		var jumped_line := get_line(idx + dir)
+		if jumped_line == null and dir == 1:
+			print("removing last")
+			var i = idx
+			var prev_indent_level = get_line(idx - 1).indent_level
+			while i > 0 and prev_indent_level > 0:
+				var prev_line := get_line(i - 1)
+				if prev_line.line_type == DIISIS.LineType.Folder:
+					prev_line.change_folder_range(-1)
+					print("reduce folder range")
+				i -= 1
+				prev_indent_level = get_line(idx-1).indent_level
+		elif jumped_line.line_type == DIISIS.LineType.Folder:
+			jumped_line.change_folder_range(dir)
+			#update()
+			lines.move_child(line, idx+dir)
+		elif jumped_line.indent_level != line.indent_level:
+			var folder_operation:int
+			if line.indent_level < jumped_line.indent_level: # add to folders
+				folder_operation = 1
+			elif line.indent_level > jumped_line.indent_level: # remove from folders
+				folder_operation = -1
+			
+			var i = idx
+			var prev_indent_level = get_line(idx - 1).indent_level
+			while i > 0 and prev_indent_level > 0:
+				var prev_line := get_line(i - 1)
+				if prev_line.line_type == DIISIS.LineType.Folder:
+					prev_line.change_folder_range(folder_operation)
+					print("huh")
+				i -= 1
+				prev_indent_level = get_line(idx-1).indent_level
+				
+		else:
+			lines.move_child(line, idx+dir)
 		update()
 		return
 	
@@ -293,14 +329,15 @@ func move_line(line: Line, dir:int):
 			move_folder_down(line)
 		return
 	
+	var bump:int
 	if dir == -1:
 		var previous_line:Line = lines.get_child(idx - 1)
 		
-		if previous_line.line_type == DIISIS.LineType.Folder:
+		if previous_line.line_type == DIISIS.LineType.Folder and previous_line.indent_level == line.indent_level and line.indent_level > 0:
 			update()
 			push_warning("Use Shift to move outside of folder boundaries.")
 			return
-		var bump := idx+dir
+		bump = idx+dir
 		if previous_line.indent_level > line.indent_level:
 			# the line before this is in a folder, jump to before the folder
 			var previous_range = range(idx)
@@ -312,18 +349,22 @@ func move_line(line: Line, dir:int):
 				if l.indent_level <= line.indent_level:
 					break
 				bump = i
-		lines.move_child(line, bump)
 	elif dir == 1:
 		var next_line:Line = lines.get_child(idx + 1)
-		var line_to_move:Line = lines.get_child(idx)
+		
 		if next_line.indent_level < line.indent_level:
 			update()
 			push_warning("Use Shift to move outside of folder boundaries.")
 			return
 		
-		var bump := line_to_move.get_next_index()
+		if next_line.line_type == DIISIS.LineType.Folder:
+			bump = next_line.get_next_index() - 1
+		else:
+			bump = line.get_next_index()
 		
-		lines.move_child(line, bump)
+	
+	
+	lines.move_child(line, bump)
 	
 	update()
 
