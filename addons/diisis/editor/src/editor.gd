@@ -94,6 +94,7 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("PageCountCurrent").text = str(current_page.number)
 	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
+	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1 or current_page.number == Pages.get_page_count() - 1
 	
 	await get_tree().process_frame
 	current_page.update()
@@ -132,15 +133,14 @@ func request_delete_page(number:int):
 		push_warning("you cannot delete the last page")
 		return
 	
-	var a = get_current_page_number()
 	undo_redo.create_action("Delete Page")
-	if a == 0:
-		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(a + 1))
+	if number == 0:
+		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(number + 1))
 	else:
-		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(a - 1))
-	undo_redo.add_do_method(DiisisEditorActions.delete_page.bind(a))
-	undo_redo.add_undo_method(DiisisEditorActions.add_page.bind(a))
-	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(a))
+		undo_redo.add_do_method(DiisisEditorActions.load_page.bind(number - 1))
+	undo_redo.add_do_method(DiisisEditorActions.delete_page.bind(number))
+	undo_redo.add_undo_method(DiisisEditorActions.add_page.bind(number))
+	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(number))
 	undo_redo.commit_action()
 
 

@@ -45,7 +45,6 @@ func delete_line(at):
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
 
-
 func load_page(at:int):
 	# prepare current page to change
 	if Pages.editor.current_page:
@@ -53,6 +52,8 @@ func load_page(at:int):
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
+	## TODO: Adding this await fucks up the load???
+	#await get_tree().process_frame
 	Pages.editor.load_page(at)
 	
 	await get_tree().process_frame

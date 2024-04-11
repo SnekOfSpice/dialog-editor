@@ -206,6 +206,7 @@ func delete_page_data(at: int):
 		page_data[new_number] = data
 	
 	# the last page is now a duplicate
+	prints("deleting at", get_page_count() - 1)
 	page_data.erase(get_page_count() - 1)
 	
 	change_page_references_dir(at, -1)
