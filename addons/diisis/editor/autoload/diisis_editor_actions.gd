@@ -161,3 +161,21 @@ func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
 
 func delete_fact_local(address:String, target:int, fact_name:String):
 	operate_local_fact(address, target, "delete", fact_name)
+
+func move_choice_item(address:String, direction:int):
+	var level = address.count(".")
+	var address_parts = address.split(".")
+	var int_parts := []
+	for part in address_parts:
+		int_parts.append(int(part))
+	
+	if Pages.editor.current_page.number != int_parts[0]:
+		push_warning("Current page is not the page of the address")
+		return
+	if level != DiisisEditorUtil.AddressDepth.ChoiceItem:
+		push_warning("Trying to move choice item with incorrect address depth")
+		push_warning(str(level))
+		return
+	
+	var choice_line : Line = Pages.editor.current_page.get_line(int_parts[1])
+	choice_line.move_choice_item_by_index(int_parts[2], direction)

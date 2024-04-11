@@ -10,7 +10,8 @@ class_name Facts
 @export var facts_container:VBoxContainer
 
 func init():
-	add_button.pressed.connect(request_add_fact)
+	if not add_button.pressed.is_connected(request_add_fact):
+		add_button.pressed.connect(request_add_fact)
 	if visibility_toggle_button:
 		find_child("VisibilityToggleButton").visible = false
 		if not visibility_toggle_button.pressed.is_connected(toggle_visibility):

@@ -79,7 +79,12 @@ func set_line_type(value: int):
 	
 	if line_type == DIISIS.LineType.Folder:
 		find_child("DeleteButton").tooltip_text = "Click to delete folder.\nShift + Click to delete folder + contents."
-			
+
+func move_choice_item_by_index(at_index:int, direction:int):
+	if line_type != DIISIS.LineType.Choice:
+		push_warning("trying to move choice item of nonchoice line")
+		return
+	find_child("ChoiceContainer").move_choice_item_by_index(at_index, direction)
 
 func set_head_editable(value: bool):
 	is_head_editable = value

@@ -44,14 +44,25 @@ func add_choice(choice_data:={
 	$ChoiceList.add_child(choice)
 	choice.init()
 	choice.deserialize(choice_data)
-	choice.connect("move_choice_edit", move_choice_edit)
+	choice.connect("move_choice_edit", request_move_choice_edit)
 	if find_child("JumpPageButton").button_pressed: # override
 		choice.set_do_jump_page(true)
 		#choice.set_jump_page_toggle_visible(false)
 	update()
 
-func move_choice_edit(choice_edit: ChoiceEdit, direction:int):
-	$ChoiceList.move_child(choice_edit, choice_edit.get_index() + direction)
+func request_move_choice_edit(choice_edit: ChoiceEdit, direction:int):
+	var undo_redo = Pages.editor.undo_redo
+	var address = DiisisEditorUtil.get_address(choice_edit, DiisisEditorUtil.AddressDepth.ChoiceItem)
+	var switched_item : ChoiceEdit = find_child("ChoiceList").get_child(choice_edit.get_index() + direction)
+	var switched_address:=DiisisEditorUtil.get_address(switched_item, DiisisEditorUtil.AddressDepth.ChoiceItem)
+	undo_redo.create_action("Move Choice Item")
+	undo_redo.add_do_method(DiisisEditorActions.move_choice_item.bind(address, direction))
+	undo_redo.add_undo_method(DiisisEditorActions.move_choice_item.bind(switched_address, -direction))
+	undo_redo.commit_action()
+
+func move_choice_item_by_index(at_index:int, direction:int):
+	var choice = $ChoiceList.get_child(at_index)
+	$ChoiceList.move_child(choice, at_index + direction)
 	update()
 
 func update():
