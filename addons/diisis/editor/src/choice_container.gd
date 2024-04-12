@@ -36,17 +36,14 @@ func deserialize(data):
 	update()
 	
 
-func add_choice(choice_data:={
-		"choice_text": "choice label",
-		"target_page": 0,}
-	):
+func add_choice(choice_data:={}):
 	var choice = preload("res://addons/diisis/editor/src/choice_edit.tscn").instantiate()
 	$ChoiceList.add_child(choice)
 	choice.init()
 	choice.deserialize(choice_data)
 	choice.connect("move_choice_edit", request_move_choice_edit)
-	if find_child("JumpPageButton").button_pressed: # override
-		choice.set_do_jump_page(true)
+	#if find_child("JumpPageButton").button_pressed: # override
+		#choice.set_do_jump_page(true)
 		#choice.set_jump_page_toggle_visible(false)
 	update()
 

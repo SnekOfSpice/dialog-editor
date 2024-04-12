@@ -141,19 +141,6 @@ func get_line(at_index:int) -> Line:
 func get_line_data(at_index:int) -> Dictionary:
 	return find_child("Lines").get_child(at_index).serialize()
 
-# we delete bottom up
-# so when we deserialize folders to delete, we deserialize a version with shortened ranged
-func delete_line(at_index):
-	for l in find_child("Lines").get_children():
-		if l.line_type == DIISIS.LineType.Folder:
-			var range : Vector2 = l.get_folder_range_v()
-			if at_index >= range.x and at_index <= range.y:
-				l.change_folder_range(-1)
-	
-	for l in get_lines_to_delete(at_index):
-		l.queue_free()
-
-var lines_to_add := []
 func request_delete_line(at_index:int):
 	var indices_to_delete := get_indices_to_delete(at_index, Input.is_key_pressed(KEY_SHIFT))
 	var line_data_to_delete := {}
@@ -170,11 +157,10 @@ func request_delete_line(at_index:int):
 	# restore in ascending index order
 	indices_to_delete.reverse()
 	undo_redo.add_undo_method(DiisisEditorActions.add_lines.bind(indices_to_delete, line_data_to_delete))
-	
-	#undo_redo.add_do_method(DiisisEditorActions.delete_line.bind(at_index))
-	#undo_redo.add_undo_property(self, "lines_to_add", line_data_to_delete)
-	#undo_redo.add_undo_method(DiisisEditorActions.add_line.bind(at_index))#s.bind(at_index).bind(line_data_to_delete))
 	undo_redo.commit_action()
+
+func delete_line(at_index):
+	delete_lines([at_index])
 
 func delete_lines(indices:Array):
 	# sort in descending order
@@ -248,9 +234,6 @@ func add_lines(indices:Array, data_by_index:={}):
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})
-			# if at_index iss within range (index to index + max value), increase range by 1
-	
-	
 	
 
 func swap_lines(index0:int, index1:int):

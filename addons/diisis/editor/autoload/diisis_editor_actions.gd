@@ -1,6 +1,7 @@
 @tool
 extends Node
 
+var cached_pages := {}
 var cached_lines := {}
 # these technically could also be in cached_lines, but that serialization is so deep and nested, this is way easier
 var cached_choice_items := {}
@@ -10,11 +11,15 @@ func add_lines(indices:Array, data_by_index:={}):
 		Pages.editor.add_page(0)
 	
 	for i in indices:
-		# use cached data if it's there
+		# what is this for again??
 		if cached_lines.has(Pages.editor.current_page.number):
 			var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.current_page.number)
-			if cached_lines_on_page.has(i):
-				data_by_index[i] = cached_lines_on_page.get(i)
+			var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
+			if not cached_lines_at_index.is_empty():
+				var data = cached_lines_at_index.pop_back()
+				cached_lines_on_page[i] = cached_lines_at_index
+				cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
+				data_by_index[i] = data
 		
 	Pages.editor.current_page.add_lines(indices, data_by_index)
 	
@@ -29,10 +34,12 @@ func delete_lines(indices:Array):
 	for i in indices:
 		# update cached line data
 		if cached_lines.has(Pages.editor.current_page.number):
-			var lines : Dictionary = cached_lines.get(Pages.editor.current_page.number)
-			lines[i] = Pages.editor.current_page.get_line_data(i)
+			var cached_lines_on_page = cached_lines.get(Pages.editor.current_page.number)
+			var cached_lines_at_index = cached_lines_on_page.get(i, [])
+			cached_lines_at_index.append(Pages.editor.current_page.get_line_data(i))
+			cached_lines[Pages.editor.current_page.number][i] = cached_lines_at_index
 		else:
-			cached_lines[Pages.editor.current_page.number] = {i:Pages.editor.current_page.get_line_data(i)}
+			cached_lines[Pages.editor.current_page.number] = {i:[Pages.editor.current_page.get_line_data(i)]}
 	
 	Pages.editor.current_page.delete_lines(indices)
 	
@@ -40,10 +47,7 @@ func delete_lines(indices:Array):
 	Pages.editor.current_page.update()
 
 func delete_line(at):
-	Pages.editor.current_page.delete_line(at)
-	
-	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	delete_lines([at])
 
 func load_page(at:int):
 	# prepare current page to change
@@ -52,8 +56,6 @@ func load_page(at:int):
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
-	## TODO: Adding this await fucks up the load???
-	#await get_tree().process_frame
 	Pages.editor.load_page(at)
 	
 	await get_tree().process_frame
@@ -62,23 +64,24 @@ func load_page(at:int):
 func change_page_references_dir(changed_page: int, operation:int):
 	Pages.change_page_references_dir(changed_page, operation)
 
-func create_page(at, overwrite_existing:= false):
-	Pages.create_page(at, overwrite_existing)
-	
-	await get_tree().process_frame
-	Pages.editor.current_page.update()
-
 func delete_page(at:int):
-	cached_lines[at] = Pages.page_data.get(at)
+	var cache = cached_pages.get(at, [])
+	cache.append(Pages.page_data.get(at))
+	cached_pages[at] = cache
 	await get_tree().process_frame # without this await, the last page cannot be deleted
 	Pages.delete_page_data(at)
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
-	prints("pages after deletion: ", Pages.page_data.keys())
 
 func add_page(at:int):
-	var data : Dictionary = cached_lines.get(at, {})
+	var cache : Array = cached_pages.get(at, [])
+	var data : Dictionary
+	if not cache.is_empty():
+		data = cache.pop_back()
+		cached_pages[at] = cache
+	else:
+		data = {}
 	Pages.add_page_data(at, data)
 	await get_tree().process_frame
 	Pages.change_page_references_dir(at, 1)
@@ -124,16 +127,11 @@ func delete_fact_local(address:String, target:int, fact_name:String):
 	operate_local_fact(address, target, "delete", fact_name)
 
 func add_choice_item(line_address:String):
-	var default_data := {
-		"choice_text": "choice label",
-		"target_page": 0,}
 	var target_line : Line = DiisisEditorUtil.get_node_at_address(line_address)
 	#var item_address := str(line_address, ".", target_line.get_choice_item_count())
 	var cache:Array=cached_choice_items.get(line_address, [])
-	var data
-	if cache.is_empty():
-		data = default_data
-	else:
+	var data := {}
+	if not cache.is_empty():
 		data = cache.pop_back()
 		cached_choice_items[line_address] = cache
 	target_line.add_choice_item(data)

@@ -68,7 +68,7 @@ signal pages_modified
 func get_page_count() -> int:
 	return page_data.size()
 
-func create_page(number:int, overwrite_existing := false, overwrite_data:={}):
+func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
@@ -188,7 +188,7 @@ func add_page_data(at: int, new_data := {}):
 		page_data[new_number] = data
 	
 	# insert page
-	create_page(at, true, new_data)
+	create_page_data(at, true, new_data)
 
 func delete_page_data(at: int):
 	if not page_data.keys().has(at):

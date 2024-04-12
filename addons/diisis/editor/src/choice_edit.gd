@@ -19,9 +19,9 @@ func init() -> void:
 
 
 func deserialize(data:Dictionary):
-	find_child("LineEditEnabled").text = data.get("choice_text.enabled", data.get("choice_text", ""))
+	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
-	find_child("PageSelect").value = data.get("target_page")
+	find_child("PageSelect").value = data.get("target_page", 0)
 	find_child("Facts").deserialize(data.get("facts", {}).get("values", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
