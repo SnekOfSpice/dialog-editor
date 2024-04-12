@@ -42,7 +42,7 @@ func truncate_address(address:String, to_level:AddressDepth) -> String:
 		push_warning("Address is already truncated below requested level")
 		return address
 	for i in to_level + 1:
-		result += parts[i]
+		result += str(parts[i])
 		result += "."
 	result = result.trim_suffix(".")
 	return result

@@ -84,7 +84,7 @@ func request_delete():
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Delete Choice Item")
 	undo_redo.add_do_method(DiisisEditorActions.delete_choice_item.bind(address))
-	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(line_address))
+	undo_redo.add_undo_method(DiisisEditorActions.add_choice_item.bind(line_address))
 	undo_redo.commit_action()
 
 #func set_jump_page_toggle_visible(value:bool):

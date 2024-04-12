@@ -128,14 +128,23 @@ func add_choice_item(line_address:String):
 		"choice_text": "choice label",
 		"target_page": 0,}
 	var target_line : Line = DiisisEditorUtil.get_node_at_address(line_address)
-	var item_address := str(line_address, ".", target_line.get_choice_item_count())
-	target_line.add_choice_item(cached_choice_items.get(item_address, default_data))
+	#var item_address := str(line_address, ".", target_line.get_choice_item_count())
+	var cache:Array=cached_choice_items.get(line_address, [])
+	var data
+	if cache.is_empty():
+		data = default_data
+	else:
+		data = cache.pop_back()
+		cached_choice_items[line_address] = cache
+	target_line.add_choice_item(data)
 
 func delete_choice_item(item_address:String):
+	var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
 	var item = DiisisEditorUtil.get_node_at_address(item_address)
-	var parts = DiisisEditorUtil.get_split_address(item_address)
 	var data = item.serialize()
-	cached_choice_items[item_address] = data
+	var cache :Array= cached_choice_items.get(line_address, [])
+	cache.append(data)
+	cached_choice_items[line_address] = cache
 	item.queue_free()
 
 func move_choice_item(item_address:String, direction:int):
