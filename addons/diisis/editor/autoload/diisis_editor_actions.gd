@@ -69,9 +69,8 @@ func create_page(at, overwrite_existing:= false):
 	Pages.editor.current_page.update()
 
 func delete_page(at:int):
-	prints("pages before deletion: ", Pages.page_data.keys())
-	#if at == Pages.editor.current_page.number:
-	cached_lines[at] = Pages.page_data.get(at)#Pages.editor.current_page.serialize()
+	cached_lines[at] = Pages.page_data.get(at)
+	await get_tree().process_frame # without this await, the last page cannot be deleted
 	Pages.delete_page_data(at)
 	
 	await get_tree().process_frame

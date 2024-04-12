@@ -94,7 +94,7 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("PageCountCurrent").text = str(current_page.number)
 	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
-	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1 or current_page.number == Pages.get_page_count() - 1
+	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1
 	
 	await get_tree().process_frame
 	current_page.update()
