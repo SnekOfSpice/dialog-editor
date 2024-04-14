@@ -156,6 +156,36 @@ func key_exists(key: String) -> bool:
 func get_page_key(page_index:int) -> String:
 	return str(page_data.get(page_index, {}).get("page_key", ""))
 
+func get_line_type(page_index:int, line_index:int) -> int:
+	var page = page_data.get(page_index, {})
+	var lines = page.get("lines")
+	return int(lines[line_index].get("line_type"))
+
+func get_line_type_str(page_index:int, line_index:int) -> String:
+	var line_type = get_line_type(page_index, line_index)
+	match line_type:
+		DIISIS.LineType.Text:
+			return "Text"
+		DIISIS.LineType.Choice:
+			return "Choice"
+		DIISIS.LineType.Instruction:
+			return "Instruction"
+		DIISIS.LineType.Folder:
+			return "Folder"
+	return "undefined"
+
+func get_choice_text_shortened(page_index:int, line_index:int, choice_index:int):
+	var page = page_data.get(page_index, {})
+	var lines = page.get("lines")
+	var line = lines[line_index]
+	var choice = line.get("content").get("choices")[choice_index]
+	var choice_text:String
+	if choice.get("choice_text.enabled_as_default", true):
+		choice_text = choice.get("choice_text.enabled")
+	else:
+		choice_text = choice.get("choice_text.disabled")
+	return choice_text.left(25)
+
 func get_page_references(page_index:int) -> Array:
 	if not page_data.has(page_index):
 		push_warning(str("cannot get page reference on non-existent page ", page_index))
@@ -579,26 +609,23 @@ func alter_fact(from:String, to=null):
 	editor.refresh(false)
 
 func does_address_exist(address:String) -> bool:
-	var parts := address.split(".")
+	if address.ends_with("."):
+		return false
+	var parts := DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:
 		return false
-	
-	var p := []
-	for part in parts:
-		p.append(int(part))
-	parts = p
 	
 	if parts.size() == 1: # page
 		return page_data.has(parts[0])
 	elif parts.size() == 2: # line
-		return page_data.get(parts[0], {}).get("lines", []).size() < parts[1]
+		return page_data.get(parts[0], {}).get("lines", []).size() > parts[1]
 	elif parts.size() == 3: # choice item
-		if page_data.get(parts[0], {}).get("lines", []).size() >= parts[1]:
+		if page_data.get(parts[0], {}).get("lines", []).size() <= parts[1]:
 			return false
 		var line = page_data.get(parts[0], {}).get("lines", [])[parts[1]]
 		if line.get("line_type") != DIISIS.LineType.Choice:
 			return false
-		return line.get("content", {}).get("choices", []).size() < parts[2]
+		return line.get("content", {}).get("choices", []).size() > parts[2]
 	
 	return false
 

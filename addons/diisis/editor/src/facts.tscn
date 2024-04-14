@@ -26,3 +26,5 @@ text = "Add Fact"
 
 [node name="FactsContainer" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
+
+[connection signal="pressed" from="VBox/Controls/AddFactButton" to="." method="request_add_fact"]

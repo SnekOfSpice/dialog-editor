@@ -8,27 +8,39 @@ script = ExtResource("1_mfnyd")
 
 [node name="ErrorLabel" type="Label" parent="."]
 layout_mode = 2
-text = "\"can jump\""
+text = "Go To"
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 2
 columns = 2
 
-[node name="GoToButton" type="Button" parent="GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GridContainer"]
+layout_mode = 2
+
+[node name="GoToButton" type="Button" parent="GridContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = ">>"
+
+[node name="CancelGoTo" type="Button" parent="GridContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "X"
 
 [node name="CurrentPageLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 text = "40"
 
 [node name="AddressBar" type="LineEdit" parent="GridContainer"]
+visible = false
 layout_mode = 2
 
 [node name="PageCountLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 text = "200"
 
-[connection signal="text_changed" from="GridContainer/AddressBar" to="." method="_on_adress_bar_text_changed"]
-[connection signal="text_submitted" from="GridContainer/AddressBar" to="." method="_on_adress_bar_text_submitted"]
+[connection signal="pressed" from="GridContainer/HBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
+[connection signal="pressed" from="GridContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
+[connection signal="text_changed" from="GridContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
+[connection signal="text_submitted" from="GridContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]

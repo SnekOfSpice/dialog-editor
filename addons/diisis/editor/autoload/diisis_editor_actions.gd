@@ -49,17 +49,24 @@ func delete_lines(indices:Array):
 func delete_line(at):
 	delete_lines([at])
 
-func load_page(at:int):
+func go_to(address:String):
+	var parts := DiisisEditorUtil.get_split_address(address)
+	
 	# prepare current page to change
 	if Pages.editor.current_page:
 		Pages.editor.current_page.set_page_key(Pages.editor.current_page.find_child("PageKeyLineEdit").text)
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
-	Pages.editor.load_page(at)
-	
+	Pages.editor.load_page(parts[0])
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
+	
+	if parts.size() >= 2:
+		Pages.editor.current_page.ensure_control_at_address_is_visible(address)
+
+func load_page(at:int):
+	go_to(str(at))
 
 func change_page_references_dir(changed_page: int, operation:int):
 	Pages.change_page_references_dir(changed_page, operation)

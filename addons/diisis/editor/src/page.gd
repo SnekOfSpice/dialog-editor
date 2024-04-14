@@ -198,6 +198,10 @@ func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 		#add_line(start_index + i, data[i])
 		#i += 1
 
+func ensure_control_at_address_is_visible(address:String):
+	var target = DiisisEditorUtil.get_node_at_address(address)
+	find_child("ScrollContainer").ensure_control_visible(target)
+
 func get_line_count():
 	return find_child("Lines").get_child_count()
 

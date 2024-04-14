@@ -31,7 +31,7 @@ func init() -> void:
 	
 	update_controls()
 	
-	set_current_page_changeable(false)
+	#set_current_page_changeable(false)
 	
 	find_child("FDOpen").size = get_window().size * 0.75
 	find_child("FDSave").size = get_window().size * 0.75
@@ -91,35 +91,31 @@ func update_controls():
 	find_child("Prev").disabled = current_page.number <= 0
 	find_child("Next").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
-	find_child("PageCountCurrent").text = str(current_page.number)
-	find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
+	#find_child("PageCountCurrent").text = str(current_page.number)
+	find_child("GoTo").set_current_page_count(str(current_page.number))
+	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
+	#find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
 	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1
 	
 	await get_tree().process_frame
 	current_page.update()
-	
 
 func get_current_page_number() -> int:
 	if not current_page:
 		return 0
-	
 	return current_page.number
 
-
-
-
 func _on_first_pressed() -> void:
-	move_to_page(0, "Move to first page")
-
+	request_load_page(0, "Move to first page")
 
 func _on_prev_pressed() -> void:
-	move_to_page(current_page.number - 1, "Move to previous page")
+	request_load_page(current_page.number - 1, "Move to previous page")
 
 func _on_next_pressed() -> void:
-	move_to_page(current_page.number + 1, "Move to next page")
+	request_load_page(current_page.number + 1, "Move to next page")
 
 func _on_last_pressed() -> void:
-	move_to_page(Pages.get_page_count() - 1, "Move to last page")
+	request_load_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
 	request_add_page(Pages.get_page_count())
@@ -214,24 +210,28 @@ func _on_fd_open_file_selected(path: String) -> void:
 	
 	load_page(0, true)
 
-func set_current_page_changeable(value:bool):
-	find_child("PageCountSpinCounter").visible = value
-	find_child("PageCountSpinCounter").max_value = Pages.get_page_count() - 1
-	find_child("PageCountSpinCounter").get_line_edit().text = find_child("PageCountCurrent").text
-	find_child("PageCountSpinCounter").apply()
-	find_child("PageCountCurrent").visible = not value
-
-func move_to_page(number:int, action_message:String):
+func request_go_to_address(address:String, action_message:=""):
+	if action_message.is_empty():
+		action_message == str("Go to ", address)
 	undo_redo.create_action(action_message)
-	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(number))
-	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(get_current_page_number()))
+	undo_redo.add_do_method(DiisisEditorActions.go_to.bind(address))
+	undo_redo.add_undo_method(DiisisEditorActions.go_to.bind(str(get_current_page_number())))
 	undo_redo.commit_action()
+
+func request_load_page(number:int, action_message:String):
+	request_go_to_address(str(number), action_message)
+
+func ensure_line_is_visible(line_index:int):
+	pass
+
+func ensure_choice_is_visible(line_index:int, choice_index:int):
+	pass
 
 func _on_change_page_button_pressed() -> void:
 	if find_child("PageCountSpinCounter").visible:
-		move_to_page(find_child("PageCountSpinCounter").value, "Jump to page")
+		request_load_page(find_child("PageCountSpinCounter").value, "Jump to page")
 	
-	set_current_page_changeable(find_child("PageCountCurrent").visible)
+	#set_current_page_changeable(find_child("PageCountCurrent").visible)
 
 
 func _on_add_line_button_pressed() -> void:

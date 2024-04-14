@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 var do_jump_page := true
 
@@ -28,7 +28,7 @@ func deserialize(data):
 		set_do_jump_page(data.get("meta.do_jump_page"))
 	
 	for d in choices:
-		add_choice(d)
+		add_choice(-1, d)
 	
 	find_child("AutoSwitchButton").button_pressed = data.get("auto_switch", false)
 	set_auto_switch(find_child("AutoSwitchButton").button_pressed)
@@ -36,16 +36,14 @@ func deserialize(data):
 	update()
 	
 
-func add_choice(at_index: int, choice_data:={}):
+func add_choice(at_index:=-1, choice_data:={}):
 	var choice = preload("res://addons/diisis/editor/src/choice_edit.tscn").instantiate()
 	$ChoiceList.add_child(choice)
 	choice.init()
-	$ChoiceList.move_child(choice, at_index)
+	if at_index != -1:
+		$ChoiceList.move_child(choice, at_index)
 	choice.deserialize(choice_data)
 	choice.connect("move_choice_edit", request_move_choice_edit)
-	#if find_child("JumpPageButton").button_pressed: # override
-		#choice.set_do_jump_page(true)
-		#choice.set_jump_page_toggle_visible(false)
 	update()
 
 func request_add_choice():
@@ -88,9 +86,6 @@ func _on_add_button_pressed() -> void:
 func set_do_jump_page(do: bool):
 	do_jump_page = do
 	find_child("JumpPageButton").button_pressed = do_jump_page
-	#for c in find_child("ChoiceList").get_children():
-		#c.set_do_jump_page(find_child("JumpPageButton").button_pressed)
-		#c.set_jump_page_toggle_visible(not do_jump_page)
 
 func _on_jump_page_button_pressed() -> void:
 	set_do_jump_page(find_child("JumpPageButton").button_pressed)
