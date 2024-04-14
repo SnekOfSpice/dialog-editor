@@ -213,35 +213,6 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "<"
 
-[node name="PageCount" type="VBoxContainer" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount"]
-custom_minimum_size = Vector2(78.12, 0)
-layout_mode = 2
-
-[node name="ChangePageButton" type="Button" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "jump"
-
-[node name="PageCountCurrent" type="Label" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
-layout_mode = 2
-text = "40"
-horizontal_alignment = 1
-
-[node name="PageCountSpinCounter" type="SpinBox" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer"]
-layout_mode = 2
-update_on_text_changed = true
-select_all_on_focus = true
-
-[node name="PageCountMax" type="Label" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount"]
-layout_mode = 2
-text = "200"
-horizontal_alignment = 2
-
 [node name="GoTo" parent="Core/PageControl/PageNav/PanelContainer/HBoxContainer" instance=ExtResource("4_m6c15")]
 layout_mode = 2
 
@@ -410,8 +381,8 @@ autostart = true
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
-[connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/PageCount/HBoxContainer/ChangePageButton" to="." method="_on_change_page_button_pressed"]
 [connection signal="go_to" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="request_go_to_address"]
+[connection signal="request_refresh" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="refresh"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Next" to="." method="_on_next_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/PanelContainer/HBoxContainer/Last" to="." method="_on_last_pressed"]
 [connection signal="pressed" from="Core/PageControl/PageNav/JumpContainer/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]

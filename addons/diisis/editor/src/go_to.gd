@@ -17,17 +17,20 @@ func update(address:String):
 	var address_exists:bool = Pages.does_address_exist(address)
 	
 	if address_exists:
-		var address_string := ""
-		var parts := DiisisEditorUtil.get_split_address(address)
-		address_string = str(Pages.get_page_key(parts[0]))
-		if parts.size() > 1:
-			address_string += str(" / ", Pages.get_line_type_str(parts[0], parts[1]))
-		if parts.size() > 2:
-			address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
-		# TODO: [page name or number if no name] / line type / choice text (concat)
-		find_child("ErrorLabel").text = address_string
+		if $GridContainer/AddressBar.visible:
+			var address_string := ""
+			var parts := DiisisEditorUtil.get_split_address(address)
+			address_string = str(Pages.get_page_key(parts[0]))
+			if parts.size() > 1:
+				address_string += str(" / ", Pages.get_line_type_str(parts[0], parts[1]))
+			if parts.size() > 2:
+				address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
+			# TODO: [page name or number if no name] / line type / choice text (concat)
+			find_child("ErrorLabel").text = address_string
+		else:
+			find_child("ErrorLabel").text = "Go To"
 	else:
-		find_child("ErrorLabel").text = str("Address does not exist.")
+		find_child("ErrorLabel").text = "Address does not exist."
 	find_child("GoToButton").disabled = not address_exists
 
 

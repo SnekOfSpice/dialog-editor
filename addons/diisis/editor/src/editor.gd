@@ -221,19 +221,6 @@ func request_go_to_address(address:String, action_message:=""):
 func request_load_page(number:int, action_message:String):
 	request_go_to_address(str(number), action_message)
 
-func ensure_line_is_visible(line_index:int):
-	pass
-
-func ensure_choice_is_visible(line_index:int, choice_index:int):
-	pass
-
-func _on_change_page_button_pressed() -> void:
-	if find_child("PageCountSpinCounter").visible:
-		request_load_page(find_child("PageCountSpinCounter").value, "Jump to page")
-	
-	#set_current_page_changeable(find_child("PageCountCurrent").visible)
-
-
 func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
 	var line_count = current_page.get_line_count()
