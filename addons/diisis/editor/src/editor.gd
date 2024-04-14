@@ -257,3 +257,11 @@ func _on_undo_button_pressed() -> void:
 func _on_redo_button_pressed() -> void:
 	undo_redo.redo()
 	update_undo_redo_buttons()
+
+
+func _on_toggle_search_button_pressed() -> void:
+	find_child("TextSearchContainer").visible = not find_child("TextSearchContainer").visible
+	if find_child("TextSearchContainer").visible:
+		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND
+	else:
+		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND_FILL

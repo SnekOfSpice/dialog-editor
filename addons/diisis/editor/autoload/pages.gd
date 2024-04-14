@@ -236,7 +236,6 @@ func delete_page_data(at: int):
 		page_data[new_number] = data
 	
 	# the last page is now a duplicate
-	prints("deleting at", get_page_count() - 1)
 	page_data.erase(get_page_count() - 1)
 	
 	change_page_references_dir(at, -1)
@@ -333,7 +332,6 @@ func apply_new_header_schema(new_schema: Array):
 		var lines = page_data.get(i).get("lines")
 		
 		for line in lines:
-			print(Pages.page_data)
 			prints("PRETRANSFORM-", line["header"], " SCHEMA-> ", new_schema)
 			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
 			prints("POSTTRANSFORM-", line["header"])

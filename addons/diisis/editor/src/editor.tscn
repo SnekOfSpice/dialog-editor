@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=21 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://thtw7bxvvc4f" path="res://addons/diisis/editor/src/graphview/graph_view.tscn" id="5_bks01"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://addons/diisis/editor/src/instruction_popup.tscn" id="6_m88mr"]
+[ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="7_eshag"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
 [ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
@@ -307,6 +308,7 @@ popup = NodePath("../../../../../WordCountDialog")
 
 [node name="SearchTextButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
+focus_mode = 0
 text = "Search Text"
 alignment = 2
 script = ExtResource("3_u6k32")
@@ -319,6 +321,21 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Core"]
+visible = false
+layout_mode = 2
+
+[node name="ToggleSearchButton" type="Button" parent="Core/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "search"
+
+[node name="TextSearchContainer" parent="Core/VBoxContainer" instance=ExtResource("7_eshag")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="GraphView" parent="." instance=ExtResource("5_bks01")]
 visible = false
@@ -385,6 +402,7 @@ autostart = true
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
+[connection signal="pressed" from="Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="update" from="HeaderPopup" to="." method="_on_header_popup_update"]

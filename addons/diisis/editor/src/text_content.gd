@@ -56,12 +56,6 @@ func insert(control_sequence: String):
 		"lineclear":
 			tb.insert_text_at_caret("<lc>")
 
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.keycode == KEY_ENTER:
-			#if not use_dialog_syntax: return
-			print("ENTER")
-
 func _on_pause_auto_cont_pressed() -> void:
 	insert("autopause")
 
@@ -189,17 +183,6 @@ func _on_dialog_argument_hint_item_chosen(item_name) -> void:
 	position_hint_at_caret(find_child("DialogArgumentValueHint"))
 	
 	used_arguments.append(item_name)
-#	if entered_arguments < Pages.dropdown_dialog_arguments.size():
-#		if used_arguments.size() >= Pages.dropdown_dialog_arguments.size():
-#			return
-#		var available_arguments := []
-#		for a in Pages.dropdown_dialog_arguments:
-#			if not used_arguments.has(a):
-#				available_arguments.append(a)
-#		prints("AVAIALBL", available_arguments)
-		
-		
-	
 	entered_arguments += 1
 
 
