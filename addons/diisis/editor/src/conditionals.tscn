@@ -12,7 +12,7 @@ layout_mode = 2
 
 [node name="VisibilityToggleButton" type="CheckButton" parent="VBoxContainer"]
 layout_mode = 2
-text = "Visible"
+text = "Conditionals"
 
 [node name="Controls" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

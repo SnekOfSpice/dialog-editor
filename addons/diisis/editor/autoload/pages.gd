@@ -632,3 +632,37 @@ func does_address_exist(address:String) -> bool:
 func delete_fact(fact:String):
 	alter_fact(fact)
 	
+
+func search_string(substr:String):
+	var found_facts := {}
+	for fact : String in facts:
+		if fact.contains(substr):
+			found_facts[fact] = fact
+	
+	var found_choices := {}
+	var found_text := {}
+	var page_index := 0
+	for page in page_data.values():
+		var line_index := 0
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var choice_index := 0
+				for choice in line.get("content", {}).get("choices", []):
+					if choice.get("choice_text.enabled").contains(substr):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = choice.get("choice_text.enabled")
+					if choice.get("choice_text.disabled").contains(substr):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = choice.get("choice_text.disabled")
+					choice_index += 1
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				var text : String = line.get("content", {}).get("content", "")
+				if text.contains(substr):
+					found_text[str(page_index, ".", line_index)] = text
+			line_index += 1
+		page_index += 1
+	
+	var result := {
+		"facts":found_facts,
+		"text":found_text,
+		"choices":found_choices,
+	}
+	return result

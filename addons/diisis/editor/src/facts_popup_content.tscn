@@ -19,42 +19,59 @@ text = "yea tbh this doesn't do much atm"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="FactInteractionContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="FactInteractionContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="RenameFactButton" type="Button" parent="VBoxContainer/FactInteractionContainer"]
+[node name="RenameFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
 layout_mode = 2
 text = "Rename"
 
-[node name="CancelRenameButton" type="Button" parent="VBoxContainer/FactInteractionContainer"]
+[node name="CancelRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="DeleteFactButton" type="Button" parent="VBoxContainer/FactInteractionContainer"]
+[node name="DeleteFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
 layout_mode = 2
 text = "Delete"
 
-[node name="FactNameLabel" type="Label" parent="VBoxContainer/FactInteractionContainer"]
+[node name="FactNameLabel" type="Label" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
 layout_mode = 2
 
-[node name="FactRenameEditContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="FactRenameEditContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ConfirmRenameButton" type="Button" parent="VBoxContainer/FactRenameEditContainer"]
+[node name="ConfirmRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer"]
 layout_mode = 2
 text = "Save"
 
-[node name="NewNameEdit" type="LineEdit" parent="VBoxContainer/FactRenameEditContainer"]
+[node name="NewNameEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="FactDuplicateLabel" type="Label" parent="VBoxContainer"]
+[node name="FactDuplicateLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Fact is already declared."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="GoToAddressLabel" type="Label" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="GoToAddressButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+focus_mode = 0
+text = "go to"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -114,10 +131,11 @@ initial_position = 4
 ok_button_text = "Delete Fact (NO UNDO)"
 
 [connection signal="item_clicked" from="Facts" to="." method="_on_facts_item_clicked"]
-[connection signal="pressed" from="VBoxContainer/FactInteractionContainer/RenameFactButton" to="." method="_on_rename_fact_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/FactInteractionContainer/CancelRenameButton" to="." method="_on_cancel_rename_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/FactInteractionContainer/DeleteFactButton" to="." method="_on_delete_fact_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/FactRenameEditContainer/ConfirmRenameButton" to="." method="_on_confirm_rename_button_pressed"]
-[connection signal="text_changed" from="VBoxContainer/FactRenameEditContainer/NewNameEdit" to="." method="_on_new_name_edit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/RenameFactButton" to="." method="_on_rename_fact_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/CancelRenameButton" to="." method="_on_cancel_rename_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/DeleteFactButton" to="." method="_on_delete_fact_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FactRenameEditContainer/ConfirmRenameButton" to="." method="_on_confirm_rename_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/FactRenameEditContainer/NewNameEdit" to="." method="_on_new_name_edit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToAddressButton" to="." method="_on_go_to_address_button_pressed"]
 [connection signal="canceled" from="ConfirmDelete" to="." method="_on_confirm_delete_canceled"]
 [connection signal="confirmed" from="ConfirmDelete" to="." method="_on_confirm_delete_confirmed"]

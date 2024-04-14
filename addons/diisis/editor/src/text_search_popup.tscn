@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqaxdhdqxqyrw"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/text_search_popup.gd" id="1_drvnk"]
+[ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="2_ywacf"]
+
+[node name="TextSearchPopup" type="Window"]
+initial_position = 4
+size = Vector2i(730, 355)
+script = ExtResource("1_drvnk")
+
+[node name="TextSearchContainer" parent="." instance=ExtResource("2_ywacf")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

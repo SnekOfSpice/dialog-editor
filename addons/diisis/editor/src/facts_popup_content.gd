@@ -42,10 +42,15 @@ func fill():
 	find_child("FactNameLabel").text = ""
 	drop_other_focused()
 
-func drop_other_focused(_i:=0, clicked_item_list:ItemList=null):
+func drop_other_focused(selected_index:=0, clicked_item_list:ItemList=null):
 	for list in ref_lists:
 		if clicked_item_list != list:
 			list.deselect_all()
+	
+	find_child("GoToAddressButton").disabled = clicked_item_list == null
+	find_child("GoToAddressLabel").text = ""
+	if clicked_item_list != null:
+		find_child("GoToAddressLabel").text = clicked_item_list.get_item_text(selected_index)
 
 func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	find_child("FactInteractionContainer").visible = true
@@ -139,3 +144,8 @@ func _on_confirm_delete_confirmed() -> void:
 	
 	await get_tree().process_frame
 	emit_signal("request_popup")
+
+
+func _on_go_to_address_button_pressed() -> void:
+	emit_signal("request_hide")
+	Pages.editor.request_go_to_address(find_child("GoToAddressLabel").text)

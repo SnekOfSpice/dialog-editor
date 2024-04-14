@@ -10,8 +10,6 @@ class_name Facts
 @export var facts_container:VBoxContainer
 
 func init():
-	#if not add_button.pressed.is_connected(request_add_fact):
-		#add_button.pressed.connect(request_add_fact)
 	if visibility_toggle_button:
 		find_child("VisibilityToggleButton").visible = false
 		if not visibility_toggle_button.pressed.is_connected(toggle_visibility):
@@ -22,6 +20,8 @@ func init():
 			find_child("VisibilityToggleButton").connect("pressed", toggle_visibility)
 		#find_child("VisibilityToggleButton").button_pressed = find_child("Controls").visible
 		set_visibility(find_child("VisibilityToggleButton").button_pressed)
+	
+	update()
 
 func set_visibility(value:bool):
 	if visibility_toggle_button:
@@ -64,6 +64,15 @@ func add_fact(fact_name: String, fact_value: bool):
 	facts_container.add_child(f)
 	f.set_fact(fact_name, fact_value)
 	f.request_delete_fact.connect(request_delete_fact)
+	update()
+
+func update():
+	var button_label = "Conditionals" if self is Conditionals else "Facts"
+	if visibility_toggle_button:
+		visibility_toggle_button.text = str(button_label, " (", facts_container.get_child_count(), ")")
+	else:
+		find_child("VisibilityToggleButton").text = str(button_label, " (", facts_container.get_child_count(), ")")
+
 
 func request_delete_fact(fact_name:String):
 	var address := get_address_suffixed()
@@ -82,16 +91,17 @@ func delete_fact(fact_name:String):
 	for c : FactItem in facts_container.get_children():
 		if c.get_fact_name() == fact_name:
 			c.queue_free()
-			return
+			
+			break
+	await get_tree().process_frame
+	update()
 
 func get_address_suffixed() -> String:
 	var address = DiisisEditorUtil.get_address(self, address_depth)
 	
-	if self is Conditionals: # proxy for if conditional
-		prints("added con at ", address)
+	if self is Conditionals:
 		address += "c"
 	else:
-		prints("added f at ", address)
 		address += "f"
 	
 	return address
