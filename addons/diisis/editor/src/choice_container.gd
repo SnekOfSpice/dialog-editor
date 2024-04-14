@@ -36,10 +36,11 @@ func deserialize(data):
 	update()
 	
 
-func add_choice(choice_data:={}):
+func add_choice(at_index: int, choice_data:={}):
 	var choice = preload("res://addons/diisis/editor/src/choice_edit.tscn").instantiate()
 	$ChoiceList.add_child(choice)
 	choice.init()
+	$ChoiceList.move_child(choice, at_index)
 	choice.deserialize(choice_data)
 	choice.connect("move_choice_edit", request_move_choice_edit)
 	#if find_child("JumpPageButton").button_pressed: # override
@@ -52,7 +53,7 @@ func request_add_choice():
 	var address := DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	var item_address := str(address, ".", get_choice_item_count())
 	undo_redo.create_action("Add Choice")
-	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(address))
+	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(item_address))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_choice_item.bind(item_address))
 	undo_redo.commit_action()
 

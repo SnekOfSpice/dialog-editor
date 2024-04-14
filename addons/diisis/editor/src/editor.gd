@@ -29,7 +29,6 @@ func init() -> void:
 	#add_empty_page()
 	request_add_page(0)
 	
-	
 	update_controls()
 	
 	set_current_page_changeable(false)

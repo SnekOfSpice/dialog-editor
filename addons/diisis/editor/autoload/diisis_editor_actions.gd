@@ -126,15 +126,16 @@ func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
 func delete_fact_local(address:String, target:int, fact_name:String):
 	operate_local_fact(address, target, "delete", fact_name)
 
-func add_choice_item(line_address:String):
-	var target_line : Line = DiisisEditorUtil.get_node_at_address(line_address)
-	#var item_address := str(line_address, ".", target_line.get_choice_item_count())
-	var cache:Array=cached_choice_items.get(line_address, [])
+func add_choice_item(item_address:String):
+	var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
+	var target_line : Line = DiisisEditorUtil.get_node_at_address(target_line_address)
+	var parts := DiisisEditorUtil.get_split_address(item_address)
+	var cache:Array=cached_choice_items.get(target_line_address, [])
 	var data := {}
 	if not cache.is_empty():
 		data = cache.pop_back()
-		cached_choice_items[line_address] = cache
-	target_line.add_choice_item(data)
+		cached_choice_items[target_line_address] = cache
+	target_line.add_choice_item(parts[2], data)
 
 func delete_choice_item(item_address:String):
 	var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)

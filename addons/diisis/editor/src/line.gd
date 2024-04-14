@@ -199,11 +199,11 @@ func delete_conditional(fact_name:String):
 	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
 	facts.delete_fact(fact_name)
 
-func add_choice_item(choice_data:={}):
+func add_choice_item(at_index:int, choice_data:={}):
 	if line_type != DIISIS.LineType.Choice:
 		push_warning("Trying to add choice to nonchoice line")
 		return
-	find_child("ChoiceContainer").add_choice(choice_data)
+	find_child("ChoiceContainer").add_choice(at_index, choice_data)
 
 func get_choice_item(at_index:int) -> ChoiceEdit:
 	if line_type != DIISIS.LineType.Choice:
