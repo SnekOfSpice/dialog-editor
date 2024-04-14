@@ -450,16 +450,14 @@ func lines_referencing_fact(fact_name: String):
 								ref_pages.append(page.get("number"))
 							ref_lines_choice_declare.append(str(page.get("number"), ".", i, ".", choice_index))
 					choice_index += 1
-			
-			
 	
 	var all_refs := {
-		"ref_pages": ref_pages,
+		"ref_pages_fact": ref_pages,
 		"ref_pages_page_bound": ref_pages_page_bound,
-		"ref_lines_declare": ref_lines_declare,
+		"ref_lines_fact": ref_lines_declare,
 		"ref_lines_condition": ref_lines_condition,
-		"ref_lines_choice_declare": ref_lines_choice_declare,
-		"ref_lines_choice_condition": ref_lines_choice_condition
+		"ref_choices_fact": ref_lines_choice_declare,
+		"ref_choices_condition": ref_lines_choice_condition
 	}
 	
 	return all_refs
@@ -507,6 +505,9 @@ func word_count_total_approx() -> int:
 	return sum
 
 func rename_fact(from:String, to:String):
+	alter_fact(from, to)
+
+func alter_fact(from:String, to=null):
 	for page in page_data.values():
 		
 		var page_facts:Dictionary
@@ -516,7 +517,8 @@ func rename_fact(from:String, to:String):
 			page_facts = page.get("facts", {})
 		for fact in page_facts.keys():
 			if fact == from:
-				page_facts[to] = page_facts[from]
+				if to is String:
+					page_facts[to] = page_facts[from]
 				page_facts.erase(from)
 		
 		for i in page.get("lines", []).size():
@@ -528,7 +530,8 @@ func rename_fact(from:String, to:String):
 				line_facts = line.get("facts", {})
 			for fact in line_facts.keys():
 				if fact == from:
-					line_facts[to] = line_facts[from]
+					if to is String:
+						line_facts[to] = line_facts[from]
 					line_facts.erase(from)
 			
 			var line_conditionals:Dictionary
@@ -538,7 +541,8 @@ func rename_fact(from:String, to:String):
 				line_conditionals = line.get("conditionals", {}).get("facts", {})
 			for fact in line_conditionals:
 				if fact == from:
-					line_conditionals[to] = line_conditionals[from]
+					if to is String:
+						line_conditionals[to] = line_conditionals[from]
 					line_conditionals.erase(from)
 			
 			if line.get("line_type") == DIISIS.LineType.Choice:
@@ -552,7 +556,8 @@ func rename_fact(from:String, to:String):
 						option_conditionals = option.get("conditionals", {}).get("facts", {})
 					for fact in option_conditionals:
 						if fact == from:
-							option_conditionals[to] = option_conditionals[from]
+							if to is String:
+								option_conditionals[to] = option_conditionals[from]
 							option_conditionals.erase(from)
 					
 					var option_facts:Dictionary
@@ -562,11 +567,13 @@ func rename_fact(from:String, to:String):
 						option_facts = option.get("facts", {})
 					for fact in option_facts:
 						if fact == from:
-							option_facts[to] = option_facts[from]
+							if to is String:
+								option_facts[to] = option_facts[from]
 							option_facts.erase(from)
 					choice_index += 1
 	
-	facts[to] = facts.get(from)
+	if to is String:
+		facts[to] = facts.get(from)
 	facts.erase(from)
 	
 	editor.refresh(false)
@@ -594,3 +601,7 @@ func does_address_exist(address:String) -> bool:
 		return line.get("content", {}).get("choices", []).size() < parts[2]
 	
 	return false
+
+func delete_fact(fact:String):
+	alter_fact(fact)
+	
