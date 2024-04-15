@@ -13,6 +13,15 @@ func _on_size_changed() -> void:
 	get_viewport().get_camera_2d().offset = (size*0.5)
 
 func _on_close_requested() -> void:
+	var text := ""
+	text += "Do you want to close DIISIS?\n"
+	if $Editor.active_dir.is_empty() or not $Editor.has_saved:
+		text += str("You have not saved since opening.")
+	else:
+		var time = int($Editor.time_since_last_save)
+		var time_word = "second" if time == 1 else "seconds"
+		text += str("You last saved ", time, " ", time_word, " ago.")
+	$QuitDialog.dialog_text = text
 	$QuitDialog.popup()
 
 func _on_quit_dialog_canceled() -> void:

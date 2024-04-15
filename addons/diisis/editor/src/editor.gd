@@ -10,6 +10,8 @@ var undo_redo = UndoRedo.new()
 
 var active_dir := ""
 var active_file_name := ""
+var time_since_last_save := 0.0
+var has_saved := false
 
 func refresh(serialize_before_load:=true):
 	var cpn:int
@@ -82,11 +84,11 @@ func set_save_path(value:String):
 	find_child("SavePathLabel").text = str(active_dir, active_file_name)
 
 func _process(delta: float) -> void:
-	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
-	find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
+	if not active_dir.is_empty() and has_saved:
+		time_since_last_save += delta
+	#find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
+	#find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
 	
-	#if Input.is_action_just_pressed("f1"):
-		#set_graph_view_visible(not $GraphView.visible)
 
 func set_graph_view_visible(value:bool):
 	$Core.visible = not value
@@ -180,6 +182,8 @@ func save_to_file(path:String):
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	set_save_path(path)
+	time_since_last_save = 0.0
+	has_saved = true
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
