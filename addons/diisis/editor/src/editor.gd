@@ -9,6 +9,7 @@ var current_page: Page
 var undo_redo = UndoRedo.new()
 
 var active_dir := ""
+var active_file_name := ""
 
 func refresh(serialize_before_load:=true):
 	var cpn:int
@@ -47,6 +48,8 @@ func init() -> void:
 	undo_redo.clear_history()
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
+	
+	find_child("MenuButton")
 	print("init editor successful")
 
 func load_page(number: int, discard_without_saving:=false):
@@ -71,6 +74,12 @@ func load_page(number: int, discard_without_saving:=false):
 	
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	await get_tree().process_frame
+
+func set_save_path(value:String):
+	var parts = value.split("/")
+	active_file_name = parts[parts.size() - 1]
+	active_dir = value.trim_suffix(active_file_name)
+	find_child("SavePathLabel").text = str(active_dir, active_file_name)
 
 func _process(delta: float) -> void:
 	find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
@@ -149,18 +158,12 @@ func request_add_page(at:int):
 	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))
 	undo_redo.commit_action()
 
-func _on_save_button_pressed() -> void:
+func open_save_popup():
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
-	find_child("FDSave").popup()
+	open_popup(find_child("FDSave"))
 
-func _on_open_button_pressed() -> void:
-	if active_dir != "":
-		get_node("FDSave").current_dir = active_dir
-	find_child("FDOpen").size = size
-	find_child("FDOpen").popup()
-
-func _on_fd_save_file_selected(path: String) -> void:
+func save_to_file(path:String):
 	if current_page:
 		current_page.save()
 	
@@ -176,7 +179,10 @@ func _on_fd_save_file_selected(path: String) -> void:
 	}
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
-	active_dir = path
+	set_save_path(path)
+
+func _on_fd_save_file_selected(path: String) -> void:
+	save_to_file(path)
 
 
 func _on_fd_open_file_selected(path: String) -> void:
@@ -184,7 +190,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
-	active_dir = path
+	set_save_path(path)
 	
 	# all keys are now strings instead of ints
 	var int_data = {}
@@ -265,3 +271,50 @@ func _on_toggle_search_button_pressed() -> void:
 		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND
 	else:
 		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND_FILL
+
+
+func open_popup(popup:Window):
+	if not popup:
+		push_warning("No popup set.")
+		return
+	Pages.editor.refresh()
+	popup.popup()
+
+
+func _on_setup_index_pressed(index: int) -> void:
+	match index:
+		1: # header
+			open_popup(find_child("HeaderPopup"))
+		2: # dd
+			open_popup(find_child("DropdownPopup"))
+		3: # instr
+			open_popup(find_child("InstructionPopup"))
+		5: # facts
+			open_popup(find_child("FactsPopup"))
+		6: # pages
+			open_popup(find_child("MovePagePopup"))
+
+
+func _on_utility_index_pressed(index: int) -> void:
+	match index:
+		0: 
+			open_popup(find_child("WordCountDialog"))
+		1: 
+			open_popup(find_child("TextSearchPopup"))
+
+
+func _on_file_index_pressed(index: int) -> void:
+	match index:
+		0: #save
+			if active_dir.is_empty():
+				open_save_popup()
+				return
+			save_to_file(active_dir)
+		1: # save as
+			open_save_popup()
+		2:
+			# open
+			if active_dir != "":
+				get_node("FDSave").current_dir = active_dir
+			find_child("FDOpen").size = size
+			open_popup(find_child("FDOpen"))

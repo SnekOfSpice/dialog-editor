@@ -60,6 +60,9 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="SavePathLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
 
@@ -78,6 +81,7 @@ layout_mode = 2
 
 [node name="SaveButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
@@ -85,6 +89,7 @@ text = "save"
 
 [node name="OpenButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
@@ -103,6 +108,43 @@ text = "Redo"
 [node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Autosave in: 0"
+
+[node name="MenuBar" type="MenuBar" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="File" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+item_count = 3
+item_0/text = "Save"
+item_1/text = "Save As..."
+item_1/id = 1
+item_2/text = "Open"
+item_2/id = 2
+
+[node name="Utility" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "Word & Character Count"
+item_1/text = "Search Text"
+item_1/id = 1
+
+[node name="Setup" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+auto_translate_mode = 1
+item_count = 7
+item_0/text = "Edit"
+item_0/separator = true
+item_1/text = "Header"
+item_1/id = 1
+item_2/text = "Dropdowns"
+item_2/id = 2
+item_3/text = "Instructions"
+item_3/id = 3
+item_4/text = "View"
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Facts"
+item_5/id = 5
+item_6/text = "Pages"
+item_6/id = 6
 
 [node name="ErrorTextBox" type="RichTextLabel" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
 layout_mode = 2
@@ -249,10 +291,12 @@ focus_mode = 0
 text = "add line"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Core/HBoxContainer2"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer2/MarginContainer2"]
+visible = false
 layout_mode = 2
 
 [node name="EditHeaderButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
@@ -386,10 +430,11 @@ visible = false
 wait_time = 5.0
 autostart = true
 
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_open_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
+[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
+[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
+[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

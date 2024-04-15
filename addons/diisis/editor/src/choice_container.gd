@@ -48,7 +48,7 @@ func add_choice(at_index:=-1, choice_data:={}):
 
 func request_add_choice():
 	var undo_redo = Pages.editor.undo_redo
-	var address := DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	var address :String= DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	var item_address := str(address, ".", get_choice_item_count())
 	undo_redo.create_action("Add Choice")
 	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(item_address))
@@ -59,7 +59,7 @@ func request_move_choice_edit(choice_edit: ChoiceEdit, direction:int):
 	var undo_redo = Pages.editor.undo_redo
 	var address = DiisisEditorUtil.get_address(choice_edit, DiisisEditorUtil.AddressDepth.ChoiceItem)
 	var switched_item : ChoiceEdit = find_child("ChoiceList").get_child(choice_edit.get_index() + direction)
-	var switched_address:=DiisisEditorUtil.get_address(switched_item, DiisisEditorUtil.AddressDepth.ChoiceItem)
+	var switched_address :String= DiisisEditorUtil.get_address(switched_item, DiisisEditorUtil.AddressDepth.ChoiceItem)
 	undo_redo.create_action("Move Choice Item")
 	undo_redo.add_do_method(DiisisEditorActions.move_choice_item.bind(address, direction))
 	undo_redo.add_undo_method(DiisisEditorActions.move_choice_item.bind(switched_address, -direction))

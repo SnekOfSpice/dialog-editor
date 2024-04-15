@@ -609,7 +609,7 @@ func alter_fact(from:String, to=null):
 func does_address_exist(address:String) -> bool:
 	if address.ends_with("."):
 		return false
-	var parts := DiisisEditorUtil.get_split_address(address)
+	var parts :Array[int]= DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:
 		return false
 	
