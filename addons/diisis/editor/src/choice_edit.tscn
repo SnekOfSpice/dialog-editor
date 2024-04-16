@@ -6,7 +6,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ennve"]
 
-[node name="ChoiceEdit" type="HBoxContainer"]
+[node name="ChoiceEdit" type="HBoxContainer" groups=["page_view_sensitive"]]
 offset_right = 1152.0
 offset_bottom = 135.0
 script = ExtResource("1_2jptq")
@@ -21,25 +21,28 @@ layout_mode = 2
 size_flags_vertical = 0
 text = "X"
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="MoveChoiceItemContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(32.665, 0)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+[node name="ItemMoveButtons" type="GridContainer" parent="MoveChoiceItemContainer"]
 layout_mode = 2
+columns = 3
 
-[node name="UpButton" type="Button" parent="MarginContainer2/VBoxContainer"]
+[node name="UpButton" type="Button" parent="MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
+size_flags_horizontal = 4
 focus_mode = 0
 text = "^"
 
-[node name="IndexLabel" type="Label" parent="MarginContainer2/VBoxContainer"]
+[node name="IndexLabel" type="Label" parent="MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
-[node name="DownButton" type="Button" parent="MarginContainer2/VBoxContainer"]
+[node name="DownButton" type="Button" parent="MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
+size_flags_horizontal = 4
 focus_mode = 0
 text = "v"
 
@@ -102,12 +105,14 @@ caret_blink = true
 caret_blink_interval = 0.5
 
 [node name="DefaultButtonDisabled" type="CheckBox" parent="VBoxContainer2/HBoxContainer/TextLines"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 button_group = SubResource("ButtonGroup_ennve")
 text = "default: disabled"
 
 [node name="LineEditDisabled" type="LineEdit" parent="VBoxContainer2/HBoxContainer/TextLines"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -136,7 +141,7 @@ add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
 [connection signal="pressed" from="MarginContainer/Delete" to="." method="_on_delete_pressed"]
-[connection signal="pressed" from="MarginContainer2/VBoxContainer/UpButton" to="." method="_on_up_button_pressed"]
-[connection signal="pressed" from="MarginContainer2/VBoxContainer/DownButton" to="." method="_on_down_button_pressed"]
+[connection signal="pressed" from="MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="pressed" from="VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_pressed"]
 [connection signal="value_changed" from="VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]

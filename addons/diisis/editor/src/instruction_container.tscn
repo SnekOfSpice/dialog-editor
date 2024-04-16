@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="2_ow7ne"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
 
-[node name="InstructionContainer" type="VBoxContainer"]
+[node name="InstructionContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 35.0
@@ -28,39 +28,39 @@ placeholder_text = "enter instruction here"
 wrap_mode = 1
 scroll_fit_content_height = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(291, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/InputLockContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/InputLockContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Delay & Input Lock"
 
-[node name="DelayContainer" type="GridContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="DelayContainer" type="GridContainer" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Before" type="Label" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+[node name="Before" type="Label" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 text = "Before Execution"
 
-[node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+[node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
 
-[node name="After" type="Label" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+[node name="After" type="Label" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 text = "After Execution"
 
-[node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/DelayContainer"]
+[node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01

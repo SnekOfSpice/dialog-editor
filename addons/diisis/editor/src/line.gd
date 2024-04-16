@@ -24,7 +24,20 @@ func init() -> void:
 	#find_child("FactsVisibilityToggle").button_pressed = false
 	set_head_editable(true)
 	set_non_meta_parts_visible(true)
-	#update()
+
+func set_page_view(view:DiisisEditor.PageView):
+	var move_controls : Control = find_child("MoveControlsContainer")
+	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
+	move_controls.visible = view != DiisisEditor.PageView.Minimal
+	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
+	if view == DiisisEditor.PageView.Full:
+		move_controls_buttons.columns = 2
+		move_controls.find_child("Spacer").visible = true
+		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 1)
+	else:
+		move_controls_buttons.columns = 5
+		move_controls.find_child("Spacer").visible = false
+		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 0)
 
 func set_indent_level(to:int):
 	indent_level = to

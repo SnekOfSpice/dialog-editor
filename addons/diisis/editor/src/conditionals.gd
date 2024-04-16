@@ -17,6 +17,10 @@ var selected_behavior := Behavior.Show
 
 func init() -> void:
 	super.init()
+	
+	find_child("OperandOptionButton").clear()
+	find_child("BehaviorButton").clear()
+	
 	for a in ConditionalOperand:
 		find_child("OperandOptionButton").add_item(a)
 	

@@ -80,6 +80,9 @@ func update():
 func get_item(at_index:int) -> ChoiceEdit:
 	return find_child("ChoiceList").get_child(at_index)
 
+func set_page_view(view:DiisisEditor.PageView):
+	$Controls.visible = view != DiisisEditor.PageView.Minimal
+
 func _on_add_button_pressed() -> void:
 	request_add_choice()
 

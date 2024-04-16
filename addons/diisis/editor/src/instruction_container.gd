@@ -4,19 +4,6 @@ extends Control
 var instruction_name := ""
 var selected_index := 0
 
-#func _ready() -> void:
-#	var list : ItemList = find_child("TemplateList")
-#	for instr in Pages.instruction_templates:
-#		list.add_item(instr.get("name"))
-#
-##	if list.is_item_selectable(0):
-##		list.select(0)
-#
-#	list.sort_items_by_text()
-
-
-
-
 func serialize():
 	var result = {}
 	
@@ -53,7 +40,6 @@ func serialize():
 	var m = 0
 	while entered_args.size() < template_args.size():
 		entered_args.append(str("underdefined", m))
-		#entered_args.append("")
 		m += 1
 	
 	print(template_args)
@@ -67,8 +53,6 @@ func serialize():
 		}
 		content.append(arg)
 		
-		#content.append(c.serialize())
-		
 	result["content"] = content
 	
 	return result
@@ -81,10 +65,6 @@ func deserialize(data):
 		
 	set_instruction_name(instruction_name)
 	
-	#if data.get("content") is Array: # deserializing with {name, value}
-#		for c in find_child("ArgContainer").get_children():
-#			c.queue_free()
-		
 	var line_content := str(instruction_name, "(")
 	var last_value:String
 	var i = 0
@@ -96,45 +76,15 @@ func deserialize(data):
 			line_content += ", "
 		last_value = arg_with_value.get("value")
 		i += 1
-	#if not line_content.trim_suffix(", ").ends_with(", "):
-#	while line_content.count(", ") > data.get("content").size() - 1 and line_content.ends_with(", "):
-##	if not last_value.is_empty():
-#		line_content = line_content.trim_suffix(", ")
 	line_content += ")"
 	find_child("InstructionTextEdit").text = line_content
 		
-#		for arg_with_value in data.get("content"):
-#
-#
-#
-#
-#			var a = preload("res://addons/diisis/editor/src/instruction_argument.tscn").instantiate()
-#			find_child("ArgContainer").add_child(a)
-#			var formatted = {
-#				"name": arg_with_value.get("name"),
-#				"value": arg_with_value.get("value")
-#			}
-#			a.deserialize(formatted)
-#	else:
-#		fill_args(data.get("content").get("args"))
 	
 	find_child("DelayBeforeSpinBox").value = float(data.get("delay.before", data.get("delay", 0.0)))
 	find_child("DelayAfterSpinBox").value = float(data.get("delay.after", 0.0))
-	
 
-#func fill_args(args: Array):
-#	for c in find_child("ArgContainer").get_children():
-#		c.queue_free()
-	
-	
-#	for arg in args:
-#		var a = preload("res://addons/diisis/editor/src/instruction_argument.tscn").instantiate()
-#		find_child("ArgContainer").add_child(a)
-#		var formatted = {
-#			"name": arg,
-#			"value": ""
-#		}
-#		a.deserialize(formatted)
+func set_page_view(view:DiisisEditor.PageView):
+	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
 
 func _on_template_list_item_selected(index: int) -> void:
 	set_instruction_name(find_child("TemplateList").get_item_text(index))
@@ -143,21 +93,6 @@ func _on_template_list_item_selected(index: int) -> void:
 
 func set_instruction_name(instr_name : String):
 	instruction_name = instr_name
-#	var args = Pages.get_instruction_args(instruction_name)
-#	fill_args(args)
-	
-#	var i := 0
-#	for template in Pages.instruction_templates:
-#
-#		if template.get("name") == instruction_name:
-#			break
-#		i += 1
-#	print(i)
-	
-	
-	
-#	if find_child("TemplateList").is_item_selectable(selected_index):
-#		find_child("TemplateList").select(selected_index)
 
 func build_typing_hint():
 	find_child("TypingHint").build(Pages.get_all_instruction_names())
@@ -210,32 +145,7 @@ func _on_instruction_text_edit_caret_changed() -> void:
 				args_cleaned += "[/b]"
 			i += 1
 		
-		#args_cleaned = args_cleaned.trim_suffix(", ")
-		
-#		var arg_start = args_cleaned.rfind(", ", caret_col)
-#		var arg_end = args_cleaned.find(", ", caret_col)
-#		printt(arg_start, arg_end)
-#		if arg_start == -1 and arg_end == -1:
-#			pass
-#			print("a")
-#		elif arg_start == -1:
-#			args_cleaned = args_cleaned.insert(0, "[b]")
-#			args_cleaned = args_cleaned.insert(arg_end+3, "[/b]")
-#			print("b")
-#		elif arg_end == -1:
-#			args_cleaned = args_cleaned.insert(arg_start, "[b]")
-#			args_cleaned = args_cleaned.insert(args_cleaned.length(), "[/b]")
-#			print("c")
-#		else:
-#			args_cleaned = args_cleaned.insert(arg_start, "[b]")
-#			args_cleaned = args_cleaned.insert(arg_end+3, "[/b]")
-		
-		
-		
-		
 		find_child("ArgHint").build(args_cleaned)
-		
-		#if not find_child("ArgHint").visible:
 		find_child("ArgHint").popup()
 		
 		find_child("InstructionTextEdit").set_caret_column(caret_col)

@@ -7,7 +7,3 @@ class_name LineTypeButton
 # I'm using the workaround
 # https://github.com/godotengine/godot/issues/73109#issuecomment-1714885562
 @export var line_type := DIISIS.LineType.Text
-
-#func _ready() -> void:
-	##toggle_mode = true
-	#button_pressed = line_type == DIISIS.LineType.Text

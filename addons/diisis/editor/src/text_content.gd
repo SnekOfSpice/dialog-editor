@@ -21,6 +21,7 @@ func init() -> void:
 		find_child("DropDownForActors").add_item(title)
 	find_child("DropDownForActors").select(find_child("DropDownForActors").get_selectable_item())
 	set_use_dialog_syntax(true)
+	set_page_view(Pages.editor.get_selected_page_view())
 	
 func serialize() -> Dictionary:
 	var result := {}
@@ -40,8 +41,24 @@ func deserialize(data: Dictionary):
 	selected_actor_dropdown_index = data.get("selected_actor_dropdown_index", 0)
 	set_use_dialog_syntax(data.get("use_dialog_syntax", false))
 	
-	
-	
+
+func set_page_view(view:DiisisEditor.PageView):
+	find_child("DialogSyntaxContainer").visible = view != DiisisEditor.PageView.Minimal
+	var tb : TextEdit = find_child("TextBox")
+	match view:
+		DiisisEditor.PageView.Full:
+			tb.custom_minimum_size.y = 80
+			tb.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			tb.scroll_fit_content_height = true
+		DiisisEditor.PageView.Truncated:
+			tb.custom_minimum_size.y = 25
+			tb.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+			tb.scroll_fit_content_height = true
+		DiisisEditor.PageView.Minimal:
+			tb.custom_minimum_size.y = 25
+			tb.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+			tb.scroll_fit_content_height = false
+
 
 func _input(event: InputEvent) -> void:
 	pass
@@ -55,16 +72,6 @@ func insert(control_sequence: String):
 			tb.insert_text_at_caret("<mp>")
 		"lineclear":
 			tb.insert_text_at_caret("<lc>")
-
-func _on_pause_auto_cont_pressed() -> void:
-	insert("autopause")
-
-
-func _on_pause_click_cont_pressed() -> void:
-	insert("manualpause")
-
-func _on_line_clear_pressed() -> void:
-	insert("lineclear")
 
 func set_use_dialog_syntax(value: bool):
 	use_dialog_syntax = value

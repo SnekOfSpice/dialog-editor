@@ -13,6 +13,12 @@ var active_file_name := ""
 var time_since_last_save := 0.0
 var has_saved := false
 
+enum PageView {
+	Full,
+	Truncated,
+	Minimal
+}
+
 func refresh(serialize_before_load:=true):
 	var cpn:int
 	if current_page:
@@ -54,6 +60,10 @@ func init() -> void:
 	find_child("MenuButton")
 	print("init editor successful")
 
+func update_page_view(view:PageView):
+	for node in get_tree().get_nodes_in_group("page_view_sensitive"):
+		node.set_page_view(view)
+
 func load_page(number: int, discard_without_saving:=false):
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -86,6 +96,16 @@ func get_selected_line_type() -> int:
 			break
 	
 	return line_type
+
+func get_selected_page_view() -> PageView:
+	var view:=PageView.Full
+	
+	for button : PageViewButton in find_child("ViewTypes").get_children():
+		if button.button_pressed:
+			view = button.page_view
+			break
+	
+	return view
 
 func set_save_path(value:String):
 	var parts = value.split("/")

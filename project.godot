@@ -34,6 +34,10 @@ window/subwindows/embed_subwindows=false
 
 enabled=PackedStringArray("res://addons/diisis/plugin.cfg")
 
+[global_group]
+
+page_view_sensitive=""
+
 [input]
 
 ui_left={

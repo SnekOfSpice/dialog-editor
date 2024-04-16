@@ -16,6 +16,7 @@ func init() -> void:
 	#find_child("Conditionals").visible = false
 	
 	set_do_jump_page(false)
+	set_page_view(Pages.editor.get_selected_page_view())
 
 
 func deserialize(data:Dictionary):
@@ -41,6 +42,34 @@ func serialize():
 		"conditionals": find_child("Conditionals").serialize(),
 		"do_jump_page": do_jump_page
 	}
+
+func set_page_view(view:DiisisEditor.PageView):
+	var default_enabled : CheckBox = find_child("DefaultButtonEnabled")
+	var line_edit_enabled : LineEdit = find_child("LineEditEnabled")
+	var default_disabled : CheckBox = find_child("DefaultButtonDisabled")
+	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
+	var buttons : GridContainer = find_child("ItemMoveButtons")
+	
+	if view == DiisisEditor.PageView.Full:
+		default_enabled.visible = true
+		line_edit_enabled.visible = true
+		default_disabled.visible = true
+		line_edit_disabled.visible = true
+		buttons.columns = 1
+		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
+		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
+	else:
+		default_enabled.visible = default_enabled.button_pressed
+		line_edit_enabled.visible = default_enabled.button_pressed
+		default_disabled.visible = default_disabled.button_pressed
+		line_edit_disabled.visible = default_disabled.button_pressed
+		buttons.columns = 3
+		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
+		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
+	
+	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.Minimal
+	
+	
 
 func _on_page_select_value_changed(value: float) -> void:
 	update()

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/folder_container.gd" id="1_k5xft"]
 
-[node name="FolderContainer" type="VBoxContainer"]
+[node name="FolderContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
 script = ExtResource("1_k5xft")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -20,12 +20,6 @@ text = "folder vis"
 layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="DebugLabel" type="Label" parent="PanelContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="DebugLabel2" type="Label" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
 
 [connection signal="pressed" from="PanelContainer/HBoxContainer/FolderVisibilityCheckBox" to="." method="_on_folder_visibility_check_box_pressed"]
