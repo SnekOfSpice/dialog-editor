@@ -77,6 +77,16 @@ func load_page(number: int, discard_without_saving:=false):
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	await get_tree().process_frame
 
+func get_selected_line_type() -> int:
+	var line_type:=DIISIS.LineType.Text
+	
+	for button : LineTypeButton in find_child("LineTypes").get_children():
+		if button.button_pressed:
+			line_type = button.line_type
+			break
+	
+	return line_type
+
 func set_save_path(value:String):
 	var parts = value.split("/")
 	active_file_name = parts[parts.size() - 1]

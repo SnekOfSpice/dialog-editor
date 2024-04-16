@@ -1,10 +1,11 @@
-[gd_scene load_steps=21 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=19 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://addons/diisis/editor/src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/LineTypeButton.gd" id="3_2h0gj"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor_popup_button.gd" id="3_u6k32"]
+[ext_resource type="ButtonGroup" uid="uid://wl636ja43dky" path="res://addons/diisis/editor/src/line_type_button_group.tres" id="4_dg3k4"]
 [ext_resource type="PackedScene" uid="uid://bxsq5rsj1i12f" path="res://addons/diisis/editor/src/go_to.tscn" id="4_m6c15"]
 [ext_resource type="PackedScene" uid="uid://thtw7bxvvc4f" path="res://addons/diisis/editor/src/graphview/graph_view.tscn" id="5_bks01"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
@@ -28,12 +29,6 @@ border_blend = true
 
 [sub_resource type="Theme" id="Theme_bik72"]
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_1frgx")
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_seml8"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_r7ou1"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_1gv23"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -246,41 +241,36 @@ layout_mode = 2
 columns = 2
 
 [node name="TypeText" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
-unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
-button_pressed = true
-button_group = SubResource("ButtonGroup_seml8")
+button_group = ExtResource("4_dg3k4")
 text = "Text"
 script = ExtResource("3_2h0gj")
 
 [node name="TypeChoice" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
-unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
-button_group = SubResource("ButtonGroup_r7ou1")
+button_group = ExtResource("4_dg3k4")
 text = "Choice"
 script = ExtResource("3_2h0gj")
 line_type = 1
 
 [node name="TypeInstruction" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
-unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
-button_group = SubResource("ButtonGroup_1gv23")
+button_group = ExtResource("4_dg3k4")
 text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
 
 [node name="TypeFolder" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/VBoxContainer/LineTypes"]
-unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
-button_group = SubResource("ButtonGroup_1gv23")
+button_group = ExtResource("4_dg3k4")
 text = "Folder"
 script = ExtResource("3_2h0gj")
 line_type = 3

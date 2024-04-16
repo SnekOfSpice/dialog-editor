@@ -18,7 +18,7 @@ func init() -> void:
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("TextContent").init()
-	set_line_type(Data.of("editor.selected_line_type"))
+	set_line_type(Pages.editor.get_selected_line_type())
 	await get_tree().process_frame
 	#find_child("ConditionalsVisibilityToggle").button_pressed = false
 	#find_child("FactsVisibilityToggle").button_pressed = false

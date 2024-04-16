@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://1vmmm8sbcfcx"]
-
-[ext_resource type="Script" path="res://addons/diisis/editor/autoload/data.gd" id="1_rw3m2"]
-
-[node name="Data" type="Node"]
-script = ExtResource("1_rw3m2")

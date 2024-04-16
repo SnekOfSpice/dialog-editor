@@ -4,7 +4,7 @@ extends EditorPlugin
 var dia_editor_window:Window
 var toolbar_button
 
-const AUTOLOAD_DATA = "Data"
+#const AUTOLOAD_DATA = "Data"
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
@@ -13,7 +13,7 @@ const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 func add_editor_singletons():
-	add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
+	#add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
@@ -23,7 +23,7 @@ func add_parser_singletons():
 	add_autoload_singleton(AUTOLOAD_PARSER_EVENTS, "res://addons/diisis/parser/autoload/parser_events.tscn")
 
 func remove_editor_singletons():
-	remove_autoload_singleton(AUTOLOAD_DATA)
+	#remove_autoload_singleton(AUTOLOAD_DATA)
 	remove_autoload_singleton(AUTOLOAD_PAGES)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
