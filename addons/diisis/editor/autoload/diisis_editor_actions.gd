@@ -6,6 +6,11 @@ var cached_lines := {}
 # these technically could also be in cached_lines, but that serialization is so deep and nested, this is way easier
 var cached_choice_items := {}
 
+var clipboard := {}
+var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
+var selected_addresses := []
+var delete_from_selected_addresses_on_insert := false
+
 func add_lines(indices:Array, data_by_index:={}):
 	if not Pages.editor.current_page:
 		Pages.editor.add_page(0)
@@ -15,7 +20,7 @@ func add_lines(indices:Array, data_by_index:={}):
 		if cached_lines.has(Pages.editor.current_page.number):
 			var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.current_page.number)
 			var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
-			if not cached_lines_at_index.is_empty():
+			if not cached_lines_at_index.is_empty() and data_by_index.get(i) == null:
 				var data = cached_lines_at_index.pop_back()
 				cached_lines_on_page[i] = cached_lines_at_index
 				cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
@@ -49,7 +54,7 @@ func delete_lines(indices:Array):
 func delete_line(at):
 	delete_lines([at])
 
-func go_to(address:String):
+func go_to(address:String, discard_without_saving:=false):
 	var parts := DiisisEditorUtil.get_split_address(address)
 	
 	# prepare current page to change
@@ -58,7 +63,7 @@ func go_to(address:String):
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
-	Pages.editor.load_page(parts[0])
+	Pages.editor.load_page(parts[0], discard_without_saving)
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
 	
@@ -168,3 +173,66 @@ func move_choice_item(item_address:String, direction:int):
 	
 	var choice_line : Line = Pages.editor.current_page.get_line(address_parts[1])
 	choice_line.move_choice_item_by_index(address_parts[2], direction)
+
+func clear_selected_addresses():
+	while not selected_addresses.is_empty():
+		remove_from_selected_addresses(selected_addresses.back())
+
+func add_to_selected_addresses(address:String):
+	# disable all other selectors that don't operate on the same depth while a selection is going on
+	# (only needs to happen once in the beginning because no mixing of address types)
+	if selected_addresses.is_empty():
+		var depth := DiisisEditorUtil.get_address_depth(address)
+		for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
+			selector.set_interactable(selector.address_depth == depth)
+		current_selection_address_depth = depth
+	
+	selected_addresses.append(address)
+
+func remove_from_selected_addresses(address:String):
+	selected_addresses.erase(address)
+	if selected_addresses.is_empty():
+		for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
+			selector.set_interactable(true)
+	current_selection_address_depth = -1
+
+func add_data_from_selected_addresses_to_clipboard():
+	var sorted = DiisisEditorUtil.sort_addresses(selected_addresses)
+	clipboard.clear()
+	for address in sorted:
+		clipboard[address] = Pages.get_data_from_address(address)
+
+func add_to_clipboard(addresses_with_data:Array):
+	
+	current_selection_address_depth = -1
+
+func insert_from_clipboard(
+	start_address:String,
+	delete_from_source_addresses := false
+	):
+		
+	if delete_from_source_addresses:
+		Pages.editor.refresh()
+		await get_tree().process_frame
+	
+		var sorted_delete_targets = DiisisEditorUtil.sort_addresses(selected_addresses)
+		sorted_delete_targets.reverse()
+	
+		for deletion in sorted_delete_targets:
+			Pages.delete_data_from_address(deletion)
+	# insert lines
+	go_to(start_address, true)
+	await get_tree().process_frame
+	
+	var depth = DiisisEditorUtil.get_address_depth(start_address)
+	
+	
+	
+	if depth == DiisisEditorUtil.AddressDepth.Line:
+		var indices := []
+		var data_by_index := {}
+		for address in selected_addresses:
+			var parts = DiisisEditorUtil.get_split_address(start_address)
+			indices.append(parts[1])
+			data_by_index[parts[1]] = clipboard.get(address)
+		add_lines(indices, data_by_index)

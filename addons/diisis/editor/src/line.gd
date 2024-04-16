@@ -172,6 +172,9 @@ func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 
 
 func _on_delete_pressed() -> void:
+	request_delete()
+
+func request_delete():
 	emit_signal("delete_line", get_index())
 
 func move(dir: int):

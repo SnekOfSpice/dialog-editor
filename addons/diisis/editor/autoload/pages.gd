@@ -243,6 +243,59 @@ func delete_page_data(at: int):
 	emit_signal("pages_modified")
 
 
+func get_data_from_address(address:String):
+	var cpn = editor.get_current_page_number()
+	var address_page = DiisisEditorUtil.get_split_address(address)[0]
+	# if current page is address
+	if cpn == address_page:
+		var target = DiisisEditorUtil.get_node_at_address(address)
+		return target.serialize()
+	
+	# get from internal data
+	var depth = DiisisEditorUtil.get_address_depth(address)
+	var parts = DiisisEditorUtil.get_split_address(address)
+	
+	if depth == DiisisEditorUtil.AddressDepth.Page:
+		return page_data.get(address_page)
+	elif depth == DiisisEditorUtil.AddressDepth.Line:
+		var lines : Array = page_data.get(address_page).get("lines")
+		return lines[parts[1]]
+	elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+		var lines : Array = page_data.get(address_page).get("lines")
+		var line : Dictionary = lines[parts[1]]
+		return line.get("content", {}).get("choices", [])[parts[2]]
+
+func delete_data_from_address(address:String):
+	var cpn = editor.get_current_page_number()
+	var address_page = DiisisEditorUtil.get_split_address(address)[0]
+	var depth = DiisisEditorUtil.get_address_depth(address)
+	var parts = DiisisEditorUtil.get_split_address(address)
+	# if current page is address
+	if cpn == address_page:
+		var target = DiisisEditorUtil.get_node_at_address(address)
+		if depth == DiisisEditorUtil.AddressDepth.Line:
+			target.request_delete()
+			return
+		elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+			target.request_delete()
+			return
+	
+	# get from internal data
+	
+	
+	if depth == DiisisEditorUtil.AddressDepth.Page:
+		delete_page_data(parts[0])
+	elif depth == DiisisEditorUtil.AddressDepth.Line:
+		var lines : Array = page_data.get(address_page).get("lines")
+		lines.remove_at(parts[1])
+		page_data[address_page]["lines"] = lines
+	elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+		var lines : Array = page_data.get(address_page).get("lines")
+		var line : Dictionary = lines[parts[1]]
+		var choices : Array = line.get("content", {}).get("choices", [])
+		choices.remove_at(parts[2])
+		page_data[address_page]["lines"]["content"]["choices"] = choices
+
 func get_defaults(property_key:String):
 	for p in head_defaults:
 		if p.get("property_name") == property_key:

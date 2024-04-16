@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5eu4io5wokaq"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/address_select_action_container.gd" id="1_1ayp7"]
+
+[node name="AddressSelectActionContainer" type="CenterContainer" groups=["address_selectors"]]
+auto_translate_mode = 1
+script = ExtResource("1_1ayp7")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SelectCheckBox" type="CheckBox" parent="HBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="A" type="PopupMenu" parent="HBoxContainer/MenuBar"]
+item_count = 6
+item_0/text = "Copy this"
+item_1/text = "Copy selection"
+item_1/id = 1
+item_2/text = "Cut this"
+item_2/id = 2
+item_3/text = "Cut selection"
+item_3/id = 3
+item_4/text = "Paste above"
+item_4/id = 4
+item_5/text = "Paste below"
+item_5/id = 5
+
+[connection signal="toggled" from="HBoxContainer/SelectCheckBox" to="." method="_on_select_check_box_toggled"]
+[connection signal="index_pressed" from="HBoxContainer/MenuBar/A" to="." method="_on_a_index_pressed"]

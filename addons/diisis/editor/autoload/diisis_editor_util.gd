@@ -71,3 +71,20 @@ func get_node_at_address(address:String):
 	elif level == AddressDepth.ChoiceItem:
 		return Pages.editor.current_page.get_line(address_parts[1]).get_choice_item(address_parts[2])
 		
+
+func sort_addresses(addresses:Array) -> Array:
+	addresses.sort_custom(_sort_addresses)
+	return addresses
+
+func _sort_addresses(a1:String, a2: String) -> bool:
+	var depth1 = get_address_depth(a1)
+	var depth2 = get_address_depth(a2)
+	
+	if depth1 < depth2:
+		return true
+	elif depth1 > depth2:
+		return false
+	
+	var last1 = get_split_address(a1).back()
+	var last2 = get_split_address(a2).back()
+	return last1 < last2

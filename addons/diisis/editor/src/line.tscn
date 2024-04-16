@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=14 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_viyfr"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://addons/diisis/editor/src/header.tscn" id="2_qs17t"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="3_01wq6"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://addons/diisis/editor/src/choice_container.tscn" id="3_jjtdq"]
+[ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="3_k7b5x"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="3_pymyd"]
 [ext_resource type="PackedScene" uid="uid://c7k2h1p5qalaa" path="res://addons/diisis/editor/src/text_content.tscn" id="3_ty44c"]
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://addons/diisis/editor/src/instruction_container.tscn" id="4_phdce"]
@@ -53,6 +54,9 @@ layout_mode = 2
 [node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
+[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_k7b5x")]
+layout_mode = 2
+
 [node name="MetaControls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
@@ -69,7 +73,6 @@ disabled = true
 text = "lock"
 
 [node name="MoveControlsContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
@@ -144,7 +147,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
