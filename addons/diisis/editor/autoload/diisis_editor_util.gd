@@ -57,18 +57,20 @@ func get_split_address(address:String) -> Array[int]:
 func get_address_depth(address:String) -> int:
 	return address.count(".")
 
-func get_node_at_address(address:String):
+func get_node_at_address(address:String, suppress_off_page_warning := false):
 	var level := get_address_depth(address)
 	var address_parts := get_split_address(address)
 	if Pages.editor.current_page.number != address_parts[0]:
-		push_warning("Current page is not within scope of address")
-		return
+		if not suppress_off_page_warning:
+			push_warning("Current page is not within scope of address")
+		return null
 	
 	if level == AddressDepth.Page:
 		return Pages.editor.current_page
 	elif level == AddressDepth.Line:
 		return Pages.editor.current_page.get_line(address_parts[1])
 	elif level == AddressDepth.ChoiceItem:
+		print("1")
 		return Pages.editor.current_page.get_line(address_parts[1]).get_choice_item(address_parts[2])
 		
 

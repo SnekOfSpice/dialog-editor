@@ -174,11 +174,17 @@ func move_choice_item(item_address:String, direction:int):
 	var choice_line : Line = Pages.editor.current_page.get_line(address_parts[1])
 	choice_line.move_choice_item_by_index(address_parts[2], direction)
 
+
+
+
+
 func clear_selected_addresses():
 	while not selected_addresses.is_empty():
 		remove_from_selected_addresses(selected_addresses.back())
 
 func add_to_selected_addresses(address:String):
+	if selected_addresses.has(address):
+		return
 	# disable all other selectors that don't operate on the same depth while a selection is going on
 	# (only needs to happen once in the beginning because no mixing of address types)
 	if selected_addresses.is_empty():
@@ -197,42 +203,64 @@ func remove_from_selected_addresses(address:String):
 	current_selection_address_depth = -1
 
 func add_data_from_selected_addresses_to_clipboard():
-	var sorted = DiisisEditorUtil.sort_addresses(selected_addresses)
+	update_selected_addresses()
 	clipboard.clear()
-	for address in sorted:
-		clipboard[address] = Pages.get_data_from_address(address)
+	for address in selected_addresses:
+		prints("adding data from ", address)
+		add_to_clipboard(address)
 
-func add_to_clipboard(addresses_with_data:Array):
+func update_selected_addresses():
+	var selected_off_page := []
+	for a :String in selected_addresses:
+		if a.begins_with(str(Pages.editor.get_current_page_number())):
+			continue
+		selected_off_page.append(a)
 	
-	current_selection_address_depth = -1
+	var selected_on_page :=[]
+	for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
+		if selector.is_selected():
+			selected_on_page.append(DiisisEditorUtil.get_address(selector, selector.address_depth))
+	
+	selected_off_page.append_array(selected_on_page)
+	selected_addresses = selected_off_page
 
-func insert_from_clipboard(
-	start_address:String,
-	delete_from_source_addresses := false
-	):
-		
-	if delete_from_source_addresses:
+func add_to_clipboard(address_with_data:String):
+	clipboard[address_with_data] = Pages.get_data_from_address(address_with_data)
+
+func insert_from_clipboard(start_address:String):
+	var objects_to_delete := [] # on current page
+	var data_to_delete := [] # off page
+	if delete_from_selected_addresses_on_insert:
 		Pages.editor.refresh()
 		await get_tree().process_frame
-	
-		var sorted_delete_targets = DiisisEditorUtil.sort_addresses(selected_addresses)
-		sorted_delete_targets.reverse()
-	
-		for deletion in sorted_delete_targets:
-			Pages.delete_data_from_address(deletion)
+		
+		for address_to_delete_from in selected_addresses:
+			var object = DiisisEditorUtil.get_node_at_address(address_to_delete_from, true)
+			if object == null:
+				data_to_delete.append(address_to_delete_from)
+			else:
+				objects_to_delete.append(object)
+			
 	# insert lines
 	go_to(start_address, true)
 	await get_tree().process_frame
 	
 	var depth = DiisisEditorUtil.get_address_depth(start_address)
 	
-	
-	
 	if depth == DiisisEditorUtil.AddressDepth.Line:
 		var indices := []
 		var data_by_index := {}
+		var i := 0
+		var parts = DiisisEditorUtil.get_split_address(start_address)
 		for address in selected_addresses:
-			var parts = DiisisEditorUtil.get_split_address(start_address)
-			indices.append(parts[1])
-			data_by_index[parts[1]] = clipboard.get(address)
+			indices.append(parts[1] + i)
+			data_by_index[parts[1] + i] = clipboard.get(address)
+			i += 1
 		add_lines(indices, data_by_index)
+
+	data_to_delete = DiisisEditorUtil.sort_addresses(data_to_delete)
+	data_to_delete.reverse()
+	for data_address in data_to_delete:
+		Pages.delete_data_from_address(data_address)
+	for object in objects_to_delete:
+		object.request_delete()

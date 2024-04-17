@@ -3,11 +3,15 @@ extends CenterContainer
 class_name AddressSelectActionContainer
 
 @export var address_depth := DiisisEditorUtil.AddressDepth.Line
+var delete_from_selected_addresses_on_insert := false
+var just_cut := false
 
 func set_interactable(value:bool):
 	find_child("SelectCheckBox").disabled = not value
 	find_child("MenuBar").visible = value
 
+func is_selected() -> bool:
+	return find_child("SelectCheckBox").button_pressed
 
 func set_selected(value:bool):
 	if find_child("SelectCheckBox").button_pressed != value:
@@ -23,26 +27,23 @@ func _on_select_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_a_index_pressed(index: int) -> void:
+	var address = DiisisEditorUtil.get_address(self, address_depth)
 	match index:
 		0: # copy this
-			DiisisEditorActions.clear_selected_addresses()
-			set_selected(true)
+			DiisisEditorActions.clipboard.clear()
+			DiisisEditorActions.add_to_clipboard(address)
 			DiisisEditorActions.delete_from_selected_addresses_on_insert = false
-			DiisisEditorActions.add_data_from_selected_addresses_to_clipboard()
-			set_selected(false)
 		1: # copy selection
+			DiisisEditorActions.add_data_from_selected_addresses_to_clipboard()
 			DiisisEditorActions.delete_from_selected_addresses_on_insert = false
-			DiisisEditorActions.add_data_from_selected_addresses_to_clipboard()
-		2: # cut this
-			DiisisEditorActions.clear_selected_addresses()
-			set_selected(true)
-			DiisisEditorActions.delete_from_selected_addresses_on_insert = true
-			DiisisEditorActions.add_data_from_selected_addresses_to_clipboard()
-			set_selected(false)
 			
-		3: # cut selection
+		2: # cut this
+			DiisisEditorActions.clipboard.clear()
+			DiisisEditorActions.add_to_clipboard(address)
 			DiisisEditorActions.delete_from_selected_addresses_on_insert = true
+		3: # cut selection
 			DiisisEditorActions.add_data_from_selected_addresses_to_clipboard()
+			DiisisEditorActions.delete_from_selected_addresses_on_insert = true
 		4: # insert above
 			request_insert_items(true)
 		5: # insert below
@@ -50,6 +51,7 @@ func _on_a_index_pressed(index: int) -> void:
 
 
 func request_insert_items(above:bool):
+	delete_from_selected_addresses_on_insert = false
 	var selected_address = DiisisEditorUtil.get_address(self, address_depth)
 	if not above:
 		var parts = DiisisEditorUtil.get_split_address(selected_address)
@@ -58,6 +60,6 @@ func request_insert_items(above:bool):
 		for p in parts:
 			new_address += str(p)
 			new_address += "."
-		new_address.trim_suffix(".")
+		new_address = new_address.trim_suffix(".")
 		selected_address = new_address
 	DiisisEditorActions.insert_from_clipboard(selected_address)

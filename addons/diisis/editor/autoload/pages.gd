@@ -248,9 +248,10 @@ func get_data_from_address(address:String):
 	var address_page = DiisisEditorUtil.get_split_address(address)[0]
 	# if current page is address
 	if cpn == address_page:
+		print("getting data from current page")
 		var target = DiisisEditorUtil.get_node_at_address(address)
 		return target.serialize()
-	
+	print("getting data from page_data")
 	# get from internal data
 	var depth = DiisisEditorUtil.get_address_depth(address)
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -274,6 +275,7 @@ func delete_data_from_address(address:String):
 	if cpn == address_page:
 		var target = DiisisEditorUtil.get_node_at_address(address)
 		if depth == DiisisEditorUtil.AddressDepth.Line:
+			print("deleting line")
 			target.request_delete()
 			return
 		elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
