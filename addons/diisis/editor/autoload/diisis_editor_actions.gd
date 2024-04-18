@@ -8,7 +8,6 @@ var cached_choice_items := {}
 
 var clipboard := {}
 var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
-var selected_addresses := []
 var delete_from_selected_addresses_on_insert := false
 
 func add_lines(indices:Array, data_by_index:={}):
@@ -175,92 +174,117 @@ func move_choice_item(item_address:String, direction:int):
 	choice_line.move_choice_item_by_index(address_parts[2], direction)
 
 
+# ====== COPY PASTE CONSTRUCTION SITE ==============
 
 
+#func clear_selected_addresses():
+	#while not selected_addresses.is_empty():
+		#remove_from_selected_addresses(selected_addresses.back())
 
-func clear_selected_addresses():
-	while not selected_addresses.is_empty():
-		remove_from_selected_addresses(selected_addresses.back())
+#func add_to_selected_addresses(address:String):
+	#if selected_addresses.has(address):
+		#return
+	## disable all other selectors that don't operate on the same depth while a selection is going on
+	## (only needs to happen once in the beginning because no mixing of address types)
+	#if selected_addresses.is_empty():
+		#var depth := DiisisEditorUtil.get_address_depth(address)
+		#for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
+			#selector.set_interactable(selector.address_depth == depth)
+		#current_selection_address_depth = depth
+	#
+	#selected_addresses.append(address)
+#
+#func remove_from_selected_addresses(address:String):
+	#selected_addresses.erase(address)
+	#if selected_addresses.is_empty():
+		#for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
+			#selector.set_interactable(true)
+	#current_selection_address_depth = -1
 
-func add_to_selected_addresses(address:String):
-	if selected_addresses.has(address):
-		return
-	# disable all other selectors that don't operate on the same depth while a selection is going on
-	# (only needs to happen once in the beginning because no mixing of address types)
-	if selected_addresses.is_empty():
-		var depth := DiisisEditorUtil.get_address_depth(address)
-		for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
-			selector.set_interactable(selector.address_depth == depth)
-		current_selection_address_depth = depth
-	
-	selected_addresses.append(address)
+#func add_data_to_clipboard(depth:int):
+	#var selected_data := {}
+	#clipboard[depth] = selected_data
 
-func remove_from_selected_addresses(address:String):
-	selected_addresses.erase(address)
-	if selected_addresses.is_empty():
-		for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
-			selector.set_interactable(true)
-	current_selection_address_depth = -1
+#func add_data_from_selected_addresses_to_clipboard():
+	#update_selected_addresses()
+	#clipboard.clear()
+	#for address in selected_addresses:
+		#prints("adding data from ", address)
+		#add_to_clipboard(address)
 
-func add_data_from_selected_addresses_to_clipboard():
-	update_selected_addresses()
-	clipboard.clear()
+## Returns addresses it copied from
+func copy(depth:int, single_address_override := "") -> Array:
+	var selected_addresses := get_selected_addresses(depth)
+	if not single_address_override.is_empty():
+		print("using override")
+		selected_addresses = [single_address_override]
+
+	var data_at_depth := {}
 	for address in selected_addresses:
+		data_at_depth[address] = Pages.get_data_from_address(address)
 		prints("adding data from ", address)
-		add_to_clipboard(address)
-
-func update_selected_addresses():
-	var selected_off_page := []
-	for a :String in selected_addresses:
-		if a.begins_with(str(Pages.editor.get_current_page_number())):
-			continue
-		selected_off_page.append(a)
+	clipboard[depth] = data_at_depth
 	
+	return selected_addresses
+
+func cut(depth:int, single_address_override := ""):
+	var copied = copy(depth, single_address_override)
+	
+	copied = DiisisEditorUtil.sort_addresses(copied)
+	var objects_to_delete := []
+	copied.reverse()
+	for c in copied:
+		objects_to_delete.append(DiisisEditorUtil.get_node_at_address(c))	
+	for object in objects_to_delete:
+		object.request_delete()
+
+func get_selected_addresses(depth:int) -> Array:
 	var selected_on_page :=[]
 	for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
-		if selector.is_selected():
+		if selector.is_selected() and selector.address_depth == depth:
 			selected_on_page.append(DiisisEditorUtil.get_address(selector, selector.address_depth))
-	
-	selected_off_page.append_array(selected_on_page)
-	selected_addresses = selected_off_page
+	prints("getting addresses", selected_on_page)
+	return selected_on_page
 
 func add_to_clipboard(address_with_data:String):
 	clipboard[address_with_data] = Pages.get_data_from_address(address_with_data)
 
 func insert_from_clipboard(start_address:String):
-	var objects_to_delete := [] # on current page
-	var data_to_delete := [] # off page
-	if delete_from_selected_addresses_on_insert:
-		Pages.editor.refresh()
-		await get_tree().process_frame
-		
-		for address_to_delete_from in selected_addresses:
-			var object = DiisisEditorUtil.get_node_at_address(address_to_delete_from, true)
-			if object == null:
-				data_to_delete.append(address_to_delete_from)
-			else:
-				objects_to_delete.append(object)
+	#var objects_to_delete := [] # on current page
+	#var data_to_delete := [] # off page
+	#if delete_from_selected_addresses_on_insert:
+		#Pages.editor.refresh()
+		#await get_tree().process_frame
+		#
+		#for address_to_delete_from in selected_addresses:
+			#var object = DiisisEditorUtil.get_node_at_address(address_to_delete_from, true)
+			#if object == null:
+				#data_to_delete.append(address_to_delete_from)
+			#else:
+				#objects_to_delete.append(object)
 			
 	# insert lines
-	go_to(start_address, true)
-	await get_tree().process_frame
+	#go_to(start_address, true)
+	#await get_tree().process_frame
 	
-	var depth = DiisisEditorUtil.get_address_depth(start_address)
-	
-	if depth == DiisisEditorUtil.AddressDepth.Line:
+	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
+	var data_at_depth = clipboard.get(insert_depth, {})
+	print(data_at_depth.keys())
+	if insert_depth == DiisisEditorUtil.AddressDepth.Line:
 		var indices := []
 		var data_by_index := {}
 		var i := 0
 		var parts = DiisisEditorUtil.get_split_address(start_address)
-		for address in selected_addresses:
+		for address in data_at_depth:
 			indices.append(parts[1] + i)
-			data_by_index[parts[1] + i] = clipboard.get(address)
+			data_by_index[parts[1] + i] = data_at_depth.get(address)
 			i += 1
+		prints("adding lines ", indices, " - ", data_by_index)
 		add_lines(indices, data_by_index)
 
-	data_to_delete = DiisisEditorUtil.sort_addresses(data_to_delete)
-	data_to_delete.reverse()
-	for data_address in data_to_delete:
-		Pages.delete_data_from_address(data_address)
-	for object in objects_to_delete:
-		object.request_delete()
+	#data_to_delete = DiisisEditorUtil.sort_addresses(data_to_delete)
+	#data_to_delete.reverse()
+	#for data_address in data_to_delete:
+		#Pages.delete_data_from_address(data_address)
+	#for object in objects_to_delete:
+		#object.request_delete()

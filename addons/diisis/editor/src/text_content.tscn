@@ -12,6 +12,7 @@ theme = ExtResource("1_6al0s")
 script = ExtResource("1_uudox")
 
 [node name="DialogSyntaxContainer" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 
 [node name="UseDialogSyntaxButton" type="CheckBox" parent="DialogSyntaxContainer"]
@@ -37,7 +38,7 @@ layout_mode = 2
 
 [node name="TextBox" type="TextEdit" parent="."]
 clip_contents = true
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0

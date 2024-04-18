@@ -43,7 +43,7 @@ func deserialize(data: Dictionary):
 	
 
 func set_page_view(view:DiisisEditor.PageView):
-	find_child("DialogSyntaxContainer").visible = view != DiisisEditor.PageView.Minimal
+	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full
 	var tb : TextEdit = find_child("TextBox")
 	match view:
 		DiisisEditor.PageView.Full:

@@ -121,6 +121,7 @@ func serialize() -> Dictionary:
 	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
 	data["meta.indent_level"] = indent_level
+	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
 	
 	# content match
 	match line_type:
@@ -138,6 +139,7 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	# line type
 	set_line_type(data.get("line_type"))
+	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	
 	# header
 	find_child("FactsVisibilityToggle").button_pressed = data.get("meta.facts_visible", false)
