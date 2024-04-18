@@ -27,6 +27,7 @@ func deserialize(data:Dictionary):
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
 	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
+	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	
 	set_do_jump_page(data.get("do_jump_page", false))
 	
@@ -40,7 +41,8 @@ func serialize():
 		"target_page": find_child("PageSelect").value,
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
-		"do_jump_page": do_jump_page
+		"do_jump_page": do_jump_page,
+		"meta.selector" : find_child("AddressSelectActionContainer").serialize()
 	}
 
 func set_page_view(view:DiisisEditor.PageView):
@@ -84,6 +86,9 @@ func update():
 	find_child("IndexLabel").text = str(get_index())
 	find_child("UpButton").disabled = get_index() <= 0
 	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
+
+func set_selected(value:bool):
+	find_child("AddressSelectActionContainer").set_selected(value)
 
 func add_fact(fact_name: String, fact_value: bool):
 	var facts = $VBoxContainer2/HBoxContainer/Facts

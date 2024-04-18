@@ -99,3 +99,21 @@ func set_auto_switch(value: bool):
 
 func _on_auto_switch_button_pressed() -> void:
 	set_auto_switch(find_child("AutoSwitchButton").button_pressed)
+
+func set_all_items_selected(value:bool):
+	for c : ChoiceEdit in find_child("ChoiceList").get_children():
+		c.set_selected(value)
+
+func _on_select_index_pressed(index: int) -> void:
+	match index:
+		1: # keep others selected
+			set_all_items_selected(true)
+		2: # drop other selections
+			for container in get_tree().get_nodes_in_group("diisis_choice_container"):
+				container.set_all_items_selected(false)
+			set_all_items_selected(true)
+		4: # drop all selections here
+			set_all_items_selected(false)
+		5: # drop all selections everywhere
+			for container in get_tree().get_nodes_in_group("diisis_choice_container"):
+				container.set_all_items_selected(false)

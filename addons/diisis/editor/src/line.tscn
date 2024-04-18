@@ -54,8 +54,9 @@ layout_mode = 2
 [node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_k7b5x")]
+[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
 layout_mode = 2
+status_panels = [NodePath("../../../PanelContainer"), NodePath("../../../..")]
 
 [node name="MetaControls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 visible = false
@@ -86,24 +87,23 @@ layout_mode = 2
 
 [node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-columns = 5
-
-[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "+^+"
+columns = 2
 
 [node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "^"
 
+[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "+^+"
+
 [node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 
 [node name="Spacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 auto_translate_mode = 1
-visible = false
 layout_mode = 2
 
 [node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
@@ -225,8 +225,8 @@ layout_mode = 2
 
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/VisibleToggle" to="." method="_on_visible_toggle_toggled"]
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/LockToggle" to="." method="_on_lock_toggle_toggled"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveUp" to="." method="_on_move_up_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveDown" to="." method="_on_move_down_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineBelow" to="." method="_on_insert_line_below_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls/MoveToIndexButton" to="." method="_on_move_to_index_button_pressed"]

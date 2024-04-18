@@ -3,6 +3,7 @@ extends CenterContainer
 class_name AddressSelectActionContainer
 
 @export var address_depth := DiisisEditorUtil.AddressDepth.Line
+@export var status_panels : Array[PanelContainer] = []
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -12,12 +13,14 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data:Dictionary):
-	find_child("SelectCheckBox").button_pressed = data.get("selected")
+	set_selected(data.get("selected", false))
 
 func is_selected() -> bool:
 	return find_child("SelectCheckBox").button_pressed
 
 func set_selected(value:bool):
+	for panel in status_panels:
+		panel.self_modulate.a = 5.0 if value else 1.0
 	if find_child("SelectCheckBox").button_pressed != value:
 		find_child("SelectCheckBox").button_pressed = value
 

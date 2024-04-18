@@ -138,13 +138,13 @@ func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
 func delete_fact_local(address:String, target:int, fact_name:String):
 	operate_local_fact(address, target, "delete", fact_name)
 
-func add_choice_item(item_address:String):
+func add_choice_item(item_address:String, choice_data:={}):
 	var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
 	var target_line : Line = DiisisEditorUtil.get_node_at_address(target_line_address)
 	var parts := DiisisEditorUtil.get_split_address(item_address)
 	var cache:Array=cached_choice_items.get(target_line_address, [])
-	var data := {}
-	if not cache.is_empty():
+	var data := choice_data
+	if not cache.is_empty() and choice_data.is_empty():
 		data = cache.pop_back()
 		cached_choice_items[target_line_address] = cache
 	target_line.add_choice_item(parts[2], data)
@@ -216,13 +216,11 @@ func move_choice_item(item_address:String, direction:int):
 func copy(depth:int, single_address_override := "") -> Array:
 	var selected_addresses := get_selected_addresses(depth)
 	if not single_address_override.is_empty():
-		print("using override")
 		selected_addresses = [single_address_override]
 
 	var data_at_depth := {}
 	for address in selected_addresses:
 		data_at_depth[address] = Pages.get_data_from_address(address)
-		prints("adding data from ", address)
 	clipboard[depth] = data_at_depth
 	
 	return selected_addresses
@@ -269,18 +267,29 @@ func insert_from_clipboard(start_address:String):
 	
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
 	var data_at_depth = clipboard.get(insert_depth, {})
-	print(data_at_depth.keys())
+	var start_address_parts = DiisisEditorUtil.get_split_address(start_address)
 	if insert_depth == DiisisEditorUtil.AddressDepth.Line:
 		var indices := []
 		var data_by_index := {}
 		var i := 0
-		var parts = DiisisEditorUtil.get_split_address(start_address)
 		for address in data_at_depth:
-			indices.append(parts[1] + i)
-			data_by_index[parts[1] + i] = data_at_depth.get(address)
+			indices.append(start_address_parts[1] + i)
+			data_by_index[start_address_parts[1] + i] = data_at_depth.get(address)
 			i += 1
-		prints("adding lines ", indices, " - ", data_by_index)
+	#prints("adding lines ", indices, " - ", data_by_index)
+	
 		add_lines(indices, data_by_index)
+	elif insert_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+		var i := 0
+		for address in data_at_depth:
+			var new_address = str(
+				start_address_parts[0], ".",
+				start_address_parts[1], ".",
+				start_address_parts[2] + i,
+				
+			)
+			add_choice_item(new_address, data_at_depth.get(address))
+			i += 1
 
 	#data_to_delete = DiisisEditorUtil.sort_addresses(data_to_delete)
 	#data_to_delete.reverse()

@@ -62,20 +62,22 @@ tooltip_text = "terminates the page, stopping the parser from reading the next o
 focus_mode = 0
 text = "terminate"
 
-[node name="Facts" parent="." node_paths=PackedStringArray("add_button", "facts_container") instance=ExtResource("2_eeb01")]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="LineSelector" type="CheckBox" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+focus_mode = 0
+
+[node name="Facts" parent="HBoxContainer" node_paths=PackedStringArray("add_button", "facts_container") instance=ExtResource("2_eeb01")]
 layout_mode = 2
 add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
-
-[node name="Controls" type="HBoxContainer" parent="."]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="Add" type="Button" parent="Controls"]
-layout_mode = 2
-focus_mode = 0
-text = "add line"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -103,4 +105,4 @@ mouse_filter = 2
 [connection signal="toggled" from="Info/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
 [connection signal="value_changed" from="Info/NextContainer/NextLineEdit" to="." method="_on_next_line_edit_value_changed"]
 [connection signal="toggled" from="Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]
-[connection signal="pressed" from="Controls/Add" to="." method="_on_add_pressed"]
+[connection signal="toggled" from="HBoxContainer/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]

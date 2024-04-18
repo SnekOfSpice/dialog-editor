@@ -172,6 +172,8 @@ func deserialize(data: Dictionary):
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 	set_head_editable(button_pressed)
 
+func set_selected(value:bool):
+	find_child("AddressSelectActionContainer").set_selected(value)
 
 func _on_delete_pressed() -> void:
 	request_delete()

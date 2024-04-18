@@ -45,6 +45,7 @@ func serialize() -> Dictionary:
 	data["meta.scroll_vertical"] = find_child("ScrollContainer").scroll_vertical
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	data["facts"] = find_child("Facts").serialize()
+	data["meta.selected"] = find_child("LineSelector").button_pressed
 	
 	var lines_data := []
 	for c in find_child("Lines").get_children():
@@ -63,6 +64,7 @@ func deserialize(data: Dictionary):
 	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines"))
 	find_child("Facts").deserialize(data.get("facts", {}))
+	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -456,3 +458,7 @@ func _on_next_line_edit_value_changed(value: float) -> void:
 
 func _on_terminate_check_toggled(toggled_on: bool) -> void:
 	find_child("NextContainer").visible = not toggled_on
+
+func _on_line_selector_toggled(toggled_on: bool) -> void:
+	for line : Line in find_child("Lines").get_children():
+		line.set_selected(toggled_on)

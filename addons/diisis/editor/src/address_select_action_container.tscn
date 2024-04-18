@@ -12,6 +12,7 @@ layout_mode = 2
 [node name="SelectCheckBox" type="CheckBox" parent="HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+focus_mode = 0
 
 [node name="MenuBar" type="MenuBar" parent="HBoxContainer"]
 layout_mode = 2

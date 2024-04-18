@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/choice_container.gd" id="1_22qh4"]
 
-[node name="ChoiceContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
+[node name="ChoiceContainer" type="VBoxContainer" groups=["diisis_choice_container", "page_view_sensitive"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,6 +12,25 @@ script = ExtResource("1_22qh4")
 
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="Controls"]
+layout_mode = 2
+
+[node name="Select" type="PopupMenu" parent="Controls/MenuBar"]
+item_count = 6
+item_0/text = "Select all items in this choice and..."
+item_0/separator = true
+item_1/text = "Keep other choice items selected"
+item_1/id = 1
+item_2/text = "Drop selections in other choices"
+item_2/id = 2
+item_3/text = "Drop all choice selections in..."
+item_3/id = 3
+item_3/separator = true
+item_4/text = "This Choice"
+item_4/id = 4
+item_5/text = "All Choices"
+item_5/id = 5
 
 [node name="AddButton" type="Button" parent="Controls"]
 custom_minimum_size = Vector2(40, 40)
@@ -34,6 +53,7 @@ text = "auto switch"
 [node name="ChoiceList" type="VBoxContainer" parent="."]
 layout_mode = 2
 
+[connection signal="index_pressed" from="Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
 [connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="Controls/JumpPageButton" to="." method="_on_jump_page_button_pressed"]
 [connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]
