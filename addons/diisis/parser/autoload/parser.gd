@@ -187,18 +187,7 @@ func get_game_progress(full_if_on_last_page:= true) -> float:
 	var page_index_used_for_calc := page_index
 	var line_index_used_for_calc := line_index
 	
-#	if FileAccess.file_exists(save_file_path):
-#		var file = FileAccess.open(save_file_path, FileAccess.READ)
-#
-#		var data : Dictionary = JSON.parse_string(file.get_as_text())
-#		file.close()
-#
-#		var parser_data = data.get("Parser", {})
-#
-#		page_index_used_for_calc = int(parser_data.get("Parser.page_index", 0))
-#		line_index_used_for_calc = int(parser_data.get("Parser.line_index", 0))
-	
-	
+
 	if max_line_index_used_for_calc <= 0:
 		return 0.0
 	
@@ -286,8 +275,8 @@ func deserialize(data: Dictionary):
 	line_index = int(data.get("Parser.line_index", 0))
 	apply_facts(data.get("Parser.facts", {}))
 	history = data.get("Parser.history", [])
-	var line_reader_data = data.get("Parser.line_reader", {})
-	if line_reader_data == {}:
+	var line_reader_data : Dictionary = data.get("Parser.line_reader", {})
+	if line_reader_data.is_empty():
 		read_page(page_index, line_index)
 	else:
 		line_reader.deserialize(line_reader_data)

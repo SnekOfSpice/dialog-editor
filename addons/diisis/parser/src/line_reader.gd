@@ -363,6 +363,12 @@ func advance():
 	else:
 		emit_signal("line_finished", line_index)
 
+func interrupt():
+	pass
+
+func continue_after_interrupt():
+	pass
+
 func instruction_completed():
 	emit_signal("line_finished", line_index)
 

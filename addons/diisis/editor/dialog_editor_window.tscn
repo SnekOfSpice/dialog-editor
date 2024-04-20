@@ -6,9 +6,9 @@
 [node name="DialogEditorWindow" type="Window"]
 title = "DIISIS"
 initial_position = 2
-size = Vector2i(795, 367)
+size = Vector2i(895, 507)
 transient = true
-min_size = Vector2i(795, 367)
+min_size = Vector2i(895, 507)
 script = ExtResource("1_d4u1q")
 
 [node name="Editor" parent="." instance=ExtResource("2_4owra")]
