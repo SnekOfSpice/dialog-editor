@@ -15,15 +15,14 @@ func add_lines(indices:Array, data_by_index:={}):
 		Pages.editor.add_page(0)
 	
 	for i in indices:
-		# what is this for again??
-		if cached_lines.has(Pages.editor.current_page.number):
-			var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.current_page.number)
-			var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
-			if not cached_lines_at_index.is_empty() and data_by_index.get(i) == null:
-				var data = cached_lines_at_index.pop_back()
-				cached_lines_on_page[i] = cached_lines_at_index
-				cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
-				data_by_index[i] = data
+		var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.get_current_page_number(), {})
+		var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
+		prints("data at index is ", data_by_index.get(i))
+		if not cached_lines_at_index.is_empty() and data_by_index.get(i, null) == null:
+			var data = cached_lines_at_index.pop_back()
+			cached_lines_on_page[i] = cached_lines_at_index
+			cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
+			data_by_index[i] = data
 		
 	Pages.editor.current_page.add_lines(indices, data_by_index)
 	
