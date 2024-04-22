@@ -110,7 +110,8 @@ var name_container: Control:
 			update_configuration_warnings()
 
 @export_group("Optional References")
-## Node that has vars and funcs to evaluate in dynamic Strings.
+## Node that has vars and funcs to evaluate in dynamic Strings. All functions within
+## this node have to return a [String] (can be empty).
 @export var inline_evaluator: Node
 
 
