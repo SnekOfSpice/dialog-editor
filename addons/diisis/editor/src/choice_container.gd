@@ -117,3 +117,7 @@ func _on_select_index_pressed(index: int) -> void:
 		5: # drop all selections everywhere
 			for container in get_tree().get_nodes_in_group("diisis_choice_container"):
 				container.set_all_items_selected(false)
+		6:
+			for container in get_tree().get_nodes_in_group("diisis_choice_container"):
+				if not container == self:
+					container.set_all_items_selected(false)

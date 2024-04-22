@@ -198,6 +198,8 @@ func update():
 	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
+	if line_type == DIISIS.LineType.Choice:
+		find_child("ChoiceContainer").update()
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:

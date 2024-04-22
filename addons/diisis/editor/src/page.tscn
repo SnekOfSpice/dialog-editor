@@ -71,7 +71,10 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
 [node name="LineSelector" type="CheckBox" parent="HBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
 focus_mode = 0
 
 [node name="Facts" parent="HBoxContainer" node_paths=PackedStringArray("add_button", "facts_container") instance=ExtResource("2_eeb01")]

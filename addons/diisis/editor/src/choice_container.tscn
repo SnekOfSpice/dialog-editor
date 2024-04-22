@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://btcdvjuk2ku18"]
+[gd_scene load_steps=7 format=3 uid="uid://btcdvjuk2ku18"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/choice_container.gd" id="1_22qh4"]
 [ext_resource type="Texture2D" uid="uid://bfj2h1pk5gj5j" path="res://addons/diisis/editor/visuals/helpZeichenfläche 8.png" id="2_6u1sp"]
 [ext_resource type="Texture2D" uid="uid://c385ybtobabdb" path="res://addons/diisis/editor/visuals/helpZeichenfläche 9.png" id="3_u4gig"]
 [ext_resource type="Texture2D" uid="uid://ctg7s4q3jhcgg" path="res://addons/diisis/editor/visuals/helpZeichenfläche 10.png" id="4_arn3v"]
 [ext_resource type="Texture2D" uid="uid://btw7w3aypt2nc" path="res://addons/diisis/editor/visuals/helpZeichenfläche 11.png" id="5_6apmx"]
+[ext_resource type="Texture2D" uid="uid://hve0bgnfaxmq" path="res://addons/diisis/editor/visuals/halfchoice.png" id="6_iqpwk"]
 
 [node name="ChoiceContainer" type="VBoxContainer" groups=["diisis_choice_container", "page_view_sensitive"]]
 anchors_preset = 15
@@ -21,7 +22,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Select" type="PopupMenu" parent="Controls/MenuBar"]
-item_count = 6
+item_count = 7
 item_0/text = "Select all items in this choice and..."
 item_0/separator = true
 item_1/text = "Keep other choice items selected"
@@ -39,6 +40,9 @@ item_4/id = 4
 item_5/text = "All Choices"
 item_5/icon = ExtResource("5_6apmx")
 item_5/id = 5
+item_6/text = "Other Choices"
+item_6/icon = ExtResource("6_iqpwk")
+item_6/id = 6
 
 [node name="AddButton" type="Button" parent="Controls"]
 custom_minimum_size = Vector2(40, 40)

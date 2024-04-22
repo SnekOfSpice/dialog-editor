@@ -138,25 +138,42 @@ func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
 func delete_fact_local(address:String, target:int, fact_name:String):
 	operate_local_fact(address, target, "delete", fact_name)
 
-func add_choice_item(item_address:String, choice_data:={}):
-	var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
-	var target_line : Line = DiisisEditorUtil.get_node_at_address(target_line_address)
-	var parts := DiisisEditorUtil.get_split_address(item_address)
-	var cache:Array=cached_choice_items.get(target_line_address, [])
-	var data := choice_data
-	if not cache.is_empty() and choice_data.is_empty():
-		data = cache.pop_back()
-		cached_choice_items[target_line_address] = cache
-	target_line.add_choice_item(parts[2], data)
+func add_choice_items(item_addresses:Array, choice_data_by_address:={}):
+	item_addresses = DiisisEditorUtil.sort_addresses(item_addresses)
+	for item_address in item_addresses:
+		var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
+		var target_line : Line = DiisisEditorUtil.get_node_at_address(target_line_address)
+		var parts := DiisisEditorUtil.get_split_address(item_address)
+		var cache:Array=cached_choice_items.get(target_line_address, [])
+		var data := choice_data_by_address.get(item_address, {})
+		if not cache.is_empty() and data.is_empty():
+			data = cache.pop_back()
+			cached_choice_items[target_line_address] = cache
+		target_line.add_choice_item(parts[2], data)
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
 
+func add_choice_item(item_address:String, choice_data:={}):
+	add_choice_items([item_address], {item_address:choice_data})
+
+func delete_choice_items(item_addresses:Array):
+	item_addresses = DiisisEditorUtil.sort_addresses(item_addresses)
+	item_addresses.reverse()
+	for item_address in item_addresses:
+		var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
+		var item = DiisisEditorUtil.get_node_at_address(item_address)
+		var data = item.serialize()
+		var cache :Array= cached_choice_items.get(line_address, [])
+		cache.append(data)
+		cached_choice_items[line_address] = cache
+		item.queue_free()
+	
+	await get_tree().process_frame
+	Pages.editor.current_page.update()
+	
 func delete_choice_item(item_address:String):
-	var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
-	var item = DiisisEditorUtil.get_node_at_address(item_address)
-	var data = item.serialize()
-	var cache :Array= cached_choice_items.get(line_address, [])
-	cache.append(data)
-	cached_choice_items[line_address] = cache
-	item.queue_free()
+	delete_choice_items([item_address])
 
 func move_choice_item(item_address:String, direction:int):
 	var level := DiisisEditorUtil.get_address_depth(item_address)
@@ -278,22 +295,33 @@ func insert_from_clipboard(start_address:String):
 			i += 1
 	#prints("adding lines ", indices, " - ", data_by_index)
 	
-		add_lines(indices, data_by_index)
+		var undo_redo = Pages.editor.undo_redo
+		undo_redo.create_action("Paste Lines")
+		indices.sort()
+		undo_redo.add_do_method(add_lines.bind(indices, data_by_index))
+		indices.reverse()
+		undo_redo.add_undo_method(delete_lines.bind(indices))
+		
+		# restore in ascending index order
+
+		
+		undo_redo.commit_action()
 	elif insert_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
 		var i := 0
+		var addresses := []
+		var data_by_address := {}
 		for address in data_at_depth:
 			var new_address = str(
 				start_address_parts[0], ".",
 				start_address_parts[1], ".",
 				start_address_parts[2] + i,
-				
 			)
-			add_choice_item(new_address, data_at_depth.get(address))
+			addresses.append(new_address)
+			data_by_address[new_address] = data_at_depth.get(address)
 			i += 1
-
-	#data_to_delete = DiisisEditorUtil.sort_addresses(data_to_delete)
-	#data_to_delete.reverse()
-	#for data_address in data_to_delete:
-		#Pages.delete_data_from_address(data_address)
-	#for object in objects_to_delete:
-		#object.request_delete()
+		
+		var undo_redo = Pages.editor.undo_redo
+		undo_redo.create_action("Paste Choice Items")
+		undo_redo.add_do_method(add_choice_items.bind(addresses, data_by_address))
+		undo_redo.add_undo_method(delete_choice_items.bind(addresses))
+		undo_redo.commit_action()

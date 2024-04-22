@@ -26,11 +26,11 @@ func clear():
 		c.queue_free()
 
 func add_fact(fact_name: String, fact_value: bool):
-	var facts = $Facts
+	var facts = find_child("Facts")
 	facts.add_fact(fact_name, fact_value)
 
 func delete_fact(fact_name:String):
-	var facts = $Facts
+	var facts = find_child("Facts")
 	facts.delete_fact(fact_name)
 
 func save():
