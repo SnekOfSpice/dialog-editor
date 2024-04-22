@@ -4,7 +4,14 @@ extends Control
 var addresses_by_index := {}
 var details_by_address := {}
 
+var last_search_query := ""
+
+func init():
+	find_child("GoToButton").text = str("Go To")
+	find_child("ReplaceContainer").visible = false
+	
 func display_results(search:String):
+	find_child("ReplaceContainer").visible = false
 	var result = Pages.search_string(search)
 	var item_list:ItemList = find_child("ItemList")
 	item_list.clear()
@@ -25,14 +32,62 @@ func display_results(search:String):
 			item_list.add_item(address)
 	
 	find_child("NoResultsLabel").visible = not find_child("GoToButton").visible
+
+
+func request_replace_local():
+	last_search_query = find_child("QueryTextEdit").text
+	var address = find_child("ItemList").get_item_text(find_child("ItemList").get_selected_items()[0])
+	var replace_str = find_child("ReplaceTextEdit").text
 	
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Replace Text Local")
+	undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str))
+	undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query))
+	undo_redo.commit_action()
+	
+	display_results(last_search_query)
+	find_child("ResultLabel").text = ""
+	find_child("GoToButton").text = "Go To"
+
+func request_replace_all():
+	pass
+
+func request_replace_all_in_type():
+	var start_selection : int = find_child("ItemList").get_selected_items()[0]
+	var addresses_in_type := [find_child("ItemList").get_item_text(start_selection)]
+	var i := start_selection - 1
+	while i >= 0 and find_child("ItemList").is_item_selectable(i):
+		addresses_in_type.append(find_child("ItemList").get_item_text(i))
+		i -= 1
+	i = start_selection + 1
+	while i < find_child("ItemList").get_item_count() and find_child("ItemList").is_item_selectable(i):
+		addresses_in_type.append(find_child("ItemList").get_item_text(i))
+		i += 1
+	
+	last_search_query = find_child("QueryTextEdit").text
+	var replace_str = find_child("ReplaceTextEdit").text
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Replace Text In Type")
+	undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str))
+	undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query))
+	undo_redo.commit_action()
+	
+	display_results(last_search_query)
+	find_child("ResultLabel").text = ""
+	find_child("GoToButton").text = "Go To"
 
 func _on_search_button_pressed() -> void:
-	display_results(find_child("QueryTextEdit").text)
+	last_search_query = find_child("QueryTextEdit").text
+	display_results(last_search_query)
 
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
-	find_child("ResultLabel").text = str(details_by_address.get(address))
+	var details : String = str("[color=#adaca9]", details_by_address.get(address), "[/color]")
+	details = details.replace(last_search_query, str("[color=#f8f6f8][b]", last_search_query, "[/b][/color]"))
+	find_child("ResultLabel").text = details
+	
+	find_child("GoToButton").text = str("Go To ", address)
+	find_child("ReplaceContainer").visible = true
 
 
 func _on_go_to_button_pressed() -> void:

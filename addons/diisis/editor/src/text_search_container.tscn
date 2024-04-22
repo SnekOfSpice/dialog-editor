@@ -31,6 +31,31 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Search"
 
+[node name="ReplaceContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ReplaceTextEdit" type="TextEdit" parent="VBoxContainer/ReplaceContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ReplaceContainer"]
+layout_mode = 2
+
+[node name="ReplaceLocallyButton" type="Button" parent="VBoxContainer/ReplaceContainer/VBoxContainer"]
+layout_mode = 2
+text = "Replace"
+
+[node name="ReplaceAllInTypeButton" type="Button" parent="VBoxContainer/ReplaceContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Replace All In Type"
+
+[node name="ReplaceAllButton" type="Button" parent="VBoxContainer/ReplaceContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Replace All"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -55,7 +80,11 @@ size_flags_vertical = 3
 [node name="ResultLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+bbcode_enabled = true
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SearchButton" to="." method="_on_search_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceLocallyButton" to="." method="request_replace_local"]
+[connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceAllInTypeButton" to="." method="request_replace_all_in_type"]
+[connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceAllButton" to="." method="request_replace_all"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]

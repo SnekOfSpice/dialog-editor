@@ -343,7 +343,7 @@ func _on_file_index_pressed(index: int) -> void:
 			if active_dir.is_empty():
 				open_save_popup()
 				return
-			save_to_file(active_dir)
+			save_to_file(str(active_dir, active_file_name))
 		1: # save as
 			open_save_popup()
 		2:

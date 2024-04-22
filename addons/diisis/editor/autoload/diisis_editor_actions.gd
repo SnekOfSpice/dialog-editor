@@ -324,3 +324,35 @@ func insert_from_clipboard(start_address:String):
 		undo_redo.add_do_method(add_choice_items.bind(addresses, data_by_address))
 		undo_redo.add_undo_method(delete_choice_items.bind(addresses))
 		undo_redo.commit_action()
+
+func replace_line_content_texts(line_addresses:Array, what:String, with:String):
+	var pages_to_operate_on := {}
+	for address in line_addresses:
+		var parts = DiisisEditorUtil.get_split_address(address)
+		if pages_to_operate_on.has(parts[0]):
+			var lines : Array = pages_to_operate_on.get(parts[0])
+			lines.append(parts[1])
+		else:
+			pages_to_operate_on[parts[0]] = [parts[1]]
+	for n in pages_to_operate_on.keys():
+		var page = Pages.page_data.get(n, {})
+		var lines : Array = page.get("lines", [])
+		var lines_to_operate_on : Array = pages_to_operate_on.get(n)
+		var i := 0
+		while i < lines.size():
+			if not lines_to_operate_on.has(i):
+				i += 1
+				continue
+			var line = lines[i]
+			if line.get("line_type") == DIISIS.LineType.Text:
+				var content : String = line.get("content").get("content")
+				content = content.replace(what, with)
+				line["content"]["content"] = content
+			i += 1
+	
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
+
+func replace_line_content_text(line_address:String, what:String, with:String):
+	replace_line_content_texts([line_address], what, with)
