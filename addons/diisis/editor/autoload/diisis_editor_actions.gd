@@ -292,7 +292,6 @@ func insert_from_clipboard(start_address:String):
 			indices.append(start_address_parts[1] + i)
 			data_by_index[start_address_parts[1] + i] = data_at_depth.get(address)
 			i += 1
-	#prints("adding lines ", indices, " - ", data_by_index)
 	
 		var undo_redo = Pages.editor.undo_redo
 		undo_redo.create_action("Paste Lines")
@@ -300,11 +299,15 @@ func insert_from_clipboard(start_address:String):
 		undo_redo.add_do_method(add_lines.bind(indices, data_by_index))
 		indices.reverse()
 		undo_redo.add_undo_method(delete_lines.bind(indices))
-		
-		# restore in ascending index order
-
-		
 		undo_redo.commit_action()
+		
+		var addresses := []
+		for j in indices:
+			addresses.append(str(Pages.editor.get_current_page_number(), ".", j))
+		for address in addresses:
+			var object : Line = DiisisEditorUtil.get_node_at_address(address)
+			object.set_selected(false)
+		
 	elif insert_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
 		var i := 0
 		var addresses := []
@@ -324,6 +327,10 @@ func insert_from_clipboard(start_address:String):
 		undo_redo.add_do_method(add_choice_items.bind(addresses, data_by_address))
 		undo_redo.add_undo_method(delete_choice_items.bind(addresses))
 		undo_redo.commit_action()
+		
+		for address in addresses:
+			var object : ChoiceEdit = DiisisEditorUtil.get_node_at_address(address)
+			object.set_selected(false)
 
 func replace_line_content_texts(line_addresses:Array, what:String, with:String):
 	var pages_to_operate_on := {}

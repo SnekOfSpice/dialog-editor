@@ -1,149 +1,163 @@
-[gd_scene load_steps=6 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=7 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="2_6aqyr"]
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="2_616tk"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_bcn4k"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0ndw"]
+bg_color = Color(0, 0, 0, 0.064)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.10891, 0.00364763, 0.0790583, 1)
+border_blend = true
+
 [sub_resource type="ButtonGroup" id="ButtonGroup_ennve"]
 
-[node name="ChoiceEdit" type="HBoxContainer" groups=["page_view_sensitive"]]
-offset_right = 1152.0
-offset_bottom = 135.0
+[node name="ChoiceEdit" type="PanelContainer" groups=["page_view_sensitive"]]
+offset_right = 898.0
+offset_bottom = 167.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_g0ndw")
 script = ExtResource("1_2jptq")
 
-[node name="AddressSelectActionContainer" parent="." instance=ExtResource("2_616tk")]
+[node name="ChoiceEdit" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="AddressSelectActionContainer" parent="ChoiceEdit" node_paths=PackedStringArray("status_panels") instance=ExtResource("2_616tk")]
 layout_mode = 2
 address_depth = 2
+status_panels = [NodePath("../..")]
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="ChoiceEdit"]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Delete" type="Button" parent="MarginContainer"]
+[node name="Delete" type="Button" parent="ChoiceEdit/MarginContainer"]
 custom_minimum_size = Vector2(37.05, 38.68)
 layout_mode = 2
 size_flags_vertical = 0
 text = "X"
 
-[node name="MoveChoiceItemContainer" type="MarginContainer" parent="."]
+[node name="MoveChoiceItemContainer" type="MarginContainer" parent="ChoiceEdit"]
 custom_minimum_size = Vector2(32.665, 0)
 layout_mode = 2
 
-[node name="ItemMoveButtons" type="GridContainer" parent="MoveChoiceItemContainer"]
+[node name="ItemMoveButtons" type="GridContainer" parent="ChoiceEdit/MoveChoiceItemContainer"]
 layout_mode = 2
 
-[node name="UpButton" type="Button" parent="MoveChoiceItemContainer/ItemMoveButtons"]
+[node name="UpButton" type="Button" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 text = "^"
 
-[node name="IndexLabel" type="Label" parent="MoveChoiceItemContainer/ItemMoveButtons"]
+[node name="IndexLabel" type="Label" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
-[node name="DownButton" type="Button" parent="MoveChoiceItemContainer/ItemMoveButtons"]
+[node name="DownButton" type="Button" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 text = "v"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ConditionalVisibilityToggle" type="CheckButton" parent="VBoxContainer2/VBoxContainer"]
+[node name="ConditionalVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = "conditionals"
 
-[node name="JumpPageToggle" type="CheckBox" parent="VBoxContainer2/VBoxContainer"]
+[node name="JumpPageToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = "jump page"
 
-[node name="FactsVisibilityToggle" type="CheckButton" parent="VBoxContainer2/VBoxContainer"]
+[node name="FactsVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
 focus_mode = 0
 text = "facts"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Conditionals" parent="VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_6aqyr")]
+[node name="Conditionals" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_6aqyr")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/ConditionalVisibilityToggle")
 address_depth = 2
 add_button = NodePath("VBoxContainer/Controls/AddConditionButton")
 facts_container = NodePath("VBoxContainer/FactsContainer")
 
-[node name="TextLines" type="GridContainer" parent="VBoxContainer2/HBoxContainer"]
+[node name="TextLines" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 columns = 2
 
-[node name="DefaultButtonEnabled" type="CheckBox" parent="VBoxContainer2/HBoxContainer/TextLines"]
+[node name="DefaultButtonEnabled" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/TextLines"]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
 button_group = SubResource("ButtonGroup_ennve")
 text = "default: enabled"
 
-[node name="LineEditEnabled" type="LineEdit" parent="VBoxContainer2/HBoxContainer/TextLines"]
+[node name="LineEditEnabled" type="LineEdit" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/TextLines"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="DefaultButtonDisabled" type="CheckBox" parent="VBoxContainer2/HBoxContainer/TextLines"]
+[node name="DefaultButtonDisabled" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/TextLines"]
 layout_mode = 2
 focus_mode = 0
 button_group = SubResource("ButtonGroup_ennve")
 text = "default: disabled"
 
-[node name="LineEditDisabled" type="LineEdit" parent="VBoxContainer2/HBoxContainer/TextLines"]
+[node name="LineEditDisabled" type="LineEdit" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/TextLines"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="JumpPageContainer" type="MarginContainer" parent="VBoxContainer2/HBoxContainer"]
+[node name="JumpPageContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_right = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer/JumpPageContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
 layout_mode = 2
 
-[node name="PageSelect" type="SpinBox" parent="VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+[node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PageKeyLabel" type="Label" parent="VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+[node name="PageKeyLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Facts" parent="VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_bcn4k")]
+[node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_bcn4k")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/FactsVisibilityToggle")
 address_depth = 2
 add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
-[connection signal="pressed" from="MarginContainer/Delete" to="." method="_on_delete_pressed"]
-[connection signal="pressed" from="MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
-[connection signal="pressed" from="MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
-[connection signal="pressed" from="VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_pressed"]
-[connection signal="value_changed" from="VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
+[connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="ChoiceEdit" method="_on_delete_pressed"]
+[connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="ChoiceEdit" method="_on_up_button_pressed"]
+[connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="ChoiceEdit" method="_on_down_button_pressed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="ChoiceEdit" method="_on_jump_page_toggle_pressed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/PageSelect" to="ChoiceEdit" method="_on_page_select_value_changed"]

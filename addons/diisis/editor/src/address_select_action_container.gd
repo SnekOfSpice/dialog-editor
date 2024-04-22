@@ -2,7 +2,7 @@
 extends CenterContainer
 class_name AddressSelectActionContainer
 
-@export var address_depth := DiisisEditorUtil.AddressDepth.Line
+@export var address_depth : int = DiisisEditorUtil.AddressDepth.Line
 @export var status_panels : Array[PanelContainer] = []
 
 func serialize() -> Dictionary:

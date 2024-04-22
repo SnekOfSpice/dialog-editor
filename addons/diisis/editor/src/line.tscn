@@ -12,10 +12,10 @@
 [ext_resource type="PackedScene" uid="uid://dt4yhnj3n5k5m" path="res://addons/diisis/editor/src/folder_container.tscn" id="9_23thg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5f2i"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
+bg_color = Color(0.66, 0.529, 0.561, 0.033)
 border_width_left = 5
 border_width_top = 4
-border_color = Color(0.192157, 0.00392157, 0.156863, 1)
+border_color = Color(0.518909, 0.032135, 0.437566, 0.827)
 border_blend = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ynk1p"]

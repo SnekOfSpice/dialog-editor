@@ -294,11 +294,6 @@ func _ready() -> void:
 func on_fact_change(fact_name:String, old:bool, new:bool):
 	printt(fact_name, old, new)
 
-func handle_event(event_name: String, event_args: Dictionary):
-	match event_name:
-		"fact_changed":
-			print(event_args)
-
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
 func get_preferences() -> Dictionary:
 	var prefs = {}
@@ -422,7 +417,7 @@ func read_new_line(new_line: Dictionary):
 	
 	# register facts
 	var facts = line_data.get("facts", {}).get("values", {})
-#	printt(line_type, facts)
+	
 	for f in facts.keys():
 		Parser.change_fact(f, facts.get(f))
 	
@@ -496,11 +491,11 @@ func update_limit_line_count(lines: Array):
 	while i < lines.size():
 		var line:String = lines[i]
 		var words := Array(line.split(" "))
-		#words.reverse()
+		
 		var subline : String = ""
 		
-		var line_height : int = font.get_string_size(line, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size).y
-		printt(words, line_height)
+		var line_height : int = font.get_string_size(str(lines), HORIZONTAL_ALIGNMENT_CENTER, -1, font_size).y
+		
 		while not words.is_empty():
 			var line_size : Vector2 = font.get_multiline_string_size(subline, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
 			var next_word = ""
@@ -508,11 +503,6 @@ func update_limit_line_count(lines: Array):
 				next_word = words.pop_front() + " "
 				line_size = font.get_multiline_string_size(subline + next_word, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
 				
-				if line_size.y > line_height * max_text_line_count:
-					new_lines.append(subline)
-					new_actors.append(dialog_actors[i])
-					subline = next_word
-					break
 				if words.is_empty():
 					if line_size.y <= line_height * max_text_line_count:
 						subline += next_word
@@ -522,10 +512,16 @@ func update_limit_line_count(lines: Array):
 					new_actors.append(dialog_actors[i])
 					subline = ""
 					break
+				
+				if line_size.y > line_height * max_text_line_count:
+					new_lines.append(subline)
+					new_actors.append(dialog_actors[i])
+					subline = next_word
+					break
+				
 				subline += next_word
 		i += 1
-		#printt(line_size, line_height)
-	#printt(font_size, font)
+		
 	dialog_lines = new_lines
 	dialog_actors = new_actors
 
@@ -545,7 +541,6 @@ func _process(delta: float) -> void:
 	if Parser.paused:
 		return
 	
-#	printt("vis:", text_content.visible_characters, " chunk end:", get_end_of_chunk_position())
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
 	if text_content.visible_characters < get_end_of_chunk_position():
@@ -591,7 +586,7 @@ func _process(delta: float) -> void:
 	characters_visible_so_far = new_characters_visible_so_far
 	
 	last_visible_ratio = text_content.visible_ratio
-#	prints("auto pause dir ", remaining_auto_pause_duration)
+	
 	if auto_continue:
 		if not line_type == DIISIS.LineType.Text:
 			return
@@ -678,13 +673,12 @@ func start_showing_text():
 
 func replace_var_func_tags(lines):
 	if not inline_evaluator:
-		push_warning("No InlineEvaluator has been set. Calls to <var:> and <func:> won't be parsed.")
+		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, and <name:> won't be parsed.")
 		return lines
 	var i := 0
 	var result := []
 	while i < lines.size():
 		var new_text:String = lines[i]
-		# replace var and func calls
 		var scan_index := 0
 		var text_length := new_text.length()
 		while scan_index < text_length:
@@ -730,6 +724,22 @@ func replace_var_func_tags(lines):
 						if not a.is_empty():
 							func_args.append(a)
 					new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
+				elif new_text.find("<name:", scan_index) == scan_index:
+					var local_scan_index := scan_index
+					var control_to_replace := ""
+					var name_key := ""
+					var start_reading_name_key := false
+					while new_text[local_scan_index] != ">":
+						control_to_replace += new_text[local_scan_index]
+						if start_reading_name_key:
+							name_key += new_text[local_scan_index]
+						if new_text[local_scan_index] == ":":
+							start_reading_name_key = true
+						local_scan_index += 1
+					name_key = name_key.trim_suffix(">")
+					control_to_replace += ">"
+					new_text = new_text.replace(control_to_replace,name_map.get(name_key, name_key))
+				
 			
 			text_length = new_text.length()
 			scan_index += 1

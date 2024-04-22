@@ -6,13 +6,14 @@ var active_actors := [] # list of character names
 var active_actors_title := ""
 var selected_actor_dropdown_index := 0
 
-var control_sequences := ["lc", "ap", "mp", "var", "func"]
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name"]
 var control_sequence_hints := {
 	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
 	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
 	"mp": "Manual Pause: Pauses the reading of text until the player clicks.",
 	"var": "<var:var_name>\n\nEvaluate any variable (will get inserted as its String representation).",
 	"func": "<func:func_name>\n<func:func_name,arg0,arg1>\n\nCall a function (It should return a String). Can take in arbitrary amounts of arguments, but the arguments must match the function signature of the respective func in the evaluator (obv).",
+	"name": "<name:name_map_entry>"
 }
 
 func init() -> void:
@@ -163,7 +164,7 @@ func position_hint_at_caret(hint: Window):
 
 
 func _on_control_sequence_hint_item_chosen(item_name) -> void:
-	if item_name == "var" or item_name == "func":
+	if item_name in ["var", "func", "name"]:
 		find_child("TextBox").insert_text_at_caret(str(item_name, ":>"))
 		find_child("TextBox").set_caret_column(find_child("TextBox").get_caret_column() - 1)
 	else:
