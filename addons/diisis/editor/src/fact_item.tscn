@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bhjckv7pd2eri"]
+[gd_scene load_steps=3 format=3 uid="uid://bhjckv7pd2eri"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/fact_item.gd" id="1_kk40s"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="2_ehjrn"]
 
 [node name="Fact" type="VBoxContainer"]
 offset_right = 289.0
@@ -24,6 +25,8 @@ size_flags_vertical = 8
 custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_mode = 1
+mouse_force_pass_scroll_events = false
 placeholder_text = "fact name"
 expand_to_text_length = true
 
@@ -49,8 +52,14 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 text = "register"
 
+[node name="ReadHint" parent="." instance=ExtResource("2_ehjrn")]
+visible = false
+
 [connection signal="pressed" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_pressed"]
 [connection signal="toggled" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_toggled"]
+[connection signal="focus_entered" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_focus_entered"]
+[connection signal="focus_exited" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_focus_exited"]
+[connection signal="gui_input" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_gui_input"]
 [connection signal="text_changed" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_text_changed"]
 [connection signal="pressed" from="FactItem/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="RegisterContainer/RegisterButton" to="." method="_on_register_button_pressed"]

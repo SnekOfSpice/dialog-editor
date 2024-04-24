@@ -24,6 +24,9 @@ func init() -> void:
 	set_use_dialog_syntax(true)
 	set_page_view(Pages.editor.get_selected_page_view())
 	
+	for window : Window in find_child("Hints").get_children():
+		window.text_input.connect(handle_text_input_from_hint)
+	
 func serialize() -> Dictionary:
 	var result := {}
 	
@@ -41,7 +44,14 @@ func deserialize(data: Dictionary):
 	active_actors_title = data.get("active_actors_title", "")
 	selected_actor_dropdown_index = data.get("selected_actor_dropdown_index", 0)
 	set_use_dialog_syntax(data.get("use_dialog_syntax", false))
-	
+
+func handle_text_input_from_hint(window: Window, event:InputEvent):
+	#if event is InputEventKey:
+		#var event_label := OS.get_keycode_string(event.key_label)
+		#if "QWERTZUIOPASDFGHJKLÖÄÜYXCVBNM".contains(event_label):
+			#find_child("TextBox").text += event_label.to_lower()
+			#find_child("TextBox").set_caret_column(find_child("TextBox").get_line_width(find_child("TextBox").get_caret_line()))
+	position_hint_at_caret(window)
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full

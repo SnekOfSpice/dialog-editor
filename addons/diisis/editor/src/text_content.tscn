@@ -12,7 +12,6 @@ theme = ExtResource("1_6al0s")
 script = ExtResource("1_uudox")
 
 [node name="DialogSyntaxContainer" type="HBoxContainer" parent="."]
-visible = false
 layout_mode = 2
 
 [node name="UseDialogSyntaxButton" type="CheckBox" parent="DialogSyntaxContainer"]
@@ -38,10 +37,10 @@ layout_mode = 2
 
 [node name="TextBox" type="TextEdit" parent="."]
 clip_contents = true
-custom_minimum_size = Vector2(0, 25)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 3
 placeholder_text = "enter text here"
 wrap_mode = 1
 autowrap_mode = 2
@@ -49,19 +48,21 @@ scroll_fit_content_height = true
 caret_blink = true
 caret_multiple = false
 
-[node name="DialogActorHint" parent="." instance=ExtResource("3_8xrow")]
+[node name="Hints" type="Node" parent="."]
+
+[node name="DialogActorHint" parent="Hints" instance=ExtResource("3_8xrow")]
 position = Vector2i(0, 36)
 visible = false
 
-[node name="ControlSequenceHint" parent="." instance=ExtResource("3_8xrow")]
+[node name="ControlSequenceHint" parent="Hints" instance=ExtResource("3_8xrow")]
 position = Vector2i(0, 36)
 visible = false
 
-[node name="DialogArgumentHint" parent="." instance=ExtResource("3_8xrow")]
+[node name="DialogArgumentHint" parent="Hints" instance=ExtResource("3_8xrow")]
 position = Vector2i(0, 36)
 visible = false
 
-[node name="DialogArgumentValueHint" parent="." instance=ExtResource("3_8xrow")]
+[node name="DialogArgumentValueHint" parent="Hints" instance=ExtResource("3_8xrow")]
 position = Vector2i(0, 36)
 visible = false
 
@@ -70,10 +71,10 @@ visible = false
 [connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]
 [connection signal="text_changed" from="TextBox" to="." method="_on_text_box_text_changed"]
-[connection signal="about_to_close" from="DialogActorHint" to="." method="type_hint_about_to_close"]
-[connection signal="item_chosen" from="DialogActorHint" to="." method="_on_dialog_actor_hint_item_chosen"]
-[connection signal="item_chosen" from="ControlSequenceHint" to="." method="_on_control_sequence_hint_item_chosen"]
-[connection signal="about_to_close" from="DialogArgumentHint" to="." method="type_hint_about_to_close"]
-[connection signal="item_chosen" from="DialogArgumentHint" to="." method="_on_dialog_argument_hint_item_chosen"]
-[connection signal="about_to_close" from="DialogArgumentValueHint" to="." method="type_hint_about_to_close"]
-[connection signal="item_chosen" from="DialogArgumentValueHint" to="." method="_on_dialog_argument_value_hint_item_chosen"]
+[connection signal="about_to_close" from="Hints/DialogActorHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="Hints/DialogActorHint" to="." method="_on_dialog_actor_hint_item_chosen"]
+[connection signal="item_chosen" from="Hints/ControlSequenceHint" to="." method="_on_control_sequence_hint_item_chosen"]
+[connection signal="about_to_close" from="Hints/DialogArgumentHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="Hints/DialogArgumentHint" to="." method="_on_dialog_argument_hint_item_chosen"]
+[connection signal="about_to_close" from="Hints/DialogArgumentValueHint" to="." method="type_hint_about_to_close"]
+[connection signal="item_chosen" from="Hints/DialogArgumentValueHint" to="." method="_on_dialog_argument_value_hint_item_chosen"]

@@ -313,6 +313,7 @@ func open_popup(popup:Window):
 		return
 	Pages.editor.refresh()
 	popup.popup()
+	popup.grab_focus()
 
 
 func _on_setup_index_pressed(index: int) -> void:

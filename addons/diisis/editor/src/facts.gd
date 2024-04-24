@@ -107,7 +107,7 @@ func get_address_suffixed() -> String:
 	return address
 
 func request_add_fact():
-	var fact_name = str("newfact", Pages.facts.keys().size())
+	var fact_name = ""
 	var address := get_address_suffixed()
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Add Fact")

@@ -3,6 +3,7 @@ extends Window
 
 signal item_chosen(item_name)
 signal about_to_close()
+signal text_input(hint_window: Window, event:InputEvent)
 
 var item_descriptions := {}
 var selected_index := 0
@@ -32,9 +33,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		emit_signal("about_to_close")
 		emit_signal("close_requested")
-	if event.is_action_pressed("ui_accept"):
+	elif event.is_action_pressed("ui_accept"):
 		emit_signal("item_chosen", find_child("ItemList").get_item_text(selected_index))
 		emit_signal("close_requested")
+	else:
+		emit_signal("text_input", self, event)
 
 func _on_close_requested() -> void:
 	hide()
