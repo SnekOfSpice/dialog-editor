@@ -16,9 +16,9 @@ var head_defaults := [
 ]
 
 
-var dropdowns := {"dropdown1": ["0", "1"], "dropdown2": ["a", "b"]}
-var dropdown_titles := ["dropdown1", "dropdown2"]
-var dropdown_dialog_arguments := []
+var dropdowns := {"dropdown1": ["00", "01"], "dropdown2": ["a", "b"], "dd3": ["arg1", "arg2"]}
+var dropdown_titles := ["dropdown1", "dropdown2", "dd3"]
+var dropdown_dialog_arguments := ["dd3"]
 
 var facts := {}
 

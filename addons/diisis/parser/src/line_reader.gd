@@ -10,7 +10,9 @@ const MAX_TEXT_SPEED := 101
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
 ## The delay that <ap> tags imply, in seconds.
 @export var auto_pause_duration := 0.2
-## Disables input-based calls of [code]avance()[/code]. Instead, when hitting the end of a line or <mp> tag, LineReader will wait [code]auto_continue_delay[/code] seconds until continuing automatically.
+## Disables input-based calls of [method advance].
+## Instead, when hitting the end of a line or <mp> tag, LineReader
+## will wait [param auto_continue_delay] seconds until continuing automatically.
 @export var auto_continue := false:
 	set(value):
 		auto_continue = value
@@ -18,12 +20,23 @@ const MAX_TEXT_SPEED := 101
 ## Time before the line reader automatically continues, in seconds.
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
 var auto_continue_duration:= auto_continue_delay
+## If [code]0[/code], [param text_content] will be filled as far as possible.
+## Breaks will be caused by <lc> tags, 
+## a [TextContent] with [param TextContent.use_dialog_syntax] enabled, and a
+## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
+## If set to more than [code]0[/code], the text will additionally be split to
+## ensure it never runs more than that amount of lines. [br]
+## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
+## throw this alignment off.
 @export var max_text_line_count:=0
 @export var block_advance_during_choices:=true
 
 @export_subgroup("Choices")
+## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_choices := false
-## Button scene that gets
+## Button scene that gets instantiated as children of [param choice_option_container].[br]
+## If left unassigned, will use a default button.[br]
+## If overridden, it must inherit from [class ChoiceButton].
 @export var button_scene:ChoiceButton
 
 @export_subgroup("Advance")
