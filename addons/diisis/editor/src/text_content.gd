@@ -2,6 +2,7 @@
 extends Control
 class_name TextContent
 
+const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
 var use_dialog_syntax := false
 var active_actors := [] # list of character names
 var active_actors_title := ""
@@ -46,8 +47,11 @@ func init() -> void:
 	for window : Window in find_child("Hints").get_children():
 		window.text_input.connect(handle_text_input_from_hint)
 	
-	var a : PackedStringArray = [">", "{"]
-	a.append_array(active_actors)
+	# these are  the symbols that need to wrap any position where code completion
+	# should be able to be triggered /on both sides/
+	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":"]
+	for actor in active_actors:
+		a.append(actor[actor.length() - 1])
 	text_box.code_completion_prefixes = a
 	
 func serialize() -> Dictionary:
@@ -95,8 +99,11 @@ func set_page_view(view:DiisisEditor.PageView):
 			text_box.scroll_fit_content_height = false
 
 
-func _input(event: InputEvent) -> void:
-	pass
+var caret_movement_to_do := 0
+func _process(delta: float) -> void:
+	if caret_movement_to_do != 0:
+		move_caret(caret_movement_to_do)
+		caret_movement_to_do = 0
 
 func insert(control_sequence: String):
 	match control_sequence:
@@ -125,8 +132,73 @@ func _on_use_dialog_syntax_button_toggled(button_pressed: bool) -> void:
 #		c.queue_free()
 	
 	# TODO active actor stuff
-	
 
+func get_word_under_caret() -> String:
+	var line := text_box.get_line(text_box.get_caret_line())
+	var start_position := text_box.get_caret_column()
+	var i := start_position-1
+	var character_at_position := line[i]
+	var word := ""
+	while not (character_at_position in WORD_SEPARATORS) and i >= 0:
+		character_at_position = line[i]
+		if character_at_position in WORD_SEPARATORS:
+			break
+		word = character_at_position + word
+		
+		i -= 1
+	i = start_position + 1
+	while not (character_at_position in WORD_SEPARATORS) and i < line.length():
+		character_at_position = line[i]
+		if character_at_position in WORD_SEPARATORS:
+			break
+		word += character_at_position
+		
+		i += 1
+	
+	return word
+
+func _find_position_under_caret(back_to_front:bool) -> int:
+	var line := text_box.get_line(text_box.get_caret_line())
+	var start_position := text_box.get_caret_column()
+	var found_position:int
+	if back_to_front:
+		found_position = -1
+	else:
+		found_position = line.length()
+	for separator in WORD_SEPARATORS:
+		var separator_position:int
+		if back_to_front:
+			separator_position = line.rfind(separator, start_position)
+			if separator_position > found_position:
+				found_position = separator_position
+		else:
+			separator_position = line.find(separator, start_position)
+			if separator_position < found_position and separator_position != -1:
+				found_position = separator_position
+	return found_position
+
+func get_start_position_of_word_under_caret() -> int:
+	return _find_position_under_caret(true)
+
+func get_end_position_of_word_under_caret() -> int:
+	return _find_position_under_caret(false)
+
+func get_separator_character_before_word_under_caret() -> String:
+	var line := text_box.get_line(text_box.get_caret_line())
+	var pos := get_start_position_of_word_under_caret()
+	if pos == -1:
+		return ""
+	return line[pos]
+
+func get_separator_character_after_word_under_caret() -> String:
+	var line := text_box.get_line(text_box.get_caret_line())
+	var pos := get_end_position_of_word_under_caret()
+	if pos == line.length():
+		return ""
+	return line[pos]
+
+func is_current_line_empty():
+	return text_box.get_line(text_box.get_caret_line()).is_empty()
 
 func _on_text_box_caret_changed() -> void:
 	if text_box.get_caret_column() == 0:
@@ -135,33 +207,89 @@ func _on_text_box_caret_changed() -> void:
 			build_actor_hint()
 	
 	var lines := text_box.text.split("\n")
-	var break_full := false
+	#var break_full := false
 	var i := 0
 	#for line in lines:
 	var line := lines[text_box.get_caret_line()]
 	#for actor in active_actors:
 		#text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, actor, actor)
+	
+	var full_actor_before_caret := false
+	for actor:String in active_actors:
+		if get_text_before_caret(actor.length()) == actor:
+			full_actor_before_caret = true
+			break
+	prints("is full actor before caret", full_actor_before_caret)
+	# I think the prefixes cannot be normal characters, they have to be ;:() etc??
+	#if full_actor_before_caret and get_separator_character_after_word_under_caret() == ":":
+		#print("full")
+		#for arg in Pages.dropdown_dialog_arguments:
+			#text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str("{", arg, "|}"))
+		#text_box.update_code_completion_options(true)
 	if get_text_before_caret(3) == "[]>":
 		for actor in active_actors:
-			text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, actor, str(actor, ":"))
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, ":"))
 		print("actor completion")
 		text_box.update_code_completion_options(true)
-		break_full  = true
-	if get_text_before_caret(1) == "{":
+		#break_full  = true
+	elif get_text_before_caret(1) == "{":
 		for actor in Pages.dropdown_dialog_arguments:
-			text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, actor, str(actor, ":"))
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, "|}"))
 		print("dropdown_dialog_arguments completion")
 		text_box.update_code_completion_options(true)
-		break_full  = true
-		
-	if get_text_before_caret(1) == "{":
-		print("yeag")
-		for arg in ["fuck", "this"]:
-			var s = arg
-			text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, s, str(s, ":"))
+		#break_full  = true
+	elif get_text_before_caret(1) == "," and get_text_after_caret(1) == "}":
+		var used_args = get_used_dialog_args_in_line()
+		for arg in Pages.dropdown_dialog_arguments:
+			if arg in used_args:
+				continue
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
+		print("dropdown_dialog_arguments completion")
 		text_box.update_code_completion_options(true)
-		break_full  = true
+	elif get_text_before_caret(1) == "<":
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>"]:
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
+		text_box.update_code_completion_options(true)
+	elif get_text_before_caret(1) == "|":
+		prints("ARGS", Pages.dropdowns.get(auto_complete_context, []), ".", auto_complete_context)
+		for a in Pages.dropdowns.get(auto_complete_context, []):
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
+		text_box.update_code_completion_options(true)
+	elif full_actor_before_caret and get_text_after_caret(1) == ":":
+		prints("hi", text_box.code_completion_prefixes)
+		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, "a", "a")
+		text_box.update_code_completion_options(true)
+	elif is_text_before_caret(":") and is_text_after_caret(">"):
+		print("tag")
 	
+	return
+	#print(get_word_under_caret())
+	if get_word_under_caret() in active_actors:
+		print("over actor rn")
+		if get_separator_character_after_word_under_caret() == ":":
+			if get_end_position_of_word_under_caret() == text_box.get_caret_column():
+				print(text_box.code_completion_prefixes)
+				for arg in ["arg", "arg1"]:
+					print("argssss")
+					var s = arg
+					text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, s, str(s, ":"))
+					text_box.add_code_completion_option(CodeEdit.KIND_CLASS, s, str(s, ":"))
+					text_box.add_code_completion_option(CodeEdit.KIND_CONSTANT, s, str(s, ":"))
+					text_box.add_code_completion_option(CodeEdit.KIND_FILE_PATH, s, str(s, ":"))
+					text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, s, str(s, ":"))
+					text_box.add_code_completion_option(CodeEdit.KIND_VARIABLE, s, str(s, ":"))
+				print(text_box.get_code_completion_options())
+				text_box.update_code_completion_options(true)
+				print(text_box.get_code_completion_options())
+	
+	else:
+		for actor : String in active_actors:
+			if line.begins_with(str("[]>", actor, ":")):
+				for each_f in ["hg", "ggfh"]:
+					text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, each_f, each_f)
+				text_box.update_code_completion_options(true)
+	return
+	print(text_box.get_code_completion_options())
 	for actor : String in active_actors:
 		if not text_box.code_completion_prefixes.has(actor):
 			#prints("new prefix", actor)
@@ -181,6 +309,29 @@ func _on_text_box_caret_changed() -> void:
 			#print(i)
 			#break
 		#i += 1
+
+func get_used_dialog_args_in_line() -> Array:
+	var line : String = text_box.get_line(text_box.get_caret_line())
+	if not line.begins_with("[]>"):
+		return []
+	if not line.contains("}:"):
+		return []
+	
+	var beginning := line.split(":")[0]
+	beginning = beginning.trim_prefix("[]>")
+	for actor in active_actors:
+		beginning = beginning.trim_prefix(actor)
+	beginning = beginning.trim_prefix("{")
+	beginning = beginning.trim_suffix("}")
+	var arg_pairs := beginning.split(",")
+	var args := []
+	for pair in arg_pairs:
+		if not pair.contains("|"):
+			continue
+		var arg_name = pair.split("|")[0]
+		args.append(arg_name)
+	
+	return args
 
 func build_actor_hint():
 	#return
@@ -313,3 +464,33 @@ func _on_dialog_argument_value_hint_item_chosen(item_name) -> void:
 func type_hint_about_to_close():
 	# move caret to end of line
 	text_box.set_caret_column(text_box.get_line(text_box.get_caret_line()).length())
+
+func is_text_before_caret(what:String):
+	return get_text_before_caret(what.length()) == what
+
+func is_text_after_caret(what:String):
+	return get_text_after_caret(what.length()) == what
+
+var auto_complete_context := ""
+
+func _on_text_box_code_completion_requested() -> void:
+	print(".........................request auticorre")
+	
+			
+			
+	prints("available args", Pages.dropdown_dialog_arguments)
+	for arg_name in Pages.dropdown_dialog_arguments:
+		if is_text_before_caret(str(arg_name, "|}")):
+			auto_complete_context = arg_name
+			#caret_movement_to_do = -1
+			print("befre")
+		else:
+			print("hbfghdfjg")
+	
+		caret_movement_to_do = -1
+
+	for control in ["func", "name", "var"]:
+		if is_text_before_caret(str("<", control, ":>")):
+			prints("before cartet", control)
+			caret_movement_to_do = -1
+			auto_complete_context = control

@@ -5,6 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="3_8xrow"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
+number_color = Color(0.976822, 0.706174, 0.89807, 1)
+symbol_color = Color(0.863144, 5.31363e-05, 0.655125, 1)
+function_color = Color(0.747536, 0.121441, 0.22022, 1)
+member_variable_color = Color(0.323408, 0.685104, 0.939903, 1)
 
 [node name="TextContent" type="VBoxContainer" groups=["page_view_sensitive"]]
 offset_right = 40.0
@@ -43,6 +47,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 14
 placeholder_text = "enter text here"
 wrap_mode = 1
 autowrap_mode = 2
@@ -74,6 +79,7 @@ visible = false
 [connection signal="toggled" from="DialogSyntaxContainer/UseDialogSyntaxButton" to="." method="_on_use_dialog_syntax_button_toggled"]
 [connection signal="item_selected" from="DialogSyntaxContainer/DialogSyntaxControls/HBoxContainer/DropDownForActors" to="." method="_on_drop_down_for_actors_item_selected"]
 [connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
+[connection signal="code_completion_requested" from="TextBox" to="." method="_on_text_box_code_completion_requested"]
 [connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]
 [connection signal="text_changed" from="TextBox" to="." method="_on_text_box_text_changed"]
 [connection signal="about_to_close" from="Hints/DialogActorHint" to="." method="type_hint_about_to_close"]
