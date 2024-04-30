@@ -1,8 +1,11 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://addons/diisis/editor/visuals/fonts/Fragmentcore.otf" id="1_2td53"]
 [ext_resource type="FontFile" uid="uid://cj0gnvw2fkuo" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Light.otf" id="2_0vdkv"]
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/fonts/textfont.tres" id="3_8wpuc"]
+[ext_resource type="FontFile" uid="uid://db4qvjd2nptp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial DemiBold.otf" id="4_tmw8r"]
+[ext_resource type="FontFile" uid="uid://dlvqsstudstck" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Regular.otf" id="5_lpck6"]
+[ext_resource type="Texture2D" uid="uid://bdmep4e76l0yy" path="res://addons/diisis/editor/visuals/spinx4.png" id="6_7kwpp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5foo6"]
 bg_color = Color(0.0794575, 0.0327925, 0.0782667, 1)
@@ -63,16 +66,6 @@ shadow_color = Color(0, 0, 0, 0.45098)
 shadow_size = 2
 shadow_offset = Vector2(5.275, 9.4)
 
-[sub_resource type="Gradient" id="Gradient_7koe6"]
-offsets = PackedFloat32Array(0, 0.221429, 0.446429, 1)
-colors = PackedColorArray(0.780392, 0.364706, 0.27451, 1, 0.68932, 0.505857, 0.679585, 0.623529, 0.487773, 0.174068, 0.463985, 1, 0.961667, 0.54, 1, 0.192157)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_acwas"]
-gradient = SubResource("Gradient_7koe6")
-width = 14
-height = 20
-fill = 2
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f0tga"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.709804)
 border_width_left = 1
@@ -104,7 +97,10 @@ MarginContainer/constants/margin_bottom = 3
 MarginContainer/constants/margin_left = 3
 MarginContainer/constants/margin_right = 3
 MarginContainer/constants/margin_top = 3
+MenuBar/fonts/font = ExtResource("4_tmw8r")
 Panel/styles/panel = SubResource("StyleBoxFlat_diu3x")
-SpinBox/icons/updown = SubResource("GradientTexture2D_acwas")
+PopupMenu/fonts/font = ExtResource("5_lpck6")
+PopupMenu/fonts/font_separator = ExtResource("4_tmw8r")
+SpinBox/icons/updown = ExtResource("6_7kwpp")
 TextEdit/fonts/font = ExtResource("3_8wpuc")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_f0tga")

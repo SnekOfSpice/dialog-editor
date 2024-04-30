@@ -57,10 +57,8 @@ func serialize() -> Dictionary:
 	return data
 
 func deserialize(data: Dictionary):
-	set_page_key(data.get("page_key"))
-	if not data.get("next"):
-		data["next"] = number+1
-	set_next(int(data.get("next")))
+	set_page_key(data.get("page_key", "")) 
+	set_next(int(data.get("next", number+1)))
 	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines"))
 	find_child("Facts").deserialize(data.get("facts", {}))
