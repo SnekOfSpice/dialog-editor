@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ceoicybbk4rjn"]
+
+[ext_resource type="PackedScene" uid="uid://cvek8s1fxdfmt" path="res://addons/diisis/editor/src/file_config_container.tscn" id="1_7a7dg"]
+[ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_popup.gd" id="1_pdew5"]
+
+[node name="FileConfigPopup" type="Window"]
+initial_position = 2
+wrap_controls = true
+script = ExtResource("1_pdew5")
+
+[node name="FileConfigContainer" parent="." instance=ExtResource("1_7a7dg")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

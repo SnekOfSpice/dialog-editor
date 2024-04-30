@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvek8s1fxdfmt"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_container.gd" id="1_yn2ca"]
+
+[node name="FileConfigContainer" type="Control"]
+auto_translate_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yn2ca")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+item_count = 1
+item_0/text = "Evaluators"
+
+[node name="ContentContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EvaluatorContainer" type="PanelContainer" parent="HBoxContainer/ContentContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/ContentContainer/EvaluatorContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
+layout_mode = 2
+text = "- file paths to nodes that are inline_evaluators of any LineReader
+- ending in .tscn or .gd
+- formatted like \"res://src/game/evaluator.gd\""
+
+[node name="EvaluatorSortButton" type="Button" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+text = "sort A-Z"
+
+[node name="EvaluatorLabel" type="TextEdit" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveEvaluatorChangesButton" type="Button" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "save changes"
+
+[node name="ResetEvaluatorChangesButton" type="Button" parent="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "reset changes"
+
+[connection signal="item_selected" from="HBoxContainer/ScrollContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorLabel" to="." method="_on_evaluator_label_text_changed"]
+[connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/SaveEvaluatorChangesButton" to="." method="_on_save_evaluator_changes_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/ResetEvaluatorChangesButton" to="." method="_on_reset_evaluator_changes_button_pressed"]

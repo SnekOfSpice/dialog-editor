@@ -60,10 +60,46 @@ var editor:DiisisEditor
 # data: {}
 var page_data := {}
 
-#var page_count := 0
-
+var evaluator_paths := ["res://sample/inline_eval.gd"]
 
 signal pages_modified
+
+func serialize() -> Dictionary:
+	return {
+		"head_defaults" : head_defaults,
+		"page_data" : page_data,
+		"instruction_templates": instruction_templates,
+		"facts": facts,
+		"dropdowns": dropdowns,
+		"dropdown_titles": dropdown_titles,
+		"dropdown_dialog_arguments": dropdown_dialog_arguments,
+		"file_config": get_file_config()
+	}
+
+func deserialize(data:Dictionary):
+	# all keys are now strings instead of ints
+	var int_data = {}
+	var local_page_data = data.get("page_data")
+	for i in local_page_data.size():
+		var where = int(local_page_data.get(str(i)).get("number"))
+		int_data[where] = local_page_data.get(str(i)).duplicate()
+	
+	page_data.clear()
+	page_data = int_data.duplicate()
+	head_defaults = data.get("head_defaults", [])
+	instruction_templates = data.get("instruction_templates", [])
+	if data.get("facts") is Array:
+		var compat_facts := {}
+		for f in data.get("facts"):
+			compat_facts[f] = true
+		facts = compat_facts
+	else:
+		facts = data.get("facts", {})
+	dropdowns = data.get("dropdowns", {})
+	dropdown_titles = data.get("dropdown_titles", [])
+	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
+	
+	apply_file_config(data.get("file_config", {}))
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -101,7 +137,7 @@ func swap_pages(page_a: int, page_b: int):
 	page_data[page_a] = data_b
 	page_data[page_b] = data_a
 	
-	
+
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
@@ -160,6 +196,14 @@ func get_line_type(page_index:int, line_index:int) -> int:
 	var page = page_data.get(page_index, {})
 	var lines = page.get("lines")
 	return int(lines[line_index].get("line_type"))
+
+func apply_file_config(data:Dictionary):
+	evaluator_paths = data.get("evaluator_paths", [])
+
+func get_file_config() -> Dictionary:
+	return {
+		"evaluator_paths":evaluator_paths
+	}
 
 func get_line_type_str(page_index:int, line_index:int) -> String:
 	var line_type = get_line_type(page_index, line_index)
@@ -684,7 +728,85 @@ func does_address_exist(address:String) -> bool:
 
 func delete_fact(fact:String):
 	alter_fact(fact)
+
+func get_evaluator_methods() -> Array:
+	var methods := []
+	for evaluator : String in evaluator_paths:
+		var script_methods:Array
+		if evaluator.ends_with(".tscn"):
+			var n = load(evaluator)
+			if not n:
+				push_warning(str("Couldn't load", evaluator))
+				continue
+			var s = n.get_script()
+			if not s:
+				push_warning(str("Couldn't get script on", evaluator))
+				continue
+			script_methods = s.get_script_method_list()
+			n.queue_free()
+		elif evaluator.ends_with(".gd"):
+			var n = load(evaluator)
+			if not n:
+				push_warning(str("Couldn't load", evaluator))
+				continue
+			script_methods = n.get_script_method_list()
+		else:
+			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
+			continue
+		
+		for method in script_methods:
+			if not methods.has(method.get("name")):
+				methods.append(method.get("name"))
 	
+	var base = Node.new()
+	var base_methods = base.get_method_list()
+	for method in base_methods:
+		methods.erase(method.get("name"))
+	base.queue_free()
+	
+	methods.erase("execute")
+	methods.erase("wrapper_execute")
+	return methods
+
+func get_evaluator_properties() -> Array:
+	var methods := []
+	for evaluator : String in evaluator_paths:
+		var script_methods:Array
+		if evaluator.ends_with(".tscn"):
+			var n = load(evaluator)
+			if not n:
+				push_warning(str("Couldn't load", evaluator))
+				continue
+			var s = n.get_script()
+			if not s:
+				push_warning(str("Couldn't get script on", evaluator))
+				continue
+			script_methods = s.get_script_property_list()
+			n.queue_free()
+		elif evaluator.ends_with(".gd"):
+			var n = load(evaluator)
+			if not n:
+				push_warning(str("Couldn't load", evaluator))
+				continue
+			script_methods = n.get_script_property_list()
+		else:
+			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
+			continue
+		
+		for method in script_methods:
+			if not methods.has(method.get("name")):
+				methods.append(method.get("name"))
+	
+	var base = Node.new()
+	var base_methods = base.get_property_list()
+	for method in base_methods:
+		methods.erase(method.get("name"))
+	base.queue_free()
+	for method : String in methods:
+		if method.ends_with(".gd") or method.ends_with(".tscn"):
+			methods.erase(method)
+	
+	return methods
 
 func search_string(substr:String):
 	var found_facts := {}

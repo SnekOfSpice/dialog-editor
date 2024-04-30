@@ -31,6 +31,26 @@ func refresh(serialize_before_load:=true):
 	load_page(cpn, not serialize_before_load)
 
 func init() -> void:
+	var n = Node.new()
+	var node_functions := n.get_method_list()
+	var node_functions_names := []
+	for f in node_functions:
+		node_functions_names.append(f.get("name"))
+	var handler_functions :Array= load("res://sample/Handler.gd").get_script_method_list()
+	var handler_functions_names := []
+	for f in handler_functions:
+		handler_functions_names.append(f.get("name"))
+	n.queue_free()
+	var unique_functions := []
+	for f in handler_functions_names:
+		if not node_functions_names.has(f):
+			unique_functions.append(f)
+	node_functions_names.sort()
+	handler_functions_names.sort()
+	unique_functions.sort()
+	#print("\n".join(PackedStringArray(node_functions_names)))
+	#print("\n".join(PackedStringArray(handler_functions_names)))
+	print("\n".join(PackedStringArray(unique_functions)))
 	print("init editor")
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
@@ -193,22 +213,14 @@ func request_add_page(at:int):
 func open_save_popup():
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
-	open_popup(find_child("FDSave"))
+	open_popup(find_child("FDSave"), true)
 
 func save_to_file(path:String):
 	if current_page:
 		current_page.save()
 	
 	var file = FileAccess.open(path, FileAccess.WRITE)
-	var data_to_save = {
-		"head_defaults" : Pages.head_defaults,
-		"page_data" : Pages.page_data,
-		"instruction_templates": Pages.instruction_templates,
-		"facts": Pages.facts,
-		"dropdowns": Pages.dropdowns,
-		"dropdown_titles": Pages.dropdown_titles,
-		"dropdown_dialog_arguments": Pages.dropdown_dialog_arguments,
-	}
+	var data_to_save = Pages.serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	set_save_path(path)
@@ -226,27 +238,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 	
 	set_save_path(path)
 	
-	# all keys are now strings instead of ints
-	var int_data = {}
-	var page_data = data.get("page_data")
-	for i in page_data.size():
-		var where = int(page_data.get(str(i)).get("number"))
-		int_data[where] = page_data.get(str(i)).duplicate()
-	
-	Pages.page_data.clear()
-	Pages.page_data = int_data.duplicate()
-	Pages.head_defaults = data.get("head_defaults", [])
-	Pages.instruction_templates = data.get("instruction_templates", [])
-	if data.get("facts") is Array:
-		var compat_facts := {}
-		for f in data.get("facts"):
-			compat_facts[f] = true
-		Pages.facts = compat_facts
-	else:
-		Pages.facts = data.get("facts", {})
-	Pages.dropdowns = data.get("dropdowns", {})
-	Pages.dropdown_titles = data.get("dropdown_titles", [])
-	Pages.dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
+	Pages.deserialize(data)
 	
 	load_page(0, true)
 
@@ -307,10 +299,12 @@ func _on_toggle_search_button_pressed() -> void:
 		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND_FILL
 
 
-func open_popup(popup:Window):
+func open_popup(popup:Window, fit_to_size:=false):
 	if not popup:
 		push_warning("No popup set.")
 		return
+	if fit_to_size:
+		popup.size = size
 	Pages.editor.refresh()
 	popup.popup()
 	popup.grab_focus()
@@ -351,5 +345,7 @@ func _on_file_index_pressed(index: int) -> void:
 			# open
 			if active_dir != "":
 				get_node("FDSave").current_dir = active_dir
-			find_child("FDOpen").size = size
-			open_popup(find_child("FDOpen"))
+			open_popup(find_child("FDOpen"), true)
+		4:
+			# config
+			open_popup(find_child("FileConfigPopup"), true)

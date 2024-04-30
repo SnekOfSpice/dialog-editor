@@ -136,6 +136,7 @@ func _on_fact_name_gui_input(event: InputEvent) -> void:
 		text_in_hint = text_in_hint.replace("[b]", "")
 		text_in_hint = text_in_hint.replace("[/b]", "")
 		find_child("FactName").text = text_in_hint
+		_on_fact_name_text_changed(text_in_hint)
 		
 		await get_tree().process_frame
 		$ReadHint.hide()

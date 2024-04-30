@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bqrm52wm8b1cu"]
+[gd_scene load_steps=5 format=3 uid="uid://bqrm52wm8b1cu"]
 
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_bva4l"]
 [ext_resource type="Script" path="res://sample/sample_scene.gd" id="1_df3e1"]
 [ext_resource type="Script" path="res://sample/Handler.gd" id="2_kv7jx"]
+[ext_resource type="Script" path="res://sample/inline_eval.gd" id="4_traxq"]
 
 [node name="SampleScene" type="Control"]
 layout_mode = 3
@@ -83,3 +84,6 @@ text_container = NodePath("../Control/TextContainer")
 name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
 name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
 inline_evaluator = NodePath("../Handler")
+
+[node name="InlineEval" type="Node" parent="."]
+script = ExtResource("4_traxq")

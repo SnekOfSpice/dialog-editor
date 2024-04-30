@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=22 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
 [ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
+[ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -110,12 +111,16 @@ text = "Autosave in: 0"
 layout_mode = 2
 
 [node name="File" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
-item_count = 3
+item_count = 5
 item_0/text = "Save"
 item_1/text = "Save As..."
 item_1/id = 1
 item_2/text = "Open"
 item_2/id = 2
+item_3/id = 4
+item_3/separator = true
+item_4/text = "Config"
+item_4/id = 3
 
 [node name="Utility" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -461,6 +466,9 @@ visible = false
 [node name="InstructionDefinitionTimer" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
+
+[node name="FileConfigPopup" parent="." instance=ExtResource("19_rgmxs")]
+visible = false
 
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
