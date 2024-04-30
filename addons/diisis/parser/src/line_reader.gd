@@ -176,6 +176,7 @@ var started_word_buffer :=""
 var characters_visible_so_far := ""
 
 var last_visible_ratio := 0.0
+var visibilities_before_interrupt := {}
 
 signal line_reader_ready
 
@@ -372,11 +373,28 @@ func advance():
 	else:
 		emit_signal("line_finished", line_index)
 
-func interrupt():
-	pass
 
-func continue_after_interrupt():
-	pass
+## Pauses the Parser and hides all controls uif [param hide_controls] is [code]true[/code] (default). Useful for reacting to game events outside the line reader. [br]
+## [b]Call [method continue_after_interrupt] afterwards to cleanly resume.[/b]
+func interrupt(hide_controls:=true):
+	Parser.paused = true
+	if hide_controls:
+		for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+			visibilities_before_interrupt[key] = get(key).visible
+			get(key).visible = false
+
+
+## Call this after calling [method interrupt] to cleanly resume the reading of lines.[br]
+## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
+## [i]Currently not tested with input locks.[/i]
+## @experimental
+func continue_after_interrupt(read_page:=-1, read_line:=0):
+	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+		get(key).visible = visibilities_before_interrupt[key]
+	
+	if read_page != -1:
+		Parser.read_page(read_page, read_line)
+	Parser.paused = false
 
 func instruction_completed():
 	emit_signal("line_finished", line_index)
@@ -560,9 +578,12 @@ func _process(delta: float) -> void:
 		if text_speed == MAX_TEXT_SPEED:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
+			var old_text_length : int = text_content.visible_characters
 			text_content.visible_ratio += (float(text_speed) / text_content.text.length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
+			if old_text_length != text_content.visible_characters:
+				ParserEvents.visible_characters_changed.emit(old_text_length, text_content.visible_characters)
 	elif remaining_auto_pause_duration > 0 and next_pause_type == PauseTypes.Auto:
 		var last_dur = remaining_auto_pause_duration
 		remaining_auto_pause_duration -= delta
@@ -736,7 +757,10 @@ func replace_var_func_tags(lines):
 					for a in packed_func_args:
 						if not a.is_empty():
 							func_args.append(a)
-					new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
+					if inline_evaluator.has_method(func_name):
+						new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
+					else:
+						push_warning(str(func_name, " doesn't exist in inline_evaluator."))
 				elif new_text.find("<name:", scan_index) == scan_index:
 					var local_scan_index := scan_index
 					var control_to_replace := ""

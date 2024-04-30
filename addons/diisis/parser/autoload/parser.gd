@@ -78,7 +78,6 @@ func _ready() -> void:
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index:=0):
 	line_reader.terminated = false
-	line_reader.visible = true
 	paused = false
 	reset_facts()
 	read_page(start_page_index)

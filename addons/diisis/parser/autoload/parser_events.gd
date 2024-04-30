@@ -89,6 +89,12 @@ signal word_read(
 	word: String
 )
 
+## Emitted whenever [LineReader] advances text enough for one or more new characters to be visible in [member LineReader.text_content].
+signal visible_characters_changed(
+	old_amount:int,
+	new_amount:int,
+)
+
 ## Emitted when [InstructionHandler] receives an instruction.
 ## This will be on the same frame as [signal instruction_started_after_delay] if [param delay]
 ## is [code] 0.0[/code].

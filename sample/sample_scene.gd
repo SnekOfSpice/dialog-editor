@@ -10,3 +10,11 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			$LineReader.request_advance()
+
+
+func _on_interrupt_button_pressed() -> void:
+	$LineReader.interrupt()
+
+
+func _on_continue_button_pressed() -> void:
+	$LineReader.continue_after_interrupt()

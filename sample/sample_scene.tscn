@@ -87,3 +87,23 @@ inline_evaluator = NodePath("../Handler")
 
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("4_traxq")
+
+[node name="InterruptButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 921.0
+offset_top = 107.0
+offset_right = 962.0
+offset_bottom = 138.0
+text = "KILL"
+
+[node name="ContinueButton" type="Button" parent="."]
+auto_translate_mode = 1
+layout_mode = 0
+offset_left = 921.0
+offset_top = 194.0
+offset_right = 998.0
+offset_bottom = 225.0
+text = "continue"
+
+[connection signal="pressed" from="InterruptButton" to="." method="_on_interrupt_button_pressed"]
+[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
