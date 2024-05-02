@@ -50,9 +50,12 @@ text = "?"
 [node name="CodeEdit" type="CodeEdit" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+text = "show_character(character-name,clear-others)
+rotate_icon()
+"
 autowrap_mode = 2
-highlight_current_line = true
 syntax_highlighter = SubResource("CodeHighlighter_hv7t4")
+highlight_current_line = true
 line_folding = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true

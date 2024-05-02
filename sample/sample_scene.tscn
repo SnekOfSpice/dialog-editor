@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bqrm52wm8b1cu"]
+[gd_scene load_steps=6 format=3 uid="uid://bqrm52wm8b1cu"]
 
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_bva4l"]
 [ext_resource type="Script" path="res://sample/sample_scene.gd" id="1_df3e1"]
 [ext_resource type="Script" path="res://sample/Handler.gd" id="2_kv7jx"]
 [ext_resource type="Script" path="res://sample/inline_eval.gd" id="4_traxq"]
+[ext_resource type="Texture2D" uid="uid://vvvuc4ewukes" path="res://icon.svg" id="5_y8wyq"]
 
 [node name="SampleScene" type="Control"]
 layout_mode = 3
@@ -60,8 +61,9 @@ offset_bottom = 40.0
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/ChoiceContainer"]
 layout_mode = 2
 
-[node name="Handler" type="Node" parent="."]
+[node name="Handler" type="Node" parent="." node_paths=PackedStringArray("icon")]
 script = ExtResource("2_kv7jx")
+icon = NodePath("../Icon")
 
 [node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
 layout_mode = 1
@@ -72,7 +74,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_bva4l")
-max_text_line_count = 2
 name_map = {
 "cum": "Yippie"
 }
@@ -104,6 +105,10 @@ offset_top = 194.0
 offset_right = 998.0
 offset_bottom = 225.0
 text = "continue"
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(241, 341)
+texture = ExtResource("5_y8wyq")
 
 [connection signal="pressed" from="InterruptButton" to="." method="_on_interrupt_button_pressed"]
 [connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]

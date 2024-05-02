@@ -1,17 +1,17 @@
 extends Node
 
-
+## Path to the file exported from DIISIS.
 @export_file("*.json") var source_file
-@export_file("*.json") var demo_file
-#@export var source_path := ""
-#@export var source_path_demo := ""
-@export var show_demo := false
+## Number of entries the history will save. If set to [code]-1[/code] (default),
+## the history is not limited. Otherwise, the latest history entry will be erased when 
+## a new one is entered while at max length.
 @export var max_history_length := -1
 
 @export_group("Choices")
-## If true, will append the text of choice buttons to the history.
+## If [code]true[/code], will append the text of choice buttons to the history.
 @export var append_choices_to_history := true
-##A space will be inserted between this String and the text of the choice made.
+##A space will be inserted between this String and the text of the choice made.[br]
+## If this is an empty string, no space will be inserted.
 @export var choice_appendation_string := "Choice made:"
 
 var page_data := {}
@@ -44,15 +44,9 @@ var currently_speaking_visible := true
 var history := []
 
 func _ready() -> void:
-	#var path = source_path_demo if show_demo else source_path
-	var file : FileAccess
-	if show_demo:
-		file = FileAccess.open(demo_file, FileAccess.READ)
-	else:
-		file = FileAccess.open(source_file, FileAccess.READ)
+	var file := FileAccess.open(source_file, FileAccess.READ)
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
-	
 	
 	# all keys are now strings instead of ints
 	var int_data := {}
@@ -67,9 +61,6 @@ func _ready() -> void:
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles")
 	dropdowns = data.get("dropdowns")
-	
-	if show_demo:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	
 	ParserEvents.display_name_changed.connect(on_name_label_updated)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
@@ -117,7 +108,12 @@ func on_choice_pressed(
 	choice_text:String
 ):
 	if append_choices_to_history:
-		call_deferred("append_to_history", str(choice_appendation_string, " ", choice_text))
+		var prefix:String
+		if not choice_appendation_string.is_empty():
+			prefix = ""
+		else:
+			prefix = str(choice_appendation_string, " ")
+		call_deferred("append_to_history", str(prefix, choice_text))
 
 func on_name_label_updated(
 	actor_name: String,

@@ -765,7 +765,7 @@ func get_evaluator_methods() -> Array:
 	base.queue_free()
 	
 	methods.erase("execute")
-	methods.erase("wrapper_execute")
+	methods.erase("_wrapper_execute")
 	return methods
 
 func get_evaluator_properties() -> Array:

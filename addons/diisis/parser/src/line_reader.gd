@@ -386,8 +386,6 @@ func interrupt(hide_controls:=true):
 
 ## Call this after calling [method interrupt] to cleanly resume the reading of lines.[br]
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
-## [i]Currently not tested with input locks.[/i]
-## @experimental
 func continue_after_interrupt(read_page:=-1, read_line:=0):
 	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
 		get(key).visible = visibilities_before_interrupt[key]
@@ -440,8 +438,10 @@ func read_new_line(new_line: Dictionary):
 	var choices
 	if line_type == DIISIS.LineType.Choice:
 		choices = line_data.get("content").get("choices")
-	var content_name = line_data.get("content").get("name") # wtf is this
+	var content_name = line_data.get("content").get("name")
 	
+	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+		get(key).visible = true
 	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
 	showing_text = line_type == DIISIS.LineType.Text
 	choice_container.visible = line_type == DIISIS.LineType.Choice
@@ -502,7 +502,7 @@ func read_new_line(new_line: Dictionary):
 			var delay_before = new_line.get("content").get("delay.before")
 			var delay_after = new_line.get("content").get("delay.after")
 			
-			instruction_handler.wrapper_execute(instruction_name, args, delay_before, delay_after)
+			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
