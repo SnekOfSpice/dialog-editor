@@ -19,7 +19,7 @@ const MAX_TEXT_SPEED := 101
 		notify_property_list_changed()
 ## Time before the line reader automatically continues, in seconds.
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
-var auto_continue_duration:= auto_continue_delay
+var _auto_continue_duration:= auto_continue_delay
 ## If [code]0[/code], [param text_content] will be filled as far as possible.
 ## Breaks will be caused by <lc> tags, 
 ## a [TextContent] with [param TextContent.use_dialog_syntax] enabled, and a
@@ -29,6 +29,8 @@ var auto_continue_duration:= auto_continue_delay
 ## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
 ## throw this alignment off.
 @export var max_text_line_count:=0
+## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
+## Choice Buttons are currently presented to the player.
 @export var block_advance_during_choices:=true
 
 @export_subgroup("Choices")
@@ -36,7 +38,7 @@ var auto_continue_duration:= auto_continue_delay
 @export var show_text_during_choices := false
 ## Button scene that gets instantiated as children of [param choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
-## If overridden, it must inherit from [class ChoiceButton].
+## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
 
 @export_subgroup("Advance")
@@ -347,7 +349,7 @@ func request_advance():
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
 	if auto_continue:
-		auto_continue_duration = auto_continue_delay
+		_auto_continue_duration = auto_continue_delay
 	if showing_text:
 		
 		if text_content.visible_ratio >= 1.0:
@@ -377,6 +379,7 @@ func advance():
 ## Pauses the Parser and hides all controls uif [param hide_controls] is [code]true[/code] (default). Useful for reacting to game events outside the line reader. [br]
 ## [b]Call [method continue_after_interrupt] afterwards to cleanly resume.[/b]
 func interrupt(hide_controls:=true):
+	ParserEvents.line_reader_interrupted.emit(self)
 	Parser.paused = true
 	if hide_controls:
 		for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
@@ -393,6 +396,7 @@ func continue_after_interrupt(read_page:=-1, read_line:=0):
 	if read_page != -1:
 		Parser.read_page(read_page, read_line)
 	Parser.paused = false
+	ParserEvents.line_reader_resumed_after_interrupt.emit(self)
 
 func instruction_completed():
 	emit_signal("line_finished", line_index)
@@ -643,8 +647,8 @@ func _process(delta: float) -> void:
 #			"length", text_content.text.length()
 #			)
 		if text_content.visible_characters >= pause_positions[next_pause_position_index] - 4 * next_pause_position_index or text_content.visible_characters == -1:
-			auto_continue_duration -= delta
-			if auto_continue_duration <= 0.0:
+			_auto_continue_duration -= delta
+			if _auto_continue_duration <= 0.0:
 				
 				advance()
 

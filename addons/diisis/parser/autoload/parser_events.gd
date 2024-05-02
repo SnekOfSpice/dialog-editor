@@ -129,3 +129,11 @@ signal instruction_completed_after_delay(
 	args : Dictionary,
 	delay : float,
 )
+
+signal line_reader_interrupted(
+	line_reader:LineReader
+)
+
+signal line_reader_resumed_after_interrupt(
+	line_reader:LineReader
+)
