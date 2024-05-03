@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=23 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
+[ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1frgx"]
 bg_color = Color(0.984314, 0.882353, 0.960784, 0.254902)
@@ -50,6 +51,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="FunnyDebugButton" type="Button" parent="Core"]
+layout_mode = 2
+text = "any test functionality"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Core"]
 layout_mode = 2
@@ -111,7 +116,7 @@ text = "Autosave in: 0"
 layout_mode = 2
 
 [node name="File" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
-item_count = 5
+item_count = 9
 item_0/text = "Save"
 item_1/text = "Save As..."
 item_1/id = 1
@@ -121,6 +126,16 @@ item_3/id = 4
 item_3/separator = true
 item_4/text = "Config"
 item_4/id = 3
+item_5/text = "Localization"
+item_5/id = 5
+item_5/separator = true
+item_6/text = "Locales"
+item_6/id = 6
+item_7/text = "Export New L10ns"
+item_7/id = 7
+item_8/text = "Blank Strings"
+item_8/checkable = 1
+item_8/id = 8
 
 [node name="Utility" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -425,6 +440,17 @@ layout_mode = 1
 [node name="FDSave" type="FileDialog" parent="."]
 initial_position = 4
 size = Vector2i(827, 377)
+ok_button_text = "Save"
+access = 2
+filters = PackedStringArray("*.json")
+
+[node name="FDExportLocales" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a Directory"
+initial_position = 4
+size = Vector2i(827, 377)
+ok_button_text = "Select Current Folder"
+file_mode = 2
 access = 2
 filters = PackedStringArray("*.json")
 
@@ -470,6 +496,10 @@ autostart = true
 [node name="FileConfigPopup" parent="." instance=ExtResource("19_rgmxs")]
 visible = false
 
+[node name="LocaleSelectionWindow" parent="." instance=ExtResource("20_nu372")]
+visible = false
+
+[connection signal="pressed" from="Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
@@ -492,6 +522,7 @@ visible = false
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
 [connection signal="pressed" from="Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
+[connection signal="dir_selected" from="FDExportLocales" to="." method="_on_fd_export_locales_dir_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="update" from="HeaderPopup" to="." method="_on_header_popup_update"]
 [connection signal="validate_saved_instructions" from="InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]

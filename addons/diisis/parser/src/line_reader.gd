@@ -291,7 +291,6 @@ func _ready() -> void:
 	
 	Parser.open_connection(self)
 	
-	ParserEvents.fact_changed.connect(on_fact_change)
 	remaining_auto_pause_duration = auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
 	if not instruction_handler:
@@ -306,9 +305,6 @@ func _ready() -> void:
 		next_prompt_container.modulate.a = 0
 	
 	emit_signal("line_reader_ready")
-
-func on_fact_change(fact_name:String, old:bool, new:bool):
-	printt(fact_name, old, new)
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
 func get_preferences() -> Dictionary:
@@ -439,6 +435,7 @@ func read_new_line(new_line: Dictionary):
 	
 	var raw_content = line_data.get("content")
 	var content = line_data.get("content").get("content")
+	var content_address
 	var choices
 	if line_type == DIISIS.LineType.Choice:
 		choices = line_data.get("content").get("choices")
@@ -458,6 +455,9 @@ func read_new_line(new_line: Dictionary):
 	
 	match line_type:
 		DIISIS.LineType.Text:
+			var localized : String = Parser.replace_from_locale(line_data.get("address"), Parser.locale)
+			if not localized.is_empty():
+				content = localized
 			using_dialog_syntax = line_data.get("content").get("use_dialog_syntax", false)
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
@@ -512,8 +512,7 @@ func read_new_line(new_line: Dictionary):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
 			emit_signal("line_finished", line_index)
 			
-	
-	
+
 func update_limit_line_count(lines: Array):
 	if max_text_line_count <= 0:
 		return
@@ -883,7 +882,6 @@ func build_choices(choices, auto_switch:bool):
 		var cond_behavior = conditional_eval[1]
 		
 		if cond_true and auto_switch:
-			# untested for now
 			choice_pressed(true, option.get("target_page"))
 			break
 		

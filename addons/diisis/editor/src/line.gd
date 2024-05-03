@@ -122,6 +122,7 @@ func serialize() -> Dictionary:
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
 	data["meta.indent_level"] = indent_level
 	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
+	data["address"] = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	
 	# content match
 	match line_type:

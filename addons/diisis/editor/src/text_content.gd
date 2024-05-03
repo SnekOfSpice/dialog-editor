@@ -210,30 +210,24 @@ func _on_text_box_caret_changed() -> void:
 		if use_dialog_syntax and is_line_empty:
 			build_actor_hint()
 	
-	var lines := text_box.text.split("\n")
-	
-	var i := 0
-	#for line in lines:
-	var line := lines[text_box.get_caret_line()]
 	
 	var full_actor_before_caret := false
 	for actor:String in active_actors:
-		if get_text_before_caret(actor.length()) == actor:
+		if is_text_before_caret(actor):
 			full_actor_before_caret = true
 			break
 		
-	if get_text_before_caret(3) == "[]>":
+	if is_text_before_caret("[]>"):
 		for actor in active_actors:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, ":"))
-		print("actor completion")
+
 		text_box.update_code_completion_options(true)
-		#break_full  = true
-	elif get_text_before_caret(1) == "{":
+
+	elif is_text_before_caret("{"):
 		for actor in Pages.dropdown_dialog_arguments:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, "|}"))
 		print("dropdown_dialog_arguments completion")
 		text_box.update_code_completion_options(true)
-		#break_full  = true
 	elif get_text_before_caret(1) == "," and get_text_after_caret(1) == "}":
 		var used_args = get_used_dialog_args_in_line()
 		for arg in Pages.dropdown_dialog_arguments:

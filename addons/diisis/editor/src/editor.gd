@@ -77,7 +77,7 @@ func init() -> void:
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
 	
-	find_child("MenuButton")
+	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	print("init editor successful")
 
 func update_page_view(view:PageView):
@@ -239,6 +239,7 @@ func _on_fd_open_file_selected(path: String) -> void:
 	set_save_path(path)
 	
 	Pages.deserialize(data)
+	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	load_page(0, true)
 
@@ -349,3 +350,169 @@ func _on_file_index_pressed(index: int) -> void:
 		4:
 			# config
 			open_popup(find_child("FileConfigPopup"), true)
+		6: # locales
+			open_popup(find_child("LocaleSelectionWindow"), true)
+		7: # export blank l10n
+			open_popup(find_child("FDExportLocales"), true)
+		8:
+			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
+			find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+
+
+func _on_funny_debug_button_pressed() -> void:
+	#print(Pages.get_localizable_addresses())
+	var doms := ["af_ZA",
+"sq_AL",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"ar_SA",
+"hy_AM",
+"az_AZ",
+"eu_ES",
+"be_BY",
+"bn_IN",
+"bs_BA",
+"bg_BG",
+"ca_ES",
+"zh_CN",
+"zh_TW",
+"zh_TW",
+"zh_CN",
+"zh_TW",
+"hr_HR",
+"cs_CZ",
+"da_DK",
+"nl_NL",
+"nl_NL",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"en_US",
+"et_EE",
+"fo_FO",
+"fi_FI",
+"fr_FR",
+"fr_FR",
+"fr_FR",
+"fr_FR",
+"fr_FR",
+"fr_FR",
+"gl_ES",
+"ka_GE",
+"de_DE",
+"de_DE",
+"de_DE",
+"de_DE",
+"de_DE",
+"el_GR",
+"gu_IN",
+"he_IL",
+"hi_IN",
+"hu_HU",
+"is_IS",
+"id_ID",
+"it_IT",
+"it_IT",
+"ja_JP",
+"kn_IN",
+"kk_KZ",
+"kok_IN",
+"ko_KR",
+"lv_LV",
+"lt_LT",
+"mk_MK",
+"ms_MY",
+"ms_MY",
+"ml_IN",
+"mt_MT",
+"mr_IN",
+"mn_MN",
+"se_NO",
+"nb_NO",
+"nn_NO",
+"fa_IR",
+"pl_PL",
+"pt_BR",
+"pt_BR",
+"pa_IN",
+"ro_RO",
+"ru_RU",
+"sr_BA",
+"sr_BA",
+"sk_SK",
+"sk_SK",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"es_ES",
+"sw_KE",
+"sv_SE",
+"sv_SE",
+"syr_SY",
+"ta_IN",
+"te_IN",
+"th_TH",
+"tn_ZA",
+"tr_TR",
+"uk_UA",
+"uz_UZ",
+"vi_VN",
+"cy_GB",
+"xh_ZA",
+"zu_ZA"]
+	var uniques := []
+	for d in doms:
+		if not uniques.has(d):
+			uniques.append(d)
+	print(uniques)
+
+func _on_fd_export_locales_dir_selected(dir: String) -> void:
+	var addresses : Dictionary = Pages.get_localizable_addresses_with_content()
+	for locale in Pages.locales_to_export:
+		prints("saving", locale)
+		var file = FileAccess.open(str(dir, "/diisis_l10n_", locale, ".json"), FileAccess.WRITE)
+		var data_to_save = {}
+		for address in addresses:
+			if Pages.empty_strings_for_l10n:
+				data_to_save[address] = ""
+			else:
+				data_to_save[address] = addresses.get(address)
+		file.store_string(JSON.stringify(data_to_save, "\t"))
+		file.close()

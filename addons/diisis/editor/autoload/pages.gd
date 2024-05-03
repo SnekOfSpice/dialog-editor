@@ -3,22 +3,151 @@ extends Node
 
 
 var head_defaults := [
-#	{
-#		"property_name": "speaker",
-#		"value":"narrator",
-#		"data_type": DataTypes._String
-#	},
-#	{
-#		"property_name": "emotion",
-#		"value":"happy",
-#		"data_type": DataTypes._String
-#	},
 ]
-
 
 var dropdowns := {"dropdown1": ["00", "01"], "dropdown2": ["a", "b"], "dd3": ["arg1", "arg2"]}
 var dropdown_titles := ["dropdown1", "dropdown2", "dd3"]
 var dropdown_dialog_arguments := ["dd3"]
+
+var empty_strings_for_l10n := false
+var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
+const DOMINANT_LOCALES := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
+const LOCALES := ["af_ZA",
+"sq_AL",
+"ar_DZ",
+"ar_BH",
+"ar_EG",
+"ar_IQ",
+"ar_JO",
+"ar_KW",
+"ar_LB",
+"ar_LY",
+"ar_MA",
+"ar_OM",
+"ar_QA",
+"ar_SA",
+"ar_SY",
+"ar_TN",
+"ar_AE",
+"ar_YE",
+"hy_AM",
+"az_AZ",
+"eu_ES",
+"be_BY",
+"bn_IN",
+"bs_BA",
+"bg_BG",
+"ca_ES",
+"zh_CN",
+"zh_HK",
+"zh_MO",
+"zh_SG",
+"zh_TW",
+"hr_HR",
+"cs_CZ",
+"da_DK",
+"nl_BE",
+"nl_NL",
+"en_AU",
+"en_BZ",
+"en_CA",
+"en_IE",
+"en_JM",
+"en_NZ",
+"en_PH",
+"en_ZA",
+"en_TT",
+"en_VI",
+"en_GB",
+"en_US",
+"en_ZW",
+"et_EE",
+"fo_FO",
+"fi_FI",
+"fr_BE",
+"fr_CA",
+"fr_FR",
+"fr_LU",
+"fr_MC",
+"fr_CH",
+"gl_ES",
+"ka_GE",
+"de_AT",
+"de_DE",
+"de_LI",
+"de_LU",
+"de_CH",
+"el_GR",
+"gu_IN",
+"he_IL",
+"hi_IN",
+"hu_HU",
+"is_IS",
+"id_ID",
+"it_IT",
+"it_CH",
+"ja_JP",
+"kn_IN",
+"kk_KZ",
+"kok_IN",
+"ko_KR",
+"lv_LV",
+"lt_LT",
+"mk_MK",
+"ms_BN",
+"ms_MY",
+"ml_IN",
+"mt_MT",
+"mr_IN",
+"mn_MN",
+"se_NO",
+"nb_NO",
+"nn_NO",
+"fa_IR",
+"pl_PL",
+"pt_BR",
+"pt_PT",
+"pa_IN",
+"ro_RO",
+"ru_RU",
+"sr_BA",
+"sr_CS",
+"sk_SK",
+"sl_SI",
+"es_AR",
+"es_BO",
+"es_CL",
+"es_CO",
+"es_CR",
+"es_DO",
+"es_EC",
+"es_SV",
+"es_GT",
+"es_HN",
+"es_MX",
+"es_NI",
+"es_PA",
+"es_PY",
+"es_PE",
+"es_PR",
+"es_ES",
+"es_UY",
+"es_VE",
+"sw_KE",
+"sv_FI",
+"sv_SE",
+"syr_SY",
+"ta_IN",
+"te_IN",
+"th_TH",
+"tn_ZA",
+"tr_TR",
+"uk_UA",
+"uz_UZ",
+"vi_VN",
+"cy_GB",
+"xh_ZA",
+"zu_ZA",]
 
 var facts := {}
 
@@ -73,7 +202,9 @@ func serialize() -> Dictionary:
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
 		"dropdown_dialog_arguments": dropdown_dialog_arguments,
-		"file_config": get_file_config()
+		"file_config": get_file_config(),
+		"locales_to_export" : locales_to_export,
+		"empty_strings_for_l10n": empty_strings_for_l10n,
 	}
 
 func deserialize(data:Dictionary):
@@ -98,6 +229,8 @@ func deserialize(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
+	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
+	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
 	
 	apply_file_config(data.get("file_config", {}))
 
@@ -841,3 +974,27 @@ func search_string(substr:String):
 		"choices":found_choices,
 	}
 	return result
+
+func get_localizable_addresses() -> Array:
+	return get_localizable_addresses_with_content().keys()
+
+func get_localizable_addresses_with_content() -> Dictionary:
+	var localizable_addresses := {}
+	var page_index := 0
+	for page in page_data.values():
+		var line_index := 0
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Text:
+				localizable_addresses[(str(page_index, ".", line_index))] = line.get("content", {}).get("content", "")
+			elif line.get("line_type") == DIISIS.LineType.Choice:
+				var choice_index := 0
+				for choice in line.get("content", {}).get("choices", []):
+					if not choice.get("choice_text.enabled").is_empty():
+						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "enabled"))] = choice.get("choice_text.enabled")
+					if not choice.get("choice_text.disabled").is_empty():
+						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "disabled"))] = choice.get("choice_text.disabled")
+					choice_index += 1
+			line_index += 1
+		page_index += 1
+
+	return localizable_addresses

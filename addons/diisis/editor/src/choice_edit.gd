@@ -41,7 +41,8 @@ func serialize():
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
 		"do_jump_page": do_jump_page,
-		"meta.selector" : find_child("AddressSelectActionContainer").serialize()
+		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
+		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 	}
 
 func set_page_view(view:DiisisEditor.PageView):

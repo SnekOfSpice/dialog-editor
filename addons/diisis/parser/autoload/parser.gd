@@ -6,6 +6,7 @@ extends Node
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
 @export var max_history_length := -1
+@export_dir var localization_folder
 
 @export_group("Choices")
 ## If [code]true[/code], will append the text of choice buttons to the history.
@@ -15,6 +16,9 @@ extends Node
 @export var choice_appendation_string := "Choice made:"
 
 var page_data := {}
+var locales := {}
+var default_locale := "en_US"
+var locale := "de_DE"
 var dropdown_titles := []
 var dropdowns := {}
 
@@ -80,6 +84,21 @@ func set_paused(value:bool, suppress_event:=false):
 	paused = value
 	if not suppress_event:
 		ParserEvents.parser_paused_changed.emit(paused)
+
+func replace_from_locale(address:String, locale:String) -> String:
+	if not locales.has(locale):
+		try_load_locale(locale)
+	if not locales.has(locale):
+		return ""
+	return locales[locale][address]
+
+func try_load_locale(locale:String):
+	if not localization_folder:
+		return
+	
+	var file := FileAccess.open(str(localization_folder, "/diisis_l10n_", locale, ".json"), FileAccess.READ)
+	locales[locale] = JSON.parse_string(file.get_as_text())
+	file.close()
 
 func get_fact(fact_name: String) -> bool:
 	return facts.get(fact_name, false)

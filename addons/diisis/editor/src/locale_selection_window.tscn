@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://7a85jmuvrnhr"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/locale_selection_window.gd" id="1_tw3ps"]
+[ext_resource type="PackedScene" uid="uid://dyfpbfsqcgyrj" path="res://addons/diisis/editor/src/locale_selection_container.tscn" id="2_wmqid"]
+
+[node name="LocaleSelectionWindow" type="Window"]
+initial_position = 4
+transient = true
+script = ExtResource("1_tw3ps")
+
+[node name="LocaleSelectionContainer" parent="." instance=ExtResource("2_wmqid")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
