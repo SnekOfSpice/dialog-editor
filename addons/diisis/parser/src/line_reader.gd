@@ -901,9 +901,17 @@ func build_choices(choices, auto_switch:bool):
 			enable_option = false
 		
 		if enable_option:
-			option_text = option.get("choice_text.enabled")
+			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "enabled"), Parser.locale)
+			if not localized.is_empty():
+				option_text = localized
+			else:
+				option_text = option.get("choice_text.enabled")
 		else:
-			option_text = option.get("choice_text.disabled")
+			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "disabled"), Parser.locale)
+			if not localized.is_empty():
+				option_text = localized
+			else:
+				option_text = option.get("choice_text.disabled")
 		
 		# give to option to signal
 		var facts = option.get("facts").get("values", {})
