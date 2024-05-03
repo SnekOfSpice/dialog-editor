@@ -130,6 +130,11 @@ signal instruction_completed_after_delay(
 	delay : float,
 )
 
+## Emitted when the Parser is put into or out of pause with [method Parser.set_paused]. [param is_paused] is the new state.
+signal parser_paused_changed(
+	is_paused:bool
+)
+
 signal line_reader_interrupted(
 	line_reader:LineReader
 )

@@ -50,8 +50,7 @@ text = "?"
 [node name="CodeEdit" type="CodeEdit" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "show_character(character-name,clear-others)
-rotate_icon()
+text = "show-character(character-name,clear-others)
 "
 autowrap_mode = 2
 syntax_highlighter = SubResource("CodeHighlighter_hv7t4")

@@ -74,6 +74,13 @@ func reset_and_start(start_page_index:=0):
 	read_page(start_page_index)
 	history = []
 
+## Pauses the Parser. If [param suppress_event] is true, [signal ParserEvents.parser_paused_changed]
+## won't be emitted.
+func set_paused(value:bool, suppress_event:=false):
+	paused = value
+	if not suppress_event:
+		ParserEvents.parser_paused_changed.emit(paused)
+
 func get_fact(fact_name: String) -> bool:
 	return facts.get(fact_name, false)
 
@@ -235,10 +242,13 @@ func open_connection(new_lr: LineReader):
 	line_reader.connect("jump_to_page", read_page)
 	
 
-func change_fact(fact_name: String, new_value: bool):
+## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
+## [signal ParserEvents.fact_changed] won't be emitted.
+func change_fact(fact_name: String, new_value: bool, suppress_event:=false):
 	var old_value = facts[fact_name]
 	facts[fact_name] = new_value
-	ParserEvents.fact_changed.emit(fact_name, old_value, new_value)
+	if not suppress_event:
+		ParserEvents.fact_changed.emit(fact_name, old_value, new_value)
 
 func apply_facts(f: Dictionary):
 	for fact in f.keys():

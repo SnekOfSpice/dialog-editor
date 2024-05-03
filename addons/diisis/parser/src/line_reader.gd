@@ -380,7 +380,7 @@ func advance():
 ## [b]Call [method continue_after_interrupt] afterwards to cleanly resume.[/b]
 func interrupt(hide_controls:=true):
 	ParserEvents.line_reader_interrupted.emit(self)
-	Parser.paused = true
+	Parser.set_paused(true)
 	if hide_controls:
 		for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
 			visibilities_before_interrupt[key] = get(key).visible
@@ -395,7 +395,7 @@ func continue_after_interrupt(read_page:=-1, read_line:=0):
 	
 	if read_page != -1:
 		Parser.read_page(read_page, read_line)
-	Parser.paused = false
+	Parser.set_paused(false)
 	ParserEvents.line_reader_resumed_after_interrupt.emit(self)
 
 func instruction_completed():
