@@ -506,63 +506,83 @@ func get_instruction_arg_types(instruction_name: String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
 
 func get_all_invalid_instructions() -> String:
-	return ""
 	var warning := ""
-	
-	var overdefined_instructions := []
-	var underdefined_instructions := []
+	var page_index  := 0
 	var malformed_instructions := []
-	for i in page_data:
-		var lines = page_data.get(i).get("lines", [])
-		var j = 0
-		for l in lines:
-			if l.get("line_type") != DIISIS.LineType.Instruction:
-				j += 1
+	for page in page_data.values():
+		var lines : Array = page.get("lines", [])
+		var line_index := 0
+		for line in lines:
+			if line.get("line_type") != DIISIS.LineType.Instruction:
 				continue
-			
-			var content = l.get("content", {})
-			var instruction_name = content.get("name")
-			var instruction_args : Dictionary = content.get("args")
-			
-			if instruction_args.size() != get_instruction_arg_names(instruction_name).size():
-				malformed_instructions.append(str(i, ".", j))
-			
-			for arg in instruction_args:
-				if arg.get("value", "").begins_with("underdefined"):
-			#if instruction_args.size() != get_instruction_args(instruction_name).size():
-					underdefined_instructions.append(str(i, ".", j))
-				elif arg.get("name", "").begins_with("overdefined"):
-					overdefined_instructions.append(str(i, ".", j))
-			j += 1
-
-	if not underdefined_instructions.is_empty():
-		warning = "Warning: underdefined instructions at: "
-		for inv in underdefined_instructions:
-			warning += inv
-			warning += ", "
-		warning = warning.trim_suffix(", ")
-	
-	if not warning.is_empty():
-		warning += "\n"
-	
-	if not overdefined_instructions.is_empty():
-		warning += "Warning: overdefined instructions at: "
-		for inv in overdefined_instructions:
-			warning += inv
-			warning += ", "
-		warning = warning.trim_suffix(", ")
-	
-	if not warning.is_empty():
-		warning += "\n"
+			var text = line.get("content").get("meta.text")
+			var compliance := get_entered_instruction_compliance(text)
+			if compliance != "OK":
+				malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
+			line_index += 1
+		page_index += 1
 	
 	if not malformed_instructions.is_empty():
-		warning += "Warning: malformed instructions at: "
-		for inv in malformed_instructions:
-			warning += inv
-			warning += ", "
-		warning = warning.trim_suffix(", ")
-	
+		warning += str("Warning: invalid instructions at: ", ", ".join(malformed_instructions))
 	return warning
+	
+	#return ""
+	#
+	#
+	#var overdefined_instructions := []
+	#var underdefined_instructions := []
+	#var malformed_instructions := []
+	#for i in page_data:
+		#var lines = page_data.get(i).get("lines", [])
+		#var j = 0
+		#for l in lines:
+			#if l.get("line_type") != DIISIS.LineType.Instruction:
+				#j += 1
+				#continue
+			#
+			#var content = l.get("content", {})
+			#var instruction_name = content.get("name")
+			#var instruction_args : Dictionary = content.get("args")
+			#
+			#if instruction_args.size() != get_instruction_arg_names(instruction_name).size():
+				#malformed_instructions.append(str(i, ".", j))
+			#
+			#for arg in instruction_args:
+				#if arg.get("value", "").begins_with("underdefined"):
+			##if instruction_args.size() != get_instruction_args(instruction_name).size():
+					#underdefined_instructions.append(str(i, ".", j))
+				#elif arg.get("name", "").begins_with("overdefined"):
+					#overdefined_instructions.append(str(i, ".", j))
+			#j += 1
+#
+	#if not underdefined_instructions.is_empty():
+		#warning = "Warning: underdefined instructions at: "
+		#for inv in underdefined_instructions:
+			#warning += inv
+			#warning += ", "
+		#warning = warning.trim_suffix(", ")
+	#
+	#if not warning.is_empty():
+		#warning += "\n"
+	
+	#if not overdefined_instructions.is_empty():
+		#warning += "Warning: overdefined instructions at: "
+		#for inv in overdefined_instructions:
+			#warning += inv
+			#warning += ", "
+		#warning = warning.trim_suffix(", ")
+	#
+	#if not warning.is_empty():
+		#warning += "\n"
+	#
+	#if not malformed_instructions.is_empty():
+		#warning += "Warning: malformed instructions at: "
+		#for inv in malformed_instructions:
+			#warning += inv
+			#warning += ", "
+		#warning = warning.trim_suffix(", ")
+	#
+	#return warning
 
 # new schema with keys and values
 func apply_new_header_schema(new_schema: Array):
@@ -1123,7 +1143,10 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 			if value_string == "false":
 				arg_value = false
 		elif arg_type == "float":
-			arg_value = float(value_string)
+			if value_string.is_empty():
+				arg_value = str("no value")
+			else:
+				arg_value = float(value_string)
 	
 		args[arg_names[i]] = arg_value
 		i += 1
@@ -1158,6 +1181,8 @@ func get_compliance_with_template(instruction:String) -> String:
 		while arg_string.ends_with(" "):
 			arg_string = arg_string.trim_suffix(" ")
 		var arg_value : String = arg_string.split(":")[0]
+		if arg_value.is_empty():
+			return str("Argument ", i+1, " is empty")
 		if template_types[i] == "bool":
 			if arg_value != "true" and arg_value != "false":
 				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
@@ -1168,6 +1193,9 @@ func get_compliance_with_template(instruction:String) -> String:
 		i += 1
 	
 	return "OK"
+
+func try_delete_instruction_template(instruction_name:String):
+	instruction_templates.erase(instruction_name)
 
 func get_entered_instruction_compliance(instruction:String, check_as_template:=false, error_on_duplicate := false) -> String:
 	if instruction.count("(") != 1:

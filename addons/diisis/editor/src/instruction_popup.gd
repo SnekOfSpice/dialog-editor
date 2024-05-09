@@ -65,6 +65,7 @@ func _on_about_to_popup() -> void:
 
 func _on_close_requested() -> void:
 	Pages.editor.refresh(false)
+	emit_signal("validate_saved_instructions")
 	hide()
 
 
@@ -93,5 +94,4 @@ func _on_help_button_pressed() -> void:
 
 
 func _on_instruction_edit_container_request_close() -> void:
-	Pages.editor.refresh(false)
-	hide()
+	_on_close_requested()

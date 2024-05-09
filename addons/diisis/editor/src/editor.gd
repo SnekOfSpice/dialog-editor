@@ -516,3 +516,13 @@ func _on_fd_export_locales_dir_selected(dir: String) -> void:
 				data_to_save[address] = addresses.get(address)
 		file.store_string(JSON.stringify(data_to_save, "\t"))
 		file.close()
+
+
+func _on_refresh_button_pressed() -> void:
+	refresh()
+
+
+func _on_error_text_box_meta_clicked(meta: Variant) -> void:
+	if str(meta).begins_with("goto-"):
+		var target_address := str(meta).trim_prefix("goto-")
+		request_go_to_address(target_address, str("Go to ", target_address))

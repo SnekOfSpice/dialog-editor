@@ -83,6 +83,10 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="RefreshButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Refresh"
+
 [node name="SaveButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
@@ -169,6 +173,7 @@ item_6/id = 6
 [node name="ErrorTextBox" type="RichTextLabel" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
 layout_mode = 2
 size_flags_horizontal = 3
+bbcode_enabled = true
 fit_content = true
 
 [node name="PageControl" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer"]
@@ -501,11 +506,13 @@ visible = false
 visible = false
 
 [connection signal="pressed" from="Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
+[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
 [connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
 [connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
+[connection signal="meta_clicked" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]

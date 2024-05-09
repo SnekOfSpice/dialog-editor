@@ -17,7 +17,7 @@ layout_mode = 2
 [node name="DisplayContainer" type="HBoxContainer" parent="InstructionEditItem"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="InstructionEditItem/DisplayContainer"]
+[node name="DeleteButton" type="Button" parent="InstructionEditItem/DisplayContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "X"
@@ -34,27 +34,32 @@ text = "Edit"
 [node name="EditContainer" type="HBoxContainer" parent="InstructionEditItem"]
 layout_mode = 2
 
-[node name="InstructionEdit" type="LineEdit" parent="InstructionEditItem/EditContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="InstructionEditItem/EditContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InstructionEdit" type="LineEdit" parent="InstructionEditItem/EditContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="EditConfirmContainer" type="HBoxContainer" parent="InstructionEditItem/EditContainer"]
+[node name="EditConfirmContainer" type="HBoxContainer" parent="InstructionEditItem/EditContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="InstructionEditItem/EditContainer/EditConfirmContainer"]
+[node name="SaveButton" type="Button" parent="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Save"
 
-[node name="DiscardButton" type="Button" parent="InstructionEditItem/EditContainer/EditConfirmContainer"]
+[node name="DiscardButton" type="Button" parent="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer"]
 layout_mode = 2
-text = "Discard"
+text = "Discard Changes"
 
 [node name="ComplianceLabel" type="Label" parent="InstructionEditItem"]
 layout_mode = 2
 
+[connection signal="pressed" from="InstructionEditItem/DisplayContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="InstructionEditItem/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]
-[connection signal="text_changed" from="InstructionEditItem/EditContainer/InstructionEdit" to="." method="_on_instruction_edit_text_changed"]
-[connection signal="pressed" from="InstructionEditItem/EditContainer/EditConfirmContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="InstructionEditItem/EditContainer/EditConfirmContainer/DiscardButton" to="." method="_on_discard_button_pressed"]
+[connection signal="text_changed" from="InstructionEditItem/EditContainer/VBoxContainer/InstructionEdit" to="." method="_on_instruction_edit_text_changed"]
+[connection signal="pressed" from="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer/DiscardButton" to="." method="_on_discard_button_pressed"]

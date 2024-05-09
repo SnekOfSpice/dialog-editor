@@ -7,7 +7,8 @@ var text_box : CodeEdit
 
 func init() -> void:
 	text_box = find_child("InstructionTextEdit")
-	text_box.code_completion_prefixes = PackedStringArray(["", " ",])
+	_on_instruction_text_edit_text_changed()
+	text_box.code_completion_prefixes = PackedStringArray([" ",])
 
 func get_instruction_name() -> String:
 	if text_box.text.contains("("):
@@ -39,6 +40,7 @@ func deserialize(data: Dictionary):
 	
 	find_child("DelayBeforeSpinBox").value = float(data.get("delay_before", data.get("delay.before", data.get("delay", 0.0))))
 	find_child("DelayAfterSpinBox").value = float(data.get("delay_after", data.get("delay.after", 0.0)))
+	_on_instruction_text_edit_text_changed()
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
@@ -124,8 +126,18 @@ func _on_instruction_text_edit_text_changed() -> void:
 		var lines := text_box.text.split("\n")
 		text_box.text = "".join(lines)
 	var compliance := Pages.get_entered_instruction_compliance(text_box.text)
-	find_child("ComplianceLabel").visible = compliance != "OK"
+	find_child("ComplianceContainer").visible = compliance != "OK"
 	find_child("ComplianceLabel").text = compliance
+	
+	if compliance == "OK":
+		find_child("InstructionTextContainer")["theme_override_styles/panel"]["bg_color"]["a"] = 0.0
+	else:
+		find_child("InstructionTextContainer")["theme_override_styles/panel"]["bg_color"]["a"] = 0.7
 	
 	#if text_box.text.is_empty():
 		#build_typing_hint()
+
+
+func _on_instruction_text_edit_code_completion_requested() -> void:
+	await get_tree().process_frame
+	text_box.set_caret_column(text_box.text.length() - 2)

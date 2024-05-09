@@ -4,9 +4,6 @@ class_name InstructionEditItem
 
 var text_before_edit := ""
 
-func save():
-	pass
-
 func set_changes_discardable(value:bool):
 	find_child("DiscardButton").visible = value
 	
@@ -74,9 +71,15 @@ func _on_instruction_edit_text_changed(new_text: String) -> void:
 	var name_before_edit : String = text_before_edit.split("(")[0]
 	var entered_name : String = find_child("InstructionEdit").text.split("(")[0]
 	var compliance := Pages.get_entered_instruction_compliance(new_text, true, name_before_edit != entered_name)
-	printt(compliance, text_before_edit)
+	
 	find_child("SaveButton").disabled = compliance != "OK"
 	find_child("ComplianceLabel").visible = compliance != "OK"
 	find_child("ComplianceLabel").text = compliance
-	
-	
+	if compliance == "OK":
+		self_modulate.v = 1.0
+	else:
+		self_modulate.v = 30.0
+
+func _on_delete_button_pressed() -> void:
+	Pages.try_delete_instruction_template(find_child("InstructionLabel").text.split("(")[0])
+	queue_free()
