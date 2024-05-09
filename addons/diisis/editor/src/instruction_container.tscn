@@ -1,11 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://co4e6yj2ed45f"]
+[gd_scene load_steps=4 format=3 uid="uid://co4e6yj2ed45f"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_container.gd" id="1_mqxig"]
 [ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="2_ow7ne"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr8f2"]
-bg_color = Color(0.54, 0, 0.18, 0.7)
 
 [node name="InstructionContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
 anchors_preset = 10
@@ -19,18 +16,19 @@ script = ExtResource("1_mqxig")
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="InstructionTextContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="InstructionTextContainer" type="ColorRect" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_vr8f2")
+color = Color(0.689033, 0.0915954, 0.171793, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/InstructionTextContainer"]
 layout_mode = 2
+offset_right = 574.0
+offset_bottom = 93.0
 
 [node name="InstructionTextEdit" type="CodeEdit" parent="HBoxContainer/InstructionTextContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 33.4)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 placeholder_text = "enter instruction here"
 wrap_mode = 1
 scroll_fit_content_height = true

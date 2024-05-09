@@ -130,9 +130,9 @@ func _on_instruction_text_edit_text_changed() -> void:
 	find_child("ComplianceLabel").text = compliance
 	
 	if compliance == "OK":
-		find_child("InstructionTextContainer")["theme_override_styles/panel"]["bg_color"]["a"] = 0.0
+		find_child("InstructionTextContainer").color.a = 0.0
 	else:
-		find_child("InstructionTextContainer")["theme_override_styles/panel"]["bg_color"]["a"] = 0.7
+		find_child("InstructionTextContainer").color.a = 0.5
 	
 	#if text_box.text.is_empty():
 		#build_typing_hint()
