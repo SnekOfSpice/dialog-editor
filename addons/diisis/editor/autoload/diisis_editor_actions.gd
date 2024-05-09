@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+var blank_override_line_indices := []
+
 var cached_pages := {}
 var cached_lines := {}
 # these technically could also be in cached_lines, but that serialization is so deep and nested, this is way easier
@@ -17,8 +19,10 @@ func add_lines(indices:Array, data_by_index:={}):
 	for i in indices:
 		var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.get_current_page_number(), {})
 		var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
-		prints("data at index is ", data_by_index.get(i))
-		if not cached_lines_at_index.is_empty() and data_by_index.get(i, null) == null:
+		print(blank_override_line_indices)
+		if (not blank_override_line_indices.has(str(Pages.editor.get_current_page_number(), ".", i))
+		and not cached_lines_at_index.is_empty()
+		and data_by_index.get(i, {}).is_empty()):
 			var data = cached_lines_at_index.pop_back()
 			cached_lines_on_page[i] = cached_lines_at_index
 			cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
@@ -35,6 +39,7 @@ func add_line(at_index:int, data:={}):
 
 func delete_lines(indices:Array):
 	for i in indices:
+		blank_override_line_indices.erase(str(Pages.editor.get_current_page_number(), ".", i))
 		# update cached line data
 		if cached_lines.has(Pages.editor.current_page.number):
 			var cached_lines_on_page = cached_lines.get(Pages.editor.current_page.number)
@@ -264,23 +269,6 @@ func add_to_clipboard(address_with_data:String):
 	clipboard[address_with_data] = Pages.get_data_from_address(address_with_data)
 
 func insert_from_clipboard(start_address:String):
-	#var objects_to_delete := [] # on current page
-	#var data_to_delete := [] # off page
-	#if delete_from_selected_addresses_on_insert:
-		#Pages.editor.refresh()
-		#await get_tree().process_frame
-		#
-		#for address_to_delete_from in selected_addresses:
-			#var object = DiisisEditorUtil.get_node_at_address(address_to_delete_from, true)
-			#if object == null:
-				#data_to_delete.append(address_to_delete_from)
-			#else:
-				#objects_to_delete.append(object)
-			
-	# insert lines
-	#go_to(start_address, true)
-	#await get_tree().process_frame
-	
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
 	var data_at_depth = clipboard.get(insert_depth, {})
 	var start_address_parts = DiisisEditorUtil.get_split_address(start_address)

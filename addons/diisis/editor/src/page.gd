@@ -203,6 +203,7 @@ func get_line_count():
 func request_add_line(at_index:int):
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Add Line")
+	DiisisEditorActions.blank_override_line_indices.append(str(number, ".", at_index))
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(at_index))
 	undo_redo.commit_action()
