@@ -2,6 +2,7 @@
 extends Node
 
 var blank_override_line_indices := []
+var blank_override_choice_item_addresses := []
 
 var cached_pages := {}
 var cached_lines := {}
@@ -19,7 +20,6 @@ func add_lines(indices:Array, data_by_index:={}):
 	for i in indices:
 		var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.get_current_page_number(), {})
 		var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
-		print(blank_override_line_indices)
 		if (not blank_override_line_indices.has(str(Pages.editor.get_current_page_number(), ".", i))
 		and not cached_lines_at_index.is_empty()
 		and data_by_index.get(i, {}).is_empty()):
@@ -150,7 +150,7 @@ func add_choice_items(item_addresses:Array, choice_data_by_address:={}):
 		var parts := DiisisEditorUtil.get_split_address(item_address)
 		var cache:Array=cached_choice_items.get(target_line_address, [])
 		var data := choice_data_by_address.get(item_address, {})
-		if not cache.is_empty() and data.is_empty():
+		if not cache.is_empty() and data.is_empty() and not blank_override_choice_item_addresses.has(item_address):
 			data = cache.pop_back()
 			cached_choice_items[target_line_address] = cache
 		target_line.add_choice_item(parts[2], data)
@@ -165,6 +165,7 @@ func delete_choice_items(item_addresses:Array):
 	item_addresses = DiisisEditorUtil.sort_addresses(item_addresses)
 	item_addresses.reverse()
 	for item_address in item_addresses:
+		blank_override_choice_item_addresses.erase(item_address)
 		var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
 		var item = DiisisEditorUtil.get_node_at_address(item_address)
 		var data = item.serialize()

@@ -70,7 +70,6 @@ func get_node_at_address(address:String, suppress_off_page_warning := false):
 	elif level == AddressDepth.Line:
 		return Pages.editor.current_page.get_line(address_parts[1])
 	elif level == AddressDepth.ChoiceItem:
-		print("1")
 		return Pages.editor.current_page.get_line(address_parts[1]).get_choice_item(address_parts[2])
 		
 

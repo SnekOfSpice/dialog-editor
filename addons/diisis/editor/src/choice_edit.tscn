@@ -156,7 +156,7 @@ address_depth = 2
 add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
-[connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="ChoiceEdit" method="_on_delete_pressed"]
+[connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="ChoiceEdit" method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="ChoiceEdit" method="_on_down_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="ChoiceEdit" method="_on_jump_page_toggle_pressed"]

@@ -51,6 +51,7 @@ func request_add_choice():
 	var address :String= DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	var item_address := str(address, ".", get_choice_item_count())
 	undo_redo.create_action("Add Choice")
+	DiisisEditorActions.blank_override_choice_item_addresses.append(item_address)
 	undo_redo.add_do_method(DiisisEditorActions.add_choice_item.bind(item_address))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_choice_item.bind(item_address))
 	undo_redo.commit_action()
