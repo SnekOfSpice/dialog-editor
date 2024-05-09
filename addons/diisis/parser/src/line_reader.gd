@@ -300,6 +300,7 @@ func _ready() -> void:
 	instruction_handler.connect("set_input_lock", set_is_input_locked)
 	instruction_handler.connect("instruction_wrapped_completed", instruction_completed)
 	text_content.visible_ratio = 0
+	text_content.bbcode_enabled = true
 	
 	if not show_advance_available and next_prompt_container:
 		next_prompt_container.modulate.a = 0
@@ -387,7 +388,10 @@ func interrupt(hide_controls:=true):
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 func continue_after_interrupt(read_page:=-1, read_line:=0):
 	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
-		get(key).visible = visibilities_before_interrupt[key]
+		if not visibilities_before_interrupt.has(key):
+			push_warning("Visibilities after interrupt have not been set")
+		else:
+			get(key).visible = visibilities_before_interrupt[key]
 	
 	if read_page != -1:
 		Parser.read_page(read_page, read_line)
@@ -496,8 +500,8 @@ func read_new_line(new_line: Dictionary):
 				push_error("InsutrctionHandler doesn't have execute method.")
 				return
 			
-			var instruction_name = content_name
-			var args : Array = line_data.get("content").get("args")
+			var instruction_name : String = line_data.get("content").get("name")
+			var args : Dictionary = line_data.get("content").get("line_reader.args")
 			
 			# transform content to more friendly args
 			

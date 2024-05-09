@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr8f2"]
-bg_color = Color(0.54, 0, 0.18, 0)
+bg_color = Color(0.54, 0, 0.18, 0.7)
 
 [node name="InstructionContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
 anchors_preset = 10

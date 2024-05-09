@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqrm52wm8b1cu"]
+[gd_scene load_steps=7 format=3 uid="uid://bqrm52wm8b1cu"]
 
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_bva4l"]
 [ext_resource type="Script" path="res://sample/sample_scene.gd" id="1_df3e1"]
+[ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Bold.otf" id="2_2t8gm"]
 [ext_resource type="Script" path="res://sample/Handler.gd" id="2_kv7jx"]
 [ext_resource type="Script" path="res://sample/inline_eval.gd" id="4_traxq"]
 [ext_resource type="Texture2D" uid="uid://vvvuc4ewukes" path="res://icon.svg" id="5_y8wyq"]
@@ -52,6 +53,7 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/TextContainer/MarginContainer/VBoxContainer/Panel"]
 custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
+theme_override_fonts/bold_font = ExtResource("2_2t8gm")
 
 [node name="ChoiceContainer" type="PanelContainer" parent="Control"]
 layout_mode = 0

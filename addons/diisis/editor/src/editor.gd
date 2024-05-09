@@ -11,6 +11,7 @@ var undo_redo = UndoRedo.new()
 var active_dir := ""
 var active_file_name := ""
 var time_since_last_save := 0.0
+var last_system_save := {}
 var has_saved := false
 
 enum PageView {
@@ -225,6 +226,7 @@ func save_to_file(path:String):
 	file.close()
 	set_save_path(path)
 	time_since_last_save = 0.0
+	last_system_save = Time.get_time_dict_from_system()
 	has_saved = true
 
 func _on_fd_save_file_selected(path: String) -> void:

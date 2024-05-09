@@ -53,7 +53,7 @@ func init() -> void:
 	
 	# these are  the symbols that need to wrap any position where code completion
 	# should be able to be triggered /on both sides/
-	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":"]
+	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]"]
 	for actor in active_actors:
 		a.append(actor[actor.length() - 1])
 	text_box.code_completion_prefixes = a
@@ -253,7 +253,20 @@ func _on_text_box_caret_changed() -> void:
 			for property in Pages.get_evaluator_properties():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, property, property)
 		text_box.update_code_completion_options(true)
-	
+	elif is_text_before_caret("["):
+		for tag in ["b", "i", "u", "s"]:
+			var display_text:String
+			match tag:
+				"b":
+					display_text = "bold"
+				"i":
+					display_text = "italics"
+				"u":
+					display_text = "underline"
+				"s":
+					display_text = "strikethrough"
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", tag, "]"))
+		text_box.update_code_completion_options(true)
 
 
 
@@ -421,7 +434,6 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str(arg_name, "|}")):
 			auto_complete_context = arg_name
 			caret_movement_to_do = -1
-			print("befre")
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
@@ -430,5 +442,13 @@ func _on_text_box_code_completion_requested() -> void:
 			prints("before cartet", control)
 			caret_movement_to_do = -1
 			auto_complete_context = control
+			break
+	
+	for tag in ["b", "i", "u", "s"]:
+		if is_text_before_caret(str("[/", tag, "]")):
+			caret_movement_to_do = -str("[/", tag, "]").length()
+			break
+	
+	
 	
 	

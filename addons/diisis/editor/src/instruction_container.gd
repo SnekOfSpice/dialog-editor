@@ -125,7 +125,7 @@ func _on_instruction_text_edit_text_changed() -> void:
 	if text_box.text.contains("\n"):
 		var lines := text_box.text.split("\n")
 		text_box.text = "".join(lines)
-	var compliance := Pages.get_entered_instruction_compliance(text_box.text)
+	var compliance : String = Pages.get_entered_instruction_compliance(text_box.text)
 	find_child("ComplianceContainer").visible = compliance != "OK"
 	find_child("ComplianceLabel").text = compliance
 	

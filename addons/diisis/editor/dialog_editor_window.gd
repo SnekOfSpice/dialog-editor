@@ -20,9 +20,38 @@ func _on_close_requested() -> void:
 	if $Editor.active_dir.is_empty() or not $Editor.has_saved:
 		text += str("You have not saved since opening.")
 	else:
-		var time = int($Editor.time_since_last_save)
-		var time_word = "second" if time == 1 else "seconds"
-		text += str("You last saved ", time, " ", time_word, " ago.")
+		var seconds_since_last_save = int($Editor.time_since_last_save)
+		var minutes_since_last_save := 0
+		var hours_since_last_save := 0
+		var last_system_save = $Editor.last_system_save
+		
+		var second_word:String
+		var minute_word:String
+		var hour_word:String
+		
+		
+		if seconds_since_last_save >= 60:
+			minutes_since_last_save = floor(seconds_since_last_save / 60.0)
+			seconds_since_last_save -= 60 * minutes_since_last_save
+			if minutes_since_last_save >= 60:
+				hours_since_last_save = floor(minutes_since_last_save / 60.0)
+				minutes_since_last_save -= 60 * hours_since_last_save
+		
+		second_word = "second" if seconds_since_last_save == 1 else "seconds"
+		minute_word = "minute" if minutes_since_last_save == 1 else "minutes"
+		hour_word = "hour" if hours_since_last_save == 1 else "hours"
+		
+		var system_str := str(last_system_save.get("hour"), ":", last_system_save.get("minute"), ":", last_system_save.get("second"))
+		text += str("You last saved at ", system_str, ".\n")
+		
+		var ago_string:=""
+		if hours_since_last_save > 0:
+			ago_string += str(hours_since_last_save, " ", hour_word, ", ")
+		if minutes_since_last_save > 0:
+			ago_string += str(minutes_since_last_save, " ", minute_word, ", ")
+		
+		ago_string += str(seconds_since_last_save, " ", second_word)
+		text += str("(", ago_string, " ago.)")
 	$QuitDialog.dialog_text = text
 	$QuitDialog.popup()
 

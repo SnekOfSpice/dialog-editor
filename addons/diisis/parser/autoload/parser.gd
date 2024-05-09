@@ -18,7 +18,7 @@ extends Node
 var page_data := {}
 var locales := {}
 var default_locale := "en_US"
-var locale := "de_DE"
+var locale := "en_US"
 var dropdown_titles := []
 var dropdowns := {}
 
@@ -264,7 +264,7 @@ func open_connection(new_lr: LineReader):
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.
 func change_fact(fact_name: String, new_value: bool, suppress_event:=false):
-	var old_value = facts[fact_name]
+	var old_value = facts.get(fact_name, false)
 	facts[fact_name] = new_value
 	if not suppress_event:
 		ParserEvents.fact_changed.emit(fact_name, old_value, new_value)

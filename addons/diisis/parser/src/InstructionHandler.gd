@@ -52,7 +52,7 @@ func _process(delta: float) -> void:
 	
 	is_executing = false
 
-func _wrapper_execute(instruction_name, args, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
+func _wrapper_execute(instruction_name : String, args : Dictionary, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	delay_after = delay_after_seconds
 	delay_before = delay_before_seconds
 	execution_name = instruction_name
