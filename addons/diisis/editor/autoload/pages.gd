@@ -157,15 +157,25 @@ var facts := {}
 # if exactly one period in numerical, convert to float
 # else string
 # also convert to string if in single or double quotes
-var instruction_templates := [
-	{
-		"name": "show-character",
-		"args": [
-			"character-name",
-			"clear-others"
-		]
+var instruction_templates := {
+		"show-character": {
+			"args" : [
+				"character_name",
+				"clear_others"
+			],
+			"arg_types" : [
+				"string",
+				"bool"
+			]
+		},
+		"rotate": {
+			"args" : [
+				"angle"
+			],
+			"arg_types":
+				["float"]
+		}
 	}
-]
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -218,7 +228,7 @@ func deserialize(data:Dictionary):
 	page_data.clear()
 	page_data = int_data.duplicate()
 	head_defaults = data.get("head_defaults", [])
-	instruction_templates = data.get("instruction_templates", [])
+	instruction_templates = data.get("instruction_templates", {})
 	if data.get("facts") is Array:
 		var compat_facts := {}
 		for f in data.get("facts"):
@@ -487,20 +497,16 @@ func get_defaults(property_key:String):
 	}
 
 func get_all_instruction_names() -> Array:
-	var result := []
-	for p in instruction_templates:
-		result.append(p.get("name", ""))
-	
-	return result
+	return instruction_templates.keys()
 
-func get_instruction_args(instruction_name: String) -> Array:
-	for p in instruction_templates:
-		if p.get("name", "") == instruction_name:
-			return p.get("args", [])
-	
-	return []
+func get_instruction_arg_names(instruction_name: String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("args", [])
+
+func get_instruction_arg_types(instruction_name: String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
 
 func get_all_invalid_instructions() -> String:
+	return ""
 	var warning := ""
 	
 	var overdefined_instructions := []
@@ -516,9 +522,9 @@ func get_all_invalid_instructions() -> String:
 			
 			var content = l.get("content", {})
 			var instruction_name = content.get("name")
-			var instruction_args : Array = content.get("content")
+			var instruction_args : Dictionary = content.get("args")
 			
-			if instruction_args.size() != get_instruction_args(instruction_name).size():
+			if instruction_args.size() != get_instruction_arg_names(instruction_name).size():
 				malformed_instructions.append(str(i, ".", j))
 			
 			for arg in instruction_args:
@@ -998,3 +1004,223 @@ func get_localizable_addresses_with_content() -> Dictionary:
 		page_index += 1
 
 	return localizable_addresses
+
+
+func add_template_from_string(instruction:String):
+	var entered_name := instruction.split("(")[0]
+	var arg_string := instruction.trim_prefix(entered_name)
+	arg_string = arg_string.trim_prefix("(")
+	arg_string = arg_string.trim_suffix(")")
+	
+	var arg_names := []
+	var arg_types := []
+	var entered_args := arg_string.split(",")
+	for arg in entered_args:
+		if arg.contains(":"): # typed
+			var arg_name := arg.split(":")[0]
+			var arg_type := arg.split(":")[1]
+			while arg_name.begins_with(" "):
+				arg_name = arg_name.trim_prefix(" ")
+			while arg_name.ends_with(" "):
+				arg_name = arg_name.trim_suffix(" ")
+			while arg_type.begins_with(" "):
+				arg_type = arg_type.trim_prefix(" ")
+			while arg_type.ends_with(" "):
+				arg_type = arg_type.trim_suffix(" ")
+			arg_names.append(arg_name)
+			arg_types.append(arg_type)
+		else: # implicitly convert to string
+			while arg.begins_with(" "):
+				arg = arg.trim_prefix(" ")
+			while arg.ends_with(" "):
+				arg = arg.trim_suffix(" ")
+			arg_names.append(arg)
+			arg_types.append("string")
+	
+	instruction_templates[entered_name] = {
+		"args" : arg_names,
+		"arg_types": arg_types
+	}
+
+func update_instruction_from_template(old_name:String, new_full_instruction:String):
+	var old_template : Dictionary = instruction_templates.get(old_name)
+	instruction_templates.erase(old_name)
+	add_template_from_string(new_full_instruction)
+	var new_entered_name := new_full_instruction.split("(")[0]
+	var new_template : Dictionary = instruction_templates.get(new_entered_name)
+	
+	for page in page_data.values():
+		var lines : Array = page.get("lines", [])
+		for line in lines:
+			if line.get("line_type") != DIISIS.LineType.Instruction:
+				continue
+			if line.get("content", {}).get("name", "") != old_name:
+				continue
+			line["content"]["name"] = new_entered_name
+			
+			var old_text : String = line["content"]["meta.text"]
+			
+			var old_template_data = parse_instruction_to_handleable_dictionary(old_text, old_template)
+			
+			var old_arg_count : int = old_template.get("args").size()
+			var old_arg_names : Array = old_template.get("args")
+			var old_arg_types : Array = old_template.get("arg_types")
+			var new_arg_count : int = new_template.get("args").size()
+			var new_arg_names : Array = new_template.get("args")
+			var new_arg_types : Array = new_template.get("arg_types")
+			
+			var transformed_string := new_entered_name
+			transformed_string += "("
+			
+			var i := 0
+			var goal_arg_count := min(old_arg_count, new_arg_count)
+			while i < goal_arg_count:
+				printt(old_template_data, old_arg_names, old_arg_names[i])
+				transformed_string += old_template_data.get("args").get(old_arg_names[i])
+				if i < goal_arg_count - 1:
+					transformed_string += ", "
+				i += 1
+			
+			
+			transformed_string += ")"
+			
+			# instruction container handles it when it inits and finds an empty meta.text but existing args
+			line["content"]["meta.text"] = transformed_string
+			line["content"]["line_reader.args"] = parse_instruction_to_handleable_dictionary(transformed_string)
+			
+	
+
+func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
+	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
+		return {}
+	
+	var result := {}
+	var entered_name = instruction_text.split("(")[0]
+	result["name"] = entered_name
+	
+	var args := {}
+	var arg_names := template_override.get("args", Pages.get_instruction_arg_names(entered_name))
+	var arg_types := template_override.get("arg_types", Pages.get_instruction_arg_types(entered_name))
+	instruction_text = instruction_text.trim_prefix(str(entered_name, "("))
+	instruction_text = instruction_text.trim_suffix(")")
+	var entered_args := instruction_text.split(",")
+	var i := 0
+	while i < entered_args.size():
+		var arg = entered_args[i]
+		while arg.begins_with(" "):
+			arg = arg.trim_prefix(" ")
+		while arg.ends_with(" "):
+			arg = arg.trim_suffix(" ")
+		
+		var arg_value
+		var arg_type:String=arg_types[i]
+		var value_string := arg.split(":")[0]
+		if arg_type == "string":
+			arg_value = value_string
+		elif arg_type == "bool":
+			if value_string == "true":
+				arg_value = true
+			if value_string == "false":
+				arg_value = false
+		elif arg_type == "float":
+			arg_value = float(value_string)
+	
+		args[arg_names[i]] = arg_value
+		i += 1
+	
+	result["args"] = args
+	prints("got args ", args)
+	return result
+
+func does_instruction_name_exist(instruction_name:String):
+	return instruction_templates.keys().has(instruction_name)
+
+func get_compliance_with_template(instruction:String) -> String:
+	var entered_name = instruction.split("(")[0]
+	if not does_instruction_name_exist(entered_name):
+		return str("Instruction ", entered_name, " does not exist")
+	
+	if instruction.count(",") + 1 != instruction_templates.get(entered_name).get("args").size():
+		return "Arg count mismatch"
+	
+	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
+	var args_string = instruction.trim_prefix(entered_name)
+	args_string = args_string.trim_prefix("(")
+	args_string = args_string.trim_suffix(")")
+	var args := args_string.split(",")
+	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
+	
+	var i := 0
+	while i < template_types.size():
+		var arg_string : String = args[i]
+		while arg_string.begins_with(" "):
+			arg_string = arg_string.trim_prefix(" ")
+		while arg_string.ends_with(" "):
+			arg_string = arg_string.trim_suffix(" ")
+		var arg_value : String = arg_string.split(":")[0]
+		if template_types[i] == "bool":
+			if arg_value != "true" and arg_value != "false":
+				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
+		if template_types[i] == "float":
+			for char in arg_value:
+				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]:
+					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and .)")
+		i += 1
+	
+	return "OK"
+
+func get_entered_instruction_compliance(instruction:String, check_as_template:=false, error_on_duplicate := false) -> String:
+	if instruction.count("(") != 1:
+		return "Missing or excess ("
+	if instruction.count(")") != 1:
+		return "Missing or excess )"
+	if instruction[instruction.length() - 1] != ")":
+		return "Doesn't end with )"
+	if instruction.find("(") > instruction.find(")"):
+		return "( can't be behind )"
+	if instruction.find("(") == 0:
+		return "Can't start with ("
+	
+	var entered_name = instruction.split("(")[0]
+	if check_as_template:
+		if does_instruction_name_exist(entered_name) and error_on_duplicate:
+			return "Instruction already exists"
+		
+		if entered_name.contains(" "):
+			return "Entered name contains a space"
+		
+		if instruction.find("(") + 1 != instruction.find(")"):
+			# for every arg, it must be ended with :bool, :string, :float (json doesn't support int / float distinction
+			# and I can't be bothered to write support for dictionaries or arrays atm)
+			var arg_string = instruction.trim_prefix(entered_name)
+			arg_string = arg_string.trim_prefix("(")
+			arg_string = arg_string.trim_suffix(")")
+			var args := arg_string.split(",")
+			var arg_names := []
+			for arg in args:
+				if arg.count(":") > 1:
+					return "One or more args contain more than one :"
+				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
+					return "One or more typed arguments don't end in \":string\", \":bool\", or \":float\""
+				var arg_name := arg.split(":")[0]
+				while arg_name.begins_with(" "):
+					arg_name = arg_name.trim_prefix(" ")
+				while arg_name.ends_with(" "):
+					arg_name = arg_name.trim_suffix(" ")
+				if arg_name.is_empty():
+					return "Empty argument name"
+				if arg_names.has(arg_name):
+					return "Duplicate argument names"
+				else:
+					arg_names.append(arg_name)
+	else: # check as sth that follows the template
+		var template_compliance := get_compliance_with_template(instruction)
+		if template_compliance != "OK":
+			return template_compliance
+	
+	
+			
+	
+	return "OK"
+
+

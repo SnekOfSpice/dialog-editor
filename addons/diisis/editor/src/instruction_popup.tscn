@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://csyhxfuwxrtah"]
+[gd_scene load_steps=4 format=3 uid="uid://csyhxfuwxrtah"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_popup.gd" id="1_1xy4c"]
+[ext_resource type="PackedScene" uid="uid://d33carvc0ulrr" path="res://addons/diisis/editor/src/instruction_edit_container.tscn" id="2_3qrya"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_hv7t4"]
 symbol_color = Color(0.984314, 0.835294, 0.890196, 1)
@@ -14,7 +15,10 @@ exclusive = true
 content_scale_aspect = 1
 script = ExtResource("1_1xy4c")
 
+[node name="InstructionEditContainer" parent="." instance=ExtResource("2_3qrya")]
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -61,6 +65,7 @@ auto_brace_completion_highlight_matching = true
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="request_close" from="InstructionEditContainer" to="." method="_on_instruction_edit_container_request_close"]
 [connection signal="pressed" from="VBoxContainer/Controls/DiscardButton" to="." method="_on_discard_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Controls/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Controls/SaveCloseButton" to="." method="_on_save_close_button_pressed"]

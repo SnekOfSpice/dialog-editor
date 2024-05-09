@@ -53,6 +53,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="FunnyDebugButton" type="Button" parent="Core"]
+visible = false
 layout_mode = 2
 text = "any test functionality"
 

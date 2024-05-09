@@ -497,14 +497,12 @@ func read_new_line(new_line: Dictionary):
 				return
 			
 			var instruction_name = content_name
-			var args = {}
+			var args : Array = line_data.get("content").get("args")
 			
 			# transform content to more friendly args
-			for c in content:
-				args[c.get("name")] = c.get("value")
 			
-			var delay_before = new_line.get("content").get("delay.before")
-			var delay_after = new_line.get("content").get("delay.after")
+			var delay_before = new_line.get("content").get("delay_before")
+			var delay_after = new_line.get("content").get("delay_after")
 			
 			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
 		DIISIS.LineType.Folder:

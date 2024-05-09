@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjn0hupwylq30"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_edit_item.gd" id="1_6p6sk"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_d8oop"]
+
+[node name="PanelContainer" type="PanelContainer"]
+offset_right = 1152.0
+offset_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_d8oop")
+script = ExtResource("1_6p6sk")
+
+[node name="InstructionEditItem" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="DisplayContainer" type="HBoxContainer" parent="InstructionEditItem"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="InstructionEditItem/DisplayContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "X"
+
+[node name="InstructionLabel" type="Label" parent="InstructionEditItem/DisplayContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Instruction_text"
+
+[node name="EditButton" type="Button" parent="InstructionEditItem/DisplayContainer"]
+layout_mode = 2
+text = "Edit"
+
+[node name="EditContainer" type="HBoxContainer" parent="InstructionEditItem"]
+layout_mode = 2
+
+[node name="InstructionEdit" type="LineEdit" parent="InstructionEditItem/EditContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EditConfirmContainer" type="HBoxContainer" parent="InstructionEditItem/EditContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="InstructionEditItem/EditContainer/EditConfirmContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Save"
+
+[node name="DiscardButton" type="Button" parent="InstructionEditItem/EditContainer/EditConfirmContainer"]
+layout_mode = 2
+text = "Discard"
+
+[node name="ComplianceLabel" type="Label" parent="InstructionEditItem"]
+layout_mode = 2
+
+[connection signal="pressed" from="InstructionEditItem/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="text_changed" from="InstructionEditItem/EditContainer/InstructionEdit" to="." method="_on_instruction_edit_text_changed"]
+[connection signal="pressed" from="InstructionEditItem/EditContainer/EditConfirmContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="InstructionEditItem/EditContainer/EditConfirmContainer/DiscardButton" to="." method="_on_discard_button_pressed"]

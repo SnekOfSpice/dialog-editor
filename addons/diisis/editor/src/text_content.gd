@@ -226,7 +226,6 @@ func _on_text_box_caret_changed() -> void:
 	elif is_text_before_caret("{"):
 		for actor in Pages.dropdown_dialog_arguments:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, "|}"))
-		print("dropdown_dialog_arguments completion")
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "," and get_text_after_caret(1) == "}":
 		var used_args = get_used_dialog_args_in_line()
@@ -234,19 +233,16 @@ func _on_text_box_caret_changed() -> void:
 			if arg in used_args:
 				continue
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
-		print("dropdown_dialog_arguments completion")
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
 		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
-		prints("ARGS", Pages.dropdowns.get(auto_complete_context, []), ".", auto_complete_context)
 		for a in Pages.dropdowns.get(auto_complete_context, []):
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif full_actor_before_caret and get_text_after_caret(1) == ":":
-		prints("hi", text_box.code_completion_prefixes)
 		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, "a", "a")
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret(":") and is_text_after_caret(">"):

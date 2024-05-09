@@ -13,6 +13,8 @@ func _on_size_changed() -> void:
 	get_viewport().get_camera_2d().offset = (size*0.5)
 
 func _on_close_requested() -> void:
+	if $Editor.undo_redo.get_history_count() == 0:
+		_on_quit_dialog_confirmed()
 	var text := ""
 	text += "Do you want to close DIISIS?\n"
 	if $Editor.active_dir.is_empty() or not $Editor.has_saved:
