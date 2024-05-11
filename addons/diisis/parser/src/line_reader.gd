@@ -178,6 +178,7 @@ var started_word_buffer :=""
 var characters_visible_so_far := ""
 
 var last_visible_ratio := 0.0
+var last_visible_characters := 0.0
 var visibilities_before_interrupt := {}
 
 signal line_reader_ready
@@ -624,10 +625,15 @@ func _process(delta: float) -> void:
 				started_word_buffer = ""
 	characters_visible_so_far = new_characters_visible_so_far
 	
-	if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
-		if text_speed < MAX_TEXT_SPEED:
+	if text_speed < MAX_TEXT_SPEED:
+		if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
 			ParserEvents.text_content_filled.emit()
+		if last_visible_ratio != text_content.visible_ratio:
+			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
+		if last_visible_characters != text_content.visible_characters:
+			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 	last_visible_ratio = text_content.visible_ratio
+	last_visible_characters = text_content.visible_characters
 	
 	if auto_continue:
 		if not line_type == DIISIS.LineType.Text:

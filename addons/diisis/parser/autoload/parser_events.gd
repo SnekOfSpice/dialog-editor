@@ -147,3 +147,10 @@ signal line_reader_resumed_after_interrupt(
 ## Emitted when [member LineReader.text_content] reaches a [param visible_ratio] of [code]1.0[/code].
 ## Not emitted if [member LineReader.text_speed] is [LineReader.MAX_TEXT_SPEED].
 signal text_content_filled()
+
+signal text_content_visible_characters_changed(
+	visible_characters:int
+)
+signal text_content_visible_ratio_changed(
+	visible_ratio:float
+)
