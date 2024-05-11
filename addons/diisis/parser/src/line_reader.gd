@@ -63,7 +63,7 @@ var name_for_blank_name := ""
 @export var name_colors := {}
 
 @export_group("Mandatory References")
-## The Control holding [code]choice_option_container[/code]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
+## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
 @export var choice_container:PanelContainer:
 	get:
 		return choice_container
@@ -89,7 +89,7 @@ var instruction_handler: InstructionHandler:
 		instruction_handler = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## Should have its visible characters / ratio set to 0 in the scene.
+## The [RichTextLabel] used to display text as it gets read out. [member RichTextLabel.bbcode_enabled] will be set to [param true] by the [LineReader].
 @export var text_content: RichTextLabel:
 	get:
 		return text_content
@@ -97,7 +97,7 @@ var instruction_handler: InstructionHandler:
 		text_content = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The Control holding ALL text; [code]name_label[/code] & [code]text_content[/code].
+## Any [Control] that is a parent of both nodes used for; [member name_label] and [member text_content].
 @export var text_container: Control:
 	get:
 		return text_container
@@ -624,6 +624,9 @@ func _process(delta: float) -> void:
 				started_word_buffer = ""
 	characters_visible_so_far = new_characters_visible_so_far
 	
+	if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
+		if text_speed < MAX_TEXT_SPEED:
+			ParserEvents.text_content_filled.emit()
 	last_visible_ratio = text_content.visible_ratio
 	
 	if auto_continue:

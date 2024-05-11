@@ -1,4 +1,5 @@
 extends Node
+class_name DiisisParserEvents
 
 
 ## Emitted when a choice button has been pressed.
@@ -142,3 +143,7 @@ signal line_reader_interrupted(
 signal line_reader_resumed_after_interrupt(
 	line_reader:LineReader
 )
+
+## Emitted when [member LineReader.text_content] reaches a [param visible_ratio] of [code]1.0[/code].
+## Not emitted if [member LineReader.text_speed] is [LineReader.MAX_TEXT_SPEED].
+signal text_content_filled()
