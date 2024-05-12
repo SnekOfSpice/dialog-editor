@@ -228,6 +228,8 @@ func save_to_file(path:String):
 	time_since_last_save = 0.0
 	last_system_save = Time.get_time_dict_from_system()
 	has_saved = true
+	
+	notify(str("Saved to ", active_file_name, "!"))
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
@@ -258,8 +260,10 @@ func request_go_to_address(address:String, action_message:=""):
 func request_load_page(number:int, action_message:String):
 	request_go_to_address(str(number), action_message)
 
-func notify(message:String, duration:float):
-	pass
+func notify(message:String, duration:=5.0):
+	var notification = load("res://addons/diisis/editor/src/editor_notification.tscn").instantiate()
+	$NotificationContainer.add_child(notification)
+	notification.init(message, duration)
 
 func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
