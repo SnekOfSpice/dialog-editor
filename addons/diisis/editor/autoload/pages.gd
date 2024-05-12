@@ -1152,7 +1152,7 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 		i += 1
 	
 	result["args"] = args
-	prints("got args ", args)
+	
 	return result
 
 func does_instruction_name_exist(instruction_name:String):

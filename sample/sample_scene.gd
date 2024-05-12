@@ -5,9 +5,9 @@ extends Control
 func _ready() -> void:
 	Parser.reset_and_start(0)
 	
-	ParserEvents.text_content_filled.connect(on_text_content_filled)
-	ParserEvents.text_content_visible_characters_changed.connect(on_text_content_visible_characters_changed)
-	ParserEvents.text_content_visible_ratio_changed.connect(on_text_content_visible_ratio_changed)
+	#ParserEvents.text_content_filled.connect(on_text_content_filled)
+	#ParserEvents.text_content_visible_characters_changed.connect(on_text_content_visible_characters_changed)
+	#ParserEvents.text_content_visible_ratio_changed.connect(on_text_content_visible_ratio_changed)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

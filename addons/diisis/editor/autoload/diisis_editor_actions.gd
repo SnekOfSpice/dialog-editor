@@ -350,5 +350,57 @@ func replace_line_content_texts(line_addresses:Array, what:String, with:String):
 	
 	Pages.editor.refresh(false)
 
+func replace_choice_content_texts(choice_item_addresses:Array, what:String, with:String):
+	var pages_to_operate_on := {}
+	var enabled_addresses := []
+	var disabled_addresses := []
+	for address : String in choice_item_addresses:
+		var parts = DiisisEditorUtil.get_split_address(address)
+		if pages_to_operate_on.has(parts[0]):
+			var lines : Dictionary = pages_to_operate_on.get(parts[0], {})
+			var items : Array = lines.get(parts[1], [])
+			items.append(parts[2])
+		else:
+			pages_to_operate_on[parts[0]] = {parts[1]:[parts[2]]}
+		if address.ends_with("enabled"):
+			enabled_addresses.append(".".join(parts))
+		if address.ends_with("disabled"):
+			disabled_addresses.append(".".join(parts))
+	prints("attemting to replace at", pages_to_operate_on)
+	prints("enabled", enabled_addresses)
+	prints("disabled", disabled_addresses)
+	for n in pages_to_operate_on.keys():
+		var page = Pages.page_data.get(n, {})
+		var lines : Array = page.get("lines", [])
+		print("dfghjdfghd")
+		for line_index in pages_to_operate_on.get(n).keys():
+			print(line_index)
+			var line = lines[line_index]
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				print("huh")
+				var choices : Array = line.get("content").get("choices", [])
+				prints("hdfgj")
+				var choice_indices_to_operate_on : Array = pages_to_operate_on.get(n).get(line_index)
+				prints("operating on ", choice_indices_to_operate_on)
+				for index in choice_indices_to_operate_on:
+					var choice = choices[index]
+					var choice_address := str(n, ".", line_index, ".", index)
+					print(choice_address)
+					if enabled_addresses.has(choice_address):
+						choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
+					if disabled_addresses.has(choice_address):
+						choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
+				
+				line["content"]["choices"] = choices
+			else:
+				print("no choice")
+	
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
+
 func replace_line_content_text(line_address:String, what:String, with:String):
 	replace_line_content_texts([line_address], what, with)
+
+func replace_choice_content_text(item_address:String, what:String, with:String):
+	replace_choice_content_texts([item_address], what, with)

@@ -247,7 +247,9 @@ func _on_fd_open_file_selected(path: String) -> void:
 
 func request_go_to_address(address:String, action_message:=""):
 	if action_message.is_empty():
-		action_message == str("Go to ", address)
+		action_message = str("Go to ", address)
+	else:
+		action_message = str(action_message, "(Go to ", address,  ")")
 	undo_redo.create_action(action_message)
 	undo_redo.add_do_method(DiisisEditorActions.go_to.bind(address))
 	undo_redo.add_undo_method(DiisisEditorActions.go_to.bind(str(get_current_page_number())))
@@ -255,6 +257,9 @@ func request_go_to_address(address:String, action_message:=""):
 
 func request_load_page(number:int, action_message:String):
 	request_go_to_address(str(number), action_message)
+
+func notify(message:String, duration:float):
+	pass
 
 func _on_add_line_button_pressed() -> void:
 	undo_redo.create_action("Add Line")
@@ -285,6 +290,8 @@ func _on_instruction_popup_validate_saved_instructions() -> void:
 func update_undo_redo_buttons():
 	find_child("UndoButton").disabled = not undo_redo.has_undo()
 	find_child("RedoButton").disabled = not undo_redo.has_redo()
+	
+	find_child("LastUndoStepLabel").text = undo_redo.get_current_action_name()#undo_redo.get_history_count()
 
 func _on_undo_button_pressed() -> void:
 	undo_redo.undo()

@@ -113,9 +113,21 @@ layout_mode = 2
 focus_mode = 0
 text = "Redo"
 
-[node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+visible = false
 layout_mode = 2
 text = "Autosave in: 0"
+
+[node name="Label2" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "<"
+
+[node name="LastUndoStepLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
 
 [node name="MenuBar" type="MenuBar" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -442,6 +454,24 @@ size_flags_vertical = 3
 [node name="GraphView" parent="." instance=ExtResource("5_bks01")]
 visible = false
 layout_mode = 1
+
+[node name="NotificationLayer" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NotificationLayer"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
 
 [node name="FDSave" type="FileDialog" parent="."]
 initial_position = 4

@@ -7,7 +7,7 @@ func serialize() -> Dictionary:
 	var result = {}
 	
 	var choices = []
-	for c in $ChoiceList.get_children():
+	for c : ChoiceEdit in $ChoiceList.get_children():
 		choices.append(c.serialize())
 	result["choices"] = choices
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed

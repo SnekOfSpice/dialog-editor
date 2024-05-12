@@ -114,5 +114,14 @@ text = "continue"
 position = Vector2(241, 341)
 texture = ExtResource("5_y8wyq")
 
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 513.0
+offset_top = 259.0
+offset_right = 556.0
+offset_bottom = 290.0
+mouse_filter = 2
+text = "ouio"
+
 [connection signal="pressed" from="InterruptButton" to="." method="_on_interrupt_button_pressed"]
 [connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -40,17 +40,21 @@ func request_replace_local():
 	var replace_str = find_child("ReplaceTextEdit").text
 	
 	var undo_redo = Pages.editor.undo_redo
-	undo_redo.create_action("Replace Text Local")
-	undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str))
-	undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query))
-	undo_redo.commit_action()
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Line:
+			undo_redo.create_action("Replace Text Local")
+			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query))
+			undo_redo.commit_action()
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			undo_redo.create_action("Replace Text Local")
+			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_text.bind(address, last_search_query, replace_str))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_text.bind(address, replace_str, last_search_query))
+			undo_redo.commit_action()
 	
 	display_results(last_search_query)
 	find_child("ResultLabel").text = ""
 	find_child("GoToButton").text = "Go To"
-
-func request_replace_all():
-	pass
 
 func request_replace_all_in_type():
 	var start_selection : int = find_child("ItemList").get_selected_items()[0]
@@ -67,10 +71,19 @@ func request_replace_all_in_type():
 	last_search_query = find_child("QueryTextEdit").text
 	var replace_str = find_child("ReplaceTextEdit").text
 	var undo_redo = Pages.editor.undo_redo
-	undo_redo.create_action("Replace Text In Type")
-	undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str))
-	undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query))
-	undo_redo.commit_action()
+	
+	var start_address : String = addresses_in_type.front()
+	match DiisisEditorUtil.get_address_depth(start_address):
+		DiisisEditorUtil.AddressDepth.Line:
+			undo_redo.create_action("Replace Text In Type")
+			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query))
+			undo_redo.commit_action()
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			undo_redo.create_action("Replace Text In Type")
+			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, last_search_query, replace_str))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, replace_str, last_search_query))
+			undo_redo.commit_action()
 	
 	display_results(last_search_query)
 	find_child("ResultLabel").text = ""
@@ -82,7 +95,7 @@ func _on_search_button_pressed() -> void:
 
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
-	var details : String = str("[color=#adaca9]", details_by_address.get(address), "[/color]")
+	var details : String = details_by_address.get(address)
 	details = details.replace(last_search_query, str("[color=#f8f6f8][b]", last_search_query, "[/b][/color]"))
 	find_child("ResultLabel").text = details
 	

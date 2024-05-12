@@ -5,6 +5,12 @@ class_name LineReader
 
 const MAX_TEXT_SPEED := 101
 
+#enum ChoiceButtonFocusMode {
+	#KeyboardOnly,
+	#MouseOnly,
+	#All,
+#}
+
 @export_group("UX")
 @export_subgroup("Text Behavior")
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
@@ -40,6 +46,8 @@ var _auto_continue_duration:= auto_continue_delay
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
+#@export var give_focus_to_choice_button := false
+#@export var choice_button_focus_mode := ChoiceButtonFocusMode.MouseOnly
 
 @export_subgroup("Advance")
 @export var show_advance_available := false:
@@ -929,7 +937,11 @@ func build_choices(choices, auto_switch:bool):
 		var do_jump_page = option.get("do_jump_page")
 		var target_page = option.get("target_page")
 		
-		var new_option = preload("res://addons/diisis/parser/src/choice_option.tscn").instantiate()
+		var new_option:ChoiceButton
+		if button_scene:
+			new_option = button_scene.instantiate()
+		else:
+			new_option = preload("res://addons/diisis/parser/src/choice_option.tscn").instantiate()
 		new_option.disabled = not enable_option
 		new_option.text = option_text
 		
@@ -948,7 +960,30 @@ func build_choices(choices, auto_switch:bool):
 			"do_jump_page": do_jump_page,
 			"target_page": target_page,
 		})
+		
+		#match choice_button_focus_mode:
+			#ChoiceButtonFocusMode.All:
+				#new_option.focus_mode = Control.FOCUS_ALL
+				#new_option.mouse_filter = Control.MOUSE_FILTER_STOP
+				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_STOP
+			#ChoiceButtonFocusMode.KeyboardOnly:
+				#new_option.focus_mode = Control.FOCUS_ALL
+				#new_option.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			#ChoiceButtonFocusMode.MouseOnly:
+				#if give_focus_to_choice_button:
+					#new_option.focus_mode = Control.FOCUS_CLICK
+				#else:
+					#new_option.focus_mode = Control.FOCUS_NONE
+				#new_option.mouse_filter = Control.MOUSE_FILTER_STOP
+				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_STOP
 	ParserEvents.choices_presented.emit(built_choices)
+	
+	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
+		#if choice_option_container.get_child_count() > 0:
+			#choice_option_container.get_child(0).grab_focus.call_deferred()
+		#else:
+			#push_warning("No choice to give focus to.")
 
 func is_choice_presented():
 	return not choice_option_container.get_children().is_empty()
