@@ -9,6 +9,7 @@ var last_search_query := ""
 func init():
 	find_child("GoToButton").text = str("Go To")
 	find_child("ReplaceContainer").visible = false
+	find_child("ReplaceAllInTypeButton").text = "Replace all in Type"
 	
 func display_results(search:String):
 	find_child("ReplaceContainer").visible = false
@@ -100,7 +101,13 @@ func _on_item_list_item_selected(index: int) -> void:
 	find_child("ResultLabel").text = details
 	
 	find_child("GoToButton").text = str("Go To ", address)
-	find_child("ReplaceContainer").visible = true
+	find_child("ReplaceContainer").visible = false
+	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.Line:
+		find_child("ReplaceContainer").visible = true
+		find_child("ReplaceAllInTypeButton").text = "Replace all in Text"
+	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.ChoiceItem:
+		find_child("ReplaceContainer").visible = true
+		find_child("ReplaceAllInTypeButton").text = "Replace all in Choices"
 
 
 func _on_go_to_button_pressed() -> void:
