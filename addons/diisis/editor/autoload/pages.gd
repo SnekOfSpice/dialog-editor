@@ -8,6 +8,7 @@ var head_defaults := [
 var dropdowns := {"dropdown1": ["00", "01"], "dropdown2": ["a", "b"], "dd3": ["arg1", "arg2"]}
 var dropdown_titles := ["dropdown1", "dropdown2", "dd3"]
 var dropdown_dialog_arguments := ["dd3"]
+var dropdown_title_for_dialog_syntax := "dropdown1"
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -212,6 +213,7 @@ func serialize() -> Dictionary:
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
 		"dropdown_dialog_arguments": dropdown_dialog_arguments,
+		"dropdown_title_for_dialog_syntax": dropdown_title_for_dialog_syntax,
 		"file_config": get_file_config(),
 		"locales_to_export" : locales_to_export,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
@@ -239,6 +241,7 @@ func deserialize(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
+	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
 	
@@ -792,6 +795,31 @@ func word_count_total_approx() -> int:
 
 func rename_fact(from:String, to:String):
 	alter_fact(from, to)
+
+func rename_dropdown_title(from:String, to:String):
+	var dd_values = dropdowns.get(from).duplicate(true)
+	dropdowns[to] = dd_values
+	dropdowns.erase(from)
+	dropdown_titles.insert(dropdown_titles.find(from), to)
+	dropdown_titles.erase(from)
+	if dropdown_dialog_arguments.has(from):
+		var where = dropdown_dialog_arguments.find(from)
+		dropdown_dialog_arguments.insert(where, to)
+		dropdown_dialog_arguments.erase(from)
+	if dropdown_title_for_dialog_syntax == from:
+		dropdown_title_for_dialog_syntax = to
+	
+	# change in line data
+	for page in page_data.values():
+		var lines : Array = page.get("lines")
+		for line : Dictionary in lines:
+			if line.get("line_type") != DIISIS.LineType.Text:
+				continue
+			if line["content"]["active_actors_title"] == from:
+				line["content"]["active_actors_title"] = to
+
+func set_dropdown_options(dropdown_title:String, options:Array):
+	dropdowns[dropdown_title] = options
 
 func alter_fact(from:String, to=null):
 	for page in page_data.values():

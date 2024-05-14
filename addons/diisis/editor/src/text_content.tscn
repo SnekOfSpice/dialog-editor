@@ -20,25 +20,10 @@ script = ExtResource("1_uudox")
 [node name="DialogSyntaxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="UseDialogSyntaxButton" type="CheckBox" parent="DialogSyntaxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Use dialog syntaxing"
-
-[node name="DialogSyntaxControls" type="PanelContainer" parent="DialogSyntaxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogSyntaxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DialogSyntaxContainer/DialogSyntaxControls"]
-layout_mode = 2
-
-[node name="DropDownForActors" type="OptionButton" parent="DialogSyntaxContainer/DialogSyntaxControls/HBoxContainer"]
-layout_mode = 2
-allow_reselect = true
-
-[node name="ActiveActorsContainer" type="VBoxContainer" parent="DialogSyntaxContainer/DialogSyntaxControls/HBoxContainer"]
-layout_mode = 2
-
-[node name="ActiveActorsLabel" type="Label" parent="DialogSyntaxContainer/DialogSyntaxControls/HBoxContainer/ActiveActorsContainer"]
+[node name="ActiveActorsLabel" type="Label" parent="DialogSyntaxContainer/HBoxContainer"]
 layout_mode = 2
 
 [node name="TextBox" type="CodeEdit" parent="."]
@@ -76,8 +61,6 @@ visible = false
 position = Vector2i(0, 36)
 visible = false
 
-[connection signal="toggled" from="DialogSyntaxContainer/UseDialogSyntaxButton" to="." method="_on_use_dialog_syntax_button_toggled"]
-[connection signal="item_selected" from="DialogSyntaxContainer/DialogSyntaxControls/HBoxContainer/DropDownForActors" to="." method="_on_drop_down_for_actors_item_selected"]
 [connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="code_completion_requested" from="TextBox" to="." method="_on_text_box_code_completion_requested"]
 [connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]

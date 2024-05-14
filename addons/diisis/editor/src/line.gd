@@ -198,6 +198,8 @@ func update():
 	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
+	elif line_type == DIISIS.LineType.Text:
+		find_child("TextContent").update()
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:

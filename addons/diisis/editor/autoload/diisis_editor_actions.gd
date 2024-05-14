@@ -112,9 +112,23 @@ func move_line(line:Line, dir:int):
 func swap_pages(page_a:int, page_b:int):
 	Pages.swap_pages(page_a, page_b)
 
+func rename_dropdown_title(from:String, to:String):
+	Pages.rename_dropdown_title(from, to)
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
+
+func set_dropdown_options(dropdown_title:String, options:Array):
+	Pages.set_dropdown_options(dropdown_title, options)
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
 
 func rename_fact(from:String, to:String):
 	Pages.rename_fact(from, to)
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
 
 ## action should be either "add" or "delete"
 func operate_local_fact(address:String, target:int, action:String, fact_name:String, fact_value:=true):
@@ -195,44 +209,6 @@ func move_choice_item(item_address:String, direction:int):
 	var choice_line : Line = Pages.editor.current_page.get_line(address_parts[1])
 	choice_line.move_choice_item_by_index(address_parts[2], direction)
 
-
-# ====== COPY PASTE CONSTRUCTION SITE ==============
-
-
-#func clear_selected_addresses():
-	#while not selected_addresses.is_empty():
-		#remove_from_selected_addresses(selected_addresses.back())
-
-#func add_to_selected_addresses(address:String):
-	#if selected_addresses.has(address):
-		#return
-	## disable all other selectors that don't operate on the same depth while a selection is going on
-	## (only needs to happen once in the beginning because no mixing of address types)
-	#if selected_addresses.is_empty():
-		#var depth := DiisisEditorUtil.get_address_depth(address)
-		#for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
-			#selector.set_interactable(selector.address_depth == depth)
-		#current_selection_address_depth = depth
-	#
-	#selected_addresses.append(address)
-#
-#func remove_from_selected_addresses(address:String):
-	#selected_addresses.erase(address)
-	#if selected_addresses.is_empty():
-		#for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
-			#selector.set_interactable(true)
-	#current_selection_address_depth = -1
-
-#func add_data_to_clipboard(depth:int):
-	#var selected_data := {}
-	#clipboard[depth] = selected_data
-
-#func add_data_from_selected_addresses_to_clipboard():
-	#update_selected_addresses()
-	#clipboard.clear()
-	#for address in selected_addresses:
-		#prints("adding data from ", address)
-		#add_to_clipboard(address)
 
 ## Returns addresses it copied from
 func copy(depth:int, single_address_override := "") -> Array:

@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://63cr5arye1r6"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/dialog_argument_dropdown_item.gd" id="1_j0sk0"]
+
+[node name="DialogArgumentDropdownItem" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+script = ExtResource("1_j0sk0")
+
+[node name="SelectAsArgumentCheckbox" type="CheckBox" parent="."]
+layout_mode = 2
+text = "Argument"
+
+[node name="VSeparator" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SelectAsSyntaxCheckbox" type="CheckBox" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Speaker"
+
+[connection signal="toggled" from="SelectAsArgumentCheckbox" to="." method="_on_select_as_argument_checkbox_toggled"]
+[connection signal="toggled" from="SelectAsSyntaxCheckbox" to="." method="_on_select_as_syntax_checkbox_toggled"]

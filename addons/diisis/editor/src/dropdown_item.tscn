@@ -1,0 +1,86 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfwk1hhwqrp2n"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+
+[node name="Control" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sgb4l")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ExpandButton" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+toggle_mode = true
+text = "v"
+
+[node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="HBoxContainer/DisplayContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Edit"
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/DisplayContainer"]
+layout_mode = 2
+text = "title"
+
+[node name="EditContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveTitleButton" type="Button" parent="HBoxContainer/EditContainer"]
+layout_mode = 2
+text = "save"
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer/EditContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "dropdown title"
+
+[node name="DiscardTitleButton" type="Button" parent="HBoxContainer/EditContainer"]
+layout_mode = 2
+text = "discard"
+
+[node name="DeleteButton" type="Button" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 10
+text = "X"
+
+[node name="OptionsContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="DropdownOptionsText" type="TextEdit" parent="OptionsContainer"]
+layout_mode = 2
+scroll_fit_content_height = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "save options"
+
+[node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+text = "discard options"
+
+[connection signal="toggled" from="HBoxContainer/ExpandButton" to="." method="_on_expand_button_toggled"]
+[connection signal="pressed" from="HBoxContainer/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/EditContainer/SaveTitleButton" to="." method="_on_save_title_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/EditContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/EditContainer/DiscardTitleButton" to="." method="_on_discard_title_button_pressed"]
+[connection signal="text_changed" from="OptionsContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
+[connection signal="pressed" from="OptionsContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
+[connection signal="pressed" from="OptionsContainer/HBoxContainer/DiscardOptionsButton" to="." method="_on_discard_options_button_pressed"]

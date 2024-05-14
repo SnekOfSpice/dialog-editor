@@ -3,10 +3,9 @@ extends Control
 class_name TextContent
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
-var use_dialog_syntax := false
+var use_dialog_syntax := true
 var active_actors := [] # list of character names
 var active_actors_title := ""
-var selected_actor_dropdown_index := 0
 
 var entered_arguments := 0
 var used_arguments := []
@@ -40,12 +39,7 @@ func init() -> void:
 	text_box = find_child("TextBox")
 	await get_tree().process_frame
 	
-	
-	find_child("DropDownForActors").clear()
-	for title in Pages.dropdown_titles:
-		find_child("DropDownForActors").add_item(title)
-	find_child("DropDownForActors").select(find_child("DropDownForActors").get_selectable_item())
-	set_use_dialog_syntax(true)
+	fill_active_actors()
 	set_page_view(Pages.editor.get_selected_page_view())
 	
 	for window : Window in find_child("Hints").get_children():
@@ -64,7 +58,6 @@ func serialize() -> Dictionary:
 	result["content"] = text_box.text
 	result["use_dialog_syntax"] = use_dialog_syntax
 	result["active_actors"] = active_actors
-	result["selected_actor_dropdown_index"] = selected_actor_dropdown_index
 	result["active_actors_title"] = active_actors_title
 	
 	return result
@@ -73,8 +66,7 @@ func deserialize(data: Dictionary):
 	text_box.text = data.get("content")
 	active_actors = data.get("active_actors", [])
 	active_actors_title = data.get("active_actors_title", "")
-	selected_actor_dropdown_index = data.get("selected_actor_dropdown_index", 0)
-	set_use_dialog_syntax(data.get("use_dialog_syntax", false))
+	fill_active_actors()
 
 func handle_text_input_from_hint(window: Window, event:InputEvent):
 	#if event is InputEventKey:
@@ -117,25 +109,6 @@ func insert(control_sequence: String):
 			text_box.insert_text_at_caret("<mp>")
 		"lineclear":
 			text_box.insert_text_at_caret("<lc>")
-
-func set_use_dialog_syntax(value: bool):
-	use_dialog_syntax = value
-	if use_dialog_syntax:
-		find_child("DropDownForActors").select(selected_actor_dropdown_index)
-	find_child("DialogSyntaxControls").visible = use_dialog_syntax
-	find_child("UseDialogSyntaxButton").button_pressed = use_dialog_syntax
-	fill_active_actors()
-	
-
-func _on_use_dialog_syntax_button_toggled(button_pressed: bool) -> void:
-	set_use_dialog_syntax(button_pressed)
-	
-	if not use_dialog_syntax: return
-	
-#	for c in find_child("ActiveActorsContainer").get_children():
-#		c.queue_free()
-	
-	# TODO active actor stuff
 
 func get_word_under_caret() -> String:
 	var line := text_box.get_line(text_box.get_caret_line())
@@ -268,7 +241,8 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", tag, "]"))
 		text_box.update_code_completion_options(true)
 
-
+func update():
+	fill_active_actors()
 
 func get_used_dialog_args_in_line() -> Array:
 	var line : String = text_box.get_line(text_box.get_caret_line())
@@ -294,26 +268,17 @@ func get_used_dialog_args_in_line() -> Array:
 	return args
 
 func build_actor_hint():
-	#return
 	used_arguments.clear()
 	entered_arguments = 0
 	text_box.insert_text_at_caret("[]>")
-	#find_child("DialogActorHint").build(active_actors)
-	#find_child("DialogActorHint").popup()
-	#position_hint_at_caret(find_child("DialogActorHint"))
 
 func fill_active_actors():
-	var title = find_child("DropDownForActors").get_item_text(find_child("DropDownForActors").get_selected_id())
+	var title = Pages.dropdown_title_for_dialog_syntax
 	active_actors.clear()
 	for v in Pages.dropdowns.get(title, []):
 		active_actors.append(v)
 	active_actors_title = title
-	find_child("ActiveActorsLabel").text = str(active_actors)
-
-
-func _on_drop_down_for_actors_item_selected(index: int) -> void:
-	fill_active_actors()
-	selected_actor_dropdown_index = index
+	find_child("ActiveActorsLabel").text = ", ".join(active_actors)
 
 
 func _on_text_box_focus_entered() -> void:

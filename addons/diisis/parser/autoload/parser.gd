@@ -23,7 +23,7 @@ var dropdown_titles := []
 var dropdowns := {}
 
 var line_reader : LineReader = null
-var paused := false
+var paused := true
 
 var page_index := 0
 var line_index := 0

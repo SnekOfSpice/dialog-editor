@@ -8,6 +8,7 @@ symbol_color = Color(0.984314, 0.835294, 0.890196, 1)
 function_color = Color(0.658824, 0.341176, 0.898039, 1)
 
 [node name="InstructionPopup" type="Window"]
+title = "Instructions"
 initial_position = 2
 size = Vector2i(450, 455)
 wrap_controls = true

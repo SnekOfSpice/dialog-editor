@@ -69,6 +69,7 @@ func _wrapper_execute(instruction_name : String, args : Dictionary, delay_before
 ## Note that you have to handle what happens inside those suspended calls yourself, including pausing the [Parser] and [method LineReader.interrupt].[br]
 ## Exaple of how to write a minimal script that inherits from [InstructionHandler] and uses all of its functionality:
 ## [codeblock]
+## extends InstructionHandler
 ## @export var icon:Sprite2D
 ##
 ## func execute(instruction_name, args) -> bool:

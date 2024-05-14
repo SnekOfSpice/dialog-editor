@@ -44,8 +44,12 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/TextContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+text = "Name Label Here"
 
 [node name="Panel" type="PanelContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -54,6 +58,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 theme_override_fonts/bold_font = ExtResource("2_2t8gm")
+text = "Text Body Here"
 
 [node name="ChoiceContainer" type="PanelContainer" parent="Control"]
 layout_mode = 0
@@ -86,14 +91,15 @@ choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")
 text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
 text_container = NodePath("../Control/TextContainer")
-name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
-name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Label")
+name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
+name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../Handler")
 
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("4_traxq")
 
 [node name="InterruptButton" type="Button" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 921.0
 offset_top = 107.0
@@ -103,6 +109,7 @@ text = "KILL"
 
 [node name="ContinueButton" type="Button" parent="."]
 auto_translate_mode = 1
+visible = false
 layout_mode = 0
 offset_left = 921.0
 offset_top = 194.0
@@ -111,10 +118,12 @@ offset_bottom = 225.0
 text = "continue"
 
 [node name="Icon" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(241, 341)
 texture = ExtResource("5_y8wyq")
 
 [node name="Button" type="Button" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 513.0
 offset_top = 259.0
