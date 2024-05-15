@@ -78,6 +78,7 @@ text = "discard options"
 
 [connection signal="toggled" from="HBoxContainer/ExpandButton" to="." method="_on_expand_button_toggled"]
 [connection signal="pressed" from="HBoxContainer/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="visibility_changed" from="HBoxContainer/EditContainer" to="." method="_on_edit_container_visibility_changed"]
 [connection signal="pressed" from="HBoxContainer/EditContainer/SaveTitleButton" to="." method="_on_save_title_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/EditContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/EditContainer/DiscardTitleButton" to="." method="_on_discard_title_button_pressed"]

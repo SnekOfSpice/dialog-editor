@@ -799,15 +799,16 @@ func rename_fact(from:String, to:String):
 func rename_dropdown_title(from:String, to:String):
 	var dd_values = dropdowns.get(from).duplicate(true)
 	dropdowns[to] = dd_values
-	dropdowns.erase(from)
-	dropdown_titles.insert(dropdown_titles.find(from), to)
-	dropdown_titles.erase(from)
-	if dropdown_dialog_arguments.has(from):
-		var where = dropdown_dialog_arguments.find(from)
-		dropdown_dialog_arguments.insert(where, to)
-		dropdown_dialog_arguments.erase(from)
-	if dropdown_title_for_dialog_syntax == from:
-		dropdown_title_for_dialog_syntax = to
+	if from != to:
+		dropdowns.erase(from)
+		dropdown_titles.insert(dropdown_titles.find(from), to)
+		dropdown_titles.erase(from)
+		if dropdown_dialog_arguments.has(from):
+			var where = dropdown_dialog_arguments.find(from)
+			dropdown_dialog_arguments.insert(where, to)
+			dropdown_dialog_arguments.erase(from)
+		if dropdown_title_for_dialog_syntax == from:
+			dropdown_title_for_dialog_syntax = to
 	
 	# change in line data
 	for page in page_data.values():
@@ -817,6 +818,7 @@ func rename_dropdown_title(from:String, to:String):
 				continue
 			if line["content"]["active_actors_title"] == from:
 				line["content"]["active_actors_title"] = to
+			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
 
 func set_dropdown_options(dropdown_title:String, options:Array):
 	dropdowns[dropdown_title] = options
