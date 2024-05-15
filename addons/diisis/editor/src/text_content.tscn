@@ -5,10 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="3_8xrow"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
-number_color = Color(0.976822, 0.706174, 0.89807, 1)
-symbol_color = Color(0.863144, 5.31363e-05, 0.655125, 1)
-function_color = Color(0.747536, 0.121441, 0.22022, 1)
-member_variable_color = Color(0.323408, 0.685104, 0.939903, 1)
+number_color = Color(1, 1, 1, 1)
+symbol_color = Color(1, 0.68876, 0.875468, 1)
 
 [node name="TextContent" type="VBoxContainer" groups=["page_view_sensitive"]]
 offset_right = 40.0

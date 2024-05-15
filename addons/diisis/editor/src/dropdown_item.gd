@@ -3,6 +3,16 @@ extends VBoxContainer
 
 var dropdown_options := []
 
+func get_string_contents(filter:="") -> String:
+	var search_content := ""
+	var title_contents := str(find_child("TitleLabel").text, find_child("LineEdit").text)
+	var option_contents := str("".join(dropdown_options), find_child("DropdownOptionsText").text)
+	if filter.is_empty() or filter.to_lower() == "t":
+		search_content += title_contents
+	if filter.is_empty() or filter.to_lower() == "o":
+		search_content += option_contents
+	return search_content
+
 func init(title:String):
 	find_child("TitleLabel").text = title
 	find_child("LineEdit").text = title

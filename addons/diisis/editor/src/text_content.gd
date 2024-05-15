@@ -52,6 +52,9 @@ func init() -> void:
 		a.append(actor[actor.length() - 1])
 	text_box.code_completion_prefixes = a
 	
+	await get_tree().process_frame
+	text_box.grab_focus()
+	
 func serialize() -> Dictionary:
 	var result := {}
 	
@@ -82,7 +85,7 @@ func set_page_view(view:DiisisEditor.PageView):
 		return
 	match view:
 		DiisisEditor.PageView.Full:
-			text_box.custom_minimum_size.y = 80
+			text_box.custom_minimum_size.y = 100
 			text_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			text_box.scroll_fit_content_height = true
 		DiisisEditor.PageView.Truncated:

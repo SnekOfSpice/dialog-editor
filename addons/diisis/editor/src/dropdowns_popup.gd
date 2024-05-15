@@ -22,7 +22,7 @@ func fill():
 		find_child("DropdownsContainer").add_child(item)
 	
 	#fill_code_edit(working_memory_titles.back())
-	
+	_on_clear_search_button_pressed()
 	
 	#find_child("DropDownTabContainer").set_current_tab(working_memory_titles.back())
 	#find_child("DropDownTabContainer").set_tab_title(find_child("DropDownTabContainer").current_tab, working_memory_titles.back())
@@ -189,3 +189,25 @@ func _on_drop_down_tab_container_tab_changed(tab: int) -> void:
 
 func _on_create_dd_name_text_edit_text_changed(new_text: String) -> void:
 	find_child("AddButton").disabled = new_text.is_empty()
+
+
+func _on_clear_search_button_pressed() -> void:
+	find_child("SearchLineEdit").text = ""
+	_on_search_line_edit_text_changed("")
+
+
+func _on_search_line_edit_text_changed(new_text: String) -> void:
+	if new_text.is_empty():
+		for child in find_child("DropdownsContainer").get_children():
+			child.visible = true
+		return
+	for child in find_child("DropdownsContainer").get_children():
+		var filter:String
+		var search_term:String
+		if new_text.contains(":"):
+			filter = new_text.split(":")[0]
+			search_term = new_text.split(":")[1]
+		else:
+			filter = ""
+			search_term = new_text
+		child.visible = child.get_string_contents(filter).contains(search_term)
