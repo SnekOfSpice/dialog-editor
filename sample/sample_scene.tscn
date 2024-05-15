@@ -93,7 +93,7 @@ text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/
 text_container = NodePath("../Control/TextContainer")
 name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
 name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
-inline_evaluator = NodePath("../Handler")
+inline_evaluator = NodePath("../InlineEval")
 
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("4_traxq")
