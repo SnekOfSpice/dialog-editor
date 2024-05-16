@@ -224,7 +224,7 @@ func add_lines(indices:Array, data_by_index:={}):
 		for l : Line in find_child("Lines").get_children():
 			if l.line_type == DIISIS.LineType.Folder:
 				var range : Vector2 = l.get_folder_range_v()
-				if at_index >= range.x and at_index <= range.y:
+				if at_index > range.x and at_index <= range.y:
 					l.change_folder_range(1)
 		
 		var idx = line.get_index()
@@ -435,9 +435,8 @@ func update():
 		l.update()
 		var idx = l.get_index()
 		if l.line_type == DIISIS.LineType.Folder:
-			var is_folder_content_visible := l.get_folder_contents_visible()
+			var is_folder_content_visible := l.get_folder_contents_visible() and l.visible
 			# all after that in range of the folder line get indented l.indent_level + 1
-			var folder_range : Vector2 = l.get_folder_range_v()
 			var folder_range_i : int = l.get_folder_range_i()
 			if folder_range_i == 0:
 				continue

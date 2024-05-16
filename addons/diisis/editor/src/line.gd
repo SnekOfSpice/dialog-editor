@@ -39,8 +39,11 @@ func set_page_view(view:DiisisEditor.PageView):
 func set_indent_level(to:int):
 	indent_level = to
 	find_child("IndentContainer").custom_minimum_size.x = 60 * indent_level
+	find_child("IndentTexture").self_modulate.a = 0.2 * indent_level
+	find_child("IndentMargin").add_theme_constant_override("margin_left", 0)
 	if line_type == DIISIS.LineType.Folder:# and indent_level > 0:
 		find_child("IndentContainer").custom_minimum_size.x -= 60
+		find_child("IndentMargin").add_theme_constant_override("margin_left", 60)
 
 func change_indent_level(by:int):
 	set_indent_level(indent_level + by)
@@ -86,6 +89,7 @@ func set_line_type(value: int):
 	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
 	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
 	find_child("FolderContainer").visible = line_type == DIISIS.LineType.Folder
+	find_child("SelectAllInRangeButton").visible = line_type == DIISIS.LineType.Folder
 	
 	if line_type == DIISIS.LineType.Folder:
 		find_child("DeleteButton").tooltip_text = "Click to delete folder.\nShift + Click to delete folder + contents."
@@ -286,3 +290,11 @@ func _on_insert_line_below_pressed() -> void:
 
 func _on_move_to_index_button_pressed() -> void:
 	emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)
+
+
+func _on_select_all_in_range_button_pressed():
+	var range : int = get_folder_range_i()
+	var index := get_index()
+	for line : Line in Pages.editor.current_page.find_child("Lines").get_children():
+		var line_index := line.get_index()
+		line.set_selected(line_index >= index and line_index <= index + range)

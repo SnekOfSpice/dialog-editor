@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=16 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_viyfr"]
@@ -17,6 +17,13 @@ border_width_left = 5
 border_width_top = 4
 border_color = Color(0.518909, 0.032135, 0.437566, 0.827)
 border_blend = true
+
+[sub_resource type="Gradient" id="Gradient_0yd78"]
+offsets = PackedFloat32Array(0, 0.37884, 0.662116, 1)
+colors = PackedColorArray(0.7663, 0.776485, 0.97, 1, 0.0844793, 0.0806588, 0.175822, 0.810587, 0.0757561, 0.0728382, 0.145518, 0.640385, 0.0475577, 0.0475576, 0.0475576, 0.0901961)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rtjbl"]
+gradient = SubResource("Gradient_0yd78")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ynk1p"]
 
@@ -50,185 +57,205 @@ layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
+[node name="IndentMargin" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
+[node name="IndentTexture" type="TextureRect" parent="PanelContainer/HBoxContainer/MarginContainer/IndentMargin"]
 layout_mode = 2
-status_panels = [NodePath("../../../PanelContainer"), NodePath("../../../..")]
+texture = SubResource("GradientTexture2D_rtjbl")
 
-[node name="MetaControls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
+layout_mode = 2
+status_panels = [NodePath("../../../PanelContainer"), NodePath("../../../../../..")]
+
+[node name="MetaControls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 
-[node name="VisibleToggle" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls"]
+[node name="VisibleToggle" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls"]
 layout_mode = 2
 focus_mode = 0
 text = "vis"
 
-[node name="LockToggle" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls"]
+[node name="LockToggle" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls"]
 layout_mode = 2
 focus_mode = 0
 disabled = true
 text = "lock"
 
-[node name="MoveControlsContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="MoveControlsContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ynk1p")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
+[node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "^"
 
-[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "+^+"
 
-[node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="Spacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "v"
 
-[node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 size_flags_vertical = 10
 focus_mode = 0
 text = "+v+"
 
-[node name="MoveToIndexControls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
+[node name="MoveToIndexControls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="MoveToIndexButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls"]
+[node name="MoveToIndexButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = ">>"
 
-[node name="MoveToIndexSpinBox" type="SpinBox" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls"]
+[node name="MoveToIndexSpinBox" type="SpinBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer"]
+[node name="SelectAllInRangeButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "VselectV"
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_d3j1g")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="Controls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Controls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
 layout_mode = 2
 
-[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2"]
+[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 focus_mode = 0
 text = "header"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2"]
 layout_mode = 2
 
-[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
+[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = "conditionals"
 
-[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
+[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 text = "facts"
 
-[node name="HeaderContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
+[node name="HeaderContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
 layout_mode = 2
 
-[node name="Header" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/HeaderContainer" instance=ExtResource("2_qs17t")]
+[node name="Header" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/HeaderContainer" instance=ExtResource("2_qs17t")]
 layout_mode = 2
 
-[node name="HeaderShort" type="Label" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/HeaderContainer"]
+[node name="HeaderShort" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/HeaderContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="DeleteContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
+[node name="DeleteContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="DeleteButton" type="Button" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer"]
+[node name="DeleteButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "delete"
 
-[node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Conditionals" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("3_pymyd")]
+[node name="Conditionals" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("3_pymyd")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../Controls/VBoxContainer2/HBoxContainer/ConditionalsVisibilityToggle")
 address_depth = 1
 add_button = NodePath("VBoxContainer/Controls/AddConditionButton")
 facts_container = NodePath("VBoxContainer/FactsContainer")
 
-[node name="Facts" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("3_01wq6")]
+[node name="Facts" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("3_01wq6")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../Controls/VBoxContainer2/HBoxContainer/FactsVisibilityToggle")
 address_depth = 1
 add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
-[node name="Content" type="VBoxContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
+[node name="Content" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextContent" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_ty44c")]
+[node name="TextContent" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_ty44c")]
 layout_mode = 2
 
-[node name="ChoiceContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_jjtdq")]
+[node name="ChoiceContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_jjtdq")]
 layout_mode = 2
 
-[node name="InstructionContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("4_phdce")]
+[node name="InstructionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("4_phdce")]
 layout_mode = 2
 
-[node name="FolderContainer" parent="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("9_23thg")]
+[node name="FolderContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("9_23thg")]
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
 
-[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/VisibleToggle" to="." method="_on_visible_toggle_toggled"]
-[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/LockToggle" to="." method="_on_lock_toggle_toggled"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveUp" to="." method="_on_move_up_pressed"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveDown" to="." method="_on_move_down_pressed"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineBelow" to="." method="_on_insert_line_below_pressed"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls/MoveToIndexButton" to="." method="_on_move_to_index_button_pressed"]
-[connection signal="toggled" from="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
-[connection signal="pressed" from="PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer/DeleteButton" to="." method="_on_delete_pressed"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/VisibleToggle" to="." method="_on_visible_toggle_toggled"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/LockToggle" to="." method="_on_lock_toggle_toggled"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveUp" to="." method="_on_move_up_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveDown" to="." method="_on_move_down_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineBelow" to="." method="_on_insert_line_below_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/MoveToIndexControls/MoveToIndexButton" to="." method="_on_move_to_index_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer/SelectAllInRangeButton" to="." method="_on_select_all_in_range_button_pressed"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer/DeleteButton" to="." method="_on_delete_pressed"]
