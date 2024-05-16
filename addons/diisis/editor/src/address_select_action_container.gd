@@ -56,4 +56,5 @@ func request_insert_items(above:bool):
 			new_address += "."
 		new_address = new_address.trim_suffix(".")
 		selected_address = new_address
+	prints("requesting insertion at ", selected_address)
 	DiisisEditorActions.insert_from_clipboard(selected_address)

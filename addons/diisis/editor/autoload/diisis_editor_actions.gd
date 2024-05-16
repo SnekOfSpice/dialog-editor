@@ -1,7 +1,7 @@
 @tool
 extends Node
 
-var blank_override_line_indices := []
+var blank_override_line_addresses := []
 var blank_override_choice_item_addresses := []
 
 var cached_pages := {}
@@ -20,7 +20,7 @@ func add_lines(indices:Array, data_by_index:={}):
 	for i in indices:
 		var cached_lines_on_page : Dictionary = cached_lines.get(Pages.editor.get_current_page_number(), {})
 		var cached_lines_at_index : Array = cached_lines_on_page.get(i, [])
-		if (not blank_override_line_indices.has(str(Pages.editor.get_current_page_number(), ".", i))
+		if (not blank_override_line_addresses.has(str(Pages.editor.get_current_page_number(), ".", i))
 		and not cached_lines_at_index.is_empty()
 		and data_by_index.get(i, {}).is_empty()):
 			var data = cached_lines_at_index.pop_back()
@@ -38,16 +38,19 @@ func add_line(at_index:int, data:={}):
 	add_lines([at_index], {at_index:data})
 
 func delete_lines(indices:Array):
+	var page_number := Pages.editor.get_current_page_number()
 	for i in indices:
-		blank_override_line_indices.erase(str(Pages.editor.get_current_page_number(), ".", i))
+		var address := str(page_number, ".", i)
+		while blank_override_line_addresses.has(address):
+			blank_override_line_addresses.erase(address)
 		# update cached line data
-		if cached_lines.has(Pages.editor.current_page.number):
-			var cached_lines_on_page = cached_lines.get(Pages.editor.current_page.number)
+		if cached_lines.has(page_number):
+			var cached_lines_on_page = cached_lines.get(page_number)
 			var cached_lines_at_index = cached_lines_on_page.get(i, [])
 			cached_lines_at_index.append(Pages.editor.current_page.get_line_data(i))
-			cached_lines[Pages.editor.current_page.number][i] = cached_lines_at_index
+			cached_lines[page_number][i] = cached_lines_at_index
 		else:
-			cached_lines[Pages.editor.current_page.number] = {i:[Pages.editor.current_page.get_line_data(i)]}
+			cached_lines[page_number] = {i:[Pages.editor.current_page.get_line_data(i)]}
 	
 	Pages.editor.current_page.delete_lines(indices)
 	
@@ -212,13 +215,15 @@ func move_choice_item(item_address:String, direction:int):
 
 ## Returns addresses it copied from
 func copy(depth:int, single_address_override := "") -> Array:
-	var selected_addresses := get_selected_addresses(depth)
-	if not single_address_override.is_empty():
+	var selected_addresses: Array
+	if single_address_override.is_empty():
+		selected_addresses = get_selected_addresses(depth)
+	else:
 		selected_addresses = [single_address_override]
 
 	var data_at_depth := {}
 	for address in selected_addresses:
-		data_at_depth[address] = Pages.get_data_from_address(address)
+		data_at_depth[address] = Pages.get_data_from_address(address).duplicate(true)
 	clipboard[depth] = data_at_depth
 	
 	return selected_addresses
@@ -226,11 +231,10 @@ func copy(depth:int, single_address_override := "") -> Array:
 func cut(depth:int, single_address_override := ""):
 	var copied = copy(depth, single_address_override)
 	
-	copied = DiisisEditorUtil.sort_addresses(copied)
 	var objects_to_delete := []
 	copied.reverse()
 	for c in copied:
-		objects_to_delete.append(DiisisEditorUtil.get_node_at_address(c))	
+		objects_to_delete.append(DiisisEditorUtil.get_node_at_address(c))
 	for object in objects_to_delete:
 		object.request_delete()
 
@@ -239,11 +243,9 @@ func get_selected_addresses(depth:int) -> Array:
 	for selector : AddressSelectActionContainer in get_tree().get_nodes_in_group("address_selectors"):
 		if selector.is_selected() and selector.address_depth == depth:
 			selected_on_page.append(DiisisEditorUtil.get_address(selector, selector.address_depth))
-	prints("getting addresses", selected_on_page)
+	
+	selected_on_page = DiisisEditorUtil.sort_addresses(selected_on_page)
 	return selected_on_page
-
-func add_to_clipboard(address_with_data:String):
-	clipboard[address_with_data] = Pages.get_data_from_address(address_with_data)
 
 func insert_from_clipboard(start_address:String):
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
@@ -261,14 +263,18 @@ func insert_from_clipboard(start_address:String):
 		var undo_redo = Pages.editor.undo_redo
 		undo_redo.create_action("Paste Lines")
 		indices.sort()
+		prints("adding at ", indices, "with", data_by_index.keys(), data_at_depth.keys())
+		prints("blank overrides are ", blank_override_line_addresses)
 		undo_redo.add_do_method(add_lines.bind(indices, data_by_index))
 		indices.reverse()
 		undo_redo.add_undo_method(delete_lines.bind(indices))
 		undo_redo.commit_action()
 		
+		# deselect
 		var addresses := []
+		var page_number := Pages.editor.get_current_page_number()
 		for j in indices:
-			addresses.append(str(Pages.editor.get_current_page_number(), ".", j))
+			addresses.append(str(page_number, ".", j))
 		for address in addresses:
 			var object : Line = DiisisEditorUtil.get_node_at_address(address)
 			object.set_selected(false)
