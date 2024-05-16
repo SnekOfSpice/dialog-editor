@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 var deserialized_range:int
 

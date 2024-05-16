@@ -1,5 +1,5 @@
 @tool
-extends HBoxContainer
+extends Control
 
 var number := 0
 
