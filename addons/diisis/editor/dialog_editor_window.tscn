@@ -4,14 +4,34 @@
 [ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://addons/diisis/editor/src/editor.tscn" id="2_4owra"]
 
 [node name="DialogEditorWindow" type="Window"]
+gui_embed_subwindows = true
 title = "DIISIS"
-initial_position = 2
+initial_position = 4
 size = Vector2i(895, 507)
 transient = true
 min_size = Vector2i(895, 507)
+content_scale_mode = 1
 script = ExtResource("1_d4u1q")
 
-[node name="Editor" parent="." instance=ExtResource("2_4owra")]
+[node name="Window" type="Window" parent="."]
+size = Vector2i(895, 507)
+visible = false
+wrap_controls = true
+transient = true
+borderless = true
+content_scale_mode = 2
+content_scale_aspect = 4
+
+[node name="Editor" parent="Window" instance=ExtResource("2_4owra")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 895.0
+offset_bottom = 480.0
+grow_horizontal = 1
+grow_vertical = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="QuitDialog" type="ConfirmationDialog" parent="."]
 title = "Close DIISIS?"
@@ -21,8 +41,34 @@ popup_window = true
 ok_button_text = "Close"
 cancel_button_text = "Stay"
 
+[node name="WindowFactorWindow" type="Window" parent="."]
+position = Vector2i(0, 484)
+size = Vector2i(205, 123)
+visible = false
+wrap_controls = true
+transient = true
+borderless = true
+
+[node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow"]
+offset_right = 205.0
+offset_bottom = 23.0
+size_flags_horizontal = 2
+size_flags_vertical = 10
+
+[node name="WindowFactorScale" type="HSlider" parent="WindowFactorWindow/WindowFactorContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+
+[node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/WindowFactorContainer"]
+layout_mode = 2
+
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
 [connection signal="size_changed" from="." to="." method="_on_size_changed"]
 [connection signal="canceled" from="QuitDialog" to="." method="_on_quit_dialog_canceled"]
 [connection signal="confirmed" from="QuitDialog" to="." method="_on_quit_dialog_confirmed"]
+[connection signal="value_changed" from="WindowFactorWindow/WindowFactorContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]

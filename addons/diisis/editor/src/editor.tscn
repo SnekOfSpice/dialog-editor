@@ -193,6 +193,7 @@ layout_mode = 2
 
 [node name="PageNav" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl"]
 layout_mode = 2
+theme_override_constants/separation = 13
 
 [node name="PanelContainer" type="MarginContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
@@ -329,6 +330,7 @@ layout_mode = 2
 
 [node name="ViewTypes" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
+size_flags_horizontal = 10
 size_flags_vertical = 0
 
 [node name="ViewFullButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
