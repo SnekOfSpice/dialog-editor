@@ -77,6 +77,9 @@ func _on_quit_dialog_confirmed() -> void:
 	queue_free()
 
 func update_content_scale(scale_factor:float):
+	if not editor_window or not editor:
+		return
+	
 	editor_window.content_scale_factor = scale_factor
 	
 	editor.size.x = max(size.x, editor_start_size.x) / scale_factor
@@ -99,3 +102,22 @@ func _on_size_changed() -> void:
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
+
+
+func _on_window_mouse_entered():
+	if $QuitDialog.visible:
+		return
+	editor_window.grab_focus()
+
+
+func _on_window_mouse_exited():
+	grab_focus()
+
+func _on_window_factor_window_mouse_entered():
+	if $QuitDialog.visible:
+		return
+	find_child("WindowFactorWindow").grab_focus()
+
+
+func _on_window_factor_window_mouse_exited():
+	grab_focus()
