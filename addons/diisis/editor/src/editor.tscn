@@ -44,7 +44,7 @@ grow_vertical = 2
 theme = ExtResource("1_nb6ej")
 script = ExtResource("1_r2t7d")
 
-[node name="Core" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,87 +52,77 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FunnyDebugButton" type="Button" parent="Core"]
+[node name="Core" type="VBoxContainer" parent="ScrollContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core"]
 visible = false
 layout_mode = 2
 text = "any test functionality"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Core"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SavePathLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-
-[node name="FileControl" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
+[node name="SavePathLabel" type="Label" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+[node name="FileControl" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
 layout_mode = 2
 
-[node name="RefreshButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RefreshButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Refresh"
 
-[node name="SaveButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-text = "save"
-
-[node name="OpenButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-text = "open"
-
-[node name="UndoButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="UndoButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "Undo"
 
-[node name="RedoButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="RedoButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "Redo"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="AutosaveAnnounceLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="AutosaveAnnounceLabel" type="Label" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
 visible = false
 layout_mode = 2
 text = "Autosave in: 0"
 
-[node name="Label2" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label2" type="Label" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "<"
 
-[node name="LastUndoStepLabel" type="Label" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="LastUndoStepLabel" type="Label" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="MenuBar" type="MenuBar" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
+[node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="File" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+[node name="File" type="PopupMenu" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 item_count = 9
 item_0/text = "Save"
 item_1/text = "Save As..."
@@ -154,7 +144,7 @@ item_8/text = "Blank Strings"
 item_8/checkable = 1
 item_8/id = 8
 
-[node name="Utility" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+[node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
 item_count = 2
@@ -162,7 +152,7 @@ item_0/text = "Word & Character Count"
 item_1/text = "Search Text"
 item_1/id = 1
 
-[node name="Setup" type="PopupMenu" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+[node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(113, 197)
 item_count = 7
@@ -182,108 +172,108 @@ item_5/id = 5
 item_6/text = "Pages"
 item_6/id = 6
 
-[node name="ErrorTextBox" type="RichTextLabel" parent="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
+[node name="ErrorTextBox" type="RichTextLabel" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = true
 
-[node name="PageControl" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer"]
+[node name="PageControl" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="PageNav" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl"]
+[node name="PageNav" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl"]
 layout_mode = 2
 theme_override_constants/separation = 13
 
-[node name="PanelContainer" type="MarginContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="PanelContainer" type="MarginContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = SubResource("Theme_bik72")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer"]
 layout_mode = 2
 
-[node name="LastVisited" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="LastVisited" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 focus_mode = 0
 text = "backward"
 
-[node name="NextVisited" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="NextVisited" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 focus_mode = 0
 text = "forward"
 
-[node name="First" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="First" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "|<"
 
-[node name="Prev" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="Prev" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "<"
 
-[node name="GoTo" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer" instance=ExtResource("4_m6c15")]
+[node name="GoTo" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer" instance=ExtResource("4_m6c15")]
 layout_mode = 2
 
-[node name="Next" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="Next" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = ">"
 
-[node name="Last" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
+[node name="Last" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = ">|"
 
-[node name="JumpContainer" type="MarginContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="JumpContainer" type="MarginContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer"]
 layout_mode = 2
 
-[node name="AddAfter" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer"]
+[node name="AddAfter" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 tooltip_text = "Add page after"
 focus_mode = 0
 text = "+>"
 
-[node name="Positional" type="VBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer"]
+[node name="Positional" type="VBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="AddLast" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
+[node name="AddLast" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 tooltip_text = "Add page to end"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "+>>"
 
-[node name="DeleteCurrent" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
+[node name="DeleteCurrent" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
 tooltip_text = "Delete current page"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "-"
 
-[node name="VSeparator" type="VSeparator" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VSeparator" type="VSeparator" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
 
-[node name="LineTypes" type="GridContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+[node name="LineTypes" type="GridContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="TypeText" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeText" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -292,7 +282,7 @@ button_group = ExtResource("4_dg3k4")
 text = "Text"
 script = ExtResource("3_2h0gj")
 
-[node name="TypeChoice" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -301,7 +291,7 @@ text = "Choice"
 script = ExtResource("3_2h0gj")
 line_type = 1
 
-[node name="TypeInstruction" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -310,7 +300,7 @@ text = "Instr"
 script = ExtResource("3_2h0gj")
 line_type = 2
 
-[node name="TypeFolder" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -319,21 +309,21 @@ text = "Folder"
 script = ExtResource("3_2h0gj")
 line_type = 3
 
-[node name="AddLineButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "add line"
 
-[node name="VSeparator2" type="VSeparator" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="ViewTypes" type="HBoxContainer" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="ViewTypes" type="HBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
 
-[node name="ViewFullButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
+[node name="ViewFullButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -342,7 +332,7 @@ button_group = ExtResource("6_5vieb")
 text = "Full"
 script = ExtResource("7_7syci")
 
-[node name="ViewTruncatedButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
+[node name="ViewTruncatedButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
@@ -352,7 +342,7 @@ text = "Truncated"
 script = ExtResource("7_7syci")
 page_view = 1
 
-[node name="ViewMinimalButton" type="Button" parent="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
+[node name="ViewMinimalButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
@@ -362,93 +352,93 @@ text = "Minimal"
 script = ExtResource("7_7syci")
 page_view = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="Core/HBoxContainer2"]
+[node name="MarginContainer2" type="MarginContainer" parent="ScrollContainer/Core/HBoxContainer2"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core/HBoxContainer2/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2"]
 visible = false
 layout_mode = 2
 
-[node name="EditHeaderButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="EditHeaderButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit header"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../HeaderPopup")
+popup = NodePath("../../../../../../HeaderPopup")
 
-[node name="EditCharactersButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="EditCharactersButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit drop downs"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../DropdownPopup")
+popup = NodePath("../../../../../../DropdownPopup")
 
-[node name="EditInstructionButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="EditInstructionButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "edit instructions"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../InstructionPopup")
+popup = NodePath("../../../../../../InstructionPopup")
 
-[node name="MovePagesButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="MovePagesButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "move pages"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../MovePagePopup")
+popup = NodePath("../../../../../../MovePagePopup")
 
-[node name="HSeparator" type="HSeparator" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="EditFactsButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="EditFactsButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "view facts"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../FactsPopup")
+popup = NodePath("../../../../../../FactsPopup")
 
-[node name="WordCountButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="WordCountButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "word & char count"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../WordCountDialog")
+popup = NodePath("../../../../../../WordCountDialog")
 
-[node name="SearchTextButton" type="Button" parent="Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
+[node name="SearchTextButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/MarginContainer2/VBoxContainer" node_paths=PackedStringArray("popup")]
 layout_mode = 2
 focus_mode = 0
 text = "Search Text"
 alignment = 2
 script = ExtResource("3_u6k32")
-popup = NodePath("../../../../../TextSearchPopup")
+popup = NodePath("../../../../../../TextSearchPopup")
 
-[node name="PageContainer" type="MarginContainer" parent="Core"]
+[node name="PageContainer" type="MarginContainer" parent="ScrollContainer/Core"]
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_use_anchors_ = true
 
-[node name="Page" parent="Core/PageContainer" instance=ExtResource("2_kbraj")]
+[node name="Page" parent="ScrollContainer/Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Core"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core"]
 visible = false
 layout_mode = 2
 
-[node name="ToggleSearchButton" type="Button" parent="Core/VBoxContainer"]
+[node name="ToggleSearchButton" type="Button" parent="ScrollContainer/Core/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "search"
 
-[node name="TextSearchContainer" parent="Core/VBoxContainer" instance=ExtResource("7_eshag")]
+[node name="TextSearchContainer" parent="ScrollContainer/Core/VBoxContainer" instance=ExtResource("7_eshag")]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
@@ -528,30 +518,30 @@ visible = false
 [node name="LocaleSelectionWindow" parent="." instance=ExtResource("20_nu372")]
 visible = false
 
-[connection signal="pressed" from="Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
-[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
-[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
-[connection signal="index_pressed" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
-[connection signal="meta_clicked" from="Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
-[connection signal="go_to" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="request_go_to_address"]
-[connection signal="request_refresh" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="refresh"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Next" to="." method="_on_next_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Last" to="." method="_on_last_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/AddLast" to="." method="_on_add_last_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewFullButton" to="." method="update_page_view" binds= [0]]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewTruncatedButton" to="." method="update_page_view" binds= [1]]
-[connection signal="pressed" from="Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
-[connection signal="pressed" from="Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
+[connection signal="index_pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
+[connection signal="index_pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
+[connection signal="index_pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
+[connection signal="meta_clicked" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/First" to="." method="_on_first_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
+[connection signal="go_to" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="request_go_to_address"]
+[connection signal="request_refresh" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/GoTo" to="." method="refresh"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer/Last" to="." method="_on_last_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/AddLast" to="." method="_on_add_last_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional/DeleteCurrent" to="." method="_on_delete_current_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewFullButton" to="." method="update_page_view" binds= [0]]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewTruncatedButton" to="." method="update_page_view" binds= [1]]
+[connection signal="pressed" from="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
+[connection signal="pressed" from="ScrollContainer/Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="file_selected" from="FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="dir_selected" from="FDExportLocales" to="." method="_on_fd_export_locales_dir_selected"]
 [connection signal="file_selected" from="FDOpen" to="." method="_on_fd_open_file_selected"]

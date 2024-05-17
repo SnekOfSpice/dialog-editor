@@ -83,6 +83,7 @@ add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(0, 530)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2

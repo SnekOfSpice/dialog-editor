@@ -7,6 +7,8 @@ const AUTO_SAVE_INTERVAL := 30000.0
 var _page = preload("res://addons/diisis/editor/src/page.tscn")
 var current_page: Page
 var undo_redo = UndoRedo.new()
+var core:Control
+var page_container:Control
 
 var content_scale := 1.0
 
@@ -34,6 +36,8 @@ func refresh(serialize_before_load:=true):
 	load_page(cpn, not serialize_before_load)
 
 func init() -> void:
+	core = find_child("Core")
+	page_container = core.find_child("PageContainer")
 	var n = Node.new()
 	var node_functions := n.get_method_list()
 	var node_functions_names := []
@@ -74,7 +78,7 @@ func init() -> void:
 		c.init()
 	
 	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
-	$Core.visible = true
+	core.visible = true
 	$GraphView.visible = false
 	undo_redo.clear_history()
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
@@ -91,7 +95,7 @@ func load_page(number: int, discard_without_saving:=false):
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 	
-	for c in $Core/PageContainer.get_children():
+	for c in page_container.get_children():
 		if not c is Page:
 			push_warning(str("PageContainer has a child that's not a page: ", c))
 			continue
@@ -101,7 +105,7 @@ func load_page(number: int, discard_without_saving:=false):
 		c.queue_free()
 	
 	var page = _page.instantiate()
-	$Core/PageContainer.add_child(page)
+	page_container.add_child(page)
 	page.init(number)
 	current_page = page
 	
@@ -139,12 +143,9 @@ func set_save_path(value:String):
 func _process(delta: float) -> void:
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
-	#find_child("AutosaveAnnounceLabel").visible = $AutoSaveTimer.time_left < 6.0
-	#find_child("AutosaveAnnounceLabel").text = str("Autosave in: ", floor($AutoSaveTimer.time_left))
-	
 
 func set_graph_view_visible(value:bool):
-	$Core.visible = not value
+	core.visible = not value
 	$GraphView.visible = value
 	
 func update_controls():
@@ -155,10 +156,8 @@ func update_controls():
 	find_child("Prev").disabled = current_page.number <= 0
 	find_child("Next").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
-	#find_child("PageCountCurrent").text = str(current_page.number)
 	find_child("GoTo").set_current_page_count(str(current_page.number))
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
-	#find_child("PageCountMax").text = str(Pages.get_page_count() - 1)
 	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1
 	
 	await get_tree().process_frame

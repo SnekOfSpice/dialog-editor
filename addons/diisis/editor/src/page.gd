@@ -215,14 +215,12 @@ func request_add_line(at_index:int):
 	undo_redo.commit_action()
 
 func add_lines(indices:Array, data_by_index:={}):
-	prints("received indices", indices)
 	indices.sort()
 	for at_index in indices:
 		var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
 		var line_data = data_by_index.get(at_index, {})
 		lines.add_child(line)
 		lines.move_child(line, at_index)
-		prints("adding at", at_index, ":", line_data)
 		line.init()
 		line.connect("move_line", request_move_line)
 		line.connect("insert_line", request_add_line)

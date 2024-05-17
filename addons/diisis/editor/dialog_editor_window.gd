@@ -8,11 +8,6 @@ var editor_window : Window
 var editor_start_size:Vector2
 var editor_content_scale:=1.0
 
-func _process(delta):
-	if not editor:
-		return
-	update_content_scale(editor_content_scale)
-
 func _on_about_to_popup() -> void:
 	editor = find_child("Editor")
 	editor_window = find_child("Window")
@@ -25,7 +20,9 @@ func _on_about_to_popup() -> void:
 	await get_tree().process_frame
 	update_content_scale(1.0)
 
-func _on_size_changed() -> void:
+func _process(delta):
+	if not editor or not editor_window:
+		return
 	update_content_scale(editor_content_scale)
 
 func _on_close_requested() -> void:
@@ -95,6 +92,10 @@ func update_content_scale(scale_factor:float):
 	
 	if editor:
 		editor.content_scale = scale_factor
+
+
+func _on_size_changed() -> void:
+	update_content_scale(editor_content_scale)
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
