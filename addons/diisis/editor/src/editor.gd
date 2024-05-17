@@ -8,6 +8,8 @@ var _page = preload("res://addons/diisis/editor/src/page.tscn")
 var current_page: Page
 var undo_redo = UndoRedo.new()
 
+var content_scale := 1.0
+
 var active_dir := ""
 var active_file_name := ""
 var time_since_last_save := 0.0
@@ -320,6 +322,7 @@ func open_popup(popup:Window, fit_to_size:=false):
 		return
 	if fit_to_size:
 		popup.size = size
+	popup.content_scale_factor = content_scale
 	Pages.editor.refresh()
 	popup.popup()
 	popup.grab_focus()
