@@ -33,6 +33,9 @@ func set_visibility(value:bool):
 	super.set_visibility(value)
 	find_child("BehaviorContainer").visible = value
 
+func set_behavior_container_visible(value:bool):
+	find_child("BehaviorContainer").visible = value
+
 func toggle_visibility():
 	if visibility_toggle_button != find_child("VisibilityToggleButton"):
 		set_visibility(not visible)

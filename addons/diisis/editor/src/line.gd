@@ -210,20 +210,16 @@ func update_folder(max_folder_range):
 		find_child("FolderContainer").update(get_index(), max_folder_range)
 
 func add_fact(fact_name: String, fact_value: bool):
-	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Facts
-	facts.add_fact(fact_name, fact_value)
+	find_child("Facts").add_fact(fact_name, fact_value)
 
 func add_conditional(fact_name: String, fact_value: bool):
-	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
-	facts.add_fact(fact_name, fact_value)
+	find_child("Conditionals").add_fact(fact_name, fact_value)
 
 func delete_fact(fact_name:String):
-	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Facts
-	facts.delete_fact(fact_name)
+	find_child("Facts").delete_fact(fact_name)
 
 func delete_conditional(fact_name:String):
-	var facts = $PanelContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Conditionals
-	facts.delete_fact(fact_name)
+	find_child("Conditionals").delete_fact(fact_name)
 
 func add_choice_item(at_index:int, choice_data:={}):
 	if line_type != DIISIS.LineType.Choice:

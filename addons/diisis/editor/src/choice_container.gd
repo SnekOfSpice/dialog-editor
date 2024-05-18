@@ -91,12 +91,9 @@ func set_do_jump_page(do: bool):
 	do_jump_page = do
 	find_child("JumpPageButton").button_pressed = do_jump_page
 
-func _on_jump_page_button_pressed() -> void:
-	set_do_jump_page(find_child("JumpPageButton").button_pressed)
-
 func set_auto_switch(value: bool):
-	for c in $ChoiceList.get_children():
-		c.set_text_lines_visible(not value)
+	for c : ChoiceEdit in $ChoiceList.get_children():
+		c.set_auto_switch(value)
 
 func _on_auto_switch_button_pressed() -> void:
 	set_auto_switch(find_child("AutoSwitchButton").button_pressed)

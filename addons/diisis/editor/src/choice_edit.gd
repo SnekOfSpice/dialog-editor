@@ -3,6 +3,7 @@ extends Control
 class_name ChoiceEdit
 
 var do_jump_page := false
+var jump_page_before_auto_switch := false
 
 signal move_choice_edit(choice_edit, direction)
 
@@ -91,23 +92,28 @@ func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)
 
 func add_fact(fact_name: String, fact_value: bool):
-	var facts = $VBoxContainer2/HBoxContainer/Facts
-	facts.add_fact(fact_name, fact_value)
+	find_child("Facts").add_fact(fact_name, fact_value)
 
 func add_conditional(fact_name: String, fact_value: bool):
-	var facts = $VBoxContainer2/HBoxContainer/Conditionals
-	facts.add_fact(fact_name, fact_value)
+	find_child("Conditionals").add_fact(fact_name, fact_value)
 
 func delete_fact(fact_name:String):
-	var facts = $VBoxContainer2/HBoxContainer/Facts
-	facts.delete_fact(fact_name)
+	find_child("Facts").delete_fact(fact_name)
 
 func delete_conditional(fact_name:String):
-	var facts = $VBoxContainer2/HBoxContainer/Conditionals
-	facts.delete_fact(fact_name)
+	find_child("Conditionals").delete_fact(fact_name)
 
 func set_text_lines_visible(value:bool):
 	find_child("TextLines").visible = value
+	
+func set_auto_switch(value:bool):
+	set_text_lines_visible(not value)
+	find_child("Conditionals").set_behavior_container_visible(not value)
+	if value:
+		jump_page_before_auto_switch = do_jump_page
+		set_do_jump_page(true)
+	else:
+		set_do_jump_page(jump_page_before_auto_switch)
 
 func _on_delete_pressed() -> void:
 	request_delete()

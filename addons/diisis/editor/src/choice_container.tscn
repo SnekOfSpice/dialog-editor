@@ -50,12 +50,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 23
 text = "+"
 
-[node name="JumpPageButton" type="CheckBox" parent="Controls"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "jump page (override)"
-
 [node name="AutoSwitchButton" type="CheckBox" parent="Controls"]
 layout_mode = 2
 tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices. Needs \"jump page\" enabled to work."
@@ -67,5 +61,4 @@ layout_mode = 2
 
 [connection signal="index_pressed" from="Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
 [connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
-[connection signal="pressed" from="Controls/JumpPageButton" to="." method="_on_jump_page_button_pressed"]
 [connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]

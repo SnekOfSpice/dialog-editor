@@ -262,7 +262,11 @@ func open_connection(new_lr: LineReader):
 	
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
-## [signal ParserEvents.fact_changed] won't be emitted.
+## [signal ParserEvents.fact_changed] won't be emitted.[br]
+## If [param fact_name] doesn't exist in [member facts],
+## [signal ParserEvents.fact_changed] will be emitted with
+## [param old_value] set to [code]false[/code], and it will be added to
+## [member facts].
 func change_fact(fact_name: String, new_value: bool, suppress_event:=false):
 	var old_value = facts.get(fact_name, false)
 	facts[fact_name] = new_value

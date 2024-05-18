@@ -663,8 +663,6 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	# step over every fact in page data and save its name
 
 func lines_referencing_fact(fact_name: String):
-	prints("searching for ", fact_name, "", page_data.keys())
-	#fact_name = fact_name.split(":")[0]
 	var ref_pages := []
 	var ref_pages_page_bound := []
 	var ref_lines_declare := []
@@ -679,8 +677,8 @@ func lines_referencing_fact(fact_name: String):
 			page_facts = page.get("facts", {}).get("values", {})
 		else:
 			page_facts = page.get("facts", {})
-		print(page.get("number", 0))
-		prints("page facts", page_facts)
+		
+		
 		for fact in page_facts.keys():
 			if fact == fact_name:
 				ref_pages.append(page.get("number"))
@@ -694,7 +692,7 @@ func lines_referencing_fact(fact_name: String):
 			else:
 				line_facts = line.get("facts", {})
 			
-			prints(i, "line_facts", line_facts)
+			
 			for fact in line_facts.keys():
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):
@@ -706,7 +704,7 @@ func lines_referencing_fact(fact_name: String):
 				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("values", {})
 			else:
 				line_conditionals = line.get("conditionals", {}).get("facts", {})
-			prints(i, "line_facts", line_conditionals)
+			
 			for fact in line_conditionals:
 				if fact == fact_name:
 					if not ref_pages.has(page.get("number")):

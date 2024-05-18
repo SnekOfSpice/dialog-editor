@@ -899,8 +899,11 @@ func build_choices(choices, auto_switch:bool):
 		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
 		var cond_behavior = conditional_eval[1]
+		var facts = option.get("facts").get("values", {})
 		
 		if cond_true and auto_switch:
+			for f in facts.keys():
+				Parser.change_fact(f, facts.get(f))
 			choice_pressed(true, option.get("target_page"))
 			break
 		
@@ -933,7 +936,6 @@ func build_choices(choices, auto_switch:bool):
 				option_text = option.get("choice_text.disabled")
 		
 		# give to option to signal
-		var facts = option.get("facts").get("values", {})
 		var do_jump_page = option.get("do_jump_page")
 		var target_page = option.get("target_page")
 		
