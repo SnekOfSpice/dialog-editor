@@ -77,7 +77,6 @@ func init() -> void:
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
 	
-	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	core.visible = true
 	$GraphView.visible = false
 	undo_redo.clear_history()
@@ -85,6 +84,14 @@ func init() -> void:
 	update_undo_redo_buttons()
 	
 	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+	
+	for popup : Window in $Popups.get_children():
+		popup.visible = false
+		popup.exclusive = false
+		popup.always_on_top = true
+		popup.wrap_controls = true
+		popup.transient = false
+		popup.popup_window = false
 	print("init editor successful")
 
 func update_page_view(view:PageView):
@@ -111,7 +118,6 @@ func load_page(number: int, discard_without_saving:=false):
 	
 	update_controls()
 	
-	$AutoSaveTimer.wait_time = AUTO_SAVE_INTERVAL
 	await get_tree().process_frame
 
 func get_selected_line_type() -> int:
@@ -215,7 +221,7 @@ func request_add_page(at:int):
 func open_save_popup():
 	if active_dir != "":
 		get_node("FDSave").current_dir = active_dir
-	open_popup(find_child("FDSave"), true)
+	open_popup($Popups.find_child("FDSave"), true)
 
 func save_to_file(path:String):
 	if current_page:
@@ -274,10 +280,6 @@ func _on_add_line_button_pressed() -> void:
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
 	undo_redo.commit_action()
 
-func _on_edit_characters_button_pressed() -> void:
-	current_page.save()
-	$DropdownPopup.popup()
-
 
 func _on_header_popup_update() -> void:
 	await get_tree().process_frame
@@ -285,9 +287,6 @@ func _on_header_popup_update() -> void:
 
 func _on_instruction_definition_timer_timeout() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
-
-func _on_auto_save_timer_timeout() -> void:
-	current_page.save()
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
@@ -330,23 +329,23 @@ func open_popup(popup:Window, fit_to_size:=false):
 func _on_setup_index_pressed(index: int) -> void:
 	match index:
 		1: # header
-			open_popup(find_child("HeaderPopup"))
+			open_popup($Popups.find_child("HeaderPopup"))
 		2: # dd
-			open_popup(find_child("DropdownPopup"))
+			open_popup($Popups.find_child("DropdownPopup"))
 		3: # instr
-			open_popup(find_child("InstructionPopup"))
+			open_popup($Popups.find_child("InstructionPopup"))
 		5: # facts
-			open_popup(find_child("FactsPopup"))
+			open_popup($Popups.find_child("FactsPopup"))
 		6: # pages
-			open_popup(find_child("MovePagePopup"))
+			open_popup($Popups.find_child("MovePagePopup"))
 
 
 func _on_utility_index_pressed(index: int) -> void:
 	match index:
 		0: 
-			open_popup(find_child("WordCountDialog"))
+			open_popup($Popups.find_child("WordCountDialog"))
 		1: 
-			open_popup(find_child("TextSearchPopup"))
+			open_popup($Popups.find_child("TextSearchPopup"))
 
 
 func _on_file_index_pressed(index: int) -> void:
@@ -362,14 +361,14 @@ func _on_file_index_pressed(index: int) -> void:
 			# open
 			if active_dir != "":
 				get_node("FDSave").current_dir = active_dir
-			open_popup(find_child("FDOpen"), true)
+			open_popup($Popups.find_child("FDOpen"), true)
 		4:
 			# config
-			open_popup(find_child("FileConfigPopup"), true)
+			open_popup($Popups.find_child("FileConfigPopup"), true)
 		6: # locales
-			open_popup(find_child("LocaleSelectionWindow"), true)
+			open_popup($Popups.find_child("LocaleSelectionWindow"), true)
 		7: # export blank l10n
-			open_popup(find_child("FDExportLocales"), true)
+			open_popup($Popups.find_child("FDExportLocales"), true)
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)

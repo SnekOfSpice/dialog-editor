@@ -225,7 +225,7 @@ func copy(depth:int, single_address_override := "") -> Array:
 	for address in selected_addresses:
 		data_at_depth[address] = Pages.get_data_from_address(address).duplicate(true)
 	clipboard[depth] = data_at_depth
-	
+	Pages.editor.notify(str("Added ", data_at_depth.size(), " items to clipboard!"))
 	return selected_addresses
 
 func cut(depth:int, single_address_override := ""):
@@ -263,8 +263,6 @@ func insert_from_clipboard(start_address:String):
 		var undo_redo = Pages.editor.undo_redo
 		undo_redo.create_action("Paste Lines")
 		indices.sort()
-		prints("adding at ", indices, "with", data_by_index.keys(), data_at_depth.keys())
-		prints("blank overrides are ", blank_override_line_addresses)
 		undo_redo.add_do_method(add_lines.bind(indices, data_by_index))
 		indices.reverse()
 		undo_redo.add_undo_method(delete_lines.bind(indices))
@@ -302,6 +300,8 @@ func insert_from_clipboard(start_address:String):
 		for address in addresses:
 			var object : ChoiceEdit = DiisisEditorUtil.get_node_at_address(address)
 			object.set_selected(false)
+	
+	Pages.editor.notify(str("Adding ", data_at_depth.size(), " items from clipboard!"))
 
 func replace_line_content_texts(line_addresses:Array, what:String, with:String):
 	var pages_to_operate_on := {}
