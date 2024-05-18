@@ -65,12 +65,15 @@ func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index
 		var s := ""
 		var page_key : String = Pages.page_data.get(int(r)).get("page_key")
 		s += str(r)
+		var page_bound_icon:Texture
 		if references.get("ref_pages_page_bound").has(r):
-			s += "i"
+			page_bound_icon = load("res://addons/diisis/editor/visuals/fact-on-page.png")
+		else:
+			page_bound_icon = load("res://addons/diisis/editor/visuals/fact-not-on-page.png")
 		if not page_key.is_empty():
 			s += str("\t\t\t\t(", page_key, ")")
 		
-		ref_pages_fact.add_item(s)
+		ref_pages_fact.add_item(s, page_bound_icon)
 	
 	#s = "Conditionals referencing fact:\n"
 	for r in references.get("ref_lines_condition"):

@@ -17,7 +17,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 toggle_mode = true
-text = "v"
+text = ">"
 
 [node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -68,13 +68,14 @@ size_flags_horizontal = 8
 [node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
+disabled = true
 text = "save options"
 
 [node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 8
-text = "discard options"
+text = "discard changes"
 
 [connection signal="toggled" from="HBoxContainer/ExpandButton" to="." method="_on_expand_button_toggled"]
 [connection signal="pressed" from="HBoxContainer/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]

@@ -320,10 +320,15 @@ func open_popup(popup:Window, fit_to_size:=false):
 		return
 	if fit_to_size:
 		popup.size = size
+	
 	popup.content_scale_factor = content_scale
 	Pages.editor.refresh()
 	popup.popup()
 	popup.grab_focus()
+	
+	popup.size.x = min(popup.size.x, size.x)
+	popup.size.y = min(popup.size.y, size.y)
+	popup.position.y = max(popup.position.y, 20)
 
 
 func _on_setup_index_pressed(index: int) -> void:

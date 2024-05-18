@@ -70,10 +70,10 @@ func _on_dropdown_options_text_text_changed() -> void:
 		if not arg.is_empty():
 			args.append(arg)
 	if "".join(args) == "".join(dropdown_options):
-		find_child("SaveOptionsButton").text = "save"
+		find_child("SaveOptionsButton").text = "save options"
 		find_child("ExpandButton").disabled = false
 	else:
-		find_child("SaveOptionsButton").text = "save (*)"
+		find_child("SaveOptionsButton").text = "save options (*)"
 		find_child("ExpandButton").disabled = find_child("EditContainer").visible
 	
 
