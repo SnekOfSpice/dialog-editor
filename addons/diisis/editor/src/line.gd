@@ -19,7 +19,7 @@ func init() -> void:
 	find_child("InstructionContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
 	await get_tree().process_frame
-	set_head_editable(true)
+	set_head_editable(not Pages.head_defaults.is_empty())
 	set_non_meta_parts_visible(true)
 
 func set_page_view(view:DiisisEditor.PageView):

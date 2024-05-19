@@ -2,8 +2,7 @@
 extends Node
 
 
-var head_defaults := [
-]
+var head_defaults := []
 
 var dropdowns := {"character": ["dii", "sis"]}
 var dropdown_titles := ["character"]
@@ -196,8 +195,6 @@ var head_data_types := {
 
 var editor:DiisisEditor
 
-# {"number":1, "page_key":"lmao", "lines": [], "terminate": false}
-# data: {}
 var page_data := {}
 
 var evaluator_paths := ["res://sample/inline_eval.gd"]
@@ -403,7 +400,7 @@ func add_page_data(at: int, new_data := {}):
 	# reindex all after at
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
-		var new_number = i + 1#data.get("number") + 1
+		var new_number = i + 1
 		data["number"] = new_number
 		page_data[new_number] = data
 	
@@ -528,64 +525,7 @@ func get_all_invalid_instructions() -> String:
 	if not malformed_instructions.is_empty():
 		warning += str("Warning: invalid instructions at: ", ", ".join(malformed_instructions))
 	return warning
-	
-	#return ""
-	#
-	#
-	#var overdefined_instructions := []
-	#var underdefined_instructions := []
-	#var malformed_instructions := []
-	#for i in page_data:
-		#var lines = page_data.get(i).get("lines", [])
-		#var j = 0
-		#for l in lines:
-			#if l.get("line_type") != DIISIS.LineType.Instruction:
-				#j += 1
-				#continue
-			#
-			#var content = l.get("content", {})
-			#var instruction_name = content.get("name")
-			#var instruction_args : Dictionary = content.get("args")
-			#
-			#if instruction_args.size() != get_instruction_arg_names(instruction_name).size():
-				#malformed_instructions.append(str(i, ".", j))
-			#
-			#for arg in instruction_args:
-				#if arg.get("value", "").begins_with("underdefined"):
-			##if instruction_args.size() != get_instruction_args(instruction_name).size():
-					#underdefined_instructions.append(str(i, ".", j))
-				#elif arg.get("name", "").begins_with("overdefined"):
-					#overdefined_instructions.append(str(i, ".", j))
-			#j += 1
-#
-	#if not underdefined_instructions.is_empty():
-		#warning = "Warning: underdefined instructions at: "
-		#for inv in underdefined_instructions:
-			#warning += inv
-			#warning += ", "
-		#warning = warning.trim_suffix(", ")
-	#
-	#if not warning.is_empty():
-		#warning += "\n"
-	
-	#if not overdefined_instructions.is_empty():
-		#warning += "Warning: overdefined instructions at: "
-		#for inv in overdefined_instructions:
-			#warning += inv
-			#warning += ", "
-		#warning = warning.trim_suffix(", ")
-	#
-	#if not warning.is_empty():
-		#warning += "\n"
-	#
-	#if not malformed_instructions.is_empty():
-		#warning += "Warning: malformed instructions at: "
-		#for inv in malformed_instructions:
-			#warning += inv
-			#warning += ", "
-		#warning = warning.trim_suffix(", ")
-	#
-	#return warning
+
 
 # new schema with keys and values
 func apply_new_header_schema(new_schema: Array):
@@ -598,7 +538,7 @@ func apply_new_header_schema(new_schema: Array):
 			prints("POSTTRANSFORM-", line["header"])
 	
 	
-	editor.refresh()
+	editor.refresh(false)
 	head_defaults = new_schema
 
 
@@ -607,7 +547,6 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 	var transformed = []
 	transformed.resize(new_schema.size())
 	
-#	
 	
 	for i in min(old_schema.size(), new_schema.size()):
 		var old_name = header_to_transform[i].get("property_name")
@@ -651,16 +590,6 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 			transformed[j] = new_schema[j]
 	
 	return transformed
-
-
-#func register_facts():
-#	for page in page_data.values():
-#		for line in page.get("lines", []):
-#			for fact in line.get("facts", {}).keys():
-#				if not facts.has(fact):
-#					facts.append(fact)
-		
-	# step over every fact in page data and save its name
 
 func lines_referencing_fact(fact_name: String):
 	var ref_pages := []

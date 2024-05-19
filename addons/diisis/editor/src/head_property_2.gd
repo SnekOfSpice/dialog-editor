@@ -89,7 +89,7 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary):
-	printt(data.get("property_name"), data.get("values"))
+	prints("deserializing header with", data.get("property_name"), data.get("values"))
 	#values = data.get("values", [null, null])
 	#values = values.duplicate(true)
 	var killme = []
