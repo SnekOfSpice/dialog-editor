@@ -11,6 +11,9 @@ const MAX_TEXT_SPEED := 101
 	#All,
 #}
 
+## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
+## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Quick-Start-Guide-%E2%80%90-LineReader-&-Parser
+
 @export_group("UX")
 @export_subgroup("Text Behavior")
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
