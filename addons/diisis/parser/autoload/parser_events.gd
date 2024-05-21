@@ -80,9 +80,11 @@ signal page_terminated(
 
 ## Emitted when the text of [LineReader] changes.
 ## Emitts the the entire text, irregardless of [param visible_characters].
+## [param lead_time] is the time until the text will start showing, in seconds.
 signal text_content_text_changed(
 	old_text: String,
-	new_text: String
+	new_text: String,
+	lead_time: float
 )
 
 ## Emitted when [LineReader] has finished displaying an entire word to its text box.

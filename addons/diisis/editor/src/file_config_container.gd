@@ -5,6 +5,7 @@ extends Control
 func init():
 	_on_reset_evaluator_changes_button_pressed()
 	find_child("UseDialogSyntaxCheckBox").button_pressed = Pages.use_dialog_syntax
+	find_child("LeadTimeSpinBox").value = Pages.text_lead_time
 	find_child("ItemList").select(0)
 	_on_item_list_item_selected(0)
 
@@ -40,3 +41,7 @@ func _on_use_dialog_syntax_check_box_pressed():
 	for line : Line in Pages.editor.current_page.find_child("Lines").get_children():
 		line.find_child("TextContent").set_use_dialog_syntax(Pages.use_dialog_syntax)
 
+
+
+func _on_lead_time_spin_box_value_changed(value):
+	Pages.text_lead_time = value

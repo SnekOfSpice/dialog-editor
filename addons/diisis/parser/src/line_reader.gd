@@ -3,7 +3,7 @@
 extends Control
 class_name LineReader
 
-const MAX_TEXT_SPEED := 101
+const MAX_TEXT_SPEED := 201
 
 #enum ChoiceButtonFocusMode {
 	#KeyboardOnly,
@@ -169,7 +169,7 @@ var is_input_locked := false : set = set_is_input_locked
 var showing_text := false
 var using_dialog_syntax := false
 
-
+var lead_time := 0.0
 var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
@@ -359,7 +359,7 @@ func advance():
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if showing_text:
-		
+		lead_time = 0.0
 		if text_content.visible_ratio >= 1.0:
 			if chunk_index >= line_chunks.size() - 1:
 				if dialog_line_index >= dialog_lines.size() - 1:
@@ -586,6 +586,10 @@ func _process(delta: float) -> void:
 		return
 	
 	if Parser.paused:
+		return
+	
+	if lead_time > 0:
+		lead_time -= delta
 		return
 	
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
@@ -872,8 +876,8 @@ func read_next_chunk():
 		
 		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
-	
-	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text)
+	lead_time = Parser.text_lead_time
+	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
 
 func set_text_content_text(text: String):
