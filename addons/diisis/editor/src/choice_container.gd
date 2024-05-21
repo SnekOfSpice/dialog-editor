@@ -3,6 +3,9 @@ extends Control
 
 var do_jump_page := true
 
+func init():
+	find_child("AddButton").grab_focus()
+
 func serialize() -> Dictionary:
 	var result = {}
 	
@@ -25,7 +28,7 @@ func deserialize(data):
 		choices = data
 	else:
 		choices = data.get("choices", [])
-		set_do_jump_page(data.get("meta.do_jump_page"))
+		#set_do_jump_page(data.get("meta.do_jump_page"))
 	
 	for d in choices:
 		add_choice(-1, d)
@@ -87,9 +90,9 @@ func set_page_view(view:DiisisEditor.PageView):
 func _on_add_button_pressed() -> void:
 	request_add_choice()
 
-func set_do_jump_page(do: bool):
-	do_jump_page = do
-	find_child("JumpPageButton").button_pressed = do_jump_page
+#func set_do_jump_page(do: bool):
+	#do_jump_page = do
+	#find_child("JumpPageButton").button_pressed = do_jump_page
 
 func set_auto_switch(value: bool):
 	for c : ChoiceEdit in $ChoiceList.get_children():

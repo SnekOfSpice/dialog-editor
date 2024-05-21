@@ -55,9 +55,6 @@ func init() -> void:
 	node_functions_names.sort()
 	handler_functions_names.sort()
 	unique_functions.sort()
-	#print("\n".join(PackedStringArray(node_functions_names)))
-	#print("\n".join(PackedStringArray(handler_functions_names)))
-	print("\n".join(PackedStringArray(unique_functions)))
 	print("init editor")
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
@@ -130,6 +127,11 @@ func get_selected_line_type() -> int:
 	
 	return line_type
 
+func select_line_type(line_type:int):
+	for button : LineTypeButton in find_child("LineTypes").get_children():
+		if button.line_type == line_type:
+			button.button_pressed = true
+
 func get_selected_page_view() -> PageView:
 	var view:=PageView.Full
 	
@@ -149,6 +151,29 @@ func set_save_path(value:String):
 func _process(delta: float) -> void:
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
+
+func _shortcut_input(event):
+	if event is InputEventKey:
+		if not event.pressed:
+			return
+		if event.is_ctrl_pressed():
+			match event.key_label:
+				KEY_S:
+					attempt_save_to_dir()
+				KEY_O:
+					if active_dir != "":
+						$Popups.find_child("FDOpen").current_dir = active_dir
+					open_popup($Popups.find_child("FDOpen"), true)
+				KEY_A:
+					add_line_to_end_of_page()
+				KEY_1:
+					select_line_type(DIISIS.LineType.Text)
+				KEY_2:
+					select_line_type(DIISIS.LineType.Choice)
+				KEY_3:
+					select_line_type(DIISIS.LineType.Instruction)
+				KEY_4:
+					select_line_type(DIISIS.LineType.Folder)
 
 func set_graph_view_visible(value:bool):
 	core.visible = not value
@@ -220,7 +245,7 @@ func request_add_page(at:int):
 
 func open_save_popup():
 	if active_dir != "":
-		get_node("FDSave").current_dir = active_dir
+		$Popups.find_child("FDSave").current_dir = active_dir
 	open_popup($Popups.find_child("FDSave"), true)
 
 func save_to_file(path:String):
@@ -273,6 +298,9 @@ func notify(message:String, duration:=5.0):
 	notification.init(message, duration)
 
 func _on_add_line_button_pressed() -> void:
+	add_line_to_end_of_page()
+
+func add_line_to_end_of_page():
 	undo_redo.create_action("Add Line")
 	var line_count = current_page.get_line_count()
 	DiisisEditorActions.blank_override_line_addresses.append(str(get_current_page_number(), ".", line_count))
@@ -320,6 +348,8 @@ func open_popup(popup:Window, fit_to_size:=false):
 		return
 	if fit_to_size:
 		popup.size = size
+		popup.size.y -= 50
+		popup.size.x -= 50
 	
 	popup.content_scale_factor = content_scale
 	Pages.editor.refresh()
@@ -352,20 +382,23 @@ func _on_utility_index_pressed(index: int) -> void:
 		1: 
 			open_popup($Popups.find_child("TextSearchPopup"))
 
+# opens opoup if active_dir isn't set, otherwise saves to file
+func attempt_save_to_dir():
+	if active_dir.is_empty():
+		open_save_popup()
+		return
+	save_to_file(str(active_dir, active_file_name))
 
 func _on_file_index_pressed(index: int) -> void:
 	match index:
 		0: #save
-			if active_dir.is_empty():
-				open_save_popup()
-				return
-			save_to_file(str(active_dir, active_file_name))
+			attempt_save_to_dir()
 		1: # save as
 			open_save_popup()
 		2:
 			# open
 			if active_dir != "":
-				get_node("FDSave").current_dir = active_dir
+				$Popups.find_child("FDOpen").current_dir = active_dir
 			open_popup($Popups.find_child("FDOpen"), true)
 		4:
 			# config
@@ -380,7 +413,6 @@ func _on_file_index_pressed(index: int) -> void:
 
 
 func _on_funny_debug_button_pressed() -> void:
-	#print(Pages.get_localizable_addresses())
 	var doms := ["af_ZA",
 "sq_AL",
 "ar_SA",
@@ -521,12 +553,10 @@ func _on_funny_debug_button_pressed() -> void:
 	for d in doms:
 		if not uniques.has(d):
 			uniques.append(d)
-	print(uniques)
 
 func _on_fd_export_locales_dir_selected(dir: String) -> void:
 	var addresses : Dictionary = Pages.get_localizable_addresses_with_content()
 	for locale in Pages.locales_to_export:
-		prints("saving", locale)
 		var file = FileAccess.open(str(dir, "/diisis_l10n_", locale, ".json"), FileAccess.WRITE)
 		var data_to_save = {}
 		for address in addresses:

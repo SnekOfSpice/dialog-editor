@@ -151,12 +151,6 @@ const LOCALES := ["af_ZA",
 
 var facts := {}
 
-# TODO: code highlighting
-# true / false take precedent
-# only numerical input gets converted to int
-# if exactly one period in numerical, convert to float
-# else string
-# also convert to string if in single or double quotes
 var instruction_templates := {
 		"show-character": {
 			"args" : [
@@ -435,10 +429,8 @@ func get_data_from_address(address:String):
 	var address_page = DiisisEditorUtil.get_split_address(address)[0]
 	# if current page is address
 	if cpn == address_page:
-		print("getting data from current page")
 		var target = DiisisEditorUtil.get_node_at_address(address)
 		return target.serialize()
-	print("getting data from page_data")
 	# get from internal data
 	var depth = DiisisEditorUtil.get_address_depth(address)
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -462,7 +454,6 @@ func delete_data_from_address(address:String):
 	if cpn == address_page:
 		var target = DiisisEditorUtil.get_node_at_address(address)
 		if depth == DiisisEditorUtil.AddressDepth.Line:
-			print("deleting line")
 			target.request_delete()
 			return
 		elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
@@ -557,12 +548,6 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 		var new_name = new_schema[i].get("property_name")
 		var new_value = new_schema[i].get("values", [header_to_transform[i].get("value", null), null])
 		var new_type = new_schema[i].get("data_type")
-		
-		printt(old_name, old_value, old_type)
-		printt(old_default)
-		printt(new_name, new_value, new_type)
-		
-		
 		
 		# if the header was the default value here, just apply the new default schema
 		if old_value[0] == old_default[0] and old_value[1] == old_default[1]:
@@ -1052,7 +1037,6 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 			var i := 0
 			var goal_arg_count := min(old_arg_count, new_arg_count)
 			while i < goal_arg_count:
-				printt(old_template_data, old_arg_names, old_arg_names[i])
 				transformed_string += old_template_data.get("args").get(old_arg_names[i])
 				if i < goal_arg_count - 1:
 					transformed_string += ", "

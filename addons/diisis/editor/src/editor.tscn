@@ -124,10 +124,10 @@ layout_mode = 2
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 item_count = 9
-item_0/text = "Save"
+item_0/text = "Save    (Ctrl+S)"
 item_1/text = "Save As..."
 item_1/id = 1
-item_2/text = "Open"
+item_2/text = "Open    (Ctrl+O)"
 item_2/id = 2
 item_3/id = 4
 item_3/separator = true
@@ -275,6 +275,7 @@ columns = 2
 
 [node name="TypeText" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
+tooltip_text = "Ctrl+1"
 focus_mode = 0
 toggle_mode = true
 button_pressed = true
@@ -284,6 +285,7 @@ script = ExtResource("3_2h0gj")
 
 [node name="TypeChoice" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
+tooltip_text = "Ctrl+2"
 focus_mode = 0
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
@@ -293,6 +295,7 @@ line_type = 1
 
 [node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
+tooltip_text = "Ctrl+3"
 focus_mode = 0
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
@@ -302,6 +305,7 @@ line_type = 2
 
 [node name="TypeFolder" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
 layout_mode = 2
+tooltip_text = "Ctrl+4"
 focus_mode = 0
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
@@ -311,6 +315,7 @@ line_type = 3
 
 [node name="AddLineButton" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
 layout_mode = 2
+tooltip_text = "Ctrl+A"
 focus_mode = 0
 text = "add line"
 

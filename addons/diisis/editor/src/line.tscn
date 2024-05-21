@@ -42,6 +42,7 @@ offset_bottom = -0.112015
 grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
+focus_mode = 2
 theme = ExtResource("1_viyfr")
 script = ExtResource("1_6i1bg")
 

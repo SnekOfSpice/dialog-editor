@@ -12,11 +12,13 @@ signal move_to (child, idx)
 signal delete_line
 
 func init() -> void:
+	grab_focus()
 	find_child("Header").init()
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("TextContent").init()
 	find_child("InstructionContainer").init()
+	find_child("ChoiceContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
 	await get_tree().process_frame
 	set_head_editable(not Pages.head_defaults.is_empty())
