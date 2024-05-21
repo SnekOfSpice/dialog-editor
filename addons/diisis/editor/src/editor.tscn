@@ -208,6 +208,8 @@ text = "forward"
 [node name="First" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Go to first page
+(Ctrl+Alt+Left)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "|<"
@@ -215,6 +217,8 @@ text = "|<"
 [node name="Prev" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Go to previous page
+(Alt+Left)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "<"
@@ -224,12 +228,16 @@ layout_mode = 2
 
 [node name="Next" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Go to next page
+(Alt+Right)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = ">"
 
 [node name="Last" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Go to last page
+(Ctrl+Alt+Right)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = ">|"
@@ -242,7 +250,8 @@ layout_mode = 2
 
 [node name="AddAfter" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer"]
 layout_mode = 2
-tooltip_text = "Add page after"
+tooltip_text = "Add page after
+(Alt+A)"
 focus_mode = 0
 text = "+>"
 
@@ -251,7 +260,8 @@ layout_mode = 2
 
 [node name="AddLast" type="Button" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer/HBoxContainer/Positional"]
 layout_mode = 2
-tooltip_text = "Add page to end"
+tooltip_text = "Add page to end
+(Shift+Alt+A)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 23
 text = "+>>"

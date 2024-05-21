@@ -153,6 +153,7 @@ func _process(delta: float) -> void:
 		time_since_last_save += delta
 
 func _shortcut_input(event):
+	#print(event)
 	if event is InputEventKey:
 		if not event.pressed:
 			return
@@ -174,6 +175,25 @@ func _shortcut_input(event):
 					select_line_type(DIISIS.LineType.Instruction)
 				KEY_4:
 					select_line_type(DIISIS.LineType.Folder)
+		if event.is_alt_pressed():
+			match event.key_label:
+				KEY_LEFT:
+					if event.is_ctrl_pressed():
+						request_load_first_page()
+					else:
+						request_load_previous_page()
+				KEY_RIGHT:
+					if event.is_ctrl_pressed():
+						request_load_last_page()
+					else:
+						request_load_next_page()
+				KEY_A:
+					if event.is_shift_pressed():
+						request_add_last_page()
+					else:
+						request_add_page_after_current()
+				
+				
 
 func set_graph_view_visible(value:bool):
 	core.visible = not value
@@ -200,19 +220,35 @@ func get_current_page_number() -> int:
 	return current_page.number
 
 func _on_first_pressed() -> void:
-	request_load_page(0, "Move to first page")
-
-func _on_prev_pressed() -> void:
-	request_load_page(current_page.number - 1, "Move to previous page")
-
-func _on_next_pressed() -> void:
-	request_load_page(current_page.number + 1, "Move to next page")
+	request_load_first_page()
 
 func _on_last_pressed() -> void:
+	request_load_last_page()
+
+func _on_prev_pressed() -> void:
+	request_load_previous_page()
+
+
+func _on_next_pressed() -> void:
+	request_load_next_page()
+
+
+func request_load_previous_page():
+	request_load_page(current_page.number - 1, "Move to previous page")
+
+func request_load_next_page():
+	request_load_page(current_page.number + 1, "Move to next page")
+
+func request_load_first_page():
+	request_load_page(0, "Move to first page")
+
+func request_load_last_page():
 	request_load_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
-	request_add_page(Pages.get_page_count())
+	request_add_last_page()
+func request_add_last_page():
+		request_add_page(Pages.get_page_count())
 
 func _on_delete_current_pressed() -> void:
 	request_delete_page(get_current_page_number())
@@ -233,6 +269,9 @@ func request_delete_page(number:int):
 	undo_redo.commit_action()
 
 func _on_add_after_pressed() -> void:
+	request_add_page_after_current()
+
+func request_add_page_after_current():
 	request_add_page(get_current_page_number() + 1)
 
 func request_add_page(at:int):
