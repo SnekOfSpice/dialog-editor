@@ -12,7 +12,6 @@ func init(message:String, duration:=5.0):
 	initialized = true
 
 func _process(delta: float) -> void:
-	print(initialized)
 	if not initialized:
 		return
 	

@@ -3,7 +3,7 @@ extends Control
 class_name TextContent
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
-var use_dialog_syntax := true
+#var use_dialog_syntax := true
 var active_actors := [] # list of character names
 var active_actors_title := ""
 
@@ -41,6 +41,7 @@ func init() -> void:
 	
 	fill_active_actors()
 	set_page_view(Pages.editor.get_selected_page_view())
+	set_use_dialog_syntax(Pages.use_dialog_syntax)
 	
 	for window : Window in find_child("Hints").get_children():
 		window.text_input.connect(handle_text_input_from_hint)
@@ -54,12 +55,16 @@ func init() -> void:
 	
 	await get_tree().process_frame
 	text_box.grab_focus()
-	
+
+func set_use_dialog_syntax(value:bool):
+	#use_dialog_syntax = value
+	find_child("ActiveActorsLabel").visible = value
+
 func serialize() -> Dictionary:
 	var result := {}
 	
 	result["content"] = text_box.text
-	result["use_dialog_syntax"] = use_dialog_syntax
+	#result["use_dialog_syntax"] = use_dialog_syntax
 	result["active_actors"] = active_actors
 	result["active_actors_title"] = active_actors_title
 	
@@ -70,6 +75,7 @@ func deserialize(data: Dictionary):
 	active_actors = data.get("active_actors", [])
 	active_actors_title = data.get("active_actors_title", "")
 	fill_active_actors()
+	set_use_dialog_syntax(data.get("use_dialog_syntax", Pages.use_dialog_syntax))
 
 func handle_text_input_from_hint(window: Window, event:InputEvent):
 	#if event is InputEventKey:
@@ -183,7 +189,7 @@ func is_current_line_empty():
 func _on_text_box_caret_changed() -> void:
 	if text_box.get_caret_column() == 0:
 		var is_line_empty = text_box.get_line(text_box.get_caret_line()).is_empty()
-		if use_dialog_syntax and is_line_empty:
+		if Pages.use_dialog_syntax and is_line_empty:
 			build_actor_hint()
 	
 	
@@ -285,7 +291,7 @@ func fill_active_actors():
 
 
 func _on_text_box_focus_entered() -> void:
-	if text_box.text.is_empty() and use_dialog_syntax:
+	if text_box.text.is_empty() and Pages.use_dialog_syntax:
 		build_actor_hint()
 
 

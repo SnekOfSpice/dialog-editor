@@ -8,6 +8,7 @@ var dropdowns := {"character": ["dii", "sis"]}
 var dropdown_titles := ["character"]
 var dropdown_dialog_arguments := []
 var dropdown_title_for_dialog_syntax := "character"
+var use_dialog_syntax := true
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -208,6 +209,7 @@ func serialize() -> Dictionary:
 		"file_config": get_file_config(),
 		"locales_to_export" : locales_to_export,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
+		"use_dialog_syntax": use_dialog_syntax,
 	}
 
 func deserialize(data:Dictionary):
@@ -235,6 +237,7 @@ func deserialize(data:Dictionary):
 	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
+	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	
 	apply_file_config(data.get("file_config", {}))
 

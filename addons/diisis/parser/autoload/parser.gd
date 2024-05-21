@@ -16,6 +16,7 @@ extends Node
 @export var choice_appendation_string := "Choice made:"
 
 var page_data := {}
+var use_dialog_syntax := true
 var locales := {}
 var default_locale := "en_US"
 var locale := "en_US"
@@ -62,6 +63,7 @@ func _ready() -> void:
 	page_data = int_data.duplicate()
 	
 	facts = data.get("facts")
+	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles")
 	dropdowns = data.get("dropdowns")
@@ -169,7 +171,6 @@ func drop_down_values_to_string_array(values:=[0,0]) -> Array:
 	return result
 
 func read_page(number: int, starting_line_index := 0):
-	print(str("reading page ", number))
 	if not page_data.keys().has(number):
 		push_warning("number not in page data")
 		return
@@ -285,6 +286,7 @@ func serialize() -> Dictionary:
 	var result := {}
 	
 	result["Parser.facts"] = facts
+	result["Parser.use_dialog_syntax"] = use_dialog_syntax
 	result["Parser.lines"] = lines
 	result["Parser.max_line_index_on_page"] = max_line_index_on_page
 	result["Parser.page_index"] = page_index

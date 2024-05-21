@@ -413,7 +413,6 @@ func _on_setup_index_pressed(index: int) -> void:
 		6: # pages
 			open_popup($Popups.find_child("MovePagePopup"))
 
-
 func _on_utility_index_pressed(index: int) -> void:
 	match index:
 		0: 

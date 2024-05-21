@@ -28,8 +28,9 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-item_count = 1
+item_count = 2
 item_0/text = "Evaluators"
+item_1/text = "Line Behavior"
 
 [node name="ContentContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -71,8 +72,19 @@ layout_mode = 2
 focus_mode = 0
 text = "reset changes"
 
+[node name="LineBehaviorContainer" type="PanelContainer" parent="HBoxContainer/ContentContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/ContentContainer/LineBehaviorContainer"]
+layout_mode = 2
+
+[node name="UseDialogSyntaxCheckBox" type="CheckBox" parent="HBoxContainer/ContentContainer/LineBehaviorContainer/VBoxContainer"]
+layout_mode = 2
+text = "Use Dialog Syntax"
+
 [connection signal="item_selected" from="HBoxContainer/ScrollContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorLabel" to="." method="_on_evaluator_label_text_changed"]
 [connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/SaveEvaluatorChangesButton" to="." method="_on_save_evaluator_changes_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/ResetEvaluatorChangesButton" to="." method="_on_reset_evaluator_changes_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/UseDialogSyntaxCheckBox" to="." method="_on_use_dialog_syntax_check_box_pressed"]

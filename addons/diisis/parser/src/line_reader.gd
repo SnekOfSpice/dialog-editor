@@ -31,7 +31,7 @@ const MAX_TEXT_SPEED := 101
 var _auto_continue_duration:= auto_continue_delay
 ## If [code]0[/code], [param text_content] will be filled as far as possible.
 ## Breaks will be caused by <lc> tags, 
-## a [TextContent] with [param TextContent.use_dialog_syntax] enabled, and a
+## a file with [param Pages.use_dialog_syntax] enabled, and a
 ## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
 ## If set to more than [code]0[/code], the text will additionally be split to
 ## ensure it never runs more than that amount of lines. [br]
@@ -248,8 +248,7 @@ func deserialize(data: Dictionary):
 	line_chunks = data.get("line_chunks")
 	chunk_index = int(data.get("chunk_index"))
 	terminated = data.get("terminated")
-	if data.get("name_map"):
-		name_map = data.get("name_map")
+	name_map = data.get("name_map", name_map)
 	
 	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
 	showing_text = line_type == DIISIS.LineType.Text
@@ -474,18 +473,17 @@ func read_new_line(new_line: Dictionary):
 			var localized : String = Parser.replace_from_locale(line_data.get("address"), Parser.locale)
 			if not localized.is_empty():
 				content = localized
-			using_dialog_syntax = line_data.get("content").get("use_dialog_syntax", false)
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
 				return
-			if using_dialog_syntax:
+			if Parser.use_dialog_syntax:
 				var lines = content.split("[]>")
 				dialog_actors.clear()
 				dialog_lines.clear()
-				for l in lines:
+				for l : String in lines:
 					if l.is_empty():
 						continue
-					#var colon_pos = l.find(":")
+					
 					var actor_name = l.split(":")[0]
 					dialog_actors.append(actor_name)
 					var line : String = l.trim_prefix(str(actor_name, ":"))
@@ -495,6 +493,7 @@ func read_new_line(new_line: Dictionary):
 			else:
 				dialog_lines = [content]
 				dialog_actors.clear()
+				dialog_actors = [""]
 			
 			dialog_lines = replace_var_func_tags(dialog_lines)
 			update_limit_line_count(dialog_lines)

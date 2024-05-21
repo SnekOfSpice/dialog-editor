@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_popup.gd" id="1_pdew5"]
 
 [node name="FileConfigPopup" type="Window"]
+title = "File Config"
 initial_position = 2
 wrap_controls = true
 script = ExtResource("1_pdew5")

@@ -4,5 +4,4 @@
 
 [node name="Parser" type="Node"]
 script = ExtResource("1_0uufo")
-source_file = "res://io/folderfuckery1.json"
-localization_folder = "res://sample/l10n"
+source_file = "res://io/yessyntax.json"
