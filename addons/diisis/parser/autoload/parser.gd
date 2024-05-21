@@ -129,7 +129,8 @@ func append_to_history(text:String):
 			history.reverse()
 
 func on_text_content_text_changed(old_text: String,
-	new_text: String):
+	new_text: String,
+	lead_time: float):
 	call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", new_text)))
 
 func on_choice_pressed(

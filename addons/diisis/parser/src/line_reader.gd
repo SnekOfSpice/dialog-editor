@@ -1052,7 +1052,8 @@ func handle_header(header: Array):
 
 func set_dialog_line_index(value: int):
 	dialog_line_index = value
-	if using_dialog_syntax:
+	#prints("hiiiii", Parser.use_dialog_syntax)
+	if Parser.use_dialog_syntax:
 		var raw_name : String = dialog_actors[dialog_line_index]
 		var actor_name: String
 		var dialog_line_arg_dict := {}
@@ -1080,6 +1081,7 @@ func update_name_label(actor_name: String):
 	var name_color :Color = name_colors.get(actor_name, Color.WHITE)
 	
 	name_label.text = display_name
+	
 	name_label.add_theme_color_override("font_color", name_color)
 	
 	if actor_name == name_for_blank_name:

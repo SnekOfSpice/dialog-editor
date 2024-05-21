@@ -84,7 +84,7 @@ signal page_terminated(
 signal text_content_text_changed(
 	old_text: String,
 	new_text: String,
-	lead_time: float
+	lead_time: float,
 )
 
 ## Emitted when [LineReader] has finished displaying an entire word to its text box.
