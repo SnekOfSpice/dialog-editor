@@ -5,17 +5,19 @@ signal editor_closed()
 
 var editor : DiisisEditor
 var editor_window : Window
+var window_factor_window : Window
 var editor_start_size:Vector2
 var editor_content_scale:=1.0
 
 func _on_about_to_popup() -> void:
 	editor = find_child("Editor")
 	editor_window = find_child("Window")
+	window_factor_window = find_child("WindowFactorWindow")
 	editor_start_size = editor.size
 	editor.init()
 	
 	editor_window.visible = true
-	find_child("WindowFactorWindow").visible = true
+	window_factor_window.visible = true
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
@@ -87,11 +89,12 @@ func update_content_scale(scale_factor:float):
 	
 	editor_window.size = size
 	editor_window.size *= 2
-	editor_window.size.y -= find_child("WindowFactorContainer").size.y
+	editor_window.size.y -= find_child("WindowFactorContainer").size.y*2
 	editor_window.position = -size
+	editor_window.position.y += find_child("WindowFactorContainer").size.y
 	
-	find_child("WindowFactorLabel").text = str(scale_factor)
-	find_child("WindowFactorWindow").position.y = size.y - find_child("WindowFactorContainer").size.y
+	find_child("WindowFactorLabel").text = str(scale_factor * 100, "%")
+	window_factor_window.position.y = size.y - find_child("WindowFactorContainer").size.y
 	
 	if editor:
 		editor.content_scale = scale_factor
@@ -105,7 +108,6 @@ func _on_window_factor_scale_value_changed(value):
 
 
 func _on_window_mouse_entered():
-	#return
 	if $QuitDialog.visible:
 		return
 	editor_window.grab_focus()
@@ -115,11 +117,18 @@ func _on_window_mouse_exited():
 	grab_focus()
 
 func _on_window_factor_window_mouse_entered():
-	#return
 	if $QuitDialog.visible:
 		return
-	find_child("WindowFactorWindow").grab_focus()
+	window_factor_window.grab_focus()
 
 
 func _on_window_factor_window_mouse_exited():
 	grab_focus()
+
+
+func _on_editor_scale_editor_down():
+	find_child("WindowFactorScale").value -= find_child("WindowFactorScale").step
+
+
+func _on_editor_scale_editor_up():
+	find_child("WindowFactorScale").value += find_child("WindowFactorScale").step

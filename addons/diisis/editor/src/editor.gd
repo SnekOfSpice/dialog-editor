@@ -24,6 +24,9 @@ enum PageView {
 	Minimal
 }
 
+signal scale_editor_up()
+signal scale_editor_down()
+
 func refresh(serialize_before_load:=true):
 	var cpn:int
 	if current_page:
@@ -153,7 +156,6 @@ func _process(delta: float) -> void:
 		time_since_last_save += delta
 
 func _shortcut_input(event):
-	#print(event)
 	if event is InputEventKey:
 		if not event.pressed:
 			return
@@ -175,6 +177,11 @@ func _shortcut_input(event):
 					select_line_type(DIISIS.LineType.Instruction)
 				KEY_4:
 					select_line_type(DIISIS.LineType.Folder)
+				KEY_MINUS:
+					emit_signal("scale_editor_down")
+					print("scale down")
+				KEY_PLUS:
+					emit_signal("scale_editor_up")
 		if event.is_alt_pressed():
 			match event.key_label:
 				KEY_LEFT:
