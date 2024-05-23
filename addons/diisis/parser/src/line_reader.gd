@@ -178,6 +178,7 @@ enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
 var dialog_actors := []
 var dialog_line_index := 0
+var is_last_actor_name_different := true
 
 var line_chunks := []
 var chunk_index := 0
@@ -224,6 +225,7 @@ func serialize() -> Dictionary:
 	result["terminated"] = terminated 
 	result["text_content.text"] = text_content.text
 	result["current_raw_name"] = current_raw_name
+	result["is_last_actor_name_different"] = is_last_actor_name_different
 	result["name_map"] = name_map
 	
 	return result
@@ -249,6 +251,7 @@ func deserialize(data: Dictionary):
 	chunk_index = int(data.get("chunk_index"))
 	terminated = data.get("terminated")
 	name_map = data.get("name_map", name_map)
+	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	
 	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
 	showing_text = line_type == DIISIS.LineType.Text
@@ -876,7 +879,12 @@ func read_next_chunk():
 		
 		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
-	lead_time = Parser.text_lead_time
+	
+	prints("last actor diff", is_last_actor_name_different)
+	if is_last_actor_name_different:
+		lead_time = Parser.text_lead_time_other_actor
+	else:
+		lead_time = Parser.text_lead_time_same_actor
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
 
@@ -892,9 +900,6 @@ func find_next_pause():
 
 func get_actor_name(actor_key:String):
 	return name_map.get(actor_key, "")
-
-func set_actor_name(actor_key:String, new_name:String):
-	name_map[actor_key] = new_name
 
 func build_choices(choices, auto_switch:bool):
 	for c in choice_option_container.get_children():
@@ -1075,6 +1080,7 @@ func set_dialog_line_index(value: int):
 		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 
 func update_name_label(actor_name: String):
+	is_last_actor_name_different = actor_name != current_raw_name
 	current_raw_name = actor_name
 	var display_name: String = name_map.get(actor_name, actor_name)
 	

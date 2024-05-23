@@ -17,7 +17,8 @@ extends Node
 
 var page_data := {}
 var use_dialog_syntax := true
-var text_lead_time := 0.0
+var text_lead_time_same_actor := 0.0
+var text_lead_time_other_actor := 0.0
 var locales := {}
 var default_locale := "en_US"
 var locale := "en_US"
@@ -65,7 +66,8 @@ func _ready() -> void:
 	
 	facts = data.get("facts")
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
-	text_lead_time = data.get("text_lead_time", 0.0)
+	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
+	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles")
 	dropdowns = data.get("dropdowns")
@@ -290,7 +292,8 @@ func serialize() -> Dictionary:
 	
 	result["Parser.facts"] = facts
 	result["Parser.use_dialog_syntax"] = use_dialog_syntax
-	result["Parser.text_lead_time"] = text_lead_time
+	result["Parser.text_lead_time_other_actor"] = text_lead_time_other_actor
+	result["Parser.text_lead_time_same_actor"] = text_lead_time_same_actor
 	result["Parser.lines"] = lines
 	result["Parser.max_line_index_on_page"] = max_line_index_on_page
 	result["Parser.page_index"] = page_index
