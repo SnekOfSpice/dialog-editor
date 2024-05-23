@@ -57,9 +57,7 @@ func _on_expand_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		find_child("DropdownOptionsText").text = "\n".join(dropdown_options)
 		find_child("OptionsContainer").visible = true
-		find_child("ExpandButton").text = "v"
 	else:
-		find_child("ExpandButton").text = ">"
 		find_child("OptionsContainer").visible = false
 
 
@@ -104,3 +102,10 @@ func _on_save_options_button_pressed() -> void:
 
 func _on_edit_container_visibility_changed() -> void:
 	find_child("SaveOptionsButton").disabled = find_child("EditContainer").visible
+
+
+func _on_options_container_visibility_changed():
+	if find_child("OptionsContainer").visible:
+		find_child("ExpandButton").text = "v"
+	else:
+		find_child("ExpandButton").text = ">"

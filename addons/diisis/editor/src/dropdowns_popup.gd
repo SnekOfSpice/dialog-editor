@@ -65,16 +65,13 @@ func add_code_edit(tab_title: String):
 	find_child("SaveContentButton").visible = working_memory_titles.size() > 0
 
 func _on_add_button_pressed() -> void:
-	#var tab_title = str("untitled", find_child("DropDownTabContainer").get_tab_count()-1)
-	#add_code_edit(tab_title)
-	#fill_code_edit(tab_title)
-	
 	var dd_title = find_child("CreateDDNameTextEdit").text
 	Pages.dropdowns[dd_title] = []
 	Pages.dropdown_titles.append(dd_title)
 	var item = preload("res://addons/diisis/editor/src/dropdown_item.tscn").instantiate()
 	item.init(dd_title)
 	find_child("DropdownsContainer").add_child(item)
+	find_child("CreateDDNameTextEdit").text = ""
 
 
 

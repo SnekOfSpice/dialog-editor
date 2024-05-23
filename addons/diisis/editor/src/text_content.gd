@@ -206,6 +206,8 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 
 	elif is_text_before_caret("{"):
+		if Pages.dropdown_dialog_arguments.is_empty():
+			Pages.editor.notify("No Dialog Arguments set.\nGo to Setup > Dropdowns to change this.")
 		for actor in Pages.dropdown_dialog_arguments:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, "|}"))
 		text_box.update_code_completion_options(true)

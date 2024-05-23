@@ -45,7 +45,7 @@ var _auto_continue_duration:= auto_continue_delay
 @export_subgroup("Choices")
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_choices := false
-## Button scene that gets instantiated as children of [param choice_option_container].[br]
+## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
@@ -74,6 +74,7 @@ var name_for_blank_name := ""
 @export var name_colors := {}
 
 @export_group("Mandatory References")
+
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
 @export var choice_container:PanelContainer:
 	get:
@@ -82,7 +83,8 @@ var name_for_blank_name := ""
 		choice_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The Control used for enumerating options when they are presented. Should be HBoxContainer, VBoxContainer, or GridContainer.
+
+## The Control used for enumerating options when they are presented. Should be [HBoxContainer], [VBoxContainer], or [GridContainer].
 @export
 var choice_option_container:Control:
 	get:
@@ -91,7 +93,8 @@ var choice_option_container:Control:
 		choice_option_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## Your custom handling of instructions defined in the dialog editor.
+
+## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
 @export
 var instruction_handler: InstructionHandler:
 	get:
@@ -100,6 +103,7 @@ var instruction_handler: InstructionHandler:
 		instruction_handler = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+
 ## The [RichTextLabel] used to display text as it gets read out. [member RichTextLabel.bbcode_enabled] will be set to [param true] by the [LineReader].
 @export var text_content: RichTextLabel:
 	get:
@@ -108,6 +112,7 @@ var instruction_handler: InstructionHandler:
 		text_content = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+
 ## Any [Control] that is a parent of both nodes used for; [member name_label] and [member text_content].
 @export var text_container: Control:
 	get:
@@ -116,7 +121,8 @@ var instruction_handler: InstructionHandler:
 		text_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## A [code]Label[/code] that displays a currently speaking character's name.
+
+## A [Label] that displays a currently speaking character's name.
 @export
 var name_label: Label:
 	get:
@@ -125,7 +131,8 @@ var name_label: Label:
 		name_label = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The Control holding [code]name_label[/code]. Has its visiblity toggled by [code]name_for_blank_name[/code]. May be the same Node as [code]name_label[/code].
+
+## The Control holding [member name_label]. Has its visiblity toggled by [member name_for_blank_name. May be the same Node as [member name_label].
 @export
 var name_container: Control:
 	get:
@@ -136,6 +143,7 @@ var name_container: Control:
 			update_configuration_warnings()
 
 @export_group("Optional References")
+
 ## Node that has vars and funcs to evaluate in dynamic Strings. All functions within
 ## this node have to return a [String] (can be empty).
 @export var inline_evaluator: Node

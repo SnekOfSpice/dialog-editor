@@ -127,8 +127,8 @@ func _on_window_factor_window_mouse_exited():
 
 
 func _on_editor_scale_editor_down():
-	find_child("WindowFactorScale").value -= find_child("WindowFactorScale").step
+	find_child("WindowFactorScale").value -= 0.05
 
 
 func _on_editor_scale_editor_up():
-	find_child("WindowFactorScale").value += find_child("WindowFactorScale").step
+	find_child("WindowFactorScale").value += 0.05

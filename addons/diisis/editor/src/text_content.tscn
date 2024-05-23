@@ -7,6 +7,8 @@
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
 number_color = Color(1, 1, 1, 1)
 symbol_color = Color(1, 0.68876, 0.875468, 1)
+function_color = Color(0.784314, 0.784314, 0.784314, 1)
+member_variable_color = Color(0.783523, 0.783523, 0.783523, 1)
 
 [node name="TextContent" type="VBoxContainer" groups=["page_view_sensitive"]]
 offset_right = 40.0

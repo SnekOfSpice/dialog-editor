@@ -83,6 +83,7 @@ text = "discard changes"
 [connection signal="pressed" from="HBoxContainer/EditContainer/SaveTitleButton" to="." method="_on_save_title_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/EditContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/EditContainer/DiscardTitleButton" to="." method="_on_discard_title_button_pressed"]
+[connection signal="visibility_changed" from="OptionsContainer" to="." method="_on_options_container_visibility_changed"]
 [connection signal="text_changed" from="OptionsContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/DiscardOptionsButton" to="." method="_on_discard_options_button_pressed"]
