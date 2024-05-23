@@ -12,6 +12,7 @@ const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
+
 func add_editor_singletons():
 	#add_autoload_singleton(AUTOLOAD_DATA, "res://addons/diisis/editor/autoload/data.tscn")
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
@@ -33,16 +34,24 @@ func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
-	toolbar_button = Button.new()
-	toolbar_button.text = "hi"
+	toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
-	toolbar_button.focus_mode = Control.FOCUS_NONE
+	#toolbar_button.focus_mode = Control.FOCUS_NONE
 	toolbar_button.visible = true
+	toolbar_button.is_in_editor = true
 	toolbar_button.pressed.connect(open_editor)
+	toolbar_button.request_open_diisis.connect(open_editor)
+	#print(toolbar_button.get_parent())
+	#print(toolbar_button.get_parent().get_parent())
+	#print(toolbar_button.get_parent().get_parent().get_parent())
+	
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
 	add_parser_singletons()
 	add_custom_type("LineReader", "Control", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"))
+
+	await get_tree().process_frame
+	toolbar_button.get_parent().move_child(toolbar_button, -2)
 
 func open_editor():
 	if is_instance_valid(dia_editor_window):

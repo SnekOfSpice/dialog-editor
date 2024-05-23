@@ -1,3 +1,4 @@
+@tool
 extends Node
 class_name DiisisParserEvents
 
@@ -39,7 +40,7 @@ signal fact_changed(
 	new_value:bool,
 )
 
-## Emitted when a new line of dialog is read. Passes the actual string that ends up in [param LineReader.name_label].[nr]
+## Emitted when a new line of dialog is read. Passes the actual string that ends up in [member LineReader.name_label].[br]
 ## See [signal actor_name_changed].
 signal display_name_changed(
 	display_name:String,

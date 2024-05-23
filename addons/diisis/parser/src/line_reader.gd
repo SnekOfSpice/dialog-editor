@@ -880,7 +880,6 @@ func read_next_chunk():
 		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
 	
-	prints("last actor diff", is_last_actor_name_different)
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
 	else:

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dug0luew7u6ds"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
+
+[node name="OpenEditorButton" type="Button"]
+tooltip_text = "Open DIISIS (Ctrl+Alt+D)"
+focus_mode = 0
+text = "hi"
+script = ExtResource("1_4si81")
