@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://p3oh1wedya4m"]
+
+[ext_resource type="Script" path="res://sample/diisis_intro/autoloads/const.gd" id="1_dk4rx"]
+
+[node name="Const" type="Node"]
+script = ExtResource("1_dk4rx")

@@ -1,0 +1,177 @@
+{
+	"dropdown_dialog_arguments": [],
+	"dropdown_title_for_dialog_syntax": "character",
+	"dropdown_titles": [
+		"character"
+	],
+	"dropdowns": {
+		"character": [
+			"dii",
+			"sis"
+		]
+	},
+	"empty_strings_for_l10n": false,
+	"facts": {
+
+	},
+	"file_config": {
+		"evaluator_paths": [
+			"res://sample/inline_eval.gd"
+		]
+	},
+	"head_defaults": [],
+	"instruction_templates": {
+		"rotate": {
+			"arg_types": [
+				"float"
+			],
+			"args": [
+				"angle"
+			]
+		},
+		"show-character": {
+			"arg_types": [
+				"string",
+				"bool"
+			],
+			"args": [
+				"character_name",
+				"clear_others"
+			]
+		}
+	},
+	"locales_to_export": [
+		"af_ZA",
+		"sq_AL",
+		"ar_SA",
+		"hy_AM",
+		"az_AZ",
+		"eu_ES",
+		"be_BY",
+		"bn_IN",
+		"bs_BA",
+		"bg_BG",
+		"ca_ES",
+		"zh_CN",
+		"zh_TW",
+		"hr_HR",
+		"cs_CZ",
+		"da_DK",
+		"nl_NL",
+		"en_US",
+		"et_EE",
+		"fo_FO",
+		"fi_FI",
+		"fr_FR",
+		"gl_ES",
+		"ka_GE",
+		"de_DE",
+		"el_GR",
+		"gu_IN",
+		"he_IL",
+		"hi_IN",
+		"hu_HU",
+		"is_IS",
+		"id_ID",
+		"it_IT",
+		"ja_JP",
+		"kn_IN",
+		"kk_KZ",
+		"kok_IN",
+		"ko_KR",
+		"lv_LV",
+		"lt_LT",
+		"mk_MK",
+		"ms_MY",
+		"ml_IN",
+		"mt_MT",
+		"mr_IN",
+		"mn_MN",
+		"se_NO",
+		"nb_NO",
+		"nn_NO",
+		"fa_IR",
+		"pl_PL",
+		"pt_BR",
+		"pa_IN",
+		"ro_RO",
+		"ru_RU",
+		"sr_BA",
+		"sk_SK",
+		"es_ES",
+		"sw_KE",
+		"sv_SE",
+		"syr_SY",
+		"ta_IN",
+		"te_IN",
+		"th_TH",
+		"tn_ZA",
+		"tr_TR",
+		"uk_UA",
+		"uz_UZ",
+		"vi_VN",
+		"cy_GB",
+		"xh_ZA",
+		"zu_ZA"
+	],
+	"page_data": {
+		"0": {
+			"facts": {
+				"meta.visible": false,
+				"values": {
+
+				}
+			},
+			"lines": [
+				{
+					"address": "0.0",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": false,
+							"values": {
+
+							}
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "jkljklkj<lc>sdfgdfg",
+						"use_dialog_syntax": false
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 0,
+					"meta.selector": {
+						"selected": false
+					}
+				}
+			],
+			"meta.scroll_vertical": 0,
+			"meta.selected": false,
+			"next": 0,
+			"number": 0,
+			"page_key": "",
+			"terminate": false
+		}
+	}
+}

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://chfbyvpvah4eu"]
+
+[ext_resource type="Script" path="res://sample/diisis_intro/characters/intro_character.gd" id="1_upf4t"]
+
+[node name="IntroCharacter" type="Node2D"]
+script = ExtResource("1_upf4t")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

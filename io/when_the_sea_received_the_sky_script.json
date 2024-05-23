@@ -1,0 +1,1560 @@
+{
+	"dropdown_titles": [
+		"character",
+		"emotion-euphoria",
+		"emotion-zero"
+	],
+	"dropdowns": {
+		"character": [
+			"narrator",
+			"euphoria",
+			"zero",
+			"oldrone"
+		],
+		"dropdown1": [
+			"0",
+			"1"
+		],
+		"emotion-euphoria": [
+			"neutral",
+			"taking-notes",
+			"horny",
+			"exhausted",
+			"caring"
+		],
+		"emotion-zero": [
+			"neutral",
+			"sweaty",
+			"teasing"
+		],
+		"untitled0": [],
+		"untitled1": []
+	},
+	"facts": {
+
+	},
+	"head_defaults": [
+		{
+			"data_type": 5,
+			"property_name": "character",
+			"values": [
+				0,
+				0
+			]
+		},
+		{
+			"data_type": 5,
+			"property_name": "emotion-euphoria",
+			"values": [
+				1,
+				0
+			]
+		},
+		{
+			"data_type": 5,
+			"property_name": "emotion-zero",
+			"values": [
+				2,
+				0
+			]
+		},
+		{
+			"data_type": 6,
+			"property_name": "update-emotions",
+			"values": [
+				false,
+				null
+			]
+		}
+	],
+	"instruction_templates": [
+		{
+			"args": [
+				"character-name",
+				"clear-others"
+			],
+			"name": "show-character"
+		},
+		{
+			"args": [
+				""
+			],
+			"name": "hide-all-characters"
+		},
+		{
+			"args": [
+				""
+			],
+			"name": "black-fade-in-out"
+		},
+		{
+			"args": [
+				"background-name"
+			],
+			"name": "set-background"
+		}
+	],
+	"page_data": {
+		"0": {
+			"lines": [
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": [
+							{
+								"name": "background-name",
+								"value": "bedroom"
+							}
+						],
+						"delay.after": 0,
+						"delay.before": 0,
+						"meta.selected_index": 2,
+						"name": "set-background"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 2,
+					"meta.is_head_editable": true,
+					"meta.line_index": 0,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "You're kneeling across from her, connected by the ghost of a saliva string broken up seconds ago. Zero's half-closed eyes level with yours. Your breath; heaving. Your skin; sweaty. Your tongue; covered with the taste of salt and desire. Her churning body is loud and unwieldy, infinitely complex in its machinery.<lc>It has broken open your body in too many places to count over the course of the last days. It was built by you when her first body began to collapse."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 1,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": " Hah... hnnhn..."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								2
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								1
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 2,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "A putrid and lovely stench of oil and breath and decay emanates from her lungs."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								1
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 3,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "we still haven't... become one consciousness... hhheh..."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								2
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								1
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Her eyes narrow on yours."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								2
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								1
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Just gotta keep trying then."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								2
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": [
+							{
+								"name": "",
+								"value": ""
+							}
+						],
+						"delay.after": 0,
+						"delay.before": 0,
+						"meta.selected_index": 1,
+						"name": "hide-all-characters"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 2,
+					"meta.is_head_editable": false,
+					"meta.line_index": 7,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "It goes on like this. You're pretty sure you've been making love for at least half a week now. Or maybe you've rolled over back to day 1 at some point. You both prefer the windows blotted out with blackout curtains and ruined shutters anyways."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 8,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": [
+							{
+								"name": "",
+								"value": ""
+							}
+						],
+						"delay.after": 1.18,
+						"delay.before": 0.37,
+						"meta.selected_index": 0,
+						"name": "black-fade-in-out"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 2,
+					"meta.is_head_editable": false,
+					"meta.line_index": 9,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": ">ou awake next to Zero. She's still passed out. Some of the momentary source of anesthetic dripping both down your thighs. (Or what could be said to be Zero's thigh-ish area). As you roll over, a splitting headache runs through your skull. You're dehydrated. Severely.<lc>As you rummage through the contents of the table surface you make sure to not disturb the delicate arrangement of items and trinkets.<mp>You find a small glass still filled with water and tip it against your lips, and a thought enters your head."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								3
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 10,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Ah fuck..."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 11,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": [
+							{
+								"name": "background-name",
+								"value": "workshop-euphoria"
+							}
+						],
+						"delay.after": 5,
+						"delay.before": 5,
+						"meta.selected_index": 2,
+						"name": "set-background"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 2,
+					"meta.is_head_editable": false,
+					"meta.line_index": 12,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "You make you way down into the cellar. There, just as dehydrated as you are, is your tree. "
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 13,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Hello, little one."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								4
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 14,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Undefined machine parts line the floor: mismatched wiring, half-molded engines, globs of unrefined metal.<lc>And through it all, vast swathes of green emerge. Unfathomable crossbreeds of plant and machine all over, including the center piece of the workshop: Your tree.<ap>You gently caress the delicate leaves of the sprouting sapling before watering it.<lc>Upon inspecting the various fruit blossoms you find on these plants, their iridescent surface biomembranes reflect your workshop back at you. One orchid droops from the ceiling where an air duct once was. On this one, and on its few siblings that are all lined up in this makeshift greenhouse/workshop, you experiment with the most exotic parts. One might turn into a heart pump yet. another one a vein with an internal clock perhaps. <lc>All of them bear the weight of a better life and receive water as such."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 15,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Inventory..."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 16,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "A shelf with scraps of paper."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 17,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "Bone replacemts are still hard to come by. Buuuuut these silenced lungs should be a delight once grown.<ap>hehe."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 18,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "You check your emails. The new ribcage got seized by customs. Ordering a new one takes at least 4 weeks. Under your breath, you sigh a frustration."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 19,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "fuck... let's just hope her body remains sturdy until then."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								1
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								3
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 20,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "that's all there is to check here, so you go back. on your way back up, you empty the mailbox. what isn't medical supplies or artwork lands immediately in the trash.\none envelope draws your attention. it's official-looking, colored borders and ensignia and all. this is bad news and you immediately look into it."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 21,
+					"meta.visible": true
+				}
+			],
+			"next": 1,
+			"number": 0,
+			"page_key": "",
+			"terminate": false
+		},
+		"1": {
+			"lines": [
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": [
+							{
+								"name": "background-name",
+								"value": "apartment"
+							}
+						],
+						"delay.after": 0,
+						"delay.before": 0,
+						"meta.selected_index": 2,
+						"name": "set-background"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 2,
+					"meta.is_head_editable": false,
+					"meta.line_index": 0,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "You emerge back in your apartment, Zero now having had the time to wake and even shower apparently. You were faster with your plants once.<lc>Sipping fresh coffee, she smiles at you."
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								0
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								false,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 1,
+					"meta.visible": true
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"content": "My my, can't even wait for me to wake up, huh?"
+					},
+					"facts": {
+
+					},
+					"header": [
+						{
+							"data_type": 5,
+							"property_name": "character",
+							"values": [
+								0,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-euphoria",
+							"values": [
+								1,
+								0
+							]
+						},
+						{
+							"data_type": 5,
+							"property_name": "emotion-zero",
+							"values": [
+								2,
+								2
+							]
+						},
+						{
+							"data_type": 6,
+							"property_name": "update-emotions",
+							"values": [
+								true,
+								null
+							]
+						}
+					],
+					"line_type": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 2,
+					"meta.visible": true
+				}
+			],
+			"next": 0,
+			"number": 1,
+			"page_key": "",
+			"terminate": false
+		}
+	}
+}
