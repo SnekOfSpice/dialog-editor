@@ -6,6 +6,8 @@ extends Node
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
 @export var max_history_length := -1
+## Folder containing all l10n files (starting with "diisis_l10n_").
+## [br]Leave empty to forego l10n.
 @export_dir var localization_folder
 
 @export_group("Choices")

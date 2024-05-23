@@ -487,6 +487,7 @@ func read_new_line(new_line: Dictionary):
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
 				return
+			
 			if Parser.use_dialog_syntax:
 				var lines = content.split("[]>")
 				dialog_actors.clear()
@@ -606,6 +607,7 @@ func _process(delta: float) -> void:
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
 	if text_content.visible_characters < get_end_of_chunk_position():
+		#print(text_content.text)
 		if text_speed == MAX_TEXT_SPEED:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
@@ -1064,7 +1066,7 @@ func handle_header(header: Array):
 
 func set_dialog_line_index(value: int):
 	dialog_line_index = value
-	#prints("hiiiii", Parser.use_dialog_syntax)
+	
 	if Parser.use_dialog_syntax:
 		var raw_name : String = dialog_actors[dialog_line_index]
 		var actor_name: String
@@ -1104,6 +1106,3 @@ func update_name_label(actor_name: String):
 	
 	ParserEvents.display_name_changed.emit(display_name, name_container.modulate.a > 0.0)
 	ParserEvents.actor_name_changed.emit(actor_name, name_container.modulate.a > 0.0)
-
-func _on_finished_button_pressed() -> void:
-	emit_signal("line_finished", line_index)
