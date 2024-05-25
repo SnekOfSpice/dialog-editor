@@ -4,7 +4,6 @@ extends Node2D
 
 func _ready():
 	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
-	print("connected")
 
 func on_dialog_line_args_passed(actor_name: String, dialog_line_args: Dictionary):
 	if dialog_line_args.has(str(character_name, "-emotion")):

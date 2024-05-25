@@ -11,6 +11,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_uh8ly")
 
+[node name="Background" type="Node2D" parent="."]
+
 [node name="StageContainer" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15

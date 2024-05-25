@@ -1,8 +1,26 @@
 extends Control
+class_name StageRoot
 
 func _ready():
 	change_stage(CONST.STAGE_GAME)
+	GameWorld.stage_root = self
+
+func set_background(background:String, fade_time:=0.0):
+	var new_background:Node
+	var old_backgrounds:=$Background.get_children()
+	if background.ends_with(".png"):
+		new_background = Sprite2D.new()
+		new_background.texture = load(background)
+		new_background.centered = false
+	elif background.ends_with(".tscn"):
+		new_background = load(background).instantiate()
+	new_background.modulate.a = 0.0
+	$Background.add_child(new_background)
 	
+	var fade_tween := get_tree().create_tween()
+	fade_tween.tween_property(new_background, "modulate:a", 1.0, fade_time)
+	for old_node : Node in old_backgrounds:
+		fade_tween.finished.connect(old_node.queue_free)
 
 func change_stage(stage_path:String):
 	

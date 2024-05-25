@@ -16,7 +16,8 @@
 		],
 		"character": [
 			"amber",
-			"eterna"
+			"eterna",
+			"narrator"
 		],
 		"eterna-emotion": [
 			"neutral",
@@ -34,12 +35,32 @@
 	},
 	"head_defaults": [],
 	"instruction_templates": {
-		"rotate": {
+		"black_fade": {
 			"arg_types": [
+				"float",
+				"float",
+				"float",
+				"bool",
+				"string",
+				"string"
+			],
+			"args": [
+				"fade_in",
+				"hold_time",
+				"fade_out",
+				"hide_characters",
+				"new_background",
+				"new_bgm"
+			]
+		},
+		"set_background": {
+			"arg_types": [
+				"string",
 				"float"
 			],
 			"args": [
-				"angle"
+				"name",
+				"fade_time"
 			]
 		},
 		"show-character": {
@@ -153,12 +174,64 @@
 						"operand_key": "AND"
 					},
 					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"fade_in": 0,
+								"fade_out": 1,
+								"hide_characters": false,
+								"hold_time": 0.5,
+								"new_background": "workshop",
+								"new_bgm": "intro"
+							},
+							"name": "black_fade"
+						},
+						"meta.text": "black_fade(0.0, 0.5, 1.0, false, workshop, intro)",
+						"meta.validation_status": "OK",
+						"name": "black_fade"
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 0,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.1",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": false,
+							"values": {
+
+							}
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
 						"active_actors": [
 							"amber",
-							"eterna"
+							"eterna",
+							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>eterna{eterna-emotion|neutral,amber-emotion|neutral}:ghfgh\n[]>amber:Hi!\n[]>amber:We're Amber and Eterna, and today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our guts!"
+						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers slash across the atmosphere.\n[]>eterna{eterna-emotion|neutral,amber-emotion|neutral}:ghfgh<lc>another one<lc>and one more\n[]>amber:Hi!\n[]>amber:We're Amber and Eterna, and today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our guts!"
 					},
 					"facts": {
 						"meta.visible": false,
@@ -172,7 +245,7 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 0,
+					"meta.line_index": 1,
 					"meta.selector": {
 						"selected": false
 					}
@@ -201,7 +274,7 @@
 			"terminate": false
 		}
 	},
-	"text_lead_time_other_actor": 0,
+	"text_lead_time_other_actor": 0.2,
 	"text_lead_time_same_actor": 0,
 	"use_dialog_syntax": true
 }

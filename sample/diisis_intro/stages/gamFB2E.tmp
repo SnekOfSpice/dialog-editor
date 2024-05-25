@@ -1,13 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=8 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://sample/diisis_intro/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
-[ext_resource type="Script" path="res://sample/diisis_intro/stages/instruction_handler_intro.gd" id="4_u8vmc"]
+[ext_resource type="Script" path="res://sample/Handler.gd" id="3_6avfn"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://sample/diisis_intro/characters/intro_character.tscn" id="5_abdaq"]
 [ext_resource type="Texture2D" uid="uid://vvvuc4ewukes" path="res://icon.svg" id="5_pecrs"]
 [ext_resource type="Script" path="res://sample/inline_eval.gd" id="6_8ao3j"]
-[ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://sample/diisis_intro/stages/black_fade.tscn" id="8_50byo"]
 
 [node name="GameStage" type="Control"]
 layout_mode = 3
@@ -21,11 +20,11 @@ script = ExtResource("1_a36me")
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Eterna" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(998, 549)
+position = Vector2(710, 317)
 character_name = "eterna"
 
 [node name="Amber" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(337, 557)
+position = Vector2(195, 317)
 character_name = "amber"
 
 [node name="Control" type="Control" parent="."]
@@ -95,7 +94,7 @@ auto_translate_mode = 1
 layout_mode = 2
 
 [node name="Handler" type="Node" parent="."]
-script = ExtResource("4_u8vmc")
+script = ExtResource("3_6avfn")
 
 [node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
 layout_mode = 3
@@ -113,6 +112,8 @@ name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Ma
 name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../InlineEval")
 
+[node name="Background" type="Node2D" parent="."]
+
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(566, 297)
@@ -121,10 +122,5 @@ texture = ExtResource("5_pecrs")
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("6_8ao3j")
 
-[node name="BlackFade" parent="." instance=ExtResource("8_50byo")]
-visible = false
-layout_mode = 1
-
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
-[connection signal="start_black_fade" from="Handler" to="BlackFade" method="_on_handler_start_black_fade"]
