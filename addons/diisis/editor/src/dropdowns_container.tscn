@@ -73,5 +73,6 @@ layout_mode = 2
 [connection signal="text_changed" from="TabContainer/Dropdowns/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
 [connection signal="pressed" from="TabContainer/Dropdowns/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
 [connection signal="text_changed" from="TabContainer/Dropdowns/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_changed"]
-[connection signal="pressed" from="TabContainer/Dropdowns/Controls/CreateDDContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="text_submitted" from="TabContainer/Dropdowns/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="create_new_dropdown"]
+[connection signal="pressed" from="TabContainer/Dropdowns/Controls/CreateDDContainer/AddButton" to="." method="create_new_dropdown"]
 [connection signal="visibility_changed" from="TabContainer/DialogSyntax" to="." method="_on_dialog_syntax_visibility_changed"]

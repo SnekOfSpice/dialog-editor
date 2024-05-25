@@ -17,7 +17,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 toggle_mode = true
-text = ">"
+text = "v"
 
 [node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2

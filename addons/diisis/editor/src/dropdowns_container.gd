@@ -86,8 +86,10 @@ func _on_dialog_syntax_visibility_changed():
 	fill_dialog_argument_checkboxes()
 
 
-func _on_add_button_pressed() -> void:
-	var dd_title = find_child("CreateDDNameTextEdit").text
+func create_new_dropdown() -> void:
+	var dd_title : String = find_child("CreateDDNameTextEdit").text
+	if dd_title.is_empty():
+		return
 	Pages.dropdowns[dd_title] = []
 	Pages.dropdown_titles.append(dd_title)
 	var item = preload("res://addons/diisis/editor/src/dropdown_item.tscn").instantiate()
