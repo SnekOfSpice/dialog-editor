@@ -53,6 +53,10 @@
 				"new_bgm"
 			]
 		},
+		"hide_cgs": {
+			"arg_types": [],
+			"args": []
+		},
 		"set_background": {
 			"arg_types": [
 				"string",
@@ -72,6 +76,18 @@
 				"character_name",
 				"clear_others"
 			]
+		},
+		"show_cg": {
+			"arg_types": [
+				"string"
+			],
+			"args": [
+				"name"
+			]
+		},
+		"start_doom_timer": {
+			"arg_types": [],
+			"args": []
 		}
 	},
 	"locales_to_export": [
@@ -246,6 +262,52 @@
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
 					"meta.line_index": 1,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.2",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": false,
+							"values": {
+
+							}
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"name": "amber_guts"
+							},
+							"name": "show_cg"
+						},
+						"meta.text": "show_cg(amber_guts)",
+						"meta.validation_status": "OK",
+						"name": "show_cg"
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 2,
 					"meta.selector": {
 						"selected": false
 					}

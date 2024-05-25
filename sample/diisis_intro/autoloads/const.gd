@@ -9,3 +9,6 @@ const CHARACTER_AMBER := "amber"
 const CHARACTER_ETERNA := "eterna"
 
 const BACKGROUND_WORKSHOP := "res://sample/diisis_intro/backgrounds/workshop.png"
+
+
+const BGM_INTRO := ""
