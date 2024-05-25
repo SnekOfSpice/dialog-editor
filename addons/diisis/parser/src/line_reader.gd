@@ -323,6 +323,8 @@ func _ready() -> void:
 	instruction_handler.connect("instruction_wrapped_completed", instruction_completed)
 	text_content.visible_ratio = 0
 	text_content.bbcode_enabled = true
+	text_content.text = ""
+	name_label.text = ""
 	
 	if not show_advance_available and next_prompt_container:
 		next_prompt_container.modulate.a = 0
@@ -531,7 +533,7 @@ func read_new_line(new_line: Dictionary):
 			var delay_before = new_line.get("content").get("delay_before")
 			var delay_after = new_line.get("content").get("delay_after")
 			
-			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
+			instruction_handler._wrapper_execute(instruction_name, args.get("args"), delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
