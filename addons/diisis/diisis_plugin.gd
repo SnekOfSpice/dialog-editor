@@ -63,14 +63,10 @@ func open_editor():
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		await get_tree().process_frame
 		dia_editor_window.popup()
-		#dia_editor_window.close_requested.connect(dia_editor_window.hide)
-		#dia_editor_window.close_requested.connect(dia_editor_window.queue_free)
-		#dia_editor_window.editor_closed.connect(remove_singletons)
 
 func _process(delta: float) -> void:
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.wrap_controls = true
-#		print(dia_editor_window.get_children())
 
 func _exit_tree():
 	remove_editor_singletons()

@@ -2,7 +2,10 @@
 extends Control
 class_name DiisisEditor
 
-const AUTO_SAVE_INTERVAL := 30000.0
+const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
+const BACKUP_PATH := "user://DIISIS_autosave/"
+var auto_save_timer := AUTO_SAVE_INTERVAL
+var is_open := false
 
 var _page = preload("res://addons/diisis/editor/src/page.tscn")
 var current_page: Page
@@ -61,18 +64,11 @@ func init() -> void:
 	print("init editor")
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
+	is_open = true
 	
-	#add_empty_page()
 	request_add_page(0)
 	
 	update_controls()
-	
-	#set_current_page_changeable(false)
-	
-	find_child("FDOpen").size = get_window().size * 0.75
-	find_child("FDSave").size = get_window().size * 0.75
-	find_child("MovePagePopup").size = get_window().size * 0.75
-	find_child("FactsPopup").size = get_window().size * 0.75
 	
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
@@ -152,8 +148,14 @@ func set_save_path(value:String):
 	find_child("SavePathLabel").text = str(active_dir, active_file_name)
 
 func _process(delta: float) -> void:
+	if not is_open:
+		return
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
+	auto_save_timer -= delta
+	if auto_save_timer <= 0.0:
+		auto_save_timer = AUTO_SAVE_INTERVAL
+		save_to_file(str(BACKUP_PATH, Time.get_datetime_string_from_system().replace(":", "-"), ".json"), true)
 
 func _shortcut_input(event):
 	if event is InputEventKey:
@@ -294,20 +296,28 @@ func open_save_popup():
 		$Popups.find_child("FDSave").current_dir = active_dir
 	open_popup($Popups.find_child("FDSave"), true)
 
-func save_to_file(path:String):
-	if current_page:
+func save_to_file(path:String, is_autosave:=false):
+	if current_page and not is_autosave:
 		current_page.save()
 	
+	if path.begins_with(BACKUP_PATH):
+		if not DirAccess.dir_exists_absolute(BACKUP_PATH):
+			DirAccess.make_dir_absolute(BACKUP_PATH)
+	
 	var file = FileAccess.open(path, FileAccess.WRITE)
+	
 	var data_to_save = Pages.serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
-	set_save_path(path)
-	time_since_last_save = 0.0
-	last_system_save = Time.get_time_dict_from_system()
-	has_saved = true
+	if is_autosave:
+		notify(str("Autosaved to ", path, "!"))
+	else:
+		set_save_path(path)
+		time_since_last_save = 0.0
+		last_system_save = Time.get_time_dict_from_system()
+		has_saved = true
 	
-	notify(str("Saved to ", active_file_name, "!"))
+		notify(str("Saved to ", active_file_name, "!"))
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)

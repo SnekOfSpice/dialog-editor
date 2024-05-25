@@ -1,8 +1,6 @@
 @tool
 extends Window
 
-signal editor_closed()
-
 var editor : DiisisEditor
 var editor_window : Window
 var window_factor_window : Window
@@ -74,7 +72,7 @@ func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
 
 func _on_quit_dialog_confirmed() -> void:
-	emit_signal("editor_closed")
+	editor.is_open = false
 	hide()
 	queue_free()
 

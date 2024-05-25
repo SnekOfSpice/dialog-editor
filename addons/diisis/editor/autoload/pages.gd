@@ -740,8 +740,30 @@ func rename_dropdown_title(from:String, to:String):
 			if line["content"]["active_actors_title"] == from:
 				line["content"]["active_actors_title"] = to
 			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
+			line["content"]["content"] = line["content"]["content"].replace(str("[]>", from), str("[]>", to))
 
 func set_dropdown_options(dropdown_title:String, options:Array):
+	var old_options : Array = dropdowns.get(dropdown_title, [])
+	
+	for page in page_data.values():
+		var lines : Array = page.get("lines")
+		for line : Dictionary in lines:
+			if line.get("line_type") != DIISIS.LineType.Text:
+				continue
+			
+			var i := 0
+			while i < min(old_options.size(), options.size()):
+				var old_option:String=old_options[i]
+				var new_option:String=options[i]
+				if old_option == new_option:
+					i += 1
+					continue
+				var old_arg := str(dropdown_title, "|", old_option)
+				var new_arg := str(dropdown_title, "|", new_option)
+				line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
+				
+				i += 1
+	
 	dropdowns[dropdown_title] = options
 
 func alter_fact(from:String, to=null):
