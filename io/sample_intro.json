@@ -26,7 +26,7 @@
 	},
 	"empty_strings_for_l10n": false,
 	"facts": {
-
+		"player.against_rot": false
 	},
 	"file_config": {
 		"evaluator_paths": [
@@ -311,13 +311,240 @@
 					"meta.selector": {
 						"selected": false
 					}
+				},
+				{
+					"address": "0.3",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": false,
+							"values": {
+
+							}
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:Would you say that struggling against the Rot is a worthwhile endeavor?"
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 3,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.4",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": false,
+							"values": {
+
+							}
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"auto_switch": false,
+						"choices": [
+							{
+								"address": "0.4.0",
+								"choice_text.disabled": "",
+								"choice_text.enabled": "Yes.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"meta.visible": false,
+										"values": {
+
+										}
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"meta.visible": false,
+									"values": {
+
+									}
+								},
+								"meta.selector": {
+									"selected": false
+								},
+								"target_page": 0
+							},
+							{
+								"address": "0.4.1",
+								"choice_text.disabled": "",
+								"choice_text.enabled": "No.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"meta.visible": false,
+										"values": {
+
+										}
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"meta.visible": false,
+									"values": {
+
+									}
+								},
+								"meta.selector": {
+									"selected": false
+								},
+								"target_page": 0
+							}
+						],
+						"meta.do_jump_page": true
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 1,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.5",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+								"player.against_rot": false
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>eterna:Weakling.\n[]>amber:Yes, darling.<lc>Let the rot take hold."
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+								"player.against_rot": true
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>eterna:Why would you... <lc>Not give up?\n[]>eterna:...\n[]>amber:At this rate, we'll have to kill you.\n[]>eterna:Not necessarily... <lc> To stand against entropy, and reject it. That's powerful."
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.selector": {
+						"selected": false
+					}
 				}
 			],
-			"meta.scroll_vertical": 0,
+			"meta.scroll_vertical": 872,
 			"meta.selected": false,
-			"next": 0,
+			"next": 1,
 			"number": 0,
-			"page_key": "",
+			"page_key": "intro",
 			"terminate": false
 		},
 		"1": {
