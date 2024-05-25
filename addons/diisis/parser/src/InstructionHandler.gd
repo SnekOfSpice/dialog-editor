@@ -1,3 +1,4 @@
+@tool
 extends Node
 class_name InstructionHandler
 
@@ -17,9 +18,13 @@ var has_executed := false
 var has_received_execute_callback := false
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	instruction_completed.connect(set.bind("has_received_execute_callback", true))
 
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	if Parser.paused:
 		return
 	

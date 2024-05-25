@@ -987,6 +987,8 @@ func add_template_from_string(instruction:String):
 	var arg_types := []
 	var entered_args := arg_string.split(",")
 	for arg in entered_args:
+		if arg.is_empty():
+			continue
 		if arg.contains(":"): # typed
 			var arg_name := arg.split(":")[0]
 			var arg_type := arg.split(":")[1]
