@@ -85,7 +85,7 @@ func update_hint(new_text: String):
 	$ReadHint.build(facts)
 	
 	var caret_pos = (
-			get_window().position +
+			#get_window().position +
 			Vector2i(global_position)
 			)
 	caret_pos.y -= 140

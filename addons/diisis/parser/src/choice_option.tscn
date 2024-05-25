@@ -5,8 +5,8 @@
 [node name="ChoiceOption" type="Button"]
 offset_right = 8.0
 offset_bottom = 8.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 6
+size_flags_vertical = 6
 focus_mode = 0
 text = "jhujk"
 script = ExtResource("1_l5ra8")

@@ -47,6 +47,7 @@ func add_choice(at_index:=-1, choice_data:={}):
 		$ChoiceList.move_child(choice, at_index)
 	choice.deserialize(choice_data)
 	choice.connect("move_choice_edit", request_move_choice_edit)
+	choice.grab_focus()
 	update()
 
 func request_add_choice():

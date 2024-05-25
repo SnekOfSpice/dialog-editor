@@ -6,6 +6,7 @@ const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
 const BACKUP_PATH := "user://DIISIS_autosave/"
 var auto_save_timer := AUTO_SAVE_INTERVAL
 var is_open := false
+var undo_redo_count_at_last_save := 0
 
 var _page = preload("res://addons/diisis/editor/src/page.tscn")
 var current_page: Page
@@ -152,7 +153,9 @@ func _process(delta: float) -> void:
 		return
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
-	auto_save_timer -= delta
+	
+	if undo_redo_count_at_last_save != undo_redo.get_history_count():
+		auto_save_timer -= delta
 	if auto_save_timer <= 0.0:
 		auto_save_timer = AUTO_SAVE_INTERVAL
 		save_to_file(str(BACKUP_PATH, Time.get_datetime_string_from_system().replace(":", "-"), ".json"), true)
@@ -318,6 +321,8 @@ func save_to_file(path:String, is_autosave:=false):
 		has_saved = true
 	
 		notify(str("Saved to ", active_file_name, "!"))
+	
+	undo_redo_count_at_last_save = undo_redo.get_history_count()
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)

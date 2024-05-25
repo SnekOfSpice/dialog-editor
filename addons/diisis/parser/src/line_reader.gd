@@ -44,7 +44,7 @@ var _auto_continue_duration:= auto_continue_delay
 
 @export_subgroup("Choices")
 ## If [code]true[/code], shows [param text_container] when choices are presented.
-@export var show_text_during_choices := false
+@export var show_text_during_choices := true
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
