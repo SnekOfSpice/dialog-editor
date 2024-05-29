@@ -231,6 +231,12 @@ func get_current_page_number() -> int:
 		return 0
 	return current_page.number
 
+func has_open_popup() -> bool:
+	for popup in $Popups.get_children():
+		if popup.visible:
+			return true
+	return false
+
 func _on_first_pressed() -> void:
 	request_load_first_page()
 
