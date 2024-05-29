@@ -83,23 +83,20 @@ func serialize() -> Dictionary:
 	var result := {}
 	
 	result["property_name"] = property_name
-	result["values"] = values#.duplicate(true)#[values[0], values[1]]
+	result["values"] = values
 	result["data_type"] = data_type
 	
 	return result
 
 func deserialize(data: Dictionary):
 	prints("deserializing header with", data.get("property_name"), data.get("values"))
-	#values = data.get("values", [null, null])
-	#values = values.duplicate(true)
 	var killme = []
 	for v in data.get("values"):
 		killme.append(v)
-	printt(property_name, values, killme)
+	
 	values = killme
-	printt(property_name, values, killme)
-	#values = [data.get("values")[0], data.get("values")[1]]
-	_old_values = values#.duplicate(true)
+	
+	_old_values = values
 	
 	set_property_name(data.get("property_name", "property"))
 	_old_property_name = property_name

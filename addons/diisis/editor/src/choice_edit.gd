@@ -23,7 +23,7 @@ func deserialize(data:Dictionary):
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page", 0)
-	find_child("Facts").deserialize(data.get("facts", {}).get("values", {}))
+	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
 	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
@@ -91,11 +91,11 @@ func update():
 func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)
 
-func add_fact(fact_name: String, fact_value: bool):
+func add_fact(fact_name: String, fact_value):
 	find_child("Facts").add_fact(fact_name, fact_value)
 
 func add_conditional(fact_name: String, fact_value: bool):
-	find_child("Conditionals").add_fact(fact_name, fact_value)
+	find_child("Conditionals").add_fact(fact_name, fact_value, true)
 
 func delete_fact(fact_name:String):
 	find_child("Facts").delete_fact(fact_name)

@@ -211,11 +211,11 @@ func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:
 		find_child("FolderContainer").update(get_index(), max_folder_range)
 
-func add_fact(fact_name: String, fact_value: bool):
+func add_fact(fact_name: String, fact_value):
 	find_child("Facts").add_fact(fact_name, fact_value)
 
-func add_conditional(fact_name: String, fact_value: bool):
-	find_child("Conditionals").add_fact(fact_name, fact_value)
+func add_conditional(fact_name: String, fact_value):
+	find_child("Conditionals").add_fact(fact_name, fact_value, true)
 
 func delete_fact(fact_name:String):
 	find_child("Facts").delete_fact(fact_name)

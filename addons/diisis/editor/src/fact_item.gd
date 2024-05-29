@@ -4,46 +4,120 @@ class_name FactItem
 
 signal request_delete_fact(fact_name:String)
 
+enum DataType{
+	Bool,
+	Int,
+}
+enum Comparator{
+	EQ,
+	UNEQ,
+	LT,
+	LTE,
+	GT,
+	GTE
+}
+enum Operator{
+	Set,
+	Add,
+}
+
 var fact_name := ""
 var entered_text := ""
+var is_conditional := false
+var data_type : DataType = DataType.Bool
+var int_comparator : Comparator = Comparator.EQ
+var int_operator : Operator = Operator.Set
 
 var virtual_hint_line := 0
 
 func _ready() -> void:
 	find_child("RegisterContainer").visible = false
 
-func set_fact(new_fact_name: String, default_value: bool):
+func serialize() -> Dictionary:
+	var result := {}
+	
+	result["fact_name"] = get_fact_name()
+	result["fact_value"] = get_fact_value()
+	result["is_conditional"] = get_fact_value()
+	result["data_type"] = data_type
+	result["int_comparator"] = int_comparator
+	result["int_operator"] = int_operator
+	
+	return result
+
+func deserialize(data: Dictionary) -> void:
+	print(data)
+	set_fact(data.get("fact_name", ""), data.get("fact_value", true))
+	set_is_conditional(data.get("is_conditional", false))
+	set_data_type(data.get("data_type", DataType.Bool))
+	set_int_comparator(data.get("int_comparator", Comparator.EQ))
+	set_int_operator(data.get("int_operator", Operator.Set))
+
+
+
+func set_fact(new_fact_name: String, default_value):
+	if default_value is bool:
+		find_child("FactBoolValue").button_pressed = default_value
+	else:
+		if str(default_value).contains("."):
+			pass # floats don't exist
+		else:
+			find_child("IntValueSpinBox").value = int(default_value)
 	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
-	find_child("FactValue").button_pressed = default_value
 	_on_fact_name_text_changed(fact_name)
 
+func set_data_type(value:DataType):
+	data_type = value
+	find_child("FactBoolValue").visible = data_type == DataType.Bool
+	find_child("FactIntValueContainer").visible = data_type == DataType.Int
+	find_child("DataTypeButton").select(data_type)
+	
+
+func set_is_conditional(value:bool):
+	is_conditional = value
+	find_child("IntComparatorButton").visible = is_conditional
+	find_child("IntOperandButton").visible = not is_conditional
+
+
+func set_int_comparator(value:Comparator):
+	int_comparator = value
+	find_child("IntComparatorButton").select(int_comparator)
+
+func set_int_operator(value:Operator):
+	int_operator = value
+	var button : Button = find_child("IntOperandButton")
+	if int_operator == Operator.Set:
+		button.text = "="
+	elif int_operator == Operator.Add:
+		button.text = "+"
+
 func get_fact_value():
-	return find_child("FactValue").button_pressed
+	if data_type == DataType.Bool:
+		return find_child("FactBoolValue").button_pressed
+	elif data_type == DataType.Int:
+		return find_child("IntValueSpinBox").value
 
 func get_fact_name():
 	return find_child("FactName").text
 
 func update_unregsitered_prompt():
 	var new_text = entered_text
-	var is_unregistered = (not Pages.facts.keys().has(new_text))
-#		or Pages.facts.get(new_text) == find_child("FactValue").button_pressed
-#	)
 	find_child("RegisterContainer").visible = true
 	if not Pages.facts.keys().has(new_text):
 		find_child("RegisterLabel").text = str(
 			"Fact \"",
 			new_text,
-			"\" isn't registered in global scope with default value ",
-			not find_child("FactValue").button_pressed,
-			". Would you like to register it?",
-			" (Facts are registered with the inverse of the value that registered them.)",
-		)
+			"\" isn't registered.")
 	else:
 		find_child("RegisterLabel").text = str(
 			"Registered as ",
 			Pages.facts.get(new_text)
 		)
+		if Pages.facts.get(new_text) is bool:
+			set_data_type(DataType.Bool)
+		else:
+			set_data_type(DataType.Int)
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
@@ -98,7 +172,12 @@ func _on_fact_name_text_changed(new_text: String) -> void:
 
 
 func _on_register_button_pressed() -> void:
-	Pages.facts[entered_text] = not(find_child("FactValue").button_pressed)
+	var value
+	if data_type == DataType.Bool:
+		value = not(find_child("FactBoolValue").button_pressed)
+	elif data_type == DataType.Int:
+		value = 0
+	Pages.facts[entered_text] = value
 	find_child("RegisterContainer").visible = false
 	
 	$ReadHint.hide()
@@ -145,3 +224,11 @@ func _on_fact_name_gui_input(event: InputEvent) -> void:
 
 func _on_fact_name_focus_entered() -> void:
 	virtual_hint_line = 0
+
+
+func _on_int_operand_button_pressed() -> void:
+	var button : Button = find_child("IntOperandButton")
+	if button.text == "=":
+		set_int_operator(Operator.Add)
+	elif button.text == "+":
+		set_int_operator(Operator.Set)

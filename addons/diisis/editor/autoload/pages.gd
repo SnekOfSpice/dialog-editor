@@ -596,8 +596,8 @@ func lines_referencing_fact(fact_name: String):
 		
 		
 		var page_facts:Dictionary
-		if page.get("facts", {}).has("values"):
-			page_facts = page.get("facts", {}).get("values", {})
+		if page.get("facts", {}).has("fact_data_by_name"):
+			page_facts = page.get("facts", {}).get("fact_data_by_name", {})
 		else:
 			page_facts = page.get("facts", {})
 		
@@ -609,11 +609,7 @@ func lines_referencing_fact(fact_name: String):
 		
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
-			var line_facts:Dictionary
-			if line.get("facts", {}).has("values"):
-				line_facts = line.get("facts", {}).get("values", {})
-			else:
-				line_facts = line.get("facts", {})
+			var line_facts:Dictionary = line.get("facts", {}).get("fact_data_by_name", {})
 			
 			
 			for fact in line_facts.keys():
@@ -623,8 +619,8 @@ func lines_referencing_fact(fact_name: String):
 					ref_lines_declare.append(str(page.get("number"), ".", i))
 			
 			var line_conditionals:Dictionary
-			if line.get("conditionals", {}).get("facts", {}).has("values"):
-				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("values", {})
+			if line.get("conditionals", {}).get("facts", {}).has("fact_data_by_name"):
+				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("fact_data_by_name", {})
 			else:
 				line_conditionals = line.get("conditionals", {}).get("facts", {})
 			
@@ -639,8 +635,8 @@ func lines_referencing_fact(fact_name: String):
 				var choice_index := 0
 				for option in options.get("choices", {}):
 					var option_conditionals:Dictionary
-					if option.get("conditionals", {}).get("facts", {}).has("values"):
-						option_conditionals = option.get("conditionals", {}).get("facts", {}).get("values", {})
+					if option.get("conditionals", {}).get("facts", {}).has("fact_data_by_name"):
+						option_conditionals = option.get("conditionals", {}).get("facts", {}).get("fact_data_by_name", {})
 					else:
 						option_conditionals = option.get("conditionals", {}).get("facts", {})
 					for fact in option_conditionals:
@@ -650,8 +646,8 @@ func lines_referencing_fact(fact_name: String):
 							ref_lines_choice_condition.append(str(page.get("number"), ".", i, ".", choice_index))
 					
 					var option_facts:Dictionary
-					if option.get("facts", {}).has("values"):
-						option_facts = option.get("facts", {}).get("values", {})
+					if option.get("facts", {}).has("fact_data_by_name"):
+						option_facts = option.get("facts", {}).get("fact_data_by_name", {})
 					else:
 						option_facts = option.get("facts", {})
 					for fact in option_facts:
@@ -770,10 +766,7 @@ func alter_fact(from:String, to=null):
 	for page in page_data.values():
 		
 		var page_facts:Dictionary
-		if page.get("facts", {}).has("values"):
-			page_facts = page.get("facts", {}).get("values", {})
-		else:
-			page_facts = page.get("facts", {})
+		page_facts = page.get("facts", {}).get("fact_data_by_name", {})
 		for fact in page_facts.keys():
 			if fact == from:
 				if to is String:
@@ -783,10 +776,7 @@ func alter_fact(from:String, to=null):
 		for i in page.get("lines", []).size():
 			var line = page.get("lines")[i]
 			var line_facts:Dictionary
-			if line.get("facts", {}).has("values"):
-				line_facts = line.get("facts", {}).get("values", {})
-			else:
-				line_facts = line.get("facts", {})
+			line_facts = line.get("facts", {}).get("fact_data_by_name", {})
 			for fact in line_facts.keys():
 				if fact == from:
 					if to is String:
@@ -794,10 +784,7 @@ func alter_fact(from:String, to=null):
 					line_facts.erase(from)
 			
 			var line_conditionals:Dictionary
-			if line.get("conditionals", {}).get("facts", {}).has("values"):
-				line_conditionals = line.get("conditionals", {}).get("facts", {}).get("values", {})
-			else:
-				line_conditionals = line.get("conditionals", {}).get("facts", {})
+			line_conditionals = line.get("conditionals", {}).get("facts", {}).get("fact_data_by_name", {})
 			for fact in line_conditionals:
 				if fact == from:
 					if to is String:
@@ -809,10 +796,7 @@ func alter_fact(from:String, to=null):
 				var choice_index := 0
 				for option in options.get("choices", {}):
 					var option_conditionals:Dictionary
-					if option.get("conditionals", {}).get("facts", {}).has("values"):
-						option_conditionals = option.get("conditionals", {}).get("facts", {}).get("values", {})
-					else:
-						option_conditionals = option.get("conditionals", {}).get("facts", {})
+					option_conditionals = option.get("conditionals", {}).get("facts", {}).get("fact_data_by_name", {})
 					for fact in option_conditionals:
 						if fact == from:
 							if to is String:
@@ -820,10 +804,7 @@ func alter_fact(from:String, to=null):
 							option_conditionals.erase(from)
 					
 					var option_facts:Dictionary
-					if option.get("facts", {}).has("values"):
-						option_facts = option.get("facts", {}).get("values", {})
-					else:
-						option_facts = option.get("facts", {})
+					option_facts = option.get("facts", {}).get("fact_data_by_name", {})
 					for fact in option_facts:
 						if fact == from:
 							if to is String:

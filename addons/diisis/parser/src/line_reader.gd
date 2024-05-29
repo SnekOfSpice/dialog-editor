@@ -476,10 +476,10 @@ func read_new_line(new_line: Dictionary):
 	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
 	# register facts
-	var facts = line_data.get("facts", {}).get("values", {})
+	var facts = line_data.get("facts", {}).get("fact_data_by_name", {})
 	
-	for f in facts.keys():
-		Parser.change_fact(f, facts.get(f))
+	for f in facts.values():
+		Parser.change_fact(f)
 	
 	match line_type:
 		DIISIS.LineType.Text:
@@ -921,11 +921,11 @@ func build_choices(choices, auto_switch:bool):
 		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
 		var cond_behavior = conditional_eval[1]
-		var facts = option.get("facts").get("values", {})
+		var facts = option.get("facts").get("fact_data_by_name", {})
 		
 		if cond_true and auto_switch:
-			for f in facts.keys():
-				Parser.change_fact(f, facts.get(f))
+			for f in facts.values():
+				Parser.change_fact(f)
 			choice_pressed(true, option.get("target_page"))
 			break
 		
@@ -1026,17 +1026,45 @@ func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
 	var behavior = line_data.get("conditionals").get("behavior_key")
 	var args = conditionals.get("operand_args")
-	var facts_to_check = conditionals.get("facts").get("values")
-	if facts_to_check.keys().size() == 0:
+	var facts_to_check : Dictionary = conditionals.get("facts", {}).get("fact_data_by_name", {})
+	if facts_to_check.is_empty():
 		var default_key = "Enable" if enabled_as_default else "Disable"
 		return [true, default_key]
 	
 	
 	var operand_key = conditionals.get("operand_key")
 	var true_facts := []
-	for fact in facts_to_check:
-		if facts_to_check.get(fact) == Parser.facts.get(fact):
-			true_facts.append(fact)
+	for fact in facts_to_check.values():
+		var fact_name : String = fact.get("fact_name")
+		var current_fact_value = Parser.facts.get(fact_name)
+		if int(fact.get("data_type", 0)) == 0: # bool
+			var fact_value = bool(fact.get("fact_value", true))
+			if fact_value == current_fact_value:
+				true_facts.append(fact_name)
+		elif int(fact.get("data_type", 0)) == 1: # int
+			var new_fact_value = int(fact.get("fact_value", 0))
+			var comparator := int(fact.get("int_comparator", 0)) 
+			match comparator:
+				0: # eq
+					if new_fact_value == current_fact_value:
+						true_facts.append(fact_name)
+				1: # uneq
+					if new_fact_value != current_fact_value:
+						true_facts.append(fact_name)
+				2: # lt
+					if new_fact_value > current_fact_value:
+						true_facts.append(fact_name)
+				3: # lte
+					if new_fact_value >= current_fact_value:
+						true_facts.append(fact_name)
+				4: # gt
+					if new_fact_value < current_fact_value:
+						true_facts.append(fact_name)
+				5: # gte
+					if new_fact_value <= current_fact_value:
+						true_facts.append(fact_name)
+				
+		
 	match operand_key:
 		"AND":
 			conditional_is_true = true_facts.size() == facts_to_check.size()

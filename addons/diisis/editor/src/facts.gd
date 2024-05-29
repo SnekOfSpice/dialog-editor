@@ -40,10 +40,10 @@ func toggle_visibility():
 
 func serialize() -> Dictionary:
 	var result := {}
-	var facts := {}
+	var fact_data := {}
 	for fact in find_child("FactsContainer").get_children():
-		facts[fact.get_fact_name()] = fact.get_fact_value()
-	result["values"] = facts
+		fact_data[fact.get_fact_name()] = fact.serialize()
+	result["fact_data_by_name"] = fact_data
 	if visibility_toggle_button:
 		result["meta.visible"] = visible
 	else:
@@ -51,18 +51,30 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary):
-	for fact_name in data.get("values", {}).keys():
-		add_fact(fact_name, data.get("values", {}).get(fact_name))
+	for fact in data.get("fact_data_by_name", {}).values():
+		add_fact_from_serialized(fact)
 	set_visibility(data.get("meta.visible", false))
 	if visibility_toggle_button:
 		visibility_toggle_button.button_pressed = data.get("meta.visible", false)
 	else:
 		find_child("VisibilityToggleButton").button_pressed = data.get("meta.visible", false)
 
-func add_fact(fact_name: String, fact_value: bool):
+func add_fact_from_serialized(fact_data:Dictionary):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
 	facts_container.add_child(f)
-	f.set_fact(fact_name, fact_value)
+	f.deserialize(fact_data)
+	f.request_delete_fact.connect(request_delete_fact)
+	update()
+
+func add_fact(fact_name: String, fact_value, conditional:=false):
+	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
+	facts_container.add_child(f)
+	var data := {
+		"fact_name":fact_name,
+		"fact_value":fact_value,
+		"is_conditional":conditional,
+	}
+	f.deserialize(data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()
 

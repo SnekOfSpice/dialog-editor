@@ -20,7 +20,8 @@ func get_page_key() -> String:
 
 func set_page_key(value:String):
 	$Info/PageKey.text = value
-func add_fact(fact_name: String, fact_value: bool):
+
+func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
 	facts.add_fact(fact_name, fact_value)
 
