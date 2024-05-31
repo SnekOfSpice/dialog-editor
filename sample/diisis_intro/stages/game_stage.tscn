@@ -28,6 +28,35 @@ character_name = "eterna"
 position = Vector2(337, 557)
 character_name = "amber"
 
+[node name="CGBottomContainer" type="Control" parent="."]
+auto_translate_mode = 1
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CGBottomContainer"]
+auto_translate_mode = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CGTex" type="TextureRect" parent="CGBottomContainer"]
+auto_translate_mode = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Control" type="Control" parent="."]
 auto_translate_mode = 1
 layout_mode = 1
@@ -126,7 +155,7 @@ script = ExtResource("6_8ao3j")
 visible = false
 layout_mode = 1
 
-[node name="CGContainer" type="Control" parent="."]
+[node name="CGTopContainer" type="Control" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -135,7 +164,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="CGContainer"]
+[node name="ColorRect" type="ColorRect" parent="CGTopContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,7 +173,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="CGTex" type="TextureRect" parent="CGContainer"]
+[node name="CGTex" type="TextureRect" parent="CGTopContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -154,4 +183,5 @@ grow_vertical = 2
 
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
+[connection signal="show_cg" from="Handler" to="." method="_on_handler_show_cg"]
 [connection signal="start_black_fade" from="Handler" to="BlackFade" method="_on_handler_start_black_fade"]

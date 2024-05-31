@@ -45,17 +45,6 @@ func deserialize(data: Dictionary):
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
 
-func build_typing_hint():
-	find_child("TypingHint").build(Pages.get_all_instruction_names())
-	find_child("TypingHint").popup()
-	var caret_pos = (
-		get_window().position +
-		Vector2i(text_box.global_position) +
-		Vector2i(text_box.get_caret_draw_pos())
-		)
-	caret_pos.x += 40
-	find_child("TypingHint").position = caret_pos
-
 func _on_instruction_text_edit_focus_entered() -> void:
 	for instruction in Pages.instruction_templates:
 		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, instruction, str(instruction, "()"))
@@ -73,12 +62,8 @@ func _on_instruction_text_edit_caret_changed() -> void:
 	var end = text_box.text.find(")") + 1
 	
 	if caret_col > start and caret_col < end:
-		var caret_pos = (
-		get_window().position +
-		Vector2i(text_box.global_position) +
-		Vector2i(text_box.get_caret_draw_pos())
-		)
-		caret_pos.x += 40
+		var caret_pos = Vector2i(text_box.get_caret_draw_pos())
+		caret_pos += Vector2i(text_box.global_position)
 		find_child("ArgHint").position = caret_pos
 		
 		var arg_names = Pages.get_instruction_arg_names(get_instruction_name())
@@ -133,9 +118,6 @@ func _on_instruction_text_edit_text_changed() -> void:
 		find_child("InstructionTextContainer").color.a = 0.0
 	else:
 		find_child("InstructionTextContainer").color.a = 0.5
-	
-	#if text_box.text.is_empty():
-		#build_typing_hint()
 
 
 func _on_instruction_text_edit_code_completion_requested() -> void:

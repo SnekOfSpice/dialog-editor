@@ -9,6 +9,11 @@ signal start_black_fade(
 	new_background:String,
 	new_bgm:String)
 
+signal show_cg(
+	cg_name:String,
+	fade_in:float,
+	on_top:bool)
+
 func execute(instruction_name, args) -> bool:
 	match instruction_name:
 		"black_fade":
@@ -24,4 +29,13 @@ func execute(instruction_name, args) -> bool:
 			)
 			
 			return true
+		"show_cg":
+			#var fade_in : float = 
+			emit_signal("show_cg",
+			args.get("name"),
+			args.get("fade_in_time"),
+			not args.get("continue_dialog_through_cg")
+			)
+			if not args.get("continue_dialog_through_cg"):
+				return true
 	return false

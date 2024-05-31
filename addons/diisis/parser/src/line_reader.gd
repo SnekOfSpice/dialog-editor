@@ -45,6 +45,8 @@ var _auto_continue_duration:= auto_continue_delay
 @export_subgroup("Choices")
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_choices := true
+## If [code]true[/code], shows [param text_container] when choices are presented.
+@export var show_text_during_instructions := false
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
@@ -261,7 +263,7 @@ func deserialize(data: Dictionary):
 	name_map = data.get("name_map", name_map)
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	
-	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
+	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
 	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
@@ -471,7 +473,7 @@ func read_new_line(new_line: Dictionary):
 	
 	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
 		get(key).visible = true
-	text_container.visible = line_type == DIISIS.LineType.Text or (line_type == DIISIS.LineType.Choice and show_text_during_choices)
+	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
 	choice_container.visible = line_type == DIISIS.LineType.Choice
 	
@@ -539,6 +541,15 @@ func read_new_line(new_line: Dictionary):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
 			emit_signal("line_finished", line_index)
 			
+
+func can_text_container_be_visible() -> bool:
+	if line_type == DIISIS.LineType.Text:
+		return true
+	if line_type == DIISIS.LineType.Choice:
+		return show_text_during_choices
+	if line_type == DIISIS.LineType.Instruction:
+		return show_text_during_instructions
+	return false
 
 func update_limit_line_count(lines: Array):
 	if max_text_line_count <= 0:

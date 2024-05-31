@@ -1051,7 +1051,7 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 			var i := 0
 			var goal_arg_count := min(old_arg_count, new_arg_count)
 			while i < goal_arg_count:
-				transformed_string += old_template_data.get("args").get(old_arg_names[i])
+				transformed_string += str(old_template_data.get("args").get(old_arg_names[i]))
 				if i < goal_arg_count - 1:
 					transformed_string += ", "
 				i += 1

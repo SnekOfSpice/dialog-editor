@@ -1,4 +1,5 @@
 extends Control
+class_name GameStage
 
 @onready var characters := {
 	CONST.CHARACTER_AMBER : $Characters/Amber,
@@ -10,6 +11,7 @@ var dialog_box_offset := Vector2.ZERO
 var actor_name := ""
 var is_name_container_visible := false
 
+@onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
 var blockers := 3
 
 func _ready():
@@ -18,13 +20,39 @@ func _ready():
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	
 	GameWorld.instruction_handler = $Handler
+	GameWorld.game_stage = self
 	
 	remove_blocker()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("advance"):
+		for root in cg_roots:
+			if root.visible and emit_insutrction_complete_on_cg_hide:
+				hide_cg()
+				return
 		$LineReader.request_advance()
 
+func set_cg(cg_name:String, fade_in_duration:float, cg_node:TextureRect):
+	var cg_root : Control = cg_node.get_parent()
+	cg_root.modulate.a = 0.0
+	cg_root.visible = true
+	
+	cg_node.texture = load(str("res://sample/diisis_intro/cg/", cg_name, ".png"))
+	var t = create_tween()
+	t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
+
+func set_cg_top(cg_name:String, fade_in_duration:float):
+	set_cg(cg_name, fade_in_duration, find_child("CGTopContainer").get_node("CGTex"))
+
+func set_cg_bottom(cg_name:String, fade_in_duration:float):
+	set_cg(cg_name, fade_in_duration, find_child("CGBottomContainer").get_node("CGTex"))
+
+func hide_cg():
+	for cg_root : Control in cg_roots:
+		cg_root.visible = false
+		cg_root.modulate.a = 0.0
+		if emit_insutrction_complete_on_cg_hide:
+			GameWorld.instruction_handler.instruction_completed.emit()
 
 func on_actor_name_changed(
 	actor_name: String,
@@ -69,3 +97,11 @@ func remove_blocker():
 	if blockers <= 0:
 		Parser.reset_and_start(0)
 		print("start")
+
+var emit_insutrction_complete_on_cg_hide :bool
+func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
+	emit_insutrction_complete_on_cg_hide = on_top
+	if on_top:
+		set_cg_top(cg_name, fade_in)
+	else:
+		set_cg_bottom(cg_name, fade_in)
