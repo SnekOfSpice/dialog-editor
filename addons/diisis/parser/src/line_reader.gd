@@ -78,7 +78,6 @@ var name_for_blank_name := ""
 @export var name_map := {}
 @export var name_colors := {}
 @export var name_style : NameStyle = NameStyle.NameLabel
-var prepend_offset := 0
 var visible_prepend_offset := 0
 @export var keep_past_lines := false
 @export var past_text_continer : VBoxContainer:
@@ -627,7 +626,6 @@ func _process(delta: float) -> void:
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
 	if text_content.visible_characters < get_end_of_chunk_position():
-		#print(text_content.text)
 		if text_speed == MAX_TEXT_SPEED:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
@@ -762,20 +760,6 @@ func update_advance_available():
 
 func start_showing_text():
 	var content : String = dialog_lines[dialog_line_index]
-	#prepend_offset = 0
-	#if name_style == NameStyle.Prepend:
-		#name_container.modulate.a = 0.0
-		#var display_name: String = name_map.get(current_raw_name, current_raw_name)
-		#var name_color :Color = name_colors.get(current_raw_name, Color.WHITE)
-		#content = str(
-			#"[color=", name_color.to_html(), "]",
-			#display_name, "[/color] - ",
-			#content
-			#)
-		#var prefix_length := display_name.length() + 27
-		#prepend_offset = prefix_length
-		#visible_prepend_offset = display_name.length() + 3
-	
 	line_chunks = content.split("<lc>")
 	chunk_index = -1
 	read_next_chunk()
@@ -869,7 +853,6 @@ func read_next_chunk():
 	pause_positions.clear()
 	pause_types.clear()
 	var new_text : String = line_chunks[chunk_index]
-	prints("received new text", new_text)
 	while new_text.begins_with(" "):
 		new_text = new_text.trim_prefix(" ")
 	while new_text.begins_with("<lc>"):
@@ -888,45 +871,11 @@ func read_next_chunk():
 		new_text = new_text.trim_suffix("<mp>")
 	
 	
-	var scan_index := 0# prepend_offset
-	#var bbcode_offset := 0#27 if name_style == NameStyle.Prepend else 0
+	var scan_index := 0
 	pause_positions.clear()
 	pause_types.clear()
-	#scan_index = 0
-	#var bbcode_offsets := []
 	
-	# each index represents one character in the received strings, including bbcode
-	# indixes within tags will containe the length of their tag
-	# when the scan index enters an index in the pause map that has a non0 value,
-	# it adds that value to the overall offset.
-	#  subtracts offset from the pause position, 
-	#var pause_map := []
-	#
-	#while scan_index < new_text.length():
-		#var tag_offset := 0
-		#if new_text[scan_index] == "[":
-			#var end_tag_position = new_text.find("]", scan_index)
-			#tag_offset = end_tag_position - scan_index
-			#
-			#
-			#for i in tag_offset:
-				#pause_map.append(tag_offset + bbcode_offset)
-			#
-			##tag_offset = end_tag_position - scan_index + bbcode_offset
-			#scan_index = end_tag_position
-		#pause_map.append(tag_offset + bbcode_offset)
-		#bbcode_offset += tag_offset
-		#
-		#scan_index += 1
-	#scan_index = 0
-	#prints("pause map", pause_map, pause_map.size(), new_text.length())
 	while scan_index < new_text.length():
-		#if new_text[scan_index] == "[":
-			#var end_tag_position = new_text.find("]", scan_index)
-			#bbcode_offset += end_tag_position - scan_index
-			#scan_index = end_tag_position
-			#continue
-		
 		if new_text[scan_index] == "<":
 			if new_text.find("<mp>", scan_index) == scan_index:
 				if not pause_positions.has(scan_index):
@@ -939,16 +888,11 @@ func read_next_chunk():
 				
 		scan_index += 1
 	
-	#pause_positions.erase(-1)
 	pause_positions.append(new_text.length()-1)
 	pause_types.append(PauseTypes.EoL)
 	
-	
-	
 	next_pause_position_index = 0
 	find_next_pause()
-	
-	var k := 0
 	
 	var cleaned_text : String = new_text
 	var i = 0
@@ -958,13 +902,6 @@ func read_next_chunk():
 		
 		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
-	#prints("reading cleaned", cleaned_text, pause_positions)
-	#for pos in pause_positions:
-		#print(pause_positions[k])
-		#pause_positions[k] = pos - pause_map[pos]-4
-		#print(pause_positions[k])
-		#k += 1
-	#print(pause_positions)
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
 	else:
@@ -979,12 +916,19 @@ func read_next_chunk():
 			display_name, "[/color] - ",
 			cleaned_text
 			)
+		
+		var name_prepend_length := 3 + display_name.length()
+		var first_tag_position = cleaned_text.find("[", pause_positions[0])
 		var l := 0
 		while l < pause_positions.size():
-			pause_positions[l] = pause_positions[l] + 3 + display_name.length() - 4 * (l + 1)
+			pause_positions[l] = pause_positions[l] + name_prepend_length
+			if first_tag_position > pause_positions[l]:
+				
+				pause_positions[l] = pause_positions[l] - 4 * (l + 1)
+			else:
+				pause_positions[l] = pause_positions[l] - 4 * l
 			l += 1
-		#var prefix_length := display_name.length() + 27
-		visible_prepend_offset = 3 + display_name.length()
+		visible_prepend_offset = name_prepend_length
 		
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)

@@ -247,7 +247,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>amber:We're [b]Amber <mp>and Eterna[/b], and <mp>today we'll strip down to the core...\n[]>narrator: The stench of fried electronics and freshly-cast polymers band across the atmosphere.\n[]>amber{eterna-emotion|neutral,amber-emotion|neutral}:Hi!\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our guts! <mp>... <mp>And teach [i]you[/i] how to peer into them, extract their warmth.\n[]>eterna:Welcome to the DIISIS Demo, traveler."
+						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers band across the atmosphere.\n[]>amber{eterna-emotion|neutral,amber-emotion|neutral}:Hi! We're [b]Amber[/b] <mp>and [b]Eterna[/b], and <mp>today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our [b]guts![/b] <mp>... <mp>And teach [i]you[/i] how to peer into them, extract their warmth.\n[]>eterna:Welcome to the DIISIS Demo, traveler."
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -540,7 +540,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 278,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
