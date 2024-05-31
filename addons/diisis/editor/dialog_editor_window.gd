@@ -110,6 +110,8 @@ func _on_window_mouse_entered():
 		return
 	if $QuitDialog.visible:
 		return
+	if editor.has_open_popup():
+		return
 	editor_window.grab_focus()
 
 

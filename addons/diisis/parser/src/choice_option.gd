@@ -12,8 +12,8 @@ func _ready() -> void:
 
 func on_pressed() -> void:
 	# apply facts
-	for f in facts.keys():
-		Parser.change_fact(f, facts.get(f))
+	for f in facts.values():
+		Parser.change_fact(f)
 	
 	emit_signal("choice_pressed", do_jump_page, target_page)
 	ParserEvents.choice_pressed.emit(

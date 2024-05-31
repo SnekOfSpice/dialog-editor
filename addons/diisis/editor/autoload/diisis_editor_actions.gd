@@ -153,7 +153,7 @@ func operate_local_fact(address:String, target:int, action:String, fact_name:Str
 	elif action == "delete":
 		DiisisEditorUtil.get_node_at_address(address).call(func_name, fact_name)
 
-func add_fact(address:String, target:int, fact_name:String, fact_value:bool):
+func add_fact(address:String, target:int, fact_name:String, fact_value):
 	operate_local_fact(address, target, "add", fact_name, fact_value)
 
 func delete_fact_local(address:String, target:int, fact_name:String):

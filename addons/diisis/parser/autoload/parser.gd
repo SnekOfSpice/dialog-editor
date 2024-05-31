@@ -190,9 +190,9 @@ func read_page(number: int, starting_line_index := 0):
 	
 	line_index = starting_line_index
 	
-	var page_bound_facts : Dictionary = page_data.get(page_index).get("facts", {}).get("values", {})
-	for fact in page_bound_facts:
-		change_fact(fact, page_bound_facts.get(fact))
+	var page_bound_facts : Dictionary = page_data.get(page_index).get("facts", {}).get("fact_data_by_name", {})
+	for fact in page_bound_facts.values():
+		change_fact(fact)
 	
 	read_line(line_index)
 
@@ -271,23 +271,32 @@ func open_connection(new_lr: LineReader):
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.[br]
-## If [param fact_name] doesn't exist in [member facts],
-## [signal ParserEvents.fact_changed] will be emitted with
-## [param old_value] set to [code]false[/code], and it will be added to
-## [member facts].
-func change_fact(fact_name: String, new_value: bool, suppress_event:=false):
+
+
+func change_fact(fact_item_data:Dictionary, suppress_event:=false):
+	var fact_name : String = fact_item_data.get("fact_name", "")
 	var old_value = facts.get(fact_name, false)
+	var new_value
+	
+	if int(fact_item_data.get("data_type", 0)) == 0: # bool
+		new_value = bool(fact_item_data.get("fact_value", true))
+	elif int(fact_item_data.get("data_type", 0)) == 1: # int
+		new_value = int(fact_item_data.get("fact_value", 0))
+		if fact_item_data.get("int_operand", 0) == 0: # set
+			new_value = int(fact_item_data.get("fact_value", 0))
+		elif fact_item_data.get("int_operand", 0) == 1: # add
+			new_value = int(old_value) + int(fact_item_data.get("fact_value", 0))
+	
 	facts[fact_name] = new_value
 	if not suppress_event:
 		ParserEvents.fact_changed.emit(fact_name, old_value, new_value)
 
-func apply_facts(f: Dictionary):
-	for fact in f.keys():
-		change_fact(fact, f.get(fact))
+func apply_facts(fact_values_by_name: Dictionary):
+	for fact in fact_values_by_name:
+		facts[fact] = fact_values_by_name.get(fact)
 
 func reset_facts():
-	for fact in starting_facts.keys():
-		change_fact(fact, starting_facts.get(fact))
+	apply_facts(starting_facts)
 
 func serialize() -> Dictionary:
 	var result := {}

@@ -19,6 +19,7 @@ border_blend = true
 [node name="ChoiceEdit" type="PanelContainer" groups=["page_view_sensitive"]]
 offset_right = 898.0
 offset_bottom = 167.0
+focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g0ndw")
 script = ExtResource("1_2jptq")
 

@@ -28,10 +28,14 @@ func fill():
 	for fact in Pages.facts.keys():
 		var fact_reg = fact#str(fact, ": ", Pages.facts.get(fact))
 		var texture:Texture2D
-		if Pages.facts.get(fact):
-			texture = load("res://addons/diisis/editor/visuals/true.png")
-		else:
-			texture = load("res://addons/diisis/editor/visuals/false.png")
+		var value = Pages.facts.get(fact)
+		if value is bool:
+			if value:
+				texture = load("res://addons/diisis/editor/visuals/true.png")
+			else:
+				texture = load("res://addons/diisis/editor/visuals/false.png")
+		elif value is int:
+			texture = load("res://addons/diisis/editor/visuals/int.png")
 		find_child("Facts").add_item(fact_reg, texture)
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true

@@ -16,12 +16,25 @@ size_flags_vertical = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="FactItem"]
 layout_mode = 2
 
-[node name="FactValue" type="CheckBox" parent="FactItem/HBoxContainer"]
+[node name="FactValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer"]
+layout_mode = 2
+
+[node name="DataTypeButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Bool"
+popup/item_0/id = 0
+popup/item_1/text = "Int"
+popup/item_1/id = 1
+
+[node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer"]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 8
 
-[node name="FactName" type="LineEdit" parent="FactItem/HBoxContainer"]
+[node name="FactName" type="LineEdit" parent="FactItem/HBoxContainer/FactValueContainer"]
 custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -29,6 +42,42 @@ focus_mode = 1
 mouse_force_pass_scroll_events = false
 placeholder_text = "fact name"
 expand_to_text_length = true
+
+[node name="FactIntValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer/FactValueContainer"]
+layout_mode = 2
+
+[node name="IntOperandButton" type="Button" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+tooltip_text = "Set (=): Sets the fact to that value
+Add (+): Adds (or subtracts) the value to the fact"
+text = "="
+
+[node name="IntComparatorButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+tooltip_text = "Sets the comparison mode with the current facts saved in the Parser at runtime.
+e.g. \"fact\" > X will only display this item if fact is greater than X."
+selected = 0
+allow_reselect = true
+item_count = 6
+popup/item_0/text = "=="
+popup/item_0/id = 0
+popup/item_1/text = "!="
+popup/item_1/id = 1
+popup/item_2/text = "<"
+popup/item_2/id = 2
+popup/item_3/text = "<="
+popup/item_3/id = 3
+popup/item_4/text = ">"
+popup/item_4/id = 4
+popup/item_5/text = ">="
+popup/item_5/id = 5
+
+[node name="IntValueSpinBox" type="SpinBox" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+layout_mode = 2
+min_value = -93696.0
+max_value = 93696.0
 
 [node name="DeleteButton" type="Button" parent="FactItem"]
 layout_mode = 2
@@ -55,11 +104,14 @@ text = "register"
 [node name="ReadHint" parent="." instance=ExtResource("2_ehjrn")]
 visible = false
 
-[connection signal="pressed" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_pressed"]
-[connection signal="toggled" from="FactItem/HBoxContainer/FactValue" to="." method="_on_fact_value_toggled"]
-[connection signal="focus_entered" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_focus_entered"]
-[connection signal="focus_exited" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_focus_exited"]
-[connection signal="gui_input" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_gui_input"]
-[connection signal="text_changed" from="FactItem/HBoxContainer/FactName" to="." method="_on_fact_name_text_changed"]
+[connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
+[connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_pressed"]
+[connection signal="toggled" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_toggled"]
+[connection signal="focus_entered" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_focus_entered"]
+[connection signal="focus_exited" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_focus_exited"]
+[connection signal="gui_input" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_gui_input"]
+[connection signal="text_changed" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_changed"]
+[connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntOperandButton" to="." method="_on_int_operand_button_pressed"]
+[connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntComparatorButton" to="." method="set_int_comparator"]
 [connection signal="pressed" from="FactItem/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="RegisterContainer/RegisterButton" to="." method="_on_register_button_pressed"]

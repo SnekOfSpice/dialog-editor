@@ -46,40 +46,12 @@ func erase_property_from_temp(property):
 	new_header.erase(property)
 
 
-#func change_header_default(property_name, old_property_name, new_default_value):
-#	#print("CHANGING HEADER DEFAULT ( NOT ACTUALLY )")
-#	#printt(property_name, old_property_name, new_default_value)
-#	# not working atm
-#	# I think it is now?
-#
-#	for i in new_header.size():
-#		if new_header[i].get("property_name") == old_property_name:
-#			new_header[i] = {
-#				"property_name" : property_name,
-#				"values" : new_default_value,
-#				"data_type":
-#			}
-#			break
-	
-	# trim excess
-#	var overshoot = old_header.size() - new_header.size()
-#	if overshoot > 0:
-#
-	#new_header[old_property_name] = new_default_value
-
 func save():
 	new_header.resize(find_child("HeadPropertyContainer").get_children().size())
 	var i = 0
 	for c in find_child("HeadPropertyContainer").get_children():
 		new_header[i] = c.serialize()
 		i += 1
-#		var new_head = c.updated_header_default()
-#		change_header_default(
-#			new_head.get("property_name"),
-#			new_head.get("old_property_name"),
-#			new_head.get("new_default_values"),
-#			)
-	#get_parent().current_page.deserialize(Pages.page_data.get(get_parent().current_page.number).get("lines"))
 	Pages.apply_new_header_schema(new_header)
 	
 	emit_signal("update")
