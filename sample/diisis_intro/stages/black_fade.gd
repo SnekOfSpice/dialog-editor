@@ -24,6 +24,8 @@ func fade_in(duration: float):
 func fade_out(duration:= release_on_full_black_reached):
 	if duration == 0.0:
 		modulate.a = 0.0
+		await get_tree().process_frame
+		on_clear_reached()
 		return
 	var t = get_tree().create_tween()
 	t.tween_property(self, "modulate:a", 0.0, duration)

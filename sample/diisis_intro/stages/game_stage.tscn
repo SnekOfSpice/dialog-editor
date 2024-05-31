@@ -21,11 +21,11 @@ script = ExtResource("1_a36me")
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Eterna" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(998, 549)
+position = Vector2(1112, 549)
 character_name = "eterna"
 
 [node name="Amber" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(337, 557)
+position = Vector2(253, 557)
 character_name = "amber"
 
 [node name="Control" type="Control" parent="."]
@@ -40,21 +40,20 @@ mouse_filter = 2
 
 [node name="TextContainer" type="CenterContainer" parent="Control"]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(454, 0)
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -227.0
-offset_right = 250.0
+offset_left = -4.0
+offset_right = 4.0
 grow_horizontal = 2
 grow_vertical = 0
-use_top_left = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/TextContainer"]
 auto_translate_mode = 1
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/TextContainer/MarginContainer"]
@@ -70,16 +69,32 @@ auto_translate_mode = 1
 layout_mode = 2
 text = "Name Label Here"
 
-[node name="Panel" type="PanelContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
-auto_translate_mode = 1
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/TextContainer"]
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/TextContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PastTextContainer" type="VBoxContainer" parent="Control/TextContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/TextContainer/MarginContainer/VBoxContainer/Panel"]
+[node name="Panel" type="PanelContainer" parent="Control/TextContainer/ScrollContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextContentLabel" type="RichTextLabel" parent="Control/TextContainer/ScrollContainer/VBoxContainer/Panel"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 theme_override_fonts/bold_font = ExtResource("2_6jeks")
-text = "Text Body Here"
+text = "Text Body Here
+dghfgh"
+fit_content = true
+scroll_active = false
 
 [node name="ChoiceContainer" type="PanelContainer" parent="Control"]
 auto_translate_mode = 1
@@ -98,18 +113,29 @@ size_flags_vertical = 4
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("past_text_continer", "choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
+name_for_blank_name = "narrator"
+name_map = {
+"amber": "A",
+"eterna": "Eterna"
+}
+name_colors = {
+"amber": Color(0.888357, 0.498997, 0.742898, 1)
+}
+name_style = 1
+keep_past_lines = true
+past_text_continer = NodePath("../Control/TextContainer/ScrollContainer/VBoxContainer/PastTextContainer")
 choice_container = NodePath("../Control/ChoiceContainer")
 choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")
-text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
-text_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel")
+text_content = NodePath("../Control/TextContainer/ScrollContainer/VBoxContainer/Panel/TextContentLabel")
+text_container = NodePath("../Control/TextContainer/ScrollContainer/VBoxContainer/Panel")
 name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
 name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../InlineEval")
