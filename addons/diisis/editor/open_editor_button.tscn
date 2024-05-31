@@ -5,5 +5,5 @@
 [node name="OpenEditorButton" type="Button"]
 tooltip_text = "Open DIISIS (Ctrl+Alt+D)"
 focus_mode = 0
-text = "hi"
+text = "DIISIS"
 script = ExtResource("1_4si81")

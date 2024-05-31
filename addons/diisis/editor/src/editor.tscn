@@ -479,15 +479,16 @@ autostart = true
 [node name="Popups" type="Node" parent="."]
 
 [node name="FDSave" type="FileDialog" parent="Popups"]
+gui_embed_subwindows = true
 initial_position = 4
 size = Vector2i(827, 377)
 ok_button_text = "Save"
 access = 2
 filters = PackedStringArray("*.json")
-use_native_dialog = true
 
 [node name="FDExportLocales" type="FileDialog" parent="Popups"]
 auto_translate_mode = 1
+gui_embed_subwindows = true
 title = "Open a Directory"
 initial_position = 4
 size = Vector2i(827, 377)
@@ -495,9 +496,9 @@ ok_button_text = "Select Current Folder"
 file_mode = 2
 access = 2
 filters = PackedStringArray("*.json")
-use_native_dialog = true
 
 [node name="FDOpen" type="FileDialog" parent="Popups"]
+gui_embed_subwindows = true
 title = "Open a File"
 initial_position = 4
 size = Vector2i(312, 162)
@@ -505,7 +506,6 @@ ok_button_text = "Open"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.json")
-use_native_dialog = true
 
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
 title = "Edit Header Defaults"
