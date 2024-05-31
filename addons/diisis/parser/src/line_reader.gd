@@ -895,26 +895,52 @@ func read_next_chunk():
 	#scan_index = 0
 	var bbcode_offsets := []
 	
+	# each index represents one character in the received strings, including bbcode
+	# indixes within tags will containe the length of their tag
+	# when the scan index enters an index in the pause map that has a non0 value,
+	# it adds that value to the overall offset.
+	#  subtracts offset from the pause position, 
+	var pause_map := []
+	
 	while scan_index < new_text.length():
+		var tag_offset := 0
 		if new_text[scan_index] == "[":
-			var end_tag_position = new_text[scan_index].find("]", scan_index)
-			bbcode_offset += end_tag_position - scan_index
-			scan_index += 1
-			continue
+			var end_tag_position = new_text.find("]", scan_index)
+			tag_offset = end_tag_position - scan_index
+			
+			
+			for i in tag_offset:
+				pause_map.append(tag_offset + bbcode_offset)
+			
+			#tag_offset = end_tag_position - scan_index + bbcode_offset
+			scan_index = end_tag_position
+		pause_map.append(tag_offset + bbcode_offset)
+		bbcode_offset += tag_offset
+		
+		scan_index += 1
+	scan_index = 0
+	prints("pause map", pause_map, pause_map.size(), new_text.length())
+	while scan_index < new_text.length():
+		#if new_text[scan_index] == "[":
+			#var end_tag_position = new_text.find("]", scan_index)
+			#bbcode_offset += end_tag_position - scan_index
+			#scan_index = end_tag_position
+			#continue
+		
 		if new_text[scan_index] == "<":
 			if new_text.find("<mp>", scan_index) == scan_index:
-				if not pause_positions.has(scan_index - bbcode_offset):
-					pause_positions.append(scan_index - bbcode_offset)
+				if not pause_positions.has(scan_index):
+					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Manual)
 			elif new_text.find("<ap>", scan_index) == scan_index:
-				if not pause_positions.has(scan_index - bbcode_offset):
-					pause_positions.append(scan_index - bbcode_offset)
+				if not pause_positions.has(scan_index):
+					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Auto)
 				
 		scan_index += 1
 	
 	#pause_positions.erase(-1)
-	pause_positions.append(new_text.length()-1 - bbcode_offset)
+	pause_positions.append(new_text.length()-1)
 	pause_types.append(PauseTypes.EoL)
 	
 	
@@ -922,15 +948,23 @@ func read_next_chunk():
 	next_pause_position_index = 0
 	find_next_pause()
 	
+	var k := 0
+	
 	var cleaned_text : String = new_text
 	var i = 0
 	for pos in pause_positions:
 		if pause_types[i] == PauseTypes.EoL:
 			break
 		
-		cleaned_text = cleaned_text.erase(pos-(i*4)-bbcode_offset, 4)
+		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
 		i += 1
-	prints("reading cleaned", cleaned_text)
+	prints("reading cleaned", cleaned_text, pause_positions)
+	for pos in pause_positions:
+		print(pause_positions[k])
+		pause_positions[k] = pos - pause_map[pos]-4
+		print(pause_positions[k])
+		k += 1
+	print(pause_positions)
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
 	else:
