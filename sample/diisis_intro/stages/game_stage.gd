@@ -24,13 +24,19 @@ func _ready():
 	
 	remove_blocker()
 
-func _input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("advance"):
 		for root in cg_roots:
 			if root.visible and emit_insutrction_complete_on_cg_hide:
 				hide_cg()
 				return
 		$LineReader.request_advance()
+
+func show_ui():
+	find_child("VNUI").visible = true
+
+func hide_ui():
+	find_child("VNUI").visible = false
 
 func set_cg(cg_name:String, fade_in_duration:float, cg_node:TextureRect):
 	var cg_root : Control = cg_node.get_parent()
@@ -87,11 +93,6 @@ func on_text_content_text_changed(
 	dialog_box_tween.tween_property(text_container, "position", target_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 
-
-
-func _process(delta):
-	$Icon.global_position = $Control/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel.global_position
-
 func remove_blocker():
 	blockers -= 1
 	if blockers <= 0:
@@ -105,3 +106,7 @@ func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 		set_cg_top(cg_name, fade_in)
 	else:
 		set_cg_bottom(cg_name, fade_in)
+
+
+func _on_history_button_pressed() -> void:
+	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)

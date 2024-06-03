@@ -37,6 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="CGBottomContainer"]
 auto_translate_mode = 1
@@ -46,6 +47,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CGTex" type="TextureRect" parent="CGBottomContainer"]
@@ -56,8 +58,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Control" type="Control" parent="."]
+[node name="VNUI" type="Control" parent="."]
 auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
@@ -67,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TextContainer" type="CenterContainer" parent="Control"]
+[node name="TextContainer" type="CenterContainer" parent="VNUI"]
 auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 7
@@ -82,35 +85,35 @@ grow_horizontal = 2
 grow_vertical = 0
 use_top_left = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/TextContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VNUI/TextContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/TextContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VNUI/TextContainer/MarginContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="Label" type="Label" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Name Label Here"
 
-[node name="Panel" type="PanelContainer" parent="Control/TextContainer/MarginContainer/VBoxContainer"]
+[node name="Panel" type="PanelContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/TextContainer/MarginContainer/VBoxContainer/Panel"]
+[node name="RichTextLabel" type="RichTextLabel" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 theme_override_fonts/bold_font = ExtResource("2_6jeks")
 text = "Text Body Here"
 
-[node name="ChoiceContainer" type="PanelContainer" parent="Control"]
+[node name="ChoiceContainer" type="PanelContainer" parent="VNUI"]
 auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
@@ -119,10 +122,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/ChoiceContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VNUI/ChoiceContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 4
+
+[node name="ControlsContainer" type="VBoxContainer" parent="VNUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HistoryButton" type="Button" parent="VNUI/ControlsContainer"]
+layout_mode = 2
+text = "History"
 
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
@@ -134,13 +153,13 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
-choice_container = NodePath("../Control/ChoiceContainer")
-choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
+choice_container = NodePath("../VNUI/ChoiceContainer")
+choice_option_container = NodePath("../VNUI/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")
-text_content = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
-text_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/Panel")
-name_label = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
-name_container = NodePath("../Control/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
+text_content = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
+text_container = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/Panel")
+name_label = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
+name_container = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../InlineEval")
 
 [node name="Icon" type="Sprite2D" parent="."]
@@ -163,6 +182,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="CGTopContainer"]
 layout_mode = 1
@@ -171,6 +191,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CGTex" type="TextureRect" parent="CGTopContainer"]
@@ -180,8 +201,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
+[connection signal="pressed" from="VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="show_cg" from="Handler" to="." method="_on_handler_show_cg"]
 [connection signal="start_black_fade" from="Handler" to="BlackFade" method="_on_handler_start_black_fade"]

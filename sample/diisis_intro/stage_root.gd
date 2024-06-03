@@ -3,7 +3,19 @@ class_name StageRoot
 
 func _ready():
 	change_stage(CONST.STAGE_GAME)
+	set_screen("")
 	GameWorld.stage_root = self
+
+func set_screen(screen_path:String):
+	if screen_path.is_empty():
+		for c in $ScreenContainer.get_children():
+			c.queue_free()
+		$ScreenContainer.visible = false
+		return
+	var new_stage = load(screen_path).instantiate()
+	$ScreenContainer.add_child(new_stage)
+	$ScreenContainer.visible = true
+	
 
 func set_background(background:String, fade_time:=0.0):
 	var new_background:Node
@@ -23,7 +35,6 @@ func set_background(background:String, fade_time:=0.0):
 		fade_tween.finished.connect(old_node.queue_free)
 
 func change_stage(stage_path:String):
-	
 	var new_stage = load(stage_path).instantiate()
 	$StageContainer.add_child(new_stage)
 	for child in $StageContainer.get_children():
