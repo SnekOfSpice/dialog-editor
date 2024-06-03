@@ -620,7 +620,6 @@ func _process(delta: float) -> void:
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
 	if text_content.visible_characters < get_end_of_chunk_position():
-		#print(text_content.text)
 		if text_speed == MAX_TEXT_SPEED:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:

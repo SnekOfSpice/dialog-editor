@@ -1080,7 +1080,8 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 	instruction_text = instruction_text.trim_suffix(")")
 	var entered_args := instruction_text.split(",")
 	var i := 0
-	while i < entered_args.size():
+	
+	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
 		var arg = entered_args[i]
 		while arg.begins_with(" "):
 			arg = arg.trim_prefix(" ")
@@ -1119,7 +1120,8 @@ func get_compliance_with_template(instruction:String) -> String:
 		return str("Instruction ", entered_name, " does not exist")
 	
 	if instruction.count(",") + 1 != instruction_templates.get(entered_name).get("args").size():
-		return "Arg count mismatch"
+		if instruction.count(",") > 0:
+			return "Arg count mismatch"
 	
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
 	var args_string = instruction.trim_prefix(entered_name)
@@ -1129,7 +1131,7 @@ func get_compliance_with_template(instruction:String) -> String:
 	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
 	
 	var i := 0
-	while i < template_types.size():
+	while i < template_types.size() and not template_types.is_empty() and not args.is_empty():
 		var arg_string : String = args[i]
 		while arg_string.begins_with(" "):
 			arg_string = arg_string.trim_prefix(" ")
