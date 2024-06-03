@@ -89,7 +89,33 @@ func init() -> void:
 		popup.wrap_controls = true
 		popup.transient = false
 		popup.popup_window = false
+	
+	
+	
+	if FileAccess.file_exists(get_project_file_path()):
+		 
+		
+		var file = FileAccess.open(get_project_file_path(), FileAccess.READ)
+		var active_file_path := file.get_as_text()
+		file.close()
+		
+		open_from_path(active_file_path)
+	
 	print("init editor successful")
+
+func get_project_file_path() -> String:
+	var path := "user://DIISIS_project_"
+	path += ProjectSettings.get_setting("application/config/name")
+	path += ".txt"
+	
+	return path
+
+func set_project_file_path():
+	# save a file DIISIS_project_[project_name].txt
+	var file = FileAccess.open(get_project_file_path(), FileAccess.WRITE)
+	file.store_string(str(active_dir, active_file_name))
+	
+	file.close()
 
 func update_page_view(view:PageView):
 	for node in get_tree().get_nodes_in_group("page_view_sensitive"):
@@ -147,6 +173,7 @@ func set_save_path(value:String):
 	active_file_name = parts[parts.size() - 1]
 	active_dir = value.trim_suffix(active_file_name)
 	find_child("SavePathLabel").text = str(active_dir, active_file_name)
+	set_project_file_path()
 
 func _process(delta: float) -> void:
 	if not is_open:
@@ -319,7 +346,7 @@ func save_to_file(path:String, is_autosave:=false):
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	if is_autosave:
-		notify(str("Autosaved to ", path, "!"))
+		notify(str("Autosaved to ", ProjectSettings.globalize_path(path), "!"))
 	else:
 		set_save_path(path)
 		time_since_last_save = 0.0
@@ -333,8 +360,7 @@ func save_to_file(path:String, is_autosave:=false):
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
-
-func _on_fd_open_file_selected(path: String) -> void:
+func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
@@ -345,6 +371,9 @@ func _on_fd_open_file_selected(path: String) -> void:
 	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	load_page(0, true)
+
+func _on_fd_open_file_selected(path: String) -> void:
+	open_from_path(path)
 
 func request_go_to_address(address:String, action_message:=""):
 	if action_message.is_empty():
