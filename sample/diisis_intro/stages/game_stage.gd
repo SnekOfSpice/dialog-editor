@@ -97,14 +97,18 @@ func remove_blocker():
 	blockers -= 1
 	if blockers <= 0:
 		Parser.reset_and_start(0)
-		print("start")
 
 var emit_insutrction_complete_on_cg_hide :bool
 func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
-	emit_insutrction_complete_on_cg_hide = on_top
 	if on_top:
+		emit_insutrction_complete_on_cg_hide = true
+		
 		set_cg_top(cg_name, fade_in)
 	else:
+		var handler : InstructionHandler = GameWorld.instruction_handler
+		var t = get_tree().create_timer(fade_in)
+		t.timeout.connect(handler.instruction_completed.emit)
+		
 		set_cg_bottom(cg_name, fade_in)
 
 

@@ -53,7 +53,7 @@
 				"new_bgm"
 			]
 		},
-		"hide_cgs": {
+		"hide_cg": {
 			"arg_types": [],
 			"args": []
 		},
@@ -291,13 +291,13 @@
 						"delay_before": 0,
 						"line_reader.args": {
 							"args": {
-								"continue_dialog_through_cg": false,
-								"fade_in_time": 0.1,
+								"continue_dialog_through_cg": true,
+								"fade_in_time": 2.6,
 								"name": "amber_guts"
 							},
 							"name": "show_cg"
 						},
-						"meta.text": "show_cg(amber_guts, 0.1, false)",
+						"meta.text": "show_cg(amber_guts, 2.6, true)",
 						"meta.validation_status": "OK",
 						"name": "show_cg"
 					},
@@ -341,7 +341,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>amber:Would you say that struggling against the Rot is a worthwhile endeavor?"
+						"content": "[]>amber:You see, we're made of the violence you try to hide. The ugly rawness of machinery is our lifeblood, and the gnashing jaws of technology will devour you whole.\n[]>eterna:Her chest is so warm."
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -377,10 +377,233 @@
 						"operand_key": "AND"
 					},
 					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+
+							},
+							"name": "hide_cg"
+						},
+						"meta.text": "hide_cg()",
+						"meta.validation_status": "OK",
+						"name": "hide_cg"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.5",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:hiiii"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"fade_in": 1,
+								"fade_out": 1,
+								"hide_characters": false,
+								"hold_time": 0,
+								"new_background": "default",
+								"new_bgm": "default"
+							},
+							"name": "black_fade"
+						},
+						"meta.text": "black_fade(1.0, 0.0, 1.0, false, default, default)",
+						"meta.validation_status": "OK",
+						"name": "black_fade"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.7",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:hiiii"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 7,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.8",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:Would you say that struggling against the Rot is a worthwhile endeavor?"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 8,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.9",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
 						"auto_switch": false,
 						"choices": [
 							{
-								"address": "0.4.0",
+								"address": "0.9.0",
 								"choice_text.disabled": "",
 								"choice_text.enabled": "Yes.",
 								"choice_text.enabled_as_default": true,
@@ -408,10 +631,10 @@
 								"meta.selector": {
 									"selected": false
 								},
-								"target_page": 0
+								"target_page": 1
 							},
 							{
-								"address": "0.4.1",
+								"address": "0.9.1",
 								"choice_text.disabled": "",
 								"choice_text.enabled": "No.",
 								"choice_text.enabled_as_default": true,
@@ -439,7 +662,7 @@
 								"meta.selector": {
 									"selected": false
 								},
-								"target_page": 0
+								"target_page": 1
 							}
 						],
 						"meta.do_jump_page": true
@@ -456,13 +679,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 4,
+					"meta.line_index": 9,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.5",
+					"address": "0.10",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -498,13 +721,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 5,
+					"meta.line_index": 10,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.6",
+					"address": "0.11",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -540,13 +763,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 6,
+					"meta.line_index": 11,
 					"meta.selector": {
 						"selected": false
 					}
 				}
 			],
-			"meta.scroll_vertical": 396,
+			"meta.scroll_vertical": 925,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -555,15 +778,15 @@
 		},
 		"1": {
 			"facts": {
-				"meta.visible": false,
-				"values": {
+				"fact_data_by_name": {
 
-				}
+				},
+				"meta.visible": false
 			},
 			"lines": [],
 			"meta.scroll_vertical": 0,
 			"meta.selected": false,
-			"next": 0,
+			"next": 2,
 			"number": 1,
 			"page_key": "",
 			"terminate": false

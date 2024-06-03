@@ -14,6 +14,8 @@ signal show_cg(
 	fade_in:float,
 	on_top:bool)
 
+signal hide_cg()
+
 func execute(instruction_name, args) -> bool:
 	match instruction_name:
 		"black_fade":
@@ -27,15 +29,15 @@ func execute(instruction_name, args) -> bool:
 			args.get("new_background"),
 			args.get("new_bgm"),
 			)
-			
 			return true
 		"show_cg":
-			#var fade_in : float = 
+			print(args.get("fade_in_time"))
 			emit_signal("show_cg",
 			args.get("name"),
 			args.get("fade_in_time"),
 			not args.get("continue_dialog_through_cg")
 			)
-			if not args.get("continue_dialog_through_cg"):
-				return true
+			return true
+		"hide_cg":
+			emit_signal("hide_cg")
 	return false
