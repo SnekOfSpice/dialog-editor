@@ -199,15 +199,15 @@
 						"line_reader.args": {
 							"args": {
 								"fade_in": 0,
-								"fade_out": 1,
+								"fade_out": 0,
 								"hide_characters": false,
-								"hold_time": 0.5,
+								"hold_time": 0,
 								"new_background": "workshop",
 								"new_bgm": "intro"
 							},
 							"name": "black_fade"
 						},
-						"meta.text": "black_fade(0.0, 0.5, 1.0, false, workshop, intro)",
+						"meta.text": "black_fade(0.0, 0.0, 0.0, false, workshop, intro)",
 						"meta.validation_status": "OK",
 						"name": "black_fade"
 					},
@@ -251,7 +251,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers slash across the atmosphere.\n[]>eterna{eterna-emotion|neutral,amber-emotion|neutral}:ghfgh<lc>another one<lc>and one more\n[]>amber:Hi!\n[]>amber:We're Amber and Eterna, and today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our guts!"
+						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers band across the atmosphere.\n[]>amber{eterna-emotion|neutral,amber-emotion|neutral}:Hi! We're [b]Amber[/b] <mp>and [b]Eterna[/b], and <mp>today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our [b]guts![/b] <mp>... <mp>And teach [i]you[/i] how to peer into them, extract their warmth.\n[]>eterna:Welcome to the DIISIS Demo, traveler."
 					},
 					"facts": {
 						"fact_data_by_name": {

@@ -21,11 +21,11 @@ script = ExtResource("1_a36me")
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Eterna" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(998, 549)
+position = Vector2(1112, 549)
 character_name = "eterna"
 
 [node name="Amber" parent="Characters" instance=ExtResource("5_abdaq")]
-position = Vector2(337, 557)
+position = Vector2(253, 557)
 character_name = "amber"
 
 [node name="CGBottomContainer" type="Control" parent="."]
@@ -72,6 +72,7 @@ mouse_filter = 2
 
 [node name="TextContainer" type="CenterContainer" parent="VNUI"]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(454, 0)
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -83,7 +84,6 @@ offset_top = -227.0
 offset_right = 250.0
 grow_horizontal = 2
 grow_vertical = 0
-use_top_left = true
 
 [node name="MarginContainer" type="MarginContainer" parent="VNUI/TextContainer"]
 auto_translate_mode = 1
@@ -92,6 +92,7 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="VNUI/TextContainer/MarginContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_vertical = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
 auto_translate_mode = 1
@@ -105,13 +106,17 @@ text = "Name Label Here"
 [node name="Panel" type="PanelContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_vertical = 8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 theme_override_fonts/bold_font = ExtResource("2_6jeks")
-text = "Text Body Here"
+text = "Text Body Here
+dghfgh"
+fit_content = true
+scroll_active = false
 
 [node name="ChoiceContainer" type="PanelContainer" parent="VNUI"]
 auto_translate_mode = 1

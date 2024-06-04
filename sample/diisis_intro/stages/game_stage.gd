@@ -15,7 +15,7 @@ var is_name_container_visible := false
 var blockers := 3
 
 func _ready():
-	find_child("TextContainer").position = Vector2(size.x * 0.5, size.y - find_child("TextContainer").size.y * 0.5)
+	#find_child("TextContainer").position = Vector2(size.x * 0.5, size.y - find_child("TextContainer").size.y * 0.5)
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	
@@ -73,24 +73,25 @@ func on_text_content_text_changed(
 	new_text: String,
 	lead_time: float,
 ):
-		# move to neutral position if not visible
-		# move to actor if visible
-	if is_name_container_visible:
-		if actor_name == CONST.CHARACTER_AMBER:
-			dialog_box_offset = Vector2(-20, -10)
-		elif actor_name == CONST.CHARACTER_ETERNA:
-			dialog_box_offset = Vector2(20, -10)
-	else:
-		dialog_box_offset = Vector2.ZERO
-	
-	if dialog_box_tween:
-		dialog_box_tween.kill()
-	dialog_box_tween = create_tween()
-	
-	var text_container : CenterContainer = find_child("TextContainer")
-	var target_position = Vector2(size.x * 0.5, size.y - text_container.size.y * 0.5)
-	target_position += dialog_box_offset
-	dialog_box_tween.tween_property(text_container, "position", target_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	pass
+	## move to neutral position if not visible
+	## move to actor if visible
+	#if is_name_container_visible:
+		#if actor_name == CONST.CHARACTER_AMBER:
+			#dialog_box_offset = Vector2(-20, -10)
+		#elif actor_name == CONST.CHARACTER_ETERNA:
+			#dialog_box_offset = Vector2(20, -10)
+	#else:
+		#dialog_box_offset = Vector2.ZERO
+	#
+	#if dialog_box_tween:
+		#dialog_box_tween.kill()
+	#dialog_box_tween = create_tween()
+	#
+	#var text_container : CenterContainer = find_child("TextContainer")
+	#var target_position = Vector2(size.x * 0.5, size.y - text_container.size.y * 0.5)
+	#target_position += dialog_box_offset
+	#dialog_box_tween.tween_property(text_container, "position", target_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 
 func remove_blocker():
