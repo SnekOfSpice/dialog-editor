@@ -43,19 +43,31 @@ var _auto_continue_duration:= auto_continue_delay
 ## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
 ## throw this alignment off.
 @export var max_text_line_count:=0
-## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
-## Choice Buttons are currently presented to the player.
-@export var block_advance_during_choices:=true
-
-@export_subgroup("Choices")
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_choices := true
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_instructions := false
+@export var keep_past_lines := false:
+	set(value):
+		keep_past_lines = value
+		notify_property_list_changed()
+		update_configuration_warnings()
+@export var past_text_continer : VBoxContainer:
+	get:
+		return past_text_continer
+	set(value):
+		past_text_continer = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+
+@export_subgroup("Choices")
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
+## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
+## Choice Buttons are currently presented to the player.
+@export var block_advance_during_choices:=true
 #@export var give_focus_to_choice_button := false
 #@export var choice_button_focus_mode := ChoiceButtonFocusMode.MouseOnly
 
@@ -81,18 +93,6 @@ var name_for_blank_name := ""
 @export var name_colors := {}
 @export var name_style : NameStyle = NameStyle.NameLabel
 var visible_prepend_offset := 0
-@export var keep_past_lines := false:
-	set(value):
-		keep_past_lines = value
-		notify_property_list_changed()
-		update_configuration_warnings()
-@export var past_text_continer : VBoxContainer:
-	get:
-		return past_text_continer
-	set(value):
-		past_text_continer = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
 
 @export_group("Mandatory References")
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
