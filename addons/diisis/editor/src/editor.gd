@@ -194,6 +194,7 @@ func _shortcut_input(event):
 		if event.is_ctrl_pressed():
 			match event.key_label:
 				KEY_S:
+					print("attempt")
 					attempt_save_to_dir()
 				KEY_O:
 					if active_dir != "":
@@ -483,9 +484,11 @@ func _on_utility_index_pressed(index: int) -> void:
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
+	prints("dir:", active_dir)
 	if active_dir.is_empty():
 		open_save_popup()
 		return
+	print("save to file")
 	save_to_file(str(active_dir, active_file_name))
 
 func _on_file_index_pressed(index: int) -> void:

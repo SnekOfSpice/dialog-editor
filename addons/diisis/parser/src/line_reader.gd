@@ -11,6 +11,11 @@ const MAX_TEXT_SPEED := 201
 	#All,
 #}
 
+enum NameStyle {
+	NameLabel,
+	Prepend,
+}
+
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
 ## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Quick-Start-Guide-%E2%80%90-LineReader-&-Parser
 
@@ -63,7 +68,7 @@ var _auto_continue_duration:= auto_continue_delay
 @export var next_prompt_container: Control
 var remaining_advance_delay := advance_available_delay
 
-@export_group("Name Setup")
+@export_group("Names & Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
 @export
 var property_for_name := ""
@@ -72,9 +77,18 @@ var property_for_name := ""
 var name_for_blank_name := ""
 @export var name_map := {}
 @export var name_colors := {}
+@export var name_style : NameStyle = NameStyle.NameLabel
+var visible_prepend_offset := 0
+@export var keep_past_lines := false
+@export var past_text_continer : VBoxContainer:
+	get:
+		return past_text_continer
+	set(value):
+		past_text_continer = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
 
 @export_group("Mandatory References")
-
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
 @export var choice_container:PanelContainer:
 	get:
@@ -272,9 +286,10 @@ func deserialize(data: Dictionary):
 		var auto_switch : bool = raw_content.get("auto_switch")
 
 		build_choices(choices, auto_switch)
-		
-	set_text_content_text(data.get("text_content.text", ""))
+	
 	update_name_label(data.get("current_raw_name", name_for_blank_name))
+	set_text_content_text(data.get("text_content.text", ""))
+	
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -295,10 +310,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Text Content is null")
 	if not text_container:
 		warnings.append("Text Container is null")
-	if not name_label:
+	if not name_label and name_style == NameStyle.NameLabel:
 		warnings.append("Name Label is null")
-	if not name_container:
+	if not name_container and name_style == NameStyle.NameLabel:
 		warnings.append("Name Container is null")
+	if not past_text_continer and keep_past_lines:
+		warnings.append("Past Text Container is null")
 	if show_advance_available:
 		warnings.append("Next Prompt Container is null")
 	
@@ -592,7 +609,7 @@ func get_end_of_chunk_position() -> int:
 	elif pause_types[next_pause_position_index] == PauseTypes.EoL:
 		return text_content.text.length()
 	else:
-		return pause_positions[next_pause_position_index] - 4 * next_pause_position_index
+		return pause_positions[next_pause_position_index] - 4 * next_pause_position_index# - prepend_offset
 
 func _process(delta: float) -> void:
 	# this is a @tool script so this prevents the console from getting flooded
@@ -826,19 +843,21 @@ func replace_var_func_tags(lines):
 		i += 1
 	return result
 
+
 func read_next_chunk():
 	chunk_index += 1
 	if text_speed == MAX_TEXT_SPEED:
 		text_content.visible_ratio = 1.0
 	else:
-		text_content.visible_characters = 0
+		text_content.visible_characters = visible_prepend_offset
 	
 	pause_positions.clear()
 	pause_types.clear()
 	var new_text : String = line_chunks[chunk_index]
-	
 	while new_text.begins_with(" "):
 		new_text = new_text.trim_prefix(" ")
+	while new_text.begins_with("\n"):
+		new_text = new_text.trim_prefix("\n")
 	while new_text.begins_with("<lc>"):
 		new_text = new_text.trim_prefix("<lc>")
 	while new_text.begins_with("<ap>"):
@@ -847,6 +866,8 @@ func read_next_chunk():
 		new_text = new_text.trim_prefix("<mp>")
 	while new_text.ends_with(" "):
 		new_text = new_text.trim_suffix(" ")
+	while new_text.ends_with("\n"):
+		new_text = new_text.trim_suffix("\n")
 	while new_text.ends_with("<lc>"):
 		new_text = new_text.trim_suffix("<lc>")
 	while new_text.ends_with("<ap>"):
@@ -858,49 +879,74 @@ func read_next_chunk():
 	var scan_index := 0
 	pause_positions.clear()
 	pause_types.clear()
-	#scan_index = 0
 	
-	while scan_index < new_text.length():
-		if new_text[scan_index] == "<":
-			if new_text.find("<mp>", scan_index) == scan_index:
+	var bbcode_removed_text := new_text
+	var tag_start_position = bbcode_removed_text.find("[")
+	var tag_end_position = bbcode_removed_text.find("]", tag_start_position)
+	while tag_start_position != -1 and tag_end_position != -1:
+		bbcode_removed_text = bbcode_removed_text.erase(tag_start_position, tag_end_position - tag_start_position + 1)
+		tag_start_position = bbcode_removed_text.find("[")
+		tag_end_position = bbcode_removed_text.find("]", tag_start_position)
+	
+	while scan_index < bbcode_removed_text.length():
+		if bbcode_removed_text[scan_index] == "<":
+			if bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				if not pause_positions.has(scan_index):
 					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Manual)
-			elif new_text.find("<ap>", scan_index) == scan_index:
+			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
 				if not pause_positions.has(scan_index):
 					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Auto)
 				
 		scan_index += 1
 	
-	#pause_positions.erase(-1)
-	pause_positions.append(new_text.length()-1)
+	pause_positions.append(bbcode_removed_text.length()-1)
 	pause_types.append(PauseTypes.EoL)
-	
-	
 	
 	next_pause_position_index = 0
 	find_next_pause()
 	
 	var cleaned_text : String = new_text
-	var i = 0
-	for pos in pause_positions:
-		if pause_types[i] == PauseTypes.EoL:
-			break
-		
-		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
-		i += 1
+	cleaned_text = cleaned_text.replace("<mp>", "")
+	cleaned_text = cleaned_text.replace("<ap>", "")
 	
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
 	else:
 		lead_time = Parser.text_lead_time_same_actor
+	
+	if name_style == NameStyle.Prepend:
+		name_container.modulate.a = 0.0
+		var display_name: String = name_map.get(current_raw_name, current_raw_name)
+		var name_color :Color = name_colors.get(current_raw_name, Color.WHITE)
+		cleaned_text = str(
+			"[color=", name_color.to_html(), "]",
+			display_name, "[/color] - ",
+			cleaned_text
+			)
+		
+		var name_prepend_length := 3 + display_name.length()
+		var first_tag_position = cleaned_text.find("[", pause_positions[0])
+		var l := 0
+		while l < pause_positions.size():
+			pause_positions[l] = pause_positions[l] + name_prepend_length
+			l += 1
+		
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
 
 func set_text_content_text(text: String):
+	if keep_past_lines:
+		var past_line = RichTextLabel.new()
+		past_line.text = text_content.text
+		past_text_continer.add_child(past_line)
+		past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
+		past_line.fit_content = true
+		past_line.bbcode_enabled = true
+	
 	text_content.text = text
-	text_content.visible_characters = 0
+	text_content.visible_characters = visible_prepend_offset
 	characters_visible_so_far = ""
 	started_word_buffer = ""
 
@@ -1120,18 +1166,19 @@ func set_dialog_line_index(value: int):
 func update_name_label(actor_name: String):
 	is_last_actor_name_different = actor_name != current_raw_name
 	current_raw_name = actor_name
-	var display_name: String = name_map.get(actor_name, actor_name)
 	
+	var display_name: String = name_map.get(actor_name, actor_name)
 	var name_color :Color = name_colors.get(actor_name, Color.WHITE)
 	
-	name_label.text = display_name
+	if name_style == NameStyle.NameLabel:
+		name_label.text = display_name
+		name_label.add_theme_color_override("font_color", name_color)
+		
+		if actor_name == name_for_blank_name:
+			name_container.modulate.a = 0.0
+		else:
+			name_container.modulate.a = 1.0
 	
-	name_label.add_theme_color_override("font_color", name_color)
-	
-	if actor_name == name_for_blank_name:
-		name_container.modulate.a = 0.0
-	else:
-		name_container.modulate.a = 1.0
-	
+		
 	ParserEvents.display_name_changed.emit(display_name, name_container.modulate.a > 0.0)
 	ParserEvents.actor_name_changed.emit(actor_name, name_container.modulate.a > 0.0)

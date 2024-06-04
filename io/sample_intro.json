@@ -1,0 +1,569 @@
+{
+	"dropdown_dialog_arguments": [
+		"amber-emotion",
+		"eterna-emotion"
+	],
+	"dropdown_title_for_dialog_syntax": "character",
+	"dropdown_titles": [
+		"character",
+		"amber-emotion",
+		"eterna-emotion"
+	],
+	"dropdowns": {
+		"amber-emotion": [
+			"neutral",
+			"happy"
+		],
+		"character": [
+			"amber",
+			"eterna",
+			"narrator"
+		],
+		"eterna-emotion": [
+			"neutral",
+			"annoyed"
+		]
+	},
+	"empty_strings_for_l10n": false,
+	"facts": {
+		"player.against_rot": false
+	},
+	"file_config": {
+		"evaluator_paths": [
+			"res://sample/inline_eval.gd"
+		]
+	},
+	"head_defaults": [],
+	"instruction_templates": {
+		"black_fade": {
+			"arg_types": [
+				"float",
+				"float",
+				"float",
+				"bool",
+				"string",
+				"string"
+			],
+			"args": [
+				"fade_in",
+				"hold_time",
+				"fade_out",
+				"hide_characters",
+				"new_background",
+				"new_bgm"
+			]
+		},
+		"hide_cgs": {
+			"arg_types": [],
+			"args": []
+		},
+		"set_background": {
+			"arg_types": [
+				"string",
+				"float"
+			],
+			"args": [
+				"name",
+				"fade_time"
+			]
+		},
+		"show-character": {
+			"arg_types": [
+				"string",
+				"bool"
+			],
+			"args": [
+				"character_name",
+				"clear_others"
+			]
+		},
+		"show_cg": {
+			"arg_types": [
+				"string"
+			],
+			"args": [
+				"name"
+			]
+		},
+		"start_doom_timer": {
+			"arg_types": [],
+			"args": []
+		}
+	},
+	"locales_to_export": [
+		"af_ZA",
+		"sq_AL",
+		"ar_SA",
+		"hy_AM",
+		"az_AZ",
+		"eu_ES",
+		"be_BY",
+		"bn_IN",
+		"bs_BA",
+		"bg_BG",
+		"ca_ES",
+		"zh_CN",
+		"zh_TW",
+		"hr_HR",
+		"cs_CZ",
+		"da_DK",
+		"nl_NL",
+		"en_US",
+		"et_EE",
+		"fo_FO",
+		"fi_FI",
+		"fr_FR",
+		"gl_ES",
+		"ka_GE",
+		"de_DE",
+		"el_GR",
+		"gu_IN",
+		"he_IL",
+		"hi_IN",
+		"hu_HU",
+		"is_IS",
+		"id_ID",
+		"it_IT",
+		"ja_JP",
+		"kn_IN",
+		"kk_KZ",
+		"kok_IN",
+		"ko_KR",
+		"lv_LV",
+		"lt_LT",
+		"mk_MK",
+		"ms_MY",
+		"ml_IN",
+		"mt_MT",
+		"mr_IN",
+		"mn_MN",
+		"se_NO",
+		"nb_NO",
+		"nn_NO",
+		"fa_IR",
+		"pl_PL",
+		"pt_BR",
+		"pa_IN",
+		"ro_RO",
+		"ru_RU",
+		"sr_BA",
+		"sk_SK",
+		"es_ES",
+		"sw_KE",
+		"sv_SE",
+		"syr_SY",
+		"ta_IN",
+		"te_IN",
+		"th_TH",
+		"tn_ZA",
+		"tr_TR",
+		"uk_UA",
+		"uz_UZ",
+		"vi_VN",
+		"cy_GB",
+		"xh_ZA",
+		"zu_ZA"
+	],
+	"page_data": {
+		"0": {
+			"facts": {
+				"fact_data_by_name": {
+
+				},
+				"meta.visible": false
+			},
+			"lines": [
+				{
+					"address": "0.0",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"fade_in": 0,
+								"fade_out": 0,
+								"hide_characters": false,
+								"hold_time": 0,
+								"new_background": "workshop",
+								"new_bgm": "intro"
+							},
+							"name": "black_fade"
+						},
+						"meta.text": "black_fade(0.0, 0.0, 0.0, false, workshop, intro)",
+						"meta.validation_status": "OK",
+						"name": "black_fade"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 0,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.1",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers band across the atmosphere.\n[]>amber{eterna-emotion|neutral,amber-emotion|neutral}:Hi! We're [b]Amber[/b] <mp>and [b]Eterna[/b], and <mp>today we'll strip down to the core...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our [b]guts![/b] <mp>... <mp>And teach [i]you[/i] how to peer into them, extract their warmth.\n[]>eterna:Welcome to the DIISIS Demo, traveler."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 1,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.2",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"name": "amber_guts"
+							},
+							"name": "show_cg"
+						},
+						"meta.text": "show_cg(amber_guts)",
+						"meta.validation_status": "OK",
+						"name": "show_cg"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 2,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.3",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:Would you say that struggling against the Rot is a worthwhile endeavor?"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 3,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.4",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"auto_switch": false,
+						"choices": [
+							{
+								"address": "0.4.0",
+								"choice_text.disabled": "",
+								"choice_text.enabled": "Yes.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"meta.selector": {
+									"selected": false
+								},
+								"target_page": 0
+							},
+							{
+								"address": "0.4.1",
+								"choice_text.disabled": "",
+								"choice_text.enabled": "No.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"meta.selector": {
+									"selected": false
+								},
+								"target_page": 0
+							}
+						],
+						"meta.do_jump_page": true
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 1,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.5",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": true
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>eterna:Weakling.\n[]>amber:Yes, darling.<lc>Let the rot take hold."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": true
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>eterna:Why would you... <lc>Not give up?\n[]>eterna:...\n[]>amber:At this rate, we'll have to kill you.\n[]>eterna:Not necessarily... <lc> To stand against entropy, and reject it. That's powerful."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.selector": {
+						"selected": false
+					}
+				}
+			],
+			"meta.scroll_vertical": 0,
+			"meta.selected": false,
+			"next": 1,
+			"number": 0,
+			"page_key": "intro",
+			"terminate": false
+		},
+		"1": {
+			"facts": {
+				"meta.visible": false,
+				"values": {
+
+				}
+			},
+			"lines": [],
+			"meta.scroll_vertical": 0,
+			"meta.selected": false,
+			"next": 0,
+			"number": 1,
+			"page_key": "",
+			"terminate": false
+		}
+	},
+	"text_lead_time_other_actor": 0.2,
+	"text_lead_time_same_actor": 0,
+	"use_dialog_syntax": true
+}

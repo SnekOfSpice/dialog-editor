@@ -1,0 +1,105 @@
+{
+	"dropdown_dialog_arguments": [
+		"emotions-char1",
+		"emotions-char2",
+		"emotions-char3",
+		"smoking"
+	],
+	"dropdown_titles": [
+		"character",
+		"emotions-char1",
+		"emotions-char2",
+		"emotions-char3",
+		"smoking"
+	],
+	"dropdowns": {
+		"character": [
+			"char1",
+			"char2",
+			"char3"
+		],
+		"dropdown1": [
+			"0",
+			"1"
+		],
+		"dropdown2": [
+			"a",
+			"b",
+			""
+		],
+		"emotions-char1": [
+			"happy",
+			"sad"
+		],
+		"emotions-char2": [
+			"angry",
+			"confused"
+		],
+		"emotions-char3": [
+			"vomiting",
+			"screaming",
+			""
+		],
+		"smoking": [
+			"true",
+			"false"
+		],
+		"untitled1": [],
+		"untitled2": [],
+		"untitled3": []
+	},
+	"facts": {
+
+	},
+	"head_defaults": [],
+	"instruction_templates": [
+		{
+			"args": [
+				"character-name",
+				"clear-others"
+			],
+			"name": "show-character"
+		}
+	],
+	"page_data": {
+		"0": {
+			"lines": [
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+
+						},
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"char1",
+							"char2",
+							"char3"
+						],
+						"active_actors_title": "character",
+						"content": "[]>char1{emotions-char1|happy}:this is a demo of different expressions\n[]>char2{emotions-char2|angry}:true!!<ap>lemme light this shit up\n[]>char2{smoking|true}:lit\n[]>char2:char 2 no args\n[]>char2{emotions-char2|confused,smoking|false}:bro this cig went out\n[]>char3{emotions-char3|screaming}:haha skill issue\n[]>char3:I can even say stuff without any args",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 0,
+					"meta.visible": true
+				}
+			],
+			"next": 0,
+			"number": 0,
+			"page_key": "",
+			"terminate": false
+		}
+	}
+}

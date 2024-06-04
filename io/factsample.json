@@ -1,0 +1,315 @@
+{
+	"dropdown_dialog_arguments": [],
+	"dropdown_titles": [
+		"dropdown1",
+		"dropdown2"
+	],
+	"dropdowns": {
+		"dropdown1": [
+			"0",
+			"1"
+		],
+		"dropdown2": [
+			"a",
+			"b"
+		]
+	},
+	"facts": {
+		"newfact0": false,
+		"newfact1": false
+	},
+	"head_defaults": [],
+	"instruction_templates": [
+		{
+			"args": [
+				"character-name",
+				"clear-others"
+			],
+			"name": "show-character"
+		}
+	],
+	"page_data": {
+		"0": {
+			"facts": {
+				"meta.visible": true,
+				"values": {
+					"newfact1": true
+				}
+			},
+			"lines": [
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:Hi.",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": true,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 0
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:newfact0 is now true",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": true,
+						"values": {
+							"newfact0": true
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 1
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+								"newfact0": false
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:This shouldn't be visible",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": true,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 2
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+								"newfact0": true
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:This should be visible.",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": true,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 3
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:End",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": true,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 4
+				}
+			],
+			"meta.scroll_vertical": 0,
+			"next": 1,
+			"number": 0,
+			"page_key": "",
+			"terminate": false
+		},
+		"1": {
+			"facts": {
+				"meta.visible": false,
+				"values": {
+
+				}
+			},
+			"lines": [
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+								"newfact1": true
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:Newfact1 should be true",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 0
+				},
+				{
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"meta.visible": true,
+							"values": {
+
+							}
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"0",
+							"1"
+						],
+						"active_actors_title": "dropdown1",
+						"content": "[]>0:End.",
+						"selected_actor_dropdown_index": 0,
+						"use_dialog_syntax": true
+					},
+					"facts": {
+						"meta.visible": false,
+						"values": {
+
+						}
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.is_head_editable": true,
+					"meta.line_index": 1
+				}
+			],
+			"meta.scroll_vertical": 0,
+			"next": 0,
+			"number": 1,
+			"page_key": "",
+			"terminate": true
+		}
+	}
+}
