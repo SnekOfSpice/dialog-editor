@@ -1,3 +1,61 @@
-[gd_scene format=3 uid="uid://b3u3nrek114bl"]
+[gd_scene load_steps=2 format=3 uid="uid://b3u3nrek114bl"]
 
-[node name="MainMenuStage" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://5hwcod6006f1" path="res://sample/diisis_intro/stages/wallpaper.jpg" id="1_ivfox"]
+
+[node name="MainMenuStage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_ivfox")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -85.5
+offset_right = 70.0
+offset_bottom = 85.5
+grow_vertical = 2
+
+[node name="StartButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Start"
+alignment = 0
+
+[node name="LoadButton" type="Button" parent="VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Load"
+alignment = 0
+
+[node name="LoadButton2" type="Button" parent="VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Options"
+alignment = 0
+
+[node name="LoadButton3" type="Button" parent="VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "About"
+alignment = 0
+
+[node name="LoadButton4" type="Button" parent="VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Quit"
+alignment = 0
