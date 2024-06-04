@@ -145,7 +145,7 @@
 							"sis"
 						],
 						"active_actors_title": "character",
-						"content": "[]>dii:hi"
+						"content": "[]>dii:hi. here is a very very very very very very very very very very very very very very  long long long long long long long long long long long long long long long line!"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -309,7 +309,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 174,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 0,
 			"number": 0,
