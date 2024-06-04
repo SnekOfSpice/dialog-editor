@@ -86,6 +86,8 @@ max_text_line_count = 2
 name_map = {
 "cum": "Yippie"
 }
+name_style = 1
+keep_past_lines = true
 choice_container = NodePath("../Control/ChoiceContainer")
 choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")

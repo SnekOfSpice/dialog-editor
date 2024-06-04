@@ -79,7 +79,11 @@ var name_for_blank_name := ""
 @export var name_colors := {}
 @export var name_style : NameStyle = NameStyle.NameLabel
 var visible_prepend_offset := 0
-@export var keep_past_lines := false
+@export var keep_past_lines := false:
+	set(value):
+		keep_past_lines = value
+		notify_property_list_changed()
+		update_configuration_warnings()
 @export var past_text_continer : VBoxContainer:
 	get:
 		return past_text_continer
@@ -224,6 +228,9 @@ func _validate_property(property: Dictionary):
 	if not auto_continue:
 		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
+	if not keep_past_lines:
+		if property.name in ["past_text_continer"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -314,10 +321,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Name Label is null")
 	if not name_container and name_style == NameStyle.NameLabel:
 		warnings.append("Name Container is null")
-	if not past_text_continer and keep_past_lines:
-		warnings.append("Past Text Container is null")
-	if show_advance_available:
+	if show_advance_available and not next_prompt_container:
 		warnings.append("Next Prompt Container is null")
+	if keep_past_lines and not past_text_continer:
+		warnings.append("Past Text Container is null")
 	
 	return warnings
 
@@ -916,6 +923,7 @@ func read_next_chunk():
 	else:
 		lead_time = Parser.text_lead_time_same_actor
 	
+	visible_prepend_offset = 0
 	if name_style == NameStyle.Prepend:
 		name_container.modulate.a = 0.0
 		var display_name: String = name_map.get(current_raw_name, current_raw_name)
@@ -927,6 +935,7 @@ func read_next_chunk():
 			)
 		
 		var name_prepend_length := 3 + display_name.length()
+		visible_prepend_offset = name_prepend_length
 		var first_tag_position = cleaned_text.find("[", pause_positions[0])
 		var l := 0
 		while l < pause_positions.size():
