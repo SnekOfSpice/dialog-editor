@@ -362,6 +362,10 @@ func _on_fd_save_file_selected(path: String) -> void:
 
 func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
+	
+	if not file:
+		return
+	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
