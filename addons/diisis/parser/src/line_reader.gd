@@ -843,6 +843,7 @@ func replace_var_func_tags(lines):
 		i += 1
 	return result
 
+
 func read_next_chunk():
 	chunk_index += 1
 	if text_speed == MAX_TEXT_SPEED:
@@ -855,6 +856,8 @@ func read_next_chunk():
 	var new_text : String = line_chunks[chunk_index]
 	while new_text.begins_with(" "):
 		new_text = new_text.trim_prefix(" ")
+	while new_text.begins_with("\n"):
+		new_text = new_text.trim_prefix("\n")
 	while new_text.begins_with("<lc>"):
 		new_text = new_text.trim_prefix("<lc>")
 	while new_text.begins_with("<ap>"):
@@ -863,6 +866,8 @@ func read_next_chunk():
 		new_text = new_text.trim_prefix("<mp>")
 	while new_text.ends_with(" "):
 		new_text = new_text.trim_suffix(" ")
+	while new_text.ends_with("\n"):
+		new_text = new_text.trim_suffix("\n")
 	while new_text.ends_with("<lc>"):
 		new_text = new_text.trim_suffix("<lc>")
 	while new_text.ends_with("<ap>"):
@@ -875,33 +880,37 @@ func read_next_chunk():
 	pause_positions.clear()
 	pause_types.clear()
 	
-	while scan_index < new_text.length():
-		if new_text[scan_index] == "<":
-			if new_text.find("<mp>", scan_index) == scan_index:
+	var bbcode_removed_text := new_text
+	var tag_start_position = bbcode_removed_text.find("[")
+	var tag_end_position = bbcode_removed_text.find("]", tag_start_position)
+	while tag_start_position != -1 and tag_end_position != -1:
+		bbcode_removed_text = bbcode_removed_text.erase(tag_start_position, tag_end_position - tag_start_position + 1)
+		tag_start_position = bbcode_removed_text.find("[")
+		tag_end_position = bbcode_removed_text.find("]", tag_start_position)
+	
+	while scan_index < bbcode_removed_text.length():
+		if bbcode_removed_text[scan_index] == "<":
+			if bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				if not pause_positions.has(scan_index):
 					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Manual)
-			elif new_text.find("<ap>", scan_index) == scan_index:
+			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
 				if not pause_positions.has(scan_index):
 					pause_positions.append(scan_index)
 					pause_types.append(PauseTypes.Auto)
 				
 		scan_index += 1
 	
-	pause_positions.append(new_text.length()-1)
+	pause_positions.append(bbcode_removed_text.length()-1)
 	pause_types.append(PauseTypes.EoL)
 	
 	next_pause_position_index = 0
 	find_next_pause()
 	
 	var cleaned_text : String = new_text
-	var i = 0
-	for pos in pause_positions:
-		if pause_types[i] == PauseTypes.EoL:
-			break
-		
-		cleaned_text = cleaned_text.erase(pos-(i*4), 4)
-		i += 1
+	cleaned_text = cleaned_text.replace("<mp>", "")
+	cleaned_text = cleaned_text.replace("<ap>", "")
+	
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
 	else:
@@ -922,13 +931,7 @@ func read_next_chunk():
 		var l := 0
 		while l < pause_positions.size():
 			pause_positions[l] = pause_positions[l] + name_prepend_length
-			if first_tag_position > pause_positions[l]:
-				
-				pause_positions[l] = pause_positions[l] - 4 * (l + 1)
-			else:
-				pause_positions[l] = pause_positions[l] - 4 * l
 			l += 1
-		visible_prepend_offset = name_prepend_length
 		
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
