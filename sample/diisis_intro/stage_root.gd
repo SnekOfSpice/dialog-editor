@@ -2,7 +2,8 @@ extends Control
 class_name StageRoot
 
 func _ready():
-	change_stage(CONST.STAGE_GAME)
+	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
+	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
 
@@ -33,6 +34,18 @@ func set_background(background:String, fade_time:=0.0):
 	fade_tween.tween_property(new_background, "modulate:a", 1.0, fade_time)
 	for old_node : Node in old_backgrounds:
 		fade_tween.finished.connect(old_node.queue_free)
+	
+	GameWorld.background = background
+
+func new_gamestate():
+	change_stage(CONST.STAGE_GAME)
+	Parser.reset_and_start()
+
+func load_gamestate():
+	change_stage(CONST.STAGE_GAME)
+	Options.load_savegame()
+	set_background(Options.saved_background)
+	Sound.set_bgm(Options.saved_bgm)
 
 func change_stage(stage_path:String):
 	var new_stage = load(stage_path).instantiate()
@@ -40,3 +53,8 @@ func change_stage(stage_path:String):
 	for child in $StageContainer.get_children():
 		if new_stage != child:
 			child.queue_free()
+	
+	match stage_path:
+		CONST.STAGE_MAIN:
+			new_stage.start_game.connect(new_gamestate)
+			new_stage.load_game.connect(load_gamestate)

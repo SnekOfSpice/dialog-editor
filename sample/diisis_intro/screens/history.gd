@@ -6,7 +6,7 @@ func _ready() -> void:
 	super()
 	find_child("HistoryLabel").text = Parser.build_history_string()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	super(event)
 
 func _on_close_button_pressed() -> void:

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3u3nrek114bl"]
+[gd_scene load_steps=3 format=3 uid="uid://b3u3nrek114bl"]
 
 [ext_resource type="Texture2D" uid="uid://5hwcod6006f1" path="res://sample/diisis_intro/stages/wallpaper.jpg" id="1_ivfox"]
+[ext_resource type="Script" path="res://sample/diisis_intro/stages/main_menu_stage.gd" id="1_wqqgh"]
 
 [node name="MainMenuStage" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_wqqgh")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 0
@@ -29,7 +31,7 @@ grow_vertical = 2
 [node name="StartButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "Start"
+text = "New"
 alignment = 0
 
 [node name="LoadButton" type="Button" parent="VBoxContainer"]
@@ -39,23 +41,29 @@ focus_mode = 0
 text = "Load"
 alignment = 0
 
-[node name="LoadButton2" type="Button" parent="VBoxContainer"]
+[node name="OptionsButton" type="Button" parent="VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "Options"
 alignment = 0
 
-[node name="LoadButton3" type="Button" parent="VBoxContainer"]
+[node name="CreditsButton" type="Button" parent="VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "About"
 alignment = 0
 
-[node name="LoadButton4" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "Quit"
 alignment = 0
+
+[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="emit_signal" binds= ["start_game"]]
+[connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="emit_signal" binds= ["load_game"]]
+[connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

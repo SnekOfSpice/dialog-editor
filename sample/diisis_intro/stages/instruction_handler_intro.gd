@@ -26,7 +26,7 @@ func execute(instruction_name, args) -> bool:
 			args.get("hold_time"),
 			args.get("fade_out"),
 			args.get("hide_characters"),
-			args.get("new_background"),
+			CONST.get(str("BACKGROUND_", args.get("new_background").to_upper())),
 			args.get("new_bgm"),
 			)
 			return true

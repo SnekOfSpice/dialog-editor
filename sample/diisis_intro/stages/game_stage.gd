@@ -25,6 +25,11 @@ func _ready():
 	remove_blocker()
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and InputMap.action_has_event("ui_cancel", event):# event.is_action_just_pressed("ui_cancel"):
+			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+
+
 	if event.is_action_pressed("advance"):
 		for root in cg_roots:
 			if root.visible and emit_insutrction_complete_on_cg_hide:

@@ -67,6 +67,16 @@
 				"fade_time"
 			]
 		},
+		"set_bgm": {
+			"arg_types": [
+				"string",
+				"float"
+			],
+			"args": [
+				"name",
+				"fade_in"
+			]
+		},
 		"show-character": {
 			"arg_types": [
 				"string",
@@ -769,7 +779,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 266,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
