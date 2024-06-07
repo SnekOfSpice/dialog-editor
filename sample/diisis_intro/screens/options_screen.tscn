@@ -19,91 +19,95 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 37
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 0
 
-[node name="OptionMenusButtonContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+[node name="OptionMenusButtonContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="GameButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="GameButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Game"
 
-[node name="TextButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="TextButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Text"
 
-[node name="DisplayButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="DisplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 layout_mode = 2
 text = "Display"
 
-[node name="SoundButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Sound"
 
-[node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+[node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="GameMenu" type="PanelContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer"]
+[node name="GameMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center]Progress is saved automatically."
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="SaveButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
+[node name="SaveButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Save"
 
-[node name="MainMenuButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Main Menu"
 
-[node name="QuitButton" type="Button" parent="PanelContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
+[node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Quit"
 
-[node name="TextMenu" type="PanelContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer"]
+[node name="TextMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer/TextMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu"]
 layout_mode = 2
 
-[node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer"]
+[node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 layout_mode = 2
 
-[node name="SoundMenu" type="PanelContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer"]
+[node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu"]
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 layout_mode = 2
 text = "Master"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="MasterVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -111,12 +115,12 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Music"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="MusicVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -125,12 +129,12 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label3" type="Label" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "SFX"
 
-[node name="SFXVolumeSlider" type="HSlider" parent="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="SFXVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -152,11 +156,13 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Close"
 
-[connection signal="pressed" from="PanelContainer/VBoxContainer/OptionMenusButtonContainer/GameButton" to="." method="set_menu" binds= [0]]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/OptionMenusButtonContainer/TextButton" to="." method="set_menu" binds= [1]]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/OptionMenusButtonContainer/DisplayButton" to="." method="set_menu" binds= [2]]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/GameButton" to="." method="set_menu" binds= [0]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/TextButton" to="." method="set_menu" binds= [1]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/DisplayButton" to="." method="set_menu" binds= [2]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

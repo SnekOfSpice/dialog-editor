@@ -1,11 +1,25 @@
 extends Control
 class_name StageRoot
 
+var stage := ""
+var screen := ""
+
 func _ready():
 	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
 	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
+
+func _input(event: InputEvent) -> void:
+	#print(event)
+	if Input.is_action_just_pressed("ui_cancel") and $ScreenContainer.get_child_count() == 0:
+		set_screen(CONST.SCREEN_OPTIONS)
+		get_viewport().set_input_as_handled()
+
+func _gui_input(event: InputEvent) -> void:
+	print(event)
+	if Input.is_action_just_pressed("ui_cancel") and $ScreenContainer.get_child_count() == 0:
+		set_screen(CONST.SCREEN_OPTIONS)
 
 func set_screen(screen_path:String):
 	if screen_path.is_empty():
@@ -16,7 +30,7 @@ func set_screen(screen_path:String):
 	var new_stage = load(screen_path).instantiate()
 	$ScreenContainer.add_child(new_stage)
 	$ScreenContainer.visible = true
-	
+	screen = screen_path
 
 func set_background(background:String, fade_time:=0.0):
 	var new_background:Node
@@ -38,17 +52,23 @@ func set_background(background:String, fade_time:=0.0):
 	GameWorld.background = background
 
 func new_gamestate():
+	game_start_callable = Parser.reset_and_start
 	change_stage(CONST.STAGE_GAME)
-	Parser.reset_and_start()
+	#Parser.reset_and_start()
 
 func load_gamestate():
+	game_start_callable = Options.load_gamestate
 	change_stage(CONST.STAGE_GAME)
-	Options.load_savegame()
-	set_background(Options.saved_background)
-	Sound.set_bgm(Options.saved_bgm)
+	#Options.load_gamestate()
+	#Parser.paused = false
 
+var game_start_callable:Callable
 func change_stage(stage_path:String):
 	var new_stage = load(stage_path).instantiate()
+	
+	if stage_path == CONST.STAGE_GAME:
+		new_stage.callable_upon_blocker_clear = game_start_callable
+	
 	$StageContainer.add_child(new_stage)
 	for child in $StageContainer.get_children():
 		if new_stage != child:
@@ -58,3 +78,8 @@ func change_stage(stage_path:String):
 		CONST.STAGE_MAIN:
 			new_stage.start_game.connect(new_gamestate)
 			new_stage.load_game.connect(load_gamestate)
+		#CONST.STAGE_GAME:
+			#new_stage.blockers_cleared.connect(game_start_callable)
+	
+	stage = stage_path
+	set_screen("")

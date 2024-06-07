@@ -9,6 +9,8 @@ class_name GameStage
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
 var actor_name := ""
+var cg := ""
+var cg_position := ""
 var is_name_container_visible := false
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
@@ -51,14 +53,20 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_node:TextureRect):
 	cg_node.texture = load(str("res://sample/diisis_intro/cg/", cg_name, ".png"))
 	var t = create_tween()
 	t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
+	
+	cg = cg_name
 
 func set_cg_top(cg_name:String, fade_in_duration:float):
+	cg_position = "top"
 	set_cg(cg_name, fade_in_duration, find_child("CGTopContainer").get_node("CGTex"))
 
 func set_cg_bottom(cg_name:String, fade_in_duration:float):
+	cg_position = "bottom"
 	set_cg(cg_name, fade_in_duration, find_child("CGBottomContainer").get_node("CGTex"))
 
 func hide_cg():
+	cg = ""
+	cg_position = ""
 	for cg_root : Control in cg_roots:
 		cg_root.visible = false
 		cg_root.modulate.a = 0.0
@@ -98,11 +106,45 @@ func on_text_content_text_changed(
 	#target_position += dialog_box_offset
 	#dialog_box_tween.tween_property(text_container, "position", target_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
+var callable_upon_blocker_clear:Callable
+func set_callable_upon_blocker_clear(callable:Callable):
+	callable_upon_blocker_clear = callable
+
+func serialize() -> Dictionary:
+	var result := {}
+	
+	var character_data := {}
+	for character : Character in $Characters.get_children():
+		character_data[character.character_name] = character.serialize()
+	
+	result["character_data"] = character_data
+	result["cg"] = cg
+	result["cg_position"] = cg_position
+	
+	return result
+
+func deserialize(data:Dictionary):
+	var character_data : Dictionary = data.get("character_data", {})
+	for character : Character in $Characters.get_children():
+		character.deserialize(character_data.get(character.character_name, {}))
+	
+	var cg_name : String = data.get("cg", "")
+	if cg_name.is_empty():
+		hide_cg()
+	else:
+		var cg_node:Node
+		if data.get("cg_position", "") == "top":
+			set_cg_top(cg_name, 0.0)
+		elif data.get("cg_position", "") == "bottom":
+			set_cg_bottom(cg_name, 0.0)
+		else:
+			push_warning("cg_position isn't top or bottom")
+			hide_cg()
 
 func remove_blocker():
 	blockers -= 1
 	if blockers <= 0:
-		Parser.reset_and_start(0)
+		callable_upon_blocker_clear.call()
 
 var emit_insutrction_complete_on_cg_hide :bool
 func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:

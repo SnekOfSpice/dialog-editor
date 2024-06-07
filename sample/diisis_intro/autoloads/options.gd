@@ -46,6 +46,10 @@ func save_prefs():
 	# Save it to a file (overwrite if already exists).
 	config.save(OPTIONS_PATH)
 
+func does_savegame_exist():
+	if not ResourceLoader.exists(SAVEGAME_PATH):
+		return false
+	return true
 
 func save_gamestate():
 	var data_to_save := {}

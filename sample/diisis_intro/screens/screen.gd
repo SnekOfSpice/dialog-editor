@@ -15,8 +15,10 @@ func restore_ui():
 	if GameWorld.game_stage:
 		GameWorld.game_stage.show_ui()
 
+func close():
+	GameWorld.stage_root.set_screen("")
+	get_viewport().set_input_as_handled()
 
-func _gui_input(event: InputEvent) -> void:#(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and not ignore_event:
-		GameWorld.stage_root.set_screen("")
-		
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		close()
