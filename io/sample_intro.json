@@ -779,7 +779,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 0,
+			"meta.scroll_vertical": 89,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -796,13 +796,13 @@
 			"lines": [],
 			"meta.scroll_vertical": 0,
 			"meta.selected": false,
-			"next": 3,
+			"next": 4,
 			"number": 1,
 			"page_key": "",
 			"terminate": false
 		}
 	},
-	"text_lead_time_other_actor": 0.2,
-	"text_lead_time_same_actor": 0,
+	"text_lead_time_other_actor": 0.6,
+	"text_lead_time_same_actor": 0.05,
 	"use_dialog_syntax": true
 }

@@ -5,6 +5,12 @@ class_name GameStage
 	CONST.CHARACTER_AMBER : $Characters/Amber,
 	CONST.CHARACTER_ETERNA : $Characters/Eterna,
 }
+enum TextStyle {
+	ToBottom,
+	ToCharacter,
+}
+
+@export var text_style := TextStyle.ToBottom
 
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
@@ -27,6 +33,8 @@ func _ready():
 	find_child("LineReader").auto_continue = Options.auto_continue
 	find_child("LineReader").text_speed = Options.text_speed
 	find_child("LineReader").auto_continue_delay = Options.auto_continue_delay
+	
+	set_text_style(text_style)
 	
 	remove_blocker()
 
@@ -68,6 +76,15 @@ func set_cg_bottom(cg_name:String, fade_in_duration:float):
 	cg_position = "bottom"
 	set_cg(cg_name, fade_in_duration, find_child("CGBottomContainer").get_node("CGTex"))
 
+func set_text_style(style:TextStyle):
+	text_style = style
+	if text_style == TextStyle.ToBottom:
+		find_child("TextContainer").custom_minimum_size.x = 454
+		find_child("RichTextLabel").custom_minimum_size.x = 500
+	elif text_style == TextStyle.ToCharacter:
+		find_child("TextContainer").custom_minimum_size.x = 230
+		find_child("RichTextLabel").custom_minimum_size.x = 230
+
 func hide_cg():
 	cg = ""
 	cg_position = ""
@@ -90,9 +107,26 @@ func on_text_content_text_changed(
 	new_text: String,
 	lead_time: float,
 ):
-	pass
+	if text_style == TextStyle.ToBottom:
+		return
 	## move to neutral position if not visible
 	## move to actor if visible
+	var center = size * 0.5
+	var actor_position:Vector2
+	
+	if is_name_container_visible:
+		if not characters.get(actor_name):
+			return
+		actor_position = characters.get(actor_name).position
+		var offset : int = sign(center.direction_to(actor_position).x) * 60
+		actor_position.x -= offset
+		if sign(offset) == 1:
+			actor_position.x -= find_child("LineReader").text_container.size.x
+		actor_position.y -= 100
+	else: # name container isn't visible
+		actor_position.x = center.x
+		actor_position.y = size.y - find_child("LineReader").text_container.size.y
+	
 	#if is_name_container_visible:
 		#if actor_name == CONST.CHARACTER_AMBER:
 			#dialog_box_offset = Vector2(-20, -10)
@@ -100,15 +134,15 @@ func on_text_content_text_changed(
 			#dialog_box_offset = Vector2(20, -10)
 	#else:
 		#dialog_box_offset = Vector2.ZERO
-	#
-	#if dialog_box_tween:
-		#dialog_box_tween.kill()
-	#dialog_box_tween = create_tween()
-	#
-	#var text_container : CenterContainer = find_child("TextContainer")
-	#var target_position = Vector2(size.x * 0.5, size.y - text_container.size.y * 0.5)
-	#target_position += dialog_box_offset
-	#dialog_box_tween.tween_property(text_container, "position", target_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	
+	if dialog_box_tween:
+		dialog_box_tween.kill()
+	dialog_box_tween = create_tween()
+	
+	var text_container : CenterContainer = find_child("TextContainer")
+	text_container.position = actor_position
+	text_container.position.y += 10
+	dialog_box_tween.tween_property(text_container, "position", actor_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 var callable_upon_blocker_clear:Callable
 func set_callable_upon_blocker_clear(callable:Callable):
