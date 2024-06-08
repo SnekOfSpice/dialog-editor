@@ -1190,9 +1190,14 @@ func update_name_label(actor_name: String):
 		else:
 			name_container.modulate.a = 1.0
 	
-		
-	ParserEvents.display_name_changed.emit(display_name, name_container.modulate.a > 0.0)
-	ParserEvents.actor_name_changed.emit(actor_name, name_container.modulate.a > 0.0)
+	var name_visible:bool
+	if name_style == NameStyle.NameLabel:
+		name_visible = name_container.modulate.a > 0.0
+	elif name_style == NameStyle.Prepend:
+		name_visible = current_raw_name == name_for_blank_name
+	ParserEvents.display_name_changed.emit(display_name, name_visible)
+	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
+
 
 func can_text_container_be_visible() -> bool:
 	if line_type == DIISIS.LineType.Text:
@@ -1202,3 +1207,6 @@ func can_text_container_be_visible() -> bool:
 	if line_type == DIISIS.LineType.Instruction:
 		return show_text_during_instructions
 	return false
+
+
+
