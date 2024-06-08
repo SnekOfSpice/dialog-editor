@@ -900,10 +900,19 @@ func read_next_chunk():
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")
+	var last_tag_start_position = tag_start_position
 	var tag_end_position = bbcode_removed_text.find("]", tag_start_position)
 	while tag_start_position != -1 and tag_end_position != -1:
+		if tag_start_position > 0:
+			if bbcode_removed_text[tag_start_position - 1] == "\\":
+				bbcode_removed_text = bbcode_removed_text.erase(tag_start_position - 1)
+				last_tag_start_position = tag_start_position + 1
+				tag_start_position = bbcode_removed_text.find("[", tag_start_position + 1)
+				tag_end_position = bbcode_removed_text.find("]", tag_start_position + 1)
+				continue
 		bbcode_removed_text = bbcode_removed_text.erase(tag_start_position, tag_end_position - tag_start_position + 1)
-		tag_start_position = bbcode_removed_text.find("[")
+		last_tag_start_position = tag_start_position
+		tag_start_position = bbcode_removed_text.find("[", last_tag_start_position)
 		tag_end_position = bbcode_removed_text.find("]", tag_start_position)
 	
 	while scan_index < bbcode_removed_text.length():
@@ -928,6 +937,7 @@ func read_next_chunk():
 	var cleaned_text : String = new_text
 	cleaned_text = cleaned_text.replace("<mp>", "")
 	cleaned_text = cleaned_text.replace("<ap>", "")
+	cleaned_text = cleaned_text.replace("\\[", "[")
 	
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
