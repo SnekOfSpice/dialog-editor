@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://clvr2siqvathu"]
+[gd_scene load_steps=6 format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" path="res://sample/diisis_intro/screens/options_screen.gd" id="1_1als3"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_4bl4s"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_bdfrv"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_7g5us"]
 
 [node name="OptionsScreen" type="Control"]
 layout_mode = 3
@@ -35,20 +43,28 @@ alignment = 1
 [node name="GameButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_kpjpj")
 text = "Game"
 
 [node name="TextButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_4bl4s")
 text = "Text"
 
 [node name="DisplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_bdfrv")
 text = "Display"
 
 [node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_7g5us")
 text = "Sound"
 
 [node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
@@ -89,11 +105,55 @@ text = "Quit"
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu"]
+[node name="VBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu"]
 layout_mode = 2
+columns = 3
+
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Text Speed:"
+
+[node name="TextSpeedSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "100"
+
+[node name="AutoContinueCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Auto Continue"
+
+[node name="AutoDelaySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 20.0
+step = 0.1
+
+[node name="AutoDelayLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Delay"
 
 [node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu"]
+layout_mode = 2
+
+[node name="FullscreenCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+text = "Fullscreen
+"
 
 [node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
@@ -162,7 +222,11 @@ text = "Close"
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/TextSpeedSlider" to="." method="_on_text_speed_slider_value_changed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_pressed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_value_changed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/FullscreenCheckBox" to="." method="_on_fullscreen_check_box_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
-[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="close"]

@@ -9,6 +9,7 @@ var sfx_volume := 1.0
 
 var fullscreen := false
 var text_speed := 60
+var auto_continue_delay := 1.0
 var auto_continue := false
 
 func _ready() -> void:
@@ -24,14 +25,19 @@ func _ready() -> void:
 	master_volume = config.get_value("preferences", "master_volume", 1.0)
 	sfx_volume = config.get_value("preferences", "sfx_volume", 1.0)
 	text_speed = config.get_value("preferences", "text_speed", 60)
-	fullscreen = config.get_value("preferences", "fullscreen", false)
+	auto_continue_delay = config.get_value("preferences", "auto_continue_delay", 1.0)
+	auto_continue = config.get_value("preferences", "auto_continue", false)
+	set_fullscreen(config.get_value("preferences", "fullscreen", false))
 	
 	
+func set_fullscreen(value:bool):
+	fullscreen = value
 	if fullscreen:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+	
 func save_prefs():
 	var config = ConfigFile.new()
 
@@ -41,6 +47,7 @@ func save_prefs():
 	config.set_value("preferences", "sfx_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX"))))
 	config.set_value("preferences", "text_speed", text_speed)
 	config.set_value("preferences", "auto_continue", auto_continue)
+	config.set_value("preferences", "auto_continue_delay", auto_continue_delay)
 	config.set_value("preferences", "fullscreen", fullscreen)
 
 	# Save it to a file (overwrite if already exists).

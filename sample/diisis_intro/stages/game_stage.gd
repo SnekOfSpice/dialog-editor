@@ -24,6 +24,10 @@ func _ready():
 	GameWorld.instruction_handler = $Handler
 	GameWorld.game_stage = self
 	
+	find_child("LineReader").auto_continue = Options.auto_continue
+	find_child("LineReader").text_speed = Options.text_speed
+	find_child("LineReader").auto_continue_delay = Options.auto_continue_delay
+	
 	remove_blocker()
 
 func _gui_input(event: InputEvent) -> void:
