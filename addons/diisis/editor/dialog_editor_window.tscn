@@ -38,7 +38,7 @@ title = "Close DIISIS?"
 initial_position = 4
 transient = false
 popup_window = true
-ok_button_text = "Close"
+ok_button_text = "Close DIISIS"
 cancel_button_text = "Stay"
 
 [node name="WindowFactorWindow" type="Window" parent="."]
