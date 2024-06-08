@@ -29,7 +29,18 @@ func _ready() -> void:
 	auto_continue = config.get_value("preferences", "auto_continue", false)
 	set_fullscreen(config.get_value("preferences", "fullscreen", false))
 	
-	
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("Master"),
+		linear_to_db(master_volume)
+	)
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("Music"),
+		linear_to_db(music_volume)
+	)
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("SFX"),
+		linear_to_db(sfx_volume)
+	)
 func set_fullscreen(value:bool):
 	fullscreen = value
 	if fullscreen:
