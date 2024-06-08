@@ -19,6 +19,12 @@ func deserialize(data:Dictionary):
 func set_audio_player_volume(player:AudioStreamPlayer, volume:float):
 	player.volume_db = linear_to_db(volume)
 
+func play_sfx(sfx:String):
+	var player := AudioStreamPlayer.new()
+	player.stream = load(str("res://sample/diisis_intro/sounds/sfx/", sfx))
+	player.set_bus("SFX")
+	add_child(player)
+	player.play()
 
 func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if bgm_key == bgm:

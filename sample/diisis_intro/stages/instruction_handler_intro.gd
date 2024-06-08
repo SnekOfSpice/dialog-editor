@@ -40,4 +40,13 @@ func execute(instruction_name, args) -> bool:
 			return true
 		"hide_cg":
 			emit_signal("hide_cg")
+		"play_sfx":
+			Sound.play_sfx(CONST.get(str("SFX_", args.get("name").to_upper())))
+		"set_background":
+			GameWorld.stage_root.set_background(
+				CONST.get(str("BACKGROUND_", args.get("name").to_upper())),
+				args.get("fade_time")
+			)
+		"set_bgm":
+			Sound.play_bgm(CONST.get(str("MUSIC_", args.get("name").to_upper())), args.get("fade_in"))
 	return false

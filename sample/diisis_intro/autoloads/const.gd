@@ -21,4 +21,6 @@ const MUSIC_INTRO := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wa
 const MUSIC_MAIN_MENU := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wav"
 const MUSIC_DEFAULT := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wav"
 
+const SFX_HELLO := "48188__rwm28__hello.ogg"
+
 const SFX_BANG := ""
