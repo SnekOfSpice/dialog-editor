@@ -44,7 +44,7 @@ signal fact_changed(
 ## See [signal actor_name_changed].
 signal display_name_changed(
 	display_name:String,
-	is_name_container_visible: bool
+	is_name_visible: bool
 )
 
 ## Emitted when a new line of dialog is read. Passes the internal key of the actor.[br]
@@ -52,7 +52,7 @@ signal display_name_changed(
 ## See [signal display_name_changed].
 signal actor_name_changed(
 	actor_name: String,
-	is_name_container_visible: bool
+	is_name_visible: bool
 )
 
 
