@@ -140,6 +140,7 @@ focus_mode = 0
 text = "+v+"
 
 [node name="MoveToIndexControls" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MoveControlsContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 

@@ -286,7 +286,27 @@ func swap_pages(page_a: int, page_b: int):
 	page_data[page_a] = data_b
 	page_data[page_b] = data_a
 	
-
+func swap_line_references(on_page:int, from:int, to:int):
+	var edited_current_page := false
+	for page in page_data.values():
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var content = line.get("content")
+				for choice in content.get("choices"):
+					if choice.get("target_page") != on_page:
+						continue
+					
+					if choice.get("target_line") == from:
+						choice["target_line"] = to
+					elif choice.get("target_line") == to:
+						choice["target_line"] = from
+					
+					if page.get("number") == editor.get_current_page_number():
+						edited_current_page = true
+	
+	if edited_current_page:
+		await get_tree().process_frame
+		editor.refresh(false)
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
