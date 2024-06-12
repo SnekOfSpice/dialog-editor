@@ -82,7 +82,6 @@ func deserialize_lines(lines_data: Array):
 		i += 1
 	
 	add_lines(data_by_index.keys(), data_by_index)
-	
 	enable_page_key_edit(false)
 
 func set_next(next_page: int):
@@ -228,8 +227,6 @@ func add_lines(indices:Array, data_by_index:={}):
 				var range : Vector2 = l.get_folder_range_v()
 				if at_index > range.x and at_index <= range.y:
 					l.change_folder_range(1)
-		
-		
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})

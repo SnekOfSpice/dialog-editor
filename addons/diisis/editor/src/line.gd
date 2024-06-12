@@ -279,11 +279,25 @@ func _on_visible_toggle_toggled(button_pressed: bool) -> void:
 
 
 func _on_insert_line_above_pressed() -> void:
-	emit_signal("insert_line", get_index())
+	var insert_index := get_index()
+	emit_signal("insert_line", insert_index)
+	Pages.change_line_references_directional(
+		Pages.editor.get_current_page_number(),
+		insert_index,
+		Pages.editor.current_page.get_line_count() - 1,
+		 + 1
+	)
 
 
 func _on_insert_line_below_pressed() -> void:
-	emit_signal("insert_line", get_index() + 1)
+	var insert_index := get_index() + 1
+	emit_signal("insert_line", insert_index)
+	Pages.change_line_references_directional(
+		Pages.editor.get_current_page_number(),
+		insert_index,
+		Pages.editor.current_page.get_line_count() - 1,
+		 + 1
+	)
 
 #
 #func _on_move_to_index_button_pressed() -> void:

@@ -288,25 +288,43 @@ func swap_pages(page_a: int, page_b: int):
 	
 func swap_line_references(on_page:int, from:int, to:int):
 	var edited_current_page := false
+	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				for choice in content.get("choices"):
-					if choice.get("target_page") != on_page:
-						continue
+					var page_number : int = page.get("number")
+					if choice.get("target_page") == on_page:
 					
-					if choice.get("target_line") == from:
-						choice["target_line"] = to
-					elif choice.get("target_line") == to:
-						choice["target_line"] = from
+						if choice.get("target_line") == from:
+							choice["target_line"] = to
+							if page_number == current_page_number:
+								edited_current_page = true
+						elif choice.get("target_line") == to:
+							choice["target_line"] = from
+							if page_number == current_page_number:
+								edited_current_page = true
 					
-					if page.get("number") == editor.get_current_page_number():
-						edited_current_page = true
+					if choice.get("loopback_target_page") == on_page:
+						if choice.get("loopback_target_line") == from:
+							choice["loopback_target_line"] = to
+							if page_number == current_page_number:
+								edited_current_page = true
+						elif choice.get("loopback_target_line") == to:
+							choice["loopback_target_line"] = from
+							if page_number == current_page_number:
+								edited_current_page = true
+					
+					
 	
 	if edited_current_page:
 		await get_tree().process_frame
 		editor.refresh(false)
+
+
+func get_lines(page_number: int):
+	return page_data.get(page_number).get("lines")
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
@@ -326,10 +344,44 @@ func swap_page_references(from: int, to: int):
 						choice["target_page"] = from
 	await get_tree().process_frame
 	editor.refresh(false)
-	
 
-func get_lines(page_number: int):
-	return page_data.get(page_number).get("lines")
+
+func change_line_references_directional(on_page:int, starting_index_of_change:int, end_index_of_change:int, operation:int):
+	var edited_current_page := false
+	var current_page_number := editor.get_current_page_number()
+	for page in page_data.values():
+		print(page.get("number"))
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var content = line.get("content")
+				for choice in content.get("choices"):
+					prints("choice", choice)
+					var page_number : int = page.get("number")
+					if choice.get("target_page") == on_page:
+						
+						var target_line : int = choice.get("target_line")
+						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
+							choice["target_line"] = target_line + operation
+							if page_number == current_page_number:
+								edited_current_page = true
+					
+					if choice.get("loopback_target_page") == on_page:
+						print("loopback change")
+						var loopback_target_line : int = choice.get("loopback_target_line")
+						printt(loopback_target_line, starting_index_of_change, end_index_of_change)
+						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
+							print(choice.get("loopback_target_line"))
+							choice["loopback_target_line"] = loopback_target_line + operation
+							print(choice.get("loopback_target_line"))
+							if page_number == current_page_number:
+								edited_current_page = true
+					prints("choice", choice)
+					
+	
+	if edited_current_page:
+		await get_tree().process_frame
+		editor.refresh(false)
+	
 
 func change_page_references_dir(changed_page: int, operation:int):
 	for page in page_data.values():

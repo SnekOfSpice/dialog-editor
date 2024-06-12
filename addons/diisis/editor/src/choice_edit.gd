@@ -16,6 +16,7 @@ func init() -> void:
 	#find_child("Conditionals").visible = false
 	
 	set_do_jump_page(false)
+	set_loopback(false)
 	set_page_view(Pages.editor.get_selected_page_view())
 
 func deserialize(data:Dictionary):
@@ -23,6 +24,8 @@ func deserialize(data:Dictionary):
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page", 0)
 	find_child("LineSelect").value = data.get("target_line", 0)
+	find_child("LoopbackPageSelect").value = data.get("loopback_target_page", 0)
+	find_child("LoopbackLineSelect").value = data.get("loopback_target_line", 0)
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
@@ -31,6 +34,7 @@ func deserialize(data:Dictionary):
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
 	set_do_jump_page(data.get("do_jump_page", false))
+	set_loopback(data.get("loopback", false))
 	update()
 
 func serialize():
@@ -40,9 +44,12 @@ func serialize():
 		"choice_text.enabled_as_default": find_child("DefaultButtonEnabled").button_pressed,
 		"target_page": find_child("PageSelect").value,
 		"target_line": find_child("LineSelect").value,
+		"loopback_target_page": find_child("LoopbackPageSelect").value,
+		"loopback_target_line": find_child("LoopbackLineSelect").value,
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
 		"do_jump_page": find_child("JumpPageToggle").button_pressed,
+		"loopback": find_child("LoopbackToggle").button_pressed,
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
@@ -81,9 +88,9 @@ func _on_page_select_value_changed(value: float) -> void:
 
 func update():
 	var max_page_index : int = Pages.get_page_count() - 1
-	var target_page = int(find_child("PageSelect").value)
+	var target_page := int(find_child("PageSelect").value)
 	target_page = min(target_page, max_page_index)
-	var target_line = int(find_child("LineSelect").value)
+	var target_line := int(find_child("LineSelect").value)
 	var max_line_index : int = Pages.get_line_count(target_page) - 1
 	
 	find_child("PageSelect").max_value = max_page_index
@@ -91,6 +98,13 @@ func update():
 	
 	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
 	find_child("PageSelect").value = target_page
+	
+	find_child("LoopbackPageSelect").max_value = max_page_index
+	find_child("LoopbackLineSelect").max_value = max_line_index
+	var loopback_page := int(find_child("LoopbackPageSelect").value)
+	var loopback_line := int(find_child("LoopbackLineSelect").value)
+	
+	find_child("LoopbackTargetStringLabel").text = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
 	
 	find_child("IndexLabel").text = str(get_index())
 	find_child("UpButton").disabled = get_index() <= 0
@@ -142,6 +156,10 @@ func set_do_jump_page(do: bool):
 	find_child("JumpPageContainer").visible = do
 	find_child("JumpPageToggle").button_pressed = do
 
+func set_loopback(do:bool):
+	find_child("LoopbackContainer").visible = do
+	find_child("LoopbackToggle").button_pressed = do
+
 #func _on_facts_visibility_toggle_pressed() -> void:
 	#find_child("Facts").visible = not find_child("Facts").visible
 
@@ -149,9 +167,6 @@ func set_do_jump_page(do: bool):
 #func _on_conditional_visibility_toggle_pressed() -> void:
 	#find_child("Conditionals").visible = not find_child("Conditionals").visible
 
-
-func _on_jump_page_toggle_pressed() -> void:
-	set_do_jump_page(find_child("JumpPageToggle").button_pressed)
 
 
 func _on_up_button_pressed() -> void:
@@ -164,3 +179,20 @@ func _on_down_button_pressed() -> void:
 
 func _on_line_select_value_changed(value: float) -> void:
 	update()
+
+
+func _on_loopback_page_select_value_changed(value: float) -> void:
+	update()
+
+
+func _on_loopback_line_select_value_changed(value: float) -> void:
+	update()
+
+
+
+func _on_loopback_toggle_toggled(toggled_on: bool) -> void:
+	set_loopback(toggled_on)
+
+
+func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
+	set_do_jump_page(toggled_on)

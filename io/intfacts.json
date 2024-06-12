@@ -186,7 +186,7 @@
 							{
 								"address": "0.1.0",
 								"choice_text.disabled": "",
-								"choice_text.enabled": "jump!",
+								"choice_text.enabled": "choice label",
 								"choice_text.enabled_as_default": true,
 								"conditionals": {
 									"behavior": 0,
@@ -202,19 +202,22 @@
 									"operand_args": [],
 									"operand_key": "AND"
 								},
-								"do_jump_page": true,
+								"do_jump_page": false,
 								"facts": {
 									"fact_data_by_name": {
 
 									},
 									"meta.visible": false
 								},
+								"loopback": true,
+								"loopback_target_line": 0,
+								"loopback_target_page": 1,
 								"meta.jump_page_before_auto_switch": false,
 								"meta.selector": {
 									"selected": false
 								},
-								"target_line": 2,
-								"target_page": 1
+								"target_line": 0,
+								"target_page": 0
 							}
 						],
 						"meta.do_jump_page": true
@@ -381,7 +384,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 0,
+			"meta.scroll_vertical": 246,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -459,7 +462,7 @@
 							"sis"
 						],
 						"active_actors_title": "character",
-						"content": "[]>dii:hjkhjkhjk"
+						"content": "[]>dii:this should be read now"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -500,7 +503,7 @@
 							"sis"
 						],
 						"active_actors_title": "character",
-						"content": "[]>dii:this should be read now"
+						"content": "[]>dii:hjkhjkhjk"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -522,7 +525,7 @@
 			],
 			"meta.scroll_vertical": 0,
 			"meta.selected": false,
-			"next": 0,
+			"next": 1,
 			"number": 1,
 			"page_key": "",
 			"terminate": false
