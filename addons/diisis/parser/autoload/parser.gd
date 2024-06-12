@@ -140,6 +140,7 @@ func on_text_content_text_changed(old_text: String,
 func on_choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
+	target_line:int,
 	choice_text:String
 ):
 	if append_choices_to_history:

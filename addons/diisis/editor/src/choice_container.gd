@@ -30,11 +30,13 @@ func deserialize(data):
 		choices = data.get("choices", [])
 		#set_do_jump_page(data.get("meta.do_jump_page"))
 	
-	for d in choices:
-		add_choice(-1, d)
+	
 	
 	find_child("AutoSwitchButton").button_pressed = data.get("auto_switch", false)
 	set_auto_switch(find_child("AutoSwitchButton").button_pressed)
+	
+	for d in choices:
+		add_choice(-1, d)
 	
 	update()
 	

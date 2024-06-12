@@ -185,7 +185,7 @@ var name_container: Control:
 ]
 
 signal line_finished(line_index: int)
-signal jump_to_page(page_index: int)
+signal jump_to_page(page_index: int, target_line: int)
 signal is_input_locked_changed(new_value: bool)
 
 var line_data := {}
@@ -992,7 +992,7 @@ func build_choices(choices, auto_switch:bool):
 		if cond_true and auto_switch:
 			for f in facts.values():
 				Parser.change_fact(f)
-			choice_pressed(true, option.get("target_page"))
+			choice_pressed(true, option.get("target_page"), option.get("target_line"))
 			break
 		
 		var enable_option := true
@@ -1026,6 +1026,7 @@ func build_choices(choices, auto_switch:bool):
 		# give to option to signal
 		var do_jump_page = option.get("do_jump_page")
 		var target_page = option.get("target_page")
+		var target_line = option.get("target_line")
 		
 		var new_option:ChoiceButton
 		if button_scene:
@@ -1038,6 +1039,7 @@ func build_choices(choices, auto_switch:bool):
 		new_option.facts = facts
 		new_option.do_jump_page = do_jump_page
 		new_option.target_page = target_page
+		new_option.target_line = target_line
 		
 		new_option.connect("choice_pressed", choice_pressed)
 		
@@ -1049,6 +1051,7 @@ func build_choices(choices, auto_switch:bool):
 			"facts": facts,
 			"do_jump_page": do_jump_page,
 			"target_page": target_page,
+			"target_line": target_line,
 		})
 		
 		#match choice_button_focus_mode:
@@ -1078,11 +1081,11 @@ func build_choices(choices, auto_switch:bool):
 func is_choice_presented():
 	return not choice_option_container.get_children().is_empty()
 
-func choice_pressed(do_jump_page, target_page):
+func choice_pressed(do_jump_page, target_page, target_line):
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	if do_jump_page:
-		emit_signal("jump_to_page", target_page)
+		emit_signal("jump_to_page", target_page, target_line)
 		return
 	emit_signal("line_finished", line_index)
 	

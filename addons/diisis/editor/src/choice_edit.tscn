@@ -110,13 +110,26 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/margin_right = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
+[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
 layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+layout_mode = 2
+text = "P"
 
 [node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PageKeyLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+layout_mode = 2
+text = "L"
+
+[node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
 layout_mode = 2
 horizontal_alignment = 2
 
@@ -164,3 +177,4 @@ facts_container = NodePath("VBox/FactsContainer")
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_pressed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/LineSelect" to="." method="_on_line_select_value_changed"]

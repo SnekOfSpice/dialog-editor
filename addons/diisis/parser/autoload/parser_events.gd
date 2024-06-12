@@ -7,6 +7,7 @@ class_name DiisisParserEvents
 signal choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
+	target_line:int,
 	choice_text:String
 )
 

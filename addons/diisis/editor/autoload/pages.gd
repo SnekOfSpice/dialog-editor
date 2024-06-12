@@ -250,6 +250,9 @@ func deserialize(data:Dictionary):
 func get_page_count() -> int:
 	return page_data.size()
 
+func get_line_count(page:int) -> int:
+	return page_data.get(page).get("lines", []).size()
+
 func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))

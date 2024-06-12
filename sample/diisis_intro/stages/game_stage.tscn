@@ -120,6 +120,8 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
+keep_past_lines = true
+past_text_continer = NodePath("../Control/TextContainer/ScrollContainer/VBoxContainer/PastTextContainer")
 name_for_blank_name = "narrator"
 name_map = {
 "amber": "A",
@@ -129,8 +131,6 @@ name_colors = {
 "amber": Color(0.888357, 0.498997, 0.742898, 1)
 }
 name_style = 1
-keep_past_lines = true
-past_text_continer = NodePath("../Control/TextContainer/ScrollContainer/VBoxContainer/PastTextContainer")
 choice_container = NodePath("../Control/ChoiceContainer")
 choice_option_container = NodePath("../Control/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")

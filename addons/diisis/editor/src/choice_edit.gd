@@ -2,7 +2,6 @@
 extends Control
 class_name ChoiceEdit
 
-var do_jump_page := false
 var jump_page_before_auto_switch := false
 
 signal move_choice_edit(choice_edit, direction)
@@ -23,14 +22,15 @@ func deserialize(data:Dictionary):
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page", 0)
+	find_child("LineSelect").value = data.get("target_line", 0)
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
 	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
+	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
 	set_do_jump_page(data.get("do_jump_page", false))
-	
 	update()
 
 func serialize():
@@ -39,10 +39,12 @@ func serialize():
 		"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultButtonEnabled").button_pressed,
 		"target_page": find_child("PageSelect").value,
+		"target_line": find_child("LineSelect").value,
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
-		"do_jump_page": do_jump_page,
+		"do_jump_page": find_child("JumpPageToggle").button_pressed,
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
+		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 	}
 
@@ -78,11 +80,17 @@ func _on_page_select_value_changed(value: float) -> void:
 	update()
 
 func update():
-	var default_target = int(find_child("PageSelect").value)
-	default_target = min(default_target, Pages.get_page_count() - 1)
+	var max_page_index : int = Pages.get_page_count() - 1
+	var target_page = int(find_child("PageSelect").value)
+	target_page = min(target_page, max_page_index)
+	var target_line = int(find_child("LineSelect").value)
+	var max_line_index : int = Pages.get_line_count(target_page) - 1
 	
-	find_child("PageKeyLabel").text = Pages.page_data.get(default_target).get("page_key")
-	find_child("PageSelect").value = default_target
+	find_child("PageSelect").max_value = max_page_index
+	find_child("LineSelect").max_value = max_line_index
+	
+	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
+	find_child("PageSelect").value = target_page
 	
 	find_child("IndexLabel").text = str(get_index())
 	find_child("UpButton").disabled = get_index() <= 0
@@ -110,7 +118,7 @@ func set_auto_switch(value:bool):
 	set_text_lines_visible(not value)
 	find_child("Conditionals").set_behavior_container_visible(not value)
 	if value:
-		jump_page_before_auto_switch = do_jump_page
+		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
 		set_do_jump_page(true)
 	else:
 		set_do_jump_page(jump_page_before_auto_switch)
@@ -131,9 +139,8 @@ func request_delete():
 	#find_child("JumpPageToggle").visible = value
 
 func set_do_jump_page(do: bool):
-	do_jump_page = do
-	find_child("JumpPageContainer").visible = do_jump_page
-	find_child("JumpPageToggle").button_pressed = do_jump_page
+	find_child("JumpPageContainer").visible = do
+	find_child("JumpPageToggle").button_pressed = do
 
 #func _on_facts_visibility_toggle_pressed() -> void:
 	#find_child("Facts").visible = not find_child("Facts").visible
@@ -153,3 +160,7 @@ func _on_up_button_pressed() -> void:
 
 func _on_down_button_pressed() -> void:
 	emit_signal("move_choice_edit", self, 1)
+
+
+func _on_line_select_value_changed(value: float) -> void:
+	update()
