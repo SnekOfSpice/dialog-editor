@@ -8,6 +8,9 @@ signal choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
 	target_line:int,
+	set_loopback:bool,
+	loopback_trigger_page:int,
+	loopback_trigger_line:int,
 	choice_text:String
 )
 
@@ -20,6 +23,7 @@ signal choice_pressed(
 ##    "facts": Dictionary,
 ##    "do_jump_page": bool,
 ##    "target_page": int,
+##    "target_line": int,
 ##}
 ## [/codeblock]
 ## [param facts] is a [Dictionary] where every key is a String representing a fact

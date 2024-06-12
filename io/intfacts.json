@@ -210,14 +210,14 @@
 									"meta.visible": false
 								},
 								"loopback": true,
-								"loopback_target_line": 0,
-								"loopback_target_page": 1,
+								"loopback_target_line": 3,
+								"loopback_target_page": 0,
 								"meta.jump_page_before_auto_switch": false,
 								"meta.selector": {
 									"selected": false
 								},
-								"target_line": 0,
-								"target_page": 0
+								"target_line": 3,
+								"target_page": 1
 							}
 						],
 						"meta.do_jump_page": true
@@ -462,7 +462,7 @@
 							"sis"
 						],
 						"active_actors_title": "character",
-						"content": "[]>dii:this should be read now"
+						"content": "[]>"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -503,7 +503,7 @@
 							"sis"
 						],
 						"active_actors_title": "character",
-						"content": "[]>dii:hjkhjkhjk"
+						"content": "[]>"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -521,11 +521,462 @@
 					"meta.selector": {
 						"selected": false
 					}
+				},
+				{
+					"address": "1.3",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 3,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.4",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.5",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.7",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 7,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.8",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 8,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.9",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 9,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.10",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 10,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.11",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 11,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.12",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>dii:this should be read now"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 12,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.13",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>dii:hjkhjkhjk"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 13,
+					"meta.selector": {
+						"selected": false
+					}
 				}
 			],
-			"meta.scroll_vertical": 0,
+			"meta.scroll_vertical": 288,
 			"meta.selected": false,
-			"next": 1,
+			"next": 0,
 			"number": 1,
 			"page_key": "",
 			"terminate": false

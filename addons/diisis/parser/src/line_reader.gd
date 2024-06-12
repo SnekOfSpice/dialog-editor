@@ -1027,6 +1027,9 @@ func build_choices(choices, auto_switch:bool):
 		var do_jump_page = option.get("do_jump_page")
 		var target_page = option.get("target_page")
 		var target_line = option.get("target_line")
+		var loopback = option.get("loopback")
+		var loopback_target_page = option.get("loopback_target_page")
+		var loopback_target_line = option.get("loopback_target_line")
 		
 		var new_option:ChoiceButton
 		if button_scene:
@@ -1040,6 +1043,9 @@ func build_choices(choices, auto_switch:bool):
 		new_option.do_jump_page = do_jump_page
 		new_option.target_page = target_page
 		new_option.target_line = target_line
+		new_option.loopback = loopback
+		new_option.loopback_target_page = loopback_target_page
+		new_option.loopback_target_line = loopback_target_line
 		
 		new_option.connect("choice_pressed", choice_pressed)
 		
@@ -1052,6 +1058,9 @@ func build_choices(choices, auto_switch:bool):
 			"do_jump_page": do_jump_page,
 			"target_page": target_page,
 			"target_line": target_line,
+			"loopback" : loopback,
+			"loopback_target_page" : loopback_target_page,
+			"loopback_target_line" : loopback_target_line,
 		})
 		
 		#match choice_button_focus_mode:
