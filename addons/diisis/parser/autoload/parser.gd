@@ -142,6 +142,8 @@ var loopback_target_line:=0
 var loopback_trigger_page:=-1
 var loopback_trigger_line:=-1
 
+var selected_choices := []
+
 func on_choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
@@ -333,11 +335,13 @@ func serialize() -> Dictionary:
 	result["Parser.history"] = history
 	result["Parser.line_reader"] = line_reader.serialize()
 	result["Parser.game_progress"] = get_game_progress()
+	result["Parser.selected_choices"] = selected_choices
 	
 	return result
 
 func deserialize(data: Dictionary):
 	lines = data.get("Parser.lines")
+	selected_choices = data.get("Parser.selected_choices")
 	max_line_index_on_page = int(data.get("Parser.max_line_index_on_page"))
 	
 	page_index = int(data.get("Parser.page_index", 0))

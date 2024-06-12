@@ -86,6 +86,11 @@ tooltip_text = "auto_switch"
 focus_mode = 0
 text = "jump page"
 
+[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Behavior Override.
+When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
+
 [node name="LoopbackToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2

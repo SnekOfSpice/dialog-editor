@@ -185,6 +185,7 @@
 						"choices": [
 							{
 								"address": "0.1.0",
+								"behavior_after_first_selection": 3,
 								"choice_text.disabled": "",
 								"choice_text.enabled": "choice label",
 								"choice_text.enabled_as_default": true,
@@ -218,6 +219,43 @@
 								},
 								"target_line": 3,
 								"target_page": 1
+							},
+							{
+								"address": "0.1.1",
+								"behavior_after_first_selection": 0,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "choice label",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"loopback": false,
+								"loopback_target_line": 0,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 0
 							}
 						],
 						"meta.do_jump_page": true
@@ -384,7 +422,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 246,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -976,7 +1014,7 @@
 			],
 			"meta.scroll_vertical": 288,
 			"meta.selected": false,
-			"next": 0,
+			"next": 1,
 			"number": 1,
 			"page_key": "",
 			"terminate": false

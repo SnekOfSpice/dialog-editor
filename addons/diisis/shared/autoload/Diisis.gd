@@ -9,3 +9,12 @@ class_name DIISISGlobal
 enum LineType {
 	Text, Choice, Instruction, Folder
 }
+
+
+enum ChoiceBehaviorAfterSelection {
+	Default,
+	Show,
+	Enabled,
+	Disabled,
+	Hidden
+}

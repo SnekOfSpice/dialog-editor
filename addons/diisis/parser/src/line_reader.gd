@@ -999,7 +999,11 @@ func build_choices(choices, auto_switch:bool):
 		var option_text := ""
 		
 		if (cond_true and cond_behavior == "Hide") or (not cond_true and cond_behavior == "Show"):
-			continue
+			if Parser.selected_choices.has(option.get("address", "")):
+				if option.get("behavior_after_first_selection") == DIISIS.ChoiceBehaviorAfterSelection.Default:
+					continue
+			else:
+				continue
 		
 		if (cond_true and cond_behavior == "Show") or (not cond_true and cond_behavior == "Hide"):
 			enable_option = option.get("choice_text.enabled_as_default")
@@ -1009,6 +1013,18 @@ func build_choices(choices, auto_switch:bool):
 			
 		if (cond_true and cond_behavior == "Disable") or (not cond_true and cond_behavior == "Enable"):
 			enable_option = false
+		
+		if (
+			option.get("behavior_after_first_selection") != DIISIS.ChoiceBehaviorAfterSelection.Default and
+			Parser.selected_choices.has(option.get("address", ""))
+			):
+			match int(option.get("behavior_after_first_selection")):
+				DIISIS.ChoiceBehaviorAfterSelection.Enabled:
+					enable_option = true
+				DIISIS.ChoiceBehaviorAfterSelection.Disabled:
+					enable_option = false
+				DIISIS.ChoiceBehaviorAfterSelection.Hidden:
+					continue
 		
 		if enable_option:
 			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "enabled"), Parser.locale)
@@ -1024,12 +1040,14 @@ func build_choices(choices, auto_switch:bool):
 				option_text = option.get("choice_text.disabled")
 		
 		# give to option to signal
-		var do_jump_page = option.get("do_jump_page")
-		var target_page = option.get("target_page")
-		var target_line = option.get("target_line")
-		var loopback = option.get("loopback")
-		var loopback_target_page = option.get("loopback_target_page")
-		var loopback_target_line = option.get("loopback_target_line")
+		var do_jump_page = option.get("do_jump_page", false)
+		var target_page = option.get("target_page", 0)
+		var target_line = option.get("target_line", 0)
+		var loopback = option.get("loopback", false)
+		var loopback_target_page = option.get("loopback_target_page", -1)
+		var loopback_target_line = option.get("loopback_target_line", -1)
+		
+		
 		
 		var new_option:ChoiceButton
 		if button_scene:
@@ -1046,6 +1064,7 @@ func build_choices(choices, auto_switch:bool):
 		new_option.loopback = loopback
 		new_option.loopback_target_page = loopback_target_page
 		new_option.loopback_target_line = loopback_target_line
+		new_option.address = option.get("address", "")
 		
 		new_option.connect("choice_pressed", choice_pressed)
 		

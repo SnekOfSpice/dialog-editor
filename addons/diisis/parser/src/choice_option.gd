@@ -10,6 +10,8 @@ var loopback:=false
 var loopback_target_page:=0
 var loopback_target_line:=0
 
+var address := ""
+
 signal choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
@@ -26,6 +28,9 @@ func on_pressed() -> void:
 	# apply facts
 	for f in facts.values():
 		Parser.change_fact(f)
+	
+	if not Parser.selected_choices.has(address):
+		Parser.selected_choices.append(address)
 	
 	if loopback:
 		Parser.loopback_target_page = Parser.page_index

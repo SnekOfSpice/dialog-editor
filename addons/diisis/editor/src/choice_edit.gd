@@ -15,6 +15,10 @@ func init() -> void:
 	#find_child("Facts").visible = false
 	#find_child("Conditionals").visible = false
 	
+	var behavior_options_button : OptionButton = find_child("BehaviorAfterFirstSelectionButton")
+	for option in DIISIS.ChoiceBehaviorAfterSelection:
+		behavior_options_button.add_item(option)
+	
 	set_do_jump_page(false)
 	set_loopback(false)
 	set_page_view(Pages.editor.get_selected_page_view())
@@ -32,6 +36,8 @@ func deserialize(data:Dictionary):
 	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
+	
+	find_child("BehaviorAfterFirstSelectionButton").select(data.get("behavior_after_first_selection", 0))
 	
 	set_do_jump_page(data.get("do_jump_page", false))
 	set_loopback(data.get("loopback", false))
@@ -52,7 +58,8 @@ func serialize():
 		"loopback": find_child("LoopbackToggle").button_pressed,
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
-		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
+		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem),
+		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id()
 	}
 
 func set_page_view(view:DiisisEditor.PageView):
