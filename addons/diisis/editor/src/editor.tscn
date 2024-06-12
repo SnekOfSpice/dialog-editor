@@ -149,7 +149,7 @@ auto_translate_mode = 1
 size = Vector2i(209, 100)
 item_count = 2
 item_0/text = "Word & Character Count"
-item_1/text = "Search Text"
+item_1/text = "Search Text    (Ctrl+F)"
 item_1/id = 1
 
 [node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]

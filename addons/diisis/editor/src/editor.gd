@@ -194,12 +194,13 @@ func _shortcut_input(event):
 		if event.is_ctrl_pressed():
 			match event.key_label:
 				KEY_S:
-					print("attempt")
 					attempt_save_to_dir()
+				KEY_F:
+					open_popup($Popups.get_node("TextSearchPopup"))
 				KEY_O:
 					if active_dir != "":
-						$Popups.find_child("FDOpen").current_dir = active_dir
-					open_popup($Popups.find_child("FDOpen"), true)
+						$Popups.get_node("FDOpen").current_dir = active_dir
+					open_popup($Popups.get_node("FDOpen"), true)
 				KEY_A:
 					add_line_to_end_of_page()
 				KEY_1:
@@ -212,7 +213,6 @@ func _shortcut_input(event):
 					select_line_type(DIISIS.LineType.Folder)
 				KEY_MINUS:
 					emit_signal("scale_editor_down")
-					print("scale down")
 				KEY_PLUS:
 					emit_signal("scale_editor_up")
 		if event.is_alt_pressed():
@@ -330,8 +330,8 @@ func request_add_page(at:int):
 
 func open_save_popup():
 	if active_dir != "":
-		$Popups.find_child("FDSave").current_dir = active_dir
-	open_popup($Popups.find_child("FDSave"), true)
+		$Popups.get_node("FDSave").current_dir = active_dir
+	open_popup($Popups.get_node("FDSave"), true)
 
 func save_to_file(path:String, is_autosave:=false):
 	if current_page and not is_autosave:
@@ -465,30 +465,28 @@ func open_popup(popup:Window, fit_to_size:=false):
 func _on_setup_index_pressed(index: int) -> void:
 	match index:
 		1: # header
-			open_popup($Popups.find_child("HeaderPopup"))
+			open_popup($Popups.get_node("HeaderPopup"))
 		2: # dd
-			open_popup($Popups.find_child("DropdownPopup"))
+			open_popup($Popups.get_node("DropdownPopup"))
 		3: # instr
-			open_popup($Popups.find_child("InstructionPopup"))
+			open_popup($Popups.get_node("InstructionPopup"))
 		5: # facts
-			open_popup($Popups.find_child("FactsPopup"))
+			open_popup($Popups.get_node("FactsPopup"))
 		6: # pages
-			open_popup($Popups.find_child("MovePagePopup"))
+			open_popup($Popups.get_node("MovePagePopup"))
 
 func _on_utility_index_pressed(index: int) -> void:
 	match index:
 		0: 
-			open_popup($Popups.find_child("WordCountDialog"))
+			open_popup($Popups.get_node("WordCountDialog"))
 		1: 
-			open_popup($Popups.find_child("TextSearchPopup"))
+			open_popup($Popups.get_node("TextSearchPopup"))
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
-	prints("dir:", active_dir)
 	if active_dir.is_empty():
 		open_save_popup()
 		return
-	print("save to file")
 	save_to_file(str(active_dir, active_file_name))
 
 func _on_file_index_pressed(index: int) -> void:
@@ -500,15 +498,15 @@ func _on_file_index_pressed(index: int) -> void:
 		2:
 			# open
 			if active_dir != "":
-				$Popups.find_child("FDOpen").current_dir = active_dir
-			open_popup($Popups.find_child("FDOpen"), true)
+				$Popups.get_node("FDOpen").current_dir = active_dir
+			open_popup($Popups.get_node("FDOpen"), true)
 		4:
 			# config
-			open_popup($Popups.find_child("FileConfigPopup"), true)
+			open_popup($Popups.get_node("FileConfigPopup"), true)
 		6: # locales
-			open_popup($Popups.find_child("LocaleSelectionWindow"), true)
+			open_popup($Popups.get_node("LocaleSelectionWindow"), true)
 		7: # export blank l10n
-			open_popup($Popups.find_child("FDExportLocales"), true)
+			open_popup($Popups.get_node("FDExportLocales"), true)
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
