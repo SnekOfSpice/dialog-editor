@@ -3,6 +3,8 @@ extends Control
 class_name ChoiceEdit
 
 var jump_page_before_auto_switch := false
+var deserialized_loopback_page := 0
+var deserialized_loopback_line := 0
 
 signal move_choice_edit(choice_edit, direction)
 
@@ -24,12 +26,15 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 
 func deserialize(data:Dictionary):
+	
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page", 0)
 	find_child("LineSelect").value = data.get("target_line", 0)
 	find_child("LoopbackPageSelect").value = data.get("loopback_target_page", 0)
 	find_child("LoopbackLineSelect").value = data.get("loopback_target_line", 0)
+	deserialized_loopback_page = data.get("loopback_target_page", 0)
+	deserialized_loopback_line = data.get("loopback_target_line", 0)
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
@@ -43,7 +48,24 @@ func deserialize(data:Dictionary):
 	set_loopback(data.get("loopback", false))
 	update()
 
-func serialize():
+func serialize() -> Dictionary:
+	var loopback : bool = find_child("LoopbackToggle").button_pressed
+	# remove the loopback / jump page pointers
+	
+	if Pages.loopback_references_by_page.has(deserialized_loopback_page):
+			if Pages.loopback_references_by_page.get(deserialized_loopback_page).has(deserialized_loopback_line):
+				Pages.loopback_references_by_page[deserialized_loopback_page][deserialized_loopback_line].erase(get_address())
+	if loopback:
+		var loopback_page :int= find_child("LoopbackPageSelect").value
+		var loopback_line :int= find_child("LoopbackLineSelect").value
+		if Pages.loopback_references_by_page.has(loopback_page):
+			if Pages.loopback_references_by_page.get(loopback_page).has(loopback_line):
+				Pages.loopback_references_by_page.get(loopback_page).get(loopback_line).append(get_address())
+			else:
+				Pages.loopback_references_by_page[loopback_page][loopback_line] = [get_address()]
+		else:
+			Pages.loopback_references_by_page[loopback_page] = {loopback_line : [get_address()]}
+	
 	return {
 		"choice_text.enabled": find_child("LineEditEnabled").text,
 		"choice_text.disabled": find_child("LineEditDisabled").text,
@@ -55,12 +77,15 @@ func serialize():
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
 		"do_jump_page": find_child("JumpPageToggle").button_pressed,
-		"loopback": find_child("LoopbackToggle").button_pressed,
+		"loopback": loopback,
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
-		"address" : DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem),
+		"address" : get_address(),
 		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id()
 	}
+
+func get_address() -> String:
+	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 
 func set_page_view(view:DiisisEditor.PageView):
 	var default_enabled : CheckBox = find_child("DefaultButtonEnabled")

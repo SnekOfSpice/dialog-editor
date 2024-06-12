@@ -196,6 +196,8 @@ var page_data := {}
 
 var evaluator_paths := ["res://sample/inline_eval.gd"]
 
+var loopback_references_by_page := {}
+
 signal pages_modified
 
 func serialize() -> Dictionary:
@@ -316,7 +318,13 @@ func swap_line_references(on_page:int, from:int, to:int):
 							if page_number == current_page_number:
 								edited_current_page = true
 					
-					
+	#if loopback_references_by_page.has(on_page):
+		#var references_from : Dictionary = loopback_references_by_page.get(on_page).get(from, {})
+		#var references_to : Dictionary = loopback_references_by_page.get(on_page).get(to, {})
+		#loopback_references_by_page[on_page][from] = references_to.duplicate(true)
+		#loopback_references_by_page[on_page][to] = references_from.duplicate(true)
+		#if on_page == current_page_number and not references_from.is_empty() and not references_to.is_empty():
+			#edited_current_page = true
 	
 	if edited_current_page:
 		await get_tree().process_frame

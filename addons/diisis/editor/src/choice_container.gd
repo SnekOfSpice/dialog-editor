@@ -14,7 +14,6 @@ func serialize() -> Dictionary:
 		choices.append(c.serialize())
 	result["choices"] = choices
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed
-	
 	result["meta.do_jump_page"] = do_jump_page
 	
 	return result

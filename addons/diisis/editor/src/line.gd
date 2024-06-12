@@ -206,6 +206,8 @@ func update():
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
+	
+	find_child("LoopbackReferenceLabel").text = str("->", Pages.loopback_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size())
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:

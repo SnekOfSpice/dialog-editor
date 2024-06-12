@@ -142,6 +142,7 @@ func load_page(number: int, discard_without_saving:=false):
 	update_controls()
 	
 	await get_tree().process_frame
+	print(Pages.loopback_references_by_page)
 
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text

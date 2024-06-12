@@ -211,13 +211,13 @@
 									"meta.visible": false
 								},
 								"loopback": true,
-								"loopback_target_line": 3,
-								"loopback_target_page": 0,
+								"loopback_target_line": 4,
+								"loopback_target_page": 1,
 								"meta.jump_page_before_auto_switch": false,
 								"meta.selector": {
 									"selected": false
 								},
-								"target_line": 3,
+								"target_line": 4,
 								"target_page": 1
 							},
 							{
@@ -255,7 +255,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 0
+								"target_page": 1
 							}
 						],
 						"meta.do_jump_page": true
@@ -1012,9 +1012,9 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 288,
+			"meta.scroll_vertical": 418,
 			"meta.selected": false,
-			"next": 1,
+			"next": 0,
 			"number": 1,
 			"page_key": "",
 			"terminate": false
