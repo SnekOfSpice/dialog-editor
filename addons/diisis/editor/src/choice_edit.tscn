@@ -86,6 +86,19 @@ tooltip_text = "auto_switch"
 focus_mode = 0
 text = "jump page"
 
+[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Behavior Override.
+When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
+
+[node name="LoopbackToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "auto_switch"
+focus_mode = 0
+text = "loopback"
+
 [node name="FactsVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
@@ -110,13 +123,57 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/margin_right = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
+[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
 layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+layout_mode = 2
+text = "P"
 
 [node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PageKeyLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+layout_mode = 2
+text = "L"
+
+[node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="LoopbackContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "P"
+
+[node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "L"
+
+[node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer"]
+auto_translate_mode = 1
 layout_mode = 2
 horizontal_alignment = 2
 
@@ -162,5 +219,9 @@ facts_container = NodePath("VBox/FactsContainer")
 [connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_pressed"]
+[connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
+[connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer/LineSelect" to="." method="_on_line_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]

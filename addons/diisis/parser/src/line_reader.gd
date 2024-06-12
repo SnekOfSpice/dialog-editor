@@ -185,7 +185,7 @@ var name_container: Control:
 ]
 
 signal line_finished(line_index: int)
-signal jump_to_page(page_index: int)
+signal jump_to_page(page_index: int, target_line: int)
 signal is_input_locked_changed(new_value: bool)
 
 var line_data := {}
@@ -565,15 +565,6 @@ func read_new_line(new_line: Dictionary):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
 			emit_signal("line_finished", line_index)
 			
-
-func can_text_container_be_visible() -> bool:
-	if line_type == DIISIS.LineType.Text:
-		return true
-	if line_type == DIISIS.LineType.Choice:
-		return show_text_during_choices
-	if line_type == DIISIS.LineType.Instruction:
-		return show_text_during_instructions
-	return false
 
 func update_limit_line_count(lines: Array):
 	if max_text_line_count <= 0:
@@ -1001,14 +992,18 @@ func build_choices(choices, auto_switch:bool):
 		if cond_true and auto_switch:
 			for f in facts.values():
 				Parser.change_fact(f)
-			choice_pressed(true, option.get("target_page"))
+			choice_pressed(true, option.get("target_page"), option.get("target_line"))
 			break
 		
 		var enable_option := true
 		var option_text := ""
 		
 		if (cond_true and cond_behavior == "Hide") or (not cond_true and cond_behavior == "Show"):
-			continue
+			if Parser.selected_choices.has(option.get("address", "")):
+				if option.get("behavior_after_first_selection") == DIISIS.ChoiceBehaviorAfterSelection.Default:
+					continue
+			else:
+				continue
 		
 		if (cond_true and cond_behavior == "Show") or (not cond_true and cond_behavior == "Hide"):
 			enable_option = option.get("choice_text.enabled_as_default")
@@ -1018,6 +1013,18 @@ func build_choices(choices, auto_switch:bool):
 			
 		if (cond_true and cond_behavior == "Disable") or (not cond_true and cond_behavior == "Enable"):
 			enable_option = false
+		
+		if (
+			option.get("behavior_after_first_selection") != DIISIS.ChoiceBehaviorAfterSelection.Default and
+			Parser.selected_choices.has(option.get("address", ""))
+			):
+			match int(option.get("behavior_after_first_selection")):
+				DIISIS.ChoiceBehaviorAfterSelection.Enabled:
+					enable_option = true
+				DIISIS.ChoiceBehaviorAfterSelection.Disabled:
+					enable_option = false
+				DIISIS.ChoiceBehaviorAfterSelection.Hidden:
+					continue
 		
 		if enable_option:
 			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "enabled"), Parser.locale)
@@ -1033,8 +1040,14 @@ func build_choices(choices, auto_switch:bool):
 				option_text = option.get("choice_text.disabled")
 		
 		# give to option to signal
-		var do_jump_page = option.get("do_jump_page")
-		var target_page = option.get("target_page")
+		var do_jump_page = option.get("do_jump_page", false)
+		var target_page = option.get("target_page", 0)
+		var target_line = option.get("target_line", 0)
+		var loopback = option.get("loopback", false)
+		var loopback_target_page = option.get("loopback_target_page", -1)
+		var loopback_target_line = option.get("loopback_target_line", -1)
+		
+		
 		
 		var new_option:ChoiceButton
 		if button_scene:
@@ -1047,6 +1060,11 @@ func build_choices(choices, auto_switch:bool):
 		new_option.facts = facts
 		new_option.do_jump_page = do_jump_page
 		new_option.target_page = target_page
+		new_option.target_line = target_line
+		new_option.loopback = loopback
+		new_option.loopback_target_page = loopback_target_page
+		new_option.loopback_target_line = loopback_target_line
+		new_option.address = option.get("address", "")
 		
 		new_option.connect("choice_pressed", choice_pressed)
 		
@@ -1058,6 +1076,10 @@ func build_choices(choices, auto_switch:bool):
 			"facts": facts,
 			"do_jump_page": do_jump_page,
 			"target_page": target_page,
+			"target_line": target_line,
+			"loopback" : loopback,
+			"loopback_target_page" : loopback_target_page,
+			"loopback_target_line" : loopback_target_line,
 		})
 		
 		#match choice_button_focus_mode:
@@ -1087,11 +1109,11 @@ func build_choices(choices, auto_switch:bool):
 func is_choice_presented():
 	return not choice_option_container.get_children().is_empty()
 
-func choice_pressed(do_jump_page, target_page):
+func choice_pressed(do_jump_page, target_page, target_line):
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	if do_jump_page:
-		emit_signal("jump_to_page", target_page)
+		emit_signal("jump_to_page", target_page, target_line)
 		return
 	emit_signal("line_finished", line_index)
 	
@@ -1216,3 +1238,16 @@ func update_name_label(actor_name: String):
 		name_visible = current_raw_name == name_for_blank_name
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
 	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
+
+
+func can_text_container_be_visible() -> bool:
+	if line_type == DIISIS.LineType.Text:
+		return true
+	if line_type == DIISIS.LineType.Choice:
+		return show_text_during_choices
+	if line_type == DIISIS.LineType.Instruction:
+		return show_text_during_instructions
+	return false
+
+
+

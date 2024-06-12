@@ -89,3 +89,18 @@ func _sort_addresses(a1:String, a2: String) -> bool:
 	var last1 = get_split_address(a1).back()
 	var last2 = get_split_address(a2).back()
 	return last1 < last2
+
+# TODO: [page name or number if no name] / line type / choice text (concat)
+func humanize_address(address:String) -> String:
+	if not Pages.does_address_exist(address):
+		return "Address does not exist."
+	var address_string := ""
+	var parts := get_split_address(address)
+	address_string = str(Pages.get_page_key(parts[0]))
+	if address_string.is_empty():
+		address_string = str(parts[0])
+	if parts.size() > 1:
+		address_string += str(" / ", Pages.get_line_type_str(parts[0], parts[1]))
+	if parts.size() > 2:
+		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
+	return address_string

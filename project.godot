@@ -14,6 +14,7 @@ config/name="Dialog-editor"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="res://sample/diisis_intro/stage_root.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
+boot_splash/image="res://pride-dark-b-side.png"
 config/icon="res://icon.svg"
 
 [autoload]

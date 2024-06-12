@@ -137,9 +137,20 @@ func on_text_content_text_changed(old_text: String,
 	lead_time: float):
 	call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", new_text)))
 
+var loopback_target_page:=0
+var loopback_target_line:=0
+var loopback_trigger_page:=-1
+var loopback_trigger_line:=-1
+
+var selected_choices := []
+
 func on_choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
+	target_line:int,
+	set_loopback:bool,
+	loopback_target_page:int,
+	loopback_target_line:int,
 	choice_text:String
 ):
 	if append_choices_to_history:
@@ -233,6 +244,7 @@ func get_game_progress(full_if_on_last_page:= true) -> float:
 	return page_progress + (line_progress / float(max_page_index))
 
 func read_line(index: int):
+	
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
 		return
@@ -241,6 +253,17 @@ func read_line(index: int):
 	
 
 func read_next_line(finished_line_index: int):
+	if loopback_trigger_page == page_index and loopback_trigger_line == finished_line_index:
+		loopback_trigger_line = -1
+		loopback_trigger_page = -1
+		
+		if page_index != loopback_target_page:
+			read_page(loopback_target_page, loopback_target_line)
+		else:
+			read_line(loopback_target_line)
+		return
+		
+		
 	if finished_line_index >= max_line_index_on_page:
 		var do_terminate = bool(page_data.get(page_index).get("terminate"))
 		if do_terminate:
@@ -312,11 +335,13 @@ func serialize() -> Dictionary:
 	result["Parser.history"] = history
 	result["Parser.line_reader"] = line_reader.serialize()
 	result["Parser.game_progress"] = get_game_progress()
+	result["Parser.selected_choices"] = selected_choices
 	
 	return result
 
 func deserialize(data: Dictionary):
 	lines = data.get("Parser.lines")
+	selected_choices = data.get("Parser.selected_choices")
 	max_line_index_on_page = int(data.get("Parser.max_line_index_on_page"))
 	
 	page_index = int(data.get("Parser.page_index", 0))

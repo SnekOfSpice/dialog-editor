@@ -73,19 +73,19 @@ func change_folder_range(by:int):
 		return
 	find_child("FolderContainer").change_folder_range(by)
 
-func set_line_move_controls_visible(value:bool):
-	if value:
-		find_child("MoveToIndexControls").modulate.a = 1.0
-		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
-		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
-	else:
-		find_child("MoveToIndexControls").modulate.a = 0.0
-		find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
-		find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
+#func set_line_move_controls_visible(value:bool):
+	#if value:
+		##find_child("MoveToIndexControls").modulate.a = 1.0
+		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
+		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
+	#else:
+		##find_child("MoveToIndexControls").modulate.a = 0.0
+		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
+		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
 
 func set_line_type(value: int):
 	line_type = value
-	set_line_move_controls_visible(line_type != DIISIS.LineType.Folder)
+	#set_line_move_controls_visible(line_type != DIISIS.LineType.Folder)
 	
 	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
 	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
@@ -201,11 +201,13 @@ func update():
 		indent += ">"
 	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
-	find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
+	#find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
+	
+	find_child("LoopbackReferenceLabel").text = str("->", Pages.loopback_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size())
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:
@@ -279,15 +281,29 @@ func _on_visible_toggle_toggled(button_pressed: bool) -> void:
 
 
 func _on_insert_line_above_pressed() -> void:
-	emit_signal("insert_line", get_index())
+	var insert_index := get_index()
+	emit_signal("insert_line", insert_index)
+	Pages.change_line_references_directional(
+		Pages.editor.get_current_page_number(),
+		insert_index,
+		Pages.editor.current_page.get_line_count() - 1,
+		 + 1
+	)
 
 
 func _on_insert_line_below_pressed() -> void:
-	emit_signal("insert_line", get_index() + 1)
+	var insert_index := get_index() + 1
+	emit_signal("insert_line", insert_index)
+	Pages.change_line_references_directional(
+		Pages.editor.get_current_page_number(),
+		insert_index,
+		Pages.editor.current_page.get_line_count() - 1,
+		 + 1
+	)
 
-
-func _on_move_to_index_button_pressed() -> void:
-	emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)
+#
+#func _on_move_to_index_button_pressed() -> void:
+	#emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)
 
 
 func _on_select_all_in_range_button_pressed():

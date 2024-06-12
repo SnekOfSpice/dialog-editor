@@ -196,6 +196,8 @@ var page_data := {}
 
 var evaluator_paths := ["res://sample/inline_eval.gd"]
 
+var loopback_references_by_page := {}
+
 signal pages_modified
 
 func serialize() -> Dictionary:
@@ -250,6 +252,9 @@ func deserialize(data:Dictionary):
 func get_page_count() -> int:
 	return page_data.size()
 
+func get_line_count(page:int) -> int:
+	return page_data.get(page).get("lines", []).size()
+
 func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
@@ -283,7 +288,51 @@ func swap_pages(page_a: int, page_b: int):
 	page_data[page_a] = data_b
 	page_data[page_b] = data_a
 	
+func swap_line_references(on_page:int, from:int, to:int):
+	var edited_current_page := false
+	var current_page_number := editor.get_current_page_number()
+	for page in page_data.values():
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var content = line.get("content")
+				for choice in content.get("choices"):
+					var page_number : int = page.get("number")
+					if choice.get("target_page") == on_page:
+					
+						if choice.get("target_line") == from:
+							choice["target_line"] = to
+							if page_number == current_page_number:
+								edited_current_page = true
+						elif choice.get("target_line") == to:
+							choice["target_line"] = from
+							if page_number == current_page_number:
+								edited_current_page = true
+					
+					if choice.get("loopback_target_page") == on_page:
+						if choice.get("loopback_target_line") == from:
+							choice["loopback_target_line"] = to
+							if page_number == current_page_number:
+								edited_current_page = true
+						elif choice.get("loopback_target_line") == to:
+							choice["loopback_target_line"] = from
+							if page_number == current_page_number:
+								edited_current_page = true
+					
+	#if loopback_references_by_page.has(on_page):
+		#var references_from : Dictionary = loopback_references_by_page.get(on_page).get(from, {})
+		#var references_to : Dictionary = loopback_references_by_page.get(on_page).get(to, {})
+		#loopback_references_by_page[on_page][from] = references_to.duplicate(true)
+		#loopback_references_by_page[on_page][to] = references_from.duplicate(true)
+		#if on_page == current_page_number and not references_from.is_empty() and not references_to.is_empty():
+			#edited_current_page = true
+	
+	if edited_current_page:
+		await get_tree().process_frame
+		editor.refresh(false)
 
+
+func get_lines(page_number: int):
+	return page_data.get(page_number).get("lines")
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
@@ -303,10 +352,44 @@ func swap_page_references(from: int, to: int):
 						choice["target_page"] = from
 	await get_tree().process_frame
 	editor.refresh(false)
-	
 
-func get_lines(page_number: int):
-	return page_data.get(page_number).get("lines")
+
+func change_line_references_directional(on_page:int, starting_index_of_change:int, end_index_of_change:int, operation:int):
+	var edited_current_page := false
+	var current_page_number := editor.get_current_page_number()
+	for page in page_data.values():
+		print(page.get("number"))
+		for line in page.get("lines"):
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				var content = line.get("content")
+				for choice in content.get("choices"):
+					prints("choice", choice)
+					var page_number : int = page.get("number")
+					if choice.get("target_page") == on_page:
+						
+						var target_line : int = choice.get("target_line")
+						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
+							choice["target_line"] = target_line + operation
+							if page_number == current_page_number:
+								edited_current_page = true
+					
+					if choice.get("loopback_target_page") == on_page:
+						print("loopback change")
+						var loopback_target_line : int = choice.get("loopback_target_line")
+						printt(loopback_target_line, starting_index_of_change, end_index_of_change)
+						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
+							print(choice.get("loopback_target_line"))
+							choice["loopback_target_line"] = loopback_target_line + operation
+							print(choice.get("loopback_target_line"))
+							if page_number == current_page_number:
+								edited_current_page = true
+					prints("choice", choice)
+					
+	
+	if edited_current_page:
+		await get_tree().process_frame
+		editor.refresh(false)
+	
 
 func change_page_references_dir(changed_page: int, operation:int):
 	for page in page_data.values():

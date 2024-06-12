@@ -38,7 +38,7 @@ func serialize() -> Dictionary:
 	
 	result["fact_name"] = get_fact_name()
 	result["fact_value"] = get_fact_value()
-	result["is_conditional"] = get_fact_value()
+	result["is_conditional"] = is_conditional
 	result["data_type"] = data_type
 	result["int_comparator"] = int_comparator
 	result["int_operator"] = int_operator
@@ -46,7 +46,6 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary) -> void:
-	print(data)
 	set_fact(data.get("fact_name", ""), data.get("fact_value", true))
 	set_is_conditional(data.get("is_conditional", false))
 	set_data_type(data.get("data_type", DataType.Bool))

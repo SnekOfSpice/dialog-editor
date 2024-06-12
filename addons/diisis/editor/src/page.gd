@@ -82,7 +82,6 @@ func deserialize_lines(lines_data: Array):
 		i += 1
 	
 	add_lines(data_by_index.keys(), data_by_index)
-	
 	enable_page_key_edit(false)
 
 func set_next(next_page: int):
@@ -228,8 +227,6 @@ func add_lines(indices:Array, data_by_index:={}):
 				var range : Vector2 = l.get_folder_range_v()
 				if at_index > range.x and at_index <= range.y:
 					l.change_folder_range(1)
-		
-		
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})
@@ -282,6 +279,7 @@ func move_line(line: Line, dir:int):
 			jumped_line.change_folder_range(dir)
 			#update()
 			lines.move_child(line, idx+dir)
+			Pages.swap_line_references(number, idx, idx+dir)
 		elif jumped_line.indent_level != line.indent_level:
 			var folder_operation:int
 			if line.indent_level < jumped_line.indent_level: # add to folders
@@ -300,6 +298,7 @@ func move_line(line: Line, dir:int):
 				
 		else:
 			lines.move_child(line, idx+dir)
+			Pages.swap_line_references(number, idx, idx+dir)
 		update()
 		return
 	
@@ -346,7 +345,7 @@ func move_line(line: Line, dir:int):
 	
 	
 	lines.move_child(line, bump)
-	
+	Pages.swap_line_references(number, idx, bump)
 	update()
 
 func move_folder_up(line:Line):
@@ -355,6 +354,7 @@ func move_folder_up(line:Line):
 	var previous_line:Line = lines.get_child(idx - 1)
 	if previous_line.line_type != DIISIS.LineType.Folder and previous_line.indent_level <= line.indent_level:
 		lines.move_child(previous_line, idx + max(1, line.get_folder_range_i()))
+		Pages.swap_line_references(number, idx, idx + max(1, line.get_folder_range_i()))
 	else:
 		#look before until you find start of page or something with less indentation
 		var previous_indices = range(idx)
@@ -375,10 +375,12 @@ func move_folder_up(line:Line):
 			for l in lines_in_folder:
 				prints("moving from ", l.get_index(), "to 0")
 				lines.move_child(l, 0)
+				Pages.swap_line_references(number, idx, 0)
 		else:
 			for l in lines_in_folder:
 				prints("moving from ", l.get_index(), "to", bump+1)
 				lines.move_child(l, bump + 1)
+				Pages.swap_line_references(number, idx, bump + 1)
 		#else: move to found line idx + 1
 
 func move_folder_down(line:Line):
