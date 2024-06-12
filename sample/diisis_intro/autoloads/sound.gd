@@ -16,7 +16,7 @@ func serialize() -> Dictionary:
 func deserialize(data:Dictionary):
 	play_bgm(data.get("bgm_key", ""), 0.0, data.get("playback_position", 0.0))
 
-func set_audio_player_volume(player:AudioStreamPlayer, volume:float):
+func set_audio_player_volume(volume:float, player:AudioStreamPlayer):
 	player.volume_db = linear_to_db(volume)
 
 func play_sfx(sfx:String):
@@ -42,17 +42,17 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if fade_in > 0.0:
 		var t = create_tween()
 		t.tween_method(
-			set_audio_player_volume,
-			set_audio_player_volume.bind(music_player, 0.0),
-			set_audio_player_volume.bind(music_player, 1.0),
+			set_audio_player_volume.bind(music_player),
+			0.0,
+			1.0,
 			fade_in
 			)
 		for player in audio_players:
 			t.set_parallel()
 			t.tween_method(
-			set_audio_player_volume,
-			set_audio_player_volume.bind(player, db_to_linear(player.volume_db)),
-			set_audio_player_volume.bind(player, 0.0),
+			set_audio_player_volume.bind(player),
+			db_to_linear(player.volume_db),
+			0.0,
 			fade_in
 			)
 			t.tween_callback(player.queue_free)

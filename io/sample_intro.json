@@ -26,7 +26,9 @@
 	},
 	"empty_strings_for_l10n": false,
 	"facts": {
-		"player.against_rot": false
+		"player.against_rot": false,
+		"player.asked_question": 0,
+		"player.dig_free": false
 	},
 	"file_config": {
 		"evaluator_paths": [
@@ -217,15 +219,15 @@
 						"line_reader.args": {
 							"args": {
 								"fade_in": 0,
-								"fade_out": 0,
+								"fade_out": 2,
 								"hide_characters": false,
-								"hold_time": 0,
+								"hold_time": 0.5,
 								"new_background": "workshop",
 								"new_bgm": "intro"
 							},
 							"name": "black_fade"
 						},
-						"meta.text": "black_fade(0.0, 0.0, 0.0, false, workshop, intro)",
+						"meta.text": "black_fade(0.0, 0.5, 2.0, false, workshop, intro)",
 						"meta.validation_status": "OK",
 						"name": "black_fade"
 					},
@@ -263,17 +265,13 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": {
-							"args": {
-								"name": "hello"
-							},
-							"name": "play_sfx"
-						},
-						"meta.text": "play_sfx(hello)",
-						"meta.validation_status": "OK",
-						"name": "play_sfx"
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber{amber-emotion|happy}:Hi there! <ap>I'm Amber, and today I will guide you through this delightful little demo of the DIISIS Plugin. <mp>Let's start with the basics. <ap>DIISIS is both a dialog editor, and a set of nodes in Godot to display the text that you have written. It's designed with narrative games in mind, so go wild with choices and a complicated world!"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -282,7 +280,7 @@
 						"meta.visible": false
 					},
 					"header": [],
-					"line_type": 2,
+					"line_type": 0,
 					"meta.conditionals_visible": false,
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
@@ -309,13 +307,274 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"active_actors": [
-							"amber",
-							"eterna",
-							"narrator"
+						"auto_switch": false,
+						"choices": [
+							{
+								"address": "0.2.0",
+								"behavior_after_first_selection": 4,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "I can't really code. Can I just make something?",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+										"player.asked_question": {
+											"data_type": 1,
+											"fact_name": "player.asked_question",
+											"fact_value": 1,
+											"int_comparator": 0,
+											"int_operator": 1,
+											"is_conditional": false
+										}
+									},
+									"meta.visible": true
+								},
+								"loopback": true,
+								"loopback_target_line": 3,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 0
+							},
+							{
+								"address": "0.2.1",
+								"behavior_after_first_selection": 4,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "How do I add complexity?",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": true,
+								"facts": {
+									"fact_data_by_name": {
+										"player.asked_question": {
+											"data_type": 1,
+											"fact_name": "player.asked_question",
+											"fact_value": 1,
+											"int_comparator": 0,
+											"int_operator": 1,
+											"is_conditional": false
+										}
+									},
+									"meta.visible": true
+								},
+								"loopback": true,
+								"loopback_target_line": 4,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 4,
+								"target_page": 0
+							},
+							{
+								"address": "0.2.2",
+								"behavior_after_first_selection": 4,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "Does the HUD always look like this?",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": true,
+								"facts": {
+									"fact_data_by_name": {
+										"player.asked_question": {
+											"data_type": 1,
+											"fact_name": "player.asked_question",
+											"fact_value": 1,
+											"int_comparator": 0,
+											"int_operator": 1,
+											"is_conditional": false
+										}
+									},
+									"meta.visible": true
+								},
+								"loopback": true,
+								"loopback_target_line": 5,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 5,
+								"target_page": 0
+							},
+							{
+								"address": "0.2.3",
+								"behavior_after_first_selection": 4,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "I want to do some crazy shit.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": true,
+								"facts": {
+									"fact_data_by_name": {
+										"player.asked_question": {
+											"data_type": 1,
+											"fact_name": "player.asked_question",
+											"fact_value": 1,
+											"int_comparator": 0,
+											"int_operator": 1,
+											"is_conditional": false
+										}
+									},
+									"meta.visible": true
+								},
+								"loopback": true,
+								"loopback_target_line": 6,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 6,
+								"target_page": 0
+							},
+							{
+								"address": "0.2.4",
+								"behavior_after_first_selection": 0,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "[continue] That's really cool.",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+											"player.asked_question": {
+												"data_type": 1,
+												"fact_name": "player.asked_question",
+												"fact_value": 0,
+												"int_comparator": 0,
+												"int_operator": 0,
+												"is_conditional": true
+											}
+										},
+										"meta.visible": true
+									},
+									"meta.visible": true,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": true,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"loopback": false,
+								"loopback_target_line": 0,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 1
+							},
+							{
+								"address": "0.2.5",
+								"behavior_after_first_selection": 0,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "[continue] Thank you for that info. What else?",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+											"player.asked_question": {
+												"data_type": 1,
+												"fact_name": "player.asked_question",
+												"fact_value": 0,
+												"int_comparator": 4,
+												"int_operator": 0,
+												"is_conditional": true
+											}
+										},
+										"meta.visible": true
+									},
+									"meta.visible": true,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": true,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"loopback": false,
+								"loopback_target_line": 0,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 1
+							}
 						],
-						"active_actors_title": "character",
-						"content": "[]>narrator: The stench of fried electronics and freshly-cast polymers band across the atmosphere.\n[]>amber{eterna-emotion|neutral,amber-emotion|neutral}:Hi! We're [b]Amber[/b] \\[and] [b]Eterna[/b], and <mp>today we'll strip <mp>down to the \\[core]...\n[]>eterna{eterna-emotion|annoyed}:Ugh.\n[]>amber{amber-emotion|happy}:...Show you our [b]guts![/b] <mp>... <mp>And teach [i]you[/i] how to peer into them, extract their warmth.\n[]>eterna:Welcome to the DIISIS Demo, traveler."
+						"meta.do_jump_page": true
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -324,7 +583,7 @@
 						"meta.visible": false
 					},
 					"header": [],
-					"line_type": 0,
+					"line_type": 1,
 					"meta.conditionals_visible": false,
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
@@ -351,19 +610,13 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": {
-							"args": {
-								"continue_dialog_through_cg": true,
-								"fade_in_time": 2.6,
-								"name": "amber_guts"
-							},
-							"name": "show_cg"
-						},
-						"meta.text": "show_cg(amber_guts, 2.6, true)",
-						"meta.validation_status": "OK",
-						"name": "show_cg"
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:Yesn't. DIISIS is very raw in many aspects, because you have to remember that at its core, it is literally just the node that spits out text to read and handles when to give the player dialog options. That being said, there are some common features of visual novels that basically everyone needs. This demo is basically a minimum template for just writing some text and have it appear on the screen. This demo comes with a simple save system and menu architecture, and as long as you spend the time learning how to use the dialog editor, you should be fine with minimal coding experience."
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -372,7 +625,7 @@
 						"meta.visible": false
 					},
 					"header": [],
-					"line_type": 2,
+					"line_type": 0,
 					"meta.conditionals_visible": false,
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
@@ -405,7 +658,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>amber:You see, we're made of the violence you try to hide. The ugly rawness of machinery is our lifeblood, and the gnashing jaws of technology will devour you whole.\n[]>eterna:Her chest is so warm."
+						"content": "[]>amber:DIISIS comes with a fact system. At any point, you can declare a fact, which can be either a boolean (true or false) or an integer (any negative or positive whole number). Using this, you can hide / show lines of text and choices to make your game feel responsive. If you branch into different parts of the document, you can even create entirely disjointed story paths! And secondly, choices themselves. They can have all kinds of anatomies, such as looping back to a start point (like this one) <mp>, or being a one-and-done deal (for more linear experiences). Furthermore, you can have options be picked automatically based on the state of some fact(s). All in all, it's really flexible!"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -441,17 +694,13 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": {
-							"args": {
-
-							},
-							"name": "hide_cg"
-						},
-						"meta.text": "hide_cg()",
-						"meta.validation_status": "OK",
-						"name": "hide_cg"
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:No. You can add any theme or layout anchors as you like."
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -460,7 +709,7 @@
 						"meta.visible": false
 					},
 					"header": [],
-					"line_type": 2,
+					"line_type": 0,
 					"meta.conditionals_visible": false,
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
@@ -493,7 +742,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>amber:hiiii"
+						"content": "[]>amber:And you can do that. The entire plugin is functionally just two nodes. (That you need to care about at least.) With \"Instructions\", you can do function calls to the rest of your project. With some integration, you can easily execute arbitrary code. And with the func tags in dialog texts themselves, you can even call things mid-way through, such as <func:screenshake>this screenshake!"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -508,326 +757,6 @@
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
 					"meta.line_index": 6,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.7",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": {
-							"args": {
-								"fade_in": 1,
-								"fade_out": 1,
-								"hide_characters": false,
-								"hold_time": 0,
-								"new_background": "default",
-								"new_bgm": "default"
-							},
-							"name": "black_fade"
-						},
-						"meta.text": "black_fade(1.0, 0.0, 1.0, false, default, default)",
-						"meta.validation_status": "OK",
-						"name": "black_fade"
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 2,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 7,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.8",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"active_actors": [
-							"amber",
-							"eterna",
-							"narrator"
-						],
-						"active_actors_title": "character",
-						"content": "[]>amber:hiiii"
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 0,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 8,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.9",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"active_actors": [
-							"amber",
-							"eterna",
-							"narrator"
-						],
-						"active_actors_title": "character",
-						"content": "[]>amber:Would you say that struggling against the Rot is a worthwhile endeavor?"
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 0,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 9,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.10",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"auto_switch": false,
-						"choices": [
-							{
-								"address": "0.10.0",
-								"choice_text.disabled": "",
-								"choice_text.enabled": "Yes.",
-								"choice_text.enabled_as_default": true,
-								"conditionals": {
-									"behavior": 0,
-									"behavior_key": "Show",
-									"facts": {
-										"fact_data_by_name": {
-
-										},
-										"meta.visible": false
-									},
-									"meta.visible": false,
-									"operand": 0,
-									"operand_args": [],
-									"operand_key": "AND"
-								},
-								"do_jump_page": false,
-								"facts": {
-									"fact_data_by_name": {
-
-									},
-									"meta.visible": false
-								},
-								"meta.selector": {
-									"selected": false
-								},
-								"target_page": 1
-							},
-							{
-								"address": "0.10.1",
-								"choice_text.disabled": "",
-								"choice_text.enabled": "No.",
-								"choice_text.enabled_as_default": true,
-								"conditionals": {
-									"behavior": 0,
-									"behavior_key": "Show",
-									"facts": {
-										"fact_data_by_name": {
-
-										},
-										"meta.visible": false
-									},
-									"meta.visible": false,
-									"operand": 0,
-									"operand_args": [],
-									"operand_key": "AND"
-								},
-								"do_jump_page": false,
-								"facts": {
-									"fact_data_by_name": {
-
-									},
-									"meta.visible": false
-								},
-								"meta.selector": {
-									"selected": false
-								},
-								"target_page": 1
-							}
-						],
-						"meta.do_jump_page": true
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 1,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 10,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.11",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": true
-						},
-						"meta.visible": true,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"active_actors": [
-							"amber",
-							"eterna",
-							"narrator"
-						],
-						"active_actors_title": "character",
-						"content": "[]>eterna:Weakling.\n[]>amber:Yes, darling.<lc>Let the rot take hold."
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 0,
-					"meta.conditionals_visible": true,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 11,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.12",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": true
-						},
-						"meta.visible": true,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"active_actors": [
-							"amber",
-							"eterna",
-							"narrator"
-						],
-						"active_actors_title": "character",
-						"content": "[]>eterna:Why would you... <lc>Not give up?\n[]>eterna:...\n[]>amber:At this rate, we'll have to kill you.\n[]>eterna:Not necessarily... <lc> To stand against entropy, and reject it. That's powerful."
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 0,
-					"meta.conditionals_visible": true,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 12,
 					"meta.selector": {
 						"selected": false
 					}
@@ -847,10 +776,452 @@
 				},
 				"meta.visible": false
 			},
-			"lines": [],
-			"meta.scroll_vertical": 0,
+			"lines": [
+				{
+					"address": "1.0",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:There isn't much else to say right now, except..."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 0,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.1",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"name": "snap"
+							},
+							"name": "play_sfx"
+						},
+						"meta.text": "play_sfx(snap)",
+						"meta.validation_status": "OK",
+						"name": "play_sfx"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 1,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.2",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": {
+							"args": {
+								"fade_in": 0.1,
+								"fade_out": 3,
+								"hide_characters": true,
+								"hold_time": 3,
+								"new_background": "scrapyard",
+								"new_bgm": "rainy"
+							},
+							"name": "black_fade"
+						},
+						"meta.text": "black_fade(0.1, 3.0, 3.0, true, scrapyard, rainy)",
+						"meta.validation_status": "OK",
+						"name": "black_fade"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 2,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.3",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>narrator:Your face is planted down in the ground. The cold wetness of mud makes it difficult to breathe. The stench of mulch fills your nostrils."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 3,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.4",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"auto_switch": false,
+						"choices": [
+							{
+								"address": "1.4.0",
+								"behavior_after_first_selection": 0,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "Dig free",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+										"player.dig_free": {
+											"data_type": 0,
+											"fact_name": "player.dig_free",
+											"fact_value": true,
+											"int_comparator": 0,
+											"int_operator": 0,
+											"is_conditional": false
+										}
+									},
+									"meta.visible": true
+								},
+								"loopback": false,
+								"loopback_target_line": 0,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 0
+							},
+							{
+								"address": "1.4.1",
+								"behavior_after_first_selection": 0,
+								"choice_text.disabled": "",
+								"choice_text.enabled": "Give up",
+								"choice_text.enabled_as_default": true,
+								"conditionals": {
+									"behavior": 0,
+									"behavior_key": "Show",
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"meta.visible": false,
+									"operand": 0,
+									"operand_args": [],
+									"operand_key": "AND"
+								},
+								"do_jump_page": false,
+								"facts": {
+									"fact_data_by_name": {
+
+									},
+									"meta.visible": false
+								},
+								"loopback": false,
+								"loopback_target_line": 0,
+								"loopback_target_page": 0,
+								"meta.jump_page_before_auto_switch": false,
+								"meta.selector": {
+									"selected": false
+								},
+								"target_line": 0,
+								"target_page": 0
+							}
+						],
+						"meta.do_jump_page": true
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 1,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 4,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.5",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+								"player.dig_free": {
+									"data_type": 0,
+									"fact_name": "player.dig_free",
+									"fact_value": true,
+									"int_comparator": 0,
+									"int_operator": 0,
+									"is_conditional": true
+								}
+							},
+							"meta.visible": true
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>narrator:But you are merely down in the dirt. A few strenuous muscle movements, and you are upright again. "
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+								"player.dig_free": {
+									"data_type": 0,
+									"fact_name": "player.dig_free",
+									"fact_value": false,
+									"int_comparator": 0,
+									"int_operator": 0,
+									"is_conditional": true
+								}
+							},
+							"meta.visible": true
+						},
+						"meta.visible": true,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>narrator:Within seconds, you feel the back of your nape grabbed and lifted upwards. <lc>The cold and metallic digits are dextrous and frighteningly fast, as Amber removes some of the dirt from your hair."
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": true,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 6,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "1.7",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"active_actors": [
+							"amber",
+							"eterna",
+							"narrator"
+						],
+						"active_actors_title": "character",
+						"content": "[]>amber:As you can see, dear interloper, you can truly make your game [tornado radius=10.0 freq=1.0 connected=1]look any way you want[/tornado]. <lc>This Plugin comes with an absolute cornucopia of features and customizability, so read the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/]wiki on GitHub[/url] or just explore for yourself in the editor!"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 0,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 7,
+					"meta.selector": {
+						"selected": false
+					}
+				}
+			],
+			"meta.scroll_vertical": 200,
 			"meta.selected": false,
-			"next": 5,
+			"next": 0,
 			"number": 1,
 			"page_key": "",
 			"terminate": false

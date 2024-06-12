@@ -15,12 +15,15 @@ const CHARACTER_ETERNA := "eterna"
 
 const BACKGROUND_WORKSHOP := "res://sample/diisis_intro/backgrounds/workshop.png"
 const BACKGROUND_DEFAULT := "res://sample/diisis_intro/backgrounds/workshop.png"
+const BACKGROUND_SCRAPYARD := "res://sample/diisis_intro/backgrounds/scrapyard.png"
 
 
 const MUSIC_INTRO := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wav"
 const MUSIC_MAIN_MENU := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wav"
 const MUSIC_DEFAULT := "738239__busabx__a-minute-of-slow-funky-guitar-and-drums.wav"
+const MUSIC_RAINY := "201534__toonothing__rainy-day-with-various-birds.wav"
 
 const SFX_HELLO := "48188__rwm28__hello.ogg"
+const SFX_SNAP := "361762__lafashion__real-snap-4.wav"
 
 const SFX_BANG := ""
