@@ -351,7 +351,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 0
+								"target_page": 1
 							},
 							{
 								"address": "0.2.1",
@@ -373,7 +373,7 @@
 									"operand_args": [],
 									"operand_key": "AND"
 								},
-								"do_jump_page": true,
+								"do_jump_page": false,
 								"facts": {
 									"fact_data_by_name": {
 										"player.asked_question": {
@@ -395,7 +395,7 @@
 									"selected": false
 								},
 								"target_line": 4,
-								"target_page": 0
+								"target_page": 1
 							},
 							{
 								"address": "0.2.2",
@@ -417,7 +417,7 @@
 									"operand_args": [],
 									"operand_key": "AND"
 								},
-								"do_jump_page": true,
+								"do_jump_page": false,
 								"facts": {
 									"fact_data_by_name": {
 										"player.asked_question": {
@@ -439,7 +439,7 @@
 									"selected": false
 								},
 								"target_line": 5,
-								"target_page": 0
+								"target_page": 1
 							},
 							{
 								"address": "0.2.3",
@@ -461,7 +461,7 @@
 									"operand_args": [],
 									"operand_key": "AND"
 								},
-								"do_jump_page": true,
+								"do_jump_page": false,
 								"facts": {
 									"fact_data_by_name": {
 										"player.asked_question": {
@@ -483,7 +483,7 @@
 									"selected": false
 								},
 								"target_line": 6,
-								"target_page": 0
+								"target_page": 1
 							},
 							{
 								"address": "0.2.4",
@@ -762,7 +762,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 0,
+			"meta.scroll_vertical": 735,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -1019,7 +1019,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 0
+								"target_page": 1
 							},
 							{
 								"address": "1.4.1",
@@ -1056,7 +1056,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 0
+								"target_page": 1
 							}
 						],
 						"meta.do_jump_page": true
@@ -1219,7 +1219,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 200,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 0,
 			"number": 1,
