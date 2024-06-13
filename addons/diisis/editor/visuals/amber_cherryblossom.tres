@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=13 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=21 format=3 uid="uid://jddhsc4auo55"]
 
-[ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://addons/diisis/editor/visuals/fonts/Fragmentcore.otf" id="1_2td53"]
+[ext_resource type="FontFile" uid="uid://bdtp4mcjkejdt" path="res://addons/diisis/editor/visuals/fonts/Comfortaa-Regular.ttf" id="1_vt1s5"]
 [ext_resource type="FontFile" uid="uid://cj0gnvw2fkuo" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Light.otf" id="2_0vdkv"]
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/fonts/textfont.tres" id="3_8wpuc"]
 [ext_resource type="FontFile" uid="uid://db4qvjd2nptp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial DemiBold.otf" id="4_tmw8r"]
@@ -31,6 +31,54 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.549997, 0.278107, 0.108411, 1)
 border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_khss8"]
+content_margin_right = 15.0
+bg_color = Color(0.172549, 0.172549, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.886323, 0.3205, 0.511805, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1agr"]
+content_margin_right = 15.0
+bg_color = Color(0.172549, 0.172549, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.886323, 0.3205, 0.511805, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b3pbo"]
+content_margin_right = 15.0
+bg_color = Color(0.172549, 0.172549, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.886323, 0.3205, 0.511805, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a804k"]
+content_margin_right = 15.0
+bg_color = Color(0.172549, 0.172549, 0.172549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fdkta"]
+content_margin_right = 15.0
+bg_color = Color(0.17, 0.1003, 0.146767, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_didyh"]
+bg_color = Color(0.611739, 0.408186, 0.451644, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8xmla"]
+bg_color = Color(0.77, 0.6853, 0.726238, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_fww33"]
+color = Color(0.203324, 0.179963, 0.190463, 1)
+thickness = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3qqo"]
 content_margin_left = 5.0
@@ -82,11 +130,19 @@ Button/colors/font_focus_color = Color(0.886275, 0.207843, 0.894118, 1)
 Button/colors/font_hover_color = Color(0.764706, 0.682353, 0.894118, 1)
 Button/colors/font_outline_color = Color(1, 0.662745, 0.984314, 0.6)
 Button/constants/outline_size = 1
-Button/font_sizes/font_size = 18
-Button/fonts/font = ExtResource("1_2td53")
+Button/font_sizes/font_size = 15
+Button/fonts/font = ExtResource("1_vt1s5")
 Button/styles/hover = SubResource("StyleBoxFlat_5foo6")
 Button/styles/normal = SubResource("StyleBoxFlat_41heh")
 Button/styles/pressed = SubResource("StyleBoxFlat_1m062")
+CheckButton/styles/focus = SubResource("StyleBoxFlat_khss8")
+CheckButton/styles/hover = SubResource("StyleBoxFlat_e1agr")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxFlat_b3pbo")
+CheckButton/styles/normal = SubResource("StyleBoxFlat_a804k")
+CheckButton/styles/pressed = SubResource("StyleBoxFlat_fdkta")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_didyh")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_8xmla")
+HSlider/styles/slider = SubResource("StyleBoxLine_fww33")
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
 Label/constants/outline_size = 1

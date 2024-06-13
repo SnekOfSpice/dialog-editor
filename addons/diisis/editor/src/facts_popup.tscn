@@ -1,14 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1kjr8wvf4qtt"]
+[gd_scene load_steps=4 format=3 uid="uid://c1kjr8wvf4qtt"]
 
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_34w77"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/facts_popup.gd" id="1_ohmwo"]
 [ext_resource type="PackedScene" uid="uid://bhftsn5yhlugv" path="res://addons/diisis/editor/src/facts_popup_content.tscn" id="2_s4jbr"]
 
 [node name="FactsPopup" type="Window"]
 title = "Facts"
 initial_position = 2
-size = Vector2i(1123, 151)
+size = Vector2i(1129, 151)
 wrap_controls = true
 transient = true
+theme = ExtResource("1_34w77")
 script = ExtResource("1_ohmwo")
 
 [node name="FactsPopupContent" parent="." instance=ExtResource("2_s4jbr")]

@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bpuqu3kymqlwb"]
+[gd_scene load_steps=4 format=3 uid="uid://bpuqu3kymqlwb"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/conditionals.gd" id="1_jnmdf"]
+[ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/cond.png" id="2_i1sb1"]
+[ext_resource type="Texture2D" uid="uid://cosv2ahbynvkc" path="res://addons/diisis/editor/visuals/cond_add.png" id="3_y885n"]
 
 [node name="Conditionals" type="MarginContainer" node_paths=PackedStringArray("add_button", "facts_container")]
 script = ExtResource("1_jnmdf")
@@ -12,14 +14,17 @@ layout_mode = 2
 
 [node name="VisibilityToggleButton" type="CheckButton" parent="VBoxContainer"]
 layout_mode = 2
-text = "Conditionals"
+size_flags_horizontal = 0
+icon = ExtResource("2_i1sb1")
 
 [node name="Controls" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
 [node name="AddConditionButton" type="Button" parent="VBoxContainer/Controls"]
 layout_mode = 2
-text = "add conditional"
+size_flags_horizontal = 0
+tooltip_text = "add conditional"
+icon = ExtResource("3_y885n")
 
 [node name="OperandContainer" type="HBoxContainer" parent="VBoxContainer/Controls"]
 layout_mode = 2

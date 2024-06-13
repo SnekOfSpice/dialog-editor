@@ -85,6 +85,10 @@ size_flags_horizontal = 10
 size_flags_vertical = 8
 text = "x"
 
+[node name="TypeMismatchLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Type mismatch!"
+
 [node name="RegisterContainer" type="HBoxContainer" parent="."]
 visible = false
 layout_mode = 2

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://u1pd7cjv38qc"]
+[gd_scene load_steps=4 format=3 uid="uid://u1pd7cjv38qc"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
 [ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://addons/diisis/editor/src/editor.tscn" id="2_4owra"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="3_efdl4"]
 
 [node name="DialogEditorWindow" type="Window"]
 gui_embed_subwindows = true
@@ -43,28 +44,50 @@ cancel_button_text = "Stay"
 
 [node name="WindowFactorWindow" type="Window" parent="."]
 position = Vector2i(0, 484)
-size = Vector2i(205, 123)
-visible = false
+size = Vector2i(1330, 123)
 wrap_controls = true
 transient = true
 borderless = true
 
-[node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow"]
+[node name="Control" type="Control" parent="WindowFactorWindow"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_efdl4")
+
+[node name="ColorRect" type="ColorRect" parent="WindowFactorWindow/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+
+[node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow/Control"]
+layout_mode = 0
 offset_right = 205.0
 offset_bottom = 23.0
 size_flags_horizontal = 2
 size_flags_vertical = 10
 
-[node name="WindowFactorScale" type="HSlider" parent="WindowFactorWindow/WindowFactorContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+layout_mode = 2
+
+[node name="WindowFactorScale" type="HSlider" parent="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 tooltip_text = "Scale with click & drag, mouse wheel, or CTRL+/-"
 min_value = 0.5
 max_value = 5.0
 step = 0.01
 value = 1.0
 
-[node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/WindowFactorContainer"]
+[node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/Control/WindowFactorContainer"]
 layout_mode = 2
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
@@ -78,4 +101,4 @@ layout_mode = 2
 [connection signal="confirmed" from="QuitDialog" to="." method="_on_quit_dialog_confirmed"]
 [connection signal="mouse_entered" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_entered"]
 [connection signal="mouse_exited" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_exited"]
-[connection signal="value_changed" from="WindowFactorWindow/WindowFactorContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]
+[connection signal="value_changed" from="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]
