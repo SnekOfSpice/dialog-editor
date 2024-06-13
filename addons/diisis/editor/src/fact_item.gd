@@ -71,6 +71,16 @@ func set_data_type(value:DataType):
 	find_child("FactBoolValue").visible = data_type == DataType.Bool
 	find_child("FactIntValueContainer").visible = data_type == DataType.Int
 	find_child("DataTypeButton").select(data_type)
+	var entered_fact_name :String= find_child("FactName").text
+	if Pages.facts.has(entered_fact_name):
+		var is_registered_as_bool = Pages.facts.get(entered_fact_name) is bool
+		var mismatch: bool
+		if ((data_type == DataType.Int and is_registered_as_bool) or
+		(data_type == DataType.Bool and not is_registered_as_bool)):
+			mismatch = true
+		else:
+			mismatch = false
+		find_child("TypeMismatchLabel").visible = mismatch
 	
 
 func set_is_conditional(value:bool):

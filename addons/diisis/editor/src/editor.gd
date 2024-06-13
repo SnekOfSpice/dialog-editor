@@ -162,7 +162,7 @@ func select_line_type(line_type:int):
 func get_selected_page_view() -> PageView:
 	var view:=PageView.Full
 	
-	for button : PageViewButton in find_child("ViewTypes").get_children():
+	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
 		if button.button_pressed:
 			view = button.page_view
 			break

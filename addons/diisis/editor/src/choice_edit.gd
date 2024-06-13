@@ -37,8 +37,10 @@ func deserialize(data:Dictionary):
 	deserialized_loopback_line = data.get("loopback_target_line", 0)
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
-	find_child("DefaultButtonEnabled").button_pressed = data.get("choice_text.enabled_as_default", true)
-	find_child("DefaultButtonDisabled").button_pressed = not data.get("choice_text.enabled_as_default", true)
+	if data.get("choice_text.enabled_as_default", true):
+		find_child("DefaultApparenceSelectionButton").select(0)
+	else:
+		find_child("DefaultApparenceSelectionButton").select(1)
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
@@ -69,7 +71,7 @@ func serialize() -> Dictionary:
 	return {
 		"choice_text.enabled": find_child("LineEditEnabled").text,
 		"choice_text.disabled": find_child("LineEditDisabled").text,
-		"choice_text.enabled_as_default": find_child("DefaultButtonEnabled").button_pressed,
+		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
 		"target_page": find_child("PageSelect").value,
 		"target_line": find_child("LineSelect").value,
 		"loopback_target_page": find_child("LoopbackPageSelect").value,
@@ -87,26 +89,29 @@ func serialize() -> Dictionary:
 func get_address() -> String:
 	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 
+# TODO: Add enabled / disabled icons
 func set_page_view(view:DiisisEditor.PageView):
-	var default_enabled : CheckBox = find_child("DefaultButtonEnabled")
+	var default_enabled_texture : TextureRect = find_child("DefaultEnabledTexture")
 	var line_edit_enabled : LineEdit = find_child("LineEditEnabled")
-	var default_disabled : CheckBox = find_child("DefaultButtonDisabled")
+	var default_disabled_texture : TextureRect = find_child("DefaultDisabledTexture")
+	var default_dropdown : OptionButton = find_child("DefaultApparenceSelectionButton")
 	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
 	if view == DiisisEditor.PageView.Full:
-		default_enabled.visible = true
+		default_dropdown.visible = true
 		line_edit_enabled.visible = true
-		default_disabled.visible = true
 		line_edit_disabled.visible = true
+		default_enabled_texture.visible = true
+		default_disabled_texture.visible = true
 		buttons.columns = 1
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 	else:
-		default_enabled.visible = default_enabled.button_pressed
-		line_edit_enabled.visible = default_enabled.button_pressed
-		default_disabled.visible = default_disabled.button_pressed
-		line_edit_disabled.visible = default_disabled.button_pressed
+		default_enabled_texture.visible = default_dropdown.get_selected_id() == 0
+		line_edit_enabled.visible = default_dropdown.get_selected_id() == 0
+		default_disabled_texture.visible = default_dropdown.get_selected_id() == 1
+		line_edit_disabled.visible = default_dropdown.get_selected_id() == 1
 		buttons.columns = 3
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
@@ -129,6 +134,7 @@ func update():
 	find_child("LineSelect").max_value = max_line_index
 	
 	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
+	#find_child("TargetStringLabel").tooltip = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
 	find_child("PageSelect").value = target_page
 	
 	find_child("LoopbackPageSelect").max_value = max_page_index
@@ -137,10 +143,13 @@ func update():
 	var loopback_line := int(find_child("LoopbackLineSelect").value)
 	
 	find_child("LoopbackTargetStringLabel").text = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
+	#find_child("LoopbackTargetStringLabel").tooltip = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
 	
 	find_child("IndexLabel").text = str(get_index())
 	find_child("UpButton").disabled = get_index() <= 0
 	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
+	
+	update_default_text_warning()
 
 func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)
@@ -228,3 +237,25 @@ func _on_loopback_toggle_toggled(toggled_on: bool) -> void:
 
 func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
 	set_do_jump_page(toggled_on)
+
+
+func _on_default_apparence_selection_button_item_selected(_index: int) -> void:
+	update_default_text_warning()
+
+func update_default_text_warning():
+	var label : Label = find_child("DefaultTextEmptyWarningLabel")
+	if find_child("LineEditEnabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").get_selected_id() == 0:
+		label.visible = true
+	elif find_child("LineEditDisabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").get_selected_id() == 1:
+		label.visible = true
+	else:
+		label.visible = false
+	
+
+
+func _on_line_edit_enabled_text_changed(_new_text: String) -> void:
+	update_default_text_warning()
+
+
+func _on_line_edit_disabled_text_changed(_new_text: String) -> void:
+	update_default_text_warning()

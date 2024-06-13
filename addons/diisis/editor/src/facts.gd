@@ -79,7 +79,7 @@ func add_fact(fact_name: String, fact_value, conditional:=false):
 	update()
 
 func update():
-	var button_label = "Conditionals" if self is Conditionals else "Facts"
+	var button_label := ""# = "Conditionals" if self is Conditionals else "Facts"
 	if visibility_toggle_button:
 		visibility_toggle_button.text = str(button_label, " (", facts_container.get_child_count(), ")")
 	else:

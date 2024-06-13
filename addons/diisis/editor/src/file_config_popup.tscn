@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://ceoicybbk4rjn"]
+[gd_scene load_steps=4 format=3 uid="uid://ceoicybbk4rjn"]
 
 [ext_resource type="PackedScene" uid="uid://cvek8s1fxdfmt" path="res://addons/diisis/editor/src/file_config_container.tscn" id="1_7a7dg"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_oberv"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_popup.gd" id="1_pdew5"]
 
 [node name="FileConfigPopup" type="Window"]
 title = "File Config"
 initial_position = 2
 wrap_controls = true
+theme = ExtResource("1_oberv")
 script = ExtResource("1_pdew5")
 
 [node name="FileConfigContainer" parent="." instance=ExtResource("1_7a7dg")]
