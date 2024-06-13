@@ -312,3 +312,8 @@ func _on_select_all_in_range_button_pressed():
 	for line : Line in Pages.editor.current_page.find_child("Lines").get_children():
 		var line_index := line.get_index()
 		line.set_selected(line_index >= index and line_index <= index + range)
+
+
+func _on_text_content_drop_focus() -> void:
+	#grab_click_focus()
+	$PanelContainer.grab_focus()
