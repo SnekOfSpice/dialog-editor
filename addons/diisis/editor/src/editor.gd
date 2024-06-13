@@ -198,6 +198,16 @@ func _shortcut_input(event):
 					attempt_save_to_dir()
 				KEY_F:
 					open_popup($Popups.get_node("TextSearchPopup"))
+				KEY_Z:
+					if event.is_shift_pressed():
+						undo_redo.redo()
+						update_undo_redo_buttons()
+					else:
+						undo_redo.undo()
+						update_undo_redo_buttons()
+				KEY_Y:
+					undo_redo.redo()
+					update_undo_redo_buttons()
 				KEY_O:
 					if active_dir != "":
 						$Popups.get_node("FDOpen").current_dir = active_dir

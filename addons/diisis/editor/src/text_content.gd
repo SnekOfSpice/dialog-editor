@@ -2,6 +2,8 @@
 extends Control
 class_name TextContent
 
+signal drop_focus()
+
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
 #var use_dialog_syntax := true
 var active_actors := [] # list of character names
@@ -424,7 +426,11 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str("[/", tag, "]")):
 			caret_movement_to_do = -str("[/", tag, "]").length()
 			break
-	
-	
-	
-	
+
+
+
+
+func _on_text_box_mouse_exited() -> void:
+	text_box.cancel_code_completion()
+	#text_box.remove_caret(0)
+	emit_signal("drop_focus")
