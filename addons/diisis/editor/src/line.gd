@@ -142,32 +142,27 @@ func serialize() -> Dictionary:
 
 func deserialize(data: Dictionary):
 	# line type
-	set_line_type(data.get("line_type"))
+	set_line_type(data.get("line_type", Pages.editor.get_selected_line_type()))
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	
 	# header
 	find_child("FactsVisibilityToggle").button_pressed = data.get("meta.facts_visible", false)
 	find_child("ConditionalsVisibilityToggle").button_pressed = data.get("meta.conditionals_visible", false)
 	
-	find_child("Header").deserialize(data.get("header"))
+	find_child("Header").deserialize(data.get("header", []))
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	
 	# content (based on line type)
 	match line_type:
 		DIISIS.LineType.Text:
-			if data.get("content") is String:
-				var compat_data = {}
-				compat_data["content"] = data.get("content")
-				find_child("TextContent").deserialize(compat_data)
-			else:
-				find_child("TextContent").deserialize(data.get("content"))
+			find_child("TextContent").deserialize(data.get("content", {}))
 		DIISIS.LineType.Choice:
-			find_child("ChoiceContainer").deserialize(data.get("content"))
+			find_child("ChoiceContainer").deserialize(data.get("content", {}))
 		DIISIS.LineType.Instruction:
-			find_child("InstructionContainer").deserialize(data.get("content"))
+			find_child("InstructionContainer").deserialize(data.get("content", {}))
 		DIISIS.LineType.Folder:
-			find_child("FolderContainer").deserialize(data.get("content"))
+			find_child("FolderContainer").deserialize(data.get("content", {}))
 			set_indent_level(data.get("meta.indent_level", 0))
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
@@ -283,23 +278,11 @@ func _on_visible_toggle_toggled(button_pressed: bool) -> void:
 func _on_insert_line_above_pressed() -> void:
 	var insert_index := get_index()
 	emit_signal("insert_line", insert_index)
-	Pages.change_line_references_directional(
-		Pages.editor.get_current_page_number(),
-		insert_index,
-		Pages.editor.current_page.get_line_count() - 1,
-		 + 1
-	)
 
 
 func _on_insert_line_below_pressed() -> void:
 	var insert_index := get_index() + 1
 	emit_signal("insert_line", insert_index)
-	Pages.change_line_references_directional(
-		Pages.editor.get_current_page_number(),
-		insert_index,
-		Pages.editor.current_page.get_line_count() - 1,
-		 + 1
-	)
 
 #
 #func _on_move_to_index_button_pressed() -> void:

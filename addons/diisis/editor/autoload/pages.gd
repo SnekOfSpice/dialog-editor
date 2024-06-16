@@ -328,7 +328,7 @@ func swap_line_references(on_page:int, from:int, to:int):
 	
 	if edited_current_page:
 		await get_tree().process_frame
-		editor.refresh(false)
+		editor.refresh(false, true)
 
 
 func get_lines(page_number: int):
@@ -388,7 +388,7 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	
 	if edited_current_page:
 		await get_tree().process_frame
-		editor.refresh(false)
+		editor.refresh(false, true)
 	
 
 func change_page_references_dir(changed_page: int, operation:int):

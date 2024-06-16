@@ -31,7 +31,7 @@ enum PageView {
 signal scale_editor_up()
 signal scale_editor_down()
 
-func refresh(serialize_before_load:=true):
+func refresh(serialize_before_load:=true, fragile:=false):
 	var cpn:int
 	if current_page:
 		cpn = current_page.number
@@ -40,7 +40,11 @@ func refresh(serialize_before_load:=true):
 	if serialize_before_load:
 		current_page.save()
 	await get_tree().process_frame
-	load_page(cpn, not serialize_before_load)
+	if fragile:
+		for node in get_tree().get_nodes_in_group("diisis_fragile"):
+			node.update_fragile()
+	else:
+		load_page(cpn, not serialize_before_load)
 
 func init() -> void:
 	core = find_child("Core")
@@ -91,7 +95,6 @@ func init() -> void:
 		popup.popup_window = false
 	
 	
-	
 	if FileAccess.file_exists(get_project_file_path()):
 		 
 		
@@ -125,24 +128,22 @@ func load_page(number: int, discard_without_saving:=false):
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 	
-	for c in page_container.get_children():
-		if not c is Page:
-			push_warning(str("PageContainer has a child that's not a page: ", c))
-			continue
-		
+	for page in page_container.get_children():		
 		if not discard_without_saving:
-			c.save()
-		c.queue_free()
+			page.save()
 	
-	var page = _page.instantiate()
-	page_container.add_child(page)
-	page.init(number)
-	current_page = page
+	var page_instance:Page
+	if page_container.get_child_count() == 0:
+		page_instance = _page.instantiate()
+		page_container.add_child(page_instance)
+	else:
+		page_instance = page_container.get_child(0)
+		
+	page_instance.init(number)
+	current_page = page_instance
 	
 	update_controls()
-	
 	await get_tree().process_frame
-	print(Pages.loopback_references_by_page)
 
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text
@@ -184,6 +185,7 @@ func _process(delta: float) -> void:
 	
 	if undo_redo_count_at_last_save != undo_redo.get_history_count():
 		auto_save_timer -= delta
+	
 	if auto_save_timer <= 0.0:
 		auto_save_timer = AUTO_SAVE_INTERVAL
 		save_to_file(str(BACKUP_PATH, Time.get_datetime_string_from_system().replace(":", "-"), ".json"), true)

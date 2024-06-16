@@ -36,7 +36,7 @@ border_width_top = 6
 border_color = Color(0.8, 0.462745, 0.129412, 0.772549)
 border_blend = true
 
-[node name="Line" type="VBoxContainer" groups=["page_view_sensitive"]]
+[node name="Line" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.369

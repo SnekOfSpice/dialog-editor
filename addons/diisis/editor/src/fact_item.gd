@@ -81,6 +81,8 @@ func set_data_type(value:DataType):
 		else:
 			mismatch = false
 		find_child("TypeMismatchLabel").visible = mismatch
+	else:
+		find_child("TypeMismatchLabel").visible = false
 	
 
 func set_is_conditional(value:bool):

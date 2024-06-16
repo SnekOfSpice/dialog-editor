@@ -73,7 +73,7 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary):
-	text_box.text = data.get("content")
+	text_box.text = data.get("content", "")
 	active_actors = data.get("active_actors", [])
 	active_actors_title = data.get("active_actors_title", "")
 	fill_active_actors()

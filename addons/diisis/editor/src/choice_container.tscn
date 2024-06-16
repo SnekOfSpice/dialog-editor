@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://btw7w3aypt2nc" path="res://addons/diisis/editor/visuals/helpZeichenfläche 11.png" id="5_6apmx"]
 [ext_resource type="Texture2D" uid="uid://hve0bgnfaxmq" path="res://addons/diisis/editor/visuals/halfchoice.png" id="6_iqpwk"]
 
-[node name="ChoiceContainer" type="VBoxContainer" groups=["diisis_choice_container", "page_view_sensitive"]]
+[node name="ChoiceContainer" type="VBoxContainer" groups=["diisis_choice_container", "diisis_page_view_sensitive"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

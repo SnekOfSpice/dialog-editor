@@ -86,6 +86,12 @@ func serialize() -> Dictionary:
 		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id()
 	}
 
+func update_fragile():
+	var address := get_address()
+	var parts : Array = DiisisEditorUtil.get_split_address(address)
+	var data = Pages.page_data.get(parts[0]).get("lines")[parts[1]].get("content").get("choices")[parts[2]]
+	deserialize(data)
+
 func get_address() -> String:
 	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 

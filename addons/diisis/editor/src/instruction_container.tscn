@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bgbnqa4jqrx7w" path="res://addons/diisis/editor/src/typing_hint.tscn" id="2_ow7ne"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
 
-[node name="InstructionContainer" type="VBoxContainer" groups=["page_view_sensitive"]]
+[node name="InstructionContainer" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 35.0
