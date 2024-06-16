@@ -70,9 +70,14 @@ func deserialize(data: Dictionary):
 
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
+	var lines_to_delete := []
 	for l in lines.get_children():
 		if not l is Line:
 			continue
+		if l.get_index() >= lines_data.size():
+			lines_to_delete.append(l)
+	
+	for l in lines_to_delete:
 		l.queue_free()
 	
 	var data_by_index := {}
@@ -155,7 +160,7 @@ func request_delete_line(at_index:int):
 	
 	# restore in ascending index order
 	indices_to_delete.reverse()
-	undo_redo.add_undo_method(DiisisEditorActions.add_lines.bind(indices_to_delete, line_data_to_delete))
+	undo_redo.add_undo_method(DiisisEditorActions.add_lines.bind(indices_to_delete, line_data_to_delete, true, true))
 	undo_redo.commit_action()
 
 func delete_line(at_index):
@@ -203,22 +208,28 @@ func request_add_line(at_index:int):
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Add Line")
 	DiisisEditorActions.blank_override_line_addresses.append(str(number, ".", at_index))
-	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index))
+	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(at_index, {}, true, true))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(at_index))
 	undo_redo.commit_action()
 
-func add_lines(indices:Array, data_by_index:={}):
+func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, change_line_references:=false):
 	indices.sort()
 	for at_index in indices:
-		var line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
+		var line:Line
 		var line_data = data_by_index.get(at_index, {})
-		lines.add_child(line)
-		lines.move_child(line, at_index)
-		line.init()
-		line.connect("move_line", request_move_line)
-		line.connect("insert_line", request_add_line)
-		line.connect("delete_line", request_delete_line)
-		line.connect("move_to", move_line_to)
+		if at_index >= lines.get_child_count() or force_new_line_object:
+			line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
+			lines.add_child(line)
+			lines.move_child(line, at_index)
+			line.init()
+			line.connect("move_line", request_move_line)
+			line.connect("insert_line", request_add_line)
+			line.connect("delete_line", request_delete_line)
+			line.connect("move_to", move_line_to)
+		else:
+			line = lines.get_child(at_index)
+			line.deserialize({})
+		
 		if line_data != {}:
 			line.deserialize(line_data)
 		
@@ -227,6 +238,15 @@ func add_lines(indices:Array, data_by_index:={}):
 				var range : Vector2 = l.get_folder_range_v()
 				if at_index > range.x and at_index <= range.y:
 					l.change_folder_range(1)
+		
+		if change_line_references:
+			var to = Pages.editor.current_page.get_line_count() - 1 if Pages.editor.current_page else indices.max()
+			Pages.change_line_references_directional(
+			Pages.editor.get_current_page_number(),
+			at_index,
+			to,
+			 + 1
+			)
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})
@@ -448,6 +468,8 @@ func update():
 	
 	for node in get_tree().get_nodes_in_group("page_view_sensitive"):
 		node.set_page_view(Pages.editor.get_selected_page_view())
+	
+	find_child("Facts").update()
 	
 
 

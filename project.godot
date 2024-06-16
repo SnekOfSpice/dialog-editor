@@ -42,8 +42,9 @@ enabled=PackedStringArray("res://addons/diisis/plugin.cfg")
 
 [global_group]
 
-page_view_sensitive=""
 diisis_choice_container=""
+diisis_fragile=""
+diisis_page_view_sensitive=""
 
 [input]
 

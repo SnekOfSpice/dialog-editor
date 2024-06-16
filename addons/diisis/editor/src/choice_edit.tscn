@@ -19,7 +19,7 @@ border_width_bottom = 2
 border_color = Color(0.10891, 0.00364763, 0.0790583, 1)
 border_blend = true
 
-[node name="ChoiceEdit" type="PanelContainer" groups=["page_view_sensitive"]]
+[node name="ChoiceEdit" type="PanelContainer" groups=["diisis_fragile", "diisis_page_view_sensitive"]]
 offset_right = 898.0
 offset_bottom = 167.0
 focus_mode = 2

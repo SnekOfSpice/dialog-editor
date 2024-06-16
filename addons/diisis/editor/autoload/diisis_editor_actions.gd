@@ -13,7 +13,11 @@ var clipboard := {}
 var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
 var delete_from_selected_addresses_on_insert := false
 
-func add_lines(indices:Array, data_by_index:={}):
+func add_line(at_index:int, data:={}, force_new_line_object:=false, change_line_references:=false):
+	add_lines([at_index], {at_index:data}, force_new_line_object, change_line_references)
+
+
+func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, change_line_references:=false):
 	if not Pages.editor.current_page:
 		Pages.editor.add_page(0)
 	
@@ -28,14 +32,12 @@ func add_lines(indices:Array, data_by_index:={}):
 			cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
 			data_by_index[i] = data
 		
-	Pages.editor.current_page.add_lines(indices, data_by_index)
+	Pages.editor.current_page.add_lines(indices, data_by_index, force_new_line_object, change_line_references)
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
 
 
-func add_line(at_index:int, data:={}):
-	add_lines([at_index], {at_index:data})
 
 func delete_lines(indices:Array):
 	var page_number := Pages.editor.get_current_page_number()
@@ -51,8 +53,17 @@ func delete_lines(indices:Array):
 			cached_lines[page_number][i] = cached_lines_at_index
 		else:
 			cached_lines[page_number] = {i:[Pages.editor.current_page.get_line_data(i)]}
+		
+		Pages.change_line_references_directional(
+		Pages.editor.get_current_page_number(),
+		i,
+		Pages.editor.current_page.get_line_count() - 1,
+		 - 1
+	)
 	
 	Pages.editor.current_page.delete_lines(indices)
+	Pages.editor.refresh(false, true)
+	
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()

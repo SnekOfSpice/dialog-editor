@@ -51,6 +51,8 @@ func serialize() -> Dictionary:
 	return result
 
 func deserialize(data: Dictionary):
+	for fact in facts_container.get_children():
+		fact.queue_free()
 	for fact in data.get("fact_data_by_name", {}).values():
 		add_fact_from_serialized(fact)
 	set_visibility(data.get("meta.visible", false))
@@ -58,6 +60,7 @@ func deserialize(data: Dictionary):
 		visibility_toggle_button.button_pressed = data.get("meta.visible", false)
 	else:
 		find_child("VisibilityToggleButton").button_pressed = data.get("meta.visible", false)
+	update()
 
 func add_fact_from_serialized(fact_data:Dictionary):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()

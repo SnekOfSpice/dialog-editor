@@ -10,7 +10,7 @@ symbol_color = Color(1, 0.68876, 0.875468, 1)
 function_color = Color(0.784314, 0.784314, 0.784314, 1)
 member_variable_color = Color(0.783523, 0.783523, 0.783523, 1)
 
-[node name="TextContent" type="VBoxContainer" groups=["page_view_sensitive"]]
+[node name="TextContent" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
 offset_right = 40.0
 offset_bottom = 40.0
 size_flags_horizontal = 3
