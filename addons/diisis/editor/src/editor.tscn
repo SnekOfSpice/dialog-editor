@@ -145,26 +145,28 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
-item_count = 9
-item_0/text = "Save    (Ctrl+S)"
-item_1/text = "Save As..."
-item_1/id = 1
-item_2/text = "Open    (Ctrl+O)"
-item_2/id = 2
-item_3/id = 4
-item_3/separator = true
-item_4/text = "Config"
-item_4/id = 3
-item_5/text = "Localization"
-item_5/id = 5
-item_5/separator = true
-item_6/text = "Locales"
-item_6/id = 6
-item_7/text = "Export New L10ns"
-item_7/id = 7
-item_8/text = "Blank Strings"
-item_8/checkable = 1
-item_8/id = 8
+item_count = 10
+item_0/text = "New    (Ctrl+N)"
+item_0/id = 9
+item_1/text = "Save    (Ctrl+S)"
+item_2/text = "Save As..."
+item_2/id = 1
+item_3/text = "Open    (Ctrl+O)"
+item_3/id = 2
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Config"
+item_5/id = 3
+item_6/text = "Localization"
+item_6/id = 5
+item_6/separator = true
+item_7/text = "Locales"
+item_7/id = 6
+item_8/text = "Export New L10ns"
+item_8/id = 7
+item_9/text = "Blank Strings"
+item_9/checkable = 1
+item_9/id = 8
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -540,7 +542,7 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
-[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_index_pressed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
 [connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]

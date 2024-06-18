@@ -104,3 +104,17 @@ func humanize_address(address:String) -> String:
 	if parts.size() > 2:
 		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
 	return address_string
+
+func get_project_file_path() -> String:
+	var path := "user://DIISIS_project_"
+	path += ProjectSettings.get_setting("application/config/name")
+	path += ".txt"
+	
+	return path
+
+func set_project_file_path(active_dir:String, active_file_name:String):
+	# save a file DIISIS_project_[project_name].txt
+	var file = FileAccess.open(get_project_file_path(), FileAccess.WRITE)
+	file.store_string(str(active_dir, active_file_name))
+	
+	file.close()

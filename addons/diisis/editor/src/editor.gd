@@ -30,6 +30,7 @@ enum PageView {
 
 signal scale_editor_up()
 signal scale_editor_down()
+signal open_new_file()
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var cpn:int
@@ -46,7 +47,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	else:
 		load_page(cpn, not serialize_before_load)
 
-func init() -> void:
+func init(active_file_path:="") -> void:
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
 	var n = Node.new()
@@ -95,30 +96,13 @@ func init() -> void:
 		popup.popup_window = false
 	
 	
-	if FileAccess.file_exists(get_project_file_path()):
-		 
-		
-		var file = FileAccess.open(get_project_file_path(), FileAccess.READ)
-		var active_file_path := file.get_as_text()
-		file.close()
-		
-		open_from_path(active_file_path)
+	
+	open_from_path(active_file_path)
 	
 	print("init editor successful")
 
-func get_project_file_path() -> String:
-	var path := "user://DIISIS_project_"
-	path += ProjectSettings.get_setting("application/config/name")
-	path += ".txt"
-	
-	return path
 
-func set_project_file_path():
-	# save a file DIISIS_project_[project_name].txt
-	var file = FileAccess.open(get_project_file_path(), FileAccess.WRITE)
-	file.store_string(str(active_dir, active_file_name))
-	
-	file.close()
+
 
 func update_page_view(view:PageView):
 	for node in get_tree().get_nodes_in_group("page_view_sensitive"):
@@ -175,7 +159,7 @@ func set_save_path(value:String):
 	active_file_name = parts[parts.size() - 1]
 	active_dir = value.trim_suffix(active_file_name)
 	find_child("SavePathLabel").text = str(active_dir, active_file_name)
-	set_project_file_path()
+	DiisisEditorUtil.set_project_file_path(active_dir, active_file_name)
 
 func _process(delta: float) -> void:
 	if not is_open:
@@ -200,6 +184,8 @@ func _shortcut_input(event):
 		
 		if event.is_ctrl_pressed():
 			match event.key_label:
+				KEY_N:
+					emit_signal("open_new_file")
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_F:
@@ -506,8 +492,8 @@ func attempt_save_to_dir():
 		return
 	save_to_file(str(active_dir, active_file_name))
 
-func _on_file_index_pressed(index: int) -> void:
-	match index:
+func _on_file_id_pressed(id: int) -> void:
+	match id:
 		0: #save
 			attempt_save_to_dir()
 		1: # save as
@@ -527,6 +513,8 @@ func _on_file_index_pressed(index: int) -> void:
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+		9:
+			emit_signal("open_new_file")
 
 
 func _on_funny_debug_button_pressed() -> void:
@@ -693,3 +681,6 @@ func _on_error_text_box_meta_clicked(meta: Variant) -> void:
 	if str(meta).begins_with("goto-"):
 		var target_address := str(meta).trim_prefix("goto-")
 		request_go_to_address(target_address, str("Go to ", target_address))
+
+
+

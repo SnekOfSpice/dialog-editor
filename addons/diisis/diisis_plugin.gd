@@ -41,9 +41,6 @@ func _enter_tree():
 	toolbar_button.is_in_editor = true
 	toolbar_button.pressed.connect(open_editor)
 	toolbar_button.request_open_diisis.connect(open_editor)
-	#print(toolbar_button.get_parent())
-	#print(toolbar_button.get_parent().get_parent())
-	#print(toolbar_button.get_parent().get_parent().get_parent())
 	
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
@@ -61,8 +58,25 @@ func open_editor():
 		add_editor_singletons()
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+		
+		if FileAccess.file_exists(DiisisEditorUtil.get_project_file_path()):
+			var file = FileAccess.open(DiisisEditorUtil.get_project_file_path(), FileAccess.READ)
+			dia_editor_window.file_path = file.get_as_text()
+			file.close()
+		
 		await get_tree().process_frame
 		dia_editor_window.popup()
+		dia_editor_window.open_new_file.connect(open_new_file)
+
+func open_new_file():
+	remove_editor_singletons()
+	add_editor_singletons()
+	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
+	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+	dia_editor_window.file_path = ""
+	await get_tree().process_frame
+	dia_editor_window.popup()
+	dia_editor_window.open_new_file.connect(open_new_file)
 
 func _process(delta: float) -> void:
 	if is_instance_valid(dia_editor_window):
