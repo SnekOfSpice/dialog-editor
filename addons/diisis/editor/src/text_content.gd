@@ -15,14 +15,15 @@ var auto_complete_context := ""
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name"]
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact"]
 var control_sequence_hints := {
 	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
 	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
 	"mp": "Manual Pause: Pauses the reading of text until the player clicks.",
 	"var": "<var:var_name>\n\nEvaluate any variable (will get inserted as its String representation).",
 	"func": "<func:func_name>\n<func:func_name,arg0,arg1>\n\nCall a function (It should return a String). Can take in arbitrary amounts of arguments, but the arguments must match the function signature of the respective func in the evaluator (obv).",
-	"name": "<name:name_map_entry>"
+	"name": "<name:name_map_entry>",
+	"fact": "Fact value"
 }
 
 func get_text_before_caret(length:int):
@@ -221,7 +222,7 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>"]:
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
@@ -238,6 +239,9 @@ func _on_text_box_caret_changed() -> void:
 		elif is_text_before_caret("var:"):
 			for property in Pages.get_evaluator_properties():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, property, property)
+		elif is_text_before_caret("fact:"):
+			for fact in Pages.facts.keys():
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("["):
 		for tag in ["b", "i", "u", "s"]:
@@ -355,7 +359,7 @@ func position_hint_at_caret(hint: Window):
 
 
 func _on_control_sequence_hint_item_chosen(item_name) -> void:
-	if item_name in ["var", "func", "name"]:
+	if item_name in ["var", "func", "name", "fact"]:
 		text_box.insert_text_at_caret(str(item_name, ":>"))
 		text_box.set_caret_column(text_box.get_caret_column() - 1)
 	else:
@@ -415,7 +419,7 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
-	for control in ["func", "name", "var"]:
+	for control in ["func", "name", "var", "fact"]:
 		if is_text_before_caret(str("<", control, ":>")):
 			prints("before cartet", control)
 			caret_movement_to_do = -1
