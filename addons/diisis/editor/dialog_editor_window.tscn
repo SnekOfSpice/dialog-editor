@@ -95,6 +95,7 @@ layout_mode = 2
 [connection signal="size_changed" from="." to="." method="_on_size_changed"]
 [connection signal="mouse_entered" from="Window" to="." method="_on_window_mouse_entered"]
 [connection signal="mouse_exited" from="Window" to="." method="_on_window_mouse_exited"]
+[connection signal="open_new_file" from="Window/Editor" to="." method="_on_editor_open_new_file"]
 [connection signal="scale_editor_down" from="Window/Editor" to="." method="_on_editor_scale_editor_down"]
 [connection signal="scale_editor_up" from="Window/Editor" to="." method="_on_editor_scale_editor_up"]
 [connection signal="canceled" from="QuitDialog" to="." method="_on_quit_dialog_canceled"]

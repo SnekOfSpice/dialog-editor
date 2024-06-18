@@ -7,12 +7,16 @@ var window_factor_window : Window
 var editor_start_size:Vector2
 var editor_content_scale:=1.0
 
+var file_path := ""
+
+signal open_new_file()
+
 func _on_about_to_popup() -> void:
 	editor = find_child("Editor")
 	editor_window = find_child("Window")
 	window_factor_window = find_child("WindowFactorWindow")
 	editor_start_size = editor.size
-	editor.init()
+	editor.init(file_path)
 	
 	editor_window.visible = true
 	window_factor_window.visible = true
@@ -27,9 +31,12 @@ func _process(delta):
 
 func _on_close_requested() -> void:
 	if editor.undo_redo.get_history_count() == 0:
-		_on_quit_dialog_confirmed()
+		close_editor()
+	build_quit_dialog("Do you want to close DIISIS?\n")
+
+func build_quit_dialog(header_text:String, confirm_callable:Callable=close_editor):
 	var text := ""
-	text += "Do you want to close DIISIS?\n"
+	text += header_text
 	if editor.active_dir.is_empty() or not editor.has_saved:
 		text += str("You have not saved since opening.")
 	else:
@@ -67,14 +74,23 @@ func _on_close_requested() -> void:
 		text += str("(", ago_string, " ago.)")
 	$QuitDialog.dialog_text = text
 	$QuitDialog.popup()
+	if $QuitDialog.is_connected("confirmed", close_editor):
+		$QuitDialog.disconnect("confirmed", close_editor)
+	if $QuitDialog.is_connected("confirmed", close_editor_and_open_new_file):
+		$QuitDialog.disconnect("confirmed", close_editor_and_open_new_file)
+	$QuitDialog.confirmed.connect(confirm_callable)
 
 func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
 
-func _on_quit_dialog_confirmed() -> void:
+func close_editor():
 	editor.is_open = false
 	hide()
 	queue_free()
+
+func close_editor_and_open_new_file():
+	emit_signal("open_new_file")
+	close_editor()
 
 func update_content_scale(scale_factor:float):
 	if not editor_window or not editor:
@@ -136,3 +152,9 @@ func _on_editor_scale_editor_down():
 
 func _on_editor_scale_editor_up():
 	find_child("WindowFactorScale").value += 0.05
+
+
+func _on_editor_open_new_file() -> void:
+	if editor.undo_redo.get_history_count() == 0:
+		close_editor_and_open_new_file()
+	build_quit_dialog("Open a new, blank file?\n", close_editor_and_open_new_file)
