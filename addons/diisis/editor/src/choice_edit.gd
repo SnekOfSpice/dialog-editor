@@ -52,11 +52,20 @@ func deserialize(data:Dictionary):
 
 func serialize() -> Dictionary:
 	var loopback : bool = find_child("LoopbackToggle").button_pressed
-	# remove the loopback / jump page pointers
+	var jump_page : bool = find_child("JumpPageToggle").button_pressed
 	
+	var jump_page_target_page : int = find_child("PageSelect").value
+	var jump_page_target_line : int = find_child("LineSelect").value
+	
+	# remove the loopback / jump page pointers
 	if Pages.loopback_references_by_page.has(deserialized_loopback_page):
-			if Pages.loopback_references_by_page.get(deserialized_loopback_page).has(deserialized_loopback_line):
-				Pages.loopback_references_by_page[deserialized_loopback_page][deserialized_loopback_line].erase(get_address())
+		if Pages.loopback_references_by_page.get(deserialized_loopback_page).has(deserialized_loopback_line):
+			Pages.loopback_references_by_page[deserialized_loopback_page][deserialized_loopback_line].erase(get_address())
+	# tbh idk if this also works if we don't save the deserialized value but I think it should
+	if Pages.jump_page_references_by_page.has(jump_page_target_page):
+		if Pages.jump_page_references_by_page.get(jump_page_target_page).has(jump_page_target_line):
+			Pages.jump_page_references_by_page[jump_page_target_page][jump_page_target_line].erase(get_address())
+	
 	if loopback:
 		var loopback_page :int= find_child("LoopbackPageSelect").value
 		var loopback_line :int= find_child("LoopbackLineSelect").value
@@ -68,17 +77,27 @@ func serialize() -> Dictionary:
 		else:
 			Pages.loopback_references_by_page[loopback_page] = {loopback_line : [get_address()]}
 	
+	if jump_page:
+		if Pages.jump_page_references_by_page.has(jump_page_target_page):
+			if Pages.jump_page_references_by_page.get(jump_page_target_page).has(jump_page_target_line):
+				Pages.jump_page_references_by_page.get(jump_page_target_page).get(jump_page_target_line).append(get_address())
+			else:
+				Pages.jump_page_references_by_page[jump_page_target_page][jump_page_target_line] = [get_address()]
+		else:
+			Pages.jump_page_references_by_page[jump_page_target_page] = {jump_page_target_line : [get_address()]}
+	
+	
 	return {
 		"choice_text.enabled": find_child("LineEditEnabled").text,
 		"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
-		"target_page": find_child("PageSelect").value,
-		"target_line": find_child("LineSelect").value,
+		"target_page": jump_page_target_page,
+		"target_line": jump_page_target_line,
 		"loopback_target_page": find_child("LoopbackPageSelect").value,
 		"loopback_target_line": find_child("LoopbackLineSelect").value,
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
-		"do_jump_page": find_child("JumpPageToggle").button_pressed,
+		"do_jump_page": jump_page,
 		"loopback": loopback,
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
