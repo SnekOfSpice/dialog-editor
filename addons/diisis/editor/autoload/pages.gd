@@ -197,6 +197,7 @@ var page_data := {}
 var evaluator_paths := ["res://sample/inline_eval.gd"]
 
 var loopback_references_by_page := {}
+var jump_page_references_by_page := {}
 
 signal pages_modified
 
@@ -366,7 +367,6 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 					prints("choice", choice)
 					var page_number : int = page.get("number")
 					if choice.get("target_page") == on_page:
-						
 						var target_line : int = choice.get("target_line")
 						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
 							choice["target_line"] = target_line + operation
@@ -374,16 +374,12 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 								edited_current_page = true
 					
 					if choice.get("loopback_target_page") == on_page:
-						print("loopback change")
 						var loopback_target_line : int = choice.get("loopback_target_line")
-						printt(loopback_target_line, starting_index_of_change, end_index_of_change)
 						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
-							print(choice.get("loopback_target_line"))
 							choice["loopback_target_line"] = loopback_target_line + operation
-							print(choice.get("loopback_target_line"))
 							if page_number == current_page_number:
 								edited_current_page = true
-					prints("choice", choice)
+					
 					
 	
 	if edited_current_page:
