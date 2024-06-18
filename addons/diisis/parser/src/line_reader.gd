@@ -775,7 +775,7 @@ func start_showing_text():
 
 func replace_var_func_tags(lines):
 	if not inline_evaluator:
-		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, and <name:> won't be parsed.")
+		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, and <fact:> won't be parsed.")
 		return lines
 	var i := 0
 	var result := []
@@ -844,6 +844,21 @@ func replace_var_func_tags(lines):
 					name_key = name_key.trim_suffix(">")
 					control_to_replace += ">"
 					new_text = new_text.replace(control_to_replace,name_map.get(name_key, name_key))
+				elif new_text.find("<fact:", scan_index) == scan_index:
+					var local_scan_index := scan_index
+					var control_to_replace := ""
+					var fact_name := ""
+					var start_reading_var_name := false
+					while new_text[local_scan_index] != ">":
+						control_to_replace += new_text[local_scan_index]
+						if start_reading_var_name:
+							fact_name += new_text[local_scan_index]
+						if new_text[local_scan_index] == ":":
+							start_reading_var_name = true
+						local_scan_index += 1
+					fact_name = fact_name.trim_suffix(">")
+					control_to_replace += ">"
+					new_text = new_text.replace(control_to_replace, str(Parser.get_fact(fact_name)))
 				
 			
 			text_length = new_text.length()
