@@ -194,6 +194,10 @@ func _shortcut_input(event):
 	if event is InputEventKey:
 		if not event.pressed:
 			return
+		
+		if event.key_label == KEY_F1:
+			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+		
 		if event.is_ctrl_pressed():
 			match event.key_label:
 				KEY_S:
