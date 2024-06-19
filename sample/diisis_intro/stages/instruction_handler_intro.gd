@@ -9,44 +9,48 @@ signal start_black_fade(
 	new_background:String,
 	new_bgm:String)
 
-signal show_cg(
+signal start_show_cg(
 	cg_name:String,
 	fade_in:float,
 	on_top:bool)
 
-signal hide_cg()
+signal start_hide_cg()
 
-func execute(instruction_name, args) -> bool:
-	match instruction_name:
-		"black_fade":
-			print(args)
-			var fade_in : float = args.get("fade_in")
-			emit_signal("start_black_fade",
-			fade_in,
-			args.get("hold_time"),
-			args.get("fade_out"),
-			args.get("hide_characters"),
-			CONST.get(str("BACKGROUND_", args.get("new_background").to_upper())),
-			args.get("new_bgm"),
+func play_sfx(_name:String):
+	Sound.play_sfx(CONST.get(str("SFX_", _name.to_upper())))
+
+func set_bgm(_name:String, fade_in:float):
+	Sound.play_bgm(CONST.get(str("MUSIC_", _name.to_upper())), fade_in)
+
+
+func black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:String, new_bgm:String):
+	emit_signal("start_black_fade",
+	fade_in,
+	hold_time,
+	fade_out,
+	hide_characters,
+	CONST.get(str("BACKGROUND_", new_background.to_upper())),
+	new_bgm,
+	)
+	return true
+
+
+
+func show_cg(_name:String, fade_in_time:float, continue_dialog_through_cg:bool):
+	emit_signal("start_show_cg",
+	_name,
+	fade_in_time,
+	not continue_dialog_through_cg
+	)
+	return true
+
+func hide_cg():
+	emit_signal("hide_cg")
+	return false
+
+func set_background(_name:String, fade_time:float):
+	GameWorld.stage_root.set_background(
+				CONST.get(str("BACKGROUND_", _name.to_upper())),
+				fade_time
 			)
-			return true
-		"show_cg":
-			print(args.get("fade_in_time"))
-			emit_signal("show_cg",
-			args.get("name"),
-			args.get("fade_in_time"),
-			not args.get("continue_dialog_through_cg")
-			)
-			return true
-		"hide_cg":
-			emit_signal("hide_cg")
-		"play_sfx":
-			Sound.play_sfx(CONST.get(str("SFX_", args.get("name").to_upper())))
-		"set_background":
-			GameWorld.stage_root.set_background(
-				CONST.get(str("BACKGROUND_", args.get("name").to_upper())),
-				args.get("fade_time")
-			)
-		"set_bgm":
-			Sound.play_bgm(CONST.get(str("MUSIC_", args.get("name").to_upper())), args.get("fade_in"))
 	return false

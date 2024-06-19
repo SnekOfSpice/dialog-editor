@@ -216,6 +216,6 @@ script = ExtResource("9_lbjue")
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
 [connection signal="pressed" from="VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
-[connection signal="hide_cg" from="Handler" to="." method="hide_cg"]
-[connection signal="show_cg" from="Handler" to="." method="_on_handler_show_cg"]
 [connection signal="start_black_fade" from="Handler" to="BlackFade" method="_on_handler_start_black_fade"]
+[connection signal="start_hide_cg" from="Handler" to="." method="hide_cg"]
+[connection signal="start_show_cg" from="Handler" to="." method="_on_handler_start_show_cg"]

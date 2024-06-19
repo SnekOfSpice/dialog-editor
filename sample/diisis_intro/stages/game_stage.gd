@@ -185,7 +185,14 @@ func remove_blocker():
 		callable_upon_blocker_clear.call()
 
 var emit_insutrction_complete_on_cg_hide :bool
-func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
+
+
+
+func _on_history_button_pressed() -> void:
+	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
+
+
+func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 	if on_top:
 		emit_insutrction_complete_on_cg_hide = true
 		
@@ -196,7 +203,3 @@ func _on_handler_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 		t.timeout.connect(handler.instruction_completed.emit)
 		
 		set_cg_bottom(cg_name, fade_in)
-
-
-func _on_history_button_pressed() -> void:
-	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)

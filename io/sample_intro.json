@@ -216,17 +216,14 @@
 					"content": {
 						"delay_after": 0,
 						"delay_before": 0,
-						"line_reader.args": {
-							"args": {
-								"fade_in": 0,
-								"fade_out": 2,
-								"hide_characters": false,
-								"hold_time": 0.5,
-								"new_background": "workshop",
-								"new_bgm": "intro"
-							},
-							"name": "black_fade"
-						},
+						"line_reader.args": [
+							0,
+							0.5,
+							2,
+							false,
+							"workshop",
+							"intro"
+						],
 						"meta.text": "black_fade(0.0, 0.5, 2.0, false, workshop, intro)",
 						"meta.validation_status": "OK",
 						"name": "black_fade"
@@ -762,7 +759,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 735,
+			"meta.scroll_vertical": 0,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,

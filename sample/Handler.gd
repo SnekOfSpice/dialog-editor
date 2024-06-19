@@ -12,13 +12,20 @@ func function_one():
 func function_two():
 	return ""
 
-func execute(instruction_name, args) -> bool:
-	match instruction_name:
-		"rotate_icon":
-			rotate_icon()
-			return true
-		"show_character":
-			prints("real code", args)
+#func execute(instruction_name, args) -> bool:
+	#match instruction_name:
+		#"rotate_icon":
+			#rotate_icon()
+			#return true
+		#"show_character":
+			#prints("real code", args)
+	#return false
+
+func notbool():
+	return 9
+
+func yippie(some_arg):
+	print(str(some_arg))
 	return false
 
 func rotate_icon():
