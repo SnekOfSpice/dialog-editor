@@ -28,6 +28,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
 	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
+	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full
 	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
 	if view == DiisisEditor.PageView.Full:
 		move_controls_buttons.columns = 2
