@@ -149,6 +149,7 @@ item_count = 10
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
+item_1/id = 1
 item_2/text = "Save As..."
 item_2/id = 1
 item_3/text = "Open    (Ctrl+O)"

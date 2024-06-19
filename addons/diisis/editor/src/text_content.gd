@@ -15,7 +15,7 @@ var auto_complete_context := ""
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact"]
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos"]
 var control_sequence_hints := {
 	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
 	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
@@ -222,7 +222,7 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>"]:
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":

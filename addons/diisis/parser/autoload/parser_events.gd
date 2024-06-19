@@ -109,14 +109,14 @@ signal visible_characters_changed(
 ## is [code] 0.0[/code].
 signal instruction_started(
 	instruction_name : String,
-	args : Dictionary,
+	args : Array,
 	delay : float,
 )
 
 ## Emitted when [InstructionHandler] executes an instruction, [param delay] seconds after [signal instruction_started].
 signal instruction_started_after_delay(
 	instruction_name : String,
-	args : Dictionary,
+	args : Array,
 	delay : float,
 )
 
@@ -126,7 +126,7 @@ signal instruction_started_after_delay(
 ##[param delay] is the time in seconds until [signal instruction_completed_after_delay] gets emitted.
 signal instruction_completed(
 	instruction_name : String,
-	args : Dictionary,
+	args : Array,
 	delay : float,
 )
 
@@ -135,7 +135,7 @@ signal instruction_completed(
 ## This will be on the same frame if [param delay] is [code]0.0[/code].
 signal instruction_completed_after_delay(
 	instruction_name : String,
-	args : Dictionary,
+	args : Array,
 	delay : float,
 )
 

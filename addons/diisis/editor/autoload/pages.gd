@@ -12,6 +12,11 @@ var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
 
+const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
+	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+	"_",]
+
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const DOMINANT_LOCALES := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -511,6 +516,37 @@ func delete_page_data(at: int):
 	
 	emit_signal("pages_modified")
 
+func get_instruction_signature(instruction_name:String) -> String:
+	if not instruction_templates.has(instruction_name):
+		editor.notify(str("Instruction ", instruction_name, " is not declared in this project."))
+		return ""
+	var result := "func "
+	result += instruction_name
+	result += "("
+	
+	var i := 0
+	var arg_types : Array = instruction_templates.get(instruction_name).get("arg_types")
+	var arg_names : Array = instruction_templates.get(instruction_name).get("args")
+	while i < arg_types.size():
+		result += arg_names[i]
+		result += ": "
+		
+		if arg_types[i] == "string":
+			result += "String"
+		else:
+			result += arg_types[i]
+		
+		if i < arg_types.size() - 1:
+			result += ", "
+		
+		i += 1
+	
+	result += ") -> bool:"
+	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
+	result += "\n\t# (Needs to be called by your code from somewhere.)"
+	result += "\n\treturn false"
+	
+	return result
 
 func get_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()
@@ -1140,12 +1176,21 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 			
 			# instruction container handles it when it inits and finds an empty meta.text but existing args
 			line["content"]["meta.text"] = transformed_string
-			line["content"]["line_reader.args"] = parse_instruction_to_handleable_dictionary(transformed_string)
+			line["content"]["line_reader.args"] = get_arg_array_from_instruction_string(transformed_string, new_entered_name)
 			
 	
 
+func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
+	var args := []
+	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args")
+	var arg_order := get_argument_order_from_template(instruction_name)
+	for arg_name in arg_order:
+		args.append(arg_dict.get(arg_name))
+	return args
+
 func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
 	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
+		push_warning(str(instruction_text, " isn't OK"))
 		return {}
 	
 	var result := {}
@@ -1159,14 +1204,12 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 	instruction_text = instruction_text.trim_suffix(")")
 	var entered_args := instruction_text.split(",")
 	var i := 0
-	
 	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
 		var arg = entered_args[i]
 		while arg.begins_with(" "):
 			arg = arg.trim_prefix(" ")
 		while arg.ends_with(" "):
 			arg = arg.trim_suffix(" ")
-		
 		var arg_value
 		var arg_type:String=arg_types[i]
 		var value_string := arg.split(":")[0]
@@ -1182,13 +1225,14 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 				arg_value = str("no value")
 			else:
 				arg_value = float(value_string)
-	
 		args[arg_names[i]] = arg_value
 		i += 1
-	
 	result["args"] = args
 	
 	return result
+
+func get_argument_order_from_template(instruction_name:String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("args", [])
 
 func does_instruction_name_exist(instruction_name:String):
 	return instruction_templates.keys().has(instruction_name)
@@ -1246,6 +1290,9 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 		return "Can't start with ("
 	
 	var entered_name = instruction.split("(")[0]
+	for character in entered_name:
+		if not ALLOWED_INSTRUCTION_NAME_CHARACTERS.has(character):
+			return str("Character \"", character, "\" isn't allowed.")
 	if check_as_template:
 		if does_instruction_name_exist(entered_name) and error_on_duplicate:
 			return "Instruction already exists"

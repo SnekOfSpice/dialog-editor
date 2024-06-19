@@ -24,6 +24,7 @@ func fill():
 		list.clear()
 		if not list.item_selected.is_connected(drop_other_focused.bind(list)):
 			list.item_selected.connect(drop_other_focused.bind(list))
+			list.item_activated.connect(go_to_selected.bind(list))
 	
 	for fact in Pages.facts.keys():
 		var fact_reg = fact#str(fact, ": ", Pages.facts.get(fact))
@@ -55,6 +56,11 @@ func drop_other_focused(selected_index:=0, clicked_item_list:ItemList=null):
 	find_child("GoToAddressLabel").text = ""
 	if clicked_item_list != null:
 		find_child("GoToAddressLabel").text = clicked_item_list.get_item_text(selected_index)
+
+func go_to_selected(selected_index:=0, activateded_item_list:ItemList=null):
+	drop_other_focused(selected_index, activateded_item_list)
+	if activateded_item_list != null:
+		go_to(activateded_item_list.get_item_text(selected_index))
 
 func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	find_child("FactInteractionContainer").visible = true
@@ -153,6 +159,10 @@ func _on_confirm_delete_confirmed() -> void:
 	emit_signal("request_popup")
 
 
+
 func _on_go_to_address_button_pressed() -> void:
+	go_to(find_child("GoToAddressLabel").text)
+
+func go_to(address:String):
 	emit_signal("request_hide")
-	Pages.editor.request_go_to_address(find_child("GoToAddressLabel").text)
+	Pages.editor.request_go_to_address(address)

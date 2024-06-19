@@ -12,7 +12,7 @@ signal execute_instruction(args)
 var delay_before := 0.0
 var delay_after := 0.0
 var execution_name := ""
-var execution_args := {}
+var execution_args := []
 var is_executing := false
 var has_executed := false
 var has_received_execute_callback := false
@@ -57,7 +57,7 @@ func _process(delta: float) -> void:
 	
 	is_executing = false
 
-func _wrapper_execute(instruction_name : String, args : Dictionary, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
+func _wrapper_execute(instruction_name : String, args : Array, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	await get_tree().process_frame
 	delay_after = delay_after_seconds
 	delay_before = delay_before_seconds
@@ -97,5 +97,12 @@ func _wrapper_execute(instruction_name : String, args : Dictionary, delay_before
 ##   await t.finished
 ##   instruction_completed.emit()
 ## [/codeblock]
-func execute(instruction_name, args) -> bool:
-	return false
+func execute(instruction_name:String, args:Array) -> bool:
+	if not has_method(instruction_name):
+		push_error(str("Function ", instruction_name, " not found in InstructionHandler."))
+		return false
+	var result = callv(instruction_name, args)
+	if not result is bool:
+		push_error(str("Function ", instruction_name, " should return bool."))
+		return false
+	return result

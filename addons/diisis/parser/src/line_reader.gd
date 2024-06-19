@@ -552,14 +552,14 @@ func read_new_line(new_line: Dictionary):
 				return
 			
 			var instruction_name : String = line_data.get("content").get("name")
-			var args : Dictionary = line_data.get("content").get("line_reader.args")
+			var args : Array = line_data.get("content").get("line_reader.args")
 			
 			# transform content to more friendly args
 			
 			var delay_before = new_line.get("content").get("delay_before")
 			var delay_after = new_line.get("content").get("delay_after")
 			
-			instruction_handler._wrapper_execute(instruction_name, args.get("args"), delay_before, delay_after)
+			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
@@ -899,8 +899,6 @@ func read_next_chunk():
 	while new_text.ends_with("<mp>"):
 		new_text = new_text.trim_suffix("<mp>")
 	
-	
-	var scan_index := 0
 	pause_positions.clear()
 	pause_types.clear()
 	
@@ -921,6 +919,25 @@ func read_next_chunk():
 		tag_start_position = bbcode_removed_text.find("[", last_tag_start_position)
 		tag_end_position = bbcode_removed_text.find("]", tag_start_position)
 	
+	var scan_index := 0
+	var notify_positions := []
+	var tag_buffer := 0
+	var target_length := bbcode_removed_text.length()
+	while scan_index < target_length:
+		if bbcode_removed_text[scan_index] == "<":
+			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
+				notify_positions.append(scan_index - tag_buffer)
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, "<strpos>".length())
+				scan_index -= "<strpos>".length()
+				target_length -= "<strpos>".length()
+			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
+				tag_buffer += 2
+			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
+				tag_buffer += 2
+			
+		scan_index += 1
+	
+	scan_index = 0
 	while scan_index < bbcode_removed_text.length():
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<mp>", scan_index) == scan_index:
@@ -943,6 +960,7 @@ func read_next_chunk():
 	var cleaned_text : String = new_text
 	cleaned_text = cleaned_text.replace("<mp>", "")
 	cleaned_text = cleaned_text.replace("<ap>", "")
+	cleaned_text = cleaned_text.replace("<strpos>", "")
 	cleaned_text = cleaned_text.replace("\\[", "[")
 	
 	if is_last_actor_name_different:
@@ -968,7 +986,8 @@ func read_next_chunk():
 		while l < pause_positions.size():
 			pause_positions[l] = pause_positions[l] + name_prepend_length
 			l += 1
-		
+	
+	prints("yippie", notify_positions)
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
 
