@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://u1pd7cjv38qc"]
+[gd_scene load_steps=5 format=3 uid="uid://u1pd7cjv38qc"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
 [ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://addons/diisis/editor/src/editor.tscn" id="2_4owra"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="3_efdl4"]
+[ext_resource type="PackedScene" uid="uid://b3170v1u5of2d" path="res://addons/diisis/editor/quit_dialog.tscn" id="3_h4aux"]
 
 [node name="DialogEditorWindow" type="Window"]
 gui_embed_subwindows = true
@@ -34,13 +35,9 @@ grow_vertical = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="QuitDialog" type="ConfirmationDialog" parent="."]
-title = "Close DIISIS?"
-initial_position = 4
-transient = false
-popup_window = true
-ok_button_text = "Close DIISIS"
-cancel_button_text = "Stay"
+[node name="QuitDialog" parent="." instance=ExtResource("3_h4aux")]
+size = Vector2i(301, 144)
+visible = false
 
 [node name="WindowFactorWindow" type="Window" parent="."]
 position = Vector2i(0, 484)
@@ -98,8 +95,7 @@ layout_mode = 2
 [connection signal="open_new_file" from="Window/Editor" to="." method="_on_editor_open_new_file"]
 [connection signal="scale_editor_down" from="Window/Editor" to="." method="_on_editor_scale_editor_down"]
 [connection signal="scale_editor_up" from="Window/Editor" to="." method="_on_editor_scale_editor_up"]
-[connection signal="canceled" from="QuitDialog" to="." method="_on_quit_dialog_canceled"]
-[connection signal="confirmed" from="QuitDialog" to="." method="_on_quit_dialog_confirmed"]
+[connection signal="request_save" from="QuitDialog" to="." method="_on_quit_dialog_request_save"]
 [connection signal="mouse_entered" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_entered"]
 [connection signal="mouse_exited" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_exited"]
 [connection signal="value_changed" from="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]
