@@ -145,6 +145,8 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
+size = Vector2i(159, 228)
+content_scale_aspect = 4
 item_count = 10
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
@@ -501,7 +503,7 @@ filters = PackedStringArray("*.json")
 gui_embed_subwindows = true
 title = "Open a File"
 initial_position = 4
-size = Vector2i(312, 162)
+size = Vector2i(312, 175)
 ok_button_text = "Open"
 file_mode = 0
 access = 2
@@ -544,8 +546,11 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
+[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
+[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
+[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
 [connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/VBoxContainer/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/PanelContainer/VBoxContainer/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]

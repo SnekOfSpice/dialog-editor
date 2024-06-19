@@ -102,7 +102,12 @@ func init(active_file_path:="") -> void:
 	print("init editor successful")
 
 
-
+func set_content_scale(factor:float):
+	content_scale = factor
+	var bar : MenuBar = find_child("MenuBar")
+	bar.get_node("File").content_scale_factor = factor
+	bar.get_node("Utility").content_scale_factor = factor
+	bar.get_node("Setup").content_scale_factor = factor
 
 func update_page_view(view:PageView):
 	for node in get_tree().get_nodes_in_group("page_view_sensitive"):
@@ -684,3 +689,19 @@ func _on_error_text_box_meta_clicked(meta: Variant) -> void:
 
 
 
+func align_menu_item(menu_item:PopupMenu):
+	var menu_bar = find_child("MenuBar")
+	menu_item.position.x = (menu_item.position.x) * content_scale
+	menu_item.position.y += (menu_bar.size.y) * content_scale - menu_bar.size.y
+	menu_item.size *= content_scale * 1.01
+
+func _on_file_visibility_changed() -> void:
+	align_menu_item(find_child("File"))
+
+
+func _on_setup_visibility_changed() -> void:
+	align_menu_item(find_child("Setup"))
+
+
+func _on_utility_visibility_changed() -> void:
+	align_menu_item(find_child("Utility"))
