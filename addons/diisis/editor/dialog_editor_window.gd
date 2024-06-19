@@ -8,6 +8,7 @@ var editor_start_size:Vector2
 var editor_content_scale:=1.0
 
 var file_path := ""
+var last_quit_header := ""
 
 signal open_new_file()
 
@@ -32,9 +33,19 @@ func _process(delta):
 func _on_close_requested() -> void:
 	if editor.undo_redo.get_history_count() == 0:
 		close_editor()
-	build_quit_dialog("Do you want to close DIISIS?\n")
+	last_quit_header = "Do you want to close DIISIS?\n"
+	build_quit_dialog(last_quit_header)
 
 func build_quit_dialog(header_text:String, confirm_callable:Callable=close_editor):
+	update_quit_dialog_text(header_text)
+	$QuitDialog.popup()
+	if $QuitDialog.is_connected("confirmed", close_editor):
+		$QuitDialog.disconnect("confirmed", close_editor)
+	if $QuitDialog.is_connected("confirmed", close_editor_and_open_new_file):
+		$QuitDialog.disconnect("confirmed", close_editor_and_open_new_file)
+	$QuitDialog.confirmed.connect(confirm_callable)
+
+func update_quit_dialog_text(header_text:String):
 	var text := ""
 	text += header_text
 	if editor.active_dir.is_empty() or not editor.has_saved:
@@ -72,13 +83,7 @@ func build_quit_dialog(header_text:String, confirm_callable:Callable=close_edito
 		
 		ago_string += str(seconds_since_last_save, " ", second_word)
 		text += str("(", ago_string, " ago.)")
-	$QuitDialog.dialog_text = text
-	$QuitDialog.popup()
-	if $QuitDialog.is_connected("confirmed", close_editor):
-		$QuitDialog.disconnect("confirmed", close_editor)
-	if $QuitDialog.is_connected("confirmed", close_editor_and_open_new_file):
-		$QuitDialog.disconnect("confirmed", close_editor_and_open_new_file)
-	$QuitDialog.confirmed.connect(confirm_callable)
+	$QuitDialog.set_text(text)
 
 func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
@@ -157,4 +162,12 @@ func _on_editor_scale_editor_up():
 func _on_editor_open_new_file() -> void:
 	if editor.undo_redo.get_history_count() == 0:
 		close_editor_and_open_new_file()
-	build_quit_dialog("Open a new, blank file?\n", close_editor_and_open_new_file)
+	last_quit_header = "Open a new, blank file?\n"
+	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
+
+
+func _on_quit_dialog_request_save() -> void:
+	if editor.active_dir.is_empty():
+		$QuitDialog.hide()
+	editor.attempt_save_to_dir()
+	update_quit_dialog_text(last_quit_header)
