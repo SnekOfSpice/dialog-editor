@@ -83,3 +83,15 @@ func _on_instruction_edit_text_changed(new_text: String) -> void:
 func _on_delete_button_pressed() -> void:
 	Pages.try_delete_instruction_template(find_child("InstructionLabel").text.split("(")[0])
 	queue_free()
+
+func get_instruction_name() -> String:
+	var label_text : String = find_child("InstructionLabel").text
+	if label_text.contains("("):
+		return label_text.split("(")[0]
+	else:
+		return label_text
+
+func _on_copy_signature_to_clipboard_button_pressed() -> void:
+	var signature : String = Pages.get_instruction_signature(get_instruction_name())
+	if not signature.is_empty():
+		DisplayServer.clipboard_set(signature)

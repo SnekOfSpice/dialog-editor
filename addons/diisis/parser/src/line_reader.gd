@@ -552,14 +552,14 @@ func read_new_line(new_line: Dictionary):
 				return
 			
 			var instruction_name : String = line_data.get("content").get("name")
-			var args : Dictionary = line_data.get("content").get("line_reader.args")
+			var args : Array = line_data.get("content").get("line_reader.args")
 			
 			# transform content to more friendly args
 			
 			var delay_before = new_line.get("content").get("delay_before")
 			var delay_after = new_line.get("content").get("delay_after")
 			
-			instruction_handler._wrapper_execute(instruction_name, args.get("args"), delay_before, delay_after)
+			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))

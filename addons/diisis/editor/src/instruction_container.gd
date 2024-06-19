@@ -22,7 +22,8 @@ func serialize():
 	var result = {}
 	
 	result["name"] = get_instruction_name()
-	result["line_reader.args"] = Pages.parse_instruction_to_handleable_dictionary(text_box.text)
+	
+	result["line_reader.args"] = Pages.get_arg_array_from_instruction_string(text_box.text, get_instruction_name())
 	result["delay_before"] = find_child("DelayBeforeSpinBox").value
 	result["delay_after"] = find_child("DelayAfterSpinBox").value
 	
@@ -123,3 +124,9 @@ func _on_instruction_text_edit_text_changed() -> void:
 func _on_instruction_text_edit_code_completion_requested() -> void:
 	await get_tree().process_frame
 	text_box.set_caret_column(text_box.text.length() - 2)
+
+
+func _on_copy_signature_to_clipboard_button_pressed() -> void:
+	var signature : String = Pages.get_instruction_signature(get_instruction_name())
+	if not signature.is_empty():
+		DisplayServer.clipboard_set(signature)
