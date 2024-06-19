@@ -111,7 +111,7 @@ func update_content_scale(scale_factor:float):
 	window_factor_window.position.y = size.y - find_child("WindowFactorContainer").size.y
 	
 	if editor:
-		editor.content_scale = scale_factor
+		editor.set_content_scale(scale_factor)
 
 
 func _on_size_changed() -> void:
