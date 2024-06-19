@@ -517,7 +517,7 @@ func _on_file_id_pressed(id: int) -> void:
 			open_popup($Popups.get_node("FDExportLocales"), true)
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
-			find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+			find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
 		9:
 			emit_signal("open_new_file")
 

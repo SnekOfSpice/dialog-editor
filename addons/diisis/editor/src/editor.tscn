@@ -143,6 +143,7 @@ layout_mode = 2
 
 [node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_nb6ej")
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/VBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
