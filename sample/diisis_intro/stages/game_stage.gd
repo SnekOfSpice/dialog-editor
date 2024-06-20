@@ -26,6 +26,7 @@ func _ready():
 	#find_child("TextContainer").position = Vector2(size.x * 0.5, size.y - find_child("TextContainer").size.y * 0.5)
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
+	ParserEvents.page_terminated.connect(GameWorld.stage_root.change_stage.bind(CONST.STAGE_MAIN))
 	
 	GameWorld.instruction_handler = $Handler
 	GameWorld.game_stage = self
@@ -203,3 +204,7 @@ func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) ->
 		t.timeout.connect(handler.instruction_completed.emit)
 		
 		set_cg_bottom(cg_name, fade_in)
+
+
+func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(str(meta))
