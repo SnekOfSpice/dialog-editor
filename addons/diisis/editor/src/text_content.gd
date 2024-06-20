@@ -15,7 +15,7 @@ var auto_complete_context := ""
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos"]
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call"]
 var control_sequence_hints := {
 	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
 	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
@@ -222,7 +222,8 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>"]:
+		# duplicated because some tags have a : and some just end with >
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
@@ -233,7 +234,7 @@ func _on_text_box_caret_changed() -> void:
 		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, "a", "a")
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret(":") and is_text_after_caret(">"):
-		if is_text_before_caret("func:"):
+		if is_text_before_caret("func:") or is_text_before_caret("call:"):
 			for method in Pages.get_evaluator_methods():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, method)
 		elif is_text_before_caret("var:"):
@@ -359,7 +360,7 @@ func position_hint_at_caret(hint: Window):
 
 
 func _on_control_sequence_hint_item_chosen(item_name) -> void:
-	if item_name in ["var", "func", "name", "fact"]:
+	if item_name in ["var", "func", "name", "fact", "call"]:
 		text_box.insert_text_at_caret(str(item_name, ":>"))
 		text_box.set_caret_column(text_box.get_caret_column() - 1)
 	else:
@@ -419,7 +420,7 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
-	for control in ["func", "name", "var", "fact"]:
+	for control in ["func", "name", "var", "fact", "call"]:
 		if is_text_before_caret(str("<", control, ":>")):
 			prints("before cartet", control)
 			caret_movement_to_do = -1

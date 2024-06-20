@@ -1,20 +1,13 @@
 {
-	"dropdown_dialog_arguments": [
-		"emo"
-	],
+	"dropdown_dialog_arguments": [],
 	"dropdown_title_for_dialog_syntax": "character",
 	"dropdown_titles": [
-		"character",
-		"emo"
+		"character"
 	],
 	"dropdowns": {
 		"character": [
 			"dii",
 			"sis"
-		],
-		"emo": [
-			"hehe",
-			"haha"
 		]
 	},
 	"empty_strings_for_l10n": false,
@@ -28,10 +21,6 @@
 	},
 	"head_defaults": [],
 	"instruction_templates": {
-		"notbool": {
-			"arg_types": [],
-			"args": []
-		},
 		"rotate": {
 			"arg_types": [
 				"float"
@@ -48,14 +37,6 @@
 			"args": [
 				"character_name",
 				"clear_others"
-			]
-		},
-		"yippie": {
-			"arg_types": [
-				"string"
-			],
-			"args": [
-				"some_arg"
 			]
 		}
 	},
@@ -159,12 +140,12 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": [],
-						"meta.text": "notbool()",
-						"meta.validation_status": "OK",
-						"name": "notbool"
+						"active_actors": [
+							"dii",
+							"sis"
+						],
+						"active_actors_title": "character",
+						"content": "[]>dii:0123456789<strpos>0123456789<call:function_in_eval>01234<mp>56789<strpos>01234<ap>56789\n[]>dii:hi. here is a very very very very very very very very very very very very very very  long long long long long long long long long long long long long long long line! "
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -173,7 +154,7 @@
 						"meta.visible": false
 					},
 					"header": [],
-					"line_type": 2,
+					"line_type": 0,
 					"meta.conditionals_visible": false,
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
@@ -200,94 +181,10 @@
 						"operand_key": "AND"
 					},
 					"content": {
-						"delay_after": 0,
-						"delay_before": 0,
-						"line_reader.args": [
-							"hello"
-						],
-						"meta.text": "yippie(hello)",
-						"meta.validation_status": "OK",
-						"name": "yippie"
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 2,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 1,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.2",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
-						"active_actors": [
-							"dii",
-							"sis"
-						],
-						"active_actors_title": "character",
-						"content": "[]>dii{emo|sdfsdfg}:0123456789<strpos>0123456789<strpos>01234<mp>56789<strpos>01234<ap>56789<func:sdfgdfg>\n[]>dii:hi. here is a very very very very very very very very very very very very very very  long long long long long long long long long long long long long long long line! "
-					},
-					"facts": {
-						"fact_data_by_name": {
-
-						},
-						"meta.visible": false
-					},
-					"header": [],
-					"line_type": 0,
-					"meta.conditionals_visible": false,
-					"meta.facts_visible": false,
-					"meta.indent_level": 0,
-					"meta.is_head_editable": false,
-					"meta.line_index": 2,
-					"meta.selector": {
-						"selected": false
-					}
-				},
-				{
-					"address": "0.3",
-					"conditionals": {
-						"behavior": 0,
-						"behavior_key": "Show",
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"meta.visible": false,
-						"operand": 0,
-						"operand_args": [],
-						"operand_key": "AND"
-					},
-					"content": {
 						"auto_switch": false,
 						"choices": [
 							{
-								"address": "0.3.0",
+								"address": "0.1.0",
 								"behavior_after_first_selection": 3,
 								"choice_text.disabled": "",
 								"choice_text.enabled": "choice label",
@@ -324,7 +221,7 @@
 								"target_page": 1
 							},
 							{
-								"address": "0.3.1",
+								"address": "0.1.1",
 								"behavior_after_first_selection": 0,
 								"choice_text.disabled": "",
 								"choice_text.enabled": "choice label",
@@ -375,13 +272,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 3,
+					"meta.line_index": 1,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.4",
+					"address": "0.2",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -423,13 +320,13 @@
 					"meta.facts_visible": true,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 4,
+					"meta.line_index": 2,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.5",
+					"address": "0.3",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -471,13 +368,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 5,
+					"meta.line_index": 3,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.6",
+					"address": "0.4",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -519,7 +416,7 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 6,
+					"meta.line_index": 4,
 					"meta.selector": {
 						"selected": false
 					}
@@ -1115,9 +1012,9 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 2006,
+			"meta.scroll_vertical": 418,
 			"meta.selected": false,
-			"next": 1,
+			"next": 0,
 			"number": 1,
 			"page_key": "",
 			"terminate": false

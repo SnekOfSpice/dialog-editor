@@ -84,29 +84,45 @@ size_flags_vertical = 0
 focus_mode = 0
 icon = ExtResource("4_x4tpw")
 
+[node name="GridContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "default"
+horizontal_alignment = 1
+
+[node name="DefaultApparenceSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+tooltip_text = "Default Appearance.
+If no conditional modifies this choice item, you can either have it appear in an enabled or disabled state.
+Text is custom for both states."
+selected = 0
+item_count = 2
+popup/item_0/text = "enabled"
+popup/item_1/text = "disabled"
+popup/item_1/id = 1
+
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "after 1st"
+horizontal_alignment = 1
+
+[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+layout_mode = 2
+tooltip_text = "Behavior Override.
+When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
+
 [node name="JumpPageToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "auto_switch"
 focus_mode = 0
 text = "jump page"
-
-[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
-layout_mode = 2
-tooltip_text = "Behavior Override.
-When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
-
-[node name="DefaultApparenceSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
-auto_translate_mode = 1
-layout_mode = 2
-tooltip_text = "Behavior Override.
-When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
-selected = 0
-item_count = 2
-popup/item_0/text = "enabled"
-popup/item_0/id = 0
-popup/item_1/text = "disabled"
-popup/item_1/id = 1
 
 [node name="LoopbackToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
@@ -261,8 +277,8 @@ facts_container = NodePath("VBox/FactsContainer")
 [connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
+[connection signal="item_selected" from="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_item_selected"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
-[connection signal="item_selected" from="ChoiceEdit/VBoxContainer2/VBoxContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_item_selected"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/LineSelect" to="." method="_on_line_select_value_changed"]

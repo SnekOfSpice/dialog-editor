@@ -81,7 +81,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_bva4l")
-text_speed = 200.0
+text_speed = 10.0
 max_text_line_count = 2
 name_map = {
 "cum": "Yippie"

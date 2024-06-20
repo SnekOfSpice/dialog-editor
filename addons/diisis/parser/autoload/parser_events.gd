@@ -93,6 +93,19 @@ signal text_content_text_changed(
 	lead_time: float,
 )
 
+## Emitted at the start of each line chunk getting read. Contains all string positions
+## that were marked with a [code]<strpos>[/code] tag.
+signal notify_string_positions(
+	positions: Array
+)
+
+## Emitted when a function is called by the [LineReader] that was marked with a [code]<call:>[/code] tag.
+signal function_called(
+	method_name: String,
+	arguments: Array,
+	at_index: int
+)
+
 ## Emitted when [LineReader] has finished displaying an entire word to its text box.
 signal word_read(
 	word: String
