@@ -72,7 +72,7 @@ func init(active_file_path:="") -> void:
 	Pages.editor = self
 	is_open = true
 	
-	request_add_page(0)
+	request_add_page(0, 0)
 	
 	update_controls()
 	
@@ -328,9 +328,9 @@ func _on_add_after_pressed() -> void:
 func request_add_page_after_current():
 	request_add_page(get_current_page_number() + 1)
 
-func request_add_page(at:int):
+func request_add_page(at:int, page_reference_change:=1):
 	undo_redo.create_action("Insert page")
-	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at))
+	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at, page_reference_change))
 	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(at))
 	undo_redo.add_undo_method(DiisisEditorActions.load_page.bind(get_current_page_number()))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_page.bind(at))

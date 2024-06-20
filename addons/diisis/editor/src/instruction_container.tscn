@@ -44,6 +44,7 @@ auto_brace_completion_enabled = true
 [node name="CopySignatureToClipboardButton" type="Button" parent="HBoxContainer/InstructionTextContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
+tooltip_text = "Copy GDScript function signature to clipboard."
 icon = ExtResource("2_lquiu")
 
 [node name="ComplianceContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer/VBoxContainer"]

@@ -26,7 +26,6 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 
 func deserialize(data:Dictionary):
-	
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	find_child("PageSelect").value = data.get("target_page", 0)
