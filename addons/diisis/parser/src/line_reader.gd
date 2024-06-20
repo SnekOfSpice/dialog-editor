@@ -201,6 +201,7 @@ var lead_time := 0.0
 var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
+var call_strings := {}
 var next_pause_type := 0
 enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
@@ -686,6 +687,11 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
 		if last_visible_characters != text_content.visible_characters:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
+	
+	for call_position : int in call_strings:
+		if call_position >= last_visible_characters and call_position <= text_content.visible_characters:
+			call_from_position(call_position)
+	
 	last_visible_ratio = text_content.visible_ratio
 	last_visible_characters = text_content.visible_characters
 	
@@ -775,7 +781,7 @@ func start_showing_text():
 
 func replace_var_func_tags(lines):
 	if not inline_evaluator:
-		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, and <fact:> won't be parsed.")
+		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
 		return lines
 	var i := 0
 	var result := []
@@ -877,6 +883,8 @@ func read_next_chunk():
 	
 	pause_positions.clear()
 	pause_types.clear()
+	call_strings.clear()
+	
 	var new_text : String = line_chunks[chunk_index]
 	while new_text.begins_with(" "):
 		new_text = new_text.trim_prefix(" ")
@@ -898,9 +906,6 @@ func read_next_chunk():
 		new_text = new_text.trim_suffix("<ap>")
 	while new_text.ends_with("<mp>"):
 		new_text = new_text.trim_suffix("<mp>")
-	
-	pause_positions.clear()
-	pause_types.clear()
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")
@@ -934,6 +939,13 @@ func read_next_chunk():
 				tag_buffer += 2
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
 				tag_buffer += 2
+			elif bbcode_removed_text.find("<call:", scan_index) == scan_index:
+				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
+				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
+				call_strings[scan_index] = tag_string
+				scan_index -= tag_string.length()
+				target_length -= tag_string.length()
 			
 		scan_index += 1
 	
@@ -962,6 +974,8 @@ func read_next_chunk():
 	cleaned_text = cleaned_text.replace("<ap>", "")
 	cleaned_text = cleaned_text.replace("<strpos>", "")
 	cleaned_text = cleaned_text.replace("\\[", "[")
+	for call : String in call_strings.values():
+		cleaned_text = cleaned_text.replace(call, "")
 	
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor
@@ -987,9 +1001,20 @@ func read_next_chunk():
 			pause_positions[l] = pause_positions[l] + name_prepend_length
 			l += 1
 	
-	prints("yippie", notify_positions)
+	ParserEvents.notify_string_positions.emit(notify_positions)
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
+
+func call_from_position(call_position: int):
+	var text : String = call_strings.get(call_position)
+	text = text.trim_prefix("<call:")
+	text = text.trim_suffix(">")
+	var parts := text.split(",")
+	var func_name = parts[0]
+	parts.remove_at(0)
+	inline_evaluator.callv(func_name, Array(parts))
+	ParserEvents.function_called.emit(func_name, Array(parts), call_position)
+	call_strings.erase(call_position)
 
 func set_text_content_text(text: String):
 	if keep_past_lines:

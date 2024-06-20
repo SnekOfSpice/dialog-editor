@@ -2,6 +2,35 @@
 extends Node
 class_name InstructionHandler
 
+## A supplementary class to give more complex behaviors to [LineReader].
+##
+## All methods implemented in [InstructionHandler] should return [code]false[/code] by default. Return [code]true[/code] for any
+## instructions to make the [InstructionHandler] wait for [signal InstructionHandler.instruction_completed]
+## to be emitted. (Has to emitted manually.) This is useful for instructions that don't have an instant effect, such as a fade to black or other animations.[br]
+## Note that you have to handle what happens inside those suspended calls yourself, including pausing the [Parser] and [method LineReader.interrupt].[br]
+## Supported data types for arguments are [b]String, float, and bool only.[b][br]
+## Exaple of how to write a minimal script that inherits from [InstructionHandler] and uses all of its functionality:
+## 
+## [codeblock]
+## extends InstructionHandler
+##
+## # This will instantly position something.
+## func position_character(character_name:String, character_position:int):
+##    # However you want to do this in your project is up to you.
+##    GameStage.set_character_position(
+##    character_name,
+##    character_position))
+##    return false
+##
+## # This implementation returns true, so the LineReader will wait until you tell it to continue.
+## # Make a callback to emit the instruction_completed signal of this node from the code that handles the movement.
+## # Maybe it has some lerp that takes some time!
+## func do_delayed():
+##    # Give self as an argument to make the callback easier.
+##    GameStage.call_some_lerp(self, 2.0)
+##    return true
+## [/codeblock]
+
 signal set_input_lock(value)
 signal instruction_wrapped_completed()
 ## Emit this signal from within the node that inherits from [InstructionHandler] after return from
@@ -69,34 +98,7 @@ func _wrapper_execute(instruction_name : String, args : Array, delay_before_seco
 	emit_signal("set_input_lock", true)
 	ParserEvents.instruction_started.emit(instruction_name, args, delay_before)
 
-## Should return [code]false[/code] by default. Return [code]true[/code] for any
-## instructions to make the [InstructionHandler] wait for [signal InstructionHandler.instruction_completed]
-## to be emitted. (Has to emitted manually.) This is useful for instructions that don't have an instant effect, such as a fade to black or other animations.[br]
-## Note that you have to handle what happens inside those suspended calls yourself, including pausing the [Parser] and [method LineReader.interrupt].[br]
-## Exaple of how to write a minimal script that inherits from [InstructionHandler] and uses all of its functionality:
-## [codeblock]
-## extends InstructionHandler
-## @export var icon:Sprite2D
-##
-## func execute(instruction_name, args) -> bool:
-##    match instruction_name:
-##        "show_character":
-##            # However you want to do this in your project is up to you.
-##            GameStage.set_character_visible(
-##                args.get("character_name"),
-##                bool(args.get("value"))
-##            )
-##        "rotate_icon":
-##            rotate_icon()
-##            return true
-##    return false
-##
-## func rotate_icon():
-##   var t = get_tree().create_tween()
-##   t.tween_property(icon, "rotation_degrees", 360, 2.0)
-##   await t.finished
-##   instruction_completed.emit()
-## [/codeblock]
+
 func execute(instruction_name:String, args:Array) -> bool:
 	if not has_method(instruction_name):
 		push_error(str("Function ", instruction_name, " not found in InstructionHandler."))
