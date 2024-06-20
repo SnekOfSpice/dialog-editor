@@ -482,29 +482,38 @@ autostart = true
 [node name="Popups" type="Node" parent="."]
 
 [node name="FDSave" type="FileDialog" parent="Popups"]
+transparent_bg = true
 gui_embed_subwindows = true
 initial_position = 4
 size = Vector2i(827, 377)
+transparent = true
+theme = ExtResource("1_nb6ej")
 ok_button_text = "Save"
 access = 2
 filters = PackedStringArray("*.json")
 
 [node name="FDExportLocales" type="FileDialog" parent="Popups"]
 auto_translate_mode = 1
+transparent_bg = true
 gui_embed_subwindows = true
 title = "Open a Directory"
 initial_position = 4
 size = Vector2i(827, 377)
+transparent = true
+theme = ExtResource("1_nb6ej")
 ok_button_text = "Select Current Folder"
 file_mode = 2
 access = 2
 filters = PackedStringArray("*.json")
 
 [node name="FDOpen" type="FileDialog" parent="Popups"]
+transparent_bg = true
 gui_embed_subwindows = true
 title = "Open a File"
 initial_position = 4
 size = Vector2i(312, 175)
+transparent = true
+theme = ExtResource("1_nb6ej")
 ok_button_text = "Open"
 file_mode = 0
 access = 2
@@ -518,6 +527,7 @@ content_scale_aspect = 1
 
 [node name="InstructionPopup" parent="Popups" instance=ExtResource("6_m88mr")]
 visible = false
+theme = ExtResource("1_nb6ej")
 
 [node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
 size = Vector2i(300, 270)

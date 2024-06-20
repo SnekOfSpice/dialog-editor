@@ -1,0 +1,18 @@
+[gd_resource type="StyleBoxFlat" format=3 uid="uid://cbtvpop26qltu"]
+
+[resource]
+bg_color = Color(0.168244, 0.174607, 0.237699, 1)
+border_width_left = 3
+border_width_top = 23
+border_width_right = 3
+border_width_bottom = 38
+border_color = Color(0.33, 0.17534, 0.0792, 0)
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 4.0
+expand_margin_top = 30.0
+expand_margin_right = 4.0
+expand_margin_bottom = 8.0
