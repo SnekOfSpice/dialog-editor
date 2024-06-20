@@ -11,7 +11,6 @@ var active_actors_title := ""
 
 var entered_arguments := 0
 var used_arguments := []
-var auto_complete_context := ""
 
 var text_box : CodeEdit
 
@@ -227,7 +226,7 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
-		for a in Pages.dropdowns.get(auto_complete_context, []):
+		for a in Pages.dropdowns.get(Pages.auto_complete_context, []):
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif full_actor_before_caret and get_text_after_caret(1) == ":":
@@ -415,7 +414,7 @@ func is_text_after_caret(what:String):
 func _on_text_box_code_completion_requested() -> void:
 	for arg_name in Pages.dropdown_dialog_arguments:
 		if is_text_before_caret(str(arg_name, "|}")):
-			auto_complete_context = arg_name
+			Pages.auto_complete_context = arg_name
 			caret_movement_to_do = -1
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
@@ -424,7 +423,7 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str("<", control, ":>")):
 			prints("before cartet", control)
 			caret_movement_to_do = -1
-			auto_complete_context = control
+			Pages.auto_complete_context = control
 			break
 	
 	for tag in ["b", "i", "u", "s"]:
