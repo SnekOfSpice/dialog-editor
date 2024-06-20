@@ -3,6 +3,7 @@ extends Node
 
 
 var head_defaults := []
+var auto_complete_context := ""
 
 var dropdowns := {"character": ["dii", "sis"]}
 var dropdown_titles := ["character"]
