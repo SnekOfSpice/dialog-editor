@@ -11,8 +11,12 @@ const MAX_TEXT_SPEED := 201
 	#All,
 #}
 
+## Determines how the name of the currently speaking actor is displayed. All options
+## respect [member name_map] and [member name_colors].
 enum NameStyle {
+	## The name will be displayed in [member name_label].
 	NameLabel,
+	## The name will be inserted in front of the text with a dividing hyphen. [member name_label] will be hidden.
 	Prepend,
 }
 

@@ -6,11 +6,12 @@
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
 number_color = Color(0.784314, 0.784314, 0.784314, 1)
-symbol_color = Color(1, 0.68876, 0.875468, 1)
+symbol_color = Color(0.784314, 0.784314, 0.784314, 1)
 function_color = Color(0.784314, 0.784314, 0.784314, 1)
 member_variable_color = Color(0.783523, 0.783523, 0.783523, 1)
 color_regions = {
 "< >": Color(0.596078, 0.545098, 0.752941, 1),
+"[ ]": Color(0.164069, 0.63007, 0.827847, 1),
 "[] >": Color(0.8, 0.364706, 0.913725, 1),
 "{ }": Color(0.87, 0.4002, 0.4002, 1)
 }
@@ -32,7 +33,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="TextBox" type="CodeEdit" parent="."]
-clip_contents = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3

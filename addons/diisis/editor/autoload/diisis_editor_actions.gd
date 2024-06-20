@@ -104,7 +104,7 @@ func delete_page(at:int):
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
 
-func add_page(at:int):
+func add_page(at:int, page_reference_change:=1):
 	var cache : Array = cached_pages.get(at, [])
 	var data : Dictionary
 	if not cache.is_empty():
@@ -114,7 +114,7 @@ func add_page(at:int):
 		data = {}
 	Pages.add_page_data(at, data)
 	await get_tree().process_frame
-	Pages.change_page_references_dir(at, 1)
+	Pages.change_page_references_dir(at, page_reference_change)
 	Pages.editor.load_page(at)
 	
 	await get_tree().process_frame
