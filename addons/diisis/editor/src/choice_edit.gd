@@ -26,14 +26,49 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 
 func deserialize(data:Dictionary):
+	var jump_target_page : int = data.get("target_page", 0)
+	var jump_target_line : int = data.get("target_line", 0)
+	var loopback_target_page : int = data.get("loopback_target_page", 0)
+	var loopback_target_line : int = data.get("loopback_target_line", 0)
+	
+	if find_child("PageSelect").max_value < jump_target_page:
+		#print("target exeeds limit")
+		find_child("PageSelect").max_value = jump_target_page
+		#prints("limit is now ", find_child("PageSelect").max_value)
+	if find_child("LineSelect").max_value < jump_target_line:
+		#print("target exeeds limit l")
+		find_child("LineSelect").max_value = jump_target_line
+		#prints("llimit is now ", find_child("LineSelect").max_value)
+	if find_child("LoopbackPageSelect").max_value < loopback_target_page:
+		find_child("LoopbackPageSelect").max_value = loopback_target_page
+	if find_child("LoopbackLineSelect").max_value < loopback_target_line:
+		find_child("LoopbackLineSelect").max_value = loopback_target_line
+	
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
-	find_child("PageSelect").value = data.get("target_page", 0)
-	find_child("LineSelect").value = data.get("target_line", 0)
-	find_child("LoopbackPageSelect").value = data.get("loopback_target_page", 0)
-	find_child("LoopbackLineSelect").value = data.get("loopback_target_line", 0)
-	deserialized_loopback_page = data.get("loopback_target_page", 0)
-	deserialized_loopback_line = data.get("loopback_target_line", 0)
+	#find_child("PageSelect").value = data.get("target_page", 0)
+	#find_child("LineSelect").value = data.get("target_line", 0)
+	#find_child("LoopbackPageSelect").value = data.get("loopback_target_page", 0)
+	#find_child("LoopbackLineSelect").value = data.get("loopback_target_line", 0)
+	#deserialized_loopback_page = data.get("loopback_target_page", 0)
+	#deserialized_loopback_line = data.get("loopback_target_line", 0)
+	
+
+	#
+	deserialized_loopback_page = loopback_target_page
+	deserialized_loopback_line = loopback_target_line
+	find_child("PageSelect").value = jump_target_page
+	find_child("LineSelect").value = jump_target_line
+	find_child("LoopbackPageSelect").value = loopback_target_page
+	find_child("LoopbackLineSelect").value = loopback_target_line
+#
+	#prints(
+		#"jline", jump_target_line,
+		#"jpage", jump_target_page,
+		#"lline", loopback_target_line,
+		#"lpage", loopback_target_page,
+	#)
+	
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	if data.get("choice_text.enabled_as_default", true):
@@ -107,6 +142,7 @@ func serialize() -> Dictionary:
 func update_fragile():
 	var address := get_address()
 	var parts : Array = DiisisEditorUtil.get_split_address(address)
+	#prints("fragile update", Pages.page_data.get(parts[0]).get("lines")[parts[1]].get("content"))
 	var data = Pages.page_data.get(parts[0]).get("lines")[parts[1]].get("content").get("choices")[parts[2]]
 	deserialize(data)
 
@@ -148,12 +184,13 @@ func _on_page_select_value_changed(value: float) -> void:
 	update()
 
 func update():
-	var max_page_index : int = Pages.get_page_count() - 1
+	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
 	var target_page := int(find_child("PageSelect").value)
 	target_page = min(target_page, max_page_index)
 	var target_line := int(find_child("LineSelect").value)
-	var max_line_index : int = Pages.get_line_count(target_page) - 1
+	var max_line_index : int = max(Pages.get_line_count(target_page) - 1, deserialized_loopback_line)
 	
+	#prints("updating, setting to", max_line_index, " was des w", deserialized_loopback_line)
 	find_child("PageSelect").max_value = max_page_index
 	find_child("LineSelect").max_value = max_line_index
 	
@@ -167,13 +204,17 @@ func update():
 	var loopback_line := int(find_child("LoopbackLineSelect").value)
 	
 	find_child("LoopbackTargetStringLabel").text = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
-	#find_child("LoopbackTargetStringLabel").tooltip = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
 	
 	find_child("IndexLabel").text = str(get_index())
 	find_child("UpButton").disabled = get_index() <= 0
 	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
 	
 	update_default_text_warning()
+	
+	if deserialized_loopback_line > find_child("LoopbackLineSelect").value:
+		find_child("LoopbackLineSelect").value = deserialized_loopback_page
+	if deserialized_loopback_page > find_child("LoopbackPageSelect").value:
+		find_child("LoopbackPageSelect").value = deserialized_loopback_page
 
 func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)

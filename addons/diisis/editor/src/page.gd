@@ -247,6 +247,11 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			to,
 			 + 1
 			)
+	
+	#print(change_line_references)
+	#await get_tree().process_frame
+	#save()
+	#update()
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})
@@ -285,14 +290,12 @@ func move_line(line: Line, dir:int):
 	if Input.is_key_pressed(KEY_SHIFT):
 		var jumped_line := get_line(idx + dir)
 		if jumped_line == null and dir == 1:
-			print("removing last")
 			var i = idx
 			var prev_indent_level = get_line(idx - 1).indent_level
 			while i > 0 and prev_indent_level > 0:
 				var prev_line := get_line(i - 1)
 				if prev_line.line_type == DIISIS.LineType.Folder:
 					prev_line.change_folder_range(-1)
-					print("reduce folder range")
 				i -= 1
 				prev_indent_level = get_line(idx-1).indent_level
 		elif jumped_line.line_type == DIISIS.LineType.Folder:

@@ -15,7 +15,7 @@ func _on_quit_button_pressed() -> void:
 	emit_signal("confirmed")
 
 func _on_about_to_popup() -> void:
-	pass
+	find_child("QuitButton").grab_focus()
 	#add_theme_icon_override("close", Texture2D.new())
 
 
