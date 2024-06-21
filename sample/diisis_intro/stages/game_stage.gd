@@ -22,11 +22,13 @@ var is_name_container_visible := false
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
 var blockers := 3
 
+@onready var text_start_position = find_child("TextContainer").position
+
 func _ready():
 	#find_child("TextContainer").position = Vector2(size.x * 0.5, size.y - find_child("TextContainer").size.y * 0.5)
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
-	ParserEvents.page_terminated.connect(GameWorld.stage_root.change_stage.bind(CONST.STAGE_MAIN))
+	ParserEvents.page_terminated.connect(go_to_main_menu)
 	
 	GameWorld.instruction_handler = $Handler
 	GameWorld.game_stage = self
@@ -38,6 +40,9 @@ func _ready():
 	set_text_style(text_style)
 	
 	remove_blocker()
+
+func go_to_main_menu(_unused):
+	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -81,6 +86,7 @@ func set_text_style(style:TextStyle):
 	text_style = style
 	if text_style == TextStyle.ToBottom:
 		find_child("TextContainer").custom_minimum_size.x = 454
+		find_child("TextContainer").position = text_start_position
 		find_child("RichTextLabel").custom_minimum_size.x = 500
 	elif text_style == TextStyle.ToCharacter:
 		find_child("TextContainer").custom_minimum_size.x = 230

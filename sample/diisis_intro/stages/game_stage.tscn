@@ -22,10 +22,12 @@ script = ExtResource("1_a36me")
 
 [node name="Eterna" parent="Characters" instance=ExtResource("5_abdaq")]
 position = Vector2(1112, 549)
+scale = Vector2(0.5, 0.5)
 character_name = "eterna"
 
 [node name="Amber" parent="Characters" instance=ExtResource("5_abdaq")]
 position = Vector2(253, 557)
+scale = Vector2(0.5, 0.5)
 character_name = "amber"
 
 [node name="CGBottomContainer" type="Control" parent="."]
@@ -211,6 +213,12 @@ mouse_filter = 2
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(720, 450)
 script = ExtResource("9_lbjue")
+
+[node name="TextPositionAmber" type="Node2D" parent="."]
+position = Vector2(509, 409)
+
+[node name="TextPositionEterna" type="Node2D" parent="."]
+position = Vector2(971, 409)
 
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]

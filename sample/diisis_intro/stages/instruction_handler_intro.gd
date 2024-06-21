@@ -22,6 +22,12 @@ func play_sfx(_name:String):
 func set_bgm(_name:String, fade_in:float):
 	Sound.play_bgm(CONST.get(str("MUSIC_", _name.to_upper())), fade_in)
 
+func set_text_style(style: String) -> bool:
+	if style == "ToBottom":
+		GameWorld.game_stage.set_text_style(GameStage.TextStyle.ToBottom)
+	elif style == "ToCharacter":
+		GameWorld.game_stage.set_text_style(GameStage.TextStyle.ToCharacter)
+	return false
 
 func black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:String, new_bgm:String):
 	emit_signal("start_black_fade",

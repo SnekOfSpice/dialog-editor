@@ -88,14 +88,12 @@
 				"fade_in"
 			]
 		},
-		"show-character": {
+		"set_text_style": {
 			"arg_types": [
-				"string",
-				"bool"
+				"string"
 			],
 			"args": [
-				"character_name",
-				"clear_others"
+				"style"
 			]
 		},
 		"show_cg": {
@@ -108,6 +106,16 @@
 				"name",
 				"fade_in_time",
 				"continue_dialog_through_cg"
+			]
+		},
+		"show_character": {
+			"arg_types": [
+				"string",
+				"bool"
+			],
+			"args": [
+				"character_name",
+				"clear_others"
 			]
 		},
 		"start_doom_timer": {
@@ -430,7 +438,7 @@
 									"meta.visible": true
 								},
 								"loopback": true,
-								"loopback_target_line": 5,
+								"loopback_target_line": 7,
 								"loopback_target_page": 0,
 								"meta.jump_page_before_auto_switch": false,
 								"meta.selector": {
@@ -474,13 +482,13 @@
 									"meta.visible": true
 								},
 								"loopback": true,
-								"loopback_target_line": 6,
+								"loopback_target_line": 8,
 								"loopback_target_page": 0,
 								"meta.jump_page_before_auto_switch": false,
 								"meta.selector": {
 									"selected": false
 								},
-								"target_line": 6,
+								"target_line": 8,
 								"target_page": 0
 							},
 							{
@@ -692,13 +700,56 @@
 						"operand_key": "AND"
 					},
 					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": [
+							"ToCharacter"
+						],
+						"meta.text": "set_text_style(ToCharacter)",
+						"meta.validation_status": "OK",
+						"name": "set_text_style"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 5,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.6",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
 						"active_actors": [
 							"amber",
 							"eterna",
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>eterna:No. You can add any theme or layout anchors as you like."
+						"content": "[]>eterna{eterna-emotion|neutral}:No. You can add any theme or layout anchors as you like.\n[]>amber:The HUD is your canvas.\n[]>eterna:As you can observe, this even allows for dynamic UI, if you want to put in the work...\n[]>amber:Hehe."
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -712,13 +763,56 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 5,
+					"meta.line_index": 6,
 					"meta.selector": {
 						"selected": false
 					}
 				},
 				{
-					"address": "0.6",
+					"address": "0.7",
+					"conditionals": {
+						"behavior": 0,
+						"behavior_key": "Show",
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"meta.visible": false,
+						"operand": 0,
+						"operand_args": [],
+						"operand_key": "AND"
+					},
+					"content": {
+						"delay_after": 0,
+						"delay_before": 0,
+						"line_reader.args": [
+							"ToBottom"
+						],
+						"meta.text": "set_text_style(ToBottom)",
+						"meta.validation_status": "OK",
+						"name": "set_text_style"
+					},
+					"facts": {
+						"fact_data_by_name": {
+
+						},
+						"meta.visible": false
+					},
+					"header": [],
+					"line_type": 2,
+					"meta.conditionals_visible": false,
+					"meta.facts_visible": false,
+					"meta.indent_level": 0,
+					"meta.is_head_editable": false,
+					"meta.line_index": 7,
+					"meta.selector": {
+						"selected": false
+					}
+				},
+				{
+					"address": "0.8",
 					"conditionals": {
 						"behavior": 0,
 						"behavior_key": "Show",
@@ -754,13 +848,13 @@
 					"meta.facts_visible": false,
 					"meta.indent_level": 0,
 					"meta.is_head_editable": false,
-					"meta.line_index": 6,
+					"meta.line_index": 8,
 					"meta.selector": {
 						"selected": false
 					}
 				}
 			],
-			"meta.scroll_vertical": 1321,
+			"meta.scroll_vertical": 2027,
 			"meta.selected": false,
 			"next": 1,
 			"number": 0,
@@ -1011,7 +1105,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 2
+								"target_page": 1
 							},
 							{
 								"address": "1.4.1",
@@ -1048,7 +1142,7 @@
 									"selected": false
 								},
 								"target_line": 0,
-								"target_page": 2
+								"target_page": 1
 							}
 						],
 						"meta.do_jump_page": true
@@ -1211,9 +1305,9 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 1033,
+			"meta.scroll_vertical": 1022,
 			"meta.selected": false,
-			"next": 2,
+			"next": 1,
 			"number": 1,
 			"page_key": "",
 			"terminate": true

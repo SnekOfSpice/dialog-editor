@@ -58,3 +58,5 @@ offset_top = -31.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "close"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
