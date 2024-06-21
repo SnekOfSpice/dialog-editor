@@ -508,12 +508,12 @@ func _on_file_id_pressed(id: int) -> void:
 			if active_dir != "":
 				$Popups.get_node("FDOpen").current_dir = active_dir
 			open_popup($Popups.get_node("FDOpen"), true)
-		4:
+		3:
 			# config
 			open_popup($Popups.get_node("FileConfigPopup"), true)
-		6: # locales
+		5: # locales
 			open_popup($Popups.get_node("LocaleSelectionWindow"), true)
-		7: # export blank l10n
+		6: # export blank l10n
 			open_popup($Popups.get_node("FDExportLocales"), true)
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n

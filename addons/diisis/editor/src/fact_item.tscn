@@ -25,7 +25,6 @@ layout_mode = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "Bool"
-popup/item_0/id = 0
 popup/item_1/text = "Int"
 popup/item_1/id = 1
 
@@ -62,7 +61,6 @@ selected = 0
 allow_reselect = true
 item_count = 6
 popup/item_0/text = "=="
-popup/item_0/id = 0
 popup/item_1/text = "!="
 popup/item_1/id = 1
 popup/item_2/text = "<"
