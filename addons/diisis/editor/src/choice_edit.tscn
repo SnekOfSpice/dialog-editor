@@ -173,6 +173,7 @@ text = "P"
 
 [node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
+max_value = 1e+07
 
 [node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
@@ -181,6 +182,7 @@ text = "L"
 [node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+max_value = 1e+07
 
 [node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
@@ -211,6 +213,7 @@ text = "P"
 [node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+max_value = 1e+07
 
 [node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
@@ -220,6 +223,7 @@ text = "L"
 [node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+max_value = 1e+07
 
 [node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
