@@ -57,6 +57,7 @@ func init() -> void:
 	
 	await get_tree().process_frame
 	text_box.grab_focus()
+	text_box.cancel_code_completion()
 
 func set_use_dialog_syntax(value:bool):
 	#use_dialog_syntax = value
@@ -432,9 +433,3 @@ func _on_text_box_code_completion_requested() -> void:
 			break
 
 
-
-
-func _on_text_box_mouse_exited() -> void:
-	text_box.cancel_code_completion()
-	#text_box.remove_caret(0)
-	emit_signal("drop_focus")

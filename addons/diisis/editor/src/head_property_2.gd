@@ -126,13 +126,11 @@ func _on_drop_down_button_item_selected(index: int) -> void:
 	
 	values[0] = index
 	values = values.duplicate(true)
-	print("A")
 
 
 func _on_drop_down_value_button_item_selected(index: int) -> void:
 	values[1] = index
 	values = values.duplicate(true)
-	print("B")
 
 
 func _on_line_edit_text_changed(new_text: String) -> void:

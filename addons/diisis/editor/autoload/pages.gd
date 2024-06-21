@@ -365,12 +365,11 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	var edited_current_page := false
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		print(page.get("number"))
+		prints("page", page.get("number"))
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				for choice in content.get("choices"):
-					prints("choice", choice)
 					var page_number : int = page.get("number")
 					if choice.get("target_page") == on_page:
 						var target_line : int = choice.get("target_line")

@@ -51,6 +51,7 @@ func deserialize(data: Dictionary) -> void:
 	set_data_type(data.get("data_type", DataType.Bool))
 	set_int_comparator(data.get("int_comparator", Comparator.EQ))
 	set_int_operator(data.get("int_operator", Operator.Set))
+	find_child("RegisterButton").visible = not Pages.facts.has(data.get("fact_name", ""))
 
 
 
