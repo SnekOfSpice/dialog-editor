@@ -6,6 +6,7 @@ var emotion := ""
 
 func _ready():
 	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
+	add_to_group("character")
 
 func serialize() -> Dictionary:
 	var result := {}

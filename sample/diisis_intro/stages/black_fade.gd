@@ -34,7 +34,7 @@ func fade_out(duration:= release_on_full_black_reached):
 
 func on_full_black_reached():
 	if hide_characters_on_full_black_reached:
-		for c in get_tree().get_nodes_in_group("Character"):
+		for c in get_tree().get_nodes_in_group("character"):
 			c.visible = false
 	
 	GameWorld.stage_root.set_background(new_background_on_full_black_reached)

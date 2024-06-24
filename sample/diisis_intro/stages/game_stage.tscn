@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=10 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://sample/diisis_intro/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
+[ext_resource type="Theme" uid="uid://c3ok2vnjyu5p7" path="res://sample/diisis_intro/visuals/demo_theme.tres" id="1_ratke"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
 [ext_resource type="Script" path="res://sample/diisis_intro/stages/instruction_handler_intro.gd" id="4_u8vmc"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://sample/diisis_intro/characters/intro_character.tscn" id="5_abdaq"]
@@ -16,6 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_ratke")
 script = ExtResource("1_a36me")
 
 [node name="Characters" type="Node2D" parent="."]
@@ -81,9 +83,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -227.0
-offset_right = 250.0
+offset_left = -257.0
+offset_top = -258.0
+offset_right = 257.0
+offset_bottom = -13.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -99,8 +102,17 @@ size_flags_vertical = 8
 [node name="MarginContainer" type="MarginContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 1
 
-[node name="Label" type="Label" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/PanelContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Name Label Here"
@@ -109,6 +121,7 @@ text = "Name Label Here"
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 8
+mouse_filter = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel"]
 auto_translate_mode = 1
@@ -122,6 +135,7 @@ scroll_active = false
 
 [node name="ChoiceContainer" type="PanelContainer" parent="VNUI"]
 auto_translate_mode = 1
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -150,6 +164,11 @@ grow_vertical = 0
 layout_mode = 2
 text = "History"
 
+[node name="MenuButton" type="Button" parent="VNUI/ControlsContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Menu"
+
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
 
@@ -170,7 +189,7 @@ choice_option_container = NodePath("../VNUI/ChoiceContainer/VBoxContainer")
 instruction_handler = NodePath("../Handler")
 text_content = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
 text_container = NodePath("../VNUI/TextContainer")
-name_label = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/Label")
+name_label = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/Label")
 name_container = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../InlineEval")
 
@@ -223,7 +242,10 @@ position = Vector2(971, 409)
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
 [connection signal="meta_clicked" from="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
 [connection signal="pressed" from="VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
+[connection signal="pressed" from="VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="start_black_fade" from="Handler" to="BlackFade" method="_on_handler_start_black_fade"]
 [connection signal="start_hide_cg" from="Handler" to="." method="hide_cg"]
 [connection signal="start_show_cg" from="Handler" to="." method="_on_handler_start_show_cg"]

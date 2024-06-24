@@ -664,7 +664,7 @@
 							"narrator"
 						],
 						"active_actors_title": "character",
-						"content": "[]>amber:DIISIS comes with a [rainbow freq=2.0 sat=0.5 val=0.8]fact system[/rainbow]. <mp>At any point, you can declare a fact, which can be either a boolean (true or false) or an integer (any negative or positive whole number). <lc>Using this, you can hide / show lines of text and choices to make your game feel responsive. <mp>If you branch into different parts of the document (pages), you can even create entirely disjointed story paths! <lc>And secondly, you have choices themselves. They can have all kinds of anatomies, such as looping back to a start point (like this one) <mp>, or being a one-and-done deal (for more linear experiences).<lc> Furthermore, you can have options be picked automatically based on the state of some fact(s). All in all, it's really flexible!"
+						"content": "[]>amber:DIISIS comes with a [rainbow freq=2.0 sat=0.5 val=0.8]fact system[/rainbow]. <mp>At any point, you can declare a fact, which can be either a boolean (true or false) or an integer (any negative or positive whole number). <lc>Using this, you can hide / show lines of text and choices to make your game feel responsive. <mp>If you branch into different parts of the document (pages), you can even create entirely disjointed story paths! <lc>And secondly, you have choices themselves. They can have all kinds of anatomies, such as looping back to a start point (like this one)<mp>, or being a one-and-done deal (for more linear experiences).<lc> Furthermore, you can have options be picked automatically based on the state of some fact(s). All in all, it's really flexible!"
 					},
 					"facts": {
 						"fact_data_by_name": {
@@ -1305,7 +1305,7 @@
 					}
 				}
 			],
-			"meta.scroll_vertical": 1022,
+			"meta.scroll_vertical": 1033,
 			"meta.selected": false,
 			"next": 1,
 			"number": 1,

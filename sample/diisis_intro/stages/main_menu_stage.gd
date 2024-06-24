@@ -3,11 +3,9 @@ extends Control
 signal start_game()
 signal load_game()
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	find_child("LoadButton").visible = Options.does_savegame_exist()
-
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

@@ -18,6 +18,7 @@ signal start_hide_cg()
 
 func play_sfx(_name:String):
 	Sound.play_sfx(CONST.get(str("SFX_", _name.to_upper())))
+	return false
 
 func set_bgm(_name:String, fade_in:float):
 	Sound.play_bgm(CONST.get(str("MUSIC_", _name.to_upper())), fade_in)

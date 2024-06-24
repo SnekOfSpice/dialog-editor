@@ -21,6 +21,7 @@ var is_name_container_visible := false
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
 var blockers := 3
+var hovering_meta := false
 
 @onready var text_start_position = find_child("TextContainer").position
 
@@ -44,11 +45,12 @@ func _ready():
 func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
-func _gui_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
+	if hovering_meta:
+		return
 	if event is InputEventKey:
 		if event.pressed and InputMap.action_has_event("ui_cancel", event):# event.is_action_just_pressed("ui_cancel"):
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
-
 
 	if event.is_action_pressed("advance"):
 		for root in cg_roots:
@@ -214,3 +216,16 @@ func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) ->
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
+
+
+func _on_menu_button_pressed() -> void:
+	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+
+
+
+func _on_rich_text_label_meta_hover_ended(meta: Variant) -> void:
+	hovering_meta = false
+
+
+func _on_rich_text_label_meta_hover_started(meta: Variant) -> void:
+	hovering_meta = true

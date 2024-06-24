@@ -23,15 +23,16 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -85.5
-offset_right = 70.0
-offset_bottom = 85.5
+offset_left = 15.0
+offset_top = -103.0
+offset_right = 155.0
+offset_bottom = 103.0
 grow_vertical = 2
 
 [node name="StartButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "New"
+text = "New Game"
 alignment = 0
 
 [node name="LoadButton" type="Button" parent="VBoxContainer"]
@@ -59,7 +60,7 @@ alignment = 0
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
-text = "CW"
+text = "Content Warning"
 alignment = 0
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]

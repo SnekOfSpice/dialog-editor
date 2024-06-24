@@ -67,10 +67,11 @@ func change_stage(stage_path:String):
 	if stage_path == CONST.STAGE_GAME:
 		new_stage.callable_upon_blocker_clear = game_start_callable
 	
-	$StageContainer.add_child(new_stage)
 	for child in $StageContainer.get_children():
 		if new_stage != child:
 			child.queue_free()
+	$StageContainer.add_child(new_stage)
+	
 	
 	match stage_path:
 		CONST.STAGE_MAIN:

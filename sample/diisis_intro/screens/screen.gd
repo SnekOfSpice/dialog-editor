@@ -8,8 +8,15 @@ func _ready() -> void:
 		GameWorld.game_stage.hide_ui()
 	tree_exiting.connect(restore_ui)
 	
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	gui_input.connect(handle_input)
+	
 	await get_tree().process_frame
 	ignore_event = false
+
+func handle_input(event: InputEvent):
+	if event is InputEventMouseButton:
+		close()
 
 func restore_ui():
 	if GameWorld.game_stage:
