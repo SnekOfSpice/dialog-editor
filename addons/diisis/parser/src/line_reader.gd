@@ -1161,6 +1161,8 @@ func build_choices(choices, auto_switch:bool):
 					#new_option.focus_mode = Control.FOCUS_NONE
 				#new_option.mouse_filter = Control.MOUSE_FILTER_STOP
 				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_STOP
+	if choice_option_container.get_child_count() > 0:
+		choice_option_container.get_child(0).call_deferred("grab_focus")
 	ParserEvents.choices_presented.emit(built_choices)
 	
 	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
