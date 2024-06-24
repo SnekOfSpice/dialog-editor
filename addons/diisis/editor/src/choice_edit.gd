@@ -142,8 +142,13 @@ func serialize() -> Dictionary:
 func update_fragile():
 	var address := get_address()
 	var parts : Array = DiisisEditorUtil.get_split_address(address)
-	#prints("fragile update", Pages.page_data.get(parts[0]).get("lines")[parts[1]].get("content"))
-	var data = Pages.page_data.get(parts[0]).get("lines")[parts[1]].get("content").get("choices")[parts[2]]
+	var line : Dictionary = Pages.page_data.get(parts[0]).get("lines")[parts[1]]
+	var line_type : int= line.get("line_type")
+	if line_type != DIISIS.LineType.Choice:
+		# since lines never delete the different line type containers, there can be remnants of choice items at this line index from other pages during page loading
+		# this ensures that we actually only get choices if the current line is actually still a choice
+		return
+	var data = line.get("content").get("choices")[parts[2]]
 	deserialize(data)
 
 func get_address() -> String:
