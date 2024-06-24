@@ -83,6 +83,7 @@ mouse_filter = 2
 script = ExtResource("1_bva4l")
 text_speed = 10.0
 max_text_line_count = 2
+choice_button_focus_mode = null
 name_map = {
 "cum": "Yippie"
 }
