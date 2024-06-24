@@ -1254,7 +1254,7 @@ func get_compliance_with_template(instruction:String) -> String:
 	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
 	
 	var i := 0
-	while i < template_types.size() and not template_types.is_empty() and not args.is_empty():
+	while i < template_types.size() and not template_types.is_empty() and i < args.size():
 		var arg_string : String = args[i]
 		while arg_string.begins_with(" "):
 			arg_string = arg_string.trim_prefix(" ")

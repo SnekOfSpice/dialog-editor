@@ -101,10 +101,10 @@ func _wrapper_execute(instruction_name : String, args : Array, delay_before_seco
 
 func execute(instruction_name:String, args:Array) -> bool:
 	if not has_method(instruction_name):
-		push_error(str("Function ", instruction_name, " not found in InstructionHandler."))
+		push_error(str("Function ", instruction_name, " not found in ", get_script().get_global_name(),"."))
 		return false
 	var result = callv(instruction_name, args)
 	if not result is bool:
-		push_error(str("Function ", instruction_name, " should return bool."))
+		push_error(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
 		return false
 	return result

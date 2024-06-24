@@ -1172,7 +1172,7 @@ func build_choices(choices, auto_switch:bool):
 			#push_warning("No choice to give focus to.")
 
 func is_choice_presented():
-	return not choice_option_container.get_children().is_empty()
+	return (not choice_option_container.get_children().is_empty()) and choice_container.visible
 
 func choice_pressed(do_jump_page, target_page, target_line):
 	for c in choice_option_container.get_children():
