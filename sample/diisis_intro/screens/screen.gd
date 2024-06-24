@@ -16,7 +16,8 @@ func _ready() -> void:
 
 func handle_input(event: InputEvent):
 	if event is InputEventMouseButton:
-		close()
+		if event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+			close()
 
 func restore_ui():
 	if GameWorld.game_stage:
