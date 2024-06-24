@@ -3,13 +3,16 @@
 extends Control
 class_name LineReader
 
+## Text speed at which text will be shown instantly instead of gradually revealed.
 const MAX_TEXT_SPEED := 201
 
-#enum ChoiceButtonFocusMode {
-	#KeyboardOnly,
-	#MouseOnly,
-	#All,
-#}
+
+enum ChoiceButtonFocusMode {
+	## The first [ChoiceButton] of [member choice_button_container] will receive focus upon build. Items can be navigated and selected with keyboard UI inputs. Mouse can still be used.
+	Keyboard,
+	## No [ChoiceButton] will receive focus. An option has to be clicked to be selected.
+	None
+}
 
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member name_colors].
@@ -25,6 +28,7 @@ enum NameStyle {
 
 @export_group("UX")
 @export_subgroup("Text Behavior")
+## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
 ## The delay that <ap> tags imply, in seconds.
 @export var auto_pause_duration := 0.2
@@ -35,7 +39,7 @@ enum NameStyle {
 	set(value):
 		auto_continue = value
 		notify_property_list_changed()
-## Time before the line reader automatically continues, in seconds.
+## If [member auto_continue] is [code]true[/code], this is the time before the line reader automatically continues, in seconds.
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
 var _auto_continue_duration:= auto_continue_delay
 ## If [code]0[/code], [param text_content] will be filled as far as possible.
@@ -49,8 +53,9 @@ var _auto_continue_duration:= auto_continue_delay
 @export var max_text_line_count:=0
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export var show_text_during_choices := true
-## If [code]true[/code], shows [param text_container] when choices are presented.
+## If [code]true[/code], shows [param text_container] when instructions are being executed.
 @export var show_text_during_instructions := false
+## If [code]true[/code], the LineReader will add a copy of its text to [member past_text_continer] whenever the text of [member text_content] is reset.
 @export var keep_past_lines := false:
 	set(value):
 		keep_past_lines = value
@@ -65,15 +70,15 @@ var _auto_continue_duration:= auto_continue_delay
 			update_configuration_warnings()
 
 @export_subgroup("Choices")
-## Button scene that gets instantiated as children of [member choice_option_container].[br]
-## If left unassigned, will use a default button.[br]
-## If overridden, it must inherit from [ChoiceButton].
-@export var button_scene:ChoiceButton
 ## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
 ## Choice Buttons are currently presented to the player.
 @export var block_advance_during_choices:=true
 #@export var give_focus_to_choice_button := false
-#@export var choice_button_focus_mode := ChoiceButtonFocusMode.MouseOnly
+@export var choice_button_focus_mode := ChoiceButtonFocusMode.None
+## Button scene that gets instantiated as children of [member choice_option_container].[br]
+## If left unassigned, will use a default button.[br]
+## If overridden, it must inherit from [ChoiceButton].
+@export var button_scene:ChoiceButton
 
 @export_subgroup("Advance")
 @export var show_advance_available := false:
@@ -1145,23 +1150,14 @@ func build_choices(choices, auto_switch:bool):
 			"loopback_target_line" : loopback_target_line,
 		})
 		
-		#match choice_button_focus_mode:
-			#ChoiceButtonFocusMode.All:
-				#new_option.focus_mode = Control.FOCUS_ALL
-				#new_option.mouse_filter = Control.MOUSE_FILTER_STOP
-				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_STOP
-			#ChoiceButtonFocusMode.KeyboardOnly:
-				#new_option.focus_mode = Control.FOCUS_ALL
-				#new_option.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			#ChoiceButtonFocusMode.MouseOnly:
-				#if give_focus_to_choice_button:
-					#new_option.focus_mode = Control.FOCUS_CLICK
-				#else:
-					#new_option.focus_mode = Control.FOCUS_NONE
-				#new_option.mouse_filter = Control.MOUSE_FILTER_STOP
-				#choice_option_container.mouse_filter = Control.MOUSE_FILTER_STOP
-	if choice_option_container.get_child_count() > 0:
+		match choice_button_focus_mode:
+			ChoiceButtonFocusMode.Keyboard:
+				new_option.focus_mode = Control.FOCUS_ALL
+				new_option.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			ChoiceButtonFocusMode.None:
+				new_option.focus_mode = Control.FOCUS_NONE
+				new_option.mouse_filter = Control.MOUSE_FILTER_STOP
+	if choice_option_container.get_child_count() > 0 and choice_button_focus_mode == ChoiceButtonFocusMode.Keyboard:
 		choice_option_container.get_child(0).call_deferred("grab_focus")
 	ParserEvents.choices_presented.emit(built_choices)
 	
