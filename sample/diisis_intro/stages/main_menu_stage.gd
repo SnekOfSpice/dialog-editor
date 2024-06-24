@@ -26,3 +26,11 @@ func _on_credits_button_pressed() -> void:
 
 func _on_cw_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_CONTENT_WARNING)
+
+
+func _on_discord_button_pressed() -> void:
+	OS.shell_open("https://discord.gg/jPU4RvmTvP")
+
+
+func _on_git_hub_button_pressed() -> void:
+	OS.shell_open("https://github.com/SnekOfSpice/dialog-editor")

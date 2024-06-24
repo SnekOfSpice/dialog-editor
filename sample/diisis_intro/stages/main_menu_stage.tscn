@@ -70,9 +70,37 @@ focus_mode = 0
 text = "Quit"
 alignment = 0
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -162.0
+offset_top = -61.0
+offset_right = -27.0
+offset_bottom = 43.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="DiscordButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Discord"
+
+[node name="GitHubButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "GitHub"
+
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="emit_signal" binds= ["start_game"]]
 [connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="emit_signal" binds= ["load_game"]]
 [connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/CWButton" to="." method="_on_cw_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/DiscordButton" to="." method="_on_discord_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/GitHubButton" to="." method="_on_git_hub_button_pressed"]
