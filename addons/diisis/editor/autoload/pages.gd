@@ -1036,10 +1036,10 @@ func get_evaluator_properties() -> Array:
 	
 	return methods
 
-func search_string(substr:String):
+func search_string(substr:String, case_insensitive:=false):
 	var found_facts := {}
 	for fact : String in facts:
-		if fact.contains(substr):
+		if (case_insensitive and fact.containsn(substr)) or (not case_insensitive and fact.contains(substr)):
 			found_facts[fact] = fact
 	
 	var found_choices := {}
@@ -1051,14 +1051,14 @@ func search_string(substr:String):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var choice_index := 0
 				for choice in line.get("content", {}).get("choices", []):
-					if choice.get("choice_text.enabled").contains(substr):
+					if (case_insensitive and choice.get("choice_text.enabled").containsn(substr)) or (not case_insensitive and choice.get("choice_text.enabled").contains(substr)):
 						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = choice.get("choice_text.enabled")
-					if choice.get("choice_text.disabled").contains(substr):
+					if (case_insensitive and choice.get("choice_text.disabled").containsn(substr)) or (not case_insensitive and choice.get("choice_text.disabled").contains(substr)):
 						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = choice.get("choice_text.disabled")
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var text : String = line.get("content", {}).get("content", "")
-				if text.contains(substr):
+				if (case_insensitive and text.containsn(substr)) or (not case_insensitive and text.contains(substr)):
 					found_text[str(page_index, ".", line_index)] = text
 			line_index += 1
 		page_index += 1
