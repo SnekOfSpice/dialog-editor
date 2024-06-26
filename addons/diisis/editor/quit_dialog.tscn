@@ -1,17 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3170v1u5of2d"]
+[gd_scene load_steps=3 format=3 uid="uid://b3170v1u5of2d"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/quit_dialog.gd" id="1_pn46y"]
+[ext_resource type="Texture2D" uid="uid://3gqp3bocdpbm" path="res://addons/diisis/editor/visuals/blank.png" id="1_rxmbd"]
 
 [node name="QuitDialog" type="Window"]
 auto_translate_mode = 1
 title = "Close DIISIS?"
 initial_position = 4
 size = Vector2i(301, 150)
+wrap_controls = true
 transient = true
 exclusive = true
-borderless = true
 always_on_top = true
 popup_window = true
+theme_override_icons/close = ExtResource("1_rxmbd")
+theme_override_icons/close_pressed = ExtResource("1_rxmbd")
 script = ExtResource("1_pn46y")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

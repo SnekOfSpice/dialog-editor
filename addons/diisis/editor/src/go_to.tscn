@@ -3,44 +3,56 @@
 [ext_resource type="Script" path="res://addons/diisis/editor/src/go_to.gd" id="1_mfnyd"]
 
 [node name="GoTo" type="VBoxContainer"]
+offset_right = 131.0
 offset_bottom = 66.0
 script = ExtResource("1_mfnyd")
 
-[node name="ErrorLabel" type="Label" parent="."]
-layout_mode = 2
-text = "Go To"
-
-[node name="GridContainer" type="GridContainer" parent="."]
-layout_mode = 2
-columns = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="GoToButton" type="Button" parent="GridContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="GoToButton" type="Button" parent="HBoxContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = ">>"
 
-[node name="CancelGoTo" type="Button" parent="GridContainer/HBoxContainer"]
+[node name="CancelGoTo" type="Button" parent="HBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 focus_mode = 0
 text = "X"
 
-[node name="CurrentPageLabel" type="Label" parent="GridContainer"]
+[node name="AddressBar" type="LineEdit" parent="HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+
+[node name="CurrentPageLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "40"
 
-[node name="AddressBar" type="LineEdit" parent="GridContainer"]
-visible = false
+[node name="Slash" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+text = "/"
 
-[node name="PageCountLabel" type="Label" parent="GridContainer"]
+[node name="PageCountLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "200"
 
-[connection signal="pressed" from="GridContainer/HBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
-[connection signal="pressed" from="GridContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
-[connection signal="text_changed" from="GridContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
-[connection signal="text_submitted" from="GridContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 5
+
+[node name="ErrorLabel" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(166.74, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Go To"
+text_overrun_behavior = 1
+
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
+[connection signal="text_changed" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
+[connection signal="text_submitted" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]

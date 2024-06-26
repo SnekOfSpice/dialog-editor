@@ -124,6 +124,8 @@ func _on_size_changed() -> void:
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
+	for window : Window in get_tree().get_nodes_in_group("diisis_scalable_popup"):
+		window.content_scale_factor = value
 
 
 func _on_window_mouse_entered():
@@ -164,6 +166,7 @@ func _on_editor_open_new_file() -> void:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
+	title = "DIISIS"
 
 
 func _on_quit_dialog_request_save() -> void:
@@ -171,3 +174,7 @@ func _on_quit_dialog_request_save() -> void:
 		$QuitDialog.hide()
 	editor.attempt_save_to_dir()
 	update_quit_dialog_text(last_quit_header)
+
+
+func _on_editor_save_path_set(active_dir: String, active_file_name: String) -> void:
+	title = str(active_file_name, " - DIISIS - ", " (", active_dir, active_file_name, ")")

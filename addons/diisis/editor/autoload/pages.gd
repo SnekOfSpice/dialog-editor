@@ -1333,5 +1333,3 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 			
 	
 	return "OK"
-
-
