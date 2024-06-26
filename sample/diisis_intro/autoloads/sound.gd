@@ -20,7 +20,7 @@ func set_audio_player_volume(volume:float):
 	main_audio_player.volume_db = linear_to_db(volume)
 	for player : AudioStreamPlayer in audio_players:
 		if player == main_audio_player:
-			return
+			continue
 		player.volume_db = linear_to_db((1.0 - volume) / (audio_players.size() - 1))
 		if db_to_linear(player.volume_db) <= 0.0:
 			audio_players.erase(player)
@@ -37,7 +37,7 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if bgm_key == bgm:
 		return
 	
-	bgm_key = bgm
+	bgm_key = bgm 
 	
 	var music_player = AudioStreamPlayer.new()
 	music_player.connect("tree_exiting", audio_players.erase.bind(music_player))
@@ -65,7 +65,7 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 			#t.tween_callback(player.queue_free)
 	else:
 		while not audio_players.is_empty():
-			var player : AudioStreamPlayer = audio_players.front()
+			var player : AudioStreamPlayer = audio_players.pop_front()
 			player.queue_free()
 		music_player.volume_db = linear_to_db(Options.music_volume)
 	

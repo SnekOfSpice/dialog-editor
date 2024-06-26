@@ -4,6 +4,7 @@ signal start_game()
 signal load_game()
 
 func _ready() -> void:
+	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	find_child("LoadButton").visible = Options.does_savegame_exist()
 

@@ -5,7 +5,6 @@ var stage := ""
 var screen := ""
 
 func _ready():
-	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
 	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
@@ -20,6 +19,9 @@ func _gui_input(event: InputEvent) -> void:
 		set_screen(CONST.SCREEN_OPTIONS)
 
 func set_screen(screen_path:String):
+	if Parser.line_reader:
+		if Parser.line_reader.is_input_locked:
+			return
 	if screen_path.is_empty():
 		for c in $ScreenContainer.get_children():
 			c.queue_free()
