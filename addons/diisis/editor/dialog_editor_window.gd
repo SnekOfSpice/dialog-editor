@@ -12,6 +12,8 @@ var last_quit_header := ""
 
 signal open_new_file()
 
+const PREFERENCE_PATH := "user://editor_preferences.cfg"
+
 func _on_about_to_popup() -> void:
 	editor = find_child("Editor")
 	editor_window = find_child("Window")
@@ -24,6 +26,12 @@ func _on_about_to_popup() -> void:
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
+	
+	var config = ConfigFile.new()
+	var err = config.load(PREFERENCE_PATH)
+	if err == OK:
+		update_content_scale(config.get_value("editor", "content_scale", 1.0))
+		size = config.get_value("editor", "size", size)
 
 func _process(delta):
 	if not editor or not editor_window:
@@ -88,7 +96,16 @@ func update_quit_dialog_text(header_text:String):
 func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
 
+func save_preferences():
+	var config = ConfigFile.new()
+	
+	config.set_value("editor", "content_scale", editor_window.content_scale_factor)
+	config.set_value("editor", "size", size)
+	
+	config.save(PREFERENCE_PATH)
+
 func close_editor():
+	save_preferences()
 	editor.is_open = false
 	hide()
 	queue_free()
@@ -124,6 +141,8 @@ func _on_size_changed() -> void:
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
+	for window : Window in get_tree().get_nodes_in_group("diisis_scalable_popup"):
+		window.content_scale_factor = value
 
 
 func _on_window_mouse_entered():
@@ -164,6 +183,7 @@ func _on_editor_open_new_file() -> void:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
+	title = "DIISIS"
 
 
 func _on_quit_dialog_request_save() -> void:
@@ -171,3 +191,7 @@ func _on_quit_dialog_request_save() -> void:
 		$QuitDialog.hide()
 	editor.attempt_save_to_dir()
 	update_quit_dialog_text(last_quit_header)
+
+
+func _on_editor_save_path_set(active_dir: String, active_file_name: String) -> void:
+	title = str(active_file_name, " - DIISIS - ", " (", active_dir, active_file_name, ")")

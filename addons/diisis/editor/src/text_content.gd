@@ -431,5 +431,3 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str("[/", tag, "]")):
 			caret_movement_to_do = -str("[/", tag, "]").length()
 			break
-
-

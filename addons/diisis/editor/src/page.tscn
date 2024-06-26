@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://bl3r0kwwycrmw"]
+[gd_scene load_steps=4 format=3 uid="uid://bl3r0kwwycrmw"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/page.gd" id="1_2lug2"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_eeb01"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6srl"]
+bg_color = Color(0.28, 0.0924, 0.229973, 0.156863)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 4
+border_color = Color(0.09, 0.09, 0.09, 0.764706)
+border_blend = true
 
 [node name="Page" type="VBoxContainer"]
 anchors_preset = -1
@@ -15,72 +24,73 @@ size_flags_horizontal = 3
 script = ExtResource("1_2lug2")
 metadata/_edit_use_anchors_ = true
 
-[node name="Info" type="HBoxContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m6srl")
+
+[node name="Info" type="HBoxContainer" parent="PanelContainer"]
 custom_minimum_size = Vector2(550, 0)
 layout_mode = 2
 
-[node name="Number" type="Label" parent="Info"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Info"]
 layout_mode = 2
-text = "0"
-
-[node name="Seperator" type="Label" parent="Info"]
-visible = false
-layout_mode = 2
-text = "|"
-
-[node name="PageKey" type="Label" parent="Info"]
-visible = false
-layout_mode = 2
-text = "key"
-
-[node name="PageKeyLineEdit" type="LineEdit" parent="Info"]
-visible = false
-layout_mode = 2
-
-[node name="PageKeyEditButton" type="CheckButton" parent="Info"]
-layout_mode = 2
-focus_mode = 0
-text = "edit page key"
-
-[node name="NextContainer" type="HBoxContainer" parent="Info"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Info/NextContainer"]
-layout_mode = 2
-text = "->"
-
-[node name="NextLineEdit" type="SpinBox" parent="Info/NextContainer"]
-layout_mode = 2
-
-[node name="NextKey" type="Label" parent="Info/NextContainer"]
-layout_mode = 2
-text = "-> 1 | pagekey"
-
-[node name="TerminateCheck" type="CheckBox" parent="Info"]
-layout_mode = 2
-tooltip_text = "terminates the page, stopping the parser from reading the next one automatically. you should still set the next page index, as when you start reading dialog again, you may want to not have to set that page index manually."
-focus_mode = 0
-text = "terminate"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
-layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="LineSelector" type="CheckBox" parent="HBoxContainer/MarginContainer"]
+[node name="LineSelector" type="CheckBox" parent="PanelContainer/Info/MarginContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 focus_mode = 0
 
-[node name="Facts" parent="HBoxContainer" node_paths=PackedStringArray("add_button", "facts_container") instance=ExtResource("2_eeb01")]
+[node name="Number" type="Label" parent="PanelContainer/Info"]
 layout_mode = 2
-add_button = NodePath("VBox/Controls/AddFactButton")
-facts_container = NodePath("VBox/FactsContainer")
+text = "0"
+
+[node name="Seperator" type="Label" parent="PanelContainer/Info"]
+visible = false
+layout_mode = 2
+text = "|"
+
+[node name="PageKey" type="Label" parent="PanelContainer/Info"]
+visible = false
+layout_mode = 2
+text = "key"
+
+[node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/Info"]
+visible = false
+layout_mode = 2
+
+[node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/Info"]
+layout_mode = 2
+focus_mode = 0
+text = "edit page key"
+
+[node name="NextContainer" type="HBoxContainer" parent="PanelContainer/Info"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/Info/NextContainer"]
+layout_mode = 2
+text = "->"
+
+[node name="NextLineEdit" type="SpinBox" parent="PanelContainer/Info/NextContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="NextKey" type="Label" parent="PanelContainer/Info/NextContainer"]
+layout_mode = 2
+text = "-> 1 | pagekey"
+
+[node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
+layout_mode = 2
+tooltip_text = "terminates the page, stopping the parser from reading the next one automatically. you should still set the next page index, as when you start reading dialog again, you may want to not have to set that page index manually."
+focus_mode = 0
+text = "terminate"
+
+[node name="Facts" parent="PanelContainer/Info" instance=ExtResource("2_eeb01")]
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(0, 530)
@@ -108,8 +118,8 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 mouse_filter = 2
 
-[connection signal="text_changed" from="Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_changed"]
-[connection signal="toggled" from="Info/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
-[connection signal="value_changed" from="Info/NextContainer/NextLineEdit" to="." method="_on_next_line_edit_value_changed"]
-[connection signal="toggled" from="Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]
-[connection signal="toggled" from="HBoxContainer/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
+[connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
+[connection signal="text_changed" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_changed"]
+[connection signal="toggled" from="PanelContainer/Info/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
+[connection signal="value_changed" from="PanelContainer/Info/NextContainer/NextLineEdit" to="." method="_on_next_line_edit_value_changed"]
+[connection signal="toggled" from="PanelContainer/Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]

@@ -31,6 +31,7 @@ enum PageView {
 signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
+signal save_path_set(active_dir:String, active_file_name:String)
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var cpn:int
@@ -94,8 +95,9 @@ func init(active_file_path:="") -> void:
 		popup.wrap_controls = true
 		popup.transient = false
 		popup.popup_window = false
+		popup.add_to_group("diisis_scalable_popup")
 	
-	
+	find_child("ShowErrorsButton").button_pressed = false
 	
 	open_from_path(active_file_path)
 	
@@ -163,7 +165,7 @@ func set_save_path(value:String):
 	var parts = value.split("/")
 	active_file_name = parts[parts.size() - 1]
 	active_dir = value.trim_suffix(active_file_name)
-	find_child("SavePathLabel").text = str(active_dir, active_file_name)
+	emit_signal("save_path_set", active_dir, active_file_name)
 	DiisisEditorUtil.set_project_file_path(active_dir, active_file_name)
 
 func _process(delta: float) -> void:
@@ -705,3 +707,11 @@ func _on_setup_visibility_changed() -> void:
 
 func _on_utility_visibility_changed() -> void:
 	align_menu_item(find_child("Utility"))
+
+
+func _on_show_errors_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		find_child("ErrorTextBox").custom_minimum_size.y = 90
+	else:
+		find_child("ErrorTextBox").custom_minimum_size.y = find_child("ShowErrorsButton").size.y
+		

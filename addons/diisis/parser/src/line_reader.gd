@@ -1309,6 +1309,3 @@ func can_text_container_be_visible() -> bool:
 	if line_type == DIISIS.LineType.Instruction:
 		return show_text_during_instructions
 	return false
-
-
-

@@ -17,7 +17,7 @@ func update(address:String):
 	var address_exists:bool = Pages.does_address_exist(address)
 	
 	if address_exists:
-		if $GridContainer/AddressBar.visible:
+		if find_child("AddressBar").visible:
 			find_child("ErrorLabel").text = DiisisEditorUtil.humanize_address(address)
 		else:
 			find_child("ErrorLabel").text = "Go To"
@@ -31,15 +31,15 @@ func _on_address_bar_text_submitted(new_text: String) -> void:
 		push_warning("Address does not exist.")
 		return
 	emit_signal("go_to", new_text)
-	$GridContainer/AddressBar.visible = false
+	find_child("AddressBar").visible = false
 
 
 func _on_go_to_button_pressed() -> void:
-	if $GridContainer/AddressBar.visible:
-		emit_signal("go_to", $GridContainer/AddressBar.text)
+	if find_child("AddressBar").visible:
+		emit_signal("go_to", find_child("AddressBar").text)
 	else:
-		$GridContainer/AddressBar.visible = true
-		update($GridContainer/AddressBar.text)
+		find_child("AddressBar").visible = true
+		update(find_child("AddressBar").text)
 		find_child("CancelGoTo").visible = true
 		emit_signal("request_refresh")
 

@@ -314,7 +314,7 @@ func insert_from_clipboard(start_address:String):
 	
 	Pages.editor.notify(str("Adding ", data_at_depth.size(), " items from clipboard!"))
 
-func replace_line_content_texts(line_addresses:Array, what:String, with:String):
+func replace_line_content_texts(line_addresses:Array, what:String, with:String, case_insensitive:=false):
 	var pages_to_operate_on := {}
 	for address in line_addresses:
 		var parts = DiisisEditorUtil.get_split_address(address)
@@ -335,7 +335,10 @@ func replace_line_content_texts(line_addresses:Array, what:String, with:String):
 			var line = lines[i]
 			if line.get("line_type") == DIISIS.LineType.Text:
 				var content : String = line.get("content").get("content")
-				content = content.replace(what, with)
+				if case_insensitive:
+					content = content.replacen(what, with)
+				else:
+					content = content.replace(what, with)
 				line["content"]["content"] = content
 			i += 1
 	
@@ -343,7 +346,7 @@ func replace_line_content_texts(line_addresses:Array, what:String, with:String):
 	
 	Pages.editor.refresh(false)
 
-func replace_choice_content_texts(choice_item_addresses:Array, what:String, with:String):
+func replace_choice_content_texts(choice_item_addresses:Array, what:String, with:String, case_insensitive:=false):
 	var pages_to_operate_on := {}
 	var enabled_addresses := []
 	var disabled_addresses := []
@@ -371,9 +374,15 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 					var choice = choices[index]
 					var choice_address := str(n, ".", line_index, ".", index)
 					if enabled_addresses.has(choice_address):
-						choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
+						if case_insensitive:
+							choice["choice_text.enabled"] = choice["choice_text.enabled"].replacen(what, with)
+						else:
+							choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
 					if disabled_addresses.has(choice_address):
-						choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
+						if case_insensitive:
+							choice["choice_text.disabled"] = choice["choice_text.disabled"].replacen(what, with)
+						else:
+							choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
 				
 				line["content"]["choices"] = choices
 			else:

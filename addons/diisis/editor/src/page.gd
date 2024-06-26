@@ -10,16 +10,16 @@ func init(n:=number):
 	var data = Pages.page_data.get(n)
 	number = n
 	lines = find_child("Lines")
-	$Info/Number.text = str(n)
+	find_child("Number").text = str(n)
 	set_next(n+1)
 	find_child("Facts").init()
 	deserialize(data)
 
 func get_page_key() -> String:
-	return str($Info/PageKey.text)
+	return str(find_child("PageKey").text)
 
 func set_page_key(value:String):
-	$Info/PageKey.text = value
+	find_child("PageKey").text = value
 
 func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
@@ -107,23 +107,23 @@ func _on_page_key_edit_pressed() -> void:
 	pass # Replace with function body.
 
 func enable_page_key_edit(value: bool):
-	$Info/PageKey.visible = not value
-	$Info/PageKeyLineEdit.visible = value
-	$Info/PageKeyLineEdit.text = get_page_key()
+	find_child("PageKey").visible = not value
+	find_child("PageKeyLineEdit").visible = value
+	find_child("PageKeyLineEdit").text = get_page_key()
 	
-	$Info/Seperator.visible = get_page_key() != ""
+	find_child("Seperator").visible = get_page_key() != ""
 
 func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
 	if not button_pressed:
 		# add check for duplicates later
-		set_page_key($Info/PageKeyLineEdit.text)
+		set_page_key(find_child("PageKeyLineEdit").text)
 		save()
 	
 	enable_page_key_edit(button_pressed)
 
 
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
-	$Info/PageKeyEditButton.disabled = Pages.key_exists(new_text)
+	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text)
 
 func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = lines.get_child(at_index)

@@ -36,9 +36,10 @@ grow_vertical = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="QuitDialog" parent="." instance=ExtResource("3_h4aux")]
+[node name="QuitDialog" parent="." groups=["diisis_scalable_popup"] instance=ExtResource("3_h4aux")]
 size = Vector2i(301, 144)
 visible = false
+content_scale_factor = 1.45
 
 [node name="WindowFactorWindow" type="Window" parent="."]
 position = Vector2i(0, 484)
@@ -94,6 +95,7 @@ layout_mode = 2
 [connection signal="mouse_entered" from="Window" to="." method="_on_window_mouse_entered"]
 [connection signal="mouse_exited" from="Window" to="." method="_on_window_mouse_exited"]
 [connection signal="open_new_file" from="Window/Editor" to="." method="_on_editor_open_new_file"]
+[connection signal="save_path_set" from="Window/Editor" to="." method="_on_editor_save_path_set"]
 [connection signal="scale_editor_down" from="Window/Editor" to="." method="_on_editor_scale_editor_down"]
 [connection signal="scale_editor_up" from="Window/Editor" to="." method="_on_editor_scale_editor_up"]
 [connection signal="request_save" from="QuitDialog" to="." method="_on_quit_dialog_request_save"]

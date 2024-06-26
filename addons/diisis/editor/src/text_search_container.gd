@@ -10,10 +10,12 @@ func init():
 	find_child("GoToButton").text = str("Go To")
 	find_child("ReplaceContainer").visible = false
 	find_child("ReplaceAllInTypeButton").text = "Replace all in Type"
+	find_child("QueryTextEdit").grab_focus()
 	
 func display_results(search:String):
+	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	find_child("ReplaceContainer").visible = false
-	var result = Pages.search_string(search)
+	var result = Pages.search_string(search, case_insensitive)
 	var item_list:ItemList = find_child("ItemList")
 	item_list.clear()
 	var i = 0
@@ -39,18 +41,18 @@ func request_replace_local():
 	last_search_query = find_child("QueryTextEdit").text
 	var address = find_child("ItemList").get_item_text(find_child("ItemList").get_selected_items()[0])
 	var replace_str = find_child("ReplaceTextEdit").text
-	
+	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	var undo_redo = Pages.editor.undo_redo
 	match DiisisEditorUtil.get_address_depth(address):
 		DiisisEditorUtil.AddressDepth.Line:
 			undo_redo.create_action("Replace Text Local")
-			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str))
-			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query))
+			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str, case_insensitive))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
 		DiisisEditorUtil.AddressDepth.ChoiceItem:
 			undo_redo.create_action("Replace Text Local")
-			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_text.bind(address, last_search_query, replace_str))
-			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_text.bind(address, replace_str, last_search_query))
+			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_text.bind(address, last_search_query, replace_str, case_insensitive))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_text.bind(address, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
 	
 	display_results(last_search_query)
@@ -72,18 +74,18 @@ func request_replace_all_in_type():
 	last_search_query = find_child("QueryTextEdit").text
 	var replace_str = find_child("ReplaceTextEdit").text
 	var undo_redo = Pages.editor.undo_redo
-	
+	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	var start_address : String = addresses_in_type.front()
 	match DiisisEditorUtil.get_address_depth(start_address):
 		DiisisEditorUtil.AddressDepth.Line:
 			undo_redo.create_action("Replace Text In Type")
-			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str))
-			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query))
+			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str, case_insensitive))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
 		DiisisEditorUtil.AddressDepth.ChoiceItem:
 			undo_redo.create_action("Replace Text In Type")
-			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, last_search_query, replace_str))
-			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, replace_str, last_search_query))
+			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, last_search_query, replace_str, case_insensitive))
+			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
 	
 	display_results(last_search_query)
@@ -91,7 +93,10 @@ func request_replace_all_in_type():
 	find_child("GoToButton").text = "Go To"
 
 func _on_search_button_pressed() -> void:
-	last_search_query = find_child("QueryTextEdit").text
+	update_query(find_child("QueryTextEdit").text)
+
+func update_query(query:String) -> void:
+	last_search_query = query
 	display_results(last_search_query)
 
 func _on_item_list_item_selected(index: int) -> void:
