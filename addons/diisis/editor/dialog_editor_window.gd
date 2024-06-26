@@ -30,8 +30,9 @@ func _on_about_to_popup() -> void:
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
-		update_content_scale(config.get_value("editor", "content_scale", 1.0))
+		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
 		size = config.get_value("editor", "size", size)
+		position = config.get_value("editor", "position", position)
 
 func _process(delta):
 	if not editor or not editor_window:
@@ -101,6 +102,7 @@ func save_preferences():
 	
 	config.set_value("editor", "content_scale", editor_window.content_scale_factor)
 	config.set_value("editor", "size", size)
+	config.set_value("editor", "position", position)
 	
 	config.save(PREFERENCE_PATH)
 
