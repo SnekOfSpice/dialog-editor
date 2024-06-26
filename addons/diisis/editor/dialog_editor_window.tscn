@@ -39,6 +39,7 @@ size_flags_vertical = 3
 [node name="QuitDialog" parent="." groups=["diisis_scalable_popup"] instance=ExtResource("3_h4aux")]
 size = Vector2i(301, 144)
 visible = false
+content_scale_factor = 1.45
 
 [node name="WindowFactorWindow" type="Window" parent="."]
 position = Vector2i(0, 484)
