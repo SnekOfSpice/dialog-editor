@@ -5,11 +5,13 @@
 [ext_resource type="PackedScene" uid="uid://bhftsn5yhlugv" path="res://addons/diisis/editor/src/facts_popup_content.tscn" id="2_s4jbr"]
 
 [node name="FactsPopup" type="Window"]
+gui_embed_subwindows = true
 title = "Facts"
 initial_position = 2
-size = Vector2i(1129, 151)
+size = Vector2i(1129, 255)
 wrap_controls = true
 transient = true
+min_size = Vector2i(0, 255)
 theme = ExtResource("1_34w77")
 script = ExtResource("1_ohmwo")
 

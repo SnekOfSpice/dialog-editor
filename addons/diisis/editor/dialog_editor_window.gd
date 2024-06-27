@@ -197,3 +197,7 @@ func _on_quit_dialog_request_save() -> void:
 
 func _on_editor_save_path_set(active_dir: String, active_file_name: String) -> void:
 	title = str(active_file_name, " - DIISIS - ", " (", active_dir, active_file_name, ")")
+
+
+func _on_reset_scale_button_pressed() -> void:
+	find_child("WindowFactorScale").set_value(1.0)
