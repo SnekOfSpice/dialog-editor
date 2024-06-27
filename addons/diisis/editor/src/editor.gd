@@ -34,6 +34,8 @@ signal open_new_file()
 signal save_path_set(active_dir:String, active_file_name:String)
 
 func refresh(serialize_before_load:=true, fragile:=false):
+	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
+	
 	var cpn:int
 	if current_page:
 		cpn = current_page.number
@@ -47,6 +49,10 @@ func refresh(serialize_before_load:=true, fragile:=false):
 			node.update_fragile()
 	else:
 		load_page(cpn, not serialize_before_load)
+	
+	await get_tree().process_frame
+	if goto_has_focus:
+		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
 	core = find_child("Core")
@@ -693,7 +699,8 @@ func _on_error_text_box_meta_clicked(meta: Variant) -> void:
 
 func align_menu_item(menu_item:PopupMenu):
 	var menu_bar = find_child("MenuBar")
-	menu_item.position.x = (menu_item.position.x) * content_scale
+	#menu_item.position.x = menu_item.position.x + ((menu_item.position.x) * content_scale)- ( menu_bar.size.y * content_scale)
+	menu_item.position.x += (menu_bar.position.x * content_scale - menu_bar.position.x)
 	menu_item.position.y += (menu_bar.size.y) * content_scale - menu_bar.size.y
 	menu_item.size *= content_scale * 1.01
 

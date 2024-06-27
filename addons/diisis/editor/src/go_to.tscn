@@ -1,13 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://bxsq5rsj1i12f"]
+[gd_scene load_steps=3 format=3 uid="uid://bxsq5rsj1i12f"]
 
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_0ya0s"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/go_to.gd" id="1_mfnyd"]
 
 [node name="GoTo" type="VBoxContainer"]
-offset_right = 131.0
-offset_bottom = 66.0
+custom_minimum_size = Vector2(239, 0)
+offset_right = 219.0
+offset_bottom = 27.0
+size_flags_vertical = 0
+theme = ExtResource("1_0ya0s")
 script = ExtResource("1_mfnyd")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(219, 0)
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
@@ -16,7 +21,7 @@ layout_mode = 2
 [node name="GoToButton" type="Button" parent="HBoxContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = ">>"
+text = "Go>"
 
 [node name="CancelGoTo" type="Button" parent="HBoxContainer/HBoxContainer"]
 visible = false
@@ -31,28 +36,39 @@ layout_mode = 2
 
 [node name="CurrentPageLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 10
 text = "40"
 
 [node name="Slash" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 8
 text = "/"
 
 [node name="PageCountLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 8
 text = "200"
 
-[node name="GridContainer" type="GridContainer" parent="."]
-layout_mode = 2
-columns = 5
+[node name="ErrorLabelWindow" type="Window" parent="."]
+position = Vector2i(50, -30)
+size = Vector2i(42, 23)
+visible = false
+wrap_controls = true
+transient = true
+borderless = true
+unfocusable = true
+popup_window = true
+mouse_passthrough = true
 
-[node name="ErrorLabel" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(166.74, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Go To"
-text_overrun_behavior = 1
+[node name="ErrorLabel" type="Label" parent="ErrorLabelWindow"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "sdgfg"
 
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
+[connection signal="focus_entered" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_focus_entered"]
+[connection signal="focus_exited" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_focus_exited"]
 [connection signal="text_changed" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
 [connection signal="text_submitted" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]
+[connection signal="about_to_popup" from="ErrorLabelWindow" to="." method="_on_error_label_window_about_to_popup"]

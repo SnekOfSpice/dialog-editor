@@ -934,7 +934,7 @@ func alter_fact(from:String, to=null):
 	editor.refresh(false)
 
 func does_address_exist(address:String) -> bool:
-	if address.ends_with("."):
+	if address.ends_with(".") or address.is_empty():
 		return false
 	var parts :Array[int]= DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:

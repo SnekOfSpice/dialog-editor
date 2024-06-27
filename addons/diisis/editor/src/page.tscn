@@ -65,6 +65,7 @@ layout_mode = 2
 
 [node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/Info"]
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 text = "edit page key"
 
@@ -85,6 +86,7 @@ text = "-> 1 | pagekey"
 
 [node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
 layout_mode = 2
+size_flags_vertical = 4
 tooltip_text = "terminates the page, stopping the parser from reading the next one automatically. you should still set the next page index, as when you start reading dialog again, you may want to not have to set that page index manually."
 focus_mode = 0
 text = "terminate"
