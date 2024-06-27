@@ -73,6 +73,14 @@ offset_bottom = 23.0
 size_flags_horizontal = 2
 size_flags_vertical = 10
 
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+layout_mode = 2
+
+[node name="ResetScaleButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "100"
+
 [node name="MarginContainer" type="MarginContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
 layout_mode = 2
 
@@ -88,6 +96,7 @@ value = 1.0
 
 [node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/Control/WindowFactorContainer"]
 layout_mode = 2
+text = "100%"
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
@@ -101,4 +110,5 @@ layout_mode = 2
 [connection signal="request_save" from="QuitDialog" to="." method="_on_quit_dialog_request_save"]
 [connection signal="mouse_entered" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_entered"]
 [connection signal="mouse_exited" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_exited"]
+[connection signal="pressed" from="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer/ResetScaleButton" to="." method="_on_reset_scale_button_pressed"]
 [connection signal="value_changed" from="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]

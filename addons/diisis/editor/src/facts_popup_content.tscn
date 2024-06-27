@@ -87,22 +87,27 @@ columns = 5
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Pages containing fact:"
+text_overrun_behavior = 1
 
 [node name="Label3" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Lines declaring fact:"
+text_overrun_behavior = 1
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Conditionals referencing fact:"
+text_overrun_behavior = 1
 
 [node name="Label4" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Choice Items declaring fact:"
+text_overrun_behavior = 1
 
 [node name="Label5" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Choice Items referencing fact as conditional:"
+text_overrun_behavior = 1
 
 [node name="RefPagesFact" type="ItemList" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -128,6 +133,8 @@ size_flags_horizontal = 3
 [node name="ConfirmDelete" type="ConfirmationDialog" parent="."]
 title = "Delete Fact?"
 initial_position = 4
+always_on_top = true
+popup_window = true
 ok_button_text = "Delete Fact (NO UNDO)"
 
 [connection signal="item_clicked" from="Facts" to="." method="_on_facts_item_clicked"]
