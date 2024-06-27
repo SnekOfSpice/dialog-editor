@@ -934,7 +934,7 @@ func alter_fact(from:String, to=null):
 	editor.refresh(false)
 
 func does_address_exist(address:String) -> bool:
-	if address.ends_with("."):
+	if address.ends_with(".") or address.is_empty():
 		return false
 	var parts :Array[int]= DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:
@@ -1039,7 +1039,7 @@ func get_evaluator_properties() -> Array:
 func search_string(substr:String, case_insensitive:=false):
 	var found_facts := {}
 	for fact : String in facts:
-		if (case_insensitive and fact.containsn(substr)) or (not case_insensitive and fact.contains(substr)):
+		if (case_insensitive and fact.findn(substr) != -1) or (not case_insensitive and fact.find(substr) != -1):
 			found_facts[fact] = fact
 	
 	var found_choices := {}
@@ -1051,14 +1051,14 @@ func search_string(substr:String, case_insensitive:=false):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var choice_index := 0
 				for choice in line.get("content", {}).get("choices", []):
-					if (case_insensitive and choice.get("choice_text.enabled").containsn(substr)) or (not case_insensitive and choice.get("choice_text.enabled").contains(substr)):
+					if (case_insensitive and choice.get("choice_text.enabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.enabled").find(substr) != -1):
 						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = choice.get("choice_text.enabled")
-					if (case_insensitive and choice.get("choice_text.disabled").containsn(substr)) or (not case_insensitive and choice.get("choice_text.disabled").contains(substr)):
+					if (case_insensitive and choice.get("choice_text.disabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.disabled").find(substr) != -1):
 						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = choice.get("choice_text.disabled")
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var text : String = line.get("content", {}).get("content", "")
-				if (case_insensitive and text.containsn(substr)) or (not case_insensitive and text.contains(substr)):
+				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
 			line_index += 1
 		page_index += 1
