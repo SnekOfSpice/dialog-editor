@@ -133,16 +133,8 @@ func on_text_content_text_changed(
 			actor_position.x -= find_child("LineReader").text_container.size.x
 		actor_position.y -= 100
 	else: # name container isn't visible
-		actor_position.x = center.x
-		actor_position.y = size.y - find_child("LineReader").text_container.size.y
-	
-	#if is_name_container_visible:
-		#if actor_name == CONST.CHARACTER_AMBER:
-			#dialog_box_offset = Vector2(-20, -10)
-		#elif actor_name == CONST.CHARACTER_ETERNA:
-			#dialog_box_offset = Vector2(20, -10)
-	#else:
-		#dialog_box_offset = Vector2.ZERO
+		actor_position.x = center.x - find_child("LineReader").text_container.size.x * 0.5
+		actor_position.y = size.y - find_child("LineReader").text_container.size.y - 60
 	
 	if dialog_box_tween:
 		dialog_box_tween.kill()
@@ -167,6 +159,8 @@ func serialize() -> Dictionary:
 	result["character_data"] = character_data
 	result["cg"] = cg
 	result["cg_position"] = cg_position
+	result["text_container_position"] = find_child("TextContainer").position
+	result["text_style"] = text_style
 	
 	return result
 
@@ -187,6 +181,23 @@ func deserialize(data:Dictionary):
 		else:
 			push_warning("cg_position isn't top or bottom")
 			hide_cg()
+	
+	set_text_style(data.get("text_style", TextStyle.ToBottom))
+	if text_style == TextStyle.ToCharacter:
+		# gets deserialized as string for some reason??
+		var fixed_position : Vector2
+		var deserialized_position = data.get("text_container_position", find_child("TextContainer").position)
+		if deserialized_position is String:
+			deserialized_position = deserialized_position.trim_prefix("(")
+			deserialized_position = deserialized_position.trim_suffix(")")
+			var parts = deserialized_position.split(",")
+			fixed_position = Vector2(float(parts[0]), float(parts[1]))
+		elif deserialized_position is Vector2:
+			fixed_position = deserialized_position
+		else:
+			push_warning("Deserialized game_stage with something wild.")
+			return
+		find_child("TextContainer").position = fixed_position
 
 func remove_blocker():
 	blockers -= 1
