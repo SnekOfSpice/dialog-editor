@@ -27,7 +27,7 @@ func set_screen(screen_path:String):
 			c.queue_free()
 		$ScreenContainer.visible = false
 		return
-	var new_stage = load(screen_path).instantiate()
+	var new_stage = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
 	$ScreenContainer.add_child(new_stage)
 	$ScreenContainer.visible = true
 	screen = screen_path
@@ -37,10 +37,13 @@ func set_background(background:String, fade_time:=0.0):
 	var old_backgrounds:=$Background.get_children()
 	if background.ends_with(".png"):
 		new_background = Sprite2D.new()
-		new_background.texture = load(background)
+		new_background.texture = load(str(CONST.BACKGROUND_ROOT, background))
 		new_background.centered = false
 	elif background.ends_with(".tscn"):
-		new_background = load(background).instantiate()
+		new_background = load(str(CONST.BACKGROUND_ROOT, background)).instantiate()
+	else:
+		push_error(str("Background ", background, " does not end in .png or .tscn."))
+		return
 	new_background.modulate.a = 0.0
 	$Background.add_child(new_background)
 	
@@ -64,7 +67,7 @@ func load_gamestate():
 
 var game_start_callable:Callable
 func change_stage(stage_path:String):
-	var new_stage = load(stage_path).instantiate()
+	var new_stage = load(str(CONST.STAGE_ROOT, stage_path)).instantiate()
 	
 	if stage_path == CONST.STAGE_GAME:
 		new_stage.callable_upon_blocker_clear = game_start_callable

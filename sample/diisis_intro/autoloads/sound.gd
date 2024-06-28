@@ -28,7 +28,7 @@ func set_audio_player_volume(volume:float):
 
 func play_sfx(sfx:String):
 	var player := AudioStreamPlayer.new()
-	player.stream = load(str("res://sample/diisis_intro/sounds/sfx/", sfx))
+	player.stream = load(str(CONST.SFX_ROOT, sfx))
 	player.set_bus("SFX")
 	add_child(player)
 	player.play()
@@ -42,7 +42,7 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	var music_player = AudioStreamPlayer.new()
 	music_player.connect("tree_exiting", audio_players.erase.bind(music_player))
 	main_audio_player = music_player
-	music_player.stream = load(str("res://sample/diisis_intro/sounds/music/", bgm_key))
+	music_player.stream = load(str(CONST.MUSIC_ROOT, bgm_key))
 	music_player.volume_db = -80
 	music_player.set_bus("Music")
 	
