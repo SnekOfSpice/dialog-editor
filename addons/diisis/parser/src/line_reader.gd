@@ -95,9 +95,9 @@ var remaining_advance_delay := advance_available_delay
 ## The name of the dropdown property used for keying names. Usually something like "character"
 @export
 var property_for_name := ""
-## If set, this name will instead hide the name label alltogether.
+## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
 @export
-var name_for_blank_name := ""
+var blank_names : Array[String] = []
 @export var name_map := {}
 @export var name_colors := {}
 @export var name_style : NameStyle = NameStyle.NameLabel
@@ -161,7 +161,7 @@ var name_label: Label:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
-## The Control holding [member name_label]. Has its visiblity toggled by [member name_for_blank_name. May be the same Node as [member name_label].
+## The Control holding [member name_label]. Has its visiblity toggled by [member blank_names]. May be the same Node as [member name_label].
 @export
 var name_container: Control:
 	get:
@@ -306,7 +306,7 @@ func deserialize(data: Dictionary):
 
 		build_choices(choices, auto_switch)
 	
-	update_name_label(data.get("current_raw_name", name_for_blank_name))
+	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
 	set_text_content_text(data.get("text_content.text", ""))
 	
 
@@ -1287,7 +1287,7 @@ func update_name_label(actor_name: String):
 		name_label.text = display_name
 		name_label.add_theme_color_override("font_color", name_color)
 		
-		if actor_name == name_for_blank_name:
+		if actor_name in blank_names:
 			name_container.modulate.a = 0.0
 		else:
 			name_container.modulate.a = 1.0
@@ -1296,7 +1296,7 @@ func update_name_label(actor_name: String):
 	if name_style == NameStyle.NameLabel:
 		name_visible = name_container.modulate.a > 0.0
 	elif name_style == NameStyle.Prepend:
-		name_visible = current_raw_name == name_for_blank_name
+		name_visible = current_raw_name in blank_names
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
 	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
 
