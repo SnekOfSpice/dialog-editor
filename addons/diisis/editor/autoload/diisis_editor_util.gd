@@ -105,6 +105,14 @@ func humanize_address(address:String) -> String:
 		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
 	return address_string
 
+func get_project_source_file_path() -> String:
+	var file_path := get_project_file_path()
+	if FileAccess.file_exists(file_path):
+		var file = FileAccess.open(file_path, FileAccess.READ)
+		return file.get_as_text()
+	push_warning("No source file set.")
+	return ""
+
 func get_project_file_path() -> String:
 	var path := "user://DIISIS_project_"
 	path += ProjectSettings.get_setting("application/config/name")

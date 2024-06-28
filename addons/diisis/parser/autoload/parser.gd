@@ -1,7 +1,7 @@
 extends Node
 
-## Path to the file exported from DIISIS.
-@export_file("*.json") var source_file
+## Set this to manually set any DIISIS-generated file to be used as source, irregardless of project.
+@export_file("*.json") var source_file_override: String
 ## Number of entries the history will save. If set to [code]-1[/code] (default),
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
@@ -53,7 +53,15 @@ var currently_speaking_visible := true
 var history := []
 
 func _ready() -> void:
-	var file := FileAccess.open(source_file, FileAccess.READ)
+	var source_path:String
+	if not source_file_override.is_empty():
+		source_path = source_file_override
+	else:
+		source_path = DiisisEditorUtil.get_project_source_file_path()
+		if source_path.is_empty():
+			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved under the current project name at least once.")
+			return
+	var file := FileAccess.open(source_path, FileAccess.READ)
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
