@@ -93,6 +93,7 @@ func reset_and_start(start_page_index:=0):
 	reset_facts()
 	read_page(start_page_index)
 	history = []
+	selected_choices = []
 
 ## Pauses the Parser. If [param suppress_event] is true, [signal ParserEvents.parser_paused_changed]
 ## won't be emitted.
