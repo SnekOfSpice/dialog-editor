@@ -179,7 +179,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
-name_for_blank_name = "narrator"
+blank_names = Array[String](["narrator"])
 name_map = {
 "amber": "Amber",
 "eterna": "Eterna"
