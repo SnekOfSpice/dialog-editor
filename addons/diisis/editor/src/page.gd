@@ -338,7 +338,7 @@ func move_line(line: Line, dir:int):
 		
 		if previous_line.line_type == DIISIS.LineType.Folder and previous_line.indent_level == line.indent_level and line.indent_level > 0:
 			update()
-			push_warning("Use Shift to move outside of folder boundaries.")
+			Pages.editor.notify("Use Shift to move outside of folder boundaries.")
 			return
 		bump = idx+dir
 		if previous_line.indent_level > line.indent_level:
@@ -357,7 +357,7 @@ func move_line(line: Line, dir:int):
 		
 		if next_line.indent_level < line.indent_level:
 			update()
-			push_warning("Use Shift to move outside of folder boundaries.")
+			Pages.editor.notify("Use Shift to move outside of folder boundaries.")
 			return
 		
 		if next_line.line_type == DIISIS.LineType.Folder:
