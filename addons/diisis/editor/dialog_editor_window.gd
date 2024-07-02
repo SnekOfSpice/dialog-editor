@@ -133,6 +133,8 @@ func update_content_scale(scale_factor:float):
 	
 	find_child("WindowFactorLabel").text = str(scale_factor * 100, "%")
 	window_factor_window.position.y = size.y - find_child("WindowFactorContainer").size.y
+	#window_factor_window.size.x = size.x
+	find_child("WindowFactorContainer").size.x = size.x
 	
 	if editor:
 		editor.set_content_scale(scale_factor)
@@ -201,3 +203,7 @@ func _on_editor_save_path_set(active_dir: String, active_file_name: String) -> v
 
 func _on_reset_scale_button_pressed() -> void:
 	find_child("WindowFactorScale").set_value(1.0)
+
+
+func _on_help_button_pressed() -> void:
+	OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")

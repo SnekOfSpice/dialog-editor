@@ -55,6 +55,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 theme = ExtResource("3_efdl4")
 
 [node name="ColorRect" type="ColorRect" parent="WindowFactorWindow/Control"]
@@ -68,8 +69,8 @@ color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 
 [node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow/Control"]
 layout_mode = 0
-offset_right = 205.0
-offset_bottom = 23.0
+offset_right = 721.16
+offset_bottom = 26.0
 size_flags_horizontal = 2
 size_flags_vertical = 10
 
@@ -78,6 +79,7 @@ layout_mode = 2
 
 [node name="ResetScaleButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Reset editor scale"
 focus_mode = 0
 text = "100"
 
@@ -98,6 +100,14 @@ value = 1.0
 layout_mode = 2
 text = "100%"
 
+[node name="HelpButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Open GitHub wiki (F1)"
+focus_mode = 0
+theme_override_font_sizes/font_size = 12
+text = "?"
+
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
 [connection signal="size_changed" from="." to="." method="_on_size_changed"]
@@ -112,3 +122,4 @@ text = "100%"
 [connection signal="mouse_exited" from="WindowFactorWindow" to="." method="_on_window_factor_window_mouse_exited"]
 [connection signal="pressed" from="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer/ResetScaleButton" to="." method="_on_reset_scale_button_pressed"]
 [connection signal="value_changed" from="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer/WindowFactorScale" to="." method="_on_window_factor_scale_value_changed"]
+[connection signal="pressed" from="WindowFactorWindow/Control/WindowFactorContainer/HelpButton" to="." method="_on_help_button_pressed"]
