@@ -231,6 +231,8 @@ var last_visible_ratio := 0.0
 var last_visible_characters := 0.0
 var visibilities_before_interrupt := {}
 
+var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
+
 signal line_reader_ready
 
 func _validate_property(property: Dictionary):
@@ -895,26 +897,19 @@ func read_next_chunk():
 	call_strings.clear()
 	
 	var new_text : String = line_chunks[chunk_index]
-	while new_text.begins_with(" "):
-		new_text = new_text.trim_prefix(" ")
-	while new_text.begins_with("\n"):
-		new_text = new_text.trim_prefix("\n")
-	while new_text.begins_with("<lc>"):
-		new_text = new_text.trim_prefix("<lc>")
-	while new_text.begins_with("<ap>"):
-		new_text = new_text.trim_prefix("<ap>")
-	while new_text.begins_with("<mp>"):
-		new_text = new_text.trim_prefix("<mp>")
-	while new_text.ends_with(" "):
-		new_text = new_text.trim_suffix(" ")
-	while new_text.ends_with("\n"):
-		new_text = new_text.trim_suffix("\n")
-	while new_text.ends_with("<lc>"):
-		new_text = new_text.trim_suffix("<lc>")
-	while new_text.ends_with("<ap>"):
-		new_text = new_text.trim_suffix("<ap>")
-	while new_text.ends_with("<mp>"):
-		new_text = new_text.trim_suffix("<mp>")
+	var begins_trimmable := begins_with_trimmable(new_text)
+	while begins_trimmable:
+		for t in trimmable_strings:
+			new_text = new_text.trim_prefix(t)
+		begins_trimmable = begins_with_trimmable(new_text)
+		
+	var ends_trimmable := ends_with_trimmable(new_text)
+	while ends_trimmable:
+		for t in trimmable_strings:
+			new_text = new_text.trim_suffix(t)
+		ends_trimmable = ends_with_trimmable(new_text)
+		
+	
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")
@@ -1013,6 +1008,17 @@ func read_next_chunk():
 	ParserEvents.notify_string_positions.emit(notify_positions)
 	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
 	set_text_content_text(cleaned_text)
+
+func begins_with_trimmable(text:String) -> bool:
+	for t in trimmable_strings:
+		if text.begins_with(t):
+			return true
+	return false
+func ends_with_trimmable(text:String) -> bool:
+	for t in trimmable_strings:
+		if text.ends_with(t):
+			return true
+	return false
 
 func call_from_position(call_position: int):
 	var text : String = call_strings.get(call_position)
