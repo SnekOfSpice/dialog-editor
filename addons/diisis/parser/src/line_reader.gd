@@ -547,8 +547,8 @@ func read_new_line(new_line: Dictionary):
 				dialog_actors.clear()
 				dialog_actors = [""]
 			
-			dialog_lines = replace_var_func_tags(dialog_lines)
-			update_limit_line_count(dialog_lines)
+			dialog_lines = replace_tags(dialog_lines)
+			
 			
 			set_dialog_line_index(0)
 			start_showing_text()
@@ -578,51 +578,68 @@ func read_new_line(new_line: Dictionary):
 			emit_signal("line_finished", line_index)
 			
 
-func update_limit_line_count(lines: Array):
+func fit_to_max_line_count(lines: Array):
 	if max_text_line_count <= 0:
 		return
-	var font : FontFile = text_content.get_theme_font("font", "RichTextLabel")
-	var font_size : int = text_content.get_theme_font_size("font_size", "RichTextLabel")
-	var label_width : float = text_content.size.x
-	var new_actors := []
-	var new_lines := []
+	
+	var new_chunks := []
+	var label : RichTextLabel = RichTextLabel.new()
+	add_child(label)
+	label.bbcode_enabled = true
+	label.theme = text_content.get_theme()
+	label.size = text_content.size
+	
 	var i := 0
 	while i < lines.size():
+		
+		var line_height:=0
+		var content_height := 0
+		
 		var line:String = lines[i]
-		var words := Array(line.split(" "))
+		label.text = line
+		label.visible_characters = 1
+		if line_height == 0:
+			line_height = label.get_content_height()
 		
-		var subline : String = ""
-		
-		var line_height : int = font.get_string_size(str(lines), HORIZONTAL_ALIGNMENT_CENTER, -1, font_size).y
-		
-		while not words.is_empty():
-			var line_size : Vector2 = font.get_multiline_string_size(subline, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
-			var next_word = ""
-			while line_size.y <= line_height * max_text_line_count:
-				next_word = words.pop_front() + " "
-				line_size = font.get_multiline_string_size(subline + next_word, HORIZONTAL_ALIGNMENT_CENTER, label_width, font_size)
+		while content_height <= line_height * max_text_line_count:
+			if label.text.is_empty():
+				break
+			label.visible_characters += 1
+			content_height = label.get_content_height()
+			if content_height > line_height * max_text_line_count:
+				label.visible_characters -= 1
+				while label.text[label.visible_characters] != " ":
+					label.visible_characters -= 1
+				label.bbcode_enabled = false
+				var bbcode_padding := 0
+				var scan_index := 0
+				while scan_index < label.visible_characters:
+					scan_index += 1
+					if label.text[scan_index] == "[":
+						if label.text[scan_index-1] == "\\[":
+							scan_index += 1
+							continue
+						var tag_end = label.text.find("]", scan_index)
+						bbcode_padding += tag_end - scan_index + 2
 				
-				if words.is_empty():
-					if line_size.y <= line_height * max_text_line_count:
-						subline += next_word
-					else:
-						subline = next_word
-					new_lines.append(subline)
-					new_actors.append(dialog_actors[i])
-					subline = ""
-					break
 				
-				if line_size.y > line_height * max_text_line_count:
-					new_lines.append(subline)
-					new_actors.append(dialog_actors[i])
-					subline = next_word
-					break
-				
-				subline += next_word
+				var fitting_raw_text := label.text.substr(0, label.visible_characters + bbcode_padding)
+				line = line.trim_prefix(fitting_raw_text)
+				label.text = line
+				new_chunks.append(fitting_raw_text)
+				label.bbcode_enabled = true
+				content_height = 0
+				label.visible_characters = 0
+				continue
+			
+			if label.visible_ratio == 1.0:
+				new_chunks.append(line)
+				break
+			
 		i += 1
-		
-	dialog_lines = new_lines
-	dialog_actors = new_actors
+	line_chunks = new_chunks
+	label.queue_free()
+
 
 func get_end_of_chunk_position() -> int:
 	if pause_positions.size() == 0:
@@ -788,9 +805,10 @@ func start_showing_text():
 	var content : String = dialog_lines[dialog_line_index]
 	line_chunks = content.split("<lc>")
 	chunk_index = -1
+	fit_to_max_line_count(line_chunks)
 	read_next_chunk()
 
-func replace_var_func_tags(lines):
+func replace_tags(lines):
 	if not inline_evaluator:
 		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
 		return lines
