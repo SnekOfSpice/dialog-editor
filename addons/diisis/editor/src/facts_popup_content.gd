@@ -12,6 +12,9 @@ signal request_hide
 signal request_popup
 
 func fill():
+	for child in get_children():
+		if child is SubViewport:
+			child.queue_free()
 	ref_pages_fact = find_child("RefPagesFact")
 	ref_lines_fact = find_child("RefLinesFact")
 	ref_lines_condition = find_child("RefLinesCondition")
@@ -36,13 +39,23 @@ func fill():
 			else:
 				texture = load("res://addons/diisis/editor/visuals/false.png")
 		elif value is int:
-			texture = load("res://addons/diisis/editor/visuals/int.png")
+			var label = Label.new()
+			label.text = str(value)
+			var vp = SubViewport.new()
+			vp.add_child(label)
+			add_child(vp)
+			vp.size = label.size
+			await RenderingServer.frame_post_draw
+			texture = vp.get_texture()#load("res://addons/diisis/editor/visuals/int.png")
+			#vp.queue_free()
+			#label.queue_free()
 		find_child("Facts").add_item(fact_reg, texture)
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true
 	find_child("FactRenameEditContainer").visible = false
 	find_child("FactInteractionContainer").visible = false
 	find_child("CancelRenameButton").visible = false
+	find_child("CancelChangeDefaultButton").visible = false
 	find_child("FactDuplicateLabel").visible = false
 	find_child("FactNameLabel").text = ""
 	drop_other_focused()
@@ -110,12 +123,14 @@ func _on_rename_fact_button_pressed() -> void:
 	find_child("CancelRenameButton").visible = true
 	find_child("DeleteFactButton").visible = false
 	find_child("RenameFactButton").visible = false
+	find_child("ChangeDefaultButton").visible = false
 
 func _on_cancel_rename_button_pressed() -> void:
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true
 	find_child("FactRenameEditContainer").visible = false
 	find_child("CancelRenameButton").visible = false
+	find_child("ChangeDefaultButton").visible = true
 
 
 func _on_confirm_rename_button_pressed() -> void:
@@ -166,3 +181,37 @@ func _on_go_to_address_button_pressed() -> void:
 func go_to(address:String):
 	emit_signal("request_hide")
 	Pages.editor.request_go_to_address(address)
+
+
+func _on_change_default_button_pressed() -> void:
+	find_child("CancelChangeDefaultButton").visible = true
+	var fact : String = find_child("FactNameLabel").text
+	if Pages.facts.get(fact) is bool:
+		find_child("NewDefaultCheckBox").visible = true
+		find_child("NewDefaultCheckBox").button_pressed = Pages.facts.get(fact)
+		find_child("NewDefaultSpinBox").visible = false
+	elif Pages.facts.get(fact) is int:
+		find_child("NewDefaultCheckBox").visible = false
+		find_child("NewDefaultSpinBox").visible = true
+		find_child("NewDefaultSpinBox").value = Pages.facts.get(fact)
+	else:
+		return
+	find_child("ChangeDefaultEditContainer").visible = true
+	find_child("ChangeDefaultButton").visible = false
+
+func _on_save_new_default_button_pressed() -> void:
+	var fact : String = find_child("FactNameLabel").text
+	if Pages.facts.get(fact) is bool:
+		Pages.facts[fact] = find_child("NewDefaultCheckBox").value
+	elif Pages.facts.get(fact) is int:
+		Pages.facts[fact] = int(find_child("NewDefaultSpinBox").value)
+	find_child("ChangeDefaultEditContainer").visible = false
+	find_child("ChangeDefaultButton").visible = true
+	fill()
+	
+
+
+func _on_cancel_change_default_button_pressed() -> void:
+	find_child("ChangeDefaultButton").visible = true
+	find_child("ChangeDefaultEditContainer").visible = false
+	find_child("CancelChangeDefaultButton").visible = false

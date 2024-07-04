@@ -89,7 +89,7 @@ func _ready() -> void:
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index:=0):
 	line_reader.terminated = false
-	paused = false
+	set_paused(false)
 	reset_facts()
 	read_page(start_page_index)
 	history = []

@@ -237,13 +237,14 @@ func deserialize(data:Dictionary):
 	page_data = int_data.duplicate()
 	head_defaults = data.get("head_defaults", [])
 	instruction_templates = data.get("instruction_templates", {})
-	if data.get("facts") is Array:
-		var compat_facts := {}
-		for f in data.get("facts"):
-			compat_facts[f] = true
-		facts = compat_facts
-	else:
-		facts = data.get("facts", {})
+	var fact_fix := {}
+	var fact_data : Dictionary = data.get("facts", {})
+	for fact_name in fact_data:
+		if fact_data.get(fact_name) is bool:
+			fact_fix[fact_name] = fact_data.get(fact_name)
+		else:
+			fact_fix[fact_name] = int(fact_data.get(fact_name))
+	facts = fact_fix
 	dropdowns = data.get("dropdowns", {})
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
