@@ -202,7 +202,10 @@ func deserialize(data:Dictionary):
 func remove_blocker():
 	blockers -= 1
 	if blockers <= 0:
-		callable_upon_blocker_clear.call()
+		if callable_upon_blocker_clear:
+			callable_upon_blocker_clear.call()
+		else:
+			Parser.reset_and_start()
 
 var emit_insutrction_complete_on_cg_hide :bool
 
