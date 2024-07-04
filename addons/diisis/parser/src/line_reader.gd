@@ -585,6 +585,7 @@ func fit_to_max_line_count(lines: Array):
 	var new_chunks := []
 	var label : RichTextLabel = RichTextLabel.new()
 	add_child(label)
+	label.visible = false
 	label.bbcode_enabled = true
 	label.theme = text_content.get_theme()
 	label.size = text_content.size
@@ -595,11 +596,26 @@ func fit_to_max_line_count(lines: Array):
 		var line_height:=0
 		var content_height := 0
 		
+		var name_prefix:String
+		var name_length:int
+		if name_style == NameStyle.Prepend:
+			var display_name: String = name_map.get(dialog_actors[dialog_line_index], dialog_actors[dialog_line_index])
+			display_name = display_name.substr(0, display_name.find("{"))
+			var name_color :Color = name_colors.get(dialog_actors[dialog_line_index], Color.WHITE)
+			name_prefix = str(
+			"[color=", name_color.to_html(), "]",
+			display_name, "[/color] - ")
+			name_length = display_name.length() + 3
+		elif name_style == NameStyle.NameLabel:
+			name_prefix = ""
+			name_length = 0
+		
 		var line:String = lines[i]
 		label.text = line
 		label.visible_characters = 1
 		if line_height == 0:
 			line_height = label.get_content_height()
+		label.text = str(name_prefix, line)
 		
 		while content_height <= line_height * max_text_line_count:
 			if label.text.is_empty():
@@ -607,7 +623,9 @@ func fit_to_max_line_count(lines: Array):
 			label.visible_characters += 1
 			content_height = label.get_content_height()
 			if content_height > line_height * max_text_line_count:
+				label.text = label.text.trim_prefix(name_prefix)
 				label.visible_characters -= 1
+				label.visible_characters -= name_length
 				while label.text[label.visible_characters] != " ":
 					label.visible_characters -= 1
 				label.bbcode_enabled = false
