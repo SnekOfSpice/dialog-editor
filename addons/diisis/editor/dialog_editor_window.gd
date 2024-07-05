@@ -133,7 +133,7 @@ func update_content_scale(scale_factor:float):
 	
 	find_child("WindowFactorLabel").text = str(scale_factor * 100, "%")
 	window_factor_window.position.y = size.y - find_child("WindowFactorContainer").size.y
-	#window_factor_window.size.x = size.x
+	window_factor_window.size.x = size.x
 	find_child("WindowFactorContainer").size.x = size.x
 	
 	if editor:
