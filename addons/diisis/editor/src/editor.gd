@@ -145,7 +145,9 @@ func load_page(number: int, discard_without_saving:=false):
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text
 	
-	for button : LineTypeButton in find_child("LineTypes").get_children():
+	for button in find_child("LineTypes").get_children():
+		if not button is LineTypeButton:
+			continue
 		if button.button_pressed:
 			line_type = button.line_type
 			break
