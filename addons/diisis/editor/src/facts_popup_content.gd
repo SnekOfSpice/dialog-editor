@@ -202,7 +202,7 @@ func _on_change_default_button_pressed() -> void:
 func _on_save_new_default_button_pressed() -> void:
 	var fact : String = find_child("FactNameLabel").text
 	if Pages.facts.get(fact) is bool:
-		Pages.facts[fact] = find_child("NewDefaultCheckBox").value
+		Pages.facts[fact] = find_child("NewDefaultCheckBox").button_pressed
 	elif Pages.facts.get(fact) is int:
 		Pages.facts[fact] = int(find_child("NewDefaultSpinBox").value)
 	find_child("ChangeDefaultEditContainer").visible = false

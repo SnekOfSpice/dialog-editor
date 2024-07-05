@@ -64,7 +64,8 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	super.deserialize(data.get("facts", {}))
 	set_operand(data.get("operand", 0))
-	find_child("BehaviorButton").select(data.get("behavior", 0))
+	selected_behavior = int(data.get("behavior", 0))
+	find_child("BehaviorButton").select(selected_behavior)
 	
 	var args = data.get("operand_args", [])
 	if args.size() > 0:

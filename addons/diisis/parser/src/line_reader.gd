@@ -735,7 +735,7 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 	
 	for call_position : int in call_strings:
-		if call_position >= last_visible_characters and call_position <= text_content.visible_characters:
+		if (call_position >= last_visible_characters or call_position == 0) and (call_position <= text_content.visible_characters or text_content.visible_characters == -1):
 			call_from_position(call_position)
 	
 	last_visible_ratio = text_content.visible_ratio
@@ -1224,7 +1224,7 @@ func choice_pressed(do_jump_page, target_page, target_line):
 ## returns an array of size 2. index 0 is if the conditionals are satisfied. index 1 is the behavior if it's true
 func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
-	var behavior = line_data.get("conditionals").get("behavior_key")
+	var behavior = conditionals.get("behavior_key")
 	var args = conditionals.get("operand_args")
 	var facts_to_check : Dictionary = conditionals.get("facts", {}).get("fact_data_by_name", {})
 	if facts_to_check.is_empty():
