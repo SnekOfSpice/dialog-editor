@@ -45,6 +45,7 @@ var execution_args := []
 var is_executing := false
 var has_executed := false
 var has_received_execute_callback := false
+var emitted_complete := false
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -77,7 +78,10 @@ func _process(delta: float) -> void:
 		delay_after -= delta
 		if delay_after <= 0:
 			ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
+			emitted_complete = true
 		return
+	elif not emitted_complete:
+		ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
 	
 	emit_signal("set_input_lock", false)
 	emit_signal("instruction_wrapped_completed")
@@ -97,6 +101,7 @@ func _wrapper_execute(instruction_name : String, args : Array, delay_before_seco
 	has_received_execute_callback = true
 	emit_signal("set_input_lock", true)
 	ParserEvents.instruction_started.emit(instruction_name, args, delay_before)
+	emitted_complete = false
 
 
 func execute(instruction_name:String, args:Array) -> bool:

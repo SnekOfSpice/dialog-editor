@@ -973,7 +973,7 @@ func read_next_chunk():
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, "<strpos>".length())
-				scan_index -= "<strpos>".length()
+				scan_index = max(scan_index - "<strpos>".length(), 0)
 				target_length -= "<strpos>".length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				tag_buffer += 2
@@ -984,7 +984,7 @@ func read_next_chunk():
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
 				call_strings[scan_index] = tag_string
-				scan_index -= tag_string.length()
+				scan_index = max(scan_index - tag_string.length(), 0)
 				target_length -= tag_string.length()
 			
 		scan_index += 1
