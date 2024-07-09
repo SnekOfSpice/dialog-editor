@@ -117,8 +117,11 @@ func try_load_locale(locale:String):
 	locales[locale] = JSON.parse_string(file.get_as_text())
 	file.close()
 
-func get_fact(fact_name: String) -> bool:
-	return facts.get(fact_name, false)
+func get_fact(fact_name: String):
+	if not facts.has(fact_name):
+		push_error(str("Fact ", fact_name, " is not registered. Returning false."))
+		return false
+	return facts.get(fact_name)
 
 func get_facts_of_value(b: bool) -> Array:
 	var result := []
