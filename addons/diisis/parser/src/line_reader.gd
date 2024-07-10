@@ -211,6 +211,7 @@ var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
 var call_strings := {}
+var called_positions := []
 var next_pause_type := 0
 enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
@@ -270,6 +271,8 @@ func serialize() -> Dictionary:
 	result["current_raw_name"] = current_raw_name
 	result["is_last_actor_name_different"] = is_last_actor_name_different
 	result["name_map"] = name_map
+	result["called_positions"] = called_positions
+	result["call_strings"] = call_strings
 	
 	return result
 
@@ -295,6 +298,8 @@ func deserialize(data: Dictionary):
 	terminated = data.get("terminated")
 	name_map = data.get("name_map", name_map)
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
+	called_positions = data.get("called_positions", [])
+	call_strings = data.get("call_strings", {})
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -735,7 +740,10 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 	
 	for call_position : int in call_strings:
-		if (call_position >= last_visible_characters or call_position == 0) and (call_position <= text_content.visible_characters or text_content.visible_characters == -1):
+		if (
+			(not called_positions.has(call_position) and call_position >= last_visible_characters) or
+			((call_position >= last_visible_characters and call_position <= text_content.visible_characters) or	text_content.visible_characters == -1)
+		):
 			call_from_position(call_position)
 	
 	last_visible_ratio = text_content.visible_ratio
@@ -931,6 +939,7 @@ func read_next_chunk():
 	pause_positions.clear()
 	pause_types.clear()
 	call_strings.clear()
+	called_positions.clear()
 	
 	var new_text : String = line_chunks[chunk_index]
 	var begins_trimmable := begins_with_trimmable(new_text)
@@ -1058,6 +1067,7 @@ func ends_with_trimmable(text:String) -> bool:
 
 func call_from_position(call_position: int):
 	var text : String = call_strings.get(call_position)
+	called_positions.append(call_position)
 	text = text.trim_prefix("<call:")
 	text = text.trim_suffix(">")
 	var parts := text.split(",")
