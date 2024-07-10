@@ -741,7 +741,8 @@ func _process(delta: float) -> void:
 	
 	for call_position : int in call_strings:
 		if (
-			(not called_positions.has(call_position) and call_position >= last_visible_characters) or
+			((not called_positions.has(call_position)) and call_position <= last_visible_characters) or
+			((not called_positions.has(call_position)) and text_content.visible_characters == -1) or
 			((call_position >= last_visible_characters and call_position <= text_content.visible_characters) or	text_content.visible_characters == -1)
 		):
 			call_from_position(call_position)
@@ -984,17 +985,19 @@ func read_next_chunk():
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, "<strpos>".length())
 				scan_index = max(scan_index - "<strpos>".length(), 0)
 				target_length -= "<strpos>".length()
+				tag_buffer += "<strpos>".length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
-				tag_buffer += 2
+				tag_buffer += 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
-				tag_buffer += 2
+				tag_buffer += 4
 			elif bbcode_removed_text.find("<call:", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index] = tag_string
+				call_strings[scan_index - tag_buffer] = tag_string
 				scan_index = max(scan_index - tag_string.length(), 0)
 				target_length -= tag_string.length()
+				tag_buffer += tag_string.length()
 			
 		scan_index += 1
 	
