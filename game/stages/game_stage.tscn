@@ -1,12 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=12 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="Theme" uid="uid://c3ok2vnjyu5p7" path="res://game/visuals/demo_theme.tres" id="1_ratke"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
 [ext_resource type="Script" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
+[ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/intro_character.tscn" id="5_abdaq"]
 [ext_resource type="Script" path="res://game/inline_eval.gd" id="6_8ao3j"]
+[ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/helpZeichenfläche 3.png" id="6_mh4vb"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 
@@ -133,6 +135,21 @@ dghfgh"
 fit_content = true
 scroll_active = false
 
+[node name="HBoxContainer" type="HBoxContainer" parent="VNUI/TextContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PageUnfinished" type="TextureRect" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("5_7sulw")
+stretch_mode = 2
+
+[node name="PageFinished" type="TextureRect" parent="VNUI/TextContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("6_mh4vb")
+stretch_mode = 2
+
 [node name="ChoiceContainer" type="PanelContainer" parent="VNUI"]
 auto_translate_mode = 1
 visible = false
@@ -172,14 +189,13 @@ text = "Menu"
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator")]
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator", "prompt_unfinished", "prompt_finished")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
-max_text_line_count = 2
 blank_names = Array[String](["narrator"])
 name_map = {
 "amber": "Amber",
@@ -193,6 +209,11 @@ text_container = NodePath("../VNUI/TextContainer")
 name_label = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/Label")
 name_container = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
 inline_evaluator = NodePath("../InlineEval")
+show_input_prompt = true
+input_prompt_delay = 1.29
+input_prompt_lerp_weight = 0.233
+prompt_unfinished = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/HBoxContainer/PageUnfinished")
+prompt_finished = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/HBoxContainer/PageFinished")
 
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("6_8ao3j")
