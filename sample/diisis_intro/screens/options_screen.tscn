@@ -121,6 +121,8 @@ text = "Text Speed:"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
+min_value = 1.0
+value = 1.0
 
 [node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)

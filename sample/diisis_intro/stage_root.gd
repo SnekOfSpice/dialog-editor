@@ -5,7 +5,7 @@ var stage := ""
 var screen := ""
 
 func _ready():
-	change_stage(CONST.STAGE_GAME)
+	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
 
@@ -26,6 +26,8 @@ func set_screen(screen_path:String):
 		for c in $ScreenContainer.get_children():
 			c.queue_free()
 		$ScreenContainer.visible = false
+		if stage == CONST.STAGE_GAME:
+			GameWorld.game_stage.grab_focus()
 		return
 	var new_stage = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
 	$ScreenContainer.add_child(new_stage)

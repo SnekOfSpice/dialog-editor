@@ -20,7 +20,7 @@ var cg_position := ""
 var is_name_container_visible := false
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-var blockers := 3
+var blockers : int = 1 + 2 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
 var hovering_meta := false
 
 @onready var text_start_position = find_child("TextContainer").position
@@ -30,6 +30,8 @@ func _ready():
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
+	ParserEvents.instruction_started.connect(on_instruction_started)
+	ParserEvents.instruction_completed.connect(on_instruction_completed)
 	
 	GameWorld.instruction_handler = $Handler
 	GameWorld.game_stage = self
@@ -41,11 +43,28 @@ func _ready():
 	set_text_style(text_style)
 	
 	remove_blocker()
+	grab_focus()
+
+func on_instruction_started(
+	instruction_name : String,
+	args : Array,
+	delay : float,
+):
+	if instruction_name == "black_fade":
+		find_child("ControlsContainer").visible = false
+
+func on_instruction_completed(
+	instruction_name : String,
+	args : Array,
+	delay : float,
+):
+	if instruction_name == "black_fade":
+		find_child("ControlsContainer").visible = true
 
 func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
-func _input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if hovering_meta:
 		return
 	if event is InputEventKey:
