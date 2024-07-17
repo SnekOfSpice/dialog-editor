@@ -518,7 +518,7 @@ size = Vector2i(827, 377)
 transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Save"
-access = 2
+root_subfolder = ".diisis"
 filters = PackedStringArray("*.json")
 
 [node name="FDExportLocales" type="FileDialog" parent="Popups"]
@@ -545,7 +545,7 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Open"
 file_mode = 0
-access = 2
+root_subfolder = ".diisis"
 filters = PackedStringArray("*.json")
 
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]

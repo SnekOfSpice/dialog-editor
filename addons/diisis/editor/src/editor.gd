@@ -361,7 +361,9 @@ func save_to_file(path:String, is_autosave:=false):
 	
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
-	var data_to_save = Pages.serialize()
+	var data_to_save = {}
+	data_to_save["pages"] = Pages.serialize()
+	data_to_save["editor"] = serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	if is_autosave:
@@ -375,6 +377,11 @@ func save_to_file(path:String, is_autosave:=false):
 		notify(str("Saved to ", active_file_name, "!"))
 	
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
+
+func serialize() -> Dictionary:
+	return {
+		"current_page_number" = get_current_page_number()
+	}
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
@@ -390,10 +397,10 @@ func open_from_path(path:String):
 	
 	set_save_path(path)
 	
-	Pages.deserialize(data)
+	Pages.deserialize(data.get("pages"))
 	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
-	load_page(0, true)
+	load_page(data.get("editor", {}).get("current_page_number", 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)
@@ -503,8 +510,10 @@ func _on_utility_index_pressed(index: int) -> void:
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
-		open_save_popup()
-		return
+		active_dir = "res://.diisis/"
+		active_file_name = str("script", Time.get_datetime_string_from_system().replace(":", "-"), ".json")
+		#open_save_popup()
+		#return
 	save_to_file(str(active_dir, active_file_name))
 
 func _on_file_id_pressed(id: int) -> void:
