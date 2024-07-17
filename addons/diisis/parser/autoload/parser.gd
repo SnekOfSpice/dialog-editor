@@ -117,8 +117,11 @@ func try_load_locale(locale:String):
 	locales[locale] = JSON.parse_string(file.get_as_text())
 	file.close()
 
-func get_fact(fact_name: String) -> bool:
-	return facts.get(fact_name, false)
+func get_fact(fact_name: String):
+	if not facts.has(fact_name):
+		push_error(str("Fact ", fact_name, " is not registered. Returning false."))
+		return false
+	return facts.get(fact_name)
 
 func get_facts_of_value(b: bool) -> Array:
 	var result := []
@@ -314,9 +317,9 @@ func change_fact(fact_item_data:Dictionary, suppress_event:=false):
 		new_value = bool(fact_item_data.get("fact_value", true))
 	elif int(fact_item_data.get("data_type", 0)) == 1: # int
 		new_value = int(fact_item_data.get("fact_value", 0))
-		if fact_item_data.get("int_operand", 0) == 0: # set
+		if fact_item_data.get("int_operator", 0) == 0: # set
 			new_value = int(fact_item_data.get("fact_value", 0))
-		elif fact_item_data.get("int_operand", 0) == 1: # add
+		elif fact_item_data.get("int_operator", 0) == 1: # add
 			new_value = int(old_value) + int(fact_item_data.get("fact_value", 0))
 	
 	facts[fact_name] = new_value

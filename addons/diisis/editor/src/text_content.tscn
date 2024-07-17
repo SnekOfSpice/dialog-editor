@@ -45,6 +45,7 @@ scroll_fit_content_height = true
 caret_blink = true
 caret_multiple = false
 syntax_highlighter = SubResource("CodeHighlighter_srwr3")
+delimiter_strings = Array[String]([])
 code_completion_enabled = true
 indent_automatic_prefixes = Array[String]([])
 

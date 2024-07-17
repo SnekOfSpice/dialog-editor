@@ -211,6 +211,7 @@ var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
 var call_strings := {}
+var called_positions := []
 var next_pause_type := 0
 enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
@@ -270,6 +271,8 @@ func serialize() -> Dictionary:
 	result["current_raw_name"] = current_raw_name
 	result["is_last_actor_name_different"] = is_last_actor_name_different
 	result["name_map"] = name_map
+	result["called_positions"] = called_positions
+	result["call_strings"] = call_strings
 	
 	return result
 
@@ -295,6 +298,8 @@ func deserialize(data: Dictionary):
 	terminated = data.get("terminated")
 	name_map = data.get("name_map", name_map)
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
+	called_positions = data.get("called_positions", [])
+	call_strings = data.get("call_strings", {})
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -735,7 +740,11 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 	
 	for call_position : int in call_strings:
-		if (call_position >= last_visible_characters or call_position == 0) and (call_position <= text_content.visible_characters or text_content.visible_characters == -1):
+		if (
+			((not called_positions.has(call_position)) and call_position <= last_visible_characters) or
+			((not called_positions.has(call_position)) and text_content.visible_characters == -1) or
+			((call_position >= last_visible_characters and call_position <= text_content.visible_characters) or	text_content.visible_characters == -1)
+		):
 			call_from_position(call_position)
 	
 	last_visible_ratio = text_content.visible_ratio
@@ -931,6 +940,7 @@ func read_next_chunk():
 	pause_positions.clear()
 	pause_types.clear()
 	call_strings.clear()
+	called_positions.clear()
 	
 	var new_text : String = line_chunks[chunk_index]
 	var begins_trimmable := begins_with_trimmable(new_text)
@@ -973,19 +983,21 @@ func read_next_chunk():
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, "<strpos>".length())
-				scan_index -= "<strpos>".length()
+				scan_index = max(scan_index - "<strpos>".length(), 0)
 				target_length -= "<strpos>".length()
+				tag_buffer += "<strpos>".length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
-				tag_buffer += 2
+				tag_buffer += 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
-				tag_buffer += 2
+				tag_buffer += 4
 			elif bbcode_removed_text.find("<call:", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index] = tag_string
-				scan_index -= tag_string.length()
+				call_strings[scan_index - tag_buffer] = tag_string
+				scan_index = max(scan_index - tag_string.length(), 0)
 				target_length -= tag_string.length()
+				tag_buffer += tag_string.length()
 			
 		scan_index += 1
 	
@@ -1058,6 +1070,7 @@ func ends_with_trimmable(text:String) -> bool:
 
 func call_from_position(call_position: int):
 	var text : String = call_strings.get(call_position)
+	called_positions.append(call_position)
 	text = text.trim_prefix("<call:")
 	text = text.trim_suffix(">")
 	var parts := text.split(",")
