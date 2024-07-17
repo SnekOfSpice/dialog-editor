@@ -34,6 +34,10 @@ func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
+	var root := DirAccess.open("res://")
+	if not root.dir_exists(".diisis"):
+		root.make_dir(".diisis")
+	
 	toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
 	#toolbar_button.focus_mode = Control.FOCUS_NONE

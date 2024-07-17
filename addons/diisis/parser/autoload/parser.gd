@@ -59,11 +59,12 @@ func _ready() -> void:
 	else:
 		source_path = DiisisEditorUtil.get_project_source_file_path()
 		if source_path.is_empty():
-			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved under the current project name at least once.")
+			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
 			return
 	var file := FileAccess.open(source_path, FileAccess.READ)
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
+	data = data.get("pages")
 	
 	# all keys are now strings instead of ints
 	var int_data := {}

@@ -114,9 +114,7 @@ func get_project_source_file_path() -> String:
 	return ""
 
 func get_project_file_path() -> String:
-	var path := "user://DIISIS_project_"
-	path += ProjectSettings.get_setting("application/config/name")
-	path += ".txt"
+	var path := "res://.diisis/active_file.txt"
 	
 	return path
 
