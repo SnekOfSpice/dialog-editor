@@ -50,14 +50,26 @@ var emitted_complete := false
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	instruction_completed.connect(set.bind("has_received_execute_callback", true))
+	instruction_completed.connect(finish_waiting_for_instruction)
+
+func finish_waiting_for_instruction():
+	has_received_execute_callback = true
+	
+	if not emitted_complete and delay_after <= 0:
+		ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
+	
+		emit_signal("set_input_lock", false)
+		emit_signal("instruction_wrapped_completed")
+		ParserEvents.instruction_completed_after_delay.emit(execution_name, execution_args, delay_after)
+		
+		is_executing = false
+		emitted_complete = true
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 	if Parser.paused:
 		return
-	
 	if not is_executing:
 		return
 	
@@ -86,7 +98,6 @@ func _process(delta: float) -> void:
 	emit_signal("set_input_lock", false)
 	emit_signal("instruction_wrapped_completed")
 	ParserEvents.instruction_completed_after_delay.emit(execution_name, execution_args, delay_after)
-
 	
 	is_executing = false
 
