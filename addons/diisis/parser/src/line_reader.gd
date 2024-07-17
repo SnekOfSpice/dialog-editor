@@ -69,28 +69,6 @@ var _auto_continue_duration:= auto_continue_delay
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
-@export_subgroup("Choices")
-## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
-## Choice Buttons are currently presented to the player.
-@export var block_advance_during_choices:=true
-#@export var give_focus_to_choice_button := false
-@export var choice_button_focus_mode := ChoiceButtonFocusMode.None
-## Button scene that gets instantiated as children of [member choice_option_container].[br]
-## If left unassigned, will use a default button.[br]
-## If overridden, it must inherit from [ChoiceButton].
-@export var button_scene:ChoiceButton
-
-@export_subgroup("Advance")
-@export var show_advance_available := false:
-	set(value):
-		show_advance_available = value
-		notify_property_list_changed()
-		update_configuration_warnings()
-@export_range(0.0, 1.0) var advance_available_lerp_weight := 0.1
-@export_range(0.0, 10.0) var advance_available_delay := 0.5
-@export var next_prompt_container: Control
-var remaining_advance_delay := advance_available_delay
-
 @export_group("Names & Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
 @export
@@ -177,6 +155,48 @@ var name_container: Control:
 ## this node have to return a [String] (can be empty).
 @export var inline_evaluator: Node
 
+@export_subgroup("Choices")
+## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
+## Choice Buttons are currently presented to the player.
+@export var block_advance_during_choices:=true
+#@export var give_focus_to_choice_button := false
+@export var choice_button_focus_mode := ChoiceButtonFocusMode.None
+## Button scene that gets instantiated as children of [member choice_option_container].[br]
+## If left unassigned, will use a default button.[br]
+## If overridden, it must inherit from [ChoiceButton].
+@export var button_scene:ChoiceButton
+
+@export_subgroup("Input Prompt")
+## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
+## Both references have to be set, and cannot be the same node.
+@export var show_input_prompt := false:
+	set(value):
+		show_input_prompt = value
+		notify_property_list_changed()
+		update_configuration_warnings()
+## The delay until the target prompt ([member prompt_unfinished] or [member prompt_finished]) starts being faded in with [member input_prompt_lerp_weight].
+@export_range(0.0, 10.0) var input_prompt_delay := 0.0
+## The weight with which the [member modulate.a] of the target prompt ([member prompt_unfinished] or [member prompt_finished]) gets faded in. [code]1.0[/code] is instant.
+@export_range(0.0, 1.0) var input_prompt_lerp_weight := 1.0
+## The node that gets shown when the [LineReader] is awaiting input but is not at the end of the text yet. Usually because of [code]<mp>[/code] tags.
+@export
+var prompt_unfinished: Control:
+	get:
+		return prompt_unfinished
+	set(value):
+		prompt_unfinished = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+## The node that gets shown when advancing the [LineReader] will clear [LineReader.text_content].
+@export
+var prompt_finished: Control:
+	get:
+		return prompt_finished
+	set(value):
+		prompt_finished = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+var remaining_prompt_delay := input_prompt_delay
 
 @export_group("Parser Event Configurations")
 ## List of characters that will not be part of the [code]read_word[/code] Parser event and instead be treated as spaces.
@@ -237,8 +257,8 @@ var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
 signal line_reader_ready
 
 func _validate_property(property: Dictionary):
-	if not show_advance_available:
-		if property.name in ["advance_available_delay", "advance_available_lerp_weight", "next_prompt_container"]:
+	if not show_input_prompt:
+		if property.name in ["input_prompt_delay", "input_prompt_lerp_weight", "prompt_finished", "prompt_unfinished"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not auto_continue:
 		if property.name in ["auto_continue_delay"]:
@@ -340,8 +360,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Name Label is null")
 	if not name_container and name_style == NameStyle.NameLabel:
 		warnings.append("Name Container is null")
-	if show_advance_available and not next_prompt_container:
-		warnings.append("Next Prompt Container is null")
+	if show_input_prompt and not prompt_unfinished:
+		warnings.append("Prompt Unfinished is null")
+	if show_input_prompt and not prompt_finished:
+		warnings.append("Prompt Finished is null")
+	if show_input_prompt and prompt_finished == prompt_unfinished and prompt_unfinished:
+		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
 	if keep_past_lines and not past_text_continer:
 		warnings.append("Past Text Container is null")
 	
@@ -369,8 +393,10 @@ func _ready() -> void:
 	text_content.text = ""
 	name_label.text = ""
 	
-	if not show_advance_available and next_prompt_container:
-		next_prompt_container.modulate.a = 0
+	if not show_input_prompt and prompt_unfinished:
+		prompt_unfinished.modulate.a = 0
+	if not show_input_prompt and prompt_finished:
+		prompt_finished.modulate.a = 0
 	
 	emit_signal("line_reader_ready")
 
@@ -419,13 +445,13 @@ func advance():
 		if text_content.visible_ratio >= 1.0:
 			if chunk_index >= line_chunks.size() - 1:
 				if dialog_line_index >= dialog_lines.size() - 1:
+					remaining_prompt_delay = input_prompt_delay
 					emit_signal("line_finished", line_index)
 				else:
-					remaining_advance_delay = advance_available_delay
+					remaining_prompt_delay = input_prompt_delay
 					set_dialog_line_index(dialog_line_index + 1)
 					start_showing_text()
 			else:
-				remaining_advance_delay = advance_available_delay
 				read_next_chunk()
 		else:
 			if next_pause_position_index < pause_positions.size():
@@ -435,7 +461,7 @@ func advance():
 						next_pause_position_index += 1
 					find_next_pause()
 					remaining_auto_pause_duration = remaining_auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
-					remaining_advance_delay = advance_available_delay
+				remaining_prompt_delay = input_prompt_delay
 	else:
 		emit_signal("line_finished", line_index)
 
@@ -524,6 +550,11 @@ func read_new_line(new_line: Dictionary):
 	for f in facts.values():
 		Parser.change_fact(f)
 	
+	if not show_input_prompt and prompt_unfinished:
+		prompt_unfinished.modulate.a = 0
+	if not show_input_prompt and prompt_finished:
+		prompt_finished.modulate.a = 0
+	
 	match line_type:
 		DIISIS.LineType.Text:
 			var localized : String = Parser.replace_from_locale(line_data.get("address"), Parser.locale)
@@ -581,7 +612,8 @@ func read_new_line(new_line: Dictionary):
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
 			emit_signal("line_finished", line_index)
-			
+	
+	remaining_prompt_delay = input_prompt_delay
 
 func fit_to_max_line_count(lines: Array):
 	if max_text_line_count <= 0:
@@ -680,6 +712,8 @@ func _process(delta: float) -> void:
 	if Parser.paused:
 		return
 	
+	update_input_prompt(delta)
+	
 	if lead_time > 0:
 		lead_time -= delta
 		return
@@ -704,11 +738,7 @@ func _process(delta: float) -> void:
 			find_next_pause()
 			remaining_auto_pause_duration = auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
-	if show_advance_available:
-		if remaining_advance_delay <= 0.0:
-			update_advance_available()
-		else:
-			remaining_advance_delay -= delta
+	
 	
 	var new_characters_visible_so_far = text_content.text.substr(0, text_content.visible_characters)
 	var new_characters : String = new_characters_visible_so_far.trim_prefix(characters_visible_so_far)
@@ -789,32 +819,26 @@ func remove_symbols(from: String, symbols:=non_word_characters) -> String:
 	
 	return s
 
-func update_advance_available():
+func update_input_prompt(delta:float):
+	if (not show_input_prompt) or auto_continue:
+		prompt_finished.visible = false
+		prompt_unfinished.visible = false
+		return
+	
 	var prompt_visible: bool
-#	if next_pause_position_index != -1 and next_pause_position_index < pause_positions.size():
-#		if (
-#		next_pause_type == PauseTypes.Manual and 
-#		text_content.visible_characters < 
-#		pause_positions[next_pause_position_index] - 4 * next_pause_position_index
-#		):
-#			prompt_visible = true
 
 	if text_content.visible_ratio >= 1.0:
 		prompt_visible = true
 	elif next_pause_position_index > pause_positions.size() and next_pause_position_index != -1:
 		prompt_visible = true
 	elif pause_positions.size() > 0 and next_pause_type == PauseTypes.Manual:
-		if next_pause_position_index >= pause_positions.size() -1:
-			prompt_visible = text_content.visible_ratio >= 1.0
-		elif (text_content.visible_characters < 
-		pause_positions[next_pause_position_index] - 4 * next_pause_position_index
-		):
-
+		if text_content.visible_characters == pause_positions[next_pause_position_index] - 4 * next_pause_position_index:
 			prompt_visible = true
 		else:
 			prompt_visible = false
 	else:
 		prompt_visible = false
+	
 	if text_content.visible_characters < get_end_of_chunk_position():
 		prompt_visible = false
 		if text_content.visible_characters == -1:
@@ -822,11 +846,28 @@ func update_advance_available():
 	
 	if is_input_locked:
 		prompt_visible = false
-	
 	if not prompt_visible:
-		next_prompt_container.modulate.a = 0
+		prompt_unfinished.modulate.a = 0
+		prompt_finished.modulate.a = 0
+		return
 	else:
-		next_prompt_container.modulate.a = lerp(next_prompt_container.modulate.a, 1.0, advance_available_lerp_weight)
+		if remaining_prompt_delay > 0.0:
+			remaining_prompt_delay -= delta
+			return
+	
+	# Order of operations is important. since both prompts may be the same node, we want to ensure something is visible if appropriate.
+	var target_prompt:Control
+	if text_content.visible_ratio >= 1.0:
+		target_prompt = prompt_finished
+		prompt_unfinished.visible = false
+		prompt_finished.visible = true
+	else:
+		target_prompt = prompt_unfinished
+		prompt_finished.visible = false
+		prompt_unfinished.visible = true
+	
+	target_prompt.modulate.a = lerp(target_prompt.modulate.a, 1.0, input_prompt_lerp_weight)
+
 
 func start_showing_text():
 	var content : String = dialog_lines[dialog_line_index]
@@ -931,6 +972,7 @@ func replace_tags(lines):
 
 
 func read_next_chunk():
+	remaining_prompt_delay = input_prompt_delay
 	chunk_index += 1
 	if text_speed == MAX_TEXT_SPEED:
 		text_content.visible_ratio = 1.0
