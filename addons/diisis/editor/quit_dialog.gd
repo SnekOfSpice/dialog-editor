@@ -21,3 +21,4 @@ func _on_about_to_popup() -> void:
 
 func _on_save_button_pressed() -> void:
 	emit_signal("request_save")
+	emit_signal("confirmed")

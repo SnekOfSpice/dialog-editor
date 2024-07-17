@@ -29,6 +29,7 @@ size_flags_vertical = 4
 [node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
 layout_mode = 2
@@ -37,6 +38,7 @@ size_flags_vertical = 4
 
 [node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 bbcode_enabled = true
 text = "fgdfg"
 fit_content = true
@@ -51,12 +53,12 @@ text = "Stay"
 
 [node name="SaveButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Save"
+text = "Save & Leave"
 
 [node name="QuitButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-text = "Close DIISIS"
+text = "Leave"
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
