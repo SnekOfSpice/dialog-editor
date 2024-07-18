@@ -94,7 +94,7 @@ func deserialize_lines(lines_data: Array):
 func set_next(next_page: int):
 	next = next_page
 	var next_exists = Pages.page_data.keys().has(next)
-	find_child("NextKey").visible = next_exists
+	find_child("NextKey").modulate.a = 1.0 if next_exists else 0.0
 	
 	if not next_exists:
 		return
