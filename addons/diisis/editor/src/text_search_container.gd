@@ -3,6 +3,7 @@ extends Control
 
 var addresses_by_index := {}
 var details_by_address := {}
+var fact_start_index := 0
 
 var last_search_query := ""
 
@@ -11,8 +12,10 @@ func init():
 	find_child("ReplaceContainer").visible = false
 	find_child("ReplaceAllInTypeButton").text = "Replace all in Type"
 	find_child("QueryTextEdit").grab_focus()
+	find_child("FactEditHintLabel").visible = false
 	
 func display_results(search:String):
+	fact_start_index = -1
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	find_child("ReplaceContainer").visible = false
 	var result = Pages.search_string(search, case_insensitive)
@@ -21,20 +24,22 @@ func display_results(search:String):
 	var i = 0
 	# this is duplicated for relevancy
 	var keys := ["text", "choices", "facts"]
-	find_child("GoToButton").visible = false
+	find_child("GoToButton").disabled = true
 	
 	for k : String in keys:
 		if result.get(k).is_empty():
 			continue
-		find_child("GoToButton").visible = true
+		find_child("GoToButton").disabled = false
 		i += 1
 		item_list.add_item(str("-- ", k.capitalize(), " --"), null, false)
+		if k == "facts":
+			fact_start_index = item_list.item_count
 		for address in result.get(k):
 			addresses_by_index[i] = address
 			details_by_address[address] = result.get(k).get(address)
 			item_list.add_item(address)
 	
-	find_child("NoResultsLabel").visible = not find_child("GoToButton").visible
+	find_child("NoResultsLabel").visible = find_child("GoToButton").disabled
 
 
 func request_replace_local():
@@ -113,8 +118,23 @@ func _on_item_list_item_selected(index: int) -> void:
 	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.ChoiceItem:
 		find_child("ReplaceContainer").visible = true
 		find_child("ReplaceAllInTypeButton").text = "Replace all in Choices"
+	
+	find_child("ReplaceLocallyButton").disabled = index >= fact_start_index
+	find_child("ReplaceAllInTypeButton").disabled = index >= fact_start_index
+	find_child("FactEditHintLabel").visible = index >= fact_start_index
 
 
 func _on_go_to_button_pressed() -> void:
+	await get_tree().process_frame
+	var address = find_child("ItemList").get_item_text(find_child("ItemList").get_selected_items()[0])
+	Pages.editor.request_go_to_address(address)
+
+
+func _on_case_sensitive_button_toggled(_toggled_on: bool) -> void:
+	update_query(find_child("QueryTextEdit").text)
+
+
+func _on_item_list_item_activated(index: int) -> void:
+	await get_tree().process_frame
 	var address = find_child("ItemList").get_item_text(find_child("ItemList").get_selected_items()[0])
 	Pages.editor.request_go_to_address(address)

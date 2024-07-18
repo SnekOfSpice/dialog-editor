@@ -64,8 +64,8 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="GoToButton" type="Button" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
-visible = false
 layout_mode = 2
+disabled = true
 text = "Go To"
 
 [node name="NoResultsLabel" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
@@ -78,14 +78,25 @@ custom_minimum_size = Vector2(150, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ResultLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="FactEditHintLabel" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+text = "[Use the Facts window (Setup -> Facts) to edit fact names]"
+
+[node name="ResultLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 
 [connection signal="text_submitted" from="VBoxContainer/HBoxContainer/QueryTextEdit" to="." method="update_query"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SearchButton" to="." method="_on_search_button_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/CaseSensitiveButton" to="." method="_on_case_sensitive_button_toggled"]
 [connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceLocallyButton" to="." method="request_replace_local"]
 [connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceAllInTypeButton" to="." method="request_replace_all_in_type"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
+[connection signal="item_activated" from="VBoxContainer/HBoxContainer2/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
