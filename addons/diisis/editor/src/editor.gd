@@ -28,6 +28,8 @@ enum PageView {
 	Minimal
 }
 
+var font_sizes = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
+
 signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
@@ -82,6 +84,13 @@ func init(active_file_path:="") -> void:
 	request_add_page(0, 0)
 	
 	update_controls()
+	
+	var text_size_button : OptionButton = find_child("TextSizeButton")
+	text_size_button.clear()
+	
+	for s in font_sizes:
+		text_size_button.add_item(str(s))
+	text_size_button.select(3)
 	
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
@@ -380,7 +389,9 @@ func save_to_file(path:String, is_autosave:=false):
 
 func serialize() -> Dictionary:
 	return {
-		"current_page_number" = get_current_page_number()
+		"current_page_number" = get_current_page_number(),
+		"page_view" = get_selected_page_view(),
+		"text_size_id" = find_child("TextSizeButton").get_selected_id()
 	}
 
 func _on_fd_save_file_selected(path: String) -> void:
@@ -400,7 +411,11 @@ func open_from_path(path:String):
 	Pages.deserialize(data.get("pages"))
 	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
-	load_page(data.get("editor", {}).get("current_page_number", 0), true)
+	await get_tree().process_frame
+	var editor_data = data.get("editor", {})
+	load_page(editor_data.get("current_page_number", 0), true)
+	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
+	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)
@@ -733,3 +748,22 @@ func _on_show_errors_button_toggled(toggled_on: bool) -> void:
 	else:
 		find_child("ErrorTextBox").custom_minimum_size.y = find_child("ShowErrorsButton").size.y
 		
+
+
+func _on_text_size_button_item_selected(index: int) -> void:
+	set_text_size(index)
+	
+func set_text_size(size_index:int):
+	var label_size = font_sizes[size_index]
+	var edit_size = label_size * (16.0/14.0)
+	theme.set_font_size("font_size", "Label", label_size)
+	theme.set_font_size("font_size", "CodeEdit", label_size)
+	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
+	theme.set_font_size("font_size", "LineEdit", edit_size)
+	theme.set_font_size("font_size", "Button",  edit_size)
+	theme.set_font_size("font_size", "CheckButton",  edit_size)
+	theme.set_font_size("font_size", "CheckBox",  edit_size)
+
+
+func _on_view_truncated_button_pressed(extra_arg_0: int) -> void:
+	pass # Replace with function body.
