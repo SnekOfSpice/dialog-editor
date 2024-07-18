@@ -144,6 +144,8 @@ func load_page(number: int, discard_without_saving:=false):
 		page_container.add_child(page_instance)
 	else:
 		page_instance = page_container.get_child(0)
+	if not page_instance.is_connected("request_delete", request_delete_current_page):
+		page_instance.request_delete.connect(request_delete_current_page)
 		
 	page_instance.init(number)
 	current_page = page_instance
@@ -326,9 +328,16 @@ func request_add_last_page():
 func _on_delete_current_pressed() -> void:
 	request_delete_page(get_current_page_number())
 
+func request_delete_current_page():
+	request_delete_page(get_current_page_number())
+
 func request_delete_page(number:int):
 	if Pages.get_page_count() <= 1:
 		push_warning("you cannot delete the last page")
+		return
+	
+	if number == 0:
+		notify("You cannot delete page of index 0")
 		return
 	
 	undo_redo.create_action("Delete Page")

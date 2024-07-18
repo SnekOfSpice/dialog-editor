@@ -324,6 +324,7 @@ theme_override_font_sizes/font_size = 17
 text = "+>>"
 
 [node name="DeleteCurrent" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
 size_flags_vertical = 8
