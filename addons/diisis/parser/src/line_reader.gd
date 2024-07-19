@@ -821,8 +821,10 @@ func remove_symbols(from: String, symbols:=non_word_characters) -> String:
 
 func update_input_prompt(delta:float):
 	if (not show_input_prompt) or auto_continue:
-		prompt_finished.visible = false
-		prompt_unfinished.visible = false
+		if prompt_finished:
+			prompt_finished.visible = false
+		if prompt_unfinished:
+			prompt_unfinished.visible = false
 		return
 	
 	var prompt_visible: bool

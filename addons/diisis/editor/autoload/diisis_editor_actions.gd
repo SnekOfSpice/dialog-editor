@@ -95,9 +95,9 @@ func change_page_references_dir(changed_page: int, operation:int):
 	Pages.change_page_references_dir(changed_page, operation)
 
 func delete_page(at:int):
-	var cache = cached_pages.get(at, [])
-	cache.append(Pages.page_data.get(at))
-	cached_pages[at] = cache
+	var cached_versions = cached_pages.get(at, [])
+	cached_versions.append(Pages.page_data.get(at))
+	cached_pages[at] = cached_versions
 	await get_tree().process_frame # without this await, the last page cannot be deleted
 	Pages.delete_page_data(at)
 	
@@ -105,11 +105,11 @@ func delete_page(at:int):
 	Pages.editor.current_page.update()
 
 func add_page(at:int, page_reference_change:=1):
-	var cache : Array = cached_pages.get(at, [])
+	var cached_versions : Array = cached_pages.get(at, [])
 	var data : Dictionary
-	if not cache.is_empty():
-		data = cache.pop_back()
-		cached_pages[at] = cache
+	if not cached_versions.is_empty():
+		data = cached_versions.pop_back()
+		cached_pages[at] = cached_versions
 	else:
 		data = {}
 	Pages.add_page_data(at, data)

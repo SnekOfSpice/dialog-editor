@@ -43,6 +43,12 @@ func _on_a_index_pressed(index: int) -> void:
 			request_insert_items(true)
 		5: # insert below
 			request_insert_items(false)
+		6:
+			request_insert_items(false)
+			if address_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+				DiisisEditorActions.delete_choice_item(address)
+			elif address_depth == DiisisEditorUtil.AddressDepth.Line:
+				DiisisEditorActions.delete_line(DiisisEditorUtil.get_split_address(address)[1])
 
 
 func request_insert_items(above:bool):

@@ -24,7 +24,7 @@ focus_mode = 0
 layout_mode = 2
 
 [node name="v" type="PopupMenu" parent="HBoxContainer/MenuBar"]
-item_count = 6
+item_count = 7
 item_0/text = "Copy this"
 item_0/icon = ExtResource("2_mdac6")
 item_1/text = "Copy selection"
@@ -42,6 +42,8 @@ item_4/id = 4
 item_5/text = "Paste below"
 item_5/icon = ExtResource("7_r6sua")
 item_5/id = 5
+item_6/text = "Replace + Insert"
+item_6/id = 6
 
 [connection signal="toggled" from="HBoxContainer/SelectCheckBox" to="." method="_on_select_check_box_toggled"]
 [connection signal="index_pressed" from="HBoxContainer/MenuBar/v" to="." method="_on_a_index_pressed"]

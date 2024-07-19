@@ -515,7 +515,7 @@ func delete_page_data(at: int):
 	
 	change_page_references_dir(at, -1)
 	
-	emit_signal("pages_modified")
+	#emit_signal("pages_modified")
 
 func get_instruction_signature(instruction_name:String) -> String:
 	if not instruction_templates.has(instruction_name):

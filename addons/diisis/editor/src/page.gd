@@ -6,6 +6,8 @@ var number := 0
 var next := 1
 var lines:Node
 
+signal request_delete()
+
 func init(n:=number):
 	var data = Pages.page_data.get(n)
 	number = n
@@ -92,7 +94,7 @@ func deserialize_lines(lines_data: Array):
 func set_next(next_page: int):
 	next = next_page
 	var next_exists = Pages.page_data.keys().has(next)
-	find_child("NextKey").visible = next_exists
+	find_child("NextKey").modulate.a = 1.0 if next_exists else 0.0
 	
 	if not next_exists:
 		return
@@ -485,3 +487,14 @@ func _on_terminate_check_toggled(toggled_on: bool) -> void:
 func _on_line_selector_toggled(toggled_on: bool) -> void:
 	for line : Line in lines.get_children():
 		line.set_selected(toggled_on)
+
+
+func _on_delete_button_pressed() -> void:
+	if find_child("DeletePromptContainer").visible:
+		find_child("DeletePromptContainer").visible = false
+		emit_signal("request_delete")
+	else:
+		find_child("DeletePromptContainer").visible = true
+
+func _on_cancel_deletion_button_pressed() -> void:
+	find_child("DeletePromptContainer").visible = false
