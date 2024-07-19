@@ -77,6 +77,8 @@ func _gui_input(event: InputEvent) -> void:
 				hide_cg()
 				return
 		$LineReader.request_advance()
+	elif event.is_action_pressed("go_back"):
+		$LineReader.go_back()
 
 func show_ui():
 	find_child("VNUI").visible = true
