@@ -465,6 +465,8 @@ func advance():
 	else:
 		emit_signal("line_finished", line_index)
 
+func go_back():
+	Parser.go_back()
 
 ## Pauses the Parser and hides all controls uif [param hide_controls] is [code]true[/code] (default). Useful for reacting to game events outside the line reader. [br]
 ## [b]Call [method continue_after_interrupt] afterwards to cleanly resume.[/b]
