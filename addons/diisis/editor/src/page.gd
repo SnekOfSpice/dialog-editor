@@ -498,4 +498,3 @@ func _on_delete_button_pressed() -> void:
 
 func _on_cancel_deletion_button_pressed() -> void:
 	find_child("DeletePromptContainer").visible = false
-	Pages.editor.grab_focus()

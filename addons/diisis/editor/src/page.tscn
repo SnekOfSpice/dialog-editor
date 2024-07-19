@@ -119,6 +119,7 @@ size_flags_horizontal = 10
 [node name="DeleteButton" type="Button" parent="PanelContainer/Info/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
+focus_mode = 0
 text = "X"
 
 [node name="DeletePromptContainer" type="HBoxContainer" parent="PanelContainer/Info/VBoxContainer"]
