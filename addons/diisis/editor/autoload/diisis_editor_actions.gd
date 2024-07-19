@@ -80,6 +80,9 @@ func go_to(address:String, discard_without_saving:=false):
 		Pages.editor.current_page.save()
 		Pages.editor.current_page.enable_page_key_edit(false)
 	
+	if Pages.editor.get_current_page_number() != parts[0]:
+		Pages.local_line_insert_offset = 0
+	
 	Pages.editor.load_page(parts[0], discard_without_saving)
 	await get_tree().process_frame
 	Pages.editor.current_page.update()

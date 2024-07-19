@@ -159,6 +159,7 @@ const LOCALES := ["af_ZA",
 "zu_ZA",]
 
 var facts := {}
+var local_line_insert_offset:int
 
 var instruction_templates := {
 		"show-character": {
@@ -361,12 +362,11 @@ func swap_page_references(from: int, to: int):
 	await get_tree().process_frame
 	editor.refresh(false)
 
-
 func change_line_references_directional(on_page:int, starting_index_of_change:int, end_index_of_change:int, operation:int):
 	var edited_current_page := false
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		prints("page", page.get("number"))
+		#prints("page", page.get("number"))
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -386,8 +386,7 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 							if page_number == current_page_number:
 								edited_current_page = true
 					
-					
-	
+	local_line_insert_offset += operation
 	if edited_current_page:
 		await get_tree().process_frame
 		editor.refresh(false, true)
