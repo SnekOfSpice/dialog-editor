@@ -52,6 +52,9 @@ var currently_speaking_name := ""
 var currently_speaking_visible := true
 var history := []
 
+var address_trail_index := -1
+var address_trail := []
+
 func _ready() -> void:
 	var source_path:String
 	if not source_file_override.is_empty():
@@ -256,13 +259,60 @@ func get_game_progress(full_if_on_last_page:= true) -> float:
 	
 	return page_progress + (line_progress / float(max_page_index))
 
-func read_line(index: int):
+func get_previous_address_line_type() -> DIISIS.LineType:
+	if address_trail_index <= 0 or address_trail.is_empty():
+		push_warning("At the beginning.")
+		return int(page_data.get(0).get("lines")[0].get("line_type"))
+	var previous_address = address_trail[address_trail_index - 1]
+	var parts = DiisisEditorUtil.get_split_address(previous_address)
+	var prev_page = parts[0]
+	var prev_line = parts[1]
 	
+	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+
+func go_back():
+	if get_previous_address_line_type() in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
+		# ParserEvents.go_back_declined.emit()
+		push_warning("You cannot go further back.")
+		return
+	
+	if address_trail_index <= 0 or address_trail.is_empty():
+		push_warning("You're at the beginning.")
+		return
+	
+	address_trail_index -= 1
+	var previous_address = address_trail[address_trail_index]
+	#prints("previous address is ", previous_address, address_trail_index)
+	var parts = DiisisEditorUtil.get_split_address(previous_address)
+	var prev_page = parts[0]
+	var prev_line = parts[1]
+	if not address_trail.is_empty():
+		address_trail.resize(address_trail_index)
+	if prev_page == page_index:
+		read_line(prev_line)
+	else:
+		read_page(prev_page, prev_line)
+	address_trail_index = address_trail.size() - 1
+	#address_trail.remove_at(address_trail.size() - 1)
+	
+
+func read_line(index: int):
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
 		return
 	line_index = index
+	#prints("reading line", index, "trail is ", address_trail, " idx is", address_trail_index)
+	address_trail_index += 1
+	#if not address_trail.is_empty():
+		#address_trail.resize(address_trail_index)
+		
+	var new_address := str(page_index, ".", line_index)
+	#if address_trail.back() == new_address:
+		#address_trail_index -= 1
+	#else:
+	address_trail.append(str(page_index, ".", line_index))
 	emit_signal("read_new_line", lines[index])
+	#prints("line has been read. trail is now", address_trail, "and idx", address_trail_index)
 	
 
 func read_next_line(finished_line_index: int):
@@ -349,6 +399,8 @@ func serialize() -> Dictionary:
 	result["Parser.line_reader"] = line_reader.serialize()
 	result["Parser.game_progress"] = get_game_progress()
 	result["Parser.selected_choices"] = selected_choices
+	result["address_trail"] = address_trail
+	result["address_trail_index"] = address_trail_index
 	
 	return result
 
@@ -356,6 +408,9 @@ func deserialize(data: Dictionary):
 	lines = data.get("Parser.lines")
 	selected_choices = data.get("Parser.selected_choices")
 	max_line_index_on_page = int(data.get("Parser.max_line_index_on_page"))
+	
+	address_trail_index = data.get("address_trail_index")
+	address_trail = data.get("address_trail")
 	
 	page_index = int(data.get("Parser.page_index", 0))
 	line_index = int(data.get("Parser.line_index", 0))
