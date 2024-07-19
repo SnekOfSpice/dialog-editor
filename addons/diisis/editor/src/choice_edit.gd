@@ -5,6 +5,7 @@ class_name ChoiceEdit
 var jump_page_before_auto_switch := false
 var deserialized_loopback_page := 0
 var deserialized_loopback_line := 0
+var deserialized_line_index := 0
 
 signal move_choice_edit(choice_edit, direction)
 
@@ -54,7 +55,7 @@ func deserialize(data:Dictionary):
 	#deserialized_loopback_line = data.get("loopback_target_line", 0)
 	
 
-	#
+	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem))[1]
 	deserialized_loopback_page = loopback_target_page
 	deserialized_loopback_line = loopback_target_line
 	find_child("PageSelect").value = jump_target_page
@@ -154,7 +155,15 @@ func update_fragile():
 	var line_type : int= line.get("line_type")
 	if line_type != DIISIS.LineType.Choice:
 		return
-	var data = line.get("content").get("choices")[parts[2]]
+	
+	await get_tree().process_frame
+	var offset:int
+	if line.get("meta.line_index") > deserialized_line_index:
+		offset = Pages.local_line_insert_offset
+	else:
+		offset = 0
+	#print(Pages.page_data.get(parts[0]).get("lines")[line.get("meta.line_index")].get("content"))
+	var data =  Pages.page_data.get(parts[0]).get("lines")[line.get("meta.line_index") - offset].get("content").get("choices")[parts[2]]
 	deserialize(data)
 
 func get_address() -> String:
