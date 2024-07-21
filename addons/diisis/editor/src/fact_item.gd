@@ -52,6 +52,8 @@ func deserialize(data: Dictionary) -> void:
 	set_int_comparator(data.get("int_comparator", Comparator.EQ))
 	set_int_operator(data.get("int_operator", Operator.Set))
 	find_child("RegisterButton").visible = not Pages.facts.has(data.get("fact_name", ""))
+	
+	find_child("FactName").completion_options = Pages.facts.keys()
 
 
 
@@ -65,7 +67,7 @@ func set_fact(new_fact_name: String, default_value):
 			find_child("IntValueSpinBox").value = int(default_value)
 	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
-	_on_fact_name_text_changed(fact_name)
+	find_child("FactName")._on_text_changed(fact_name)
 
 func set_data_type(value:DataType):
 	data_type = value
@@ -116,6 +118,7 @@ func get_fact_name():
 func update_unregsitered_prompt():
 	var new_text = entered_text
 	find_child("RegisterContainer").visible = true
+	find_child("RegisterButton").visible = not Pages.facts.has(entered_text)
 	if not Pages.facts.keys().has(new_text):
 		find_child("RegisterLabel").text = str(
 			"Fact \"",
@@ -177,10 +180,6 @@ func update_hint(new_text: String):
 	caret_pos.y -= 140
 	$ReadHint.position = caret_pos
 
-func _on_fact_name_text_changed(new_text: String) -> void:
-	entered_text = new_text
-	update_unregsitered_prompt()
-	update_hint(new_text)
 
 
 func _on_register_button_pressed() -> void:
@@ -207,40 +206,14 @@ func _on_fact_value_toggled(button_pressed: bool) -> void:
 	update_unregsitered_prompt()
 
 
-func _on_fact_name_focus_exited() -> void:
-	$ReadHint.hide()
-
-
-func _on_fact_name_gui_input(event: InputEvent) -> void:
-	if Input.is_key_pressed(KEY_DOWN):
-		virtual_hint_line += 1
-		if virtual_hint_line >= $ReadHint.get_hint_line_count():
-			virtual_hint_line = 0
-	if Input.is_key_pressed(KEY_UP):
-		virtual_hint_line -= 1
-		if virtual_hint_line < 0:
-			virtual_hint_line = $ReadHint.get_hint_line_count() - 1
-	update_hint(find_child("FactName").text)
-	if Input.is_key_pressed(KEY_ENTER):
-		var text_in_hint : String = $ReadHint.get_text_in_line(virtual_hint_line)
-		text_in_hint = text_in_hint.replace(">", "")
-		text_in_hint = text_in_hint.replace("[b]", "")
-		text_in_hint = text_in_hint.replace("[/b]", "")
-		find_child("FactName").text = text_in_hint
-		_on_fact_name_text_changed(text_in_hint)
-		
-		await get_tree().process_frame
-		$ReadHint.hide()
-
-
-
-func _on_fact_name_focus_entered() -> void:
-	virtual_hint_line = 0
-
-
 func _on_int_operand_button_pressed() -> void:
 	var button : Button = find_child("IntOperandButton")
 	if button.text == "=":
 		set_int_operator(Operator.Add)
 	elif button.text == "+":
 		set_int_operator(Operator.Set)
+
+
+func _on_fact_name_text_entered(new_text: String) -> void:
+	entered_text = new_text
+	update_unregsitered_prompt()

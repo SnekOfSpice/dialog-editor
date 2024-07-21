@@ -166,7 +166,9 @@ func get_selected_line_type() -> int:
 	return line_type
 
 func select_line_type(line_type:int):
-	for button : LineTypeButton in find_child("LineTypes").get_children():
+	for button in find_child("LineTypes").get_children():
+		if not button is LineTypeButton:
+			continue
 		if button.line_type == line_type:
 			button.button_pressed = true
 

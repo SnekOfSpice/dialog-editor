@@ -1182,15 +1182,15 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 
 func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
 	var args := []
-	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args")
+	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args", {})
 	var arg_order := get_argument_order_from_template(instruction_name)
 	for arg_name in arg_order:
-		args.append(arg_dict.get(arg_name))
+		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
 	return args
 
 func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
 	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
-		push_warning(str(instruction_text, " isn't OK"))
+		#push_warning(str(instruction_text, " isn't OK"))
 		return {}
 	
 	var result := {}
@@ -1242,8 +1242,12 @@ func get_compliance_with_template(instruction:String) -> String:
 	if not does_instruction_name_exist(entered_name):
 		return str("Instruction ", entered_name, " does not exist")
 	
-	if instruction.count(",") + 1 != instruction_templates.get(entered_name).get("args").size():
-		if instruction.count(",") > 0:
+	var template_arg_count : int = instruction_templates.get(entered_name).get("args").size()
+	if template_arg_count == 0:
+		if not instruction.ends_with("()"):
+			return "Arg count mismatch"
+	if instruction.count(",") + 1 != template_arg_count:
+		if template_arg_count > 0:
 			return "Arg count mismatch"
 	
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
