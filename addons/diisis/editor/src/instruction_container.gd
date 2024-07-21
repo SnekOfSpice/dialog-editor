@@ -3,12 +3,11 @@ extends Control
 
 var selected_index := 0
 
-var text_box : CodeEdit
+var text_box : HintedLineEdit
 
 func init() -> void:
-	text_box = find_child("InstructionTextEdit")
-	_on_instruction_text_edit_text_changed()
-	text_box.code_completion_prefixes = PackedStringArray([" ",])
+	text_box = find_child("HintedLineEdit")
+	_on_hinted_line_edit_text_entered("")
 
 func get_instruction_name() -> String:
 	if text_box.text.contains("("):
@@ -16,8 +15,6 @@ func get_instruction_name() -> String:
 	else:
 		return text_box.text
 
-
-## TODO: rebuild all of this
 func serialize():
 	var result = {}
 	
@@ -33,31 +30,18 @@ func serialize():
 	return result
 
 
-
-
-
 func deserialize(data: Dictionary):
 	text_box.text = data.get("meta.text", "")
 	
 	find_child("DelayBeforeSpinBox").value = float(data.get("delay_before", data.get("delay.before", data.get("delay", 0.0))))
 	find_child("DelayAfterSpinBox").value = float(data.get("delay_after", data.get("delay.after", 0.0)))
-	_on_instruction_text_edit_text_changed()
+	_on_hinted_line_edit_text_entered(text_box.text)
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
 
-func _on_instruction_text_edit_focus_entered() -> void:
-	for instruction in Pages.instruction_templates:
-		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, instruction, str(instruction, "()"))
-	text_box.update_code_completion_options(true)
 
-
-func _on_instruction_text_edit_caret_changed() -> void:
-	for instruction in Pages.instruction_templates:
-		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, instruction, str(instruction, "()"))
-	text_box.update_code_completion_options(true)
-	
-	
+func _on_hinted_line_edit_caret_changed() -> void:
 	var caret_col = text_box.get_caret_column()
 	var start = text_box.text.find("(")
 	var end = text_box.text.find(")") + 1
@@ -96,37 +80,32 @@ func _on_instruction_text_edit_caret_changed() -> void:
 		text_box.call_deferred("grab_focus")
 	else:
 		find_child("ArgHint").hide()
+		
 
-
-func _on_typing_hint_item_chosen(item_name) -> void:
-	text_box.insert_text_at_caret(str(item_name, "()"))
-	text_box.set_caret_column(text_box.text.length() - 1)
-
-
-func _on_instruction_text_edit_focus_exited() -> void:
+func _on_hinted_line_edit_focus_exited() -> void:
 	find_child("ArgHint").hide()
 
-
-func _on_instruction_text_edit_text_changed() -> void:
-	if text_box.text.contains("\n"):
-		var lines := text_box.text.split("\n")
-		text_box.text = "".join(lines)
-	var compliance : String = Pages.get_entered_instruction_compliance(text_box.text)
-	find_child("ComplianceContainer").visible = compliance != "OK"
-	find_child("ComplianceLabel").text = compliance
-	
-	if compliance == "OK":
-		find_child("InstructionTextContainer").color.a = 0.0
-	else:
-		find_child("InstructionTextContainer").color.a = 0.5
-
-
-func _on_instruction_text_edit_code_completion_requested() -> void:
-	await get_tree().process_frame
-	text_box.set_caret_column(text_box.text.length() - 2)
 
 
 func _on_copy_signature_to_clipboard_button_pressed() -> void:
 	var signature : String = Pages.get_instruction_signature(get_instruction_name())
 	if not signature.is_empty():
 		DisplayServer.clipboard_set(signature)
+
+
+func _on_hinted_line_edit_focus_entered() -> void:
+	find_child("HintedLineEdit").completion_options = Pages.instruction_templates.keys()
+
+
+func _on_hinted_line_edit_text_entered(new_text: String) -> void:
+	if new_text.contains("\n"):
+		var lines := new_text.split("\n")
+		text_box.text = "".join(lines)
+	var compliance : String = Pages.get_entered_instruction_compliance(new_text)
+	find_child("ComplianceContainer").visible = compliance != "OK"
+	find_child("ComplianceLabel").text = compliance
+	
+	if compliance == "OK":
+		find_child("InstructionTextContainer").self_modulate.a = 0.0
+	else:
+		find_child("InstructionTextContainer").self_modulate.a = 0.5

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnpn8uwlfg1o4"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/hinted_line_edit.gd" id="1_51yrh"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="2_qlhuc"]
+
+[node name="HintedLineEdit" type="LineEdit"]
+offset_right = 67.0625
+offset_bottom = 31.0
+size_flags_vertical = 0
+script = ExtResource("1_51yrh")
+submission_append = null
+submission_offset = null
+
+[node name="ReadHint" parent="." instance=ExtResource("2_qlhuc")]
+position = Vector2i(0, 40)
+visible = false
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="text_changed" from="." to="." method="_on_text_changed"]
