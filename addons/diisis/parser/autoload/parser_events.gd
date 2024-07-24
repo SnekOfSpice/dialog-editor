@@ -1,5 +1,10 @@
 extends Node
 class_name DiisisParserEvents
+## A helper autoload that provides hooks into DIISIS.
+##
+## Connect your custom stuff to these events to react when DIISIS reaches new states, encounters issues, or generally does anything.
+##
+## @tutorial(GitHub wiki tutorial): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-Event-Signals
 
 
 ## Emitted when a choice button has been pressed.
@@ -71,14 +76,17 @@ signal new_header(
 	header:Array[Dictionary]
 )
 
+## Emitted when a page is finished. Is emitted before [signal page_terminated].
 signal page_finished(
 	page_index: int
 )
 
+## Emitted when a new page is read.
 signal read_new_page(
 	number:int
 )
 
+## Emitted when a page is finished when it was set to terminate. Is emitted after [signal page_finished].
 signal page_terminated(
 	page_index: int
 )
@@ -105,7 +113,7 @@ signal function_called(
 	at_index: int
 )
 
-## Emitted when [LineReader] has finished displaying an entire word to its text box.
+## Emitted when [LineReader] has finished displaying an entire word to its text box. See [member LineReader.non_word_characters].
 signal word_read(
 	word: String
 )
@@ -165,12 +173,23 @@ signal line_reader_resumed_after_interrupt(
 )
 
 ## Emitted when [member LineReader.text_content] reaches a [param visible_ratio] of [code]1.0[/code].
-## Not emitted if [member LineReader.text_speed] is [LineReader.MAX_TEXT_SPEED].
+## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
 signal text_content_filled()
 
+## Emitted when [member LineReader.text_content.visible_characters] is different from its value in the previous frame.
+## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
 signal text_content_visible_characters_changed(
 	visible_characters:int
 )
+
+## Emitted when [member LineReader.text_content.visible_ratio] is different from its value in the previous frame.
+## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
 signal text_content_visible_ratio_changed(
 	visible_ratio:float
 )
+
+## Emitted when [method Parser.go_back] fails. This can be because the trail of visited line indices is empty or because the line type of the would-be previous line is non-Text.
+signal go_back_declined()
+
+## Emitted when [method Parser.go_back] successfully goes back to the last visited index.
+signal go_back_accepted(page:int, line:int)
