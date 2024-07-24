@@ -55,17 +55,17 @@ var _auto_continue_duration:= auto_continue_delay
 @export var show_text_during_choices := true
 ## If [code]true[/code], shows [param text_container] when instructions are being executed.
 @export var show_text_during_instructions := false
-## If [code]true[/code], the LineReader will add a copy of its text to [member past_text_continer] whenever the text of [member text_content] is reset.
+## If [code]true[/code], the LineReader will add a copy of its text to [member past_text_container] whenever the text of [member text_content] is reset.
 @export var keep_past_lines := false:
 	set(value):
 		keep_past_lines = value
 		notify_property_list_changed()
 		update_configuration_warnings()
-@export var past_text_continer : VBoxContainer:
+@export var past_text_container : VBoxContainer:
 	get:
-		return past_text_continer
+		return past_text_container
 	set(value):
-		past_text_continer = value
+		past_text_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 var auto_advance := false
@@ -265,7 +265,7 @@ func _validate_property(property: Dictionary):
 		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
-		if property.name in ["past_text_continer"]:
+		if property.name in ["past_text_container"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
@@ -367,7 +367,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Prompt Finished is null")
 	if show_input_prompt and prompt_finished == prompt_unfinished and prompt_unfinished:
 		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
-	if keep_past_lines and not past_text_continer:
+	if keep_past_lines and not past_text_container:
 		warnings.append("Past Text Container is null")
 	
 	return warnings
@@ -1139,7 +1139,7 @@ func set_text_content_text(text: String):
 	if keep_past_lines:
 		var past_line = RichTextLabel.new()
 		past_line.text = text_content.text
-		past_text_continer.add_child(past_line)
+		past_text_container.add_child(past_line)
 		past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
 		past_line.fit_content = true
 		past_line.bbcode_enabled = true

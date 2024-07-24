@@ -271,21 +271,22 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
 func go_back():
-	if get_previous_address_line_type() in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		# ParserEvents.go_back_declined.emit()
+	if get_previous_address_line_type() in [DIISIS.LineType.Choice, DIISIS.LineType.Folder, DIISIS.LineType.Instruction]:
+		ParserEvents.go_back_declined.emit()
 		push_warning("You cannot go further back.")
 		return
 	
 	if address_trail_index <= 0 or address_trail.is_empty():
+		ParserEvents.go_back_declined.emit()
 		push_warning("You're at the beginning.")
 		return
 	
 	address_trail_index -= 1
 	var previous_address = address_trail[address_trail_index]
-	#prints("previous address is ", previous_address, address_trail_index)
 	var parts = DiisisEditorUtil.get_split_address(previous_address)
 	var prev_page = parts[0]
 	var prev_line = parts[1]
+	ParserEvents.go_back_accepted.emit(prev_page, prev_line)
 	if not address_trail.is_empty():
 		address_trail.resize(address_trail_index)
 	if prev_page == page_index:
@@ -293,7 +294,6 @@ func go_back():
 	else:
 		read_page(prev_page, prev_line)
 	address_trail_index = address_trail.size() - 1
-	#address_trail.remove_at(address_trail.size() - 1)
 	
 
 func read_line(index: int):
@@ -330,6 +330,7 @@ func read_next_line(finished_line_index: int):
 	if finished_line_index >= max_line_index_on_page:
 		var do_terminate = bool(page_data.get(page_index).get("terminate"))
 		if do_terminate:
+			ParserEvents.page_finished.emit(page_index)
 			ParserEvents.page_terminated.emit(page_index)
 			emit_signal("page_terminated", page_index)
 		else:
