@@ -38,6 +38,8 @@ size_flags_vertical = 8
 custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 placeholder_text = "fact name"
+submission_append = ""
+submission_offset = 0
 
 [node name="FactIntValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer/FactValueContainer"]
 layout_mode = 2

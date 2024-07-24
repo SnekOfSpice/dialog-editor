@@ -17,7 +17,7 @@ func update_hint(new_text: String):
 	if new_text.is_empty() or not has_focus():
 		$ReadHint.hide()
 		return
-	var facts := ""
+	var option_list_string := ""
 	var valid_options := []
 	for option : String in completion_options:
 		if option.contains(new_text):
@@ -27,30 +27,28 @@ func update_hint(new_text: String):
 		virtual_hint_line == 0
 		$ReadHint.hide()
 		return
+	
 	if virtual_hint_line >= valid_options.size():
 		virtual_hint_line = max(valid_options.size() - 1, 0)
 	
 	var i := 0
 	for option : String in valid_options:
-		var fact_highlighted := option.replace(new_text, str("[b]", new_text, "[/b]"))
+		var highlighted_substr := option.replace(new_text, str("[b]", new_text, "[/b]"))
 		
 		if i == virtual_hint_line:
-			fact_highlighted = str(">", fact_highlighted)
+			highlighted_substr = str(">", highlighted_substr)
 		
-		facts += fact_highlighted
-		facts += "\n"
+		option_list_string += highlighted_substr
+		option_list_string += "\n"
 		i += 1
 	
-	facts = facts.trim_suffix("\n")
+	option_list_string = option_list_string.trim_suffix("\n")
 	if not just_submitted:
 		$ReadHint.popup()
-		$ReadHint.build(facts)
+		$ReadHint.build(option_list_string)
 		just_submitted = false
 	
-	var caret_pos = (
-			#get_window().position +
-			Vector2i(global_position)
-			)
+	var caret_pos = Vector2i(global_position)
 	caret_pos.y -= 140
 	$ReadHint.position = caret_pos
 

@@ -8,8 +8,6 @@ offset_right = 67.0625
 offset_bottom = 31.0
 size_flags_vertical = 0
 script = ExtResource("1_51yrh")
-submission_append = null
-submission_offset = null
 
 [node name="ReadHint" parent="." instance=ExtResource("2_qlhuc")]
 position = Vector2i(0, 40)
