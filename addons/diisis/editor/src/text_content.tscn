@@ -17,8 +17,8 @@ color_regions = {
 }
 
 [node name="TextContent" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 174.7
+offset_bottom = 103.0
 size_flags_horizontal = 3
 theme = ExtResource("1_6al0s")
 script = ExtResource("1_uudox")
@@ -35,7 +35,6 @@ layout_mode = 2
 [node name="TextBox" type="CodeEdit" parent="."]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
 placeholder_text = "enter text here"
 wrap_mode = 1

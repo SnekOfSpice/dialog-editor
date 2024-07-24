@@ -68,6 +68,7 @@ var _auto_continue_duration:= auto_continue_delay
 		past_text_continer = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+var auto_advance := false
 
 @export_group("Names & Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
@@ -782,6 +783,11 @@ func _process(delta: float) -> void:
 	last_visible_ratio = text_content.visible_ratio
 	last_visible_characters = text_content.visible_characters
 	
+	if last_visible_characters == -1 and auto_advance:
+		advance()
+		auto_advance = false
+		return
+	
 	if auto_continue:
 		if not line_type == DIISIS.LineType.Text:
 			return
@@ -1000,8 +1006,11 @@ func read_next_chunk():
 		for t in trimmable_strings:
 			new_text = new_text.trim_suffix(t)
 		ends_trimmable = ends_with_trimmable(new_text)
-		
 	
+	if new_text.contains("<advance>") and not new_text.ends_with("<advance>"):
+		push_warning(str("Line chunk \"", new_text, "\" contains an <advance> tag that is not at the end of the chunk."))
+	auto_advance = new_text.ends_with("<advance>")
+	new_text = new_text.trim_suffix("<advance>")
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")

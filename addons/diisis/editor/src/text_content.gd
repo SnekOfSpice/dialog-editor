@@ -14,16 +14,7 @@ var used_arguments := []
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call"]
-var control_sequence_hints := {
-	"lc": "Line Clear: Clears all text of this line that came before this control sequence. Equivalent to starting another line.",
-	"ap": "Auto Pause: Pauses the reading of text for a certain time frame set in the parser before continuing automatically.",
-	"mp": "Manual Pause: Pauses the reading of text until the player clicks.",
-	"var": "<var:var_name>\n\nEvaluate any variable (will get inserted as its String representation).",
-	"func": "<func:func_name>\n<func:func_name,arg0,arg1>\n\nCall a function (It should return a String). Can take in arbitrary amounts of arguments, but the arguments must match the function signature of the respective func in the evaluator (obv).",
-	"name": "<name:name_map_entry>",
-	"fact": "Fact value"
-}
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance"]
 
 func get_text_before_caret(length:int):
 	var line : String = text_box.get_line(text_box.get_caret_line())
@@ -112,15 +103,6 @@ func _process(delta: float) -> void:
 	if caret_movement_to_do != 0:
 		move_caret(caret_movement_to_do)
 		caret_movement_to_do = 0
-
-func insert(control_sequence: String):
-	match control_sequence:
-		"autopause":
-			text_box.insert_text_at_caret("<ap>")
-		"manualpause":
-			text_box.insert_text_at_caret("<mp>")
-		"lineclear":
-			text_box.insert_text_at_caret("<lc>")
 
 func get_word_under_caret() -> String:
 	var line := text_box.get_line(text_box.get_caret_line())
@@ -223,7 +205,7 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
 		# duplicated because some tags have a : and some just end with >
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>"]:
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>", "advance>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
