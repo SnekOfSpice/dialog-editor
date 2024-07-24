@@ -350,10 +350,23 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Ctrl+A
+Adds a line to the end of the current page."
+focus_mode = 0
+text = "add line"
+icon_alignment = 1
+
+[node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="TypeText" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeText" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
 layout_mode = 2
 tooltip_text = "Text (Ctrl+1)"
 focus_mode = 0
@@ -364,7 +377,7 @@ icon = ExtResource("5_cfai3")
 icon_alignment = 1
 script = ExtResource("3_2h0gj")
 
-[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
 layout_mode = 2
 tooltip_text = "Choice (Ctrl+2)"
 focus_mode = 0
@@ -375,14 +388,7 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 1
 
-[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
-layout_mode = 2
-tooltip_text = "Ctrl+A"
-focus_mode = 0
-text = "add line"
-icon_alignment = 1
-
-[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
 focus_mode = 0
@@ -393,7 +399,7 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 2
 
-[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes"]
+[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
 layout_mode = 2
 tooltip_text = "Folder (Ctrl+4)"
 focus_mode = 0
@@ -466,6 +472,9 @@ page_view = 2
 
 [node name="TextSizeButton" type="OptionButton" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Font Size"
+focus_mode = 0
+allow_reselect = true
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
 auto_translate_mode = 1
@@ -611,7 +620,7 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/DeleteCurrent" to="." method="_on_delete_current_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/LineTypes/AddLineButton" to="." method="_on_add_line_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewFullButton" to="." method="update_page_view" binds= [0]]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewTruncatedButton" to="." method="update_page_view" binds= [1]]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
