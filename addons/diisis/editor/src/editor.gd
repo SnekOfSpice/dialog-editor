@@ -427,6 +427,10 @@ func open_from_path(path:String):
 	load_page(editor_data.get("current_page_number", 0), true)
 	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
+	
+	await get_tree().process_frame
+	set_text_size(editor_data.get("text_size_id", 3))
+	update_page_view(editor_data.get("page_view", PageView.Full))
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)

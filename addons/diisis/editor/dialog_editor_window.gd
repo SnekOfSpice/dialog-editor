@@ -110,6 +110,7 @@ func close_editor():
 	save_preferences()
 	editor.is_open = false
 	hide()
+	editor.update_page_view(DiisisEditor.PageView.Full)
 	queue_free()
 
 func close_editor_and_open_new_file():

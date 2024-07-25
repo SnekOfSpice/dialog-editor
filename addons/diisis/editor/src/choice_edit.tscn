@@ -84,17 +84,17 @@ size_flags_vertical = 0
 focus_mode = 0
 icon = ExtResource("4_x4tpw")
 
-[node name="GridContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
+[node name="BehaviorContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "default"
 horizontal_alignment = 1
 
-[node name="DefaultApparenceSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+[node name="DefaultApparenceSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 tooltip_text = "Default Appearance.
@@ -106,13 +106,13 @@ popup/item_0/text = "enabled"
 popup/item_1/text = "disabled"
 popup/item_1/id = 1
 
-[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+[node name="BehaviorAfterFirstLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "after 1st"
 horizontal_alignment = 1
 
-[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer"]
+[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 layout_mode = 2
 tooltip_text = "Behavior Override.
 When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
@@ -144,12 +144,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Conditionals" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_6aqyr")]
+[node name="Conditionals" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_6aqyr")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/ConditionalVisibilityToggle")
 address_depth = 2
-add_button = NodePath("VBoxContainer/Controls/AddConditionButton")
-facts_container = NodePath("VBoxContainer/FactsContainer")
 
 [node name="JumpPageContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
@@ -271,17 +269,15 @@ caret_blink_interval = 0.5
 layout_mode = 2
 text = "Default text is empty!"
 
-[node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container") instance=ExtResource("2_bcn4k")]
+[node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_bcn4k")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/FactsVisibilityToggle")
 address_depth = 2
-add_button = NodePath("VBox/Controls/AddFactButton")
-facts_container = NodePath("VBox/FactsContainer")
 
 [connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
-[connection signal="item_selected" from="ChoiceEdit/VBoxContainer2/VBoxContainer/GridContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_item_selected"]
+[connection signal="item_selected" from="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_item_selected"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
