@@ -39,6 +39,7 @@ func deserialize(data: Dictionary):
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
+	find_child("DelayContainer").columns = 2 if view == DiisisEditor.PageView.Full else 4
 
 
 func _on_hinted_line_edit_caret_changed() -> void:

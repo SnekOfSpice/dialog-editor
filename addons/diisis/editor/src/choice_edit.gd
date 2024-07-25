@@ -178,6 +178,10 @@ func set_page_view(view:DiisisEditor.PageView):
 	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
+	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.Minimal
+	find_child("BehaviorAfterFirstLabel").visible = view == DiisisEditor.PageView.Full
+	find_child("BehaviorAfterFirstSelectionButton").visible = view == DiisisEditor.PageView.Full
+	
 	if view == DiisisEditor.PageView.Full:
 		default_dropdown.visible = true
 		line_edit_enabled.visible = true
