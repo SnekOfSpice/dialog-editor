@@ -68,6 +68,7 @@ text = "!!!"
 layout_mode = 2
 
 [node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(291, 0)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -86,23 +87,28 @@ text = "Delay & Input Lock"
 layout_mode = 2
 columns = 2
 
-[node name="Before" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
-layout_mode = 2
-text = "Before Execution"
-
 [node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
 
-[node name="After" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
+[node name="Before" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
+custom_minimum_size = Vector2(65.64, 0)
 layout_mode = 2
-text = "After Execution"
+size_flags_horizontal = 3
+text = "Before Execution"
+text_overrun_behavior = 1
 
 [node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
+
+[node name="After" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
+custom_minimum_size = Vector2(50.015, 0)
+layout_mode = 2
+text = "After Execution"
+text_overrun_behavior = 1
 
 [node name="ArgHint" parent="." instance=ExtResource("3_gsr40")]
 visible = false
