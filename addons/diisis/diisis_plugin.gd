@@ -53,6 +53,10 @@ func _enter_tree():
 
 	await get_tree().process_frame
 	toolbar_button.get_parent().move_child(toolbar_button, -2)
+	
+	var welcome_message := "[font=res://addons/diisis/editor/visuals/fonts/Comfortaa-Regular.ttf]"
+	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
+	print_rich(welcome_message)
 
 func open_editor():
 	if is_instance_valid(dia_editor_window):
