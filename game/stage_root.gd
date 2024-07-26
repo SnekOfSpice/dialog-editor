@@ -5,7 +5,7 @@ var stage := ""
 var screen := ""
 
 func _ready():
-	change_stage(CONST.STAGE_GAME)
+	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
 

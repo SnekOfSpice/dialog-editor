@@ -20,7 +20,7 @@ func handle_input(event: InputEvent):
 			close()
 
 func restore_ui():
-	if GameWorld.game_stage:
+	if is_instance_valid(GameWorld.game_stage):
 		GameWorld.game_stage.show_ui()
 
 func close():

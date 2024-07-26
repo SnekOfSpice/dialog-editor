@@ -7,6 +7,8 @@ func _ready() -> void:
 	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	find_child("LoadButton").visible = Options.does_savegame_exist()
+	
+	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress_from_file(Options.SAVEGAME_PATH) * 100), "%)")
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
