@@ -1,5 +1,6 @@
 @tool
 extends EditorPlugin
+class_name DIISISPlugin
 
 var dia_editor_window:Window
 var toolbar_button
@@ -58,6 +59,10 @@ func _enter_tree():
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
 	print_rich(welcome_message)
 
+
+static func get_project_file_path() -> String:
+	return "res://.diisis/active_file.txt"
+	
 func open_editor():
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.grab_focus()
@@ -67,8 +72,8 @@ func open_editor():
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		
-		if FileAccess.file_exists(DiisisEditorUtil.get_project_file_path()):
-			var file = FileAccess.open(DiisisEditorUtil.get_project_file_path(), FileAccess.READ)
+		if FileAccess.file_exists(get_project_file_path()):
+			var file = FileAccess.open(get_project_file_path(), FileAccess.READ)
 			dia_editor_window.file_path = file.get_as_text()
 			file.close()
 		

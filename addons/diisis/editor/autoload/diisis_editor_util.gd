@@ -106,21 +106,15 @@ func humanize_address(address:String) -> String:
 	return address_string
 
 func get_project_source_file_path() -> String:
-	var file_path := get_project_file_path()
+	var file_path := DIISISPlugin.get_project_file_path()
 	if FileAccess.file_exists(file_path):
 		var file = FileAccess.open(file_path, FileAccess.READ)
 		return file.get_as_text()
 	push_warning("No source file set.")
 	return ""
 
-func get_project_file_path() -> String:
-	var path := "res://.diisis/active_file.txt"
-	
-	return path
-
 func set_project_file_path(active_dir:String, active_file_name:String):
-	# save a file DIISIS_project_[project_name].txt
-	var file = FileAccess.open(get_project_file_path(), FileAccess.WRITE)
+	var file = FileAccess.open(DIISISPlugin.get_project_file_path(), FileAccess.WRITE)
 	file.store_string(str(active_dir, active_file_name))
 	
 	file.close()
