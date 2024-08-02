@@ -1,0 +1,16 @@
+Along with DIISIS, you get some project templates that integrate it into their workflows.
+Currently the only template is for visual novel-style games, with a focus on narrative that is communicated through text and 2D character sprites on screen.
+
+To use the template, first create a directory in your project root (res://) called "game".
+If you start from a blank project, you should then have res://addons/diisis/... and res://game in your project.
+
+(Templates are located at res://addons/diisis/templates/...)
+Then, simply move the contents of the template from the addons folder to the game folder.
+For all tscn files in the autoloads folder, add them to your project's AutoLoads in Project Settings.
+
+And you're good to go!
+Use the wiki to get started https://github.com/SnekOfSpice/dialog-editor/wiki
+
+
+-------
+Note for people with more Godot experience: It technically doesn't matter where the template lives, as long as you adjust all paths in const.tscn.

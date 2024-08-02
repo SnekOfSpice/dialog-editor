@@ -57,26 +57,10 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	print("init editor")
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
-	var n = Node.new()
-	var node_functions := n.get_method_list()
-	var node_functions_names := []
-	for f in node_functions:
-		node_functions_names.append(f.get("name"))
-	var handler_functions :Array= load("res://sample/Handler.gd").get_script_method_list()
-	var handler_functions_names := []
-	for f in handler_functions:
-		handler_functions_names.append(f.get("name"))
-	n.queue_free()
-	var unique_functions := []
-	for f in handler_functions_names:
-		if not node_functions_names.has(f):
-			unique_functions.append(f)
-	node_functions_names.sort()
-	handler_functions_names.sort()
-	unique_functions.sort()
-	print("init editor")
+	
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
 	is_open = true
