@@ -70,17 +70,27 @@ var _auto_continue_duration:= auto_continue_delay
 			update_configuration_warnings()
 var auto_advance := false
 
-@export_group("Names & Text Display")
+@export_group("Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
+@export_subgroup("Names")
 @export
 var property_for_name := ""
 ## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
 @export
 var blank_names : Array[String] = []
+## A String:String Dictionary. The keys are the actor names set in the options of [member property_for_name].
+## The respective value is the name to be displayed in the [member name_label] or [member text_content], depending on [member name_style].
 @export var name_map := {}
+## A String:Color Dictionary. The keys are the actor names set in the options of [member property_for_name].
+## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member text_content], depending on [member name_style].
 @export var name_colors := {}
 @export var name_style : NameStyle = NameStyle.NameLabel
 var visible_prepend_offset := 0
+@export_subgroup("Text Content")
+## A prefix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][center][/code].
+@export var text_content_prefix := ""
+## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
+@export var text_content_suffix := ""
 
 @export_group("Mandatory References")
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
@@ -99,16 +109,6 @@ var choice_option_container:Control:
 		return choice_option_container
 	set(value):
 		choice_option_container = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-
-## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
-@export
-var instruction_handler: InstructionHandler:
-	get:
-		return instruction_handler
-	set(value):
-		instruction_handler = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
@@ -150,12 +150,23 @@ var name_container: Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
+## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
+@export
+var instruction_handler: InstructionHandler:
+	get:
+		return instruction_handler
+	set(value):
+		instruction_handler = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+
 @export_group("Optional References")
 
 ## Node that has vars and funcs to evaluate in dynamic Strings. All functions within
 ## this node have to return a [String] (can be empty).
 @export var inline_evaluator: Node
 
+@export_group("Advanced UX")
 @export_subgroup("Choices")
 ## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
 ## Choice Buttons are currently presented to the player.
@@ -655,7 +666,8 @@ func fit_to_max_line_count(lines: Array):
 		label.visible_characters = 1
 		if line_height == 0:
 			line_height = label.get_content_height()
-		label.text = str(name_prefix, line)
+		
+		label.text = str(text_content_prefix, name_prefix, line, text_content_suffix)
 		
 		while content_height <= line_height * max_text_line_count:
 			if label.text.is_empty():
@@ -1011,6 +1023,8 @@ func read_next_chunk():
 		push_warning(str("Line chunk \"", new_text, "\" contains an <advance> tag that is not at the end of the chunk."))
 	auto_advance = new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
+	
+	new_text = str(text_content_prefix, new_text, text_content_suffix)
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")
