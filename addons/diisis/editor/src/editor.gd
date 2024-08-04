@@ -770,6 +770,8 @@ func _on_text_size_button_item_selected(index: int) -> void:
 	
 func set_text_size(size_index:int):
 	var label_size = font_sizes[size_index]
+	if theme.get_font_size("font_size", "CodeEdit") == label_size:
+		return
 	var edit_size = label_size * (16.0/14.0)
 	theme.set_font_size("font_size", "Label", label_size)
 	theme.set_font_size("font_size", "CodeEdit", label_size)
@@ -778,7 +780,3 @@ func set_text_size(size_index:int):
 	theme.set_font_size("font_size", "Button",  edit_size)
 	theme.set_font_size("font_size", "CheckButton",  edit_size)
 	theme.set_font_size("font_size", "CheckBox",  edit_size)
-
-
-func _on_view_truncated_button_pressed(extra_arg_0: int) -> void:
-	pass # Replace with function body.
