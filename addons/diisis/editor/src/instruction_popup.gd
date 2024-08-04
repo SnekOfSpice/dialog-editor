@@ -11,3 +11,6 @@ func _on_close_requested() -> void:
 	Pages.editor.refresh(false)
 	emit_signal("validate_saved_instructions")
 	hide()
+
+func _on_instruction_edit_container_request_close() -> void:
+	_on_close_requested()

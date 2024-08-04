@@ -43,10 +43,12 @@ layout_mode = 2
 
 [node name="AddButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+focus_mode = 0
 text = "Add"
 
 [node name="SaveCloseButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+focus_mode = 0
 text = "Save & Close"
 
 [node name="MenuBar" type="MenuBar" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
@@ -80,11 +82,11 @@ filters = PackedStringArray("*.json")
 [node name="FDImport" type="FileDialog" parent="."]
 auto_translate_mode = 1
 mode = 2
-title = "Import Instructions"
+title = "Open a File"
 initial_position = 4
 size = Vector2i(207, 175)
 always_on_top = true
-ok_button_text = "Import from File"
+ok_button_text = "Open"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.json")
