@@ -235,6 +235,10 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 		if line_data != {}:
 			line.deserialize(line_data)
 		
+		if line.line_type == DIISIS.LineType.Choice and line.get_choice_item_count() == 0:
+			line.add_choice_item(0)
+			line.add_choice_item(1)
+		
 		for l : Line in lines.get_children():
 			if l.line_type == DIISIS.LineType.Folder:
 				var range : Vector2 = l.get_folder_range_v()
@@ -476,7 +480,6 @@ func update():
 	
 	find_child("Facts").update()
 	
-
 
 func _on_next_line_edit_value_changed(value: float) -> void:
 	set_next(int(value))

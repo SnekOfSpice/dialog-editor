@@ -6,7 +6,12 @@ var text_before_edit := ""
 
 func set_changes_discardable(value:bool):
 	find_child("DiscardButton").visible = value
-	
+
+func get_visible_text():
+	if find_child("InstructionLabel").visible:
+		return find_child("InstructionLabel").text
+	elif find_child("InstructionEdit").visible:
+		return find_child("InstructionEdit").text
 
 func get_raw_entered_text() -> String:
 	return str(find_child("InstructionLabel").text, find_child("InstructionEdit").text)

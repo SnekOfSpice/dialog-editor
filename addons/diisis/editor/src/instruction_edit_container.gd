@@ -34,3 +34,46 @@ func _on_add_button_pressed() -> void:
 
 func _on_save_close_button_pressed() -> void:
 	emit_signal("request_close")
+
+
+func _on_file_id_pressed(id: int) -> void:
+	match id:
+		0:
+			$FDExport.popup()
+		1:
+			$FDImport.popup()
+
+
+func _on_fd_export_file_selected(path: String) -> void:
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	var data_to_save = []
+	
+	var container : VBoxContainer = find_child("ItemContainer")
+	for item : InstructionEditItem in container.get_children():
+		data_to_save.append(item.get_visible_text())
+	
+	file.store_string(JSON.stringify(data_to_save, "\t"))
+	file.close()
+
+
+func _on_fd_import_file_selected(path: String) -> void:
+	var file = FileAccess.open(path, FileAccess.READ)
+	
+	if not file:
+		return
+	
+	var data : Array = JSON.parse_string(file.get_as_text())
+	file.close()
+	
+	Pages.instruction_templates.clear()
+	for text in data:
+		Pages.add_template_from_string(text)
+	fill()
+
+
+func _on_fd_export_about_to_popup() -> void:
+	$FDExport.size = get_window().size
+
+
+func _on_fd_import_about_to_popup() -> void:
+	$FDImport.size = get_window().size

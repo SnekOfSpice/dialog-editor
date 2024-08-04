@@ -169,6 +169,12 @@ func deserialize(data: Dictionary):
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
 
+func get_choice_item_count() -> int:
+	if line_type != DIISIS.LineType.Choice:
+		return 0
+	
+	return find_child("ChoiceContainer").get_choice_item_count()
+
 func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
 	set_head_editable(button_pressed)
 
@@ -239,9 +245,6 @@ func get_choice_item(at_index:int) -> ChoiceEdit:
 
 func delete_choice_item(at_index:int):
 	find_child("ChoiceContainer").get_child(at_index).queue_free()
-
-func get_choice_item_count() -> int:
-	return find_child("ChoiceContainer").get_choice_item_count()
 
 func _on_move_up_pressed() -> void:
 	move(-1)

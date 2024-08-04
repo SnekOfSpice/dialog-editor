@@ -18,6 +18,7 @@ theme_override_icons/close_pressed = ExtResource("1_rxmbd")
 script = ExtResource("1_pn46y")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
+clip_contents = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -45,6 +46,7 @@ fit_content = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 
 [node name="CancelButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2

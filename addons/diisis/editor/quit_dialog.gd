@@ -16,7 +16,10 @@ func _on_quit_button_pressed() -> void:
 
 func _on_about_to_popup() -> void:
 	find_child("QuitButton").grab_focus()
-	#add_theme_icon_override("close", Texture2D.new())
+	# sometimes the dialoge will stretch reeeaaaaaly tall and I have no idea why so this brings it back
+	var actual_size = size
+	await get_tree().process_frame
+	size = actual_size
 
 
 func _on_save_button_pressed() -> void:
