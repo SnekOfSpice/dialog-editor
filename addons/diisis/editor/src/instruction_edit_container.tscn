@@ -49,6 +49,16 @@ text = "Add"
 layout_mode = 2
 text = "Save & Close"
 
+[node name="MenuBar" type="MenuBar" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="File" type="PopupMenu" parent="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar"]
+always_on_top = true
+item_count = 2
+item_0/text = "Export..."
+item_1/text = "Import..."
+item_1/id = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -58,7 +68,33 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 2
 
+[node name="FDExport" type="FileDialog" parent="."]
+mode = 2
+title = "Export Instructions"
+initial_position = 4
+always_on_top = true
+ok_button_text = "Export to File"
+access = 2
+filters = PackedStringArray("*.json")
+
+[node name="FDImport" type="FileDialog" parent="."]
+auto_translate_mode = 1
+mode = 2
+title = "Import Instructions"
+initial_position = 4
+size = Vector2i(207, 175)
+always_on_top = true
+ok_button_text = "Import from File"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json")
+
 [connection signal="text_changed" from="PanelContainer/VBoxContainer/HBoxContainer/SearchFilter" to="." method="_on_search_filter_text_changed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/SaveCloseButton" to="." method="_on_save_close_button_pressed"]
+[connection signal="id_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/File" to="." method="_on_file_id_pressed"]
+[connection signal="about_to_popup" from="FDExport" to="." method="_on_fd_export_about_to_popup"]
+[connection signal="file_selected" from="FDExport" to="." method="_on_fd_export_file_selected"]
+[connection signal="about_to_popup" from="FDImport" to="." method="_on_fd_import_about_to_popup"]
+[connection signal="file_selected" from="FDImport" to="." method="_on_fd_import_file_selected"]
