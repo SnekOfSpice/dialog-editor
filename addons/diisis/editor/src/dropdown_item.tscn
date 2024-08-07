@@ -68,6 +68,7 @@ size_flags_horizontal = 8
 [node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
+tooltip_text = "If this is the dropdown for speaker options, you may hold shift to not replace the names. This is order-sensitive."
 disabled = true
 text = "save options"
 

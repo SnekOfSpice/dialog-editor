@@ -81,6 +81,7 @@ func _on_discard_options_button_pressed() -> void:
 
 
 func _on_save_options_button_pressed() -> void:
+	var replace_speaker = not Input.is_key_pressed(KEY_SHIFT)
 	var entered_args = find_child("DropdownOptionsText").text.split("\n")
 	var args := []
 	for arg : String in entered_args:
@@ -90,8 +91,8 @@ func _on_save_options_button_pressed() -> void:
 	var undo_redo = Pages.editor.undo_redo
 	dropdown_options = args
 	undo_redo.create_action("Change Dropdown Options")
-	undo_redo.add_do_method(DiisisEditorActions.set_dropdown_options.bind(title, args))
-	undo_redo.add_undo_method(DiisisEditorActions.set_dropdown_options.bind(title, dropdown_options))
+	undo_redo.add_do_method(DiisisEditorActions.set_dropdown_options.bind(title, args, replace_speaker))
+	undo_redo.add_undo_method(DiisisEditorActions.set_dropdown_options.bind(title, dropdown_options, replace_speaker))
 	undo_redo.commit_action()
 	
 	find_child("OptionsContainer").visible = false
