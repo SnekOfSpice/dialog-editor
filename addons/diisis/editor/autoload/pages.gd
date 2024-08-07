@@ -853,14 +853,17 @@ func rename_dropdown_title(from:String, to:String):
 			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
 			line["content"]["content"] = line["content"]["content"].replace(str("[]>", from), str("[]>", to))
 
-func set_dropdown_options(dropdown_title:String, options:Array):
+func set_dropdown_options(dropdown_title:String, options:Array, replace_speaker:=true):
 	var old_options : Array = dropdowns.get(dropdown_title, [])
+	
+	var is_speaker := dropdown_title == dropdown_title_for_dialog_syntax
 	
 	for page in page_data.values():
 		var lines : Array = page.get("lines")
 		for line : Dictionary in lines:
 			if line.get("line_type") != DIISIS.LineType.Text:
 				continue
+			
 			
 			var i := 0
 			while i < min(old_options.size(), options.size()):
@@ -872,6 +875,11 @@ func set_dropdown_options(dropdown_title:String, options:Array):
 				var old_arg := str(dropdown_title, "|", old_option)
 				var new_arg := str(dropdown_title, "|", new_option)
 				line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
+				
+				if is_speaker and replace_speaker:
+					var old_speaker := str("[]>", old_option)
+					var new_speaker := str("[]>", new_option)
+					line["content"]["content"] = line["content"]["content"].replace(old_speaker, new_speaker)
 				
 				i += 1
 	
