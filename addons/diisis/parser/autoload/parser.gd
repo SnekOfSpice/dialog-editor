@@ -55,7 +55,9 @@ var history := []
 var address_trail_index := -1
 var address_trail := []
 
-func _ready() -> void:
+var last_modified_time = 0
+
+func _get_live_source_path() -> String:
 	var source_path:String
 	if not source_file_override.is_empty():
 		source_path = source_file_override
@@ -63,12 +65,28 @@ func _ready() -> void:
 		source_path = DiisisEditorUtil.get_project_source_file_path()
 		if source_path.is_empty():
 			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
-			return
-	var file := FileAccess.open(source_path, FileAccess.READ)
+			return ""
+	return source_path
+
+func _get_data() -> Dictionary:
+	var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
-	data = data.get("pages")
+	return data.get("pages")
 	
+
+func _ready() -> void:
+	var data = _get_data()
+	
+	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
+	
+	init(data)
+	
+	ParserEvents.display_name_changed.connect(on_name_label_updated)
+	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
+	ParserEvents.choice_pressed.connect(on_choice_pressed)
+
+func init(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data := {}
 	var loaded_data = data.get("page_data")
@@ -78,17 +96,20 @@ func _ready() -> void:
 	
 	page_data = int_data.duplicate()
 	
-	facts = data.get("facts")
+	facts = data.get("facts", {})
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	starting_facts = facts.duplicate(true)
-	dropdown_titles = data.get("dropdown_titles")
-	dropdowns = data.get("dropdowns")
-	
-	ParserEvents.display_name_changed.connect(on_name_label_updated)
-	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
-	ParserEvents.choice_pressed.connect(on_choice_pressed)
+	dropdown_titles = data.get("dropdown_titles", [])
+	dropdowns = data.get("dropdowns", {})
+
+func _process(delta: float) -> void:
+	var modified_time = FileAccess.get_modified_time(_get_live_source_path())
+	if modified_time != last_modified_time:
+		init(_get_data())
+		read_page(page_index, line_index)
+	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
 
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index:=0):
