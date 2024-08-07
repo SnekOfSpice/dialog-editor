@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://sample/sample_scene.gd" id="1_df3e1"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/fonts/TT Chocolates Trial Bold.otf" id="2_2t8gm"]
 [ext_resource type="Script" path="res://sample/Handler.gd" id="2_kv7jx"]
-[ext_resource type="Script" path="res://sample/inline_eval.gd" id="4_traxq"]
+[ext_resource type="Script" path="res://game/inline_eval.gd" id="4_traxq"]
 [ext_resource type="Texture2D" uid="uid://vvvuc4ewukes" path="res://icon.svg" id="5_y8wyq"]
 
 [node name="SampleScene" type="Control"]
