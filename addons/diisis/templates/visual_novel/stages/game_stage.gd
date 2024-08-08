@@ -10,6 +10,7 @@ enum TextStyle {
 	ToCharacter,
 }
 
+@export var dev_mode := false
 @export var text_style := TextStyle.ToBottom
 
 var dialog_box_tween : Tween
@@ -44,6 +45,8 @@ func _ready():
 	
 	remove_blocker()
 	grab_focus()
+	
+	$Cheats.visible = false
 
 func on_instruction_started(
 	instruction_name : String,
@@ -68,7 +71,31 @@ func _gui_input(event: InputEvent) -> void:
 	if hovering_meta:
 		return
 	if event is InputEventKey:
-		if event.pressed and InputMap.action_has_event("ui_cancel", event):# event.is_action_just_pressed("ui_cancel"):
+		if event.pressed:
+			if InputMap.action_has_event("ui_cancel", event):
+				GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+			if InputMap.action_has_event("screenshot", event):
+				var screenshot := get_viewport().get_texture().get_image()
+				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name"), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
+				screenshot.save_png(path)
+				
+				var notification = preload("res://game/notification.tscn").instantiate()
+				var global_path := ProjectSettings.globalize_path(path)
+				var global_dir := global_path.substr(0, global_path.rfind("/"))
+				add_child(notification)
+				notification.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
+			if InputMap.action_has_event("toggle_auto_continue", event):
+				find_child("LineReader").auto_continue = not find_child("LineReader").auto_continue
+			if InputMap.action_has_event("toggle_ui", event):
+				if find_child("VNUI").visible:
+					hide_ui()
+				else:
+					show_ui()
+			if InputMap.action_has_event("cheats", event) and dev_mode:
+				find_child("Cheats").visible = not find_child("Cheats").visible
+				
+	if event is InputEventMouse:
+		if event.is_pressed() and InputMap.action_has_event("ui_cancel", event):
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
 	if event.is_action_pressed("advance"):
@@ -76,6 +103,8 @@ func _gui_input(event: InputEvent) -> void:
 			if root.visible and emit_insutrction_complete_on_cg_hide:
 				hide_cg()
 				return
+		if not find_child("VNUI").visible:
+			return
 		$LineReader.request_advance()
 	elif event.is_action_pressed("go_back"):
 		$LineReader.go_back()
@@ -219,6 +248,10 @@ func deserialize(data:Dictionary):
 			push_warning("Deserialized game_stage with something wild.")
 			return
 		find_child("TextContainer").position = fixed_position
+
+func set_all_characters_visible(value: bool):
+	for character in find_child("Characters").get_children():
+		character.visible = false
 
 func remove_blocker():
 	blockers -= 1
