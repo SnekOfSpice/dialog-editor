@@ -105,10 +105,28 @@ func init(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 
 func _process(delta: float) -> void:
+	# hot reload
 	var modified_time = FileAccess.get_modified_time(_get_live_source_path())
 	if modified_time != last_modified_time:
 		init(_get_data())
-		read_page(page_index, line_index)
+		if not line_reader:
+			last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
+			return
+		# only read the current page.line index again if we're not currently paused or terminated
+		# since this causes a page to be read again, we counteract double-adding int facts by first subtracting the same fact value
+		# this isn't necessary for bools or ints with operator Set
+		if not (paused or line_reader.terminated):
+			var f : Dictionary = page_data.get(page_index).get("facts", {}).get("fact_data_by_name", {})
+			var  page_bound_facts = f.duplicate(true)
+			for fact : Dictionary in page_bound_facts.values():
+				if fact.get("data_type", 0) == 1 and fact.get("int_operator", 0) == 1:
+					fact["fact_value"] = -fact.get("fact_value", 0)
+			for fact : Dictionary in page_bound_facts.values():
+				if fact.get("data_type") != 1:
+					continue
+				change_fact(fact)
+			
+			read_page(page_index, line_index)
 	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
 
 ## Call this one for a blank, new game.
