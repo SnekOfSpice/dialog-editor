@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=13 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/helpZeichenfläche 3.png" id="6_mh4vb"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="PackedScene" uid="uid://141n8is7jl21" path="res://game/cheats.tscn" id="12_8mra5"]
 
 [node name="GameStage" type="Control"]
 layout_mode = 3
@@ -22,6 +23,7 @@ grow_vertical = 2
 focus_mode = 2
 theme = ExtResource("1_ratke")
 script = ExtResource("1_a36me")
+dev_mode = true
 
 [node name="Characters" type="Node2D" parent="."]
 
@@ -190,7 +192,7 @@ text = "Menu"
 [node name="Handler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "instruction_handler", "text_content", "text_container", "name_label", "name_container", "inline_evaluator", "prompt_unfinished", "prompt_finished")]
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "text_content", "text_container", "name_label", "name_container", "instruction_handler", "inline_evaluator", "prompt_unfinished", "prompt_finished")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -204,11 +206,11 @@ name_map = {
 }
 choice_container = NodePath("../VNUI/ChoiceContainer")
 choice_option_container = NodePath("../VNUI/ChoiceContainer/VBoxContainer")
-instruction_handler = NodePath("../Handler")
 text_content = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/Panel/RichTextLabel")
 text_container = NodePath("../VNUI/TextContainer")
 name_label = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/Label")
 name_container = NodePath("../VNUI/TextContainer/MarginContainer/VBoxContainer/MarginContainer")
+instruction_handler = NodePath("../Handler")
 inline_evaluator = NodePath("../InlineEval")
 show_input_prompt = true
 input_prompt_delay = 1.29
@@ -261,6 +263,9 @@ position = Vector2(509, 409)
 
 [node name="TextPositionEterna" type="Node2D" parent="."]
 position = Vector2(971, 409)
+
+[node name="Cheats" parent="." instance=ExtResource("12_8mra5")]
+layout_mode = 1
 
 [connection signal="ready" from="Characters/Eterna" to="." method="remove_blocker"]
 [connection signal="ready" from="Characters/Amber" to="." method="remove_blocker"]
