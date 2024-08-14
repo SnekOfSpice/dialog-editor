@@ -490,7 +490,6 @@ func interrupt(hide_controls:=true):
 			visibilities_before_interrupt[key] = get(key).visible
 			get(key).visible = false
 
-
 ## Call this after calling [method interrupt] to cleanly resume the reading of lines.[br]
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 func continue_after_interrupt(read_page:=-1, read_line:=0):
