@@ -70,6 +70,8 @@ func _get_live_source_path() -> String:
 
 func _get_data() -> Dictionary:
 	var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
+	if not file:
+		return {}
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	return data.get("pages")
@@ -89,7 +91,7 @@ func _ready() -> void:
 func init(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data := {}
-	var loaded_data = data.get("page_data")
+	var loaded_data = data.get("page_data", {})
 	for i in loaded_data.size():
 		var where = int(loaded_data.get(str(i)).get("number"))
 		int_data[where] = loaded_data.get(str(i)).duplicate()
