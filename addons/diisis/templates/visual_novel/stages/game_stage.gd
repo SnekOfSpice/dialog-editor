@@ -1,10 +1,7 @@
 extends Control
 class_name GameStage
 
-@onready var characters := {
-	CONST.CHARACTER_AMBER : $Characters/Amber,
-	CONST.CHARACTER_ETERNA : $Characters/Eterna,
-}
+@onready var characters := {}
 enum TextStyle {
 	ToBottom,
 	ToCharacter,
@@ -79,7 +76,7 @@ func _gui_input(event: InputEvent) -> void:
 				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name"), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
 				screenshot.save_png(path)
 				
-				var notification = preload("res://game/notification.tscn").instantiate()
+				var notification = load("res://game/notification.tscn").instantiate()
 				var global_path := ProjectSettings.globalize_path(path)
 				var global_dir := global_path.substr(0, global_path.rfind("/"))
 				add_child(notification)
