@@ -42,7 +42,11 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	var music_player = AudioStreamPlayer.new()
 	music_player.connect("tree_exiting", audio_players.erase.bind(music_player))
 	main_audio_player = music_player
-	music_player.stream = load(str(CONST.MUSIC_ROOT, bgm_key))
+	
+	var music_path := str(CONST.MUSIC_ROOT, bgm_key)
+	if not ResourceLoader.exists(music_path):
+		return
+	music_player.stream = load(music_path)
 	music_player.volume_db = -80
 	music_player.set_bus("Music")
 	
