@@ -25,7 +25,7 @@ script = ExtResource("1_mqxig")
 layout_mode = 2
 
 [node name="InstructionTextContainer" type="TextureRect" parent="HBoxContainer"]
-custom_minimum_size = Vector2(0, 99.525)
+custom_minimum_size = Vector2(0, 129.295)
 layout_mode = 2
 size_flags_horizontal = 3
 texture = SubResource("GradientTexture2D_lx6fc")
@@ -44,7 +44,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HintedLineEdit" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_dsh57")]
+[node name="InstructionTextBox" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_dsh57")]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "enter instruction here"
@@ -67,8 +67,34 @@ text = "!!!"
 [node name="ComplianceLabel" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ComplianceContainer"]
 layout_mode = 2
 
-[node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer"]
+[node name="ReverseContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer"]
 visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReverseInstructionTextBox" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer" instance=ExtResource("2_dsh57")]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "reverse"
+
+[node name="CopySignatureToClipboardButton2" type="Button" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Copy GDScript function signature to clipboard."
+icon = ExtResource("2_lquiu")
+
+[node name="ReverseComplianceContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseComplianceContainer"]
+layout_mode = 2
+text = "!!!"
+
+[node name="ReverseComplianceLabel" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseComplianceContainer"]
+layout_mode = 2
+
+[node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer"]
 custom_minimum_size = Vector2(291, 0)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -110,11 +136,24 @@ layout_mode = 2
 text = "After Execution"
 text_overrun_behavior = 1
 
+[node name="HasReverseCheckBox" type="CheckBox" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+focus_mode = 0
+text = "reverse"
+
 [node name="ArgHint" parent="." instance=ExtResource("3_gsr40")]
 visible = false
 
-[connection signal="caret_changed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/HintedLineEdit" to="." method="_on_hinted_line_edit_caret_changed"]
-[connection signal="focus_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/HintedLineEdit" to="." method="_on_hinted_line_edit_focus_entered"]
-[connection signal="focus_exited" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/HintedLineEdit" to="." method="_on_hinted_line_edit_focus_exited"]
-[connection signal="text_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/HintedLineEdit" to="." method="_on_hinted_line_edit_text_entered"]
+[connection signal="caret_changed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_caret_changed"]
+[connection signal="focus_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_focus_entered"]
+[connection signal="focus_exited" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_focus_exited"]
+[connection signal="text_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_text_entered"]
 [connection signal="pressed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/CopySignatureToClipboardButton" to="." method="_on_copy_signature_to_clipboard_button_pressed"]
+[connection signal="caret_changed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_caret_changed"]
+[connection signal="focus_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_focus_entered"]
+[connection signal="focus_exited" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_focus_exited"]
+[connection signal="text_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_text_entered"]
+[connection signal="pressed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseContainer/CopySignatureToClipboardButton2" to="." method="_on_copy_signature_to_clipboard_button_2_pressed"]
+[connection signal="toggled" from="HBoxContainer/InstructionTextContainer/HBoxContainer/InputLockContainer/HasReverseCheckBox" to="." method="_on_has_reverse_check_box_toggled"]

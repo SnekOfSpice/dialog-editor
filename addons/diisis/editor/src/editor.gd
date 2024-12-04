@@ -21,6 +21,7 @@ var active_file_name := ""
 var time_since_last_save := 0.0
 var last_system_save := {}
 var has_saved := false
+var altered_history := false
 
 enum PageView {
 	Full,
@@ -57,26 +58,10 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	print("init editor")
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
-	var n = Node.new()
-	var node_functions := n.get_method_list()
-	var node_functions_names := []
-	for f in node_functions:
-		node_functions_names.append(f.get("name"))
-	var handler_functions :Array= load("res://sample/Handler.gd").get_script_method_list()
-	var handler_functions_names := []
-	for f in handler_functions:
-		handler_functions_names.append(f.get("name"))
-	n.queue_free()
-	var unique_functions := []
-	for f in handler_functions_names:
-		if not node_functions_names.has(f):
-			unique_functions.append(f)
-	node_functions_names.sort()
-	handler_functions_names.sort()
-	unique_functions.sort()
-	print("init editor")
+	
 	Pages.connect("pages_modified", update_controls)
 	Pages.editor = self
 	is_open = true
@@ -116,6 +101,8 @@ func init(active_file_path:="") -> void:
 	
 	open_from_path(active_file_path)
 	
+	undo_redo.version_changed.connect(set.bind("altered_history", true))
+	
 	print("init editor successful")
 
 
@@ -133,8 +120,7 @@ func update_page_view(view:PageView):
 func load_page(number: int, discard_without_saving:=false):
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
-	
-	for page in page_container.get_children():		
+	for page in page_container.get_children():
 		if not discard_without_saving:
 			page.save()
 	
@@ -149,9 +135,9 @@ func load_page(number: int, discard_without_saving:=false):
 		
 	page_instance.init(number)
 	current_page = page_instance
-	
 	update_controls()
 	await get_tree().process_frame
+
 
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text
@@ -184,7 +170,11 @@ func get_selected_page_view() -> PageView:
 
 func set_save_path(value:String):
 	var parts = value.split("/")
-	active_file_name = parts[parts.size() - 1]
+	var new_file_name : String = parts[parts.size() - 1]
+	var new_dir : String = value.trim_suffix(new_file_name)
+	if new_dir == active_dir and new_file_name == active_file_name:
+		return
+	active_file_name = new_file_name
 	active_dir = value.trim_suffix(active_file_name)
 	emit_signal("save_path_set", active_dir, active_file_name)
 	DiisisEditorUtil.set_project_file_path(active_dir, active_file_name)
@@ -218,6 +208,8 @@ func _shortcut_input(event):
 					attempt_save_to_dir()
 				KEY_F:
 					open_popup($Popups.get_node("TextSearchPopup"))
+				KEY_Q:
+					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_Z:
 					if event.is_shift_pressed():
 						undo_redo.redo()
@@ -387,12 +379,13 @@ func save_to_file(path:String, is_autosave:=false):
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	if is_autosave:
-		notify(str("Autosaved to ", ProjectSettings.globalize_path(path), "!"))
+		notify(str("Autosaved to [url=",ProjectSettings.globalize_path(path),"]", ProjectSettings.globalize_path(path), "!"))
 	else:
 		set_save_path(path)
 		time_since_last_save = 0.0
 		last_system_save = Time.get_time_dict_from_system()
 		has_saved = true
+		altered_history = false
 	
 		notify(str("Saved to ", active_file_name, "!"))
 	
@@ -445,7 +438,7 @@ func request_go_to_address(address:String, action_message:=""):
 	undo_redo.add_undo_method(DiisisEditorActions.go_to.bind(str(get_current_page_number())))
 	undo_redo.commit_action()
 
-func request_load_page(number:int, action_message:String):
+func request_load_page(number:int, action_message:=""):
 	request_go_to_address(str(number), action_message)
 
 func notify(message:String, duration:=5.0):
@@ -470,10 +463,13 @@ func _on_header_popup_update() -> void:
 	current_page.update()
 
 func _on_instruction_definition_timer_timeout() -> void:
+	update_error_text_box()
+
+func update_error_text_box():
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
-	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
+	update_error_text_box()
 
 func update_undo_redo_buttons():
 	find_child("UndoButton").disabled = not undo_redo.has_undo()
@@ -540,7 +536,7 @@ func _on_utility_index_pressed(index: int) -> void:
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
-		active_dir = "res://.diisis/"
+		active_dir = "res://addons/diisis/files/"
 		active_file_name = str("script", Time.get_datetime_string_from_system().replace(":", "-"), ".json")
 		#open_save_popup()
 		#return

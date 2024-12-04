@@ -176,7 +176,7 @@ item_4/id = 4
 item_4/separator = true
 item_5/text = "Facts"
 item_5/id = 5
-item_6/text = "Pages"
+item_6/text = "Pages    (Ctrl+Q)"
 item_6/id = 6
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer"]
@@ -534,7 +534,6 @@ size = Vector2i(827, 377)
 transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Save"
-root_subfolder = ".diisis"
 filters = PackedStringArray("*.json")
 
 [node name="FDExportLocales" type="FileDialog" parent="Popups"]
@@ -561,7 +560,6 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Open"
 file_mode = 0
-root_subfolder = ".diisis"
 filters = PackedStringArray("*.json")
 
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
@@ -632,3 +630,4 @@ visible = false
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
 [connection signal="validate_saved_instructions" from="Popups/InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
+[connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]

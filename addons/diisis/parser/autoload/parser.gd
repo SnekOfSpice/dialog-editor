@@ -48,8 +48,6 @@ signal page_terminated(page_index: int)
 signal page_finished(page_index: int)
 signal read_new_page(page_index: int)
 
-var currently_speaking_name := ""
-var currently_speaking_visible := true
 var history := []
 
 var address_trail_index := -1
@@ -57,19 +55,22 @@ var address_trail := []
 
 var last_modified_time = 0
 
-func _get_live_source_path() -> String:
+func _get_live_source_path(suppress_error:=false) -> String:
 	var source_path:String
 	if not source_file_override.is_empty():
 		source_path = source_file_override
 	else:
-		source_path = DiisisEditorUtil.get_project_source_file_path()
+		source_path = DiisisEditorUtil.get_project_source_file_path(suppress_error)
 		if source_path.is_empty():
-			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
+			if not suppress_error:
+				push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
 			return ""
-	return source_path
+	# where did that \n come from???
+	return source_path.trim_suffix("\n")
 
 func _get_data() -> Dictionary:
-	var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
+	#var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
+	var file := FileAccess.open("res://addons/diisis/files/script.json", FileAccess.READ)
 	if not file:
 		return {}
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
@@ -84,8 +85,6 @@ func _ready() -> void:
 	
 	init(data)
 	
-	ParserEvents.display_name_changed.connect(on_name_label_updated)
-	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
 func init(data:Dictionary):
@@ -107,29 +106,16 @@ func init(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 
 func _process(delta: float) -> void:
-	# hot reload
-	var modified_time = FileAccess.get_modified_time(_get_live_source_path())
+	if not OS.has_feature("editor"):
+		return
+	var source_path := _get_live_source_path(true)
+	var modified_time = FileAccess.get_modified_time(source_path)
 	if modified_time != last_modified_time:
+		while not FileAccess.file_exists(source_path):
+			await get_tree().process_frame
 		init(_get_data())
-		if not line_reader:
-			last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
-			return
-		# only read the current page.line index again if we're not currently paused or terminated
-		# since this causes a page to be read again, we counteract double-adding int facts by first subtracting the same fact value
-		# this isn't necessary for bools or ints with operator Set
-		if not (paused or line_reader.terminated):
-			var f : Dictionary = page_data.get(page_index).get("facts", {}).get("fact_data_by_name", {})
-			var  page_bound_facts = f.duplicate(true)
-			for fact : Dictionary in page_bound_facts.values():
-				if fact.get("data_type", 0) == 1 and fact.get("int_operator", 0) == 1:
-					fact["fact_value"] = -fact.get("fact_value", 0)
-			for fact : Dictionary in page_bound_facts.values():
-				if fact.get("data_type") != 1:
-					continue
-				change_fact(fact)
-			
-			read_page(page_index, line_index)
-	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
+		read_page(page_index, line_index)
+	last_modified_time = FileAccess.get_modified_time(source_path)
 
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index:=0):
@@ -178,6 +164,9 @@ func get_facts_of_value(b: bool) -> Array:
 func get_line_position_string() -> String:
 	return str(page_index, ".", line_index)
 
+func get_address() -> String:
+	return get_line_position_string()
+
 func get_page_key(page_index:int):
 	return page_data.get(page_index, {}).get("page_key", "")
 
@@ -189,10 +178,6 @@ func append_to_history(text:String):
 			history.pop_back()
 			history.reverse()
 
-func on_text_content_text_changed(old_text: String,
-	new_text: String,
-	lead_time: float):
-	call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", new_text)))
 
 var loopback_target_page:=0
 var loopback_target_line:=0
@@ -218,19 +203,22 @@ func on_choice_pressed(
 			prefix = str(choice_appendation_string, " ")
 		call_deferred("append_to_history", str(prefix, choice_text))
 
-func on_name_label_updated(
-	actor_name: String,
-	is_name_container_visible: bool
-):
-	currently_speaking_name = actor_name
-	currently_speaking_visible = is_name_container_visible
 
-func build_history_string(separator_string:="\n") -> String:
+
+func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 	var result  := ""
 	
+	var i := 0
 	for s in history:
+		if i < from:
+			i += 1
+			continue
+		if to != -1 and i > to:
+			i += 1
+			continue
 		result += s
 		result += separator_string
+		i += 1
 	
 	result = result.trim_suffix(separator_string)
 	
@@ -247,7 +235,7 @@ func drop_down_values_to_string_array(values:=[0,0]) -> Array:
 
 func read_page(number: int, starting_line_index := 0):
 	if not page_data.keys().has(number):
-		push_warning("number not in page data")
+		push_warning(str("number ", number, " not in page data"))
 		return
 	
 	#emit_signal("read_new_page", number)
@@ -311,6 +299,20 @@ func _get_game_progress(full_if_on_last_page:= true) -> float:
 	
 	return page_progress + (line_progress / float(max_page_index))
 
+func get_line_type(address:String) -> DIISIS.LineType:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var prev_page = parts[0]
+	var prev_line = parts[1]
+	
+	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+
+func get_line_content(address:String) -> Dictionary:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var prev_page = parts[0]
+	var prev_line = parts[1]
+	
+	return page_data.get(prev_page).get("lines")[prev_line].get("content")
+
 func get_previous_address_line_type() -> DIISIS.LineType:
 	if address_trail_index <= 0 or address_trail.is_empty():
 		push_warning("At the beginning.")
@@ -323,17 +325,54 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
 func go_back():
-	if get_previous_address_line_type() in [DIISIS.LineType.Choice, DIISIS.LineType.Folder, DIISIS.LineType.Instruction]:
+	var trail_shift = -1
+	var previous_line_type = get_previous_address_line_type()
+	if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
 		ParserEvents.go_back_declined.emit()
 		push_warning("You cannot go further back.")
-		return
+		#return
+		trail_shift = 0
 	
-	if address_trail_index <= 0 or address_trail.is_empty():
+	if address_trail_index < 0 or address_trail.is_empty():
 		ParserEvents.go_back_declined.emit()
 		push_warning("You're at the beginning.")
+		#return
+		trail_shift = 0
+	
+	
+	if line_reader._attempt_read_previous_chunk() and line_reader.line_type == DIISIS.LineType.Text:
 		return
 	
-	address_trail_index -= 1
+	var instruction_stack := []
+	var a := false
+	while previous_line_type == DIISIS.LineType.Instruction:
+		a = true
+		# build instruction stack
+		var address_content = get_line_content(address_trail[address_trail_index + trail_shift])
+		instruction_stack.append(address_content)
+		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
+		trail_shift -= 1
+		if address_trail_index + trail_shift <= 0:
+			trail_shift = 0
+			break
+	if a:
+		trail_shift += 1
+	instruction_stack.pop_back()
+	
+	for instruction in instruction_stack:
+		if not instruction.get("meta.has_reverse", false):
+			continue
+		var instr_name = instruction.get("reverse_name")
+		var instr_args = instruction.get("line_reader.reverse_args")
+		if instr_name == null or instr_name == "":
+			instr_name = instruction.get("name")
+			instr_args = instruction.get("line_reader.args")
+		line_reader.instruction_handler.execute(instr_name, instr_args)
+	
+	await get_tree().process_frame
+	address_trail_index += trail_shift
+	if address_trail_index >= address_trail.size():
+		address_trail_index = address_trail.size() - 1
 	var previous_address = address_trail[address_trail_index]
 	var parts = DiisisEditorUtil.get_split_address(previous_address)
 	var prev_page = parts[0]
@@ -345,13 +384,18 @@ func go_back():
 		read_line(prev_line)
 	else:
 		read_page(prev_page, prev_line)
+	line_reader._go_to_end_of_dialog_line()
 	address_trail_index = address_trail.size() - 1
-	
 
 func read_line(index: int):
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
 		return
+	
+	if index >= lines.size():
+		push_warning(str("Index ", index, " is higher than the available lines - index will be set to 0"))
+		index = 0
+	
 	line_index = index
 	#prints("reading line", index, "trail is ", address_trail, " idx is", address_trail_index)
 	address_trail_index += 1
@@ -406,7 +450,11 @@ func open_connection(new_lr: LineReader):
 	line_reader = new_lr
 	line_reader.connect("line_finished", read_next_line)
 	line_reader.connect("jump_to_page", read_page)
-	
+
+func close_connection():
+	line_reader.disconnect("line_finished", read_next_line)
+	line_reader.disconnect("jump_to_page", read_page)
+	line_reader = null
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.[br]

@@ -46,7 +46,9 @@ func fill():
 			add_child(vp)
 			vp.size = label.size
 			await RenderingServer.frame_post_draw
-			texture = vp.get_texture()
+			texture = vp.get_texture()#load("res://addons/diisis/editor/visuals/int.png")
+			#vp.queue_free()
+			#label.queue_free()
 		find_child("Facts").add_item(fact_reg, texture)
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true

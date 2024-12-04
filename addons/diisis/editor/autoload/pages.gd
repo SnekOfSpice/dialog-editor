@@ -544,6 +544,7 @@ func get_instruction_signature(instruction_name:String) -> String:
 	result += ") -> bool:"
 	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
 	result += "\n\t# (Needs to be called by your code from somewhere.)"
+	result += "\n\t# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)"
 	result += "\n\treturn false"
 	
 	return result
@@ -1052,6 +1053,7 @@ func search_string(substr:String, case_insensitive:=false):
 	
 	var found_choices := {}
 	var found_text := {}
+	var found_instructions := {}
 	var page_index := 0
 	for page in page_data.values():
 		var line_index := 0
@@ -1068,6 +1070,13 @@ func search_string(substr:String, case_insensitive:=false):
 				var text : String = line.get("content", {}).get("content", "")
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
+			elif line.get("line_type") == DIISIS.LineType.Instruction:
+				var text : String = line.get("content", {}).get("meta.text", "")
+				var reverse_text : String = line.get("content", {}).get("meta.reverse_text", "")
+				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
+					found_instructions[str(page_index, ".", line_index, " - default")] = text
+				if (case_insensitive and reverse_text.findn(substr) != -1) or (not case_insensitive and reverse_text.find(substr) != -1):
+					found_instructions[str(page_index, ".", line_index, " - reverse")] = reverse_text
 			line_index += 1
 		page_index += 1
 	
@@ -1075,6 +1084,7 @@ func search_string(substr:String, case_insensitive:=false):
 		"facts":found_facts,
 		"text":found_text,
 		"choices":found_choices,
+		"instructions":found_instructions,
 	}
 	return result
 
@@ -1280,8 +1290,8 @@ func get_compliance_with_template(instruction:String) -> String:
 				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
 		if template_types[i] == "float":
 			for char in arg_value:
-				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]:
-					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and .)")
+				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
+					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and . and -)")
 		i += 1
 	
 	return "OK"
@@ -1341,7 +1351,66 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 		if template_compliance != "OK":
 			return template_compliance
 	
-	
-			
-	
 	return "OK"
+
+
+func capitalize_sentence_beginnings_str(input:String) -> String:
+	return capitalize_sentence_beginnings([input])[0]
+
+func capitalize_sentence_beginnings(input:Array) -> Array:
+	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
+
+	var c12n_prefixes := [
+		".", ":", ";", "-", "?", "!", "~"
+	]
+
+	var result := []
+	for text : String in input:
+		var tags_in_text := []
+		var scan_index := 0
+		while scan_index < text.length():
+			if text[scan_index] == "<":
+				var tag_end = text.find(">", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			elif text[scan_index] == "{":
+				var tag_end = text.find("}", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			elif text[scan_index] == "[":
+				if text[scan_index-1] == "\\[":
+					scan_index += 1
+					continue
+				var tag_end = text.find("]", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			scan_index += 1
+		for letter : String in letters:
+			text = text.replace(str("\"", letter), str("\"", letter.capitalize()))
+			text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
+			text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
+			for prefix in c12n_prefixes:
+				if prefix != "-":
+					text = text.replace(str(prefix, letter), str(prefix, letter.capitalize()))
+					text = text.replace(str(prefix, "<ap>", letter), str(prefix, "<ap>", letter.capitalize()))
+					text = text.replace(str(prefix, "<mp>", letter), str(prefix, "<mp>", letter.capitalize()))
+					text = text.replace(str(prefix, "<lc>", letter), str(prefix, "<lc>", letter.capitalize()))
+				text = text.replace(str(prefix, " ", letter), str(prefix, " ", letter.capitalize()))
+				text = text.replace(str(prefix, " <ap>", letter), str(prefix, " <ap>", letter.capitalize()))
+				text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
+				text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
+		
+		for tag in tags_in_text:
+			text = text.replacen(tag, tag)
+		
+		result.append(text)
+	return result

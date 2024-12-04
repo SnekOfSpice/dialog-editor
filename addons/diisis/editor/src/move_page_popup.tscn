@@ -20,6 +20,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "search page keys"
+
 [node name="Label" type="Label" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
@@ -36,3 +40,4 @@ layout_mode = 2
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="text_changed" from="VBoxContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]

@@ -36,9 +36,6 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 	set_use_dialog_syntax(Pages.use_dialog_syntax)
 	
-	for window : Window in find_child("Hints").get_children():
-		window.text_input.connect(handle_text_input_from_hint)
-	
 	# these are  the symbols that need to wrap any position where code completion
 	# should be able to be triggered /on both sides/
 	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]"]
@@ -70,14 +67,6 @@ func deserialize(data: Dictionary):
 	active_actors_title = data.get("active_actors_title", "")
 	fill_active_actors()
 	set_use_dialog_syntax(data.get("use_dialog_syntax", Pages.use_dialog_syntax))
-
-func handle_text_input_from_hint(window: Window, event:InputEvent):
-	#if event is InputEventKey:
-		#var event_label := OS.get_keycode_string(event.key_label)
-		#if "QWERTZUIOPASDFGHJKLÖÄÜYXCVBNM".contains(event_label):
-			#text_box.text += event_label.to_lower()
-			#text_box.set_caret_column(text_box.get_line_width(text_box.get_caret_line()))
-	position_hint_at_caret(window)
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full
@@ -175,7 +164,7 @@ func _on_text_box_caret_changed() -> void:
 	if text_box.get_caret_column() == 0:
 		var is_line_empty = text_box.get_line(text_box.get_caret_line()).is_empty()
 		if Pages.use_dialog_syntax and is_line_empty:
-			build_actor_hint()
+			prepare_line_for_text_insertion()
 	
 	
 	var full_actor_before_caret := false
@@ -267,7 +256,9 @@ func get_used_dialog_args_in_line() -> Array:
 	
 	return args
 
-func build_actor_hint():
+func prepare_line_for_text_insertion():
+	if not text_box.get_selected_text().is_empty():
+		return
 	used_arguments.clear()
 	entered_arguments = 0
 	text_box.insert_text_at_caret("[]>")
@@ -283,110 +274,20 @@ func fill_active_actors():
 
 func _on_text_box_focus_entered() -> void:
 	if text_box.text.is_empty() and Pages.use_dialog_syntax:
-		build_actor_hint()
-
-
-func _on_dialog_actor_hint_item_chosen(item_name) -> void:
-	text_box.insert_text_at_caret(str(item_name, ":"))
-	if not Pages.dropdown_dialog_arguments.is_empty():
-		text_box.set_caret_column(text_box.get_caret_column() - 1)
-		#find_child("DialogArgumentHint").popup()
-		#find_child("DialogArgumentHint").build(Pages.dropdown_dialog_arguments)
-		#position_hint_at_caret(find_child("DialogArgumentHint"))
+		prepare_line_for_text_insertion()
 
 
 func _on_text_box_text_changed() -> void:
 	var line_index = text_box.get_caret_line()
 	var col_index = text_box.get_caret_column()
-	#var line = text_box.get_line(line_index)
 	var last_char : String
 	if col_index > 0:
 		last_char = get_text_before_caret(1)
 	else:
 		last_char = ""
-	
-	#if get_text_before_caret(3) == "[]>":
-		#print("show actors")
-	#var lines := text_box.text.split("\n")
-	#for line in lines:
-		##for actor in active_actors:
-			##text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, actor, actor)
-		#if get_text_before_caret(3) == "[]>":
-			#for actor in active_actors:
-				#text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, actor, str(actor, ":"))
-			#text_box.update_code_completion_options(true)
-		##print(text_box.code_completion_prefixes)
-		#
-		#for actor : String in active_actors:
-			## first argument gets special brackets
-			#if get_text_before_caret(actor.length()) == actor and get_text_after_caret(1) == ":":
-				#print("args")
-				#for arg in Pages.dropdown_dialog_arguments:
-					#text_box.add_code_completion_option(CodeEdit.KIND_FUNCTION, arg, arg)
-				#text_box.update_code_completion_options(true)
-		
-	
-	#if last_char == "<":
-		#find_child("ControlSequenceHint").build(control_sequences, control_sequence_hints)
-		#find_child("ControlSequenceHint").popup()
-		#position_hint_at_caret(find_child("ControlSequenceHint"))
-
-func position_hint_at_caret(hint: Window):
-	var caret_pos = (
-			get_window().position +
-			Vector2i(text_box.global_position) +
-			Vector2i(text_box.get_caret_draw_pos())
-			)
-	caret_pos.x += 40
-	hint.position = caret_pos
-
-
-func _on_control_sequence_hint_item_chosen(item_name) -> void:
-	if item_name in ["var", "func", "name", "fact", "call"]:
-		text_box.insert_text_at_caret(str(item_name, ":>"))
-		text_box.set_caret_column(text_box.get_caret_column() - 1)
-	else:
-		text_box.insert_text_at_caret(str(item_name, ">"))
 
 func move_caret(amount: int):
 	text_box.set_caret_column(text_box.get_caret_column() + amount)
-
-func _on_dialog_argument_hint_item_chosen(item_name) -> void:
-	if entered_arguments == 0:
-		text_box.insert_text_at_caret(str("{",item_name, "}"))
-		move_caret(-1)
-	elif entered_arguments > 0 and entered_arguments < Pages.dropdown_dialog_arguments.size():
-		move_caret(1)
-		text_box.insert_text_at_caret(str(",", item_name))
-	elif entered_arguments > 0:
-		move_caret(1)
-		text_box.insert_text_at_caret(str(item_name))
-	
-	#find_child("DialogArgumentValueHint").popup()
-	#find_child("DialogArgumentValueHint").build(Pages.dropdowns.get(item_name, []))
-	#position_hint_at_caret(find_child("DialogArgumentValueHint"))
-	
-	used_arguments.append(item_name)
-	entered_arguments += 1
-
-
-func _on_dialog_argument_value_hint_item_chosen(item_name) -> void:
-	text_box.insert_text_at_caret(str("|",item_name))
-	move_caret(-1)
-	if entered_arguments < Pages.dropdown_dialog_arguments.size():
-		if used_arguments.size() >= Pages.dropdown_dialog_arguments.size():
-			return
-		var available_arguments := []
-		for a in Pages.dropdown_dialog_arguments:
-			if not used_arguments.has(a):
-				available_arguments.append(a)
-			#find_child("DialogArgumentHint").popup()
-			#find_child("DialogArgumentHint").build(available_arguments)
-			#position_hint_at_caret(find_child("DialogArgumentHint"))
-
-func type_hint_about_to_close():
-	# move caret to end of line
-	text_box.set_caret_column(text_box.get_line(text_box.get_caret_line()).length())
 
 func is_text_before_caret(what:String):
 	return get_text_before_caret(what.length()) == what
@@ -399,6 +300,8 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str(arg_name, "|}")):
 			Pages.auto_complete_context = arg_name
 			caret_movement_to_do = -1
+		elif is_text_before_caret(str(arg_name, "|")):
+			Pages.auto_complete_context = arg_name
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
@@ -413,3 +316,9 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str("[/", tag, "]")):
 			caret_movement_to_do = -str("[/", tag, "]").length()
 			break
+
+
+func _on_text_index_pressed(index: int) -> void:
+	match index:
+		0:
+			text_box.text = Pages.capitalize_sentence_beginnings_str(text_box.text)

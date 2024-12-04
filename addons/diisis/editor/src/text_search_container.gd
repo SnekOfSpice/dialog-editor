@@ -13,7 +13,18 @@ func init():
 	find_child("ReplaceAllInTypeButton").text = "Replace all in Type"
 	find_child("QueryTextEdit").grab_focus()
 	find_child("FactEditHintLabel").visible = false
-	
+
+func _shortcut_input(event):
+	if event is InputEventKey:
+		if not event.pressed:
+			return
+		
+		if event.is_ctrl_pressed():
+			match event.key_label:
+				KEY_F:
+					find_child("QueryTextEdit").release_focus()
+					find_child("QueryTextEdit").grab_focus()
+
 func display_results(search:String):
 	fact_start_index = -1
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
@@ -23,7 +34,7 @@ func display_results(search:String):
 	item_list.clear()
 	var i = 0
 	# this is duplicated for relevancy
-	var keys := ["text", "choices", "facts"]
+	var keys := ["text", "choices", "facts", "instructions"]
 	find_child("GoToButton").disabled = true
 	
 	for k : String in keys:

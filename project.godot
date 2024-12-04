@@ -30,6 +30,10 @@ Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
 DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
 
+[diisis]
+
+project/file/path="res://addons/diisis/files/script.json"
+
 [display]
 
 window/size/viewport_width=1440
