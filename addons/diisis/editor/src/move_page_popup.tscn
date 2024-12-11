@@ -6,9 +6,10 @@
 [node name="MovePagePopup" type="Window"]
 title = "Move Pages"
 initial_position = 2
-size = Vector2i(455, 100)
+size = Vector2i(659, 326)
 wrap_controls = true
 exclusive = true
+min_size = Vector2i(659, 326)
 content_scale_aspect = 1
 theme = ExtResource("1_hk1ia")
 script = ExtResource("1_nrsai")
@@ -19,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 
 [node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
@@ -37,6 +39,7 @@ follow_focus = true
 
 [node name="Items" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]

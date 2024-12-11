@@ -21,6 +21,8 @@ func set_number(n: int):
 	
 	find_child("DownButton").disabled = number <= 0
 	find_child("UpButton").disabled = number >= Pages.get_page_count() - 1
+	
+	find_child("WordCountLabel").text = str(Pages.get_word_count_on_page_approx(number))
 
 
 func _on_up_button_pressed() -> void:

@@ -1,16 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://co4e6yj2ed45f"]
+[gd_scene load_steps=6 format=3 uid="uid://co4e6yj2ed45f"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_container.gd" id="1_mqxig"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="2_dsh57"]
 [ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/clipboard.png" id="2_lquiu"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
-
-[sub_resource type="Gradient" id="Gradient_jjhgw"]
-colors = PackedColorArray(0.98, 0.0686, 0.60025, 0, 0.98, 0.28126, 0.0686, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_lx6fc"]
-gradient = SubResource("Gradient_jjhgw")
-fill_to = Vector2(0, 1)
+[ext_resource type="PackedScene" uid="uid://dtmrdrq7nyrh0" path="res://addons/diisis/editor/src/instruction_text_edit.tscn" id="4_hkwpw"]
 
 [node name="InstructionContainer" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
 anchors_preset = 10
@@ -28,7 +22,6 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 129.295)
 layout_mode = 2
 size_flags_horizontal = 3
-texture = SubResource("GradientTexture2D_lx6fc")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer"]
 layout_mode = 0
@@ -41,6 +34,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -58,6 +52,7 @@ tooltip_text = "Copy GDScript function signature to clipboard."
 icon = ExtResource("2_lquiu")
 
 [node name="ComplianceContainer" type="HBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ComplianceContainer"]
@@ -93,6 +88,17 @@ text = "!!!"
 
 [node name="ReverseComplianceLabel" type="Label" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/ReverseComplianceContainer"]
 layout_mode = 2
+
+[node name="InstructionTextEdit" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_hkwpw")]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 0
+
+[node name="InstructionTextEditReverse" parent="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_hkwpw")]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 0
+reverse = true
 
 [node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer/InstructionTextContainer/HBoxContainer"]
 custom_minimum_size = Vector2(291, 0)

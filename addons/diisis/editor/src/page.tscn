@@ -163,6 +163,7 @@ mouse_filter = 2
 [connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
 [connection signal="toggled" from="PanelContainer/Info/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
 [connection signal="text_changed" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_changed"]
+[connection signal="text_submitted" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_submitted"]
 [connection signal="toggled" from="PanelContainer/Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]
 [connection signal="value_changed" from="PanelContainer/Info/NextContainer/NextLineEdit" to="." method="_on_next_line_edit_value_changed"]
 [connection signal="pressed" from="PanelContainer/Info/VBoxContainer/DeleteButton" to="." method="_on_delete_button_pressed"]

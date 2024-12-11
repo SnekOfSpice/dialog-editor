@@ -32,7 +32,7 @@ DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.
 
 [diisis]
 
-project/file/path="res://addons/diisis/files/script.json"
+project/file/path="res://script.json"
 
 [display]
 

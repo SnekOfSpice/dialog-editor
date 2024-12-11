@@ -3,6 +3,8 @@ extends LineEdit
 class_name HintedLineEdit
 
 @export var submission_append := ""
+
+## On submission, moves the caret by this amount. -1 goes back 1 character.
 @export var submission_offset := 0
 
 var completion_options := []

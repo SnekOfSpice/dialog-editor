@@ -100,3 +100,6 @@ func _on_copy_signature_to_clipboard_button_pressed() -> void:
 	var signature : String = Pages.get_instruction_signature(get_instruction_name())
 	if not signature.is_empty():
 		DisplayServer.clipboard_set(signature)
+
+func grab_focus():
+	find_child("InstructionEdit").grab_focus()

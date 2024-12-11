@@ -422,6 +422,12 @@ func key_exists(key: String) -> bool:
 func get_page_key(page_index:int) -> String:
 	return str(page_data.get(page_index, {}).get("page_key", ""))
 
+func get_page_number_by_key(key:String):
+	for page in page_data.values():
+		if page.get("page_key") == key:
+			return page.get("number")
+	return -1
+
 func get_line_type(page_index:int, line_index:int) -> int:
 	var page = page_data.get(page_index, {})
 	var lines = page.get("lines")
@@ -785,7 +791,7 @@ func lines_referencing_fact(fact_name: String):
 	return all_refs
 
 
-func character_count_on_page_approx(page_number: int) -> int:
+func get_character_count_on_page_approx(page_number: int) -> int:
 	var count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type")
@@ -798,7 +804,7 @@ func character_count_on_page_approx(page_number: int) -> int:
 			count += str(content.get("content")).length()
 	return count
 
-func word_count_on_page_approx(page_number: int) -> int:
+func get_word_count_on_page_approx(page_number: int) -> int:
 	var count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type", null)
@@ -813,16 +819,16 @@ func word_count_on_page_approx(page_number: int) -> int:
 				
 	return count
 
-func character_count_total_approx() -> int:
+func get_character_count_total_approx() -> int:
 	var sum := 0
 	for i in page_data.keys():
-		sum += character_count_on_page_approx(i)
+		sum += get_character_count_on_page_approx(i)
 	
 	return sum
-func word_count_total_approx() -> int:
+func get_word_count_total_approx() -> int:
 	var sum := 0
 	for i in page_data.keys():
-		sum += word_count_on_page_approx(i)
+		sum += get_word_count_on_page_approx(i)
 	
 	return sum
 

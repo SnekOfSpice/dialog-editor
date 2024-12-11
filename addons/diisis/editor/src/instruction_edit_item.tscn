@@ -9,6 +9,7 @@ offset_right = 1152.0
 offset_bottom = 128.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+focus_mode = 2
 theme = ExtResource("1_d8oop")
 script = ExtResource("1_6p6sk")
 
