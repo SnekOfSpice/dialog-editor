@@ -56,4 +56,5 @@ visible = false
 [connection signal="focus_entered" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_focus_entered"]
 [connection signal="focus_exited" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_focus_exited"]
 [connection signal="text_entered" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_text_entered"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CopySignatureToClipboardButton" to="." method="_on_copy_signature_to_clipboard_button_pressed"]

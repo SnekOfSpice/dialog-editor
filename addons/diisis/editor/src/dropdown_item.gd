@@ -2,6 +2,7 @@
 extends VBoxContainer
 
 var dropdown_options := []
+var list_size:Vector2
 
 func get_string_contents(filter:="") -> String:
 	var search_content := ""
@@ -110,3 +111,16 @@ func _on_options_container_visibility_changed():
 		find_child("ExpandButton").text = "v"
 	else:
 		find_child("ExpandButton").text = ">"
+
+
+func _on_dropdown_options_text_resized() -> void:
+	var text_box_size : Vector2 = find_child("DropdownOptionsText").size
+	if text_box_size.y <= list_size.y - 80 * Pages.editor.content_scale:
+		find_child("ScrollContainer").custom_minimum_size.y = text_box_size.y
+	else:
+		find_child("ScrollContainer").custom_minimum_size.y = list_size.y - 80 * Pages.editor.content_scale
+
+
+func set_list_size(s: Vector2):
+	list_size = s
+	_on_dropdown_options_text_resized()

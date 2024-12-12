@@ -8,13 +8,17 @@
 		"dropdown_dialog_arguments": [],
 		"dropdown_title_for_dialog_syntax": "character",
 		"dropdown_titles": [
-			"character"
+			"character",
+			"dfgdf",
+			"dfgdfg"
 		],
 		"dropdowns": {
 			"character": [
 				"dii",
 				"sis"
-			]
+			],
+			"dfgdf": [],
+			"dfgdfg": []
 		},
 		"empty_strings_for_l10n": false,
 		"facts": {
@@ -486,10 +490,71 @@
 				],
 				"meta.scroll_vertical": 0,
 				"meta.selected": false,
-				"next": 0,
+				"next": 1,
 				"number": 0,
 				"page_key": "",
 				"terminate": false
+			},
+			"1": {
+				"facts": {
+					"fact_data_by_name": {
+
+					},
+					"meta.visible": false
+				},
+				"lines": [
+					{
+						"address": "1.0",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "roll_credits()",
+							"meta.validation_status": "OK",
+							"name": "roll_credits",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 0,
+						"meta.selector": {
+							"selected": false
+						}
+					}
+				],
+				"meta.scroll_vertical": 0,
+				"meta.selected": false,
+				"next": 0,
+				"number": 1,
+				"page_key": "",
+				"terminate": true
 			}
 		},
 		"text_lead_time_other_actor": 0,

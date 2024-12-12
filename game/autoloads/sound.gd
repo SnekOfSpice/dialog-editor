@@ -5,14 +5,15 @@ var bgm_key := ""
 var audio_players := []
 var main_audio_player : AudioStreamPlayer
 
-#func _ready() -> void:
-	#push_warning(str("loading sounds", ProjectSettings.load_resource_pack("res://sounds.pck")))
 
 func serialize() -> Dictionary:
 	var data := {}
 	
 	data["bgm_key"] = bgm_key
-	data["playback_position"] = main_audio_player.get_playback_position()
+	if main_audio_player:
+		data["playback_position"] = main_audio_player.get_playback_position()
+	else:
+		data["playback_position"] = 0
 	
 	return data
 

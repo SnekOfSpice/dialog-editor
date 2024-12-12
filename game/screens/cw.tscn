@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://btwo5sdc17l8h"]
 
 [ext_resource type="Script" path="res://game/screens/cw.gd" id="1_8ylhl"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme.tres" id="1_gtq1c"]
+[ext_resource type="Theme" path="res://game/visuals/theme.tres" id="1_gtq1c"]
 
 [node name="CW" type="Control"]
 layout_mode = 3
@@ -49,26 +49,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
 bbcode_enabled = true
-text = "[center]This visual novel contains topics meant for an 18+ audience. It contains this material in sexual and/or non-sexual ways to varying degrees.
-
-This visual novel describes and references the following themes / subjects in [b]written and visual form[/b]:
-Armpit Licking
-Assisted Suicide
-Blood
-Breeding Kink
-Cannibalism
-Corpse Mutilation
-Death
-Needles
-Torture
-Wounding
-Vomit
-
-This visual novel describes and references the following themes / subjects in [b]written and non-visual form[/b]:
-Drug Use
-Misgendering
-Sexual Assault
-Transphobia"
+text = "[center]CW HERE"
 
 [node name="Button" type="Button" parent="."]
 auto_translate_mode = 1

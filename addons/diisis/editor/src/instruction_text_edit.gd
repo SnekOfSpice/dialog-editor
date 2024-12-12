@@ -59,8 +59,8 @@ func _on_instruction_text_box_caret_changed() -> void:
 	if caret_col > start and caret_col < end:
 		var caret_pos = Vector2i(text_box.get_caret_draw_pos())
 		caret_pos += Vector2i(text_box.global_position)
-		caret_pos.x += 30
-		caret_pos.y += 50
+		caret_pos *= Pages.editor.content_scale
+		caret_pos += Vector2(0, 10) * Pages.editor.content_scale
 		find_child("ArgHint").position = caret_pos
 		
 		var arg_names = Pages.get_instruction_arg_names(get_instruction_name())
@@ -97,8 +97,10 @@ func _on_instruction_text_box_focus_exited() -> void:
 	find_child("ArgHint").hide()
 
 
-
-
 func set_text(text:String):
 	text_box.text = text
 	_on_instruction_text_box_text_entered(text_box.text)
+
+
+func _on_instruction_text_box_text_submitted(new_text: String) -> void:
+	_on_instruction_text_box_text_entered(new_text)

@@ -1,9 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cjy7vf1xrnq5y"]
+[gd_scene load_steps=6 format=3 uid="uid://cjy7vf1xrnq5y"]
 
 [ext_resource type="Script" path="res://game/screens/chapter_cover.gd" id="1_kslxu"]
-[ext_resource type="Texture2D" uid="uid://b16a6fc32loqt" path="res://game/visuals/logo3.png" id="2_00vti"]
-[ext_resource type="Texture2D" uid="uid://bgu11gy874p8t" path="res://game/backgrounds/chapter_cover.png" id="2_b5b2o"]
-[ext_resource type="Texture2D" uid="uid://h1h321rpoqeg" path="res://game/characters/sprites/anhedonia-neutral.png" id="2_p6fwy"]
 [ext_resource type="FontFile" uid="uid://jc0pccgisvh0" path="res://game/visuals/fonts/FromSunflowerFie.ttf" id="4_geagf"]
 [ext_resource type="Shader" path="res://game/screens/crt.gdshader" id="5_qb4b6"]
 
@@ -53,7 +50,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_b5b2o")
 
 [node name="ColorRect2" type="ColorRect" parent="Parts"]
 custom_minimum_size = Vector2(960, 70)
@@ -70,11 +66,9 @@ color = Color(0, 0, 0, 1)
 [node name="Logo" type="Sprite2D" parent="Parts"]
 position = Vector2(482, 241)
 scale = Vector2(0.876667, 0.876667)
-texture = ExtResource("2_00vti")
 
 [node name="Character" type="Sprite2D" parent="Parts"]
 position = Vector2(460, 453)
-texture = ExtResource("2_p6fwy")
 
 [node name="Name" type="RichTextLabel" parent="Parts"]
 custom_minimum_size = Vector2(320, 120)

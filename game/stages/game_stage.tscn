@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=47 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Texture2D" uid="uid://c17fgm00bow0b" path="res://game/stages/sun_shader/mask_02_02.png" id="8_mxu8l"]
 [ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/cheats.tscn" id="13_qackq"]
 [ext_resource type="Script" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
 [ext_resource type="Shader" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
@@ -587,6 +588,10 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="BlackFade" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("8_50byo")]
+visible = false
+layout_mode = 1
+
+[node name="ChapterCover" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("12_vf2y4")]
 visible = false
 layout_mode = 1
 

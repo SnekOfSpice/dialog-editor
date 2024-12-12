@@ -1,11 +1,7 @@
 extends Control
 
 const LINES := [
-	"Created for Yuri Game Jam 2024",
-	"Written and programmed by Snek",
-	"Artwork by Blood Machine",
-	"Original Music by CØL and red_kino\nLicensed music by others; check title credits",
-	"Dedicated to a celestial muse and witch of tides",
+	"This was a demo",
 	"Thank you for reading <3"
 ]
 
