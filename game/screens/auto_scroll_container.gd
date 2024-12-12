@@ -1,4 +1,3 @@
-@tool
 extends ScrollContainer
 
 var max_scroll_length = 0

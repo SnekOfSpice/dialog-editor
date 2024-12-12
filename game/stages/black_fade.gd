@@ -33,6 +33,9 @@ func fade_out(duration:= release_on_full_black_reached):
 
 
 func on_full_black_reached():
+	if GameWorld.game_stage:
+		GameWorld.game_stage.set_fade_out(0, 0)
+		GameWorld.game_stage.hide_cg()
 	if hide_characters_on_full_black_reached:
 		for c in get_tree().get_nodes_in_group("character"):
 			c.visible = false
@@ -41,7 +44,7 @@ func on_full_black_reached():
 	#emit_signal("request_background_change", new_background_on_full_black_reached)
 	
 	if not new_bgm_on_full_black_reached.is_empty():
-		Sound.play_bgm(CONST.get(str("MUSIC_", new_bgm_on_full_black_reached.to_upper())), release_on_full_black_reached)
+		Sound.play_bgm(new_bgm_on_full_black_reached, release_on_full_black_reached)
 		
 	if sustain_on_full_black_reached > 0:
 		var t = get_tree().create_timer(sustain_on_full_black_reached)
@@ -49,15 +52,17 @@ func on_full_black_reached():
 		return
 	
 	fade_out()
-		
 	
 
 func on_clear_reached():
 	GameWorld.instruction_handler.instruction_completed.emit()
 
 
-
 func _on_handler_start_black_fade(fade_in_duration, hold_time, fade_out_duration, hide_characters, new_background, new_bgm):
+	if GameWorld.skip:
+		fade_out_duration = 0.1
+		hold_time = 0.1
+		fade_in_duration = 0.1
 	hide_characters_on_full_black_reached = hide_characters
 	new_background_on_full_black_reached = new_background
 	release_on_full_black_reached = fade_out_duration

@@ -70,7 +70,7 @@ func _get_live_source_path(suppress_error:=false) -> String:
 
 func _get_data() -> Dictionary:
 	#var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
-	var file := FileAccess.open("res://addons/diisis/files/script.json", FileAccess.READ)
+	var file := FileAccess.open(ProjectSettings.get_setting("diisis/project/file/path"), FileAccess.READ)
 	if not file:
 		return {}
 	var data : Dictionary = JSON.parse_string(file.get_as_text())

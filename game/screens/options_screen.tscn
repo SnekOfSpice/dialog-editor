@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://clvr2siqvathu"]
+[gd_scene load_steps=7 format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" path="res://game/screens/options_screen.gd" id="1_1als3"]
+[ext_resource type="Theme" path="res://game/visuals/theme.tres" id="1_uev7i"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
 
@@ -17,6 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_uev7i")
 script = ExtResource("1_1als3")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -103,8 +105,18 @@ auto_translate_mode = 1
 layout_mode = 2
 text = "Quit"
 
+[node name="RichTextLabel2" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Screenshot - [S]
+Toggle UI - [H]
+Toggle auto - [A]
+Go back - [Scroll Down] / [Left]"
+fit_content = true
+
 [node name="TextMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(509, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu"]
@@ -121,6 +133,7 @@ text = "Text Speed:"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 min_value = 1.0
 value = 1.0
 
@@ -139,12 +152,13 @@ auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 max_value = 20.0
 step = 0.1
 
 [node name="AutoDelayLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(80.055, 0)
 layout_mode = 2
 text = "Delay"
 
@@ -175,6 +189,7 @@ text = "Master"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
+focus_mode = 0
 max_value = 1.0
 step = 0.01
 value = 1.0
@@ -189,6 +204,7 @@ auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
+focus_mode = 0
 max_value = 1.0
 step = 0.01
 value = 1.0
@@ -203,20 +219,22 @@ auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
+focus_mode = 0
 max_value = 1.0
 step = 0.01
 value = 1.0
 
 [node name="CloseButton" type="Button" parent="."]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -50.0
+offset_left = -47.5
 offset_top = -31.0
-grow_horizontal = 0
+offset_right = 47.5
+grow_horizontal = 2
 grow_vertical = 0
 text = "Close"
 
@@ -226,6 +244,7 @@ text = "Close"
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/GameMenu/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/TextSpeedSlider" to="." method="_on_text_speed_slider_value_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_value_changed"]

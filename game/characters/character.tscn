@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://chfbyvpvah4eu"]
+
+[ext_resource type="Script" path="res://game/characters/character.gd" id="1_upf4t"]
+[ext_resource type="Texture2D" uid="uid://h1h321rpoqeg" path="res://game/characters/sprites/anhedonia-neutral.png" id="2_lhaq4"]
+[ext_resource type="Shader" path="res://game/characters/active.gdshader" id="2_xmhwu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_urdom"]
+resource_local_to_scene = true
+shader = ExtResource("2_xmhwu")
+shader_parameter/outline_c = Color(0.0051104, 0.000858558, 1.88011e-10, 1)
+shader_parameter/progress = 0.0
+
+[node name="Character" type="Node2D"]
+script = ExtResource("1_upf4t")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_urdom")
+texture = ExtResource("2_lhaq4")

@@ -573,7 +573,6 @@ visible = false
 theme = ExtResource("1_nb6ej")
 
 [node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
-size = Vector2i(300, 270)
 visible = false
 
 [node name="FactsPopup" parent="Popups" instance=ExtResource("8_3kqv2")]

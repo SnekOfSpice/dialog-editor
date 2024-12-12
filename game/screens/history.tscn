@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6nbwi7lgrijy"]
+[gd_scene load_steps=5 format=3 uid="uid://b6nbwi7lgrijy"]
 
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme.tres" id="1_06wm5"]
 [ext_resource type="Script" path="res://game/screens/history.gd" id="1_aiklh"]
 [ext_resource type="Script" path="res://game/screens/auto_scroll_container.gd" id="2_esrbb"]
+[ext_resource type="FontFile" uid="uid://ccqagtvgqnth1" path="res://game/visuals/fonts/Pixel Georgia.ttf" id="4_rplch"]
 
 [node name="History" type="Control"]
 layout_mode = 3
@@ -10,6 +12,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 2
+theme = ExtResource("1_06wm5")
 script = ExtResource("1_aiklh")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -26,15 +30,20 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="CenterContainer" type="ScrollContainer" parent="PanelContainer/PanelContainer"]
-custom_minimum_size = Vector2(700, 700)
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(700, 400)
 layout_mode = 2
 script = ExtResource("2_esrbb")
 
-[node name="HistoryLabel" type="RichTextLabel" parent="PanelContainer/PanelContainer/CenterContainer"]
+[node name="HistoryLabel" type="RichTextLabel" parent="PanelContainer/PanelContainer/VBoxContainer/ScrollContainer"]
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "gfhfghjghj
 ghjghj
@@ -42,10 +51,32 @@ ghjgh"
 fit_content = true
 scroll_active = false
 
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "<"
+
+[node name="ForwardButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = ">"
+
+[node name="EntryLabel" type="Label" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_rplch")
+theme_override_font_sizes/font_size = 14
+text = "Entries: 0 - 99"
+
 [node name="CloseButton" type="Button" parent="PanelContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "close history"
 
+[connection signal="pressed" from="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer/ForwardButton" to="." method="_on_forward_button_pressed"]
 [connection signal="pressed" from="PanelContainer/CloseButton" to="." method="_on_close_button_pressed"]

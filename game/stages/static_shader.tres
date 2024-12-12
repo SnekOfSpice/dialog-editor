@@ -1,0 +1,48 @@
+[gd_resource type="VisualShader" load_steps=3 format=3 uid="uid://deunnvo7bx5co"]
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_s70xt"]
+output_port_for_preview = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_64vln"]
+input_name = "time"
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+
+
+
+// 3D Noise with friendly permission by Inigo Quilez
+vec3 hash_noise_range( vec3 p ) {
+	p *= mat3(vec3(127.1, 311.7, -53.7), vec3(269.5, 183.3, 77.1), vec3(-301.7, 27.3, 215.3));
+	return 2.0 * fract(fract(p)*4375.55) -1.;
+}
+
+
+void fragment() {
+// Input:4
+	float n_out4p0 = TIME;
+
+
+// RandomRange:2
+	float n_in2p1 = 0.00000;
+	float n_in2p2 = 1.00000;
+	float n_out2p0 = mix(n_in2p1, n_in2p2, hash_noise_range(vec3(n_out4p0)).x);
+
+
+// Output:0
+	COLOR.a = n_out2p0;
+
+
+}
+"
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(540, 160)
+nodes/fragment/2/node = SubResource("VisualShaderNodeRandomRange_s70xt")
+nodes/fragment/2/position = Vector2(177.191, 187.2)
+nodes/fragment/4/node = SubResource("VisualShaderNodeInput_64vln")
+nodes/fragment/4/position = Vector2(-220, 220)
+nodes/fragment/connections = PackedInt32Array(4, 0, 2, 0, 2, 0, 0, 1)

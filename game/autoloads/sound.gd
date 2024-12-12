@@ -5,6 +5,9 @@ var bgm_key := ""
 var audio_players := []
 var main_audio_player : AudioStreamPlayer
 
+#func _ready() -> void:
+	#push_warning(str("loading sounds", ProjectSettings.load_resource_pack("res://sounds.pck")))
+
 func serialize() -> Dictionary:
 	var data := {}
 	
@@ -28,23 +31,37 @@ func set_audio_player_volume(volume:float):
 
 func play_sfx(sfx:String):
 	var player := AudioStreamPlayer.new()
-	player.stream = load(str(CONST.SFX_ROOT, sfx))
+	player.stream = load(str(CONST.SFX_ROOT, CONST.get(str("SFX_", sfx.to_upper()))))
 	player.set_bus("SFX")
 	add_child(player)
+	player.pitch_scale = randf_range(0.85, 1.0 / 0.85)
 	player.play()
+	player.finished.connect(player.queue_free)
 
 func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if bgm_key == bgm:
 		return
 	
+	if bgm == "none" or bgm == "null":
+		return
+	
+	var preserve_sex : bool
+	var sex_position : float
+	if bgm.begins_with("sex_one") and bgm_key.begins_with("sex_one"):
+		preserve_sex = true
+		sex_position = main_audio_player.get_playback_position()
+	if bgm.begins_with("sex_anhedonia") and bgm_key.begins_with("sex_anhedonia"):
+		preserve_sex = true
+		sex_position = main_audio_player.get_playback_position()
 	bgm_key = bgm 
 	
 	var music_player = AudioStreamPlayer.new()
 	music_player.connect("tree_exiting", audio_players.erase.bind(music_player))
 	main_audio_player = music_player
 	
-	var music_path := str(CONST.MUSIC_ROOT, bgm_key)
+	var music_path := str(CONST.MUSIC_ROOT, CONST.get(str("MUSIC_", bgm_key.to_upper())))
 	if not ResourceLoader.exists(music_path):
+		push_error(str(music_path, " doesn't exist with key \"", bgm_key, "\""))
 		return
 	music_player.stream = load(music_path)
 	music_player.volume_db = -80
@@ -73,8 +90,16 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 			player.queue_free()
 		music_player.volume_db = linear_to_db(Options.music_volume)
 	
+	if preserve_sex:
+		from = sex_position
+	
 	audio_players.append(music_player)
 	add_child(music_player)
 	music_player.play(from)
 	
-	
+
+func fade_out_bgm(fade_out_time:float):
+	if not main_audio_player:
+		return
+	var t = create_tween()
+	t.tween_property(main_audio_player, "volume_db", linear_to_db(0.0001), fade_out_time)

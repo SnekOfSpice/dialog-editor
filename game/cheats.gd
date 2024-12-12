@@ -1,30 +1,41 @@
 extends Control
 
+var ff_goal_page := 0
+var ff_goal_line := 0
+var ff_active := false
+var ff_prev_text_speed := 60.0
 
 func _ready() -> void:
+	await get_tree().process_frame
 	ParserEvents.fact_changed.connect(build_fact_list)
+	ParserEvents.read_new_page.connect(on_read_new_page)
+	ParserEvents.read_new_line.connect(on_read_new_line)
 	find_child("PageSpinBox").max_value = Parser.page_data.size() - 1
 	find_child("PageKeyLabel").text = Parser.get_page_key(0)
 	find_child("AutoContinueCheckButton").button_pressed = Parser.line_reader.auto_continue
 	build_fact_list()
 
-func build_fact_list(_a=null,_b=null,_c=null):
+func on_read_new_page(number:int):
+	find_child("CurrentPageLabel").text = str("Current Page: ", number, " - ", Parser.get_page_key(number))
+
+func on_read_new_line(index:int):
+	if not ff_active:
+		return
+	if Parser.page_index == ff_goal_page and index == ff_goal_line:
+		Parser.line_reader.auto_continue = false
+		ff_active = false
+		Parser.line_reader.text_speed = ff_prev_text_speed
+		GameWorld.skip = false
+
+func build_fact_list():
 	find_child("FactsList").clear()
-	for fact_name in Parser.facts:
+	for fact in Parser.facts:
 		var icon:Texture2D
-		var fact_value = Parser.get_fact(fact_name)
-		if fact_value is bool:
-			icon = load("res://addons/diisis/editor/visuals/true.png") if fact_value else load("res://addons/diisis/editor/visuals/false.png")
-		elif fact_value is int:
-			var label = Label.new()
-			label.text = str(fact_value)
-			var vp = SubViewport.new()
-			vp.add_child(label)
-			add_child(vp)
-			vp.size = label.size
-			await RenderingServer.frame_post_draw
-			icon = vp.get_texture()
-		find_child("FactsList").add_item(fact_name, icon)
+		if Parser.get_fact(fact):
+			icon = load("res://addons/diisis/editor/visuals/true.png")
+		else:
+			icon = load("res://addons/diisis/editor/visuals/false.png")
+		find_child("FactsList").add_item(fact, icon)
 
 func _on_reset_facts_pressed() -> void:
 	Parser.reset_facts()
@@ -38,8 +49,7 @@ func _on_change_fact_button_pressed() -> void:
 
 
 func _on_load_page_button_pressed() -> void:
-	if GameWorld.game_stage:
-		GameWorld.game_stage.set_all_characters_visible(false)
+	#GameState.game.set_all_characters_visible(false)
 	Parser.read_page(find_child("PageSpinBox").value, find_child("LineSpinBox").value)
 
 
@@ -58,3 +68,13 @@ func _on_page_spin_box_value_changed(value: float) -> void:
 
 func _on_read_line_button_pressed() -> void:
 	Parser.line_reader.emit_signal("line_finished", Parser.line_reader.line_index)
+
+func _on_ff_button_pressed() -> void:
+	Parser.read_page(0, 0)
+	ff_goal_page = find_child("PageSpinBox").value
+	ff_goal_line = find_child("LineSpinBox").value
+	ff_active = true
+	ff_prev_text_speed = Parser.line_reader.text_speed
+	Parser.line_reader.auto_continue = true
+	Parser.line_reader.text_speed = LineReader.MAX_TEXT_SPEED
+	GameWorld.skip = true

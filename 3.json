@@ -1,0 +1,499 @@
+{
+	"editor": {
+		"current_page_number": 0,
+		"page_view": 0,
+		"text_size_id": 3
+	},
+	"pages": {
+		"dropdown_dialog_arguments": [],
+		"dropdown_title_for_dialog_syntax": "character",
+		"dropdown_titles": [
+			"character"
+		],
+		"dropdowns": {
+			"character": [
+				"dii",
+				"sis"
+			]
+		},
+		"empty_strings_for_l10n": false,
+		"facts": {
+
+		},
+		"file_config": {
+			"evaluator_paths": [
+				"res://sample/inline_eval.gd"
+			]
+		},
+		"head_defaults": [],
+		"instruction_templates": {
+			"black_fade": {
+				"arg_types": [
+					"float",
+					"float",
+					"float",
+					"bool",
+					"string",
+					"string"
+				],
+				"args": [
+					"fade_in",
+					"hold_time",
+					"fade_out",
+					"hide_characters",
+					"new_background",
+					"new_bgm"
+				]
+			},
+			"control_camera": {
+				"arg_types": [
+					"float",
+					"float",
+					"float",
+					"float"
+				],
+				"args": [
+					"zoom",
+					"x",
+					"y",
+					"duration"
+				]
+			},
+			"cum": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"voice"
+				]
+			},
+			"hide_all_characters": {
+				"arg_types": [],
+				"args": []
+			},
+			"hide_cg": {
+				"arg_types": [],
+				"args": []
+			},
+			"move_camera_to": {
+				"arg_types": [
+					"float",
+					"float",
+					"float"
+				],
+				"args": [
+					"x",
+					"y",
+					"duration"
+				]
+			},
+			"play_chapter_intro": {
+				"arg_types": [
+					"string",
+					"string",
+					"string",
+					"float",
+					"string"
+				],
+				"args": [
+					"pov_name",
+					"bottom_text",
+					"new_background",
+					"zoom",
+					"bgm"
+				]
+			},
+			"play_sfx": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"name"
+				]
+			},
+			"roll_credits": {
+				"arg_types": [],
+				"args": []
+			},
+			"set_background": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"name",
+					"fade_time"
+				]
+			},
+			"set_bgm": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"name",
+					"fade_in"
+				]
+			},
+			"set_character_name": {
+				"arg_types": [
+					"string",
+					"string"
+				],
+				"args": [
+					"character",
+					"name"
+				]
+			},
+			"set_emotion": {
+				"arg_types": [
+					"string",
+					"string"
+				],
+				"args": [
+					"actor_name",
+					"emotion_name"
+				]
+			},
+			"set_eye_progress": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"value"
+				]
+			},
+			"set_fade_out": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"lod",
+					"mix"
+				]
+			},
+			"set_object_visible": {
+				"arg_types": [
+					"string",
+					"bool"
+				],
+				"args": [
+					"object_name",
+					"visibility"
+				]
+			},
+			"set_static": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"level"
+				]
+			},
+			"set_sun": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"property",
+					"value"
+				]
+			},
+			"set_sun_str": {
+				"arg_types": [
+					"string",
+					"string"
+				],
+				"args": [
+					"property",
+					"value"
+				]
+			},
+			"set_text_style": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"style"
+				]
+			},
+			"set_x_position": {
+				"arg_types": [
+					"string",
+					"float",
+					"float",
+					"bool"
+				],
+				"args": [
+					"character_name",
+					"index",
+					"time",
+					"wait_for_reposition"
+				]
+			},
+			"shake_camera": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"strength"
+				]
+			},
+			"show_cg": {
+				"arg_types": [
+					"string",
+					"float",
+					"bool"
+				],
+				"args": [
+					"name",
+					"fade_in_time",
+					"continue_dialog_through_cg"
+				]
+			},
+			"show_character": {
+				"arg_types": [
+					"string",
+					"bool"
+				],
+				"args": [
+					"character_name",
+					"clear_others"
+				]
+			},
+			"show_letter": {
+				"arg_types": [],
+				"args": []
+			},
+			"splatter_blood": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"amount"
+				]
+			},
+			"sway_camera": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"intensity"
+				]
+			},
+			"use_ui": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"id"
+				]
+			},
+			"wound_fx": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"shake_intensity",
+					"splatter_count"
+				]
+			},
+			"zoom_to": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"value",
+					"duration"
+				]
+			}
+		},
+		"locales_to_export": [
+			"af_ZA",
+			"sq_AL",
+			"ar_SA",
+			"hy_AM",
+			"az_AZ",
+			"eu_ES",
+			"be_BY",
+			"bn_IN",
+			"bs_BA",
+			"bg_BG",
+			"ca_ES",
+			"zh_CN",
+			"zh_TW",
+			"hr_HR",
+			"cs_CZ",
+			"da_DK",
+			"nl_NL",
+			"en_US",
+			"et_EE",
+			"fo_FO",
+			"fi_FI",
+			"fr_FR",
+			"gl_ES",
+			"ka_GE",
+			"de_DE",
+			"el_GR",
+			"gu_IN",
+			"he_IL",
+			"hi_IN",
+			"hu_HU",
+			"is_IS",
+			"id_ID",
+			"it_IT",
+			"ja_JP",
+			"kn_IN",
+			"kk_KZ",
+			"kok_IN",
+			"ko_KR",
+			"lv_LV",
+			"lt_LT",
+			"mk_MK",
+			"ms_MY",
+			"ml_IN",
+			"mt_MT",
+			"mr_IN",
+			"mn_MN",
+			"se_NO",
+			"nb_NO",
+			"nn_NO",
+			"fa_IR",
+			"pl_PL",
+			"pt_BR",
+			"pa_IN",
+			"ro_RO",
+			"ru_RU",
+			"sr_BA",
+			"sk_SK",
+			"es_ES",
+			"sw_KE",
+			"sv_SE",
+			"syr_SY",
+			"ta_IN",
+			"te_IN",
+			"th_TH",
+			"tn_ZA",
+			"tr_TR",
+			"uk_UA",
+			"uz_UZ",
+			"vi_VN",
+			"cy_GB",
+			"xh_ZA",
+			"zu_ZA"
+		],
+		"page_data": {
+			"0": {
+				"facts": {
+					"fact_data_by_name": {
+
+					},
+					"meta.visible": false
+				},
+				"lines": [
+					{
+						"address": "0.0",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								1
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "use_ui(1)",
+							"meta.validation_status": "OK",
+							"name": "use_ui",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 0,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.1",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"dii",
+								"sis"
+							],
+							"active_actors_title": "character",
+							"content": "[]>dii:hiii\n[]>dii:owo"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 1,
+						"meta.selector": {
+							"selected": false
+						}
+					}
+				],
+				"meta.scroll_vertical": 0,
+				"meta.selected": false,
+				"next": 0,
+				"number": 0,
+				"page_key": "",
+				"terminate": false
+			}
+		},
+		"text_lead_time_other_actor": 0,
+		"text_lead_time_same_actor": 0,
+		"use_dialog_syntax": true
+	}
+}

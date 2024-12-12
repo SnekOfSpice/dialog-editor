@@ -12,7 +12,7 @@ config_version=5
 
 config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
-run/main_scene="res://game/stage_root.tscn"
+run/main_scene="res://game/stages/stage_root.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/image="res://pride-dark-b-side.png"
 config/icon="res://addons/diisis/final1alt.png"
@@ -26,13 +26,14 @@ CONST="*res://game/autoloads/const.tscn"
 Options="*res://game/autoloads/options.tscn"
 GameWorld="*res://game/autoloads/game_world.tscn"
 Sound="*res://game/autoloads/sound.tscn"
+GoBackHandler="*res://game/autoloads/go_back_handler.tscn"
 Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
 DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
 
 [diisis]
 
-project/file/path="res://script.json"
+project/file/path="res://3.json"
 
 [display]
 

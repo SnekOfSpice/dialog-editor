@@ -1,0 +1,11 @@
+[
+	"black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:string, new_bgm:string)",
+	"hide_cg()",
+	"play_sfx(name:string)",
+	"set_background(name:string, fade_time:float)",
+	"set_bgm(name:string, fade_in:float)",
+	"set_text_style(style:string)",
+	"show_cg(name:string, fade_in_time:float, continue_dialog_through_cg:bool)",
+	"show_character(character_name:string, clear_others:bool)",
+	"start_doom_timer()"
+]

@@ -1,0 +1,46 @@
+[gd_scene load_steps=10 format=3 uid="uid://c7bnsg1etl8i7"]
+
+[ext_resource type="Script" path="res://game/characters/one.gd" id="1_a488w"]
+[ext_resource type="Shader" path="res://game/characters/active.gdshader" id="2_fnhvq"]
+[ext_resource type="Texture2D" uid="uid://clf4avrf860b8" path="res://game/characters/sprites/one-neutral.png" id="2_pohjl"]
+[ext_resource type="Texture2D" uid="uid://rh4gr0q2la61" path="res://game/characters/sprites/neutral-stage1.png" id="3_wyk1k"]
+[ext_resource type="Texture2D" uid="uid://bfoyfuhsnhjx7" path="res://game/characters/sprites/neutral-stage2.png" id="5_rbm2x"]
+[ext_resource type="Texture2D" uid="uid://b40qmvey34jfh" path="res://game/characters/sprites/neutral-stage3.png" id="6_u4vsr"]
+[ext_resource type="Texture2D" uid="uid://d4i4rckpp05sk" path="res://game/characters/sprites/neutral-stage4.png" id="7_wvtr1"]
+[ext_resource type="Texture2D" uid="uid://qaici06j234t" path="res://game/characters/sprites/oneOutfit.png" id="8_e2ic7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h4h10"]
+shader = ExtResource("2_fnhvq")
+shader_parameter/outline_c = Color(0.00392157, 0, 0, 1)
+shader_parameter/progress = 0.0
+
+[node name="One" type="Node2D"]
+script = ExtResource("1_a488w")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_h4h10")
+position = Vector2(74, 53)
+texture = ExtResource("2_pohjl")
+
+[node name="Eyes" type="Node2D" parent="."]
+position = Vector2(74, 53)
+
+[node name="Default" type="Node2D" parent="Eyes"]
+
+[node name="1" type="Sprite2D" parent="Eyes/Default"]
+texture = ExtResource("3_wyk1k")
+
+[node name="2" type="Sprite2D" parent="Eyes/Default"]
+visible = false
+texture = ExtResource("5_rbm2x")
+
+[node name="3" type="Sprite2D" parent="Eyes/Default"]
+visible = false
+texture = ExtResource("6_u4vsr")
+
+[node name="4" type="Sprite2D" parent="Eyes/Default"]
+texture = ExtResource("7_wvtr1")
+
+[node name="OneOutfit" type="Sprite2D" parent="."]
+position = Vector2(74, 53)
+texture = ExtResource("8_e2ic7")

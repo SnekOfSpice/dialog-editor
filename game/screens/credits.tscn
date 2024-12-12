@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5ckmmllx4d1w"]
+[gd_scene load_steps=3 format=3 uid="uid://c5ckmmllx4d1w"]
 
 [ext_resource type="Script" path="res://game/screens/credits.gd" id="1_we1wc"]
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme.tres" id="2_7p2cq"]
 
 [node name="Credits" type="Control"]
 layout_mode = 3
@@ -38,29 +39,89 @@ size_flags_horizontal = 4
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
+theme = ExtResource("2_7p2cq")
 bbcode_enabled = true
-text = "DIISIS is a dialogue tool plugin for Godot. You can peer into its source code [url=https://github.com/SnekOfSpice/dialog-editor/]on GitHub[/url].
+text = "[center][b]She Was Swallowed By The Sun[/b]
+- Made for [url=https://itch.io/jam/yuri-game-jam-2024]Yuri Game Jam 2024[/url] -
 
-This demo serves as a small base for simple visual novels. DIISIS itself is merely the structural core of dialog flow. The UI is part of the demo!
+[b]Writing, Programming, Background Art[/b]
+Snek ([url=https://snekofspice.itch.io/]itch.io[/url])
 
-You can find more of my works [url=https://snekofspice.itch.io/]online :3[/url]
+[b]Character Art[/b]
+Blood Machine ([url=https://bloodmachine.neocities.org/]neocities[/url])
+
+[b]Ending scene shader programming[/b]
+Ænthroppe ([url=https://aenthroppe.itch.io/]itch.io[/url])
 
 [b]MUSIC[/b]
-busabx - a minute of slow funky guitar and drums ([url=https://freesound.org/people/busabx/sounds/738239/]Freesound.org[/url])
+[u]Original[/u]
+CØL - Hope
+red_kino - My Sun And Moon ([url=https://itch.io/profile/red-kino]itch.io[/url])
+red_kino - Scarce Reprieve
+
+[u]Licensed[/u]
+CØL (\"we're friends so do what you want\") ([url=https://colmusic45.bandcamp.com/]bandcamp[/url])
+No Eyes, No Tongue
+8822
+Don't Die on Me
+Moonlights (Interlude)
+Reckless
+Focus On Me
+Unveiled
+Alcohol
+C Stands for Complex
+Shower Drain
+They'd Love Me More If I Were Dead
+Is It Just Me? (instrumental, not officially released)
+Curls (instrumental, not officially released)
+The Lost Light (instrumental, not officially released)
+
+Opal Vessel (CC BY 3.0) ([url=https://opalvessel.bandcamp.com/track/suffocate]bandcamp[/url])
+Worthless
+
+Lonesummer (CC BY 3.0) ([url=https://lonesummer.bandcamp.com/album/there-are-few-tomorrows-for-feeding-our-worries]bandcamp[/url])
+Despair Will Hold a Place in My Heart, a Bigger One than You Do
+There Are Few Tomorrows for Feeding Our Worries
+
+ROZKOL (CC BY 3.0) ([url=https://rozkol.bandcamp.com/]bandcamp[/url])
+Go then, there are other worlds than these
+Machine Masochist
+Oubliette
+
+kevp888 (Attribution 4.0)
+240819_2825_FR_Church_organ_rehearsal ([url=https://freesound.org/people/kevp888/sounds/759304/]freesound[/url])
+
+Beat Mekanik (Attribution 4.0 International)
+Inhale ([url=https://freemusicarchive.org/music/beat-mekanik/single/inhale/]Free Music Archive[/url])
+
+Marco Trovatello (Attribution 4.0 International)
+Violin Spider ([url=https://freemusicarchive.org/music/Marco_Trovatello/Not_At_All/06_-_Violin_Spider/]Free Music Archive[/url])
+
+Jangwa (Attribution 4.0 International)
+Dark Hearts ([url=https://freemusicarchive.org/music/Dilating_Times/cycles-trax-vol-v-drones/dark-hearts]Free Music Archive[/url])
+
+Princess Commodore 64 (CC BY 3.0) ([url=https://lostangles.bandcamp.com/album/the-death-of-a-lifestyle]bandcamp[/url])
+special containment
+VHS nation
+
+gooset - Feeling Blue ([url=https://dova-s.jp/EN/bgm/play15228.html]dova[/url])
 
 [b]FONTS[/b]
-sugargliderz - Fragment Core ([url=https://www.dafont.com/fragment-core.font]dafont.com[/url])"
+Pixel Georgia ([url=https://www.dafont.com/pixel-georgia.font]dafont[/url])
+One's Handwriting
+From Sunflower Fields"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -48.0
+offset_left = -24.0
 offset_top = -31.0
-grow_horizontal = 0
+offset_right = 24.0
+grow_horizontal = 2
 grow_vertical = 0
 text = "close"
 

@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3u3nrek114bl"]
+[gd_scene load_steps=9 format=3 uid="uid://b3u3nrek114bl"]
 
-[ext_resource type="Texture2D" uid="uid://5hwcod6006f1" path="res://game/stages/wallpaper.jpg" id="1_ivfox"]
+[ext_resource type="Theme" path="res://game/visuals/theme.tres" id="1_5gfyt"]
 [ext_resource type="Script" path="res://game/stages/main_menu_stage.gd" id="1_wqqgh"]
+[ext_resource type="Texture2D" path="res://game/backgrounds/main_menu/main_menu.png" id="3_8hnn2"]
+[ext_resource type="Texture2D" path="res://game/backgrounds/main_menu/planet.png" id="4_judul"]
+[ext_resource type="Texture2D" path="res://game/backgrounds/main_menu/planet_blast.png" id="5_4cgnl"]
+[ext_resource type="Texture2D" path="res://game/backgrounds/main_menu/blast_aura.png" id="6_ly0w3"]
+[ext_resource type="Texture2D" uid="uid://b16a6fc32loqt" path="res://game/visuals/logo3.png" id="7_iaidm"]
+[ext_resource type="Script" path="res://game/stages/main_menu_camera.gd" id="8_q8oe3"]
 
 [node name="MainMenuStage" type="Control"]
 layout_mode = 3
@@ -10,97 +16,151 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_5gfyt")
 script = ExtResource("1_wqqgh")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("1_ivfox")
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+offset_right = 960.0
+offset_bottom = 540.0
+texture = ExtResource("3_8hnn2")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+visible = false
+z_index = -4
+z_as_relative = false
+position = Vector2(-58, -27)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("3_8hnn2")
+centered = false
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+layer = -1
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(1.2, 1.2)
+
+[node name="Planet" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource("4_judul")
+centered = false
+
+[node name="PlanetBlast" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
+visible = false
+texture = ExtResource("5_4cgnl")
+centered = false
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(1.4, 1.4)
+
+[node name="Blast" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer3"]
+visible = false
+texture = ExtResource("6_ly0w3")
+centered = false
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.6, 0.6)
+
+[node name="Logo" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(221, -58)
+texture = ExtResource("7_iaidm")
+centered = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(479, 271)
+script = ExtResource("8_q8oe3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D"]
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 15.0
-offset_top = -103.0
-offset_right = 155.0
-offset_bottom = 103.0
+offset_left = -476.0
+offset_top = -127.0
+offset_right = -256.0
+offset_bottom = 157.0
 grow_vertical = 2
+theme = ExtResource("1_5gfyt")
+theme_override_constants/separation = 12
 
-[node name="StartButton" type="Button" parent="VBoxContainer"]
+[node name="StartButton" type="Button" parent="Camera2D/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 30
 text = "New Game"
 alignment = 0
 
-[node name="LoadButton" type="Button" parent="VBoxContainer"]
+[node name="LoadButton" type="Button" parent="Camera2D/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 30
 text = "Load"
 alignment = 0
 
-[node name="OptionsButton" type="Button" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Camera2D/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="OptionsButton" type="Button" parent="Camera2D/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "Options"
 alignment = 0
 
-[node name="CreditsButton" type="Button" parent="VBoxContainer"]
+[node name="CreditsButton" type="Button" parent="Camera2D/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
-text = "About"
+text = "Credits"
 alignment = 0
 
-[node name="CWButton" type="Button" parent="VBoxContainer"]
+[node name="CWButton" type="Button" parent="Camera2D/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "Content Warning"
 alignment = 0
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" type="Button" parent="Camera2D/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0
 text = "Quit"
 alignment = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D"]
+visible = false
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -162.0
-offset_top = -61.0
-offset_right = -27.0
-offset_bottom = 43.0
+offset_left = 727.0
+offset_top = 509.0
+offset_right = 861.0
+offset_bottom = 540.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="DiscordButton" type="Button" parent="HBoxContainer"]
+[node name="DiscordButton" type="Button" parent="Camera2D/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Discord"
 
-[node name="GitHubButton" type="Button" parent="HBoxContainer"]
+[node name="GitHubButton" type="Button" parent="Camera2D/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
 
-[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="emit_signal" binds= ["start_game"]]
-[connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="emit_signal" binds= ["load_game"]]
-[connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/CWButton" to="." method="_on_cw_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/DiscordButton" to="." method="_on_discord_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/GitHubButton" to="." method="_on_git_hub_button_pressed"]
+[connection signal="pressed" from="Camera2D/VBoxContainer/StartButton" to="." method="emit_signal" binds= ["start_game"]]
+[connection signal="pressed" from="Camera2D/VBoxContainer/LoadButton" to="." method="emit_signal" binds= ["load_game"]]
+[connection signal="pressed" from="Camera2D/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="Camera2D/VBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="Camera2D/VBoxContainer/CWButton" to="." method="_on_cw_button_pressed"]
+[connection signal="pressed" from="Camera2D/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Camera2D/HBoxContainer/DiscordButton" to="." method="_on_discord_button_pressed"]
+[connection signal="pressed" from="Camera2D/HBoxContainer/GitHubButton" to="." method="_on_git_hub_button_pressed"]
