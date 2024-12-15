@@ -27,7 +27,7 @@ func on_read_new_line(index:int):
 		Parser.line_reader.text_speed = ff_prev_text_speed
 		GameWorld.skip = false
 
-func build_fact_list():
+func build_fact_list(_a=null, _b=null, _c=null):
 	find_child("FactsList").clear()
 	for fact in Parser.facts:
 		var icon:Texture2D

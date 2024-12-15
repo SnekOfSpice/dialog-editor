@@ -35,8 +35,8 @@ func play_sfx(sfx:String):
 	player.stream = load(str(CONST.SFX_ROOT, CONST.get(str("SFX_", sfx.to_upper()))))
 	player.set_bus("SFX")
 	add_child(player)
-	player.pitch_scale = randf_range(0.85, 1.0 / 0.85)
 	player.play()
+	player.pitch_scale = randf_range(0.75, 1.0 / 0.75)
 	player.finished.connect(player.queue_free)
 
 func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):

@@ -230,10 +230,11 @@ func hide_cg():
 		#cg_root.modulate.a = 0.0
 		if emit_insutrction_complete_on_cg_hide:
 			GameWorld.instruction_handler.instruction_completed.emit()
+			emit_insutrction_complete_on_cg_hide = false
 	
 	
 	var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-	ui1panel.add_theme_stylebox_override("panel", load("res://game/visuals/panel_opaque.tres"))
+	#ui1panel.add_theme_stylebox_override("panel", load("res://game/visuals/panel_opaque.tres"))
 	
 
 func on_actor_name_changed(

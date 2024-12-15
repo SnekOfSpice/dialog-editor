@@ -177,6 +177,19 @@ var instruction_handler: InstructionHandler:
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
+@export var show_choice_title := false:
+	set(value):
+		show_choice_title = value
+		notify_property_list_changed()
+		update_configuration_warnings()
+@export
+var choice_title_label: Label:
+	get:
+		return choice_title_label
+	set(value):
+		choice_title_label = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -254,6 +267,7 @@ var is_last_actor_name_different := true
 var line_chunks := []
 var chunk_index := 0
 var current_raw_name := ""
+var current_choice_title := ""
 
 var terminated := false
 
@@ -279,6 +293,9 @@ func _validate_property(property: Dictionary):
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
 		if property.name in ["past_text_container"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	if not show_choice_title:
+		if property.name in ["choice_title_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
@@ -307,6 +324,7 @@ func serialize() -> Dictionary:
 	result["name_map"] = name_map
 	result["called_positions"] = called_positions
 	result["call_strings"] = call_strings
+	result["current_choice_title"] = current_choice_title
 	
 	return result
 
@@ -334,6 +352,7 @@ func deserialize(data: Dictionary):
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	called_positions = data.get("called_positions", [])
 	call_strings = data.get("call_strings", {})
+	current_choice_title = data.get("current_choice_title", "")
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -344,6 +363,7 @@ func deserialize(data: Dictionary):
 		var content = line_data.get("content").get("content")
 		var choices = line_data.get("content").get("choices")
 		var auto_switch : bool = raw_content.get("auto_switch")
+		current_choice_title = raw_content.get("choice_title", "")
 
 		build_choices(choices, auto_switch)
 	
@@ -382,6 +402,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
 	if keep_past_lines and not past_text_container:
 		warnings.append("Past Text Container is null")
+	if show_choice_title and not choice_title_label:
+		warnings.append("Choice Title Label is null")
 	
 	return warnings
 
@@ -623,6 +645,7 @@ func read_new_line(new_line: Dictionary):
 			set_dialog_line_index(0)
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
+			current_choice_title = raw_content.get("choice_title")
 			build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
 			if not instruction_handler:
@@ -1248,7 +1271,7 @@ func build_choices(choices, auto_switch:bool):
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	
-	var built_choices := []
+	var built_choices : Array[Dictionary] = []
 	for option in choices:
 		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
@@ -1358,6 +1381,12 @@ func build_choices(choices, auto_switch:bool):
 	if choice_option_container.get_child_count() > 0 and choice_button_focus_mode == ChoiceButtonFocusMode.Keyboard:
 		choice_option_container.get_child(0).call_deferred("grab_focus")
 	ParserEvents.choices_presented.emit(built_choices)
+	
+	if show_choice_title:
+		if choice_title_label:
+			choice_title_label.text = current_choice_title
+		else:
+			push_warning(str("Choice Title Label not set. Choice Title \"", current_choice_title,"\" will be ignored."))
 	
 	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
 		#if choice_option_container.get_child_count() > 0:
@@ -1513,6 +1542,8 @@ func can_text_container_be_visible() -> bool:
 
 func _go_to_end_of_dialog_line():
 	set_dialog_line_index(dialog_lines.size() - 1)
+func _go_to_start_of_dialog_line():
+	set_dialog_line_index(0)
 
 
 var currently_speaking_name := ""

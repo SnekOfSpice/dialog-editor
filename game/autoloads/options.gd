@@ -8,7 +8,7 @@ var music_volume := 1.0
 var sfx_volume := 1.0
 
 var fullscreen := false
-var text_speed := 60
+var text_speed := 201
 var auto_continue_delay := 1.0
 var auto_continue := false
 

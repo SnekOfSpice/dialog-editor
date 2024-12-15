@@ -15,6 +15,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_22qh4")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ChoiceTitleLineEdit" type="LineEdit" parent="HBoxContainer"]
+layout_mode = 2
+placeholder_text = "Choice Title (optional)"
+expand_to_text_length = true
+
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 
