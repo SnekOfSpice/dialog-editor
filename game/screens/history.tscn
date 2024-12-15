@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b6nbwi7lgrijy"]
 
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme.tres" id="1_06wm5"]
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="1_06wm5"]
 [ext_resource type="Script" path="res://game/screens/history.gd" id="1_aiklh"]
 [ext_resource type="Script" path="res://game/screens/auto_scroll_container.gd" id="2_esrbb"]
 [ext_resource type="FontFile" uid="uid://ccqagtvgqnth1" path="res://game/visuals/fonts/Pixel Georgia.ttf" id="4_rplch"]

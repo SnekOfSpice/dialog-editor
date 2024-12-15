@@ -33,13 +33,10 @@ DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.
 
 [diisis]
 
-project/file/path="res://3.json"
+project/file/path="res://script2.json"
 
 [display]
 
-window/size/viewport_width=1440
-window/size/viewport_height=900
-window/size/mode=2
 window/subwindows/embed_subwindows=false
 window/stretch/mode="canvas_items"
 

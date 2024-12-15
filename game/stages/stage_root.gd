@@ -5,7 +5,6 @@ var stage := ""
 var screen := ""
 
 func _ready():
-	push_warning(str("loading sounds ", ProjectSettings.load_resource_pack("res://sounds.pck")))
 	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self

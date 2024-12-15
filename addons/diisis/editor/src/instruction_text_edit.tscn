@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://b8jl3084itnxs" path="res://addons/diisis/editor/src/instruction_container.tres" id="1_nbbrw"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_text_edit.gd" id="2_2ingb"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="3_1si4p"]
-[ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/clipboard.png" id="4_m4ncw"]
+[ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/theme/buttons_ui/clipboard.png" id="4_m4ncw"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="5_vl1vt"]
 
 [node name="InstructionTextEdit" type="MarginContainer"]

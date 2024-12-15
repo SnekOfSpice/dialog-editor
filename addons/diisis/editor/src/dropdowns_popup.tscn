@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://buyg3m00l2a71"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/dropdowns_popup.gd" id="1_1ropq"]
-[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_pioq4"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_pioq4"]
 [ext_resource type="PackedScene" uid="uid://djiaiay3ntvfy" path="res://addons/diisis/editor/src/dropdowns_container.tscn" id="2_yuhcr"]
 
 [node name="DropdownsPopup" type="Window"]

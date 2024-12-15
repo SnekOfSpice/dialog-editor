@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" path="res://game/screens/options_screen.gd" id="1_1als3"]
-[ext_resource type="Theme" path="res://game/visuals/theme.tres" id="1_uev7i"]
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="1_uev7i"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
 

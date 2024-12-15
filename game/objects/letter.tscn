@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://game/objects/letter.gd" id="1_e4jsb"]
 [ext_resource type="Texture2D" uid="uid://b5iuxubpkxbso" path="res://game/visuals/paper.png" id="1_sx7rl"]
 [ext_resource type="FontFile" uid="uid://cms6howfjvtij" path="res://game/visuals/fonts/OnesHandwriting.ttf" id="2_3ya01"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme.tres" id="3_ame4t"]
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="3_ame4t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_34qo2"]
 bg_color = Color(0.248391, 0.0089774, 0.194022, 0.831373)

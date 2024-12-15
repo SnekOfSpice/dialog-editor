@@ -1,0 +1,34 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://jvli1k7yhuo8"
+path="res://.godot/imported/TT Chocolates Trial ExtraLight.otf-359bff76e169a18e81066c5384f3d6a1.fontdata"
+
+[deps]
+
+source_file="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial ExtraLight.otf"
+dest_files=["res://.godot/imported/TT Chocolates Trial ExtraLight.otf-359bff76e169a18e81066c5384f3d6a1.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+disable_embedded_bitmaps=true
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=1
+subpixel_positioning=1
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[]
+language_support={}
+script_support={}
+opentype_features={}

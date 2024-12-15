@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c5ckmmllx4d1w"]
 
 [ext_resource type="Script" path="res://game/screens/credits.gd" id="1_we1wc"]
-[ext_resource type="Theme" path="res://game/visuals/theme.tres" id="2_7p2cq"]
+[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="2_7p2cq"]
 
 [node name="Credits" type="Control"]
 layout_mode = 3

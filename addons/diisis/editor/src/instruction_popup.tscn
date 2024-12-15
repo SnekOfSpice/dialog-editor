@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_popup.gd" id="1_1xy4c"]
 [ext_resource type="PackedScene" uid="uid://d33carvc0ulrr" path="res://addons/diisis/editor/src/instruction_edit_container.tscn" id="2_3qrya"]
-[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="3_yph8j"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="3_yph8j"]
 
 [node name="InstructionPopup" type="Window"]
 title = "Instructions"
