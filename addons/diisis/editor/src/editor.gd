@@ -35,6 +35,7 @@ signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
 signal save_path_set(active_dir:String, active_file_name:String)
+signal history_altered(is_altered:bool)
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
@@ -101,10 +102,13 @@ func init(active_file_path:="") -> void:
 	
 	open_from_path(active_file_path)
 	
-	undo_redo.version_changed.connect(set.bind("altered_history", true))
+	undo_redo.version_changed.connect(set_altered_history.bind(true))
 	
 	print("init editor successful")
 
+func set_altered_history(value:bool):
+	altered_history = value
+	emit_signal("history_altered", altered_history)
 
 func set_content_scale(factor:float):
 	content_scale = factor
@@ -385,7 +389,7 @@ func save_to_file(path:String, is_autosave:=false):
 		time_since_last_save = 0.0
 		last_system_save = Time.get_time_dict_from_system()
 		has_saved = true
-		altered_history = false
+		set_altered_history(false)
 	
 		notify(str("Saved to ", active_file_name, "!"))
 	
@@ -536,10 +540,10 @@ func _on_utility_index_pressed(index: int) -> void:
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
-		active_dir = "res://addons/diisis/files/"
-		active_file_name = str("script", Time.get_datetime_string_from_system().replace(":", "-"), ".json")
-		#open_save_popup()
-		#return
+		#active_dir = "res://addons/diisis/files/"
+		#active_file_name = str("script", Time.get_datetime_string_from_system().replace(":", "-"), ".json")
+		open_save_popup()
+		return
 	save_to_file(str(active_dir, active_file_name))
 
 func _on_file_id_pressed(id: int) -> void:
