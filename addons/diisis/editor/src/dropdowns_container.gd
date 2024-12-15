@@ -17,7 +17,7 @@ func fill():
 		var item = preload("res://addons/diisis/editor/src/dropdown_item.tscn").instantiate()
 		item.init(t)
 		find_child("DropdownsContainer").add_child(item)
-		item.set_list_size(size)
+		item.set_list_size(Pages.editor.get_window().size * 0.25)
 	
 	_on_clear_search_button_pressed()
 
@@ -96,10 +96,10 @@ func create_new_dropdown() -> void:
 	var item = preload("res://addons/diisis/editor/src/dropdown_item.tscn").instantiate()
 	item.init(dd_title)
 	find_child("DropdownsContainer").add_child(item)
-	item.set_list_size(size)
+	item.set_list_size(Pages.editor.get_window().size * 0.25)
 	find_child("CreateDDNameTextEdit").text = ""
 
 
 func _on_dropdowns_container_resized() -> void:
 	for child in find_child("DropdownsContainer").get_children():
-		child.set_list_size(size)
+		child.set_list_size(Pages.editor.get_window().size * 0.25)
