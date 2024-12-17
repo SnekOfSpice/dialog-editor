@@ -92,14 +92,14 @@ func play_chapter_intro(pov_name: String, bottom_text: String, new_background: S
 	emit_signal("start_chapter_cover", pov_name, bottom_text, new_background, zoom, bgm)
 	return true
 
-func zoom_to_str(value, duration):
-	zoom_to(float(value), float(duration))
-	
-func zoom_to(value: float, duration:float) -> bool:
+
+func zoom_to(value, duration) -> bool:
+	value = float(value)
+	duration = float(duration)
 	GameWorld.camera.zoom_to(value, duration)
 	return false
 
-func splatter_blood(amount: float) -> bool:
+func splatter_blood(amount) -> bool:
 	emit_signal("splatter", int(amount))
 	# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed.
 	# (Needs to be called by your code from somewhere.)
@@ -119,11 +119,14 @@ func show_character(character_name: String, clear_others: bool) -> bool:
 			character.visible = false
 	return false
 
-func shake_camera_str(strength:String):
-	shake_camera(float(strength))
-func shake_camera(strength: float) -> bool:
+
+func shake_camera(strength) -> bool:
+	strength = float(strength)
 	if GameWorld.camera:
 		GameWorld.camera.apply_shake(strength)
+	# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed.
+	# (Needs to be called by your code from somewhere.)
+	# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)
 	return false
 
 
@@ -146,7 +149,8 @@ func show_letter() -> bool:
 	return false
 
 
-func sway_camera(intensity: float) -> bool:
+func sway_camera(intensity) -> bool:
+	intensity = float(intensity)
 	if GameWorld.camera:
 		GameWorld.camera.set_sway_intensity(intensity)
 	return false

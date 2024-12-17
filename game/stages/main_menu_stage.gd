@@ -1,10 +1,14 @@
 extends Control
 
+## Music key (same as instructions in DIISIS) to be played on [method _ready] Doesn't play anything if empty.
+@export var menu_music := ""
+
 signal start_game()
 signal load_game()
 
 func _ready() -> void:
-	#Sound.play_bgm("main_menu")
+	if not menu_music.is_empty():
+		Sound.play_bgm(menu_music)
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	find_child("LoadButton").visible = Options.does_savegame_exist()
 	

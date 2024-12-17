@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://btwo5sdc17l8h"]
+[gd_scene load_steps=4 format=3 uid="uid://btwo5sdc17l8h"]
 
 [ext_resource type="Script" path="res://game/screens/cw.gd" id="1_8ylhl"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="1_gtq1c"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="2_xaxk6"]
+[ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_q4mi2"]
 
 [node name="CW" type="Control"]
 layout_mode = 3
@@ -10,7 +11,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_gtq1c")
 script = ExtResource("1_8ylhl")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -22,6 +22,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("2_xaxk6")
+theme_override_styles/panel = ExtResource("3_q4mi2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 auto_translate_mode = 1

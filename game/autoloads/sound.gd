@@ -5,6 +5,8 @@ var bgm_key := ""
 var audio_players := []
 var main_audio_player : AudioStreamPlayer
 
+## Preserves the playback position when calling [method Sound.play_bgm] if the currently playing track and new track share the same prefix. E.g. "action_no_drums" and "action_full_instruments" would fade seamlessly between each other if this array contains "action".
+@export var position_preserving_prefixes : Array[String]
 
 func serialize() -> Dictionary:
 	var data := {}
@@ -46,14 +48,11 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if bgm == "none" or bgm == "null":
 		return
 	
-	var preserve_sex : bool
-	var sex_position : float
-	if bgm.begins_with("sex_one") and bgm_key.begins_with("sex_one"):
-		preserve_sex = true
-		sex_position = main_audio_player.get_playback_position()
-	if bgm.begins_with("sex_anhedonia") and bgm_key.begins_with("sex_anhedonia"):
-		preserve_sex = true
-		sex_position = main_audio_player.get_playback_position()
+	var preserve_position := -1.0
+	var preser_position : float
+	for prefix in position_preserving_prefixes:
+		if bgm.begins_with(prefix) and bgm_key.begins_with(prefix):
+			preserve_position = main_audio_player.get_playback_position()
 	bgm_key = bgm 
 	
 	var music_player = AudioStreamPlayer.new()
@@ -76,23 +75,14 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 			1.0,
 			fade_in
 			)
-		#for player in audio_players:
-			#t.set_parallel()
-			#t.tween_method(
-			#set_audio_player_volume,
-			#db_to_linear(player.volume_db),
-			#0.0,
-			#fade_in
-			#)
-			#t.tween_callback(player.queue_free)
 	else:
 		while not audio_players.is_empty():
 			var player : AudioStreamPlayer = audio_players.pop_front()
 			player.queue_free()
 		music_player.volume_db = linear_to_db(Options.music_volume)
 	
-	if preserve_sex:
-		from = sex_position
+	if preserve_position >= 0:
+		from = preserve_position
 	
 	audio_players.append(music_player)
 	add_child(music_player)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://clvr2siqvathu"]
+[gd_scene load_steps=8 format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" path="res://game/screens/options_screen.gd" id="1_1als3"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="1_uev7i"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_4xofk"]
+[ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_d5t3h"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
 
@@ -18,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_uev7i")
+theme = ExtResource("1_4xofk")
 script = ExtResource("1_1als3")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -29,6 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_d5t3h")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
 layout_mode = 2

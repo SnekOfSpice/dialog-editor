@@ -137,7 +137,7 @@ func _on_item_list_item_selected(index: int) -> void:
 	find_child("ReplaceLocallyButton").disabled = index >= fact_start_index or index >= instruction_start_index
 	find_child("ReplaceAllInTypeButton").disabled = index >= fact_start_index or index >= instruction_start_index
 	find_child("FactEditHintLabel").visible = index >= fact_start_index
-	find_child("GoToButton").disabled = index >= fact_start_index
+	find_child("GoToButton").disabled = index < fact_start_index
 	if fact_start_index == -1 and instruction_start_index == -1:
 		find_child("ReplaceLocallyButton").disabled = false
 		find_child("ReplaceAllInTypeButton").disabled = false

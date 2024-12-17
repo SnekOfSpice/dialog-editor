@@ -1,8 +1,9 @@
-[gd_scene load_steps=47 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=48 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
+[ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="3_tdgll"]
 [ext_resource type="Script" path="res://game/stages/objects.gd" id="3_x2eff"]
 [ext_resource type="Script" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
 [ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
@@ -13,13 +14,13 @@
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Texture2D" uid="uid://c17fgm00bow0b" path="res://game/stages/sun_shader/mask_02_02.png" id="8_mxu8l"]
 [ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="11_n0ymb"]
 [ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/cheats.tscn" id="13_qackq"]
 [ext_resource type="Script" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
 [ext_resource type="Shader" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
 [ext_resource type="Shader" path="res://game/stages/static.gdshader" id="17_dc0ef"]
 [ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://game/stages/rolling_credits.tscn" id="17_gnute"]
-[ext_resource type="StyleBox" uid="uid://v2vw23r324i2" path="res://game/visuals/panel_transparent.tres" id="28_wvgc1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3ca2q"]
 resource_local_to_scene = true
@@ -47,21 +48,8 @@ shader_parameter/epsilon = 1e-10
 shader_parameter/noise = ExtResource("8_6l6o8")
 shader_parameter/mask = ExtResource("8_mxu8l")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06t7e"]
-content_margin_left = 11.0
-content_margin_top = 8.0
-bg_color = Color(0.18, 0.12204, 0.1044, 0.686275)
-border_width_left = 2
-border_width_top = 1
-border_width_right = 2
-border_width_bottom = 1
-border_color = Color(0.08, 0.056, 0.08, 0)
-corner_radius_top_left = 20
-corner_radius_bottom_right = 20
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tba1"]
+bg_color = Color(0.05, 0.05, 0.05, 0.756863)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_scr08"]
 
@@ -126,6 +114,10 @@ script = ExtResource("1_a36me")
 script = ExtResource("3_x2eff")
 
 [node name="Characters" type="Node2D" parent="."]
+
+[node name="Character" parent="Characters" instance=ExtResource("3_tdgll")]
+position = Vector2(559, 375)
+character_name = "amber"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 324)
@@ -200,6 +192,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("11_n0ymb")
 
 [node name="VNUI" type="Control" parent="Camera2D/CanvasLayer/VNUIRoot"]
 auto_translate_mode = 1
@@ -280,10 +273,11 @@ theme_override_constants/margin_bottom = 1
 auto_translate_mode = 1
 custom_minimum_size = Vector2(670, 121.41)
 layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/bold_font = ExtResource("2_6jeks")
+mouse_filter = 1
+bbcode_enabled = true
 text = "Text Body Here
-dghfgh"
+dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]
+[b][i]omg both[/i][/b]"
 fit_content = true
 scroll_active = false
 
@@ -361,7 +355,6 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_06t7e")
 
 [node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel"]
 layout_mode = 2
@@ -375,7 +368,7 @@ theme_override_constants/margin_bottom = 1
 auto_translate_mode = 1
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
-mouse_filter = 2
+mouse_filter = 1
 theme_override_fonts/bold_font = ExtResource("2_6jeks")
 bbcode_enabled = true
 text = "Text Body Here
@@ -404,6 +397,7 @@ stretch_mode = 2
 
 [node name="TextContainer3" type="CenterContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
 auto_translate_mode = 1
+visible = false
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 1
 anchors_preset = 6
@@ -459,7 +453,6 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("28_wvgc1")
 
 [node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel"]
 layout_mode = 2
@@ -473,7 +466,7 @@ theme_override_constants/margin_bottom = 1
 auto_translate_mode = 1
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
-mouse_filter = 2
+mouse_filter = 1
 theme_override_fonts/bold_font = ExtResource("2_6jeks")
 bbcode_enabled = true
 text = "Text Body Here
@@ -509,6 +502,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5tba1")
 
 [node name="ChoiceOptionContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer"]
 auto_translate_mode = 1
@@ -634,20 +628,7 @@ script = ExtResource("1_h4afo")
 auto_pause_duration = 0.4
 blank_names = Array[String](["narrator"])
 name_map = {
-"anhedonia": "Anhedonia",
-"clericant": "Clericant",
-"gods": "ÁÀáÀà",
-"interrogator": "Interrogator",
-"jailer": "Jailer",
-"one": "One",
-"one+anhedonia": "One & Anhedonia",
-"spectra": "Spectra",
-"torturer": "Torturer"
-}
-name_colors = {
-"anhedonia": Color(0.98185, 0.717259, 0.904946, 1),
-"one": Color(0.973451, 0.606434, 0.346273, 1),
-"spectra": Color(0.157347, 0.679059, 0.74132, 1)
+"amber": "Amber"
 }
 choice_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/ChoiceOptionContainer")
@@ -666,9 +647,16 @@ prompt_finished = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("6_8ao3j")
 
+[connection signal="ready" from="Characters/Character" to="." method="remove_blocker"]
 [connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
 [connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
 [connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
 [connection signal="mouse_entered" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="increment_advance_blocker"]
 [connection signal="mouse_exited" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="decrement_advance_blocker"]
 [connection signal="pressed" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]

@@ -9,6 +9,8 @@ enum TextStyle {
 }
 
 @export var text_style := TextStyle.ToBottom
+@export var stylebox_regular : StyleBox
+@export var stylebox_cg : StyleBox
 
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
@@ -16,12 +18,13 @@ var actor_name := ""
 var cg := ""
 var cg_position := ""
 var is_name_container_visible := false
+var hovering_meta := false
 
 @onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
 @onready var rtl_custom_minimum_size : Vector2 = find_child("RichTextLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-var blockers : int = 1 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
+var blockers : int = 2 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
 var advance_blockers := 0
 
 @onready var text_start_position = find_child("TextContainer1").position
@@ -47,8 +50,6 @@ var target_sun_fill_amount := -1.0
 var target_static := 0.0
 
 func _ready():
-	
-	#find_child("TextContainer1").position = Vector2(size.x * 0.5, size.y - find_child("TextContainer1").size.y * 0.5)
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
@@ -74,6 +75,7 @@ func _ready():
 	tree_exiting.connect(on_tree_exit)
 	
 	overlay_sun.get_material().set_shader_parameter("fill_amount", -1.0)
+	hide_cg()
 
 func on_read_new_line(_line_index:int):
 	Options.save_gamestate()
@@ -165,6 +167,8 @@ func _input(event: InputEvent) -> void:
 				return
 		if not find_child("VNUI").visible:
 			return
+		if hovering_meta:
+			return
 		find_child("LineReader").request_advance()
 	elif event.is_action_pressed("go_back"):
 		find_child("LineReader").go_back()
@@ -176,8 +180,9 @@ func hide_ui():
 	find_child("VNUI").visible = false
 
 func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
-	var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-	ui1panel.add_theme_stylebox_override("panel", load("res://game/visuals/panel_transparent.tres"))
+	if stylebox_cg:
+		var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
+		ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
 	
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	#for c in cg_root.get_children():
@@ -232,9 +237,9 @@ func hide_cg():
 			GameWorld.instruction_handler.instruction_completed.emit()
 			emit_insutrction_complete_on_cg_hide = false
 	
-	
-	var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-	#ui1panel.add_theme_stylebox_override("panel", load("res://game/visuals/panel_opaque.tres"))
+	if stylebox_regular:
+		var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
+		ui1panel.add_theme_stylebox_override("panel", stylebox_regular)
 	
 
 func on_actor_name_changed(
@@ -470,3 +475,10 @@ func increment_advance_blocker():
 	advance_blockers += 1
 func decrement_advance_blocker():
 	advance_blockers -= 1
+
+
+func _on_rich_text_label_meta_hover_ended(meta: Variant) -> void:
+	hovering_meta = false
+
+func _on_rich_text_label_meta_hover_started(meta: Variant) -> void:
+	hovering_meta = true

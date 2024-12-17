@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daq2ov4breok"
-path="res://.godot/imported/checked.png-9da1a7d14839ef7fee3040f4f76dff22.ctex"
+uid="uid://djy6ee0dq0ry2"
+path="res://.godot/imported/ticked.png-edab85667fd333df74cf3a5ddcaabaf0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png"
-dest_files=["res://.godot/imported/checked.png-9da1a7d14839ef7fee3040f4f76dff22.ctex"]
+source_file="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked.png"
+dest_files=["res://.godot/imported/ticked.png-edab85667fd333df74cf3a5ddcaabaf0.ctex"]
 
 [params]
 

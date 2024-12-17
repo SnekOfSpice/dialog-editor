@@ -107,6 +107,7 @@ visible = false
 [connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_pressed"]
 [connection signal="toggled" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_toggled"]
 [connection signal="text_entered" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_entered"]
+[connection signal="text_submitted" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_submitted"]
 [connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntOperandButton" to="." method="_on_int_operand_button_pressed"]
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntComparatorButton" to="." method="set_int_comparator"]
 [connection signal="pressed" from="FactItem/DeleteButton" to="." method="_on_delete_button_pressed"]

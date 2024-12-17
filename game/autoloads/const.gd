@@ -11,13 +11,11 @@ const SCREEN_CREDITS := "credits.tscn"
 const SCREEN_CONTENT_WARNING := "cw.tscn"
 
 const BACKGROUND_ROOT := "res://game/backgrounds/"
-const BACKGROUND_DEFAULT := "bg.jpg"
+const BACKGROUND_DEFAULT := "void.png"
+const BACKGROUND_SKYLINE := "skyline.png"
 
-# attribution license:
-# https://rozkol.bandcamp.com/track/iii
-# https://rozkol.bandcamp.com/album/machine-masochist
 const MUSIC_ROOT := "res://game/sounds/music/"
-const MUSIC_DEFAULT := "Loyalty Freak Music - LOFI FTW - 08 You forgot us.ogg"
+const MUSIC_DEFAULT := "Loyalty Freak Music - CHILL FOR REAL ! - 06 Vroom Vroom Heart Heart -blob_0w0-​.ogg"
 
 const SFX_ROOT := "res://game/sounds/sfx/"
 const SFX_CLICK := "637345__kyles__camera-toy-single-shot-nice-stereo.ogg"

@@ -130,9 +130,9 @@ var choice_option_container:Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
-## A [Label] that displays a currently speaking character's name.
+## A [class Label] or [class RichTextLabel] that displays a currently speaking character's name.
 @export
-var name_label: Label:
+var name_label: Control:
 	get:
 		return name_label
 	set(value):
@@ -392,6 +392,11 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Text Container is null")
 	if not name_label and name_style == NameStyle.NameLabel:
 		warnings.append("Name Label is null")
+	elif name_style == NameStyle.NameLabel and not (
+			name_label is Label or  
+			name_label is RichTextLabel
+			):
+			warnings.append("Name Label is not Label, or RichTextLabel")
 	if not name_container and name_style == NameStyle.NameLabel:
 		warnings.append("Name Container is null")
 	if show_input_prompt and not prompt_unfinished:
@@ -810,7 +815,7 @@ func _process(delta: float) -> void:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
 			var old_text_length : int = text_content.visible_characters
-			text_content.visible_ratio += (float(text_speed) / text_content.text.length()) * delta
+			text_content.visible_ratio += (float(text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
 			if old_text_length != text_content.visible_characters:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ce72qyvaredxn"]
 
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="1_bd8r3"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_twmxo"]
 [ext_resource type="Script" path="res://game/stages/stage_root.gd" id="1_uh8ly"]
 
 [node name="StageRoot" type="Control"]
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_bd8r3")
+theme = ExtResource("1_twmxo")
 script = ExtResource("1_uh8ly")
 
 [node name="Background" type="Node2D" parent="."]

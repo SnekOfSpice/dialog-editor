@@ -58,7 +58,7 @@ text = "X"
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="OptionsContainer"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, -80)
 layout_mode = 2
 size_flags_vertical = 3
 

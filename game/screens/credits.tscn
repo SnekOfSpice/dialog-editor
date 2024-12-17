@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5ckmmllx4d1w"]
+[gd_scene load_steps=4 format=3 uid="uid://c5ckmmllx4d1w"]
 
 [ext_resource type="Script" path="res://game/screens/credits.gd" id="1_we1wc"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="2_7p2cq"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="2_upbhm"]
+[ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_6n2l7"]
 
 [node name="Credits" type="Control"]
 layout_mode = 3
@@ -20,6 +21,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("2_upbhm")
+theme_override_styles/panel = ExtResource("3_6n2l7")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
@@ -39,7 +42,6 @@ size_flags_horizontal = 4
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
-theme = ExtResource("2_7p2cq")
 bbcode_enabled = true
 text = "[center]CREDITS HERE"
 

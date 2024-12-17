@@ -69,6 +69,8 @@ func _on_gui_input(event: InputEvent) -> void:
 	if Input.is_key_pressed(KEY_ENTER):
 		just_submitted = true
 		var text_in_hint : String = $ReadHint.get_text_in_line(virtual_hint_line)
+		if text_in_hint.is_empty():
+			return
 		text_in_hint = text_in_hint.replace(">", "")
 		text_in_hint = text_in_hint.replace("[b]", "")
 		text_in_hint = text_in_hint.replace("[/b]", "")
