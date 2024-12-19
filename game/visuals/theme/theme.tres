@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dtxewlf7ea43j" path="res://game/visuals/unchecked.png" id="3_nf353"]
 [ext_resource type="FontFile" uid="uid://dokobl1mpxdlu" path="res://game/visuals/fonts/Pixel Georgia Bold.ttf" id="5_85f18"]
 [ext_resource type="FontFile" uid="uid://ccqagtvgqnth1" path="res://game/visuals/fonts/Pixel Georgia.ttf" id="5_ia6r6"]
-[ext_resource type="StyleBox" path="res://game/visuals/panel_opaque.tres" id="7_ps107"]
+[ext_resource type="StyleBox" uid="uid://cmup13by2d3f" path="res://game/visuals/panel_opaque.tres" id="7_ps107"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n20hv"]
 content_margin_left = 20.0

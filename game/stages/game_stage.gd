@@ -85,16 +85,16 @@ func on_tree_exit():
 
 func on_instruction_started(
 	instruction_name : String,
-	args : Array,
-	delay : float,
+	_args : Array,
+	_delay : float,
 ):
 	if instruction_name == "black_fade":
 		find_child("ControlsContainer").visible = false
 
 func on_instruction_completed(
 	instruction_name : String,
-	args : Array,
-	delay : float,
+	_args : Array,
+	_delay : float,
 ):
 	if instruction_name == "black_fade":
 		find_child("ControlsContainer").visible = true
@@ -103,7 +103,7 @@ func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	sun_mat.set_shader_parameter("steps", lerp(sun_mat.get_shader_parameter("steps"), target_sun_steps, 0.02))
 	sun_mat.set_shader_parameter("fill_amount", lerp(sun_mat.get_shader_parameter("fill_amount"), target_sun_fill_amount, 0.02))
 	if sun_mat.get_shader_parameter("fill_amount") > -1:
@@ -120,7 +120,7 @@ func _process(delta: float) -> void:
 	
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
 
-func cum(voice:String):
+func cum(_voice:String):
 	orgasm_mat.set_shader_parameter("lod", 1.8)
 	
 	get_tree().create_timer(1.5).timeout.connect(orgasm_mat.set_shader_parameter.bind("lod", 1.4))
@@ -243,10 +243,10 @@ func hide_cg():
 	
 
 func on_actor_name_changed(
-	actor_name: String,
+	actor: String,
 	is_name_container_visible: bool
 	):
-		self.actor_name = actor_name
+		actor_name = actor
 		self.is_name_container_visible = is_name_container_visible
 		return
 		
@@ -325,7 +325,6 @@ func deserialize(data:Dictionary):
 	if cg_name.is_empty():
 		hide_cg()
 	else:
-		var cg_node:Node
 		if data.get("cg_position", "") == "top":
 			set_cg_top(cg_name, 0.0)
 		elif data.get("cg_position", "") == "bottom":
@@ -431,16 +430,13 @@ var ui_id := 1
 @onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 func use_ui(id:int):
 	var lr : LineReader = find_child("LineReader")
-	var was_visible : bool
 	var root_existed : bool
 	var text_content_text = lr.text_content.text
 	var current_raw_name = lr.current_raw_name
 	
 	if ui_root:
-		was_visible = ui_root.visible
 		root_existed = true
 	else:
-		was_visible = true
 		root_existed = false
 	ui_id = id
 	ui_root = find_child(str("TextContainer", ui_id))
@@ -477,8 +473,8 @@ func decrement_advance_blocker():
 	advance_blockers -= 1
 
 
-func _on_rich_text_label_meta_hover_ended(meta: Variant) -> void:
+func _on_rich_text_label_meta_hover_ended(_meta: Variant) -> void:
 	hovering_meta = false
 
-func _on_rich_text_label_meta_hover_started(meta: Variant) -> void:
+func _on_rich_text_label_meta_hover_started(_meta: Variant) -> void:
 	hovering_meta = true

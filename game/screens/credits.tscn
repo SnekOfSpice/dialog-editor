@@ -43,7 +43,17 @@ custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
 bbcode_enabled = true
-text = "[center]CREDITS HERE"
+text = "[center][font_size=32][b]DIISIS[/b][/font_size]
+[i]Dialogue Interface Sister System[/i]
+~ Visual Novel Template ~
+
+Programmed by [url=https://snekofspice.itch.io/]Snek[/url]
+
+Background Music
+[url=https://chezmonplaisir.bandcamp.com/track/vroom-vroom-heart-heart-blob-0w0]Loyalty Freak Music - Vroom Vroom Heart Heart :blob_0w0​:​​[/url]
+
+Character Art
+[url=https://x.com/_10qi]10qi[/url]"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

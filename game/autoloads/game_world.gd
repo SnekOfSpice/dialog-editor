@@ -20,7 +20,7 @@ func serialize():
 
 func deserialize(data:Dictionary):
 	if game_stage:
-		stage_root.set_background(data.get("background", CONST.BACKGROUND_BENCH))
+		stage_root.set_background(data.get("background", ""))
 		game_stage.deserialize(data.get("game_stage", {}))
 	else:
 		print("game stage not set for gameworld deserialization")

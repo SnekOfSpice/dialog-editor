@@ -9,4 +9,3 @@ The demo project comes with a solid base for a visual novel.
 - Discord (tbd)
 - Contact me on hellsite [Twitter](https://x.com/SnekOfSpice)
 - Use the [GitHub Issues](https://github.com/SnekOfSpice/dialog-editor/issues) for bugs, feedback, and other issues you have with DIISIS
-

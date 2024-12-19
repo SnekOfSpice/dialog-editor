@@ -50,7 +50,6 @@ func deserialize(data: Dictionary):
 	active_mat.set_shader_parameter("progress", data.get("progress", 0.0))
 
 func on_dialog_line_args_passed(actor_name: String, dialog_line_args: Dictionary):
-	var new_modulate:float
 	if actor_name == character_name:
 		active_mat.set_shader_parameter("progress", 0.469)
 	else:
