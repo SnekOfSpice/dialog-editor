@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://1yh6ntfadlr4"]
+[gd_scene load_steps=7 format=3 uid="uid://1yh6ntfadlr4"]
 
 [ext_resource type="Script" path="res://game/objects/letter.gd" id="1_e4jsb"]
 [ext_resource type="Texture2D" uid="uid://b5iuxubpkxbso" path="res://game/visuals/paper.png" id="1_sx7rl"]
 [ext_resource type="FontFile" uid="uid://cms6howfjvtij" path="res://game/visuals/fonts/OnesHandwriting.ttf" id="2_3ya01"]
-[ext_resource type="Theme" uid="uid://d35oanoquofv5" path="res://game/visuals/theme/theme.tres" id="3_ame4t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_34qo2"]
 bg_color = Color(0.248391, 0.0089774, 0.194022, 0.831373)
@@ -53,7 +52,6 @@ offset_top = 430.0
 offset_right = 704.0
 offset_bottom = 461.0
 focus_mode = 0
-theme = ExtResource("3_ame4t")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/hover = SubResource("StyleBoxFlat_34qo2")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_qpeyo")
@@ -66,7 +64,6 @@ offset_top = 470.0
 offset_right = 674.0
 offset_bottom = 501.0
 focus_mode = 0
-theme = ExtResource("3_ame4t")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = SubResource("StyleBoxFlat_34qo2")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_qpeyo")
@@ -111,7 +108,6 @@ offset_left = 316.0
 offset_top = 72.0
 offset_right = 596.0
 offset_bottom = 548.0
-theme = ExtResource("3_ame4t")
 theme_override_colors/default_color = Color(0.0418059, 0.0212942, 0.166608, 1)
 theme_override_constants/shadow_offset_y = 0
 theme_override_constants/shadow_offset_x = 0

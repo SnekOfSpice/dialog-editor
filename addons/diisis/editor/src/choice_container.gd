@@ -37,7 +37,6 @@ func deserialize(data):
 	
 	for d in choices:
 		d["auto_switch"] = auto_switch
-		print(d.get("meta.jump_page_before_auto_switch"))
 		add_choice(-1, d)
 	
 	update()
