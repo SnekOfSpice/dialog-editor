@@ -13,11 +13,11 @@ var clipboard := {}
 var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
 var delete_from_selected_addresses_on_insert := false
 
-func add_line(at_index:int, data:={}, force_new_line_object:=false, change_line_references:=false):
+func add_line(at_index:int, data:={}, force_new_line_object:=true, change_line_references:=false):
 	add_lines([at_index], {at_index:data}, force_new_line_object, change_line_references)
 
 
-func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, change_line_references:=false):
+func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=true, change_line_references:=false):
 	if not Pages.editor.current_page:
 		Pages.editor.add_page(0)
 	

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dbb4hthnyqqbb"
+path="res://.godot/imported/Loyalty Freak Music - CHILL FOR REAL ! - 06 Vroom Vroom Heart Heart -blob_0w0-​.ogg-4639b80e75faa3107adc78bafc76504e.oggvorbisstr"
+
+[deps]
+
+source_file="res://addons/diisis/templates/visual_novel/sounds/music/Loyalty Freak Music - CHILL FOR REAL ! - 06 Vroom Vroom Heart Heart -blob_0w0-​.ogg"
+dest_files=["res://.godot/imported/Loyalty Freak Music - CHILL FOR REAL ! - 06 Vroom Vroom Heart Heart -blob_0w0-​.ogg-4639b80e75faa3107adc78bafc76504e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

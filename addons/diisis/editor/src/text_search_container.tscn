@@ -25,6 +25,7 @@ layout_mode = 2
 [node name="QueryTextEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+select_all_on_focus = true
 
 [node name="SearchButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

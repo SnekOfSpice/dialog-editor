@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://btwo5sdc17l8h"]
+[gd_scene load_steps=4 format=3 uid="uid://btwo5sdc17l8h"]
 
 [ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/screens/cw.gd" id="1_8ylhl"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://addons/diisis/templates/visual_novel/visuals/theme/diisis_theme.tres" id="2_xaxk6"]
+[ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://addons/diisis/templates/visual_novel/visuals/theme/background_panel.tres" id="3_q4mi2"]
 
 [node name="CW" type="Control"]
 layout_mode = 3
@@ -20,12 +22,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("2_xaxk6")
+theme_override_styles/panel = ExtResource("3_q4mi2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 2
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
 auto_translate_mode = 1
@@ -37,26 +42,29 @@ horizontal_alignment = 1
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/PanelContainer"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 1
 bbcode_enabled = true
-text = "[center]This demo contains scenes."
+text = "[center]CW HERE"
 
 [node name="Button" type="Button" parent="."]
 auto_translate_mode = 1
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -48.0
+offset_left = -46.0
 offset_top = -31.0
-grow_horizontal = 0
+offset_right = 46.0
+grow_horizontal = 2
 grow_vertical = 0
 text = "close"
 

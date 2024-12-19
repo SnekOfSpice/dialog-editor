@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b3170v1u5of2d"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/quit_dialog.gd" id="1_pn46y"]
-[ext_resource type="Texture2D" uid="uid://3gqp3bocdpbm" path="res://addons/diisis/editor/visuals/blank.png" id="1_rxmbd"]
+[ext_resource type="Texture2D" uid="uid://3gqp3bocdpbm" path="res://addons/diisis/editor/visuals/theme/buttons_ui/blank.png" id="1_rxmbd"]
 
 [node name="QuitDialog" type="Window"]
 auto_translate_mode = 1

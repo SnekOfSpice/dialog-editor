@@ -3,7 +3,8 @@ extends Control
 
 var addresses_by_index := {}
 var details_by_address := {}
-var fact_start_index := 0
+var fact_start_index := -1
+var instruction_start_index := -1
 
 var last_search_query := ""
 
@@ -13,9 +14,21 @@ func init():
 	find_child("ReplaceAllInTypeButton").text = "Replace all in Type"
 	find_child("QueryTextEdit").grab_focus()
 	find_child("FactEditHintLabel").visible = false
-	
+
+func _shortcut_input(event):
+	if event is InputEventKey:
+		if not event.pressed:
+			return
+		
+		if event.is_ctrl_pressed():
+			match event.key_label:
+				KEY_F:
+					find_child("QueryTextEdit").release_focus()
+					find_child("QueryTextEdit").grab_focus()
+
 func display_results(search:String):
 	fact_start_index = -1
+	instruction_start_index = -1
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	find_child("ReplaceContainer").visible = false
 	var result = Pages.search_string(search, case_insensitive)
@@ -23,7 +36,7 @@ func display_results(search:String):
 	item_list.clear()
 	var i = 0
 	# this is duplicated for relevancy
-	var keys := ["text", "choices", "facts"]
+	var keys := ["text", "choices", "instructions", "facts"]
 	find_child("GoToButton").disabled = true
 	
 	for k : String in keys:
@@ -34,6 +47,8 @@ func display_results(search:String):
 		item_list.add_item(str("-- ", k.capitalize(), " --"), null, false)
 		if k == "facts":
 			fact_start_index = item_list.item_count
+		if k == "instructions":
+			instruction_start_index = item_list.item_count
 		for address in result.get(k):
 			addresses_by_index[i] = address
 			details_by_address[address] = result.get(k).get(address)
@@ -119,9 +134,14 @@ func _on_item_list_item_selected(index: int) -> void:
 		find_child("ReplaceContainer").visible = true
 		find_child("ReplaceAllInTypeButton").text = "Replace all in Choices"
 	
-	find_child("ReplaceLocallyButton").disabled = index >= fact_start_index
-	find_child("ReplaceAllInTypeButton").disabled = index >= fact_start_index
+	find_child("ReplaceLocallyButton").disabled = index >= fact_start_index or index >= instruction_start_index
+	find_child("ReplaceAllInTypeButton").disabled = index >= fact_start_index or index >= instruction_start_index
 	find_child("FactEditHintLabel").visible = index >= fact_start_index
+	find_child("GoToButton").disabled = index < fact_start_index
+	if fact_start_index == -1 and instruction_start_index == -1:
+		find_child("ReplaceLocallyButton").disabled = false
+		find_child("ReplaceAllInTypeButton").disabled = false
+		find_child("FactEditHintLabel").visible = false
 
 
 func _on_go_to_button_pressed() -> void:

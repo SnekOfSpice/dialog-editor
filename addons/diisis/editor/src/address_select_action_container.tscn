@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://c5eu4io5wokaq"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/address_select_action_container.gd" id="1_1ayp7"]
-[ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/helpZeichenfläche 3.png" id="2_mdac6"]
-[ext_resource type="Texture2D" uid="uid://dtwp3dhseccat" path="res://addons/diisis/editor/visuals/helpZeichenfläche 4.png" id="3_ffxrd"]
-[ext_resource type="Texture2D" uid="uid://b6setq8tb5oh5" path="res://addons/diisis/editor/visuals/helpZeichenfläche 5.png" id="4_udsmb"]
-[ext_resource type="Texture2D" uid="uid://cw4msfbkwp4nd" path="res://addons/diisis/editor/visuals/helpZeichenfläche 6.png" id="5_5wmph"]
-[ext_resource type="Texture2D" uid="uid://d1dw6v5q8d6yk" path="res://addons/diisis/editor/visuals/helpZeichenfläche 1.png" id="6_x6ipq"]
-[ext_resource type="Texture2D" uid="uid://dvsajsji7bk6e" path="res://addons/diisis/editor/visuals/helpZeichenfläche 2.png" id="7_r6sua"]
+[ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="2_mdac6"]
+[ext_resource type="Texture2D" uid="uid://dtwp3dhseccat" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 4.png" id="3_ffxrd"]
+[ext_resource type="Texture2D" uid="uid://b6setq8tb5oh5" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 5.png" id="4_udsmb"]
+[ext_resource type="Texture2D" uid="uid://cw4msfbkwp4nd" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 6.png" id="5_5wmph"]
+[ext_resource type="Texture2D" uid="uid://d1dw6v5q8d6yk" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 1.png" id="6_x6ipq"]
+[ext_resource type="Texture2D" uid="uid://dvsajsji7bk6e" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 2.png" id="7_r6sua"]
 
 [node name="AddressSelectActionContainer" type="CenterContainer" groups=["address_selectors"]]
 auto_translate_mode = 1

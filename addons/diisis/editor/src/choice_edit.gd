@@ -83,6 +83,11 @@ func deserialize(data:Dictionary):
 	
 	set_do_jump_page(data.get("do_jump_page", false))
 	set_loopback(data.get("loopback", false))
+	
+	# this has to be done last. choice_container injects the data into this
+	# but this function relies on jump_page_before_auto_switch to be set
+	set_auto_switch(data.get("auto_switch", false))
+	
 	update()
 
 func serialize() -> Dictionary:
@@ -260,6 +265,7 @@ func set_text_lines_visible(value:bool):
 	
 func set_auto_switch(value:bool):
 	set_text_lines_visible(not value)
+	find_child("JumpPageToggle").visible = not value
 	find_child("Conditionals").set_behavior_container_visible(not value)
 	if value:
 		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
@@ -285,6 +291,7 @@ func request_delete():
 func set_do_jump_page(do: bool):
 	find_child("JumpPageContainer").visible = do
 	find_child("JumpPageToggle").button_pressed = do
+	jump_page_before_auto_switch = do
 
 func set_loopback(do:bool):
 	find_child("LoopbackContainer").visible = do

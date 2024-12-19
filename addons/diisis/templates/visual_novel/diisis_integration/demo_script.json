@@ -1,0 +1,1312 @@
+{
+	"editor": {
+		"current_page_number": 1,
+		"page_view": 0,
+		"text_size_id": 3
+	},
+	"pages": {
+		"dropdown_dialog_arguments": [
+			"amber-emotion"
+		],
+		"dropdown_title_for_dialog_syntax": "character",
+		"dropdown_titles": [
+			"amber-emotion"
+		],
+		"dropdowns": {
+			"amber-emotion": [
+				"neutral",
+				"happy"
+			],
+			"character": [
+				"narrator",
+				"amber"
+			]
+		},
+		"empty_strings_for_l10n": false,
+		"facts": {
+			"liked amber": false
+		},
+		"file_config": {
+			"evaluator_paths": [
+				"res://sample/inline_eval.gd"
+			]
+		},
+		"head_defaults": [],
+		"instruction_templates": {
+			"black_fade": {
+				"arg_types": [
+					"float",
+					"float",
+					"float",
+					"bool",
+					"string",
+					"string"
+				],
+				"args": [
+					"fade_in",
+					"hold_time",
+					"fade_out",
+					"hide_characters",
+					"new_background",
+					"new_bgm"
+				]
+			},
+			"control_camera": {
+				"arg_types": [
+					"float",
+					"float",
+					"float",
+					"float"
+				],
+				"args": [
+					"zoom",
+					"x",
+					"y",
+					"duration"
+				]
+			},
+			"cum": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"voice"
+				]
+			},
+			"hide_all_characters": {
+				"arg_types": [],
+				"args": []
+			},
+			"hide_cg": {
+				"arg_types": [],
+				"args": []
+			},
+			"move_camera_to": {
+				"arg_types": [
+					"float",
+					"float",
+					"float"
+				],
+				"args": [
+					"x",
+					"y",
+					"duration"
+				]
+			},
+			"play_chapter_intro": {
+				"arg_types": [
+					"string",
+					"string",
+					"string",
+					"float",
+					"string"
+				],
+				"args": [
+					"pov_name",
+					"bottom_text",
+					"new_background",
+					"zoom",
+					"bgm"
+				]
+			},
+			"play_sfx": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"name"
+				]
+			},
+			"roll_credits": {
+				"arg_types": [],
+				"args": []
+			},
+			"set_background": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"name",
+					"fade_time"
+				]
+			},
+			"set_bgm": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"name",
+					"fade_in"
+				]
+			},
+			"set_character_name": {
+				"arg_types": [
+					"string",
+					"string"
+				],
+				"args": [
+					"character",
+					"name"
+				]
+			},
+			"set_emotion": {
+				"arg_types": [
+					"string",
+					"string"
+				],
+				"args": [
+					"actor_name",
+					"emotion_name"
+				]
+			},
+			"set_eye_progress": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"value"
+				]
+			},
+			"set_fade_out": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"lod",
+					"mix"
+				]
+			},
+			"set_object_visible": {
+				"arg_types": [
+					"string",
+					"bool"
+				],
+				"args": [
+					"object_name",
+					"visibility"
+				]
+			},
+			"set_static": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"level"
+				]
+			},
+			"set_sun": {
+				"arg_types": [
+					"string",
+					"float"
+				],
+				"args": [
+					"property",
+					"value"
+				]
+			},
+			"set_text_style": {
+				"arg_types": [
+					"string"
+				],
+				"args": [
+					"style"
+				]
+			},
+			"set_x_position": {
+				"arg_types": [
+					"string",
+					"float",
+					"float",
+					"bool"
+				],
+				"args": [
+					"character_name",
+					"index",
+					"time",
+					"wait_for_reposition"
+				]
+			},
+			"shake_camera": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"strength"
+				]
+			},
+			"show_cg": {
+				"arg_types": [
+					"string",
+					"float",
+					"bool"
+				],
+				"args": [
+					"name",
+					"fade_in_time",
+					"continue_dialog_through_cg"
+				]
+			},
+			"show_character": {
+				"arg_types": [
+					"string",
+					"bool"
+				],
+				"args": [
+					"character_name",
+					"clear_others"
+				]
+			},
+			"show_letter": {
+				"arg_types": [],
+				"args": []
+			},
+			"splatter_blood": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"amount"
+				]
+			},
+			"sway_camera": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"intensity"
+				]
+			},
+			"use_ui": {
+				"arg_types": [
+					"float"
+				],
+				"args": [
+					"id"
+				]
+			},
+			"wound_fx": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"shake_intensity",
+					"splatter_count"
+				]
+			},
+			"zoom_to": {
+				"arg_types": [
+					"float",
+					"float"
+				],
+				"args": [
+					"value",
+					"duration"
+				]
+			}
+		},
+		"locales_to_export": [
+			"af_ZA",
+			"sq_AL",
+			"ar_SA",
+			"hy_AM",
+			"az_AZ",
+			"eu_ES",
+			"be_BY",
+			"bn_IN",
+			"bs_BA",
+			"bg_BG",
+			"ca_ES",
+			"zh_CN",
+			"zh_TW",
+			"hr_HR",
+			"cs_CZ",
+			"da_DK",
+			"nl_NL",
+			"en_US",
+			"et_EE",
+			"fo_FO",
+			"fi_FI",
+			"fr_FR",
+			"gl_ES",
+			"ka_GE",
+			"de_DE",
+			"el_GR",
+			"gu_IN",
+			"he_IL",
+			"hi_IN",
+			"hu_HU",
+			"is_IS",
+			"id_ID",
+			"it_IT",
+			"ja_JP",
+			"kn_IN",
+			"kk_KZ",
+			"kok_IN",
+			"ko_KR",
+			"lv_LV",
+			"lt_LT",
+			"mk_MK",
+			"ms_MY",
+			"ml_IN",
+			"mt_MT",
+			"mr_IN",
+			"mn_MN",
+			"se_NO",
+			"nb_NO",
+			"nn_NO",
+			"fa_IR",
+			"pl_PL",
+			"pt_BR",
+			"pa_IN",
+			"ro_RO",
+			"ru_RU",
+			"sr_BA",
+			"sk_SK",
+			"es_ES",
+			"sw_KE",
+			"sv_SE",
+			"syr_SY",
+			"ta_IN",
+			"te_IN",
+			"th_TH",
+			"tn_ZA",
+			"tr_TR",
+			"uk_UA",
+			"uz_UZ",
+			"vi_VN",
+			"cy_GB",
+			"xh_ZA",
+			"zu_ZA"
+		],
+		"page_data": {
+			"0": {
+				"facts": {
+					"fact_data_by_name": {
+
+					},
+					"meta.visible": false
+				},
+				"lines": [
+					{
+						"address": "0.0",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								1
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "use_ui(1)",
+							"meta.validation_status": "OK",
+							"name": "use_ui",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 0,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.1",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								"default",
+								0
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "set_background(default, 0)",
+							"meta.validation_status": "OK",
+							"name": "set_background",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 1,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.2",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								"default",
+								2
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "set_bgm(default, 2)",
+							"meta.validation_status": "OK",
+							"name": "set_bgm",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.3",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator:In this demo, you will find the fundamentals of DIISIS' functionalities included in the script so you can get accustomed to how things work.\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator:Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber:That I am!\n[]>narrator:What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator:Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as false. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"auto_switch": false,
+							"choice_title": "",
+							"choices": [
+								{
+									"address": "0.4.0",
+									"behavior_after_first_selection": 0,
+									"choice_text.disabled": "",
+									"choice_text.enabled": "Yes I love her",
+									"choice_text.enabled_as_default": true,
+									"conditionals": {
+										"behavior": 0,
+										"behavior_key": "Show",
+										"facts": {
+											"fact_data_by_name": {
+
+											},
+											"meta.visible": false
+										},
+										"meta.visible": false,
+										"operand": 0,
+										"operand_args": [],
+										"operand_key": "AND"
+									},
+									"do_jump_page": false,
+									"facts": {
+										"fact_data_by_name": {
+											"liked amber": {
+												"data_type": 0,
+												"fact_name": "liked amber",
+												"fact_value": true,
+												"int_comparator": 0,
+												"int_operator": 0,
+												"is_conditional": false
+											}
+										},
+										"meta.visible": true
+									},
+									"loopback": false,
+									"loopback_target_line": 1,
+									"loopback_target_page": 0,
+									"meta.jump_page_before_auto_switch": false,
+									"meta.selector": {
+										"selected": false
+									},
+									"target_line": 1,
+									"target_page": 0
+								},
+								{
+									"address": "0.4.1",
+									"behavior_after_first_selection": 0,
+									"choice_text.disabled": "",
+									"choice_text.enabled": "No actually, robots are scary",
+									"choice_text.enabled_as_default": true,
+									"conditionals": {
+										"behavior": 0,
+										"behavior_key": "Show",
+										"facts": {
+											"fact_data_by_name": {
+
+											},
+											"meta.visible": false
+										},
+										"meta.visible": false,
+										"operand": 0,
+										"operand_args": [],
+										"operand_key": "AND"
+									},
+									"do_jump_page": false,
+									"facts": {
+										"fact_data_by_name": {
+
+										},
+										"meta.visible": false
+									},
+									"loopback": false,
+									"loopback_target_line": 1,
+									"loopback_target_page": 0,
+									"meta.jump_page_before_auto_switch": false,
+									"meta.selector": {
+										"selected": false
+									},
+									"target_line": 1,
+									"target_page": 0
+								}
+							],
+							"meta.do_jump_page": true
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 1,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 4,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.5",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+									"liked amber": {
+										"data_type": 0,
+										"fact_name": "liked amber",
+										"fact_value": true,
+										"int_comparator": 0,
+										"int_operator": 0,
+										"is_conditional": true
+									}
+								},
+								"meta.visible": true
+							},
+							"meta.visible": true,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>amber{amber-emotion|happy}:I'm really happy to hear that! <mp>I think you're cool too!"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": true,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 5,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.6",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+									"liked amber": {
+										"data_type": 0,
+										"fact_name": "liked amber",
+										"fact_value": false,
+										"int_comparator": 0,
+										"int_operator": 0,
+										"is_conditional": true
+									}
+								},
+								"meta.visible": true
+							},
+							"meta.visible": true,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>amber:I promise I'm not scary!"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": true,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 6,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "0.7",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}:Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator:You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url]."
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 7,
+						"meta.selector": {
+							"selected": false
+						}
+					}
+				],
+				"meta.scroll_vertical": 0,
+				"meta.selected": false,
+				"next": 1,
+				"number": 0,
+				"page_key": "",
+				"terminate": false
+			},
+			"1": {
+				"facts": {
+					"fact_data_by_name": {
+
+					},
+					"meta.visible": false
+				},
+				"lines": [
+					{
+						"address": "1.0",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:Diisis uses so-called \"Instructions\" for more complex behavior. Read up on how to implement them on GitHub. The rough gist is that they work like functions in Godot. You give them names and arguments, and can then call them inside DIISIS.\n[]>narrator:For this, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to an Instruction, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text."
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 0,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "1.1",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								20
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": true,
+							"meta.reverse_text": "",
+							"meta.text": "shake_camera(20)",
+							"meta.validation_status": "OK",
+							"name": "shake_camera",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 1,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "1.2",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera,40>so :3"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "1.3",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo."
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "1.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								"music",
+								2,
+								true
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "show_cg(music, 2.0, true)",
+							"meta.validation_status": "OK",
+							"name": "show_cg",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 4,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "1.5",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too. (As you can see in the script, newline characters don't need to be escaped in any capacity.)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.\n[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg>"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 5,
+						"meta.selector": {
+							"selected": false
+						}
+					}
+				],
+				"meta.scroll_vertical": 0,
+				"meta.selected": false,
+				"next": 2,
+				"number": 1,
+				"page_key": "",
+				"terminate": false
+			},
+			"2": {
+				"facts": {
+					"fact_data_by_name": {
+
+					},
+					"meta.visible": false
+				},
+				"lines": [
+					{
+						"address": "2.0",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:With that, we can start to wrap up.\n[]>amber:Change of scenery please!"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 0,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "2.1",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"delay_after": 0,
+							"delay_before": 0,
+							"line_reader.args": [
+								"skyline",
+								2
+							],
+							"line_reader.reverse_args": [],
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "set_background(skyline, 2)",
+							"meta.validation_status": "OK",
+							"name": "set_background",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 1,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "2.2",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:There you go <3\n[]>narrator:Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-DIISIS-without-coding-(Using-the-Demo-project)]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes."
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						}
+					},
+					{
+						"address": "2.3",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:How can you leave this place again? Well you can just terminate the page by not having it point to a page again. <mp>[rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]\n[]>narrator:This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator:Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url].\n[]>narrator:Amber art by [url=https://x.com/_10qi]10qi[/url]."
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						}
+					}
+				],
+				"meta.scroll_vertical": 18,
+				"meta.selected": false,
+				"next": 0,
+				"number": 2,
+				"page_key": "",
+				"terminate": true
+			}
+		},
+		"text_lead_time_other_actor": 0,
+		"text_lead_time_same_actor": 0,
+		"use_dialog_syntax": true
+	}
+}

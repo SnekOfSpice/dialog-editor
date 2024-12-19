@@ -217,3 +217,10 @@ func _on_int_operand_button_pressed() -> void:
 func _on_fact_name_text_entered(new_text: String) -> void:
 	entered_text = new_text
 	update_unregsitered_prompt()
+
+
+func _on_fact_name_text_submitted(new_text: String) -> void:
+	if find_child("RegisterContainer").visible:
+		_on_register_button_pressed()
+		find_child("FactName").text = new_text
+		find_child("FactName").caret_column = new_text.length()

@@ -130,9 +130,9 @@ var choice_option_container:Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
-## A [Label] that displays a currently speaking character's name.
+## A [class Label] or [class RichTextLabel] that displays a currently speaking character's name.
 @export
-var name_label: Label:
+var name_label: Control:
 	get:
 		return name_label
 	set(value):
@@ -177,6 +177,19 @@ var instruction_handler: InstructionHandler:
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:ChoiceButton
+@export var show_choice_title := false:
+	set(value):
+		show_choice_title = value
+		notify_property_list_changed()
+		update_configuration_warnings()
+@export
+var choice_title_label: Label:
+	get:
+		return choice_title_label
+	set(value):
+		choice_title_label = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -254,6 +267,7 @@ var is_last_actor_name_different := true
 var line_chunks := []
 var chunk_index := 0
 var current_raw_name := ""
+var current_choice_title := ""
 
 var terminated := false
 
@@ -266,6 +280,8 @@ var visibilities_before_interrupt := {}
 
 var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
 
+var reverse_next_instruction := false
+
 signal line_reader_ready
 
 func _validate_property(property: Dictionary):
@@ -277,6 +293,9 @@ func _validate_property(property: Dictionary):
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
 		if property.name in ["past_text_container"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	if not show_choice_title:
+		if property.name in ["choice_title_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
@@ -305,6 +324,7 @@ func serialize() -> Dictionary:
 	result["name_map"] = name_map
 	result["called_positions"] = called_positions
 	result["call_strings"] = call_strings
+	result["current_choice_title"] = current_choice_title
 	
 	return result
 
@@ -332,6 +352,7 @@ func deserialize(data: Dictionary):
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	called_positions = data.get("called_positions", [])
 	call_strings = data.get("call_strings", {})
+	current_choice_title = data.get("current_choice_title", "")
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -342,6 +363,7 @@ func deserialize(data: Dictionary):
 		var content = line_data.get("content").get("content")
 		var choices = line_data.get("content").get("choices")
 		var auto_switch : bool = raw_content.get("auto_switch")
+		current_choice_title = raw_content.get("choice_title", "")
 
 		build_choices(choices, auto_switch)
 	
@@ -370,6 +392,11 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Text Container is null")
 	if not name_label and name_style == NameStyle.NameLabel:
 		warnings.append("Name Label is null")
+	elif name_style == NameStyle.NameLabel and not (
+			name_label is Label or  
+			name_label is RichTextLabel
+			):
+			warnings.append("Name Label is not Label, or RichTextLabel")
 	if not name_container and name_style == NameStyle.NameLabel:
 		warnings.append("Name Container is null")
 	if show_input_prompt and not prompt_unfinished:
@@ -380,6 +407,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
 	if keep_past_lines and not past_text_container:
 		warnings.append("Past Text Container is null")
+	if show_choice_title and not choice_title_label:
+		warnings.append("Choice Title Label is null")
 	
 	return warnings
 
@@ -390,9 +419,15 @@ func _ready() -> void:
 	Parser.connect("read_new_line", read_new_line)
 	Parser.connect("page_terminated", close)
 	
-	Parser.open_connection(self)
+	ParserEvents.go_back_accepted.connect(lmao)
 	
-	remaining_auto_pause_duration = auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
+	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
+	ParserEvents.display_name_changed.connect(on_name_label_updated)
+	
+	Parser.open_connection(self)
+	tree_exiting.connect(Parser.close_connection)
+	
+	remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
 	if not instruction_handler:
 		push_error("No InsutrctionHandler as child of LineReader.")
@@ -411,6 +446,9 @@ func _ready() -> void:
 		prompt_finished.modulate.a = 0
 	
 	emit_signal("line_reader_ready")
+
+func lmao(a, b):
+	reverse_next_instruction = true
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
 func get_preferences() -> Dictionary:
@@ -462,7 +500,6 @@ func advance():
 				else:
 					remaining_prompt_delay = input_prompt_delay
 					set_dialog_line_index(dialog_line_index + 1)
-					start_showing_text()
 			else:
 				read_next_chunk()
 		else:
@@ -472,12 +509,21 @@ func advance():
 					if next_pause_position_index < pause_positions.size() - 1:
 						next_pause_position_index += 1
 					find_next_pause()
-					remaining_auto_pause_duration = remaining_auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
+					#remaining_auto_pause_duration = remaining_auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 				remaining_prompt_delay = input_prompt_delay
 	else:
 		emit_signal("line_finished", line_index)
 
 func go_back():
+	if Parser.paused:
+		push_warning("Cannot go back because Parser.paused is true.")
+		return
+	if is_input_locked:
+		push_warning("Cannot go back because is_input_locked is true.")
+		return
+	if terminated:
+		push_warning("Cannot go back because terminated is true.")
+		return
 	Parser.go_back()
 
 ## Pauses the Parser and hides all controls uif [param hide_controls] is [code]true[/code] (default). Useful for reacting to game events outside the line reader. [br]
@@ -520,6 +566,7 @@ func read_new_line(new_line: Dictionary):
 	line_index = new_line.get("meta.line_index")
 	line_type = int(line_data.get("line_type"))
 	terminated = false
+	ParserEvents.read_new_line.emit(line_index)
 	
 	var eval = evaluate_conditionals(line_data.get("conditionals"))
 	var conditional_is_true = eval[0]
@@ -600,9 +647,9 @@ func read_new_line(new_line: Dictionary):
 			
 			
 			set_dialog_line_index(0)
-			start_showing_text()
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
+			current_choice_title = raw_content.get("choice_title")
 			build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
 			if not instruction_handler:
@@ -612,14 +659,40 @@ func read_new_line(new_line: Dictionary):
 				push_error("InsutrctionHandler doesn't have execute method.")
 				return
 			
-			var instruction_name : String = line_data.get("content").get("name")
-			var args : Array = line_data.get("content").get("line_reader.args")
+			var instruction_name: String
+			var args: Array
+			var delay_before: float
+			var delay_after: float
 			
-			# transform content to more friendly args
+			var instruction_content : Dictionary = line_data.get("content")
+			if reverse_next_instruction and not instruction_content.get("meta.has_reverse"):
+				reverse_next_instruction = false
+				remaining_prompt_delay = input_prompt_delay
+				return
 			
-			var delay_before = new_line.get("content").get("delay_before")
-			var delay_after = new_line.get("content").get("delay_after")
+			if not reverse_next_instruction:
+				instruction_name = instruction_content.get("name")
+			else:
+				instruction_name = instruction_content.get("reverse_name", "")
 			
+			if (not reverse_next_instruction) or instruction_name.is_empty():
+				args = instruction_content.get("line_reader.args")
+				
+				instruction_name = instruction_content.get("name")
+				delay_before = new_line.get("content").get("delay_before")
+				delay_after = new_line.get("content").get("delay_after")
+			else:
+				
+				args = instruction_content.get("line_reader.reverse_args")
+				delay_before = 0.0
+				delay_after = 0.0
+			
+			if reverse_next_instruction:
+				#instruction_handler.execute(instruction_name, args)
+				#reverse_next_instruction = false
+				remaining_prompt_delay = input_prompt_delay
+				
+				return
 			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not line_data.get("content", {}).get("meta.contents_visible", true):
@@ -627,6 +700,8 @@ func read_new_line(new_line: Dictionary):
 			emit_signal("line_finished", line_index)
 	
 	remaining_prompt_delay = input_prompt_delay
+	
+	reverse_next_instruction = false
 
 func fit_to_max_line_count(lines: Array):
 	if max_text_line_count <= 0:
@@ -739,7 +814,7 @@ func _process(delta: float) -> void:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
 			var old_text_length : int = text_content.visible_characters
-			text_content.visible_ratio += (float(text_speed) / text_content.text.length()) * delta
+			text_content.visible_ratio += (float(text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
 			if old_text_length != text_content.visible_characters:
@@ -750,7 +825,7 @@ func _process(delta: float) -> void:
 		if last_dur > 0 and remaining_auto_pause_duration <= 0:
 			next_pause_position_index += 1
 			find_next_pause()
-			remaining_auto_pause_duration = auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
+			remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
 	
 	
@@ -785,9 +860,9 @@ func _process(delta: float) -> void:
 	
 	for call_position : int in call_strings:
 		if (
-			((not called_positions.has(call_position)) and call_position <= last_visible_characters) or
-			((not called_positions.has(call_position)) and text_content.visible_characters == -1) or
-			((call_position >= last_visible_characters and call_position <= text_content.visible_characters) or	text_content.visible_characters == -1)
+			((not called_positions.has(call_position)) and last_visible_characters >= call_position) or
+			(call_position >= last_visible_characters and call_position <= text_content.visible_characters) or
+			text_content.visible_characters == -1
 		):
 			call_from_position(call_position)
 	
@@ -991,6 +1066,30 @@ func replace_tags(lines):
 		i += 1
 	return result
 
+# returns if it can go back
+func _attempt_read_previous_chunk() -> bool:
+	var chunk_failure := false
+	var dialog_line_failure := false
+	if chunk_index <= 0:
+		chunk_failure = true
+	
+	if chunk_failure:
+		if dialog_line_index <= 0:
+			dialog_line_failure = true
+		else:
+			set_dialog_line_index(dialog_line_index - 1)
+			return true
+	else:
+		chunk_index -= 2
+		read_next_chunk()
+		return true
+	
+	if chunk_failure and dialog_line_failure:
+		return false
+	
+
+	
+	return true
 
 func read_next_chunk():
 	remaining_prompt_delay = input_prompt_delay
@@ -1062,7 +1161,7 @@ func read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index - tag_buffer] = tag_string
+				call_strings[scan_index] = tag_string
 				scan_index = max(scan_index - tag_string.length(), 0)
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
@@ -1169,11 +1268,14 @@ func find_next_pause():
 func get_actor_name(actor_key:String):
 	return name_map.get(actor_key, "")
 
+func set_actor_name(actor_key:String, actor_name:String):
+	name_map[actor_key] = actor_name
+
 func build_choices(choices, auto_switch:bool):
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	
-	var built_choices := []
+	var built_choices : Array[Dictionary] = []
 	for option in choices:
 		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
@@ -1283,6 +1385,12 @@ func build_choices(choices, auto_switch:bool):
 	if choice_option_container.get_child_count() > 0 and choice_button_focus_mode == ChoiceButtonFocusMode.Keyboard:
 		choice_option_container.get_child(0).call_deferred("grab_focus")
 	ParserEvents.choices_presented.emit(built_choices)
+	
+	if show_choice_title:
+		if choice_title_label:
+			choice_title_label.text = current_choice_title
+		else:
+			push_warning(str("Choice Title Label not set. Choice Title \"", current_choice_title,"\" will be ignored."))
 	
 	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
 		#if choice_option_container.get_child_count() > 0:
@@ -1398,6 +1506,8 @@ func set_dialog_line_index(value: int):
 		update_name_label(actor_name)
 		
 		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
+	
+	start_showing_text()
 
 func update_name_label(actor_name: String):
 	is_last_actor_name_different = actor_name != current_raw_name
@@ -1432,3 +1542,33 @@ func can_text_container_be_visible() -> bool:
 	if line_type == DIISIS.LineType.Instruction:
 		return show_text_during_instructions
 	return false
+
+
+func _go_to_end_of_dialog_line():
+	set_dialog_line_index(dialog_lines.size() - 1)
+func _go_to_start_of_dialog_line():
+	set_dialog_line_index(0)
+
+
+var currently_speaking_name := ""
+var currently_speaking_visible := true
+
+func on_name_label_updated(
+	actor_name: String,
+	is_name_container_visible: bool
+):
+	currently_speaking_name = actor_name
+	currently_speaking_visible = is_name_container_visible
+
+var chunk_addresses_in_history := []
+
+func get_chunk_address() -> String:
+	return str(Parser.page_index, ".", line_index, ".", dialog_line_index, ".", chunk_index)
+
+func on_text_content_text_changed(old_text: String,
+	new_text: String,
+	lead_time: float):
+	if chunk_addresses_in_history.has(get_chunk_address()):
+		return
+	chunk_addresses_in_history.append(get_chunk_address())
+	Parser.call_deferred("append_to_history", (str(str("[b]",currently_speaking_name, "[/b]: ") if currently_speaking_visible else "", new_text)))

@@ -15,6 +15,7 @@ dest_files=["res://.godot/imported/atha.ttf-09f139b58ddd699de783f15bb44daf2e.fon
 Rendering=null
 antialiasing=1
 generate_mipmaps=false
+disable_embedded_bitmaps=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48

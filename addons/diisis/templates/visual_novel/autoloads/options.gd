@@ -8,7 +8,7 @@ var music_volume := 1.0
 var sfx_volume := 1.0
 
 var fullscreen := false
-var text_speed := 60
+var text_speed := 201
 var auto_continue_delay := 1.0
 var auto_continue := false
 
@@ -73,6 +73,7 @@ func save_gamestate():
 	var data_to_save := {}
 	data_to_save["Sound"] = Sound.serialize()
 	data_to_save["GameWorld"] = GameWorld.serialize()
+	data_to_save["GoBackHandler"] = GoBackHandler.serialize()
 	#var character_visibilities := {}
 	#for c in get_tree().get_nodes_in_group("Character"):
 		#character_visibilities[c.character_name] = c.serialize()
@@ -83,6 +84,7 @@ func load_gamestate():
 	var game_data := Parser.load_parser_state_from_file(SAVEGAME_PATH)
 	Sound.deserialize(game_data.get("Sound", {}))
 	GameWorld.deserialize(game_data.get("GameWorld", {}))
+	GoBackHandler.deserialize(game_data.get("GoBackHandler", {}))
 	#var character_visibilities : Dictionary= game_data.get("Game.character_visibilities", {})
 	#for c in get_tree().get_nodes_in_group("Character"):
 		#c.deserialize(character_visibilities.get(c.character_name, {}))

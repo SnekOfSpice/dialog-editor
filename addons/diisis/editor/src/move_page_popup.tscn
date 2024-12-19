@@ -1,14 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://d4nhcwdgxbrlm"]
 
-[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_hk1ia"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_hk1ia"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/move_page_popup.gd" id="1_nrsai"]
 
 [node name="MovePagePopup" type="Window"]
 title = "Move Pages"
 initial_position = 2
-size = Vector2i(455, 100)
+size = Vector2i(659, 326)
 wrap_controls = true
 exclusive = true
+min_size = Vector2i(659, 326)
 content_scale_aspect = 1
 theme = ExtResource("1_hk1ia")
 script = ExtResource("1_nrsai")
@@ -19,6 +20,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "search page keys"
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 visible = false
@@ -33,6 +39,8 @@ follow_focus = true
 
 [node name="Items" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="text_changed" from="VBoxContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]

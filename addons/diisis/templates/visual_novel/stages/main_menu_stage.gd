@@ -1,18 +1,26 @@
 extends Control
 
+## Music key (same as instructions in DIISIS) to be played on [method _ready] Doesn't play anything if empty.
+@export var menu_music := ""
+
 signal start_game()
 signal load_game()
 
 func _ready() -> void:
-	Sound.play_bgm(CONST.MUSIC_MAIN_MENU)
+	if not menu_music.is_empty():
+		Sound.play_bgm(menu_music)
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	find_child("LoadButton").visible = Options.does_savegame_exist()
 	
 	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress_from_file(Options.SAVEGAME_PATH) * 100), "%)")
 
+
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+		if GameWorld.stage_root.get_node("ScreenContainer").get_child_count() == 0:
+			GameWorld.stage_root.set_screen("")
+		else:
+			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
 func _on_quit_button_pressed() -> void:
 	Options.save_prefs()

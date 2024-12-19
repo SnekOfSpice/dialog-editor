@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://141n8is7jl21"]
+[gd_scene load_steps=6 format=3 uid="uid://biu88w163ploy"]
 
 [ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/cheats.gd" id="1_40coe"]
 
@@ -37,6 +37,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 grow_vertical = 2
 size_flags_horizontal = 0
+mouse_filter = 2
 theme = SubResource("Theme_soedi")
 script = ExtResource("1_40coe")
 
@@ -46,6 +47,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 75.0
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
@@ -138,6 +140,11 @@ layout_mode = 2
 focus_mode = 0
 text = "Read Line"
 
+[node name="FFButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Pages"]
+layout_mode = 2
+focus_mode = 0
+text = "FF"
+
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -159,4 +166,5 @@ text = "Auto Continue"
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Pages/HBoxContainer/PageSpinBox" to="." method="_on_page_spin_box_value_changed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Pages/LoadPageButton" to="." method="_on_load_page_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Pages/ReadLineButton" to="." method="_on_read_line_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Pages/FFButton" to="." method="_on_ff_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/AutoContinueCheckButton" to="." method="_on_auto_continue_check_button_pressed"]

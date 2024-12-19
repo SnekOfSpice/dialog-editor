@@ -57,8 +57,15 @@ text = "X"
 [node name="OptionsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="DropdownOptionsText" type="TextEdit" parent="OptionsContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="OptionsContainer"]
+custom_minimum_size = Vector2(0, -80)
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DropdownOptionsText" type="TextEdit" parent="OptionsContainer/ScrollContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
 scroll_fit_content_height = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer"]
@@ -85,6 +92,7 @@ text = "discard changes"
 [connection signal="text_changed" from="HBoxContainer/EditContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/EditContainer/DiscardTitleButton" to="." method="_on_discard_title_button_pressed"]
 [connection signal="visibility_changed" from="OptionsContainer" to="." method="_on_options_container_visibility_changed"]
-[connection signal="text_changed" from="OptionsContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
+[connection signal="resized" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_resized"]
+[connection signal="text_changed" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/DiscardOptionsButton" to="." method="_on_discard_options_button_pressed"]

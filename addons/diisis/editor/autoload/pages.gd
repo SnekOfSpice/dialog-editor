@@ -5,9 +5,9 @@ extends Node
 var head_defaults := []
 var auto_complete_context := ""
 
-var dropdowns := {"character": ["dii", "sis"]}
-var dropdown_titles := ["character"]
-var dropdown_dialog_arguments := []
+var dropdowns := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
+var dropdown_titles := ["amber-emotion"]
+var dropdown_dialog_arguments := ["amber-emotion"]
 var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
@@ -21,142 +21,7 @@ const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const DOMINANT_LOCALES := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
-const LOCALES := ["af_ZA",
-"sq_AL",
-"ar_DZ",
-"ar_BH",
-"ar_EG",
-"ar_IQ",
-"ar_JO",
-"ar_KW",
-"ar_LB",
-"ar_LY",
-"ar_MA",
-"ar_OM",
-"ar_QA",
-"ar_SA",
-"ar_SY",
-"ar_TN",
-"ar_AE",
-"ar_YE",
-"hy_AM",
-"az_AZ",
-"eu_ES",
-"be_BY",
-"bn_IN",
-"bs_BA",
-"bg_BG",
-"ca_ES",
-"zh_CN",
-"zh_HK",
-"zh_MO",
-"zh_SG",
-"zh_TW",
-"hr_HR",
-"cs_CZ",
-"da_DK",
-"nl_BE",
-"nl_NL",
-"en_AU",
-"en_BZ",
-"en_CA",
-"en_IE",
-"en_JM",
-"en_NZ",
-"en_PH",
-"en_ZA",
-"en_TT",
-"en_VI",
-"en_GB",
-"en_US",
-"en_ZW",
-"et_EE",
-"fo_FO",
-"fi_FI",
-"fr_BE",
-"fr_CA",
-"fr_FR",
-"fr_LU",
-"fr_MC",
-"fr_CH",
-"gl_ES",
-"ka_GE",
-"de_AT",
-"de_DE",
-"de_LI",
-"de_LU",
-"de_CH",
-"el_GR",
-"gu_IN",
-"he_IL",
-"hi_IN",
-"hu_HU",
-"is_IS",
-"id_ID",
-"it_IT",
-"it_CH",
-"ja_JP",
-"kn_IN",
-"kk_KZ",
-"kok_IN",
-"ko_KR",
-"lv_LV",
-"lt_LT",
-"mk_MK",
-"ms_BN",
-"ms_MY",
-"ml_IN",
-"mt_MT",
-"mr_IN",
-"mn_MN",
-"se_NO",
-"nb_NO",
-"nn_NO",
-"fa_IR",
-"pl_PL",
-"pt_BR",
-"pt_PT",
-"pa_IN",
-"ro_RO",
-"ru_RU",
-"sr_BA",
-"sr_CS",
-"sk_SK",
-"sl_SI",
-"es_AR",
-"es_BO",
-"es_CL",
-"es_CO",
-"es_CR",
-"es_DO",
-"es_EC",
-"es_SV",
-"es_GT",
-"es_HN",
-"es_MX",
-"es_NI",
-"es_PA",
-"es_PY",
-"es_PE",
-"es_PR",
-"es_ES",
-"es_UY",
-"es_VE",
-"sw_KE",
-"sv_FI",
-"sv_SE",
-"syr_SY",
-"ta_IN",
-"te_IN",
-"th_TH",
-"tn_ZA",
-"tr_TR",
-"uk_UA",
-"uz_UZ",
-"vi_VN",
-"cy_GB",
-"xh_ZA",
-"zu_ZA",]
+const LOCALES := ["af_ZA","sq_AL","ar_DZ","ar_BH","ar_EG","ar_IQ","ar_JO","ar_KW","ar_LB","ar_LY","ar_MA","ar_OM","ar_QA","ar_SA","ar_SY","ar_TN","ar_AE","ar_YE","hy_AM","az_AZ","eu_ES","be_BY","bn_IN","bs_BA","bg_BG","ca_ES","zh_CN","zh_HK","zh_MO","zh_SG","zh_TW","hr_HR","cs_CZ","da_DK","nl_BE","nl_NL","en_AU","en_BZ","en_CA","en_IE","en_JM","en_NZ","en_PH","en_ZA","en_TT","en_VI","en_GB","en_US","en_ZW","et_EE","fo_FO","fi_FI","fr_BE","fr_CA","fr_FR","fr_LU","fr_MC","fr_CH","gl_ES","ka_GE","de_AT","de_DE","de_LI","de_LU","de_CH","el_GR","gu_IN","he_IL","hi_IN","hu_HU","is_IS","id_ID","it_IT","it_CH","ja_JP","kn_IN","kk_KZ","kok_IN","ko_KR","lv_LV","lt_LT","mk_MK","ms_BN","ms_MY","ml_IN","mt_MT","mr_IN","mn_MN","se_NO","nb_NO","nn_NO","fa_IR","pl_PL","pt_BR","pt_PT","pa_IN","ro_RO","ru_RU","sr_BA","sr_CS","sk_SK","sl_SI","es_AR","es_BO","es_CL","es_CO","es_CR","es_DO","es_EC","es_SV","es_GT","es_HN","es_MX","es_NI","es_PA","es_PY","es_PE","es_PR","es_ES","es_UY","es_VE","sw_KE","sv_FI","sv_SE","syr_SY","ta_IN","te_IN","th_TH","tn_ZA","tr_TR","uk_UA","uz_UZ","vi_VN","cy_GB","xh_ZA","zu_ZA",]
 
 var facts := {}
 var local_line_insert_offset:int
@@ -422,6 +287,12 @@ func key_exists(key: String) -> bool:
 func get_page_key(page_index:int) -> String:
 	return str(page_data.get(page_index, {}).get("page_key", ""))
 
+func get_page_number_by_key(key:String):
+	for page in page_data.values():
+		if page.get("page_key") == key:
+			return page.get("number")
+	return -1
+
 func get_line_type(page_index:int, line_index:int) -> int:
 	var page = page_data.get(page_index, {})
 	var lines = page.get("lines")
@@ -529,12 +400,6 @@ func get_instruction_signature(instruction_name:String) -> String:
 	var arg_names : Array = instruction_templates.get(instruction_name).get("args")
 	while i < arg_types.size():
 		result += arg_names[i]
-		result += ": "
-		
-		if arg_types[i] == "string":
-			result += "String"
-		else:
-			result += arg_types[i]
 		
 		if i < arg_types.size() - 1:
 			result += ", "
@@ -542,8 +407,22 @@ func get_instruction_signature(instruction_name:String) -> String:
 		i += 1
 	
 	result += ") -> bool:"
+	
+	i = 0
+	while i < arg_types.size():
+		var type_str:String
+		if arg_types[i] == "string":
+			type_str = "String"
+		else:
+			type_str = arg_types[i]
+		
+		result += str("\n\t", arg_names[i], " = ", type_str, "(", arg_names[i], ")")
+		
+		i += 1
+	
 	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
 	result += "\n\t# (Needs to be called by your code from somewhere.)"
+	result += "\n\t# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)"
 	result += "\n\treturn false"
 	
 	return result
@@ -784,7 +663,7 @@ func lines_referencing_fact(fact_name: String):
 	return all_refs
 
 
-func character_count_on_page_approx(page_number: int) -> int:
+func get_character_count_on_page_approx(page_number: int) -> int:
 	var count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type")
@@ -797,7 +676,7 @@ func character_count_on_page_approx(page_number: int) -> int:
 			count += str(content.get("content")).length()
 	return count
 
-func word_count_on_page_approx(page_number: int) -> int:
+func get_word_count_on_page_approx(page_number: int) -> int:
 	var count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type", null)
@@ -812,16 +691,16 @@ func word_count_on_page_approx(page_number: int) -> int:
 				
 	return count
 
-func character_count_total_approx() -> int:
+func get_character_count_total_approx() -> int:
 	var sum := 0
 	for i in page_data.keys():
-		sum += character_count_on_page_approx(i)
+		sum += get_character_count_on_page_approx(i)
 	
 	return sum
-func word_count_total_approx() -> int:
+func get_word_count_total_approx() -> int:
 	var sum := 0
 	for i in page_data.keys():
-		sum += word_count_on_page_approx(i)
+		sum += get_word_count_on_page_approx(i)
 	
 	return sum
 
@@ -1052,6 +931,7 @@ func search_string(substr:String, case_insensitive:=false):
 	
 	var found_choices := {}
 	var found_text := {}
+	var found_instructions := {}
 	var page_index := 0
 	for page in page_data.values():
 		var line_index := 0
@@ -1068,6 +948,13 @@ func search_string(substr:String, case_insensitive:=false):
 				var text : String = line.get("content", {}).get("content", "")
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
+			elif line.get("line_type") == DIISIS.LineType.Instruction:
+				var text : String = line.get("content", {}).get("meta.text", "")
+				var reverse_text : String = line.get("content", {}).get("meta.reverse_text", "")
+				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
+					found_instructions[str(page_index, ".", line_index, " - default")] = text
+				if (case_insensitive and reverse_text.findn(substr) != -1) or (not case_insensitive and reverse_text.find(substr) != -1):
+					found_instructions[str(page_index, ".", line_index, " - reverse")] = reverse_text
 			line_index += 1
 		page_index += 1
 	
@@ -1075,6 +962,7 @@ func search_string(substr:String, case_insensitive:=false):
 		"facts":found_facts,
 		"text":found_text,
 		"choices":found_choices,
+		"instructions":found_instructions,
 	}
 	return result
 
@@ -1280,8 +1168,8 @@ func get_compliance_with_template(instruction:String) -> String:
 				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
 		if template_types[i] == "float":
 			for char in arg_value:
-				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]:
-					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and .)")
+				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
+					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and . and -)")
 		i += 1
 	
 	return "OK"
@@ -1341,7 +1229,66 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 		if template_compliance != "OK":
 			return template_compliance
 	
-	
-			
-	
 	return "OK"
+
+
+func capitalize_sentence_beginnings_str(input:String) -> String:
+	return capitalize_sentence_beginnings([input])[0]
+
+func capitalize_sentence_beginnings(input:Array) -> Array:
+	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
+
+	var c12n_prefixes := [
+		".", ":", ";", "-", "?", "!", "~"
+	]
+
+	var result := []
+	for text : String in input:
+		var tags_in_text := []
+		var scan_index := 0
+		while scan_index < text.length():
+			if text[scan_index] == "<":
+				var tag_end = text.find(">", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			elif text[scan_index] == "{":
+				var tag_end = text.find("}", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			elif text[scan_index] == "[":
+				if text[scan_index-1] == "\\[":
+					scan_index += 1
+					continue
+				var tag_end = text.find("]", scan_index)
+				if tag_end == -1:
+					scan_index += 1
+					continue
+				var tag = text.substr(scan_index, tag_end - scan_index + 1)
+				tags_in_text.append(tag)
+			scan_index += 1
+		for letter : String in letters:
+			text = text.replace(str("\"", letter), str("\"", letter.capitalize()))
+			text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
+			text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
+			for prefix in c12n_prefixes:
+				if prefix != "-":
+					text = text.replace(str(prefix, letter), str(prefix, letter.capitalize()))
+					text = text.replace(str(prefix, "<ap>", letter), str(prefix, "<ap>", letter.capitalize()))
+					text = text.replace(str(prefix, "<mp>", letter), str(prefix, "<mp>", letter.capitalize()))
+					text = text.replace(str(prefix, "<lc>", letter), str(prefix, "<lc>", letter.capitalize()))
+				text = text.replace(str(prefix, " ", letter), str(prefix, " ", letter.capitalize()))
+				text = text.replace(str(prefix, " <ap>", letter), str(prefix, " <ap>", letter.capitalize()))
+				text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
+				text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
+		
+		for tag in tags_in_text:
+			text = text.replacen(tag, tag)
+		
+		result.append(text)
+	return result

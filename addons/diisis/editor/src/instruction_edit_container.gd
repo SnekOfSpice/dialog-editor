@@ -30,6 +30,7 @@ func _on_clear_search_button_pressed() -> void:
 
 func _on_add_button_pressed() -> void:
 	add_item("")
+	find_child("ItemContainer").get_children().back().grab_focus()
 
 
 func _on_save_close_button_pressed() -> void:

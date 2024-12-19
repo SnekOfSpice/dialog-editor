@@ -40,7 +40,7 @@ func _process(delta):
 	update_content_scale(editor_content_scale)
 
 func _on_close_requested() -> void:
-	if editor.undo_redo.get_history_count() == 0:
+	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
 		close_editor()
 	last_quit_header = "Do you want to close DIISIS?\n"
 	build_quit_dialog(last_quit_header)
@@ -151,6 +151,7 @@ func _on_window_factor_scale_value_changed(value):
 
 
 func _on_window_mouse_entered():
+	return
 	if not has_focus():
 		return
 	if $QuitDialog.visible:
@@ -161,6 +162,7 @@ func _on_window_mouse_entered():
 
 
 func _on_window_mouse_exited():
+	return
 	grab_focus()
 
 func _on_window_factor_window_mouse_entered():
@@ -184,7 +186,7 @@ func _on_editor_scale_editor_up():
 
 
 func _on_editor_open_new_file() -> void:
-	if editor.undo_redo.get_history_count() == 0:
+	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
@@ -208,3 +210,11 @@ func _on_reset_scale_button_pressed() -> void:
 
 func _on_help_button_pressed() -> void:
 	OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+
+
+func _on_editor_history_altered(is_altered: bool) -> void:
+	if is_altered:
+		if not title.ends_with("*"):
+			title = str(title, "*")
+	else:
+		title = title.trim_suffix("*")

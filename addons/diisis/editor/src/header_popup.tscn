@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cp0ob2ul8hv0n"]
 
-[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/amber_cherryblossom.tres" id="1_aohf8"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_aohf8"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/header_popup.gd" id="1_bfvn8"]
 
 [node name="HeaderPopup" type="Window"]

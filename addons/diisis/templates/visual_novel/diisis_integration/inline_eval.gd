@@ -1,12 +1,6 @@
 extends Node
 
 
-func function_in_eval():
-	print("calling a function")
-	return ""
-
-func screenshake():
+func shake_camera(strength: float) -> void:
 	if GameWorld.camera:
-		GameWorld.camera.apply_shake()
-	
-	return ""
+		GameWorld.camera.apply_shake(strength)

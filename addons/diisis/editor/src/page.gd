@@ -6,6 +6,8 @@ var number := 0
 var next := 1
 var lines:Node
 
+@onready var page_key_line_edit : LineEdit = find_child("PageKeyLineEdit")
+
 signal request_delete()
 
 func init(n:=number):
@@ -105,21 +107,29 @@ func set_next(next_page: int):
 	find_child("NextLineEdit").value = next
 	find_child("NextKey").text = next_key
 
-func _on_page_key_edit_pressed() -> void:
-	pass # Replace with function body.
 
 func enable_page_key_edit(value: bool):
 	find_child("PageKey").visible = not value
-	find_child("PageKeyLineEdit").visible = value
-	find_child("PageKeyLineEdit").text = get_page_key()
+	page_key_line_edit.visible = value
+	page_key_line_edit.text = get_page_key()
 	
 	find_child("Seperator").visible = get_page_key() != ""
+	
+	if value:
+		page_key_line_edit.grab_focus()
+		page_key_line_edit.caret_column = page_key_line_edit.text.length()
+
+func save_page_key_from_line_edit():
+	set_page_key(page_key_line_edit.text)
+	save()
+	enable_page_key_edit(false)
+	find_child("PageKeyEditButton").button_pressed = false
+
 
 func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
 	if not button_pressed:
 		# add check for duplicates later
-		set_page_key(find_child("PageKeyLineEdit").text)
-		save()
+		save_page_key_from_line_edit()
 	
 	enable_page_key_edit(button_pressed)
 
@@ -501,3 +511,10 @@ func _on_delete_button_pressed() -> void:
 
 func _on_cancel_deletion_button_pressed() -> void:
 	find_child("DeletePromptContainer").visible = false
+
+
+func _on_page_key_line_edit_text_submitted(new_text: String) -> void:
+	if Pages.key_exists(new_text):
+		Pages.editor.notify(str("Page ", new_text, " already exists at ", Pages.get_page_number_by_key(new_text)))
+		return
+	save_page_key_from_line_edit()

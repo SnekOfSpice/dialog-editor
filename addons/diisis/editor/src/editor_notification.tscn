@@ -39,4 +39,5 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "X"
 
+[connection signal="meta_clicked" from="VBoxContainer/HBoxContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteButton" to="." method="_on_delete_button_pressed"]

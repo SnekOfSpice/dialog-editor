@@ -15,6 +15,7 @@ func serialize() -> Dictionary:
 	result["choices"] = choices
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed
 	result["meta.do_jump_page"] = do_jump_page
+	result["choice_title"] = find_child("ChoiceTitleLineEdit").text
 	
 	return result
 
@@ -29,12 +30,13 @@ func deserialize(data):
 		choices = data.get("choices", [])
 		#set_do_jump_page(data.get("meta.do_jump_page"))
 	
-	
-	
-	find_child("AutoSwitchButton").button_pressed = data.get("auto_switch", false)
-	set_auto_switch(find_child("AutoSwitchButton").button_pressed)
+	var auto_switch = data.get("auto_switch", false)
+	find_child("AutoSwitchButton").button_pressed = auto_switch
+	set_auto_switch(auto_switch)
+	find_child("ChoiceTitleLineEdit").text = data.get("choice_title", "")
 	
 	for d in choices:
+		d["auto_switch"] = auto_switch
 		add_choice(-1, d)
 	
 	update()

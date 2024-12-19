@@ -23,3 +23,7 @@ func _process(delta: float) -> void:
 
 func _on_delete_button_pressed() -> void:
 	queue_free()
+
+
+func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(meta)

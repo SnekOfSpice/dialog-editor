@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d33carvc0ulrr"]
+[gd_scene load_steps=3 format=3 uid="uid://d33carvc0ulrr"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_edit_container.gd" id="1_05xxm"]
+[ext_resource type="Script" path="res://addons/diisis/editor/src/auto_scroll_container.gd" id="2_ujfyx"]
 
 [node name="InstructionEditContainer" type="Control"]
 layout_mode = 3
@@ -64,6 +65,7 @@ item_1/id = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("2_ujfyx")
 
 [node name="ItemContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
