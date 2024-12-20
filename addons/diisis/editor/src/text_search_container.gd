@@ -20,7 +20,7 @@ func _shortcut_input(event):
 		if not event.pressed:
 			return
 		
-		if event.is_ctrl_pressed():
+		if event.is_command_or_control_pressed():
 			match event.key_label:
 				KEY_F:
 					find_child("QueryTextEdit").release_focus()

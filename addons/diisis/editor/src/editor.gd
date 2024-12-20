@@ -204,7 +204,7 @@ func _shortcut_input(event):
 		if event.key_label == KEY_F1:
 			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
 		
-		if event.is_ctrl_pressed():
+		if event.is_command_or_control_pressed():
 			match event.key_label:
 				KEY_N:
 					emit_signal("open_new_file")
@@ -245,12 +245,12 @@ func _shortcut_input(event):
 		if event.is_alt_pressed():
 			match event.key_label:
 				KEY_LEFT:
-					if event.is_ctrl_pressed():
+					if event.is_command_or_control_pressed():
 						request_load_first_page()
 					else:
 						request_load_previous_page()
 				KEY_RIGHT:
-					if event.is_ctrl_pressed():
+					if event.is_command_or_control_pressed():
 						request_load_last_page()
 					else:
 						request_load_next_page()
