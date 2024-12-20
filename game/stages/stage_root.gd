@@ -33,18 +33,19 @@ func set_screen(screen_path:String):
 	screen_container.visible = true
 	screen = screen_path
 
-func set_background(background:String, fade_time:=0.0, lmao := true):
-	if background == "none" or background == "null":
+func set_background(background:String, fade_time:=0.0):
+	if background == "none" or background == "null" or background.is_empty():
 		background = GameWorld.background
 	var path = str(CONST.BACKGROUND_ROOT, CONST.get(str("BACKGROUND_", background.to_upper())))
 	if not path:
 		push_warning(str("COULDN'T FIND BACKGROUND ", background, "!"))
-		path = str(CONST.BACKGROUND_ROOT, CONST.BACKGROUND_HOME_REGULAR)
+		return
 	var new_background:Node2D
 	var old_backgrounds:=$Background.get_children()
 	if path.ends_with(".png") or path.ends_with(".jpg") or path.ends_with(".jpeg"):
 		new_background = Sprite2D.new()
 		new_background.texture = load(path)
+		
 		new_background.centered = false
 	
 	elif path.ends_with(".tscn"):
@@ -52,12 +53,10 @@ func set_background(background:String, fade_time:=0.0, lmao := true):
 	else:
 		push_error(str("Background ", background, " does not end in .png, .jpg, .jpeg or .tscn."))
 		return
-	#new_background.modulate.a = 0.0
+	
 	$Background.add_child(new_background)
 	$Background.move_child(new_background, 0)
 	
-	var viewport_height = ProjectSettings.get_setting("display/window/size/viewport_height")
-	var viewport_width = ProjectSettings.get_setting("display/window/size/viewport_width")
 	var background_size := Vector2.ZERO
 	if new_background is Sprite2D:
 		background_size = new_background.texture.get_size()

@@ -49,7 +49,6 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 		return
 	
 	var preserve_position := -1.0
-	var preser_position : float
 	for prefix in position_preserving_prefixes:
 		if bgm.begins_with(prefix) and bgm_key.begins_with(prefix):
 			preserve_position = main_audio_player.get_playback_position()

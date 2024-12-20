@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cqhle8o6sobr5"]
+
+[node name="TemplateSetupConfirmationWindow" type="ConfirmationDialog"]
+initial_position = 4
+size = Vector2i(499, 236)
+visible = true
+ok_button_text = "Add Template"
+dialog_text = "Setting up a template involves creating new entries in the input map and adding autoloads to your project.
+
+If you have conflicting input actions or autoload names, they will be overwritten.
+
+Are you sure?"
+dialog_autowrap = true

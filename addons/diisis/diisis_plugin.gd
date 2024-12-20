@@ -3,9 +3,9 @@ extends EditorPlugin
 class_name DIISISPlugin
 
 var dia_editor_window:Window
-var toolbar_button
+var toolbar_button:Control
+var confirmation_window:Window
 
-#const AUTOLOAD_DATA = "Data"
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
@@ -13,6 +13,106 @@ const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
+const TEMPLATE_VN_AUTOLOAD_CONST = "CONST"
+const TEMPLATE_VN_AUTOLOAD_GAME_WORLD = "GameWorld"
+const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
+const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
+const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
+
+func setup_vn_template():
+	var e1 = InputEventMouseButton.new()
+	e1.button_index = MOUSE_BUTTON_LEFT
+	var e2 = InputEventKey.new()
+	e2.keycode = KEY_SPACE
+	e2.physical_keycode = KEY_SPACE
+	var e3 = InputEventKey.new()
+	e3.keycode = KEY_ENTER
+	e3.physical_keycode = KEY_ENTER
+	var e4 = InputEventKey.new()
+	e4.keycode = KEY_LEFT
+	e4.physical_keycode = KEY_LEFT
+	ProjectSettings.set_setting("input/advance",
+		{
+		"deadzone": 0.5,
+		"events": [e1,e2,e3,e4]
+		}
+	)
+	
+	var e5 = InputEventMouseButton.new()
+	e5.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	var e6 = InputEventKey.new()
+	e6.keycode = KEY_RIGHT
+	e6.physical_keycode = KEY_RIGHT
+	ProjectSettings.set_setting("input/go_back",
+		{
+		"deadzone": 0.5,
+		"events": [e5,e6]
+		}
+	)
+	
+	var e7 = InputEventKey.new()
+	e7.keycode = KEY_A
+	e7.physical_keycode = KEY_A
+	ProjectSettings.set_setting("input/toggle_auto_continue",
+		{
+		"deadzone": 0.5,
+		"events": [e7]
+		}
+	)
+	
+	var e8 = InputEventKey.new()
+	e8.keycode = KEY_S
+	e8.physical_keycode = KEY_S
+	ProjectSettings.set_setting("input/screenshot",
+		{
+		"deadzone": 0.5,
+		"events": [e8]
+		}
+	)
+	var e9 = InputEventKey.new()
+	e9.keycode = KEY_H
+	e9.physical_keycode = KEY_H
+	ProjectSettings.set_setting("input/toggle_ui",
+		{
+		"deadzone": 0.5,
+		"events": [e9]
+		}
+	)
+	var e10 = InputEventKey.new()
+	e10.keycode = KEY_F1
+	e10.physical_keycode = KEY_F1
+	ProjectSettings.set_setting("input/cheats",
+		{
+		"deadzone": 0.5,
+		"events": [e10]
+		}
+	)
+	
+	for file_name in ["const", "game_world", "go_back_handler", "options", "sound"]:
+		var path_game := str("res://game/autoloads/", file_name, ".tscn")
+		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
+		var autoload_name:String
+		match file_name:
+			"const":
+				autoload_name = TEMPLATE_VN_AUTOLOAD_CONST
+			"game_world":
+				autoload_name = TEMPLATE_VN_AUTOLOAD_GAME_WORLD
+			"go_back_handler":
+				autoload_name = TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER
+			"options":
+				autoload_name = TEMPLATE_VN_AUTOLOAD_OPTIONS
+			"sound":
+				autoload_name = TEMPLATE_VN_AUTOLOAD_SOUND
+		if FileAccess.file_exists(path_game):
+			add_autoload_singleton(autoload_name, path_game)
+		elif FileAccess.file_exists(path_plugin):
+			add_autoload_singleton(autoload_name, path_plugin)
+		else:
+			push_warning(str("Couldn't find VN template autoload ", file_name, " in res://game/autoloads/ or res://addons/diisis/templates/visual_novel/autoloads/"))
+		await get_tree().process_frame
+	
+	ProjectSettings.save()
+	print_rich("[wave amp=20.0 freq=5.0 connected=1]Visual Novel Template has been set up correctly[/wave] :3\n[color=#f457ff]Restart the editor to apply <3")
 
 func add_editor_singletons():
 	#if OS.has_feature("web"):
@@ -57,8 +157,8 @@ func _enter_tree():
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
 	toolbar_button.visible = true
 	toolbar_button.is_in_editor = true
-	toolbar_button.pressed.connect(open_editor)
 	toolbar_button.request_open_diisis.connect(open_editor)
+	toolbar_button.request_setup_template.connect(on_request_setup_template)
 	
 	
 	await get_tree().process_frame
@@ -68,7 +168,19 @@ func _enter_tree():
 	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Regular.ttf]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
 	print_rich(welcome_message)
-	
+
+func on_request_setup_template(template:int):
+	match template:
+		0:
+			if is_instance_valid(confirmation_window):
+				confirmation_window.queue_free()
+			confirmation_window = preload("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn").instantiate()
+			get_editor_interface().get_base_control().add_child.call_deferred(confirmation_window)
+			confirmation_window.confirmed.connect(setup_vn_template)
+			confirmation_window.canceled.connect(confirmation_window.queue_free)
+			confirmation_window.title = "Add Visual Novel Template?"
+			confirmation_window.show()
+
 func open_editor():
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.grab_focus()

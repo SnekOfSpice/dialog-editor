@@ -2,8 +2,24 @@
 
 [ext_resource type="Script" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
 
-[node name="OpenEditorButton" type="Button"]
+[node name="HBoxContainer" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_4si81")
+
+[node name="OpenEditorButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Open DIISIS (Ctrl+Alt+D)"
 focus_mode = 0
 text = "DIISIS"
-script = ExtResource("1_4si81")
+
+[node name="MenuBar" type="MenuBar" parent="."]
+layout_mode = 2
+
+[node name="v" type="PopupMenu" parent="MenuBar"]
+item_count = 1
+item_0/text = "Set up VN template..."
+
+[connection signal="pressed" from="OpenEditorButton" to="." method="_on_open_editor_button_pressed"]
+[connection signal="id_pressed" from="MenuBar/v" to="." method="_on_v_id_pressed"]

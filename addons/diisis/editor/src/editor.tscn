@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=28 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -8,7 +8,6 @@
 [ext_resource type="ButtonGroup" uid="uid://wl636ja43dky" path="res://addons/diisis/editor/src/line_type_button_group.tres" id="4_dg3k4"]
 [ext_resource type="Texture2D" uid="uid://byog66ete7xr3" path="res://addons/diisis/editor/visuals/theme/buttons_ui/redo.png" id="4_eueb5"]
 [ext_resource type="PackedScene" uid="uid://bxsq5rsj1i12f" path="res://addons/diisis/editor/src/go_to.tscn" id="4_m6c15"]
-[ext_resource type="PackedScene" uid="uid://thtw7bxvvc4f" path="res://addons/diisis/editor/src/graphview/graph_view.tscn" id="5_bks01"]
 [ext_resource type="Texture2D" uid="uid://cneqtkwtfwwmw" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png" id="5_cfai3"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="ButtonGroup" uid="uid://47f4hgcrt6xj" path="res://addons/diisis/editor/src/page_view_button_group.tres" id="6_5vieb"]
@@ -505,10 +504,6 @@ text = "search"
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="GraphView" parent="." instance=ExtResource("5_bks01")]
-visible = false
-layout_mode = 1
 
 [node name="NotificationContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
