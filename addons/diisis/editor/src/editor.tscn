@@ -589,6 +589,8 @@ visible = false
 [node name="LocaleSelectionWindow" parent="Popups" instance=ExtResource("20_nu372")]
 visible = false
 
+[node name="Camera" type="Camera2D" parent="."]
+
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]

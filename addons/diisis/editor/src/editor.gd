@@ -82,7 +82,6 @@ func init(active_file_path:="") -> void:
 		c.init()
 	
 	core.visible = true
-	$GraphView.visible = false
 	undo_redo.clear_history()
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
@@ -260,11 +259,6 @@ func _shortcut_input(event):
 					else:
 						request_add_page_after_current()
 				
-				
-
-func set_graph_view_visible(value:bool):
-	core.visible = not value
-	$GraphView.visible = value
 	
 func update_controls():
 	if not current_page:
