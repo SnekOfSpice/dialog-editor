@@ -14,7 +14,6 @@ config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="res://game/stages/stage_root.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
-boot_splash/image="res://pride-dark-b-side.png"
 config/icon="res://addons/diisis/final1alt.png"
 
 [autoload]

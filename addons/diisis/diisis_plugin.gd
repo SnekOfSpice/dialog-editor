@@ -111,14 +111,11 @@ func setup_vn_template():
 			push_warning(str("Couldn't find VN template autoload ", file_name, " in res://game/autoloads/ or res://addons/diisis/templates/visual_novel/autoloads/"))
 		await get_tree().process_frame
 	
-	var source_path_template := "res://addons/diisis/templates/visual_novel/diisis_integration/demo_script.json"
 	var source_path_game := "res://game/diisis_integration/demo_script.json"
-	if FileAccess.file_exists(source_path_template):
-		ProjectSettings.set_setting("diisis/project/file/path", source_path_template)
-	elif FileAccess.file_exists(source_path_game):
+	if FileAccess.file_exists(source_path_game):
 		ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
 	else:
-		push_warning("Couldn't find demo_script.json.")
+		push_warning(str("Couldn't find ", source_path_game, "."))
 	
 	var root_template := "res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
 	var root_game := "res://game/stages/stage_root.tscn"
@@ -128,6 +125,8 @@ func setup_vn_template():
 		ProjectSettings.set_setting("application/run/main_scene", root_game)
 	else:
 		push_warning("Couldn't find stage_root.tscn.")
+	
+	ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")
 	
 	ProjectSettings.save()
 	print_rich("[wave amp=20.0 freq=5.0 connected=1]Visual Novel Template has been set up correctly[/wave] :3\n[color=#f457ff]Restart the editor to apply <3")
