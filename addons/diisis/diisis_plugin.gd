@@ -5,6 +5,7 @@ class_name DIISISPlugin
 var dia_editor_window:Window
 var toolbar_button:Control
 var confirmation_window:Window
+var accept_dialogue:AcceptDialog
 
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
@@ -109,6 +110,7 @@ func setup_vn_template():
 			add_autoload_singleton(autoload_name, path_plugin)
 		else:
 			push_warning(str("Couldn't find VN template autoload ", file_name, " in res://game/autoloads/ or res://addons/diisis/templates/visual_novel/autoloads/"))
+			return
 		await get_tree().process_frame
 	
 	var source_path_game := "res://game/diisis_integration/demo_script.json"
@@ -116,6 +118,7 @@ func setup_vn_template():
 		ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
 	else:
 		push_warning(str("Couldn't find ", source_path_game, "."))
+		return
 	
 	var root_template := "res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
 	var root_game := "res://game/stages/stage_root.tscn"
@@ -125,11 +128,12 @@ func setup_vn_template():
 		ProjectSettings.set_setting("application/run/main_scene", root_game)
 	else:
 		push_warning("Couldn't find stage_root.tscn.")
+		return
 	
 	ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")
 	
 	ProjectSettings.save()
-	print_rich("[wave amp=20.0 freq=5.0 connected=1]Visual Novel Template has been set up correctly[/wave] :3\n[color=#f457ff]Restart the editor to apply <3")
+	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
 func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
@@ -193,6 +197,21 @@ func on_request_setup_template(template:int):
 			confirmation_window.canceled.connect(confirmation_window.queue_free)
 			confirmation_window.title = "Add Visual Novel Template?"
 			confirmation_window.show()
+
+func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text:="OK"):
+	if is_instance_valid(accept_dialogue):
+		accept_dialogue.queue_free()
+	accept_dialogue = AcceptDialog.new()
+	get_editor_interface().get_base_control().add_child.call_deferred(accept_dialogue)
+	accept_dialogue.dialog_autowrap = true
+	accept_dialogue.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+	accept_dialogue.size = Vector2(499, 236)
+	accept_dialogue.confirmed.connect(confirmation_window.queue_free)
+	accept_dialogue.canceled.connect(confirmation_window.queue_free)
+	accept_dialogue.title = dia_title
+	accept_dialogue.dialog_text = dia_text
+	accept_dialogue.ok_button_text = dia_ok_button_text
+	accept_dialogue.show()
 
 func open_editor():
 	if is_instance_valid(dia_editor_window):

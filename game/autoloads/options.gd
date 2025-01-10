@@ -7,10 +7,11 @@ var master_volume := 1.0
 var music_volume := 1.0
 var sfx_volume := 1.0
 
-var fullscreen := false
-var text_speed := 201
-var auto_continue_delay := 1.0
-var auto_continue := false
+@export_group("DIISIS Defaults")
+@export var fullscreen := false
+@export_range(1, LineReader.MAX_TEXT_SPEED, 1) var text_speed := 201
+@export_range(0.1, 60.0, 0.1) var auto_continue_delay := 1.0
+@export var auto_continue := false
 
 func _ready() -> void:
 	var config = ConfigFile.new()

@@ -275,7 +275,7 @@ var started_word_buffer :=""
 var characters_visible_so_far := ""
 
 var last_visible_ratio := 0.0
-var last_visible_characters := 0.0
+var last_visible_characters := 0
 var visibilities_before_interrupt := {}
 
 var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
@@ -488,6 +488,8 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
+	last_visible_characters = 0
+	last_visible_ratio = 0
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if showing_text:
@@ -858,17 +860,21 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
 		if last_visible_characters != text_content.visible_characters:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
-	
+		
 	for call_position : int in call_strings:
 		if (
 			((not called_positions.has(call_position)) and last_visible_characters >= call_position) or
 			(call_position >= last_visible_characters and call_position <= text_content.visible_characters) or
-			text_content.visible_characters == -1
+			text_content.visible_characters == -1 or
+			last_visible_characters == -1
 		):
 			call_from_position(call_position)
 	
 	last_visible_ratio = text_content.visible_ratio
 	last_visible_characters = text_content.visible_characters
+	if text_content.get_parsed_text().length() == text_content.visible_characters:
+		last_visible_characters = -1
+		last_visible_ratio = 0
 	
 	if last_visible_characters == -1 and auto_advance:
 		advance()
@@ -881,25 +887,10 @@ func _process(delta: float) -> void:
 		if pause_types.is_empty() or next_pause_position_index < 0:
 			return
 		if pause_types[next_pause_position_index] == PauseTypes.Auto:
-			# bug here
 			return
-#			remaining_auto_pause_duration -= delta
-#			if remaining_auto_pause_duration > 0:
-#				return
-#			else:
-#				remaining_auto_pause_duration = auto_pause_duration
-#				advance()
-#				return
-#		prints("auto pause dir ", remaining_auto_pause_duration)
-#		prints(
-#			"vis", text_content.visible_characters, 
-#			"pause at", pause_positions[next_pause_position_index] - 4 * next_pause_position_index,
-#			"length", text_content.text.length()
-#			)
 		if text_content.visible_characters >= pause_positions[next_pause_position_index] - 4 * next_pause_position_index or text_content.visible_characters == -1:
 			_auto_continue_duration -= delta
 			if _auto_continue_duration <= 0.0:
-				
 				advance()
 
 func remove_spaces_and_send_word_read_event(word: String):
