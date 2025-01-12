@@ -51,6 +51,9 @@ func set_editing(value:bool):
 
 
 func _on_save_button_pressed() -> void:
+	save()
+
+func save():
 	# if discardable, overwrite, else add
 	var new_text : String = find_child("InstructionEdit").text
 	if text_before_edit.is_empty():
@@ -103,3 +106,8 @@ func _on_copy_signature_to_clipboard_button_pressed() -> void:
 
 func grab_focus():
 	find_child("InstructionEdit").grab_focus()
+
+
+func _on_instruction_edit_text_submitted(new_text: String) -> void:
+	if not find_child("SaveButton").disabled:
+		save()

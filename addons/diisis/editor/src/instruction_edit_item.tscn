@@ -79,5 +79,6 @@ layout_mode = 2
 [connection signal="pressed" from="InstructionEditItem/DisplayContainer/CopySignatureToClipboardButton" to="." method="_on_copy_signature_to_clipboard_button_pressed"]
 [connection signal="pressed" from="InstructionEditItem/DisplayContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="text_changed" from="InstructionEditItem/EditContainer/VBoxContainer/InstructionEdit" to="." method="_on_instruction_edit_text_changed"]
+[connection signal="text_submitted" from="InstructionEditItem/EditContainer/VBoxContainer/InstructionEdit" to="." method="_on_instruction_edit_text_submitted"]
 [connection signal="pressed" from="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer/DiscardButton" to="." method="_on_discard_button_pressed"]
 [connection signal="pressed" from="InstructionEditItem/EditContainer/VBoxContainer/EditConfirmContainer/SaveButton" to="." method="_on_save_button_pressed"]
