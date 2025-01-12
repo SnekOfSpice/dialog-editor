@@ -923,7 +923,7 @@ func get_evaluator_properties() -> Array:
 	
 	return methods
 
-func search_string(substr:String, case_insensitive:=false):
+func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 	var found_facts := {}
 	for fact : String in facts:
 		if (case_insensitive and fact.findn(substr) != -1) or (not case_insensitive and fact.find(substr) != -1):
@@ -946,6 +946,22 @@ func search_string(substr:String, case_insensitive:=false):
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var text : String = line.get("content", {}).get("content", "")
+				
+				if not include_tags:
+					var scan_index := 0
+					var pairs = ["<>", "[]"]
+					for pair in pairs:
+						while scan_index < text.length():
+							if text[scan_index] == pair[0]:
+								var local_scan_index := scan_index
+								var control_to_replace := ""
+								while text[local_scan_index] != pair[1]:
+									control_to_replace += text[local_scan_index]
+									local_scan_index += 1
+								control_to_replace += pair[1]
+								text = text.replace(control_to_replace, "")
+							scan_index += 1
+				
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
 			elif line.get("line_type") == DIISIS.LineType.Instruction:

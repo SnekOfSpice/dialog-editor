@@ -964,7 +964,7 @@ func start_showing_text():
 	fit_to_max_line_count(line_chunks)
 	read_next_chunk()
 
-func replace_tags(lines):
+func replace_tags(lines:Array) -> Array:
 	if not inline_evaluator:
 		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
 		return lines

@@ -27,11 +27,13 @@ func _shortcut_input(event):
 					find_child("QueryTextEdit").grab_focus()
 
 func display_results(search:String):
+	find_child("ResultLabel").text = ""
 	fact_start_index = -1
 	instruction_start_index = -1
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
+	var include_tags = find_child("IncludeTagsButton").button_pressed
 	find_child("ReplaceContainer").visible = false
-	var result = Pages.search_string(search, case_insensitive)
+	var result = Pages.search_string(search, case_insensitive, include_tags)
 	var item_list:ItemList = find_child("ItemList")
 	item_list.clear()
 	var i = 0
@@ -122,7 +124,7 @@ func update_query(query:String) -> void:
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
 	var details : String = details_by_address.get(address)
-	details = details.replace(last_search_query, str("[color=#f8f6f8][b]", last_search_query, "[/b][/color]"))
+	details = details.replacen(last_search_query, str("[color=#f8f6f8][b]", last_search_query, "[/b][/color]"))
 	find_child("ResultLabel").text = details
 	
 	find_child("GoToButton").text = str("Go To ", address)
@@ -158,3 +160,7 @@ func _on_item_list_item_activated(index: int) -> void:
 	await get_tree().process_frame
 	var address = find_child("ItemList").get_item_text(find_child("ItemList").get_selected_items()[0])
 	Pages.editor.request_go_to_address(address)
+
+
+func _on_include_tags_button_toggled(toggled_on: bool) -> void:
+	update_query(find_child("QueryTextEdit").text)
