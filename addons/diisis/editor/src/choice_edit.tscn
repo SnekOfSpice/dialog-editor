@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=12 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_vdkak"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_bcn4k"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="4_x4tpw"]
 [ext_resource type="Texture2D" uid="uid://co44uwwjikn2w" path="res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png" id="5_jhtck"]
+[ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="7_id204"]
 [ext_resource type="Texture2D" uid="uid://nakfxqdgr4pg" path="res://addons/diisis/editor/visuals/true.png" id="7_qdd2f"]
 [ext_resource type="Texture2D" uid="uid://cyiecfr2eyp2o" path="res://addons/diisis/editor/visuals/false.png" id="8_ykt7a"]
 
@@ -157,13 +158,16 @@ theme_override_constants/margin_right = 15
 [node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2"]
-layout_mode = 2
-text = "jump"
-
 [node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 columns = 2
+
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer" instance=ExtResource("7_id204")]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "jump"
 
 [node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
@@ -193,15 +197,18 @@ layout_mode = 2
 [node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2"]
-auto_translate_mode = 1
-layout_mode = 2
-text = "loopback"
-
 [node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 columns = 2
+
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer" instance=ExtResource("7_id204")]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "loopback"
 
 [node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1

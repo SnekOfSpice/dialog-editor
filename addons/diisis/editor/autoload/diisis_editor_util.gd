@@ -93,7 +93,7 @@ func _sort_addresses(a1:String, a2: String) -> bool:
 # TODO: [page name or number if no name] / line type / choice text (concat)
 func humanize_address(address:String) -> String:
 	if not Pages.does_address_exist(address):
-		return "Address does not exist."
+		return "N/A"
 	var address_string := ""
 	var parts := get_split_address(address)
 	address_string = str(Pages.get_page_key(parts[0]))
@@ -105,8 +105,7 @@ func humanize_address(address:String) -> String:
 		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
 	return address_string
 
-func get_project_source_file_path(suppress_warning:=false) -> String:
-	#var file_path : String = DIISISPlugin.PROJECT_FILE_PATH
+func get_project_source_file_path() -> String:
 	return String(ProjectSettings.get_setting("diisis/project/file/path"))
 
 func set_project_file_path(active_dir:String, active_file_name:String):

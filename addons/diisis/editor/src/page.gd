@@ -257,17 +257,13 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 		
 		if change_line_references:
 			var to = Pages.editor.current_page.get_line_count() - 1 if Pages.editor.current_page else indices.max()
+			save()
 			Pages.change_line_references_directional(
 			Pages.editor.get_current_page_number(),
 			at_index,
 			to,
 			 + 1
 			)
-	
-	#print(change_line_references)
-	#await get_tree().process_frame
-	#save()
-	#update()
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})

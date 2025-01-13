@@ -235,16 +235,16 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
-				for choice in content.get("choices"):
+				for choice : Dictionary in content.get("choices"):
 					var page_number : int = page.get("number")
-					if choice.get("target_page") == on_page:
+					if choice.get("target_page") == on_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 						var target_line : int = choice.get("target_line")
 						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
 							choice["target_line"] = target_line + operation
 							if page_number == current_page_number:
 								edited_current_page = true
 					
-					if choice.get("loopback_target_page") == on_page:
+					if choice.get("loopback_target_page") == on_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 						var loopback_target_line : int = choice.get("loopback_target_line")
 						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
 							choice["loopback_target_line"] = loopback_target_line + operation
@@ -268,9 +268,12 @@ func change_page_references_dir(changed_page: int, operation:int):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				var choices = content.get("choices")
-				for choice in choices:
-					if choice.get("target_page") >= changed_page:
+				for choice : Dictionary in choices:
+					if choice.get("target_page") >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 						choice["target_page"] = choice.get("target_page") + operation
+					if choice.get("loopback_target_page") >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						choice["loopback_target_page"] = choice.get("loopback_target_page") + operation
+	
 	await get_tree().process_frame
 	editor.refresh(false)
 
