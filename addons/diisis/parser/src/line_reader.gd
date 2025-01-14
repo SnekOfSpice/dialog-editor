@@ -263,6 +263,7 @@ var dialog_lines := []
 var dialog_actors := []
 var dialog_line_index := 0
 var is_last_actor_name_different := true
+var text_speed_by_character_index := []
 
 var line_chunks := []
 var chunk_index := 0
@@ -325,6 +326,7 @@ func serialize() -> Dictionary:
 	result["called_positions"] = called_positions
 	result["call_strings"] = call_strings
 	result["current_choice_title"] = current_choice_title
+	result["text_speed_by_character_index"] = text_speed_by_character_index
 	
 	return result
 
@@ -353,6 +355,7 @@ func deserialize(data: Dictionary):
 	called_positions = data.get("called_positions", [])
 	call_strings = data.get("call_strings", {})
 	current_choice_title = data.get("current_choice_title", "")
+	text_speed_by_character_index = data.get("text_speed_by_character_index", [])
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -810,14 +813,18 @@ func _process(delta: float) -> void:
 		lead_time -= delta
 		return
 	
+	var current_text_speed := text_speed
+	if text_content.visible_characters < text_speed_by_character_index.size() and text_content.visible_characters != -1:
+		current_text_speed = text_speed_by_character_index[text_content.visible_characters]
+	
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
 	if text_content.visible_characters < get_end_of_chunk_position():
-		if text_speed == MAX_TEXT_SPEED:
+		if current_text_speed == MAX_TEXT_SPEED:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
 			var old_text_length : int = text_content.visible_characters
-			text_content.visible_ratio += (float(text_speed) / text_content.get_parsed_text().length()) * delta
+			text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
 			if old_text_length != text_content.visible_characters:
@@ -853,7 +860,7 @@ func _process(delta: float) -> void:
 				started_word_buffer = ""
 	characters_visible_so_far = new_characters_visible_so_far
 	
-	if text_speed < MAX_TEXT_SPEED:
+	if current_text_speed < MAX_TEXT_SPEED:
 		if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
 			ParserEvents.text_content_filled.emit()
 		if last_visible_ratio != text_content.visible_ratio:
@@ -956,7 +963,6 @@ func update_input_prompt(delta:float):
 	
 	target_prompt.modulate.a = lerp(target_prompt.modulate.a, 1.0, input_prompt_lerp_weight)
 
-
 func start_showing_text():
 	var content : String = dialog_lines[dialog_line_index]
 	line_chunks = content.split("<lc>")
@@ -1051,7 +1057,6 @@ func replace_tags(lines:Array) -> Array:
 					control_to_replace += ">"
 					new_text = new_text.replace(control_to_replace, str(Parser.get_fact(fact_name)))
 				
-			
 			text_length = new_text.length()
 			scan_index += 1
 		result.append(new_text)
@@ -1095,6 +1100,8 @@ func read_next_chunk():
 	pause_types.clear()
 	call_strings.clear()
 	called_positions.clear()
+	var text_speed_override := -1.0
+	text_speed_by_character_index.clear()
 	
 	var new_text : String = line_chunks[chunk_index]
 	var begins_trimmable := begins_with_trimmable(new_text)
@@ -1135,6 +1142,7 @@ func read_next_chunk():
 	
 	var scan_index := 0
 	var notify_positions := []
+	var text_speed_tags := []
 	var tag_buffer := 0
 	var target_length := bbcode_removed_text.length()
 	while scan_index < target_length:
@@ -1157,7 +1165,23 @@ func read_next_chunk():
 				scan_index = max(scan_index - tag_string.length(), 0)
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
-			
+			elif bbcode_removed_text.find("<ts_", scan_index) == scan_index:
+				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
+				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
+				if bbcode_removed_text.find("<ts_rel:", scan_index) == scan_index:
+					var value := float(tag_string.trim_suffix(">").split(":")[1])
+					text_speed_override = clamp(float(value) * text_speed, 1, MAX_TEXT_SPEED-1)
+				elif bbcode_removed_text.find("<ts_abs:", scan_index) == scan_index:
+					var value := float(tag_string.trim_suffix(">").split(":")[1])
+					text_speed_override = clamp(float(value), 1, MAX_TEXT_SPEED-1)
+				elif bbcode_removed_text.find("<ts_reset", scan_index) == scan_index:
+					text_speed_override = -1
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
+				target_length -= tag_string.length()
+				tag_buffer += tag_string.length()
+				text_speed_tags.append(tag_string)
+		
+		text_speed_by_character_index.append(text_speed_override if text_speed_override != -1 else text_speed)
 		scan_index += 1
 	
 	scan_index = 0
@@ -1187,6 +1211,8 @@ func read_next_chunk():
 	cleaned_text = cleaned_text.replace("\\[", "[")
 	for call : String in call_strings.values():
 		cleaned_text = cleaned_text.replace(call, "")
+	for tag : String in text_speed_tags:
+		cleaned_text = cleaned_text.replace(tag, "")
 	
 	if is_last_actor_name_different:
 		lead_time = Parser.text_lead_time_other_actor

@@ -949,7 +949,6 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var text : String = line.get("content", {}).get("content", "")
-				
 				if not include_tags:
 					var scan_index := 0
 					var pairs = ["<>", "[]"]
@@ -963,6 +962,7 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 									local_scan_index += 1
 								control_to_replace += pair[1]
 								text = text.replace(control_to_replace, "")
+								scan_index -= control_to_replace.length()
 							scan_index += 1
 				
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
