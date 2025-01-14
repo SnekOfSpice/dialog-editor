@@ -140,7 +140,7 @@ func _input(event: InputEvent) -> void:
 				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name"), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
 				screenshot.save_png(path)
 				
-				var notification_popup = preload("res://game/notification.tscn").instantiate()
+				var notification_popup = preload("res://game/systems/notification.tscn").instantiate()
 				var global_path := ProjectSettings.globalize_path(path)
 				var global_dir := global_path.substr(0, global_path.rfind("/"))
 				find_child("VNUIRoot").add_child(notification_popup)
