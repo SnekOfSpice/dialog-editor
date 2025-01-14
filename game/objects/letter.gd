@@ -7,11 +7,6 @@ func _ready() -> void:
 	$Clean.text = $Handwriting.text
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
 func _on_font_button_pressed() -> void:
 	$Handwriting.visible = not $Handwriting.visible
 	$Clean.visible = not $Clean.visible

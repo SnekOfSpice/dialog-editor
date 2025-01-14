@@ -47,12 +47,10 @@ func deserialize(data:Dictionary):
 	
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
-	#find_child("PageSelect").value = data.get("target_page", 0)
-	#find_child("LineSelect").value = data.get("target_line", 0)
-	#find_child("LoopbackPageSelect").value = data.get("loopback_target_page", 0)
-	#find_child("LoopbackLineSelect").value = data.get("loopback_target_line", 0)
-	#deserialized_loopback_page = data.get("loopback_target_page", 0)
-	#deserialized_loopback_line = data.get("loopback_target_line", 0)
+	
+	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(data.get("jump_address_mode", AddressModeButton.Mode.Objectt))
+	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(data.get("loop_address_mode", AddressModeButton.Mode.Objectt))
+	
 	
 
 	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem))[1]
@@ -62,13 +60,6 @@ func deserialize(data:Dictionary):
 	find_child("LineSelect").value = jump_target_line
 	find_child("LoopbackPageSelect").value = loopback_target_page
 	find_child("LoopbackLineSelect").value = loopback_target_line
-#
-	#prints(
-		#"jline", jump_target_line,
-		#"jpage", jump_target_page,
-		#"lline", loopback_target_line,
-		#"lpage", loopback_target_page,
-	#)
 	
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
@@ -142,12 +133,18 @@ func serialize() -> Dictionary:
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : get_address(),
-		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id()
+		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id(),
+		"jump_address_mode": find_child("JumpPageContainer").find_child("AddressModeButton").get_mode(),
+		"loop_address_mode": find_child("LoopbackContainer").find_child("AddressModeButton").get_mode(),
 	}
 
 func update_fragile():
 	var line_parent = get_parent()
+	if not is_instance_valid(line_parent):
+		return
 	while not line_parent is Line:
+		if not line_parent:
+			return
 		line_parent = line_parent.get_parent()
 	var actual_line_type = line_parent.line_type
 	if actual_line_type != DIISIS.LineType.Choice:
@@ -167,8 +164,10 @@ func update_fragile():
 		offset = Pages.local_line_insert_offset
 	else:
 		offset = 0
-	#print(Pages.page_data.get(parts[0]).get("lines")[line.get("meta.line_index")].get("content"))
-	var data =  Pages.page_data.get(parts[0]).get("lines")[line.get("meta.line_index") - offset].get("content").get("choices")[parts[2]]
+		
+	var choices = Pages.page_data.get(parts[0]).get("lines")[line.get("meta.line_index") - offset].get("content").get("choices")
+	if not choices: return
+	var data = choices[parts[2]]
 	deserialize(data)
 
 func get_address() -> String:

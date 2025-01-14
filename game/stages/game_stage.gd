@@ -140,11 +140,11 @@ func _input(event: InputEvent) -> void:
 				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name"), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
 				screenshot.save_png(path)
 				
-				var notification = preload("res://game/notification.tscn").instantiate()
+				var notification_popup = preload("res://game/systems/notification.tscn").instantiate()
 				var global_path := ProjectSettings.globalize_path(path)
 				var global_dir := global_path.substr(0, global_path.rfind("/"))
-				find_child("VNUIRoot").add_child(notification)
-				notification.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
+				find_child("VNUIRoot").add_child(notification_popup)
+				notification_popup.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
 			if InputMap.action_has_event("toggle_auto_continue", event):
 				find_child("LineReader").auto_continue = not find_child("LineReader").auto_continue
 				Options.auto_continue = find_child("LineReader").auto_continue
@@ -244,15 +244,15 @@ func hide_cg():
 
 func on_actor_name_changed(
 	actor: String,
-	is_name_container_visible: bool
+	name_container_visible: bool
 	):
 		actor_name = actor
-		self.is_name_container_visible = is_name_container_visible
+		is_name_container_visible = name_container_visible
 		return
 		
 func on_text_content_text_changed(
-	old_text: String,
-	new_text: String,
+	_old_text: String,
+	_new_text: String,
 	lead_time: float,
 ):
 	if text_style == TextStyle.ToBottom:

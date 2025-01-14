@@ -60,7 +60,7 @@ func _get_live_source_path(suppress_error:=false) -> String:
 	if not source_file_override.is_empty():
 		source_path = source_file_override
 	else:
-		source_path = DiisisEditorUtil.get_project_source_file_path(suppress_error)
+		source_path = DiisisEditorUtil.get_project_source_file_path()
 		if source_path.is_empty():
 			if not suppress_error:
 				push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")

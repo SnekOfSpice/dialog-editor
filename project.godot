@@ -21,14 +21,14 @@ config/icon="res://addons/diisis/final1alt.png"
 DIISIS="*res://addons/diisis/shared/autoload/Diisis.tscn"
 Parser="*res://addons/diisis/parser/autoload/parser.tscn"
 ParserEvents="*res://addons/diisis/parser/autoload/parser_events.tscn"
-Pages="*res://addons/diisis/editor/autoload/pages.tscn"
-DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
-DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
 CONST="*res://game/autoloads/const.tscn"
 GameWorld="*res://game/autoloads/game_world.tscn"
 GoBackHandler="*res://game/autoloads/go_back_handler.tscn"
 Options="*res://game/autoloads/options.tscn"
 Sound="*res://game/autoloads/sound.tscn"
+Pages="*res://addons/diisis/editor/autoload/pages.tscn"
+DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
+DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
 
 [diisis]
 

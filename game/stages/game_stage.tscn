@@ -16,7 +16,7 @@
 [ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="11_n0ymb"]
 [ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
-[ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/cheats.tscn" id="13_qackq"]
+[ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
 [ext_resource type="Script" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
 [ext_resource type="Shader" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
 [ext_resource type="Shader" path="res://game/stages/static.gdshader" id="17_dc0ef"]

@@ -6,8 +6,6 @@ var emotion := ""
 
 var target_x := 0.0
 
-signal repositioned()
-
 var emotions_by_page := {}
 
 @onready var active_mat = $Sprite.get_material()

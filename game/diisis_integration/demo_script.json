@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 1,
+		"current_page_number": 0,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -629,6 +629,8 @@
 										},
 										"meta.visible": true
 									},
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
@@ -666,6 +668,8 @@
 										},
 										"meta.visible": false
 									},
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
@@ -834,7 +838,7 @@
 						}
 					}
 				],
-				"meta.scroll_vertical": 0,
+				"meta.scroll_vertical": 4,
 				"meta.selected": false,
 				"next": 1,
 				"number": 0,
@@ -1090,7 +1094,7 @@
 								"amber"
 							],
 							"active_actors_title": "character",
-							"content": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too. (As you can see in the script, newline characters don't need to be escaped in any capacity.)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.\n[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg>"
+							"content": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too. (As you can see in the script, newline characters don't need to be escaped in any capacity.)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish."
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -1108,9 +1112,50 @@
 						"meta.selector": {
 							"selected": false
 						}
+					},
+					{
+						"address": "1.6",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"active_actors": [
+								"narrator",
+								"amber"
+							],
+							"active_actors_title": "character",
+							"content": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg>"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 6,
+						"meta.selector": {
+							"selected": false
+						}
 					}
 				],
-				"meta.scroll_vertical": 0,
+				"meta.scroll_vertical": 741,
 				"meta.selected": false,
 				"next": 2,
 				"number": 1,
@@ -1236,7 +1281,7 @@
 								"amber"
 							],
 							"active_actors_title": "character",
-							"content": "[]>narrator:There you go <3\n[]>narrator:Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-DIISIS-without-coding-(Using-the-Demo-project)]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes."
+							"content": "[]>narrator:There you go <3\n[]>narrator:Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes."
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -1297,7 +1342,7 @@
 						}
 					}
 				],
-				"meta.scroll_vertical": 18,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 0,
 				"number": 2,
