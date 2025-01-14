@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 2,
+		"current_page_number": 0,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -629,6 +629,8 @@
 										},
 										"meta.visible": true
 									},
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
@@ -666,6 +668,8 @@
 										},
 										"meta.visible": false
 									},
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
@@ -834,7 +838,7 @@
 						}
 					}
 				],
-				"meta.scroll_vertical": 1352,
+				"meta.scroll_vertical": 4,
 				"meta.selected": false,
 				"next": 1,
 				"number": 0,

@@ -815,7 +815,8 @@ func _process(delta: float) -> void:
 	
 	var current_text_speed := text_speed
 	if text_content.visible_characters < text_speed_by_character_index.size() and text_content.visible_characters != -1:
-		current_text_speed = text_speed_by_character_index[text_content.visible_characters]
+		var value = text_speed_by_character_index[text_content.visible_characters]
+		current_text_speed =  value if value != -1 else text_speed
 	
 	if next_pause_position_index < pause_positions.size() and next_pause_position_index != -1:
 		find_next_pause()
@@ -1181,7 +1182,7 @@ func read_next_chunk():
 				tag_buffer += tag_string.length()
 				text_speed_tags.append(tag_string)
 		
-		text_speed_by_character_index.append(text_speed_override if text_speed_override != -1 else text_speed)
+		text_speed_by_character_index.append(text_speed_override)
 		scan_index += 1
 	
 	scan_index = 0
