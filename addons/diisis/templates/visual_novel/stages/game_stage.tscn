@@ -1,0 +1,672 @@
+[gd_scene load_steps=48 format=3 uid="uid://r1ntcqdujfol"]
+
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/stages/game_stage.gd" id="1_a36me"]
+[ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
+[ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
+[ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://addons/diisis/templates/visual_novel/characters/character.tscn" id="3_tdgll"]
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/stages/objects.gd" id="3_x2eff"]
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/stages/instruction_handler_intro.gd" id="4_u8vmc"]
+[ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/diisis_integration/inline_eval.gd" id="6_8ao3j"]
+[ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="6_mh4vb"]
+[ext_resource type="Shader" path="res://addons/diisis/templates/visual_novel/stages/sun_shader/fade_out.gdshader" id="6_o425v"]
+[ext_resource type="Texture2D" uid="uid://kl3iyk14qdik" path="res://addons/diisis/templates/visual_novel/stages/sun_shader/wide_noise.tres" id="8_6l6o8"]
+[ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://addons/diisis/templates/visual_novel/stages/black_fade.tscn" id="8_50byo"]
+[ext_resource type="Texture2D" uid="uid://c17fgm00bow0b" path="res://addons/diisis/templates/visual_novel/stages/sun_shader/mask_02_02.png" id="8_mxu8l"]
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://addons/diisis/templates/visual_novel/visuals/theme/diisis_theme.tres" id="11_n0ymb"]
+[ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://addons/diisis/templates/visual_novel/screens/chapter_cover.tscn" id="12_vf2y4"]
+[ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://addons/diisis/templates/visual_novel/systems/cheats.tscn" id="13_qackq"]
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/stages/start_cover.gd" id="13_qfsh6"]
+[ext_resource type="Shader" path="res://addons/diisis/templates/visual_novel/stages/one_fadeout.gdshader" id="15_heqc4"]
+[ext_resource type="Shader" path="res://addons/diisis/templates/visual_novel/stages/static.gdshader" id="17_dc0ef"]
+[ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://addons/diisis/templates/visual_novel/stages/rolling_credits.tscn" id="17_gnute"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ca2q"]
+resource_local_to_scene = true
+shader = ExtResource("15_heqc4")
+shader_parameter/lod = 0.0
+shader_parameter/mix_percentage = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hnvqq"]
+shader = ExtResource("6_o425v")
+shader_parameter/color = Color(0.94, 0.56118, 0.3572, 1)
+shader_parameter/outer_color = Color(0.958791, 0.794025, 0.782691, 1)
+shader_parameter/width = 2.5
+shader_parameter/origin_noise = Vector2(0, 0)
+shader_parameter/origin_mask = Vector2(0, 0)
+shader_parameter/wait_time = 1.0
+shader_parameter/speed = 6.8
+shader_parameter/alpha_boost = 5.0
+shader_parameter/seconds_per_frame = 0.5
+shader_parameter/steps = 1.8
+shader_parameter/magic = 3.2
+shader_parameter/debug = 0.0
+shader_parameter/color_opacity = 1.0
+shader_parameter/fill_amount = -1.0
+shader_parameter/epsilon = 1e-10
+shader_parameter/noise = ExtResource("8_6l6o8")
+shader_parameter/mask = ExtResource("8_mxu8l")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tba1"]
+bg_color = Color(0.05, 0.05, 0.05, 0.756863)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_scr08"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hkxqd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ngewe"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s5n3v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qrqx2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6in5e"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5poes"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gq6j1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p2i0s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p17qu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6jtk0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_orud1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_akdev"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wvc3f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uymoo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xu5yj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n5rkc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yusuu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0c6oi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wwriq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wfwvw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pgtnv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d8rgb"]
+shader = ExtResource("17_dc0ef")
+shader_parameter/intensity = 0.0
+shader_parameter/border_size = 1.0
+
+[node name="GameStage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("1_a36me")
+
+[node name="Objects" type="Node2D" parent="."]
+script = ExtResource("3_x2eff")
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="Character" parent="Characters" instance=ExtResource("3_tdgll")]
+position = Vector2(559, 375)
+character_name = "amber"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+script = ExtResource("9_lbjue")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Control" type="Control" parent="Camera2D/CanvasLayer2"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CGBottomContainer" type="Control" parent="Camera2D/CanvasLayer2/Control"]
+auto_translate_mode = 1
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="Camera2D"]
+
+[node name="VFXLayer" type="Node2D" parent="Camera2D/CanvasLayer3"]
+
+[node name="FadeOut" type="CanvasLayer" parent="Camera2D"]
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/FadeOut"]
+material = SubResource("ShaderMaterial_3ca2q")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Orgasm" type="CanvasLayer" parent="Camera2D"]
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/Orgasm"]
+material = SubResource("ShaderMaterial_3ca2q")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Sun" type="CanvasLayer" parent="Camera2D"]
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/Sun"]
+material = SubResource("ShaderMaterial_hnvqq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="VNUIRoot" type="Control" parent="Camera2D/CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("11_n0ymb")
+
+[node name="VNUI" type="Control" parent="Camera2D/CanvasLayer/VNUIRoot"]
+auto_translate_mode = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextContainer1" type="CenterContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(454, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -249.0
+offset_right = 380.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1"]
+auto_translate_mode = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 1
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Name Label Here"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = -9
+
+[node name="Panel" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(670, 121.41)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Text Body Here
+dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]
+[b][i]omg both[/i][/b]"
+fit_content = true
+scroll_active = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PageUnfinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5_7sulw")
+stretch_mode = 2
+
+[node name="PageFinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("6_mh4vb")
+stretch_mode = 2
+
+[node name="TextContainer2" type="CenterContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -147.975
+offset_right = 340.0
+offset_bottom = 170.025
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/PanelContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 1
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Name Label Here"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = -9
+
+[node name="Panel" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+mouse_filter = 1
+theme_override_fonts/bold_font = ExtResource("2_6jeks")
+bbcode_enabled = true
+text = "Text Body Here
+dghfgh"
+fit_content = true
+scroll_active = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PageUnfinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5_7sulw")
+stretch_mode = 2
+
+[node name="PageFinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("6_mh4vb")
+stretch_mode = 2
+
+[node name="TextContainer3" type="CenterContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -159.0
+offset_bottom = 159.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3"]
+auto_translate_mode = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/PanelContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 1
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Name Label Here"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = -9
+
+[node name="Panel" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+mouse_filter = 1
+theme_override_fonts/bold_font = ExtResource("2_6jeks")
+bbcode_enabled = true
+text = "Text Body Here
+dghfgh"
+fit_content = true
+scroll_active = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PageUnfinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5_7sulw")
+stretch_mode = 2
+
+[node name="PageFinished" type="TextureRect" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("6_mh4vb")
+stretch_mode = 2
+
+[node name="ChoiceContainer" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
+auto_translate_mode = 1
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5tba1")
+
+[node name="ChoiceOptionContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ControlsContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HistoryButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.909804, 0.741176, 0.772549, 0.286275)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_scr08")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_hkxqd")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ngewe")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_s5n3v")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_qrqx2")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_6in5e")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5poes")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_gq6j1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_p2i0s")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_p17qu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_6jtk0")
+text = "History"
+
+[node name="MenuButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.909437, 0.742585, 0.7728, 0.286275)
+theme_override_constants/outline_size = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_orud1")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_akdev")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_wvc3f")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_uymoo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_xu5yj")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_n5rkc")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_yusuu")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_0c6oi")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_wwriq")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_wfwvw")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pgtnv")
+text = "Menu"
+
+[node name="CGTopContainer" type="Control" parent="Camera2D/CanvasLayer/VNUIRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Static" type="CanvasLayer" parent="Camera2D/CanvasLayer/VNUIRoot"]
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/VNUIRoot/Static"]
+material = SubResource("ShaderMaterial_d8rgb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BlackFade" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("8_50byo")]
+visible = false
+layout_mode = 1
+
+[node name="ChapterCover" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("12_vf2y4")]
+visible = false
+layout_mode = 1
+
+[node name="Cheats" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("13_qackq")]
+visible = false
+layout_mode = 1
+
+[node name="RollingCredits" parent="Camera2D/CanvasLayer/VNUIRoot" instance=ExtResource("17_gnute")]
+layout_mode = 1
+
+[node name="StartCover" type="ColorRect" parent="Camera2D/CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("13_qfsh6")
+
+[node name="ScreenContainer" type="Control" parent="Camera2D/CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="InstructionHandler" type="Node" parent="."]
+script = ExtResource("4_u8vmc")
+
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "text_content", "text_container", "name_label", "name_container", "instruction_handler", "inline_evaluator", "prompt_unfinished", "prompt_finished")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("1_h4afo")
+auto_pause_duration = 0.4
+blank_names = Array[String](["narrator"])
+name_map = {
+"amber": "Amber"
+}
+choice_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
+choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/ChoiceOptionContainer")
+text_content = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel")
+text_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1")
+name_label = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/Label")
+name_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer")
+instruction_handler = NodePath("../InstructionHandler")
+inline_evaluator = NodePath("../InstructionHandler")
+show_input_prompt = true
+input_prompt_delay = 1.29
+input_prompt_lerp_weight = 0.233
+prompt_unfinished = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer/PageUnfinished")
+prompt_finished = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer/PageFinished")
+
+[node name="InlineEval" type="Node" parent="."]
+script = ExtResource("6_8ao3j")
+
+[connection signal="ready" from="Characters/Character" to="." method="remove_blocker"]
+[connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
+[connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
+[connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]
+[connection signal="mouse_entered" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="increment_advance_blocker"]
+[connection signal="mouse_exited" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="decrement_advance_blocker"]
+[connection signal="pressed" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
+[connection signal="mouse_entered" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="increment_advance_blocker"]
+[connection signal="mouse_exited" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="decrement_advance_blocker"]
+[connection signal="pressed" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="request_object_visible" from="InstructionHandler" to="Objects" method="set_object_visible"]
+[connection signal="splatter" from="InstructionHandler" to="." method="_on_instruction_handler_splatter"]
+[connection signal="start_black_fade" from="InstructionHandler" to="Camera2D/CanvasLayer/VNUIRoot/BlackFade" method="_on_handler_start_black_fade"]
+[connection signal="start_hide_cg" from="InstructionHandler" to="." method="hide_cg"]
+[connection signal="start_rolling_credits" from="InstructionHandler" to="Camera2D/CanvasLayer/VNUIRoot/RollingCredits" method="start"]
+[connection signal="start_show_cg" from="InstructionHandler" to="." method="_on_handler_start_show_cg"]
+[connection signal="sun" from="InstructionHandler" to="." method="_on_instruction_handler_sun"]

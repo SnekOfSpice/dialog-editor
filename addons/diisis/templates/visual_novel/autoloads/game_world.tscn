@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bl25eggucvytj"]
+
+[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/autoloads/game_world.gd" id="1_xx7h4"]
+
+[node name="GameWorld" type="Node"]
+script = ExtResource("1_xx7h4")
