@@ -10,7 +10,8 @@
 		],
 		"dropdown_title_for_dialog_syntax": "character",
 		"dropdown_titles": [
-			"amber-emotion"
+			"amber-emotion",
+			"character"
 		],
 		"dropdowns": {
 			"amber-emotion": [
@@ -838,7 +839,7 @@
 						}
 					}
 				],
-				"meta.scroll_vertical": 4,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 1,
 				"number": 0,

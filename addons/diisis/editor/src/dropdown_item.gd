@@ -19,6 +19,10 @@ func init(title:String):
 	find_child("LineEdit").text = title
 	find_child("EditContainer").visible = false
 	find_child("OptionsContainer").visible = false
+	find_child("ReplaceSpeakersCheckBox").visible = Pages.dropdown_title_for_dialog_syntax == title
+	find_child("ReplaceInTextCheckBox").button_pressed = true
+	find_child("ReplaceSpeakersCheckBox").button_pressed = true
+	find_child("Parameters").visible = false
 	dropdown_options = Pages.dropdowns.get(title)
 
 func _on_edit_button_pressed() -> void:
@@ -82,7 +86,8 @@ func _on_discard_options_button_pressed() -> void:
 
 
 func _on_save_options_button_pressed() -> void:
-	var replace_speaker = not Input.is_key_pressed(KEY_SHIFT)
+	var replace_speaker : bool = find_child("ReplaceSpeakersCheckBox").button_pressed
+	var replace_in_text : bool = find_child("ReplaceInTextCheckBox").button_pressed
 	var entered_args = find_child("DropdownOptionsText").text.split("\n")
 	var args := []
 	for arg : String in entered_args:
@@ -92,8 +97,8 @@ func _on_save_options_button_pressed() -> void:
 	var undo_redo = Pages.editor.undo_redo
 	dropdown_options = args
 	undo_redo.create_action("Change Dropdown Options")
-	undo_redo.add_do_method(DiisisEditorActions.set_dropdown_options.bind(title, args, replace_speaker))
-	undo_redo.add_undo_method(DiisisEditorActions.set_dropdown_options.bind(title, dropdown_options, replace_speaker))
+	undo_redo.add_do_method(DiisisEditorActions.set_dropdown_options.bind(title, args, replace_in_text, replace_speaker))
+	undo_redo.add_undo_method(DiisisEditorActions.set_dropdown_options.bind(title, dropdown_options, replace_in_text, replace_speaker))
 	undo_redo.commit_action()
 	
 	find_child("OptionsContainer").visible = false
@@ -129,3 +134,11 @@ func _on_dropdown_options_text_resized() -> void:
 func set_list_size(s: Vector2):
 	list_size = s
 	_on_dropdown_options_text_resized()
+
+
+func _on_replace_in_text_check_box_toggled(toggled_on: bool) -> void:
+	find_child("ReplaceSpeakersCheckBox").disabled = not toggled_on
+
+
+func _on_save_parameters_button_pressed() -> void:
+	find_child("Parameters").visible = not find_child("Parameters").visible

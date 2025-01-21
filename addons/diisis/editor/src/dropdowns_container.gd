@@ -89,7 +89,7 @@ func _on_dialog_syntax_visibility_changed():
 
 func create_new_dropdown() -> void:
 	var dd_title : String = find_child("CreateDDNameTextEdit").text
-	if dd_title.is_empty():
+	if dd_title.is_empty() or find_child("AddButton").disabled:
 		return
 	Pages.dropdowns[dd_title] = []
 	Pages.dropdown_titles.append(dd_title)
@@ -103,3 +103,8 @@ func create_new_dropdown() -> void:
 func _on_dropdowns_container_resized() -> void:
 	for child in find_child("DropdownsContainer").get_children():
 		child.set_list_size(Pages.editor.get_window().size * 0.25)
+
+
+func _on_create_dd_name_text_edit_text_submitted(_new_text: String) -> void:
+	create_new_dropdown()
+	find_child("AddButton").disabled = true

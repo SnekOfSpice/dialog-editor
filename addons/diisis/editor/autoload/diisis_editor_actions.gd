@@ -135,8 +135,8 @@ func rename_dropdown_title(from:String, to:String):
 	
 	Pages.editor.refresh(false)
 
-func set_dropdown_options(dropdown_title:String, options:Array, replace_speaker:bool):
-	Pages.set_dropdown_options(dropdown_title, options, replace_speaker)
+func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:bool, replace_speaker:bool):
+	Pages.set_dropdown_options(dropdown_title, options, replace_in_text, replace_speaker)
 	await get_tree().process_frame
 	
 	Pages.editor.refresh(false)

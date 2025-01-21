@@ -72,17 +72,48 @@ scroll_fit_content_height = true
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="OptionsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-tooltip_text = "If this is the dropdown for speaker options, you may hold shift to not replace the names. This is order-sensitive."
+
+[node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
 disabled = true
 text = "save options"
+
+[node name="SaveParametersButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "..."
+
+[node name="Parameters" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ReplaceInTextCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "Replace in Text"
+
+[node name="ReplaceSpeakersCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "Replace in Speakers"
 
 [node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 8
+focus_mode = 0
 text = "discard changes"
 
 [connection signal="toggled" from="HBoxContainer/ExpandButton" to="." method="_on_expand_button_toggled"]
@@ -94,5 +125,7 @@ text = "discard changes"
 [connection signal="visibility_changed" from="OptionsContainer" to="." method="_on_options_container_visibility_changed"]
 [connection signal="resized" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_resized"]
 [connection signal="text_changed" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
-[connection signal="pressed" from="OptionsContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
+[connection signal="pressed" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
+[connection signal="pressed" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SaveParametersButton" to="." method="_on_save_parameters_button_pressed"]
+[connection signal="toggled" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters/ReplaceInTextCheckBox" to="." method="_on_replace_in_text_check_box_toggled"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/DiscardOptionsButton" to="." method="_on_discard_options_button_pressed"]

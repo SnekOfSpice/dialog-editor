@@ -6,7 +6,7 @@ var head_defaults := []
 var auto_complete_context := ""
 
 var dropdowns := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
-var dropdown_titles := ["amber-emotion"]
+var dropdown_titles := ["character", "amber-emotion"]
 var dropdown_dialog_arguments := ["amber-emotion"]
 var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
@@ -735,35 +735,35 @@ func rename_dropdown_title(from:String, to:String):
 			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
 			line["content"]["content"] = line["content"]["content"].replace(str("[]>", from), str("[]>", to))
 
-func set_dropdown_options(dropdown_title:String, options:Array, replace_speaker:=true):
-	var old_options : Array = dropdowns.get(dropdown_title, [])
-	
-	var is_speaker := dropdown_title == dropdown_title_for_dialog_syntax
-	
-	for page in page_data.values():
-		var lines : Array = page.get("lines")
-		for line : Dictionary in lines:
-			if line.get("line_type") != DIISIS.LineType.Text:
-				continue
-			
-			
-			var i := 0
-			while i < min(old_options.size(), options.size()):
-				var old_option:String=old_options[i]
-				var new_option:String=options[i]
-				if old_option == new_option:
-					i += 1
+func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
+	if replace_in_text:
+		var old_options : Array = dropdowns.get(dropdown_title, [])
+		var is_speaker := dropdown_title == dropdown_title_for_dialog_syntax
+		
+		for page in page_data.values():
+			var lines : Array = page.get("lines")
+			for line : Dictionary in lines:
+				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
-				var old_arg := str(dropdown_title, "|", old_option)
-				var new_arg := str(dropdown_title, "|", new_option)
-				line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
 				
-				if is_speaker and replace_speaker:
-					var old_speaker := str("[]>", old_option)
-					var new_speaker := str("[]>", new_option)
-					line["content"]["content"] = line["content"]["content"].replace(old_speaker, new_speaker)
 				
-				i += 1
+				var i := 0
+				while i < min(old_options.size(), options.size()):
+					var old_option:String=old_options[i]
+					var new_option:String=options[i]
+					if old_option == new_option:
+						i += 1
+						continue
+					var old_arg := str(dropdown_title, "|", old_option)
+					var new_arg := str(dropdown_title, "|", new_option)
+					line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
+					
+					if is_speaker and replace_speaker:
+						var old_speaker := str("[]>", old_option)
+						var new_speaker := str("[]>", new_option)
+						line["content"]["content"] = line["content"]["content"].replace(old_speaker, new_speaker)
+					
+					i += 1
 	
 	dropdowns[dropdown_title] = options
 
