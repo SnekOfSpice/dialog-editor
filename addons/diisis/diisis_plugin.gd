@@ -109,7 +109,7 @@ func setup_vn_template():
 		elif FileAccess.file_exists(path_plugin):
 			add_autoload_singleton(autoload_name, path_plugin)
 		else:
-			push_warning(str("Couldn't find VN template autoload ", file_name, " in res://game/autoloads/ or res://addons/diisis/templates/visual_novel/autoloads/"))
+			popup_accept_dialogue("Error", str("Couldn't find VN template autoload ", file_name, " in res://game/autoloads/ or res://addons/diisis/templates/visual_novel/autoloads/"))
 			return
 		await get_tree().process_frame
 	
@@ -117,7 +117,7 @@ func setup_vn_template():
 	if FileAccess.file_exists(source_path_game):
 		ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
 	else:
-		push_warning(str("Couldn't find ", source_path_game, "."))
+		popup_accept_dialogue("Error", str("Couldn't find ", source_path_game, "."))
 		return
 	
 	var root_template := "res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
@@ -127,7 +127,7 @@ func setup_vn_template():
 	elif FileAccess.file_exists(root_game):
 		ProjectSettings.set_setting("application/run/main_scene", root_game)
 	else:
-		push_warning("Couldn't find stage_root.tscn.")
+		popup_accept_dialogue("Error", "Couldn't find stage_root.tscn.")
 		return
 	
 	ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")
