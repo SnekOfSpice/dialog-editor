@@ -1238,9 +1238,10 @@ func read_next_chunk():
 			pause_positions[l] = pause_positions[l] + name_prepend_length
 			l += 1
 	
-	ParserEvents.notify_string_positions.emit(notify_positions)
-	ParserEvents.text_content_text_changed.emit(text_content.text, cleaned_text, lead_time)
+	var old_text = text_content.text
 	set_text_content_text(cleaned_text)
+	ParserEvents.text_content_text_changed.emit(old_text, cleaned_text, lead_time)
+	ParserEvents.notify_string_positions.emit(notify_positions)
 
 func begins_with_trimmable(text:String) -> bool:
 	for t in trimmable_strings:
@@ -1278,6 +1279,9 @@ func set_text_content_text(text: String):
 	text_content.visible_characters = visible_prepend_offset
 	characters_visible_so_far = ""
 	started_word_buffer = ""
+
+func set_visible_characters(value: int):
+	text_content.visible_characters = min(value, text_content.get_parsed_text().length())
 
 func find_next_pause():
 	if pause_types.size() > 0 and next_pause_position_index < pause_types.size():
