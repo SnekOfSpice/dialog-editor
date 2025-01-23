@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7rjagd305cd2"]
-
-[ext_resource type="Script" path="res://game/autoloads/options.gd" id="1_v8dpk"]
-
-[node name="Options" type="Node"]
-script = ExtResource("1_v8dpk")
