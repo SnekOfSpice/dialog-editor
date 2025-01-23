@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://blhl1p7ciguwf"]
-
-[ext_resource type="Script" path="res://addons/diisis/templates/visual_novel/visuals/vfx/splatter/blood_splatter.gd" id="1_a0jde"]
-
-[node name="BloodSplatter" type="Sprite2D"]
-script = ExtResource("1_a0jde")
