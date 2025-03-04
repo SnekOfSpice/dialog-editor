@@ -1,6 +1,6 @@
-![banner](https://github.com/user-attachments/assets/5acf42f0-4b5e-4bc1-88b6-7ec1a1262d63)
+![banner2](https://github.com/user-attachments/assets/6c0cb035-8390-4c7a-9ca6-61ea9ba6a279)
 
-MIT-licensed dialog tool. Find the source code and license and demos on [GitHub](https://github.com/SnekOfSpice/dialog-editor).
+Homebrew dialog tool. Find the source code and license and demos on [GitHub](https://github.com/SnekOfSpice/dialog-editor).
 
 # Demos & Project Templates
 
