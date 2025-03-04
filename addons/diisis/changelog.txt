@@ -1,0 +1,35 @@
+DIISIS 0.4 changelog 2025-03-04
+This is the No Empty Threats update
+
+
+General
+- Change license from MIT to COOPERATIVE NON-VIOLENT PUBLIC LICENSE v7
+- fixed some bugs on all fronts
+- editor can be opened with keyboard shortcut again (Ctrl + Alt + D)
+- instruction names can include numbers now
+- Add new logo (logo3.png and logo3_nosub.png)
+
+
+Editor
+- fix option buttons not showing their dropdowns if in subwindow (used for header properties)
+- add argument hinting to inline function calls
+- restore ability to remember the page you were on when you closed the editor
+- add shortcut for Go To (ctrl + G)
+- clarify "Text" menu button to say "Text Formatting"
+- add "Neaten Whitespace" to text formatting
+- add esoteric runes
+
+Runtime
+- Add Parser.read_page_by_key()
+
+visual novel template
+- Add save slot system
+- Add epilogue functionality
+- Add character.extras
+- Remove blockers system
+- Move screens into their own canvaslayer
+
+under the hood
+- add a few utility functions to Pages regarding Facts
+- make a custom option button
+
