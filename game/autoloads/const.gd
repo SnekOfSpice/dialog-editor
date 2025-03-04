@@ -9,6 +9,7 @@ const SCREEN_HISTORY := "history.tscn"
 const SCREEN_OPTIONS := "options_screen.tscn"
 const SCREEN_CREDITS := "credits.tscn"
 const SCREEN_CONTENT_WARNING := "cw.tscn"
+const SCREEN_SAVE := "save_screen.tscn"
 
 const BACKGROUND_ROOT := "res://game/backgrounds/"
 const BACKGROUND_DEFAULT := "void.png"

@@ -8,6 +8,8 @@ func fill():
 		c.queue_free()
 	for template in Pages.instruction_templates:
 		add_item(template)
+	find_child("SearchFilter").text = ""
+	_on_search_filter_text_changed("")
 
 func add_item(template_name:String):
 	var item = load("res://addons/diisis/editor/src/instruction_edit_item.tscn").instantiate()

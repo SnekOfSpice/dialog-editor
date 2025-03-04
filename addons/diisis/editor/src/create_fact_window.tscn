@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cigmq5hpy508j"]
+
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_hbr6i"]
+[ext_resource type="PackedScene" uid="uid://cx2yop3nuky50" path="res://addons/diisis/editor/src/create_fact_container.tscn" id="2_106om"]
+[ext_resource type="Script" path="res://addons/diisis/editor/src/create_fact_window.gd" id="2_ye56k"]
+
+[node name="CreateFactWindow" type="Window"]
+title = "Create Fact"
+initial_position = 4
+size = Vector2i(200, 195)
+wrap_controls = true
+exclusive = true
+popup_window = true
+theme = ExtResource("1_hbr6i")
+script = ExtResource("2_ye56k")
+
+[node name="Control" parent="." instance=ExtResource("2_106om")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="close" from="Control" to="." method="_on_control_close"]

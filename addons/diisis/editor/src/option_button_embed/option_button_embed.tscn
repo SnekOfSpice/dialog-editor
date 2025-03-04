@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=3 uid="uid://c5vpxjprppa8n"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.gd" id="1_aukyl"]
+[ext_resource type="Texture2D" uid="uid://cbh8ufq7liv0e" path="res://addons/diisis/editor/src/option_button_embed/icon.png" id="1_lc617"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65j1m"]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 6.0
+bg_color = Color(0.107041, 0.0828958, 0.070821, 1)
+border_width_bottom = 3
+border_color = Color(0.78, 0.0624, 0.52884, 0.901961)
+border_blend = true
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e01sk"]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 6.0
+bg_color = Color(0.384927, 0.200843, 0.257969, 1)
+border_width_bottom = 3
+border_color = Color(0.96, 0.24, 0.672, 0.854902)
+border_blend = true
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqqtk"]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 6.0
+bg_color = Color(0.18, 0.1452, 0.1278, 1)
+border_width_bottom = 3
+border_color = Color(0.96, 0.24, 0.672, 0.854902)
+border_blend = true
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
+[node name="OptionButtonEmbed" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/hover = SubResource("StyleBoxFlat_65j1m")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_e01sk")
+theme_override_styles/normal = SubResource("StyleBoxFlat_kqqtk")
+text = "XXX"
+icon = ExtResource("1_lc617")
+script = ExtResource("1_aukyl")
+options = ["a", "b"]
+
+[node name="Window" type="Window" parent="."]
+initial_position = 2
+size = Vector2i(0, 0)
+visible = false
+wrap_controls = true
+unresizable = true
+borderless = true
+always_on_top = true
+
+[node name="OptionContainer" type="VBoxContainer" parent="Window"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 0
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="hidden" from="." to="." method="_on_hidden"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="mouse_entered" from="Window" to="." method="_on_window_mouse_entered"]
+[connection signal="mouse_exited" from="Window" to="." method="_on_window_mouse_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

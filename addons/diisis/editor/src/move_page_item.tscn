@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://beiod4cxn6kp4"]
+[gd_scene load_steps=4 format=3 uid="uid://beiod4cxn6kp4"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/move_page_item.gd" id="1_ks3sh"]
+[ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="2_5k4sn"]
+[ext_resource type="Texture2D" uid="uid://blqrtjgc0d8f4" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_down.png" id="3_8tuqg"]
 
 [node name="MovePageItem" type="HBoxContainer"]
 anchors_preset = 10
@@ -46,12 +48,12 @@ mouse_filter = 1
 [node name="DownButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "^^"
+icon = ExtResource("2_5k4sn")
 
 [node name="UpButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "v"
+icon = ExtResource("3_8tuqg")
 
 [node name="DirectSwapButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2

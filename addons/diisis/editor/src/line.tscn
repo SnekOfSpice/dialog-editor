@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=20 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_viyfr"]
@@ -8,9 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="3_k7b5x"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="3_pymyd"]
 [ext_resource type="PackedScene" uid="uid://c7k2h1p5qalaa" path="res://addons/diisis/editor/src/text_content.tscn" id="3_ty44c"]
+[ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="4_1c1vd"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="4_4weov"]
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://addons/diisis/editor/src/instruction_container.tscn" id="4_phdce"]
 [ext_resource type="Texture2D" uid="uid://co44uwwjikn2w" path="res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png" id="5_hfdyk"]
+[ext_resource type="Texture2D" uid="uid://blqrtjgc0d8f4" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_down.png" id="5_pyps8"]
 [ext_resource type="PackedScene" uid="uid://dt4yhnj3n5k5m" path="res://addons/diisis/editor/src/folder_container.tscn" id="9_23thg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5f2i"]
@@ -120,7 +122,7 @@ columns = 2
 [node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "^"
+icon = ExtResource("4_1c1vd")
 
 [node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
@@ -137,7 +139,7 @@ layout_mode = 2
 [node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "v"
+icon = ExtResource("5_pyps8")
 
 [node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
@@ -187,6 +189,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0

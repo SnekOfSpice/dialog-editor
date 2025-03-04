@@ -33,7 +33,6 @@ func _ready() -> void:
 
 func close():
 	Options.save_prefs()
-	prints("parser was ", pause_state_before_open)
 	Parser.set_paused(pause_state_before_open)
 	super.close()
 

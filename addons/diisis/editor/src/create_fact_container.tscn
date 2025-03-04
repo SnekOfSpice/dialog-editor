@@ -1,0 +1,108 @@
+[gd_scene load_steps=3 format=3 uid="uid://cx2yop3nuky50"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/create_fact_container.gd" id="1_7wf80"]
+[ext_resource type="ButtonGroup" uid="uid://bolsl1ntt87q" path="res://addons/diisis/editor/src/fact_data_type_button_group.tres" id="1_qfkbe"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_7wf80")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Fact Name"
+
+[node name="AlreadyExistsLabel" type="RichTextLabel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=#faeb2b]Fact already exists![/color]"
+fit_content = true
+
+[node name="NotEmptyLabel" type="RichTextLabel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=#faeb2b]Fact cannot be empty![/color]"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="DataTypes" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Bool" type="CheckBox" parent="VBoxContainer/HBoxContainer/DataTypes"]
+layout_mode = 2
+focus_mode = 0
+button_group = ExtResource("1_qfkbe")
+text = "bool"
+
+[node name="Int" type="CheckBox" parent="VBoxContainer/HBoxContainer/DataTypes"]
+layout_mode = 2
+focus_mode = 0
+button_group = ExtResource("1_qfkbe")
+text = "int"
+
+[node name="InitialValue" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/InitialValue"]
+layout_mode = 2
+
+[node name="Bool" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/InitialValue/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DefaultBoolCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/InitialValue/VBoxContainer2/Bool"]
+layout_mode = 2
+size_flags_vertical = 6
+focus_mode = 0
+text = "false"
+
+[node name="Int" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/InitialValue/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DefaultIntSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/InitialValue/VBoxContainer2/Int"]
+layout_mode = 2
+size_flags_vertical = 6
+min_value = -99999.0
+max_value = 99999.0
+update_on_text_changed = true
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "Create"
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+text = "Cancel
+"
+
+[connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/DataTypes/Bool" to="." method="_on_bool_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/DataTypes/Int" to="." method="_on_int_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/InitialValue/VBoxContainer2/Bool/DefaultBoolCheckBox" to="." method="_on_default_bool_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]

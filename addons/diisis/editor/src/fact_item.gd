@@ -30,8 +30,9 @@ var int_operator : Operator = Operator.Set
 
 var virtual_hint_line := 0
 
-func _ready() -> void:
+func init() -> void:
 	find_child("RegisterContainer").visible = false
+	find_child("RegisterButton").visible = false
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -51,8 +52,7 @@ func deserialize(data: Dictionary) -> void:
 	set_data_type(data.get("data_type", DataType.Bool))
 	set_int_comparator(data.get("int_comparator", Comparator.EQ))
 	set_int_operator(data.get("int_operator", Operator.Set))
-	find_child("RegisterButton").visible = not Pages.facts.has(data.get("fact_name", ""))
-	
+	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(data.get("fact_name", ""))
 	find_child("FactName").completion_options = Pages.facts.keys()
 
 
@@ -118,21 +118,24 @@ func get_fact_name():
 func update_unregsitered_prompt():
 	var new_text = entered_text
 	find_child("RegisterContainer").visible = true
-	find_child("RegisterButton").visible = not Pages.facts.has(entered_text)
-	if not Pages.facts.keys().has(new_text):
+	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(entered_text)
+	if not Pages.has_fact(new_text) and not new_text.is_empty():
 		find_child("RegisterLabel").text = str(
 			"Fact \"",
 			new_text,
 			"\" isn't registered.")
 	else:
-		find_child("RegisterLabel").text = str(
-			"Registered as ",
-			Pages.facts.get(new_text)
-		)
-		if Pages.facts.get(new_text) is bool:
-			set_data_type(DataType.Bool)
+		if new_text.is_empty():
+			find_child("RegisterLabel").text = str("Can't be empty!")
 		else:
-			set_data_type(DataType.Int)
+			find_child("RegisterLabel").text = str(
+				"Registered as ",
+				Pages.facts.get(new_text)
+			)
+			if Pages.facts.get(new_text) is bool:
+				set_data_type(DataType.Bool)
+			else:
+				set_data_type(DataType.Int)
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
@@ -188,7 +191,7 @@ func _on_register_button_pressed() -> void:
 		value = not(find_child("FactBoolValue").button_pressed)
 	elif data_type == DataType.Int:
 		value = 0
-	Pages.facts[entered_text] = value
+	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false
 	
 	$ReadHint.hide()

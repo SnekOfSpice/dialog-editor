@@ -17,6 +17,9 @@ func set_number(n: int):
 	number = n
 	
 	find_child("NumberLabel").text = str(n)
+	if not Pages.page_data.get(n).get("terminate"):
+		find_child("NumberLabel").text += str(" -> ", Pages.page_data.get(n).get("next"))
+	
 	find_child("KeyLabel").text = Pages.page_data.get(n).get("page_key")
 	
 	find_child("DownButton").disabled = number <= 0

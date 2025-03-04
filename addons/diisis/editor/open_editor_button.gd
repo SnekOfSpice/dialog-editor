@@ -9,7 +9,7 @@ signal request_setup_template(template:int)
 func _shortcut_input(event):
 	if not is_in_editor:
 		return
-	if event.is_command_or_control_pressed() and event.is_alt_pressed() and event.pressed and event.key_label == KEY_D:
+	if event.is_command_or_control_pressed() and event.alt_pressed and event.key_label == KEY_D:
 		emit_signal("request_open_diisis")
 
 

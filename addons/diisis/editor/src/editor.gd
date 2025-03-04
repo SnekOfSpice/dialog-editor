@@ -6,6 +6,7 @@ const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
 const BACKUP_PATH := "user://DIISIS_autosave/"
 var auto_save_timer := AUTO_SAVE_INTERVAL
 var is_open := false
+var opening := true # spaghetti yum
 var undo_redo_count_at_last_save := 0
 
 var _page = preload("res://addons/diisis/editor/src/page.tscn")
@@ -44,7 +45,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	if current_page:
 		cpn = current_page.number
 	else:
-		cpn = 0
+		return
 	if serialize_before_load:
 		current_page.save()
 	await get_tree().process_frame
@@ -60,6 +61,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 
 func init(active_file_path:="") -> void:
 	print("init editor")
+	opening = true
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
 	
@@ -121,6 +123,8 @@ func update_page_view(view:PageView):
 		node.set_page_view(view)
 
 func load_page(number: int, discard_without_saving:=false):
+	if opening:
+		return
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 	for page in page_container.get_children():
@@ -195,8 +199,42 @@ func _process(delta: float) -> void:
 		auto_save_timer = AUTO_SAVE_INTERVAL
 		save_to_file(str(BACKUP_PATH, Time.get_datetime_string_from_system().replace(":", "-"), ".json"), true)
 
+var ctrl_down := false
+var focused_control_before_ctrl:Control
 func _shortcut_input(event):
 	if event is InputEventKey:
+		# on linux (or at least my steam deck), there's a bug where ctrl shortcuts still send their key inputs
+		# so e.g. ctrl+s to save also inserts an s in a text edit if it's currently focused
+		# this takes the focus away while holding down ctrl
+		# it's kinda scuffed ngl
+		if event.key_label == KEY_CTRL and OS.get_name() == "Linux":
+			var prev_ctrl_down = ctrl_down
+			var ctrl_start:bool
+			var ctrl_release:bool
+			if event.pressed:
+				if not prev_ctrl_down:
+					ctrl_start = true
+					focused_control_before_ctrl = get_viewport().gui_get_focus_owner()
+				ctrl_down = true
+			else:
+				if prev_ctrl_down:
+					ctrl_release = true
+				ctrl_down = false
+			
+			if ctrl_start or ctrl_release:
+				if ctrl_release:
+					if focused_control_before_ctrl:
+						var scroll := -1
+						if focused_control_before_ctrl is TextEdit or focused_control_before_ctrl is LineEdit:
+							scroll = current_page.find_child("ScrollContainer").scroll_vertical
+						focused_control_before_ctrl.grab_focus()
+						if scroll != -1:
+							await get_tree().process_frame
+							current_page.find_child("ScrollContainer").set_deferred("scroll_vertical", scroll)
+						focused_control_before_ctrl = null
+				elif ctrl_start:
+					grab_focus()
+				return
 		if not event.pressed:
 			return
 		
@@ -205,13 +243,15 @@ func _shortcut_input(event):
 		
 		if event.is_command_or_control_pressed():
 			match event.key_label:
+				KEY_G:
+					find_child("GoTo").toggle_active()
 				KEY_N:
 					emit_signal("open_new_file")
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_F:
 					open_popup($Popups.get_node("TextSearchPopup"))
-				KEY_Q:
+				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_Z:
 					if event.is_shift_pressed():
@@ -227,8 +267,8 @@ func _shortcut_input(event):
 					if active_dir != "":
 						$Popups.get_node("FDOpen").current_dir = active_dir
 					open_popup($Popups.get_node("FDOpen"), true)
-				KEY_A:
-					add_line_to_end_of_page()
+				#KEY_A:
+					#add_line_to_end_of_page()
 				KEY_1:
 					select_line_type(DIISIS.LineType.Text)
 				KEY_2:
@@ -415,13 +455,18 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	var editor_data = data.get("editor", {})
-	load_page(editor_data.get("current_page_number", 0), true)
+	#print("open from path ", editor_data.get("current_page_number", 0))
+	#load_page(editor_data.get("current_page_number", 0), true)
 	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
 	await get_tree().process_frame
 	set_text_size(editor_data.get("text_size_id", 3))
 	update_page_view(editor_data.get("page_view", PageView.Full))
+	
+	await get_tree().process_frame
+	opening = false
+	load_page(editor_data.get("current_page_number", 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)
@@ -564,6 +609,29 @@ func _on_file_id_pressed(id: int) -> void:
 		9:
 			emit_signal("open_new_file")
 
+
+func request_arg_hint(text_box:Control):
+	if not (text_box is LineEdit or text_box is TextEdit):
+		push_error(str("Tried calling request_arg_hint with object of type ", text_box.get_class()))
+		return
+	var caret_pos = Vector2i(text_box.get_caret_draw_pos())
+	caret_pos += Vector2i(text_box.global_position)
+	caret_pos *= content_scale
+	caret_pos += Vector2(0, 10) * content_scale
+	_place_arg_hint(caret_pos)
+	
+	text_box.set_caret_column(text_box.get_caret_column())
+	text_box.call_deferred("grab_focus")
+
+func _place_arg_hint(at:Vector2):
+	find_child("ArgHint").position = at
+
+func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int):
+	find_child("ArgHint").build(instruction_name, full_arg_text, caret_column)
+	find_child("ArgHint").popup()
+
+func hide_arg_hint():
+	find_child("ArgHint").hide()
 
 func _on_funny_debug_button_pressed() -> void:
 	var doms := ["af_ZA",

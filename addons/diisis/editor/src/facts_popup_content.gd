@@ -46,9 +46,7 @@ func fill():
 			add_child(vp)
 			vp.size = label.size
 			await RenderingServer.frame_post_draw
-			texture = vp.get_texture()#load("res://addons/diisis/editor/visuals/int.png")
-			#vp.queue_free()
-			#label.queue_free()
+			texture = vp.get_texture()
 		find_child("Facts").add_item(fact_reg, texture)
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true
@@ -215,3 +213,11 @@ func _on_cancel_change_default_button_pressed() -> void:
 	find_child("ChangeDefaultButton").visible = true
 	find_child("ChangeDefaultEditContainer").visible = false
 	find_child("CancelChangeDefaultButton").visible = false
+
+
+func _on_create_button_pressed() -> void:
+	$CreateFactWindow.popup()
+
+
+func _on_create_fact_window_fact_created() -> void:
+	fill()

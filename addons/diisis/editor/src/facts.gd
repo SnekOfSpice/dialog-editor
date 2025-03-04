@@ -65,6 +65,7 @@ func deserialize(data: Dictionary):
 func add_fact_from_serialized(fact_data:Dictionary):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
 	facts_container.add_child(f)
+	f.init()
 	f.deserialize(fact_data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()
@@ -77,6 +78,7 @@ func add_fact(fact_name: String, fact_value, conditional:=false):
 		"fact_value":fact_value,
 		"is_conditional":conditional,
 	}
+	f.init()
 	f.deserialize(data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()

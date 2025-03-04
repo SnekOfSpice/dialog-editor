@@ -5,15 +5,33 @@ extends Control
 
 signal start_game()
 signal load_game()
+signal start_epilogue()
 
 func _ready() -> void:
 	if not menu_music.is_empty():
 		Sound.play_bgm(menu_music)
 	find_child("QuitButton").visible = not OS.has_feature("web")
-	find_child("LoadButton").visible = Options.does_savegame_exist()
 	
-	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress_from_file(Options.SAVEGAME_PATH) * 100), "%)")
+	update_load_button()
+	#if GameWorld.just_started:
+		#GameWorld.just_started = false
+		#find_child("SoundCheckOverlay").visible = not Options.has_savedata(0)
+	
+	find_child("SaveContainer").visible = Options.has_savedata(0)
+	
+	#if Options.just_finished_game:
+		#Options.just_finished_game = false
+		#if not Options.unlocked_epilogue:
+			#Options.unlocked_epilogue = true
+			#find_child("UnlockedEpilogueOverlay").visible = Options.unlocked_epilogue
+			#Options.save_prefs()
+	
+	#find_child("EpilogueButton").visible = Options.unlocked_epilogue or OS.has_feature("editor")
 
+func update_load_button():
+	find_child("LoadButton").visible = Options.has_savedata()
+	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress_from_file(Options.get_savedata_path()) * 100), "%)")
+	
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -21,6 +39,10 @@ func _gui_input(event: InputEvent) -> void:
 			GameWorld.stage_root.set_screen("")
 		else:
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+
+func set_save_slot(slot:int):
+	find_child("SaveSlotLabel").text = str("Current Save Slot: ", slot + 1)
+	update_load_button()
 
 func _on_quit_button_pressed() -> void:
 	Options.save_prefs()
@@ -45,3 +67,15 @@ func _on_discord_button_pressed() -> void:
 
 func _on_git_hub_button_pressed() -> void:
 	OS.shell_open("https://github.com/SnekOfSpice/dialog-editor")
+
+
+func _on_sound_check_button_pressed() -> void:
+	find_child("SoundCheckOverlay").visible = false
+
+
+func _on_save_slot_button_pressed() -> void:
+	GameWorld.stage_root.set_screen(CONST.SCREEN_SAVE)
+
+
+func _on_unlocked_epilogue_button_pressed() -> void:
+	find_child("UnlockedEpilogueOverlay").visible = false

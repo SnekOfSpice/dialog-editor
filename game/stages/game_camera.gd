@@ -32,33 +32,13 @@ func serialize() -> Dictionary:
 	
 	return result
 
-func str_to_vec2(s:String) -> Vector2:
-	s = s.replace("(", "")
-	s = s.replace(")", "")
-	
-	var segments = s.split(",")
-	
-	return Vector2(float(segments[0]), float(segments[1]))
 
 func deserialize(data:Dictionary):
-	var z = data.get("zoom")
-	if z is String:
-		zoom = str_to_vec2(z)
-	else:
-		zoom = data.get("zoom", Vector2(zoom))
+	zoom = GameWorld.str_to_vec2(data.get("zoom", zoom))
+	position = GameWorld.str_to_vec2(data.get("position", position))
+	flat_offset = GameWorld.str_to_vec2(data.get("flat_offset", flat_offset))
 	
-	
-	var p = data.get("position")
-	if p is String:
-		position = str_to_vec2(p)
-	else:
-		position = data.get("position", position)
-	
-	var f = data.get("flat_offset")
-	if f is String:
-		flat_offset = str_to_vec2(f)
-	else:
-		flat_offset = data.get("flat_offset", flat_offset)
+
 	
 	sway_intensity_lerp_strength = data.get("sway_intensity_lerp_strength", sway_intensity_lerp_strength)
 	sway_intensity = data.get("sway_intensity", sway_intensity)
@@ -88,6 +68,9 @@ func _process(delta: float) -> void:
 			y * sway_intensity),
 		sway_intensity_lerp_strength) + flat_offset
 	sway_intensity_lerp_strength = lerp(sway_intensity_lerp_strength, 0.02, 0.03)
+	
+	if GameWorld.game_stage:
+		GameWorld.game_stage.set_cg_offset(offset)
 
 func apply_shake(strength:float):
 	shake_strength = strength

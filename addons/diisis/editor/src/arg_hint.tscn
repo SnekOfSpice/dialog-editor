@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://unnyq1pkgbh"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/arg_hint.gd" id="1_3il64"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qyxl3"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.109828, 0.0663, 0.13, 1)
+
+[node name="ArgHint" type="Window"]
+gui_disable_input = true
+size = Vector2i(12, 8)
+wrap_controls = true
+borderless = true
+unfocusable = true
+mouse_passthrough = true
+script = ExtResource("1_3il64")
+
+[node name="TextLabel" type="RichTextLabel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.901961, 0.788235, 0.768627, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_qyxl3")
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

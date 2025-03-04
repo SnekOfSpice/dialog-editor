@@ -117,6 +117,7 @@ script = ExtResource("3_x2eff")
 
 [node name="Character" parent="Characters" instance=ExtResource("3_tdgll")]
 position = Vector2(559, 375)
+scale = Vector2(0.735, 0.735)
 character_name = "amber"
 
 [node name="Camera2D" type="Camera2D" parent="."]

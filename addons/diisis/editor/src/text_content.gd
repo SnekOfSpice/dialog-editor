@@ -11,6 +11,7 @@ var active_actors_title := ""
 
 var entered_arguments := 0
 var used_arguments := []
+var tags := []
 
 var text_box : CodeEdit
 
@@ -229,6 +230,12 @@ func _on_text_box_caret_changed() -> void:
 					display_text = "strikethrough"
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", tag, "]"))
 		text_box.update_code_completion_options(true)
+	
+	update_tag_hint()
+
+func update_tag_hint():
+	index_all_tags()
+	update_inline_tag_prompt()
 
 func update():
 	fill_active_actors()
@@ -285,6 +292,8 @@ func _on_text_box_text_changed() -> void:
 		last_char = get_text_before_caret(1)
 	else:
 		last_char = ""
+	
+	update_tag_hint()
 
 func move_caret(amount: int):
 	text_box.set_caret_column(text_box.get_caret_column() + amount)
@@ -315,9 +324,65 @@ func _on_text_box_code_completion_requested() -> void:
 		if is_text_before_caret(str("[/", tag, "]")):
 			caret_movement_to_do = -str("[/", tag, "]").length()
 			break
+	
+	update_tag_hint()
 
 
 func _on_text_index_pressed(index: int) -> void:
 	match index:
 		0:
-			text_box.text = Pages.capitalize_sentence_beginnings_str(text_box.text)
+			text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
+		1:
+			text_box.text = Pages.neaten_whitespace(text_box.text)
+
+func index_all_tags():
+	tags.clear()
+	for line_index in text_box.get_line_count():
+		var line = text_box.get_line(line_index)
+		var start := line.find("<")
+		while start != -1:
+			var end := line.find(">", start)
+			if end == -1:
+				break
+			var tag = line.substr(start, end - start + 1)
+			var data := {}
+			data["start"] = start
+			data["tag"] = tag
+			data["end"] = end
+			data["line_index"] = line_index
+			tags.append(data)
+			start = line.find("<", end)
+
+func get_tag_under_caret() -> Dictionary:
+	for tag : Dictionary in tags:
+		if tag["line_index"] != text_box.get_caret_line():
+			continue
+		if tag["start"] < text_box.get_caret_column() and tag["end"] >= text_box.get_caret_column():
+			return tag
+	return {}
+
+# this shit is hard-coded in length atm
+# i.e. tags that access arg hint need to be 4 characters long OTL
+func update_inline_tag_prompt():
+	var data := get_tag_under_caret()
+	if data.is_empty():
+		Pages.editor.hide_arg_hint()
+		return
+	var tag = data["tag"]
+	if tag.begins_with("<call") or tag.begins_with("<func"):
+		var caret_column := text_box.get_caret_column()
+		Pages.editor.request_arg_hint(text_box)
+		tag = tag.erase(0, 6)
+		tag = tag.trim_suffix(">")
+		var instruction_name : String = tag.split(",")[0]
+		var args = tag.trim_prefix(instruction_name)
+		args = args.trim_prefix(",")
+		if caret_column > data["start"] and caret_column <= data["start"] + 6 + instruction_name.length():
+			# INSTRUCTION NAME SECTION
+			Pages.editor.hide_arg_hint()
+		else:
+			# ARG SECTION
+			Pages.editor.build_arg_hint(instruction_name, args, caret_column - data["start"] - 6 - instruction_name.length())
+	else:
+		Pages.editor.hide_arg_hint()
+		
