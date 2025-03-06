@@ -400,8 +400,8 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 	
 	Pages.editor.refresh(false)
 
-func replace_line_content_text(line_address:String, what:String, with:String):
-	replace_line_content_texts([line_address], what, with)
+func replace_line_content_text(line_address:String, what:String, with:String, case_insensitive:=false):
+	replace_line_content_texts([line_address], what, with, case_insensitive)
 
-func replace_choice_content_text(item_address:String, what:String, with:String):
-	replace_choice_content_texts([item_address], what, with)
+func replace_choice_content_text(item_address:String, what:String, with:String, case_insensitive:=false):
+	replace_choice_content_texts([item_address], what, with, case_insensitive)

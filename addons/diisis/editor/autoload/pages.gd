@@ -1264,6 +1264,22 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var c12n_prefixes := [
 		".", ":", ";", "?", "!", "~"
 	]
+	
+	var letter_indices_after_elipses := {}
+	var elipse_position := text.find("...")
+	var elipse_length := 3
+	while elipse_position != -1:
+		if elipse_position < text.length():
+			if text[elipse_position + elipse_length + 1] in letters:
+				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
+				elipse_position = text.find("...", elipse_position + elipse_length + 1)
+				continue
+			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
+				if text[elipse_position + 2] in letters:
+					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
+					elipse_position = text.find("...", elipse_position + elipse_length + 1)
+					continue
+		elipse_position = text.find("...", elipse_position + elipse_length + 1)
 
 	var tags_in_text := []
 	var scan_index := 0
@@ -1294,7 +1310,6 @@ func capitalize_sentence_beginnings(text:String) -> String:
 			tags_in_text.append(tag)
 		scan_index += 1
 	for letter : String in letters:
-		text = text.replace(str("\"", letter), str("\"", letter.capitalize()))
 		text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
 		text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
 		for prefix in c12n_prefixes:
@@ -1310,6 +1325,11 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
+	
+	print(letter_indices_after_elipses)
+	for index in letter_indices_after_elipses.keys():
+		var letter : String = letter_indices_after_elipses.get(index)
+		text[index] = letter
 	
 	return text
 
@@ -1336,5 +1356,14 @@ func neaten_whitespace(text:String) -> String:
 		var doublespace_index = text.find("] ")
 		text = text.erase(doublespace_index + 1)
 		contains_dead_whitespace = text.contains("] ")
+	
+	var closing_bb_lead_space_position := text.find(" [/")
+	while closing_bb_lead_space_position != -1:
+		var end_bracket_position = text.find("]", closing_bb_lead_space_position)
+		if end_bracket_position == -1:
+			break
+		text = text.insert(end_bracket_position + 1, " ")
+		text = text.erase(closing_bb_lead_space_position)
+		closing_bb_lead_space_position = text.find(" [/")
 	
 	return text

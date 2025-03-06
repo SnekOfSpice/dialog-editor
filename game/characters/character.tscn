@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://chfbyvpvah4eu"]
 
 [ext_resource type="Script" path="res://game/characters/character.gd" id="1_upf4t"]
-[ext_resource type="Texture2D" uid="uid://3h1r84mqbc2g" path="res://game/characters/sprites/amber-neutral.png" id="2_lhaq4"]
+[ext_resource type="Texture2D" uid="uid://dg5q71bcceghv" path="res://game/characters/sprites/amber-neutral.png" id="2_lhaq4"]
 [ext_resource type="Shader" path="res://game/characters/active.gdshader" id="2_xmhwu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_urdom"]
