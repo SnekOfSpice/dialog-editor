@@ -14,7 +14,7 @@ signal start_show_cg(
 	fade_in:float,
 	on_top:bool)
 
-signal start_hide_cg()
+signal start_hide_cg(fade_out:float)
 signal start_rolling_credits()
 signal splatter(amount:int)
 signal start_chapter_cover(pov_name:String)
@@ -74,8 +74,8 @@ func show_cg(_name:String, fade_in_time:float, continue_dialog_through_cg:bool):
 	)
 	return true
 
-func hide_cg():
-	emit_signal("start_hide_cg")
+func hide_cg(fade_out:float):
+	emit_signal("start_hide_cg", fade_out)
 	return false
 
 func set_background(_name:String, fade_time:float):

@@ -195,10 +195,6 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
 	
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
-	#for c in cg_root.get_children():
-		#if c == cg_root.get_node("ColorRect"):
-			#continue
-		#c.modulate.a = 0.0
 	cg_root.visible = true
 	
 	var cg_node = TextureRect.new()
@@ -209,7 +205,6 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		cg_name = cg
 		str("res://game/cg/", cg_name, ".png")
 		push_warning(str("Couldn't find CG \"", cg_name, "\"."))
-	#ProjectSettings.load_resource_pack(cg_path)
 	cg_node.texture = load(cg_path)
 	var t = create_tween()
 	
@@ -257,9 +252,19 @@ func set_text_style(style:TextStyle):
 		find_child("TextContainer1").custom_minimum_size.x = 230
 		find_child("RichTextLabel").custom_minimum_size.x = 230
 
-func hide_cg():
+func hide_cg(fade_out := 0.0):
 	cg = ""
 	cg_position = ""
+	if fade_out == 0.0:
+		_clear_cg()
+		return
+	var t = create_tween()
+	t.set_parallel()
+	for cg_root : Control in cg_roots:
+		t.tween_property(cg_root, "modulate:a", 0, fade_out)
+	t.finished.connect(_clear_cg)
+	
+func _clear_cg():
 	for cg_root : Control in cg_roots:
 		cg_root.visible = false
 		for c in cg_root.get_children():

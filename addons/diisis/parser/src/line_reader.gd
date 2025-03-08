@@ -240,7 +240,6 @@ var remaining_prompt_delay := input_prompt_delay
 
 signal line_finished(line_index: int)
 signal jump_to_page(page_index: int, target_line: int)
-signal is_input_locked_changed(new_value: bool)
 
 var line_data := {}
 var line_type := 0
@@ -560,7 +559,6 @@ func instruction_completed():
 
 func set_is_input_locked(value: bool):
 	is_input_locked = value
-	emit_signal("is_input_locked_changed", is_input_locked)
 
 func close(_terminating_page):
 	visible = false
