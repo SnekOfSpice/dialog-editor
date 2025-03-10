@@ -5,6 +5,7 @@
 		"text_size_id": 3
 	},
 	"pages": {
+		"default_address_mode_pages": 0,
 		"dropdown_dialog_arguments": [
 			"amber-emotion"
 		],
@@ -844,6 +845,7 @@
 						}
 					}
 				],
+				"meta.address_mode_next": 0,
 				"meta.scroll_vertical": 1151,
 				"meta.selected": false,
 				"next": 1,
@@ -894,7 +896,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
@@ -941,7 +943,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
@@ -982,7 +984,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
@@ -1023,7 +1025,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
@@ -1072,7 +1074,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
@@ -1113,7 +1115,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
@@ -1154,14 +1156,15 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.scroll_vertical": 578,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 84,
 				"meta.selected": false,
 				"next": 2,
 				"number": 1,
@@ -1348,6 +1351,7 @@
 						}
 					}
 				],
+				"meta.address_mode_next": 1,
 				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 0,

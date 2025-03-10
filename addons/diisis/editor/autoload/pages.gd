@@ -68,6 +68,7 @@ var editor:DiisisEditor
 var page_data := {}
 
 var evaluator_paths := ["res://sample/inline_eval.gd"]
+var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -93,6 +94,7 @@ func serialize() -> Dictionary:
 		"use_dialog_syntax": use_dialog_syntax,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
+		"default_address_mode_pages": default_address_mode_pages,
 	}
 
 func deserialize(data:Dictionary):
@@ -124,6 +126,7 @@ func deserialize(data:Dictionary):
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
+	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
 	apply_file_config(data.get("file_config", {}))
 
@@ -168,8 +171,10 @@ func swap_pages(page_a: int, page_b: int):
 	
 func swap_line_references(on_page:int, from:int, to:int):
 	var edited_current_page := false
+	
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
+		print("TODO")
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -177,21 +182,21 @@ func swap_line_references(on_page:int, from:int, to:int):
 					var page_number : int = page.get("number")
 					if choice.get("target_page") == on_page:
 					
-						if choice.get("target_line") == from:
+						if choice.get("target_line") == from and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("target_line") == to:
+						elif choice.get("target_line") == to and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
 					
 					if choice.get("loopback_target_page") == on_page:
-						if choice.get("loopback_target_line") == from:
+						if choice.get("loopback_target_line") == from and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["loopback_target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("loopback_target_line") == to:
+						elif choice.get("loopback_target_line") == to and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["loopback_target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
@@ -214,20 +219,27 @@ func get_lines(page_number: int):
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
-		var next = page.get("next")
-		if next == from:
-			page["next"] = to
-		elif next == to:
-			page["next"] = from
+		if page.get("meta.address_mode_next", default_address_mode_pages) == AddressModeButton.Mode.Objectt:
+			var next = page.get("next")
+			if next == from:
+				page["next"] = to
+			elif next == to:
+				page["next"] = from
 		
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				for choice in content.get("choices"):
-					if choice.get("target_page") == from:
-						choice["target_page"] = to
-					elif choice.get("target_page") == to:
-						choice["target_page"] = from
+					if choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("target_page") == from:
+							choice["target_page"] = to
+						elif choice.get("target_page") == to:
+							choice["target_page"] = from
+					if choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("loopback_target_page") == from:
+							choice["loopback_target_page"] = to
+						elif choice.get("loopback_target_page") == to:
+							choice["loopback_target_page"] = from
 	await get_tree().process_frame
 	editor.refresh(false)
 

@@ -13,4 +13,5 @@ OBJ: target an object at an address, aka adjust page indices."
 texture_normal = ExtResource("1_4lfae")
 script = ExtResource("1_i1bym")
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="pressed" from="." to="." method="_on_pressed"]

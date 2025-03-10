@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://dt3k1eclvuiqs"]
+
+[ext_resource type="Script" path="res://addons/diisis/editor/src/reset_address_mode_popup.gd" id="1_8n7sg"]
+
+[node name="ResetAddressModePopup" type="Popup"]
+size = Vector2i(343, 144)
+visible = true
+always_on_top = true
+script = ExtResource("1_8n7sg")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Click one of the buttons below to change the target address mode of all pages:"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ObjectButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Set to object"
+
+[node name="AddressButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Set to address"
+
+[node name="DefaultButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Set to default"
+
+[node name="CancelButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/ObjectButton" to="." method="_on_object_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/AddressButton" to="." method="_on_address_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/DefaultButton" to="." method="_on_default_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]

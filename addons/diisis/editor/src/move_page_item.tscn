@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://beiod4cxn6kp4"]
+[gd_scene load_steps=5 format=3 uid="uid://beiod4cxn6kp4"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/move_page_item.gd" id="1_ks3sh"]
 [ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="2_5k4sn"]
+[ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="2_bqh0w"]
 [ext_resource type="Texture2D" uid="uid://blqrtjgc0d8f4" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_down.png" id="3_8tuqg"]
 
 [node name="MovePageItem" type="HBoxContainer"]
@@ -27,6 +28,9 @@ layout_mode = 2
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "0"
+
+[node name="AddressModeButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_bqh0w")]
+layout_mode = 2
 
 [node name="KeyLabel" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -64,6 +68,7 @@ custom_minimum_size = Vector2(24.635, 0)
 layout_mode = 2
 
 [connection signal="pressed" from="GoToButton" to="." method="_on_go_to_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/AddressModeButton" to="." method="_on_address_mode_button_pressed"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/DirectSwapButton" to="." method="_on_direct_swap_button_pressed"]

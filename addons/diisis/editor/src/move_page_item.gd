@@ -25,6 +25,8 @@ func set_number(n: int):
 	find_child("DownButton").disabled = number <= 0
 	find_child("UpButton").disabled = number >= Pages.get_page_count() - 1
 	
+	find_child("AddressModeButton").set_mode(Pages.page_data.get(n).get("meta.address_mode_next", Pages.default_address_mode_pages))
+	
 	find_child("WordCountLabel").text = str(Pages.get_word_count_on_page_approx(number))
 
 
@@ -43,3 +45,14 @@ func _on_direct_swap_button_pressed() -> void:
 
 func _on_go_to_button_pressed() -> void:
 	emit_signal("go_to", number)
+
+
+func _on_address_mode_button_pressed() -> void:
+	set_address_mode(find_child("AddressModeButton").get_mode())
+
+func set_address_mode(mode:AddressModeButton.Mode):
+	if mode != find_child("AddressModeButton").get_mode():
+		find_child("AddressModeButton").set_mode(mode)
+	Pages.page_data[number]["meta.address_mode_next"] = mode
+	if Pages.editor.get_current_page_number() == number:
+		Pages.editor.current_page.find_child("AddressModeButton").set_mode(mode)
