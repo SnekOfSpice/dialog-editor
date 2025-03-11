@@ -63,8 +63,9 @@ func _on_search_line_edit_text_changed(new_text: String) -> void:
 
 
 func _on_reset_address_mode_pressed() -> void:
-	$ResetAddressModePopup.position = position
+	
 	$ResetAddressModePopup.popup()
+	$ResetAddressModePopup.position = size - $ResetAddressModePopup.size
 
 
 func _on_reset_address_mode_popup_change_to_mode(mode: AddressModeButton.Mode) -> void:

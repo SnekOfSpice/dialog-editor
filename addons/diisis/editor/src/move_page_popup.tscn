@@ -41,6 +41,7 @@ size_flags_horizontal = 3
 [node name="ResetAddressMode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
+focus_mode = 0
 text = "Reset Address Mode..."
 
 [node name="ResetAddressModePopup" parent="." instance=ExtResource("3_p8ppp")]

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/diisis/editor/src/reset_address_mode_popup.gd" id="1_8n7sg"]
 
 [node name="ResetAddressModePopup" type="Popup"]
-size = Vector2i(343, 144)
+size = Vector2i(343, 116)
 visible = true
 always_on_top = true
 script = ExtResource("1_8n7sg")

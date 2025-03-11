@@ -29,8 +29,10 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "0"
 
-[node name="AddressModeButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_bqh0w")]
+[node name="AddressModeButton" parent="MarginContainer/HBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("2_bqh0w")]
 layout_mode = 2
+address_source = NodePath("../../..")
+address_function = "get_next"
 
 [node name="KeyLabel" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2

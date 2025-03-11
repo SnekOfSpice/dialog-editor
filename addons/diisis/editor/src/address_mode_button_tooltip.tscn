@@ -6,9 +6,9 @@ offset_right = 400.0
 offset_bottom = 207.0
 size_flags_vertical = 0
 bbcode_enabled = true
-text = "[img]addons/diisis/editor/visuals/address_mode_obj.png[/img]  targets an object at an address. If you move the object (like a page or line) that this is pointing to, the address will be adjusted.
+text = "[img]addons/diisis/editor/visuals/address_mode_obj.png[/img]  targets an object (like a page or line) at an address. If you move the object that this is pointing to, the address will be adjusted.
 
-[img]addons/diisis/editor/visuals/address_mode_adr.png[/img] targets an address itself. If you move, delete, or insert lines or pages where this is pointing to, it will still point to that spot in the file.
+[img]addons/diisis/editor/visuals/address_mode_adr.png[/img] targets an address itself. If you move, delete, or insert lines or pages where this is pointing to, it will still point to that address in the file.
 [color=CC5DE9]Using ADR can result in game-breaking pointers into nothing![/color]
 
 [color=E9C55D][wave amp=10.0 freq=-4 connected=1]RClick to go here :3[/wave][/color] (if applicable)

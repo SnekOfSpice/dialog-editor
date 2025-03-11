@@ -2,6 +2,7 @@
 extends Control
 
 var number := 0
+var next := 0
 
 signal move_page (page_number, current_n, new_n)
 signal go_to(page_number)
@@ -15,10 +16,13 @@ func set_number(n: int):
 		return
 	
 	number = n
+	next = Pages.page_data.get(n).get("next", -1)
+	
+	var terminates : bool = Pages.page_data.get(n).get("terminate")
 	
 	find_child("NumberLabel").text = str(n)
-	if not Pages.page_data.get(n).get("terminate"):
-		find_child("NumberLabel").text += str(" -> ", Pages.page_data.get(n).get("next"))
+	if not terminates:
+		find_child("NumberLabel").text += str(" -> ", next)
 	
 	find_child("KeyLabel").text = Pages.page_data.get(n).get("page_key")
 	
@@ -26,9 +30,12 @@ func set_number(n: int):
 	find_child("UpButton").disabled = number >= Pages.get_page_count() - 1
 	
 	find_child("AddressModeButton").set_mode(Pages.page_data.get(n).get("meta.address_mode_next", Pages.default_address_mode_pages))
+	find_child("AddressModeButton").visible = not terminates
 	
 	find_child("WordCountLabel").text = str(Pages.get_word_count_on_page_approx(number))
 
+func get_next() -> int:
+	return next
 
 func _on_up_button_pressed() -> void:
 	emit_signal("move_page", number, number + 1)
