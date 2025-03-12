@@ -12,7 +12,7 @@ config_version=5
 
 config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
-run/main_scene="res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
+run/main_scene="res://game/stages/stage_root.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://addons/diisis/final1alt.png"
 
@@ -21,11 +21,11 @@ config/icon="res://addons/diisis/final1alt.png"
 DIISIS="*res://addons/diisis/shared/autoload/Diisis.tscn"
 Parser="*res://addons/diisis/parser/autoload/parser.tscn"
 ParserEvents="*res://addons/diisis/parser/autoload/parser_events.tscn"
-CONST="*res://addons/diisis/templates/visual_novel/autoloads/const.tscn"
-GameWorld="*res://addons/diisis/templates/visual_novel/autoloads/game_world.tscn"
-GoBackHandler="*res://addons/diisis/templates/visual_novel/autoloads/go_back_handler.tscn"
-Options="*res://addons/diisis/templates/visual_novel/autoloads/options.tscn"
-Sound="*res://addons/diisis/templates/visual_novel/autoloads/sound.tscn"
+CONST="*res://game/autoloads/const.tscn"
+GameWorld="*res://game/autoloads/game_world.tscn"
+GoBackHandler="*res://game/autoloads/go_back_handler.tscn"
+Options="*res://game/autoloads/options.tscn"
+Sound="*res://game/autoloads/sound.tscn"
 Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
 DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"

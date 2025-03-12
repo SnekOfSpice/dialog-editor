@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx2gvdr4ulr2f"]
+
+[ext_resource type="Script" path="res://game/autoloads/go_back_handler.gd" id="1_6kqm3"]
+
+[node name="GoBackHandler" type="Node"]
+script = ExtResource("1_6kqm3")
