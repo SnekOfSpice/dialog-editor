@@ -84,6 +84,8 @@ func go_to(address:String, discard_without_saving:=false):
 		Pages.local_line_insert_offset = 0
 	
 	Pages.editor.load_page(parts[0], discard_without_saving)
+	if not Pages.editor.current_page:
+		return
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
 	
@@ -119,6 +121,9 @@ func add_page(at:int, page_reference_change:=1):
 	await get_tree().process_frame
 	Pages.change_page_references_dir(at, page_reference_change)
 	Pages.editor.load_page(at)
+	
+	if not Pages.editor.current_page:
+		return
 	
 	await get_tree().process_frame
 	Pages.editor.current_page.update()
@@ -395,8 +400,8 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 	
 	Pages.editor.refresh(false)
 
-func replace_line_content_text(line_address:String, what:String, with:String):
-	replace_line_content_texts([line_address], what, with)
+func replace_line_content_text(line_address:String, what:String, with:String, case_insensitive:=false):
+	replace_line_content_texts([line_address], what, with, case_insensitive)
 
-func replace_choice_content_text(item_address:String, what:String, with:String):
-	replace_choice_content_texts([item_address], what, with)
+func replace_choice_content_text(item_address:String, what:String, with:String, case_insensitive:=false):
+	replace_choice_content_texts([item_address], what, with, case_insensitive)

@@ -11,6 +11,7 @@ var file_path := ""
 var last_quit_header := ""
 
 signal open_new_file()
+signal closing_editor()
 
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
 
@@ -33,11 +34,9 @@ func _on_about_to_popup() -> void:
 		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
-
-func _process(delta):
-	if not editor or not editor_window:
-		return
-	update_content_scale(editor_content_scale)
+	
+	await get_tree().process_frame
+	update_content_scale(1.0)
 
 func _on_close_requested() -> void:
 	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
@@ -107,6 +106,7 @@ func save_preferences():
 	config.save(PREFERENCE_PATH)
 
 func close_editor():
+	emit_signal("closing_editor")
 	save_preferences()
 	editor.is_open = false
 	hide()
@@ -142,6 +142,7 @@ func update_content_scale(scale_factor:float):
 
 
 func _on_size_changed() -> void:
+	await get_tree().process_frame
 	update_content_scale(editor_content_scale)
 
 func _on_window_factor_scale_value_changed(value):
@@ -214,7 +215,7 @@ func _on_help_button_pressed() -> void:
 
 func _on_editor_history_altered(is_altered: bool) -> void:
 	if is_altered:
-		if not title.ends_with("*"):
-			title = str(title, "*")
+		if not title.begins_with("(*) "):
+			title = str("(*) ", title)
 	else:
-		title = title.trim_suffix("*")
+		title = title.trim_prefix("(*) ")

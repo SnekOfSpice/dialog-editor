@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=29 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_bxdqj"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -35,6 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 2
 theme = ExtResource("1_nb6ej")
 script = ExtResource("1_r2t7d")
 
@@ -175,7 +177,7 @@ item_4/id = 4
 item_4/separator = true
 item_5/text = "Facts"
 item_5/id = 5
-item_6/text = "Pages    (Ctrl+Q)"
+item_6/text = "Pages    (Ctrl+T)"
 item_6/id = 6
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer"]
@@ -590,6 +592,10 @@ visible = false
 visible = false
 
 [node name="Camera" type="Camera2D" parent="."]
+
+[node name="ArgHint" parent="." instance=ExtResource("28_bxdqj")]
+auto_translate_mode = 1
+visible = false
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c2equl4umuelj"]
+[gd_scene load_steps=3 format=3 uid="uid://c2equl4umuelj"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/head_property_2.gd" id="1_sdsq2"]
+[ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_3op7w"]
 
 [node name="HeadProperty2" type="VBoxContainer"]
 anchors_preset = 10
@@ -12,39 +13,28 @@ script = ExtResource("1_sdsq2")
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="DataTypeButton" type="OptionButton" parent="HBoxContainer"]
+[node name="DataTypeButton" parent="HBoxContainer" instance=ExtResource("2_3op7w")]
 layout_mode = 2
-selected = 0
-item_count = 7
-popup/item_0/text = "_String"
-popup/item_0/id = 0
-popup/item_1/text = "_Integer"
-popup/item_1/id = 1
-popup/item_2/text = "_Float"
-popup/item_2/id = 2
-popup/item_3/text = "_Array"
-popup/item_3/id = 3
-popup/item_4/text = "_Dictionary"
-popup/item_4/id = 4
-popup/item_5/text = "_DropDown"
-popup/item_5/id = 5
-popup/item_6/text = "_Boolean"
-popup/item_6/id = 6
+icon = null
+options = Array[String](["string", "drop down", "boolean"])
 
 [node name="NameEditContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/NameEditContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/NameEditContainer"]
 layout_mode = 2
 
-[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer/VBoxContainer"]
-custom_minimum_size = Vector2(121.325, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/NameEditContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="PropertyNameLabel2" type="Label" parent="HBoxContainer/NameEditContainer/VBoxContainer"]
+[node name="PropertyNameLabel2" type="Label" parent="HBoxContainer/NameEditContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "property name"
+
+[node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(121.325, 0)
+layout_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="HBoxContainer/NameEditContainer"]
 layout_mode = 2
@@ -82,11 +72,14 @@ layout_mode = 2
 [node name="DropDownContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="DropDownButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
+[node name="DropDownButton" parent="MarginContainer/HBoxContainer2/DropDownContainer" instance=ExtResource("2_3op7w")]
 layout_mode = 2
+icon = null
+options = Array[String](["sophie-emotion", "character", "heather-emotion"])
 
-[node name="DropDownValueButton" type="OptionButton" parent="MarginContainer/HBoxContainer2/DropDownContainer"]
+[node name="DropDownValueButton" parent="MarginContainer/HBoxContainer2/DropDownContainer" instance=ExtResource("2_3op7w")]
 layout_mode = 2
+icon = null
 
 [node name="BooleanButton" type="CheckBox" parent="MarginContainer/HBoxContainer2"]
 layout_mode = 2
@@ -98,10 +91,10 @@ visible = false
 layout_mode = 2
 text = "undefined dropdowns"
 
-[connection signal="item_selected" from="HBoxContainer/DataTypeButton" to="." method="_on_data_type_button_item_selected"]
-[connection signal="text_changed" from="HBoxContainer/NameEditContainer/VBoxContainer/PropertyNameEdit" to="." method="_on_property_name_edit_text_changed"]
+[connection signal="option_pressed" from="HBoxContainer/DataTypeButton" to="." method="_on_data_type_button_option_pressed"]
+[connection signal="text_changed" from="HBoxContainer/NameEditContainer/PanelContainer/VBoxContainer/PropertyNameEdit" to="." method="_on_property_name_edit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/MarginContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="text_changed" from="MarginContainer/HBoxContainer2/StringValueEdit" to="." method="_on_line_edit_text_changed"]
-[connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_item_selected"]
-[connection signal="item_selected" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownValueButton" to="." method="_on_drop_down_value_button_item_selected"]
+[connection signal="option_pressed" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownButton" to="." method="_on_drop_down_button_option_pressed"]
+[connection signal="option_pressed" from="MarginContainer/HBoxContainer2/DropDownContainer/DropDownValueButton" to="." method="_on_drop_down_value_button_option_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer2/BooleanButton" to="." method="_on_boolean_button_pressed"]

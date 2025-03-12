@@ -17,6 +17,7 @@ var dialog_box_offset := Vector2.ZERO
 var actor_name := ""
 var cg := ""
 var cg_position := ""
+var base_cg_offset : Vector2
 var is_name_container_visible := false
 var hovering_meta := false
 
@@ -24,7 +25,7 @@ var hovering_meta := false
 @onready var rtl_custom_minimum_size : Vector2 = find_child("RichTextLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-var blockers : int = 2 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
+#var blockers : int = 3 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
 var advance_blockers := 0
 
 @onready var text_start_position = find_child("TextContainer1").position
@@ -38,7 +39,6 @@ var callable_upon_blocker_clear:Callable
 @onready var overlay_orgasm = find_child("Orgasm").get_node("ColorRect")
 
 
-@onready var sun_mat = overlay_sun.get_material()
 @onready var orgasm_mat = overlay_orgasm.get_material()
 @onready var fade_mat = overlay_fade_out.get_material()
 @onready var static_mat = overlay_static.get_material()
@@ -50,6 +50,7 @@ var target_sun_fill_amount := -1.0
 var target_static := 0.0
 
 func _ready():
+	find_child("StartCover").visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
@@ -69,13 +70,22 @@ func _ready():
 	for character in find_child("Characters").get_children():
 		character.visible = false
 	
-	remove_blocker()
+	#remove_blocker()
 	grab_focus()
 	
 	tree_exiting.connect(on_tree_exit)
 	
 	overlay_sun.get_material().set_shader_parameter("fill_amount", -1.0)
 	hide_cg()
+	
+	await get_tree().process_frame
+	if callable_upon_blocker_clear:
+		callable_upon_blocker_clear.call()
+	else:
+		Parser.reset_and_start()
+	
+	await get_tree().process_frame
+	find_child("StartCover").visible = false
 
 func on_read_new_line(_line_index:int):
 	Options.save_gamestate()
@@ -104,10 +114,10 @@ func go_to_main_menu(_unused):
 
 
 func _process(_delta: float) -> void:
-	sun_mat.set_shader_parameter("steps", lerp(sun_mat.get_shader_parameter("steps"), target_sun_steps, 0.02))
-	sun_mat.set_shader_parameter("fill_amount", lerp(sun_mat.get_shader_parameter("fill_amount"), target_sun_fill_amount, 0.02))
-	if sun_mat.get_shader_parameter("fill_amount") > -1:
-		sun_mat.set_shader_parameter("background", get_viewport().get_texture())
+	#sun_mat.set_shader_parameter("steps", lerp(sun_mat.get_shader_parameter("steps"), target_sun_steps, 0.02))
+	#sun_mat.set_shader_parameter("fill_amount", lerp(sun_mat.get_shader_parameter("fill_amount"), target_sun_fill_amount, 0.02))
+	#if sun_mat.get_shader_parameter("fill_amount") > -1:
+	#sun_mat.set_shader_parameter("texture_channel0", get_viewport().get_texture())
 	
 	fade_mat.set_shader_parameter("lod", lerp(fade_mat.get_shader_parameter("lod"), target_lod, 0.02))
 	fade_mat.set_shader_parameter("mix_percentage", lerp(fade_mat.get_shader_parameter("mix_percentage"), target_mix, 0.02))
@@ -185,17 +195,16 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
 	
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
-	#for c in cg_root.get_children():
-		#if c == cg_root.get_node("ColorRect"):
-			#continue
-		#c.modulate.a = 0.0
 	cg_root.visible = true
 	
 	var cg_node = TextureRect.new()
 	cg_root.add_child(cg_node)
 	cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
 	var cg_path := str("res://game/cg/", cg_name, ".png")
-	#ProjectSettings.load_resource_pack(cg_path)
+	if not ResourceLoader.exists(cg_path):
+		cg_name = cg
+		str("res://game/cg/", cg_name, ".png")
+		push_warning(str("Couldn't find CG \"", cg_name, "\"."))
 	cg_node.texture = load(cg_path)
 	var t = create_tween()
 	
@@ -204,6 +213,20 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		t.tween_property(cg_node, "modulate:a", 1.0, fade_in_duration)
 	else:
 		t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
+	
+	
+	var background_size : Vector2 = cg_node.texture.get_size()
+	var overshoot = background_size - Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height")
+		)
+	var container = cg_node.get_parent() # might be top or bottom
+	container.position = Vector2.ZERO
+	if overshoot.x > 0:
+		container.position.x = - overshoot.x * 0.5
+	if overshoot.y > 0:
+		container.position.y = - overshoot.y * 0.5
+	base_cg_offset = container.position
 	
 	cg = cg_name
 
@@ -215,6 +238,10 @@ func set_cg_bottom(cg_name:String, fade_in_duration:float):
 	cg_position = "bottom"
 	set_cg(cg_name, fade_in_duration, find_child("CGBottomContainer"))
 
+func set_cg_offset(offset:Vector2):
+	find_child("CGTopContainer").position = offset + base_cg_offset
+	find_child("CGBottomContainer").position = offset + base_cg_offset
+
 func set_text_style(style:TextStyle):
 	text_style = style
 	if text_style == TextStyle.ToBottom:
@@ -225,9 +252,19 @@ func set_text_style(style:TextStyle):
 		find_child("TextContainer1").custom_minimum_size.x = 230
 		find_child("RichTextLabel").custom_minimum_size.x = 230
 
-func hide_cg():
+func hide_cg(fade_out := 0.0):
 	cg = ""
 	cg_position = ""
+	if fade_out == 0.0:
+		_clear_cg()
+		return
+	var t = create_tween()
+	t.set_parallel()
+	for cg_root : Control in cg_roots:
+		t.tween_property(cg_root, "modulate:a", 0, fade_out)
+	t.finished.connect(_clear_cg)
+	
+func _clear_cg():
 	for cg_root : Control in cg_roots:
 		cg_root.visible = false
 		for c in cg_root.get_children():
@@ -297,6 +334,7 @@ func serialize() -> Dictionary:
 	result["character_data"] = character_data
 	result["cg"] = cg
 	result["cg_position"] = cg_position
+	result["base_cg_offset"] = base_cg_offset
 	result["text_container_position"] = find_child("TextContainer1").position
 	result["text_style"] = text_style
 	result["objects"] = $Objects.serialize()
@@ -366,14 +404,15 @@ func deserialize(data:Dictionary):
 	overlay_static.get_material().set_shader_parameter("border_size", 1 - target_static)
 	
 	use_ui(data.get("ui_id", 1))
+	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
 
-func remove_blocker():
-	blockers -= 1
-	if blockers <= 0:
-		if callable_upon_blocker_clear:
-			callable_upon_blocker_clear.call()
-		else:
-			Parser.reset_and_start()
+#func remove_blocker():
+	#blockers -= 1
+	#if blockers <= 0:
+		#if callable_upon_blocker_clear:
+			#callable_upon_blocker_clear.call()
+		#else:
+			#Parser.reset_and_start()
 
 var emit_insutrction_complete_on_cg_hide :bool
 

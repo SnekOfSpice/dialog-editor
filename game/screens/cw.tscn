@@ -51,7 +51,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
 bbcode_enabled = true
-text = "[center]CW HERE"
+text = "[center]Open cw.tscn and enter your content warnings here!"
 
 [node name="Button" type="Button" parent="."]
 auto_translate_mode = 1

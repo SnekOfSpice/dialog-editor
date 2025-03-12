@@ -240,7 +240,6 @@ var remaining_prompt_delay := input_prompt_delay
 
 signal line_finished(line_index: int)
 signal jump_to_page(page_index: int, target_line: int)
-signal is_input_locked_changed(new_value: bool)
 
 var line_data := {}
 var line_type := 0
@@ -560,7 +559,6 @@ func instruction_completed():
 
 func set_is_input_locked(value: bool):
 	is_input_locked = value
-	emit_signal("is_input_locked_changed", is_input_locked)
 
 func close(_terminating_page):
 	visible = false
@@ -872,8 +870,7 @@ func _process(delta: float) -> void:
 		if (
 			((not called_positions.has(call_position)) and last_visible_characters >= call_position) or
 			(call_position >= last_visible_characters and call_position <= text_content.visible_characters) or
-			text_content.visible_characters == -1 or
-			last_visible_characters == -1
+			text_content.visible_characters == -1
 		):
 			call_from_position(call_position)
 	
@@ -1150,7 +1147,7 @@ func read_next_chunk():
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, "<strpos>".length())
-				scan_index = max(scan_index - "<strpos>".length(), 0)
+				scan_index = max(scan_index - "<strpos>".length(), -1) # -1 because at the end we add 1
 				target_length -= "<strpos>".length()
 				tag_buffer += "<strpos>".length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
@@ -1161,8 +1158,8 @@ func read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index] = tag_string
-				scan_index = max(scan_index - tag_string.length(), 0)
+				call_strings[scan_index - tag_buffer] = tag_string
+				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<ts_", scan_index) == scan_index:
@@ -1261,9 +1258,28 @@ func call_from_position(call_position: int):
 	text = text.trim_suffix(">")
 	var parts := text.split(",")
 	var func_name = parts[0]
+	while func_name.begins_with(" "):
+		func_name = func_name.trim_prefix(" ")
+	while func_name.ends_with(" "):
+		func_name = func_name.trim_suffix(" ")
 	parts.remove_at(0)
-	inline_evaluator.callv(func_name, Array(parts))
-	ParserEvents.function_called.emit(func_name, Array(parts), call_position)
+	
+	var args := []
+	var i := 0
+	var arg_types : Array = Parser.get_instruction_arg_types(func_name)
+	for type in arg_types:
+		match type:
+			"float":
+				args.append(float(parts[i]))
+			"string":
+				args.append(String(parts[i]))
+			"bool":
+				var cast : bool = true if parts[i] == "true" else false
+				args.append(cast)
+		i += 1
+	
+	inline_evaluator.callv(func_name, args)
+	ParserEvents.function_called.emit(func_name, args, call_position)
 	call_strings.erase(call_position)
 
 func set_text_content_text(text: String):

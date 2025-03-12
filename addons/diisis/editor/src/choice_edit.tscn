@@ -162,8 +162,10 @@ layout_mode = 2
 layout_mode = 2
 columns = 2
 
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer" instance=ExtResource("7_id204")]
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
 layout_mode = 2
+address_source = NodePath("../../../../../../..")
+address_function = "get_jump_target_address"
 
 [node name="Label3" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
@@ -202,8 +204,10 @@ auto_translate_mode = 1
 layout_mode = 2
 columns = 2
 
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer" instance=ExtResource("7_id204")]
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
 layout_mode = 2
+address_source = NodePath("../../../../../../..")
+address_function = "get_loopback_target_address"
 
 [node name="Label3" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer"]
 auto_translate_mode = 1

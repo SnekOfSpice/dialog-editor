@@ -21,8 +21,10 @@ func init() -> void:
 	find_child("ChoiceContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
 	await get_tree().process_frame
-	set_head_editable(not Pages.head_defaults.is_empty())
+	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
+	set_head_editable(Pages.is_header_schema_empty())
 	set_non_meta_parts_visible(true)
+	
 
 func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
@@ -30,6 +32,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
 	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full
 	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
+	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	if view == DiisisEditor.PageView.Full:
 		move_controls_buttons.columns = 2
 		move_controls.find_child("Spacer").visible = true
@@ -147,6 +150,7 @@ func deserialize(data: Dictionary):
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	
 	# header
+	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	find_child("FactsVisibilityToggle").button_pressed = data.get("meta.facts_visible", false)
 	find_child("ConditionalsVisibilityToggle").button_pressed = data.get("meta.conditionals_visible", false)
 	

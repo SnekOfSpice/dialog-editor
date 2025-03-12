@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bhftsn5yhlugv"]
+[gd_scene load_steps=4 format=3 uid="uid://bhftsn5yhlugv"]
 
 [ext_resource type="Script" path="res://addons/diisis/editor/src/facts_popup_content.gd" id="1_x3wnc"]
+[ext_resource type="FontFile" uid="uid://py6byfikelnx" path="res://addons/diisis/editor/visuals/theme/fonts/LinearAtype.ttf" id="2_a21hr"]
+[ext_resource type="PackedScene" uid="uid://cigmq5hpy508j" path="res://addons/diisis/editor/src/create_fact_window.tscn" id="2_bhobo"]
 
 [node name="FactsPopupContent" type="VBoxContainer"]
 anchors_preset = 15
@@ -10,10 +12,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x3wnc")
 
-[node name="Label" type="Label" parent="."]
-visible = false
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 2
-text = "yea tbh this doesn't do much atm"
+
+[node name="Label" type="Label" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.145098)
+theme_override_fonts/font = ExtResource("2_a21hr")
+theme_override_font_sizes/font_size = 24
+text = "DIISIS loves you X angels love you X lessthanthree"
+vertical_alignment = 1
+
+[node name="CreateButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+text = "+"
 
 [node name="Facts" type="ItemList" parent="."]
 layout_mode = 2
@@ -163,6 +178,10 @@ always_on_top = true
 popup_window = true
 ok_button_text = "Delete Fact (NO UNDO)"
 
+[node name="CreateFactWindow" parent="." instance=ExtResource("2_bhobo")]
+visible = false
+
+[connection signal="pressed" from="HBoxContainer2/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="item_clicked" from="Facts" to="." method="_on_facts_item_clicked"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/ChangeDefaultButton" to="." method="_on_change_default_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/CancelChangeDefaultButton" to="." method="_on_cancel_change_default_button_pressed"]
@@ -175,3 +194,4 @@ ok_button_text = "Delete Fact (NO UNDO)"
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToAddressButton" to="." method="_on_go_to_address_button_pressed"]
 [connection signal="canceled" from="ConfirmDelete" to="." method="_on_confirm_delete_canceled"]
 [connection signal="confirmed" from="ConfirmDelete" to="." method="_on_confirm_delete_confirmed"]
+[connection signal="fact_created" from="CreateFactWindow" to="." method="_on_create_fact_window_fact_created"]

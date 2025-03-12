@@ -296,13 +296,11 @@ func set_loopback(do:bool):
 	find_child("LoopbackContainer").visible = do
 	find_child("LoopbackToggle").button_pressed = do
 
-#func _on_facts_visibility_toggle_pressed() -> void:
-	#find_child("Facts").visible = not find_child("Facts").visible
+func get_loopback_target_address() -> String:
+	return str(find_child("LoopbackPageSelect").value, ".", find_child("LoopbackLineSelect").value)
 
-
-#func _on_conditional_visibility_toggle_pressed() -> void:
-	#find_child("Conditionals").visible = not find_child("Conditionals").visible
-
+func get_jump_target_address() -> String:
+	return str(find_child("PageSelect").value, ".", find_child("LineSelect").value)
 
 
 func _on_up_button_pressed() -> void:

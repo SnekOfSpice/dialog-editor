@@ -60,3 +60,14 @@ func _on_close_requested() -> void:
 
 func _on_search_line_edit_text_changed(new_text: String) -> void:
 	filter_items(new_text)
+
+
+func _on_reset_address_mode_pressed() -> void:
+	
+	$ResetAddressModePopup.popup()
+	$ResetAddressModePopup.position = size - $ResetAddressModePopup.size
+
+
+func _on_reset_address_mode_popup_change_to_mode(mode: AddressModeButton.Mode) -> void:
+	for item in find_child("Items").get_children():
+		item.set_address_mode(mode)

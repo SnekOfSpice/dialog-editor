@@ -16,7 +16,8 @@ var text_lead_time_other_actor := 0.0
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
-	"_",]
+	"_",
+	"1","2","3","4","5","6","7","8","9","0",]
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -67,11 +68,15 @@ var editor:DiisisEditor
 var page_data := {}
 
 var evaluator_paths := ["res://sample/inline_eval.gd"]
+var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
 
 signal pages_modified
+
+func is_header_schema_empty():
+	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
 	return {
@@ -89,6 +94,7 @@ func serialize() -> Dictionary:
 		"use_dialog_syntax": use_dialog_syntax,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
+		"default_address_mode_pages": default_address_mode_pages,
 	}
 
 func deserialize(data:Dictionary):
@@ -120,6 +126,7 @@ func deserialize(data:Dictionary):
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
+	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
 	apply_file_config(data.get("file_config", {}))
 
@@ -164,8 +171,10 @@ func swap_pages(page_a: int, page_b: int):
 	
 func swap_line_references(on_page:int, from:int, to:int):
 	var edited_current_page := false
+	
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
+		print("TODO")
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -173,21 +182,21 @@ func swap_line_references(on_page:int, from:int, to:int):
 					var page_number : int = page.get("number")
 					if choice.get("target_page") == on_page:
 					
-						if choice.get("target_line") == from:
+						if choice.get("target_line") == from and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("target_line") == to:
+						elif choice.get("target_line") == to and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
 					
 					if choice.get("loopback_target_page") == on_page:
-						if choice.get("loopback_target_line") == from:
+						if choice.get("loopback_target_line") == from and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["loopback_target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("loopback_target_line") == to:
+						elif choice.get("loopback_target_line") == to and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 							choice["loopback_target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
@@ -210,20 +219,27 @@ func get_lines(page_number: int):
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
-		var next = page.get("next")
-		if next == from:
-			page["next"] = to
-		elif next == to:
-			page["next"] = from
+		if page.get("meta.address_mode_next", default_address_mode_pages) == AddressModeButton.Mode.Objectt:
+			var next = page.get("next")
+			if next == from:
+				page["next"] = to
+			elif next == to:
+				page["next"] = from
 		
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
 				for choice in content.get("choices"):
-					if choice.get("target_page") == from:
-						choice["target_page"] = to
-					elif choice.get("target_page") == to:
-						choice["target_page"] = from
+					if choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("target_page") == from:
+							choice["target_page"] = to
+						elif choice.get("target_page") == to:
+							choice["target_page"] = from
+					if choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("loopback_target_page") == from:
+							choice["loopback_target_page"] = to
+						elif choice.get("loopback_target_page") == to:
+							choice["loopback_target_page"] = from
 	await get_tree().process_frame
 	editor.refresh(false)
 
@@ -402,7 +418,13 @@ func get_instruction_signature(instruction_name:String) -> String:
 	var arg_types : Array = instruction_templates.get(instruction_name).get("arg_types")
 	var arg_names : Array = instruction_templates.get(instruction_name).get("args")
 	while i < arg_types.size():
-		result += arg_names[i]
+		var arg_type_name : String
+		var raw_type : String = arg_types[i].trim_suffix(" ").trim_prefix(" ")
+		if raw_type.containsn("string"):
+			arg_type_name = "String"
+		else:
+			arg_type_name = raw_type
+		result += str(arg_names[i], " : ", arg_type_name)
 		
 		if i < arg_types.size() - 1:
 			result += ", "
@@ -410,18 +432,6 @@ func get_instruction_signature(instruction_name:String) -> String:
 		i += 1
 	
 	result += ") -> bool:"
-	
-	i = 0
-	while i < arg_types.size():
-		var type_str:String
-		if arg_types[i] == "string":
-			type_str = "String"
-		else:
-			type_str = arg_types[i]
-		
-		result += str("\n\t", arg_names[i], " = ", type_str, "(", arg_names[i], ")")
-		
-		i += 1
 	
 	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
 	result += "\n\t# (Needs to be called by your code from somewhere.)"
@@ -530,10 +540,7 @@ func apply_new_header_schema(new_schema: Array):
 		var lines = page_data.get(i).get("lines")
 		
 		for line in lines:
-			prints("PRETRANSFORM-", line["header"], " SCHEMA-> ", new_schema)
 			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
-			prints("POSTTRANSFORM-", line["header"])
-	
 	
 	editor.refresh(false)
 	head_defaults = new_schema
@@ -767,6 +774,12 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 	
 	dropdowns[dropdown_title] = options
 
+func register_fact(fact_name : String, value):
+	if has_fact(fact_name):
+		push_warning(str("Fact ", fact_name, " already exists with default value ", facts.get(fact_name), " and won't be registered again."))
+		return
+	facts[fact_name] = value
+
 func alter_fact(from:String, to=null):
 	for page in page_data.values():
 		
@@ -822,6 +835,12 @@ func alter_fact(from:String, to=null):
 	facts.erase(from)
 	
 	editor.refresh(false)
+	
+func is_fact_new_and_not_empty(fact_name: String) -> bool:
+	return not (has_fact(fact_name) or fact_name.is_empty())
+
+func has_fact(fact_name:String) -> bool:
+	return facts.keys().has(fact_name)
 
 func does_address_exist(address:String) -> bool:
 	if address.ends_with(".") or address.is_empty():
@@ -1251,63 +1270,112 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 	return "OK"
 
 
-func capitalize_sentence_beginnings_str(input:String) -> String:
-	return capitalize_sentence_beginnings([input])[0]
-
-func capitalize_sentence_beginnings(input:Array) -> Array:
+func capitalize_sentence_beginnings(text:String) -> String:
 	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
 
 	var c12n_prefixes := [
-		".", ":", ";", "-", "?", "!", "~"
+		".", ":", ";", "?", "!", "~"
 	]
+	
+	var letter_indices_after_elipses := {}
+	var elipse_position := text.find("...")
+	var elipse_length := 3
+	while elipse_position != -1:
+		if elipse_position < text.length():
+			if text[elipse_position + elipse_length + 1] in letters:
+				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
+				elipse_position = text.find("...", elipse_position + elipse_length + 1)
+				continue
+			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
+				if text[elipse_position + 2] in letters:
+					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
+					elipse_position = text.find("...", elipse_position + elipse_length + 1)
+					continue
+		elipse_position = text.find("...", elipse_position + elipse_length + 1)
 
-	var result := []
-	for text : String in input:
-		var tags_in_text := []
-		var scan_index := 0
-		while scan_index < text.length():
-			if text[scan_index] == "<":
-				var tag_end = text.find(">", scan_index)
-				if tag_end == -1:
-					scan_index += 1
-					continue
-				var tag = text.substr(scan_index, tag_end - scan_index + 1)
-				tags_in_text.append(tag)
-			elif text[scan_index] == "{":
-				var tag_end = text.find("}", scan_index)
-				if tag_end == -1:
-					scan_index += 1
-					continue
-				var tag = text.substr(scan_index, tag_end - scan_index + 1)
-				tags_in_text.append(tag)
-			elif text[scan_index] == "[":
-				if text[scan_index-1] == "\\[":
-					scan_index += 1
-					continue
-				var tag_end = text.find("]", scan_index)
-				if tag_end == -1:
-					scan_index += 1
-					continue
-				var tag = text.substr(scan_index, tag_end - scan_index + 1)
-				tags_in_text.append(tag)
-			scan_index += 1
-		for letter : String in letters:
-			text = text.replace(str("\"", letter), str("\"", letter.capitalize()))
-			text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
-			text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
-			for prefix in c12n_prefixes:
-				if prefix != "-":
-					text = text.replace(str(prefix, letter), str(prefix, letter.capitalize()))
-					text = text.replace(str(prefix, "<ap>", letter), str(prefix, "<ap>", letter.capitalize()))
-					text = text.replace(str(prefix, "<mp>", letter), str(prefix, "<mp>", letter.capitalize()))
-					text = text.replace(str(prefix, "<lc>", letter), str(prefix, "<lc>", letter.capitalize()))
-				text = text.replace(str(prefix, " ", letter), str(prefix, " ", letter.capitalize()))
-				text = text.replace(str(prefix, " <ap>", letter), str(prefix, " <ap>", letter.capitalize()))
-				text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
-				text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
-		
-		for tag in tags_in_text:
-			text = text.replacen(tag, tag)
-		
-		result.append(text)
-	return result
+	var tags_in_text := []
+	var scan_index := 0
+	while scan_index < text.length():
+		if text[scan_index] == "<":
+			var tag_end = text.find(">", scan_index)
+			if tag_end == -1:
+				scan_index += 1
+				continue
+			var tag = text.substr(scan_index, tag_end - scan_index + 1)
+			tags_in_text.append(tag)
+		elif text[scan_index] == "{":
+			var tag_end = text.find("}", scan_index)
+			if tag_end == -1:
+				scan_index += 1
+				continue
+			var tag = text.substr(scan_index, tag_end - scan_index + 1)
+			tags_in_text.append(tag)
+		elif text[scan_index] == "[":
+			if text[scan_index-1] == "\\[":
+				scan_index += 1
+				continue
+			var tag_end = text.find("]", scan_index)
+			if tag_end == -1:
+				scan_index += 1
+				continue
+			var tag = text.substr(scan_index, tag_end - scan_index + 1)
+			tags_in_text.append(tag)
+		scan_index += 1
+	for letter : String in letters:
+		text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
+		text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
+		for prefix in c12n_prefixes:
+			if prefix != "-":
+				text = text.replace(str(prefix, letter), str(prefix, letter.capitalize()))
+				text = text.replace(str(prefix, "<ap>", letter), str(prefix, "<ap>", letter.capitalize()))
+				text = text.replace(str(prefix, "<mp>", letter), str(prefix, "<mp>", letter.capitalize()))
+				text = text.replace(str(prefix, "<lc>", letter), str(prefix, "<lc>", letter.capitalize()))
+			text = text.replace(str(prefix, " ", letter), str(prefix, " ", letter.capitalize()))
+			text = text.replace(str(prefix, " <ap>", letter), str(prefix, " <ap>", letter.capitalize()))
+			text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
+			text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
+	
+	for tag in tags_in_text:
+		text = text.replacen(tag, tag)
+	
+	print(letter_indices_after_elipses)
+	for index in letter_indices_after_elipses.keys():
+		var letter : String = letter_indices_after_elipses.get(index)
+		text[index] = letter
+	
+	return text
+
+func neaten_whitespace(text:String) -> String:
+	text = text.replace(":", ": ")
+	text = text.replace("<", " <")
+	text = text.replace("[", " [")
+	text = text.replace(" []>", "[]>")
+	
+	var contains_dead_whitespace := text.contains("  ")
+	while contains_dead_whitespace:
+		var doublespace_index = text.find("  ")
+		text = text.erase(doublespace_index)
+		contains_dead_whitespace = text.contains("  ")
+	
+	contains_dead_whitespace = text.contains("> ")
+	while contains_dead_whitespace:
+		var doublespace_index = text.find("> ")
+		text = text.erase(doublespace_index + 1)
+		contains_dead_whitespace = text.contains("> ")
+	
+	contains_dead_whitespace = text.contains("] ")
+	while contains_dead_whitespace:
+		var doublespace_index = text.find("] ")
+		text = text.erase(doublespace_index + 1)
+		contains_dead_whitespace = text.contains("] ")
+	
+	var closing_bb_lead_space_position := text.find(" [/")
+	while closing_bb_lead_space_position != -1:
+		var end_bracket_position = text.find("]", closing_bb_lead_space_position)
+		if end_bracket_position == -1:
+			break
+		text = text.insert(end_bracket_position + 1, " ")
+		text = text.erase(closing_bb_lead_space_position)
+		closing_bb_lead_space_position = text.find(" [/")
+	
+	return text

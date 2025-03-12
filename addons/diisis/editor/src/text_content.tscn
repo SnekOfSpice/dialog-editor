@@ -25,12 +25,17 @@ script = ExtResource("1_uudox")
 [node name="DialogSyntaxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="MenuBar" type="MenuBar" parent="DialogSyntaxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="DialogSyntaxContainer"]
 layout_mode = 2
 
-[node name="Text" type="PopupMenu" parent="DialogSyntaxContainer/MenuBar"]
-item_count = 1
+[node name="MenuBar" type="MenuBar" parent="DialogSyntaxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Format Text" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar"]
+item_count = 2
 item_0/text = "Capitalize"
+item_1/text = "Neaten Whitespace"
+item_1/id = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="DialogSyntaxContainer"]
 layout_mode = 2
@@ -53,7 +58,7 @@ delimiter_strings = Array[String]([])
 code_completion_enabled = true
 indent_automatic_prefixes = Array[String]([])
 
-[connection signal="index_pressed" from="DialogSyntaxContainer/MenuBar/Text" to="." method="_on_text_index_pressed"]
+[connection signal="index_pressed" from="DialogSyntaxContainer/PanelContainer/MenuBar/Format Text" to="." method="_on_text_index_pressed"]
 [connection signal="caret_changed" from="TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="code_completion_requested" from="TextBox" to="." method="_on_text_box_code_completion_requested"]
 [connection signal="focus_entered" from="TextBox" to="." method="_on_text_box_focus_entered"]

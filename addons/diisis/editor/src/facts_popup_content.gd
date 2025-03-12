@@ -213,3 +213,11 @@ func _on_cancel_change_default_button_pressed() -> void:
 	find_child("ChangeDefaultButton").visible = true
 	find_child("ChangeDefaultEditContainer").visible = false
 	find_child("CancelChangeDefaultButton").visible = false
+
+
+func _on_create_button_pressed() -> void:
+	$CreateFactWindow.popup()
+
+
+func _on_create_fact_window_fact_created() -> void:
+	fill()

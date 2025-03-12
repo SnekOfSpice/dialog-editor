@@ -19,6 +19,11 @@ func init(n:=number):
 	find_child("Facts").init()
 	deserialize(data)
 
+func get_next():
+	if find_child("TerminateCheck").button_pressed:
+		push_warning("Getting next from a page that terminates.")
+	return next
+
 func get_page_key() -> String:
 	return str(find_child("PageKey").text)
 
@@ -48,6 +53,7 @@ func serialize() -> Dictionary:
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	data["facts"] = find_child("Facts").serialize()
 	data["meta.selected"] = find_child("LineSelector").button_pressed
+	data["meta.address_mode_next"] = find_child("AddressModeButton").get_mode()
 	
 	var lines_data := []
 	for c in lines.get_children():
@@ -67,6 +73,7 @@ func deserialize(data: Dictionary):
 	deserialize_lines(data.get("lines", []))
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
+	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -492,6 +499,7 @@ func _on_next_line_edit_value_changed(value: float) -> void:
 
 func _on_terminate_check_toggled(toggled_on: bool) -> void:
 	find_child("NextContainer").visible = not toggled_on
+	find_child("AddressModeButton").visible = not toggled_on
 
 func _on_line_selector_toggled(toggled_on: bool) -> void:
 	for line : Line in lines.get_children():

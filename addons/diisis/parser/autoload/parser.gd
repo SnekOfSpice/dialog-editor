@@ -36,6 +36,7 @@ var lines := []
 
 var facts := {}
 var starting_facts := {}
+var instruction_templates := {}
 
 var max_line_index_on_page := 0
 
@@ -104,6 +105,7 @@ func init(data:Dictionary):
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
+	instruction_templates = data.get("instruction_templates", {})
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
@@ -233,12 +235,25 @@ func drop_down_values_to_string_array(values:=[0,0]) -> Array:
 	result[1] = value
 	return result
 
+func get_page_number(key:String) -> int:
+	for data in page_data.values():
+		if data.get("page_key", "") == key:
+			return data.get("number")
+	return -1
+
+func read_page_by_key(key:String):
+	var number = get_page_number(key)
+	if number == -1:
+		push_error(str("Couldn't find page with key \"", key, "\"."))
+		return
+	read_page(number)
+
 func read_page(number: int, starting_line_index := 0):
 	if not page_data.keys().has(number):
 		push_warning(str("number ", number, " not in page data"))
 		return
 	
-	#emit_signal("read_new_page", number)
+	set_paused(false)
 	ParserEvents.read_new_page.emit(number)
 	page_index = number
 	lines = page_data.get(page_index).get("lines")
@@ -537,6 +552,10 @@ func deserialize(data: Dictionary):
 
 func save_parser_state_to_file(file_path: String, additional_data:={}):
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	if not file:
+		push_error("File saving failed")
+		push_error(FileAccess.get_open_error())
+		return
 	var data_to_save := {}
 	data_to_save["Parser"] = serialize()
 	data_to_save["Custom"] = additional_data
@@ -560,3 +579,6 @@ func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> 
 	paused = pause_after_load
 	
 	return data.get("Custom", {})
+
+func get_instruction_arg_types(instruction_name: String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("arg_types", [])

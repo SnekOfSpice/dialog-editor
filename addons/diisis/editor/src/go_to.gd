@@ -39,6 +39,17 @@ func _on_address_bar_text_submitted(new_text: String) -> void:
 	emit_signal("go_to", new_text)
 	find_child("AddressBar").visible = false
 
+# used by editor shortcut
+func toggle_active():
+	if find_child("AddressBar").visible:
+		_on_cancel_go_to_pressed()
+		await get_tree().process_frame
+		find_child("ErrorLabelWindow").hide()
+	else:
+		_on_go_to_button_pressed()
+		await get_tree().process_frame
+		find_child("AddressBar").grab_focus()
+		
 
 func _on_go_to_button_pressed() -> void:
 	if find_child("AddressBar").visible:

@@ -57,44 +57,14 @@ func _on_instruction_text_box_caret_changed() -> void:
 	var end = text_box.text.find(")") + 1
 	
 	if caret_col > start and caret_col < end:
-		var caret_pos = Vector2i(text_box.get_caret_draw_pos())
-		caret_pos += Vector2i(text_box.global_position)
-		caret_pos *= Pages.editor.content_scale
-		caret_pos += Vector2(0, 10) * Pages.editor.content_scale
-		find_child("ArgHint").position = caret_pos
+		Pages.editor.request_arg_hint(text_box)
+		Pages.editor.build_arg_hint(get_instruction_name(), text_box.text, caret_col)
 		
-		var arg_names = Pages.get_instruction_arg_names(get_instruction_name())
-		var arg_types = Pages.get_instruction_arg_types(get_instruction_name())
-		var arg_strings := []
-		var i := 0
-		while i < arg_names.size():
-			arg_strings.append(str(arg_names[i], ":", arg_types[i]))
-			i += 1
-		var args_before_caret :int = text_box.text.count(",", 0, caret_col)
-		
-		var args_cleaned := ""
-		
-		i = 0
-		for a in arg_strings:
-			if i == args_before_caret:
-				args_cleaned += "[b]"
-			args_cleaned += a
-			if i < arg_strings.size() - 1:
-				args_cleaned += ", "
-			if i == args_before_caret:
-				args_cleaned += "[/b]"
-			i += 1
-		
-		find_child("ArgHint").build(args_cleaned)
-		find_child("ArgHint").popup()
-		
-		text_box.set_caret_column(caret_col)
-		text_box.call_deferred("grab_focus")
 	else:
-		find_child("ArgHint").hide()
+		Pages.editor.hide_arg_hint()
 
 func _on_instruction_text_box_focus_exited() -> void:
-	find_child("ArgHint").hide()
+	Pages.editor.hide_arg_hint()
 
 
 func set_text(text:String):

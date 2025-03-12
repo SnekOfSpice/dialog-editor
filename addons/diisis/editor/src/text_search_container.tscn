@@ -21,6 +21,7 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="QueryTextEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -83,7 +84,7 @@ layout_mode = 2
 text = "No Results"
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(150, 200)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
