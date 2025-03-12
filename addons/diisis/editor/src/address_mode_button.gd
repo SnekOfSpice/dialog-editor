@@ -36,6 +36,10 @@ func _on_pressed() -> void:
 	set_mode(wrap(mode + 1, 0, Mode.size()))
 	emit_signal("mode_set", mode)
 
+func set_page_view(view:DiisisEditor.PageView):
+	if not address_source:
+		return
+	visible = view == DiisisEditor.PageView.Full
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
