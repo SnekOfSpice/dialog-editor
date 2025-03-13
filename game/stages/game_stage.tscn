@@ -523,8 +523,8 @@ grow_vertical = 0
 
 [node name="HistoryButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.909804, 0.741176, 0.772549, 0.286275)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_scr08")
@@ -543,8 +543,8 @@ text = "History"
 [node name="MenuButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
 layout_mode = 2
 focus_mode = 0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.909437, 0.742585, 0.7728, 0.286275)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_styles/focus = SubResource("StyleBoxEmpty_orud1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_akdev")
@@ -647,7 +647,6 @@ prompt_finished = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("6_8ao3j")
 
-[connection signal="ready" from="Characters/Character" to="." method="remove_blocker"]
 [connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]

@@ -80,10 +80,10 @@ var property_for_name := ""
 var blank_names : Array[String] = []
 ## A String:String Dictionary. The keys are the actor names set in the options of [member property_for_name].
 ## The respective value is the name to be displayed in the [member name_label] or [member text_content], depending on [member name_style].
-@export var name_map := {}
+@export var name_map : Dictionary[String, String] = {}
 ## A String:Color Dictionary. The keys are the actor names set in the options of [member property_for_name].
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member text_content], depending on [member name_style].
-@export var name_colors := {}
+@export var name_colors : Dictionary[String, Color] = {}
 @export var name_style : NameStyle = NameStyle.NameLabel
 var visible_prepend_offset := 0
 @export_subgroup("Text Content")
