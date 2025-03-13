@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://dktj30rkefkhh"]
 
-[ext_resource type="Script" uid="uid://br6m8tytv6dtu" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
+[ext_resource type="Script" uid="uid://cb8xoqufpekv5" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_vdkak"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="2_6aqyr"]
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="2_616tk"]
@@ -104,6 +104,7 @@ Text is custom for both states."
 selected = 0
 item_count = 2
 popup/item_0/text = "enabled"
+popup/item_0/id = 0
 popup/item_1/text = "disabled"
 popup/item_1/id = 1
 
@@ -291,8 +292,10 @@ address_depth = 2
 [connection signal="item_selected" from="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_item_selected"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/AddressModeButton" to="." method="update"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/JumpPageContainer/VBoxContainer2/VBoxContainer/LineSelect" to="." method="_on_line_select_value_changed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer/AddressModeButton" to="." method="update"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]
 [connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/LineEditEnabled" to="." method="_on_line_edit_enabled_text_changed"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b1plcm2obfitt"]
 
-[ext_resource type="Script" uid="uid://cjj6p55a4myk" path="res://game/screens/save_screen.gd" id="1_ktv3v"]
+[ext_resource type="Script" uid="uid://rrr1l3javlw7" path="res://game/screens/save_screen.gd" id="1_ktv3v"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="2_k1kml"]
 
 [node name="SaveScreen" type="Control"]

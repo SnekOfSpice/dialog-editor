@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://1yh6ntfadlr4"]
 
-[ext_resource type="Script" uid="uid://c7ekq66wcgmt8" path="res://game/objects/letter.gd" id="1_e4jsb"]
+[ext_resource type="Script" uid="uid://d2cngi0f3xshf" path="res://game/objects/letter.gd" id="1_e4jsb"]
 [ext_resource type="Texture2D" uid="uid://b5iuxubpkxbso" path="res://game/visuals/paper.png" id="1_sx7rl"]
 [ext_resource type="FontFile" uid="uid://cms6howfjvtij" path="res://game/visuals/fonts/OnesHandwriting.ttf" id="2_3ya01"]
 
@@ -83,8 +83,22 @@ offset_bottom = 427.0
 theme_override_colors/default_color = Color(0.00909251, 0.125081, 0.292677, 1)
 theme_override_fonts/normal_font = ExtResource("2_3ya01")
 theme_override_font_sizes/normal_font_size = 13
-bbcode_enabled = true
-text = "This has been removed for containing spoilers for [url=https://snekofspice.itch.io/she-was-swallowed-by-the-sun]She Was Swallowed By The Sun[/url]"
+text = "My dearest Anhedonia, 
+
+I love you.
+
+If you are reading this, I am sorry to have left you. I wish I could carry this grief with you, but alas, I also arrogate to be its source.
+
+As I sit here, dying, I will have left you with some minor work. Atop my workbench you will find writeups and manuals to aid you in this final stretch, should you need them. You extracted so much of my blood from its vessel. Please treasure this last offering.
+
+I only urge you to make haste, as to not waste this body in its final hours. My trust in your ability to do this is absolute and unfaltering.
+
+You are the most wonderful girlfriend I could have ever wished for.
+
+I am grateful for all you have done for me, and all that you have allowed me to experience alongside you. Please keep me in your heart - for it is there where I found my home.
+
+Yours, always,
+One"
 fit_content = true
 
 [node name="Clean" type="RichTextLabel" parent="."]
@@ -100,6 +114,22 @@ theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_outline_size = 0
 theme_override_constants/line_separation = 0
 theme_override_font_sizes/normal_font_size = 11
+text = "My dearest Anhedonia, 
+
+I love you.
+
+If you are reading this, I am sorry to have left you. I wish I could carry this grief with you, but alas, I also arrogate to be its source.
+
+As I sit here, dying, I will have left you with some minor work. Atop my workbench you will find writeups and manuals to aid you in this final strech, should you need them. You extracted so much of my blood from its vessel. Please treasure this last offering.
+
+I only urge you to make haste, as to not waste this body in its final hours. My trust in your ability to do this is absolute and unfaltering.
+
+You are the most wonderful girlfriend I could have ever wished for.
+
+I am grateful for all you have done for me, and all that you have allowed me to experience alongside you. Please keep me in your heart - for it is there where I found my home.
+
+Yours, always,
+One"
 fit_content = true
 
 [connection signal="pressed" from="FontButton" to="." method="_on_font_button_pressed"]

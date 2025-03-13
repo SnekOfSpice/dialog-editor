@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ce72qyvaredxn"]
 
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_twmxo"]
-[ext_resource type="Script" uid="uid://304x6y0bdmbj" path="res://game/stages/stage_root.gd" id="1_uh8ly"]
+[ext_resource type="Script" uid="uid://2ixj0k2jnsqy" path="res://game/stages/stage_root.gd" id="1_uh8ly"]
 
 [node name="StageRoot" type="Control"]
 layout_mode = 3

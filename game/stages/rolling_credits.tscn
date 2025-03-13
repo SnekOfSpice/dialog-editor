@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ipa310726xyt"]
 
-[ext_resource type="Script" uid="uid://cccu5ulrngtbv" path="res://game/stages/rolling_credits.gd" id="1_cgvis"]
+[ext_resource type="Script" uid="uid://i7kqgyovxhb7" path="res://game/stages/rolling_credits.gd" id="1_cgvis"]
 
 [node name="RollingCredits" type="Control"]
 layout_mode = 3

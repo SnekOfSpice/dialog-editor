@@ -19,7 +19,7 @@ class_name Character
 ## }
 ## [/codeblock]
 ## All [Object]s should be pngs you drag in there
-@export var extras := {
+@export var extras : Dictionary[String, Dictionary] = {
 	"default" : {}
 }
 var fade_in := 0.4

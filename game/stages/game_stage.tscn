@@ -1,25 +1,25 @@
 [gd_scene load_steps=48 format=3 uid="uid://r1ntcqdujfol"]
 
-[ext_resource type="Script" uid="uid://c2yyp8r0mkjpq" path="res://game/stages/game_stage.gd" id="1_a36me"]
-[ext_resource type="Script" uid="uid://cpkm3nnu3sjka" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
+[ext_resource type="Script" uid="uid://j84s4qlkmfxw" path="res://game/stages/game_stage.gd" id="1_a36me"]
+[ext_resource type="Script" uid="uid://rq52trv32gab" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="3_tdgll"]
-[ext_resource type="Script" uid="uid://cutq8qhlfleg5" path="res://game/stages/objects.gd" id="3_x2eff"]
-[ext_resource type="Script" uid="uid://c8eh41vm2b3x4" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
+[ext_resource type="Script" uid="uid://brouc1vl1o5us" path="res://game/stages/objects.gd" id="3_x2eff"]
+[ext_resource type="Script" uid="uid://odc5pcwes4bj" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
 [ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
-[ext_resource type="Script" uid="uid://dcotmpfp643o1" path="res://game/diisis_integration/inline_eval.gd" id="6_8ao3j"]
+[ext_resource type="Script" uid="uid://mewk84fljr5k" path="res://game/diisis_integration/inline_eval.gd" id="6_8ao3j"]
 [ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="6_mh4vb"]
-[ext_resource type="Shader" uid="uid://bc670wltfn0i0" path="res://game/stages/sun_shader/fade_out.gdshader" id="6_o425v"]
+[ext_resource type="Shader" uid="uid://s1xa6ldfbhsh" path="res://game/stages/sun_shader/fade_out.gdshader" id="6_o425v"]
 [ext_resource type="Texture2D" uid="uid://kl3iyk14qdik" path="res://game/stages/sun_shader/wide_noise.tres" id="8_6l6o8"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Texture2D" uid="uid://c17fgm00bow0b" path="res://game/stages/sun_shader/mask_02_02.png" id="8_mxu8l"]
-[ext_resource type="Script" uid="uid://dw0ik4gxkj4rp" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="Script" uid="uid://c2vvnjn4tl6a7" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="11_n0ymb"]
 [ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
-[ext_resource type="Script" uid="uid://slb7behxtuck" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
-[ext_resource type="Shader" uid="uid://g0q1wp6t2mlg" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
-[ext_resource type="Shader" uid="uid://bckysgpgkoqt0" path="res://game/stages/static.gdshader" id="17_dc0ef"]
+[ext_resource type="Script" uid="uid://byyv78vc44g4u" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
+[ext_resource type="Shader" uid="uid://bhcpxuibbsole" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
+[ext_resource type="Shader" uid="uid://oj2v8kbp13pd" path="res://game/stages/static.gdshader" id="17_dc0ef"]
 [ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://game/stages/rolling_credits.tscn" id="17_gnute"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3ca2q"]
@@ -523,8 +523,8 @@ grow_vertical = 0
 
 [node name="HistoryButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.909804, 0.741176, 0.772549, 0.286275)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_scr08")
@@ -543,8 +543,8 @@ text = "History"
 [node name="MenuButton" type="Button" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ControlsContainer"]
 layout_mode = 2
 focus_mode = 0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.909437, 0.742585, 0.7728, 0.286275)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_styles/focus = SubResource("StyleBoxEmpty_orud1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_akdev")
@@ -647,7 +647,6 @@ prompt_finished = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1
 [node name="InlineEval" type="Node" parent="."]
 script = ExtResource("6_8ao3j")
 
-[connection signal="ready" from="Characters/Character" to="." method="remove_blocker"]
 [connection signal="meta_clicked" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]

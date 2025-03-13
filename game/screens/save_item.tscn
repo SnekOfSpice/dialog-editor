@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://ci8kef6ajk80i"]
 
-[ext_resource type="Script" uid="uid://b6yqwaqnkm2u7" path="res://game/screens/save_item.gd" id="1_qsytn"]
+[ext_resource type="Script" uid="uid://mmisnvxbh28j" path="res://game/screens/save_item.gd" id="1_qsytn"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_v5j8a"]
 [ext_resource type="Texture2D" uid="uid://dyu323vcu5wwa" path="res://game/systems/save_system/no_data.png" id="2_w4nvg"]
 

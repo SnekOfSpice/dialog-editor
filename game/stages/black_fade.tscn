@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qkegdwc8ux5o"]
 
-[ext_resource type="Script" uid="uid://bjkcsuvf4nu4k" path="res://game/stages/black_fade.gd" id="1_7syd8"]
+[ext_resource type="Script" uid="uid://c8bebmcwonix6" path="res://game/stages/black_fade.gd" id="1_7syd8"]
 
 [node name="BlackFade" type="ColorRect"]
 auto_translate_mode = 1

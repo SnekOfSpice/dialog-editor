@@ -32,6 +32,7 @@ layout_mode = 2
 [node name="Select" type="PopupMenu" parent="Controls/MenuBar"]
 item_count = 7
 item_0/text = "Select all items in this choice and..."
+item_0/id = 0
 item_0/separator = true
 item_1/text = "Keep other choice items selected"
 item_1/icon = ExtResource("2_6u1sp")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cfwk1hhwqrp2n"]
 
-[ext_resource type="Script" uid="uid://4fxwiavhbfar" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+[ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
 
 [node name="Control" type="VBoxContainer"]
 anchors_preset = 15
@@ -67,6 +67,14 @@ custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 scroll_fit_content_height = true
+
+[node name="DuplicateOptionsLabel" type="RichTextLabel" parent="OptionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[color=pink][center]Duplicate Options!"
+fit_content = true
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer"]
 layout_mode = 2

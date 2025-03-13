@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cjy7vf1xrnq5y"]
 
-[ext_resource type="Script" uid="uid://c6kpc5vp2lvaa" path="res://game/screens/chapter_cover.gd" id="1_kslxu"]
+[ext_resource type="Script" uid="uid://cjpx3217opxr1" path="res://game/screens/chapter_cover.gd" id="1_kslxu"]
 [ext_resource type="FontFile" uid="uid://jc0pccgisvh0" path="res://game/visuals/fonts/FromSunflowerFie.ttf" id="4_geagf"]
-[ext_resource type="Shader" uid="uid://ljvm5du181nf" path="res://game/screens/crt.gdshader" id="5_qb4b6"]
+[ext_resource type="Shader" uid="uid://so6mao4p5gra" path="res://game/screens/crt.gdshader" id="5_qb4b6"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w55d1"]
 content_margin_left = 10.0

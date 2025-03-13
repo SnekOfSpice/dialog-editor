@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://biu88w163ploy"]
 
-[ext_resource type="Script" uid="uid://d12rr7cukw4vs" path="res://game/systems/cheats.gd" id="1_40coe"]
+[ext_resource type="Script" uid="uid://cxlvpibbwn7vb" path="res://game/systems/cheats.gd" id="1_40coe"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ohfvt"]
 content_margin_top = 5.0

@@ -70,7 +70,6 @@ func _ready():
 	for character in find_child("Characters").get_children():
 		character.visible = false
 	
-	#remove_blocker()
 	grab_focus()
 	
 	tree_exiting.connect(on_tree_exit)
@@ -405,14 +404,6 @@ func deserialize(data:Dictionary):
 	
 	use_ui(data.get("ui_id", 1))
 	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
-
-#func remove_blocker():
-	#blockers -= 1
-	#if blockers <= 0:
-		#if callable_upon_blocker_clear:
-			#callable_upon_blocker_clear.call()
-		#else:
-			#Parser.reset_and_start()
 
 var emit_insutrction_complete_on_cg_hide :bool
 
