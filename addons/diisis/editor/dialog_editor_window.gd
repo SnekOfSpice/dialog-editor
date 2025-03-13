@@ -52,6 +52,9 @@ func build_quit_dialog(header_text:String, confirm_callable:Callable=close_edito
 	if $QuitDialog.is_connected("confirmed", close_editor_and_open_new_file):
 		$QuitDialog.disconnect("confirmed", close_editor_and_open_new_file)
 	$QuitDialog.confirmed.connect(confirm_callable)
+	
+	await get_tree().process_frame
+	$QuitDialog.position = Vector2i(size * 0.5) - Vector2i($QuitDialog.size * 0.5)
 
 func update_quit_dialog_text(header_text:String):
 	var text := ""

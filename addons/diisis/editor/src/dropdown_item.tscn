@@ -68,6 +68,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 scroll_fit_content_height = true
 
+[node name="DuplicateOptionsLabel" type="RichTextLabel" parent="OptionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[color=pink][center]Duplicate Options!"
+fit_content = true
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer"]
 layout_mode = 2
 size_flags_horizontal = 8

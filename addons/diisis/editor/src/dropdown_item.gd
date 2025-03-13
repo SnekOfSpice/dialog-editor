@@ -23,6 +23,7 @@ func init(title:String):
 	find_child("ReplaceInTextCheckBox").button_pressed = true
 	find_child("ReplaceSpeakersCheckBox").button_pressed = true
 	find_child("Parameters").visible = false
+	find_child("DuplicateOptionsLabel").visible = false
 	dropdown_options = Pages.dropdowns.get(title)
 
 func _on_edit_button_pressed() -> void:
@@ -67,11 +68,22 @@ func _on_expand_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_dropdown_options_text_text_changed() -> void:
-	var entered_args = find_child("DropdownOptionsText").text.split("\n")
+	var entered_args := Array(find_child("DropdownOptionsText").text.split("\n"))
 	var args := []
+	var has_duplicate := false
 	for arg : String in entered_args:
 		if not arg.is_empty():
+			if entered_args.count(arg) > 1:
+				has_duplicate = true
+				break
 			args.append(arg)
+	if has_duplicate:
+		find_child("SaveOptionsButton").disabled = true
+		find_child("DuplicateOptionsLabel").visible = true
+		return
+	find_child("SaveOptionsButton").disabled = find_child("TitleLabel").text != find_child("LineEdit").text
+	find_child("DuplicateOptionsLabel").visible = false
+	
 	if "".join(args) == "".join(dropdown_options):
 		find_child("SaveOptionsButton").text = "save options"
 		find_child("ExpandButton").disabled = false

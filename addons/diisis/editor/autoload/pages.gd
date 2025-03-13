@@ -253,14 +253,14 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 				var content = line.get("content")
 				for choice : Dictionary in content.get("choices"):
 					var page_number : int = page.get("number")
-					if choice.get("target_page") == on_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("target_page") == on_page and choice.get("jump_address_mode") == AddressModeButton.Mode.Objectt:
 						var target_line : int = choice.get("target_line")
 						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
 							choice["target_line"] = target_line + operation
 							if page_number == current_page_number:
 								edited_current_page = true
 					
-					if choice.get("loopback_target_page") == on_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("loopback_target_page") == on_page and choice.get("loop_address_mode") == AddressModeButton.Mode.Objectt:
 						var loopback_target_line : int = choice.get("loopback_target_line")
 						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
 							choice["loopback_target_line"] = loopback_target_line + operation
@@ -533,6 +533,43 @@ func get_all_invalid_instructions() -> String:
 		warning += str("Warning: invalid instructions at: ", ", ".join(malformed_instructions))
 	return warning
 
+
+func get_all_invalid_address_pointers() -> String:
+	var warning := ""
+	var page_index  := 0
+	var invalid_addresses := []
+	for page in page_data.values():
+		var next : String = str(page.get("next", -1))
+		if (not does_address_exist(next)) and (not page.get("terminate")):
+			invalid_addresses.append(str("next ", next, " of page [url=goto-",str(page_index),"]", page_index, "[/url]"))
+	
+		var lines : Array = page.get("lines", [])
+		var line_index := 0
+		for line in lines:
+			if line.get("line_type") != DIISIS.LineType.Choice:
+				continue
+			if not does_address_exist(str(page_index, ".", line_index)):
+				continue
+			var choices : Array = line.get("content").get("choices", [])
+			var choice_index := 0
+			for choice : Dictionary in choices:
+				var choice_address := str(int(page_index), ".", int(line_index), ".", choice_index)
+				if choice.get("do_jump_page", false):
+					var address := str(choice.get("target_page"), ".", choice.get("target_line"))
+					if not does_address_exist(address):
+						invalid_addresses.append(str("jump ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
+				
+				if choice.get("loopback", false):
+					var address := str(choice.get("loopback_target_page"), ".", choice.get("loopback_target_line"))
+					if not does_address_exist(address):
+						invalid_addresses.append(str("loop ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
+				choice_index += 1
+			line_index += 1
+		page_index += 1
+	
+	if not invalid_addresses.is_empty():
+		warning = str("Warning: invalid addresses at: ", ", ".join(invalid_addresses))
+	return warning
 
 # new schema with keys and values
 func apply_new_header_schema(new_schema: Array):

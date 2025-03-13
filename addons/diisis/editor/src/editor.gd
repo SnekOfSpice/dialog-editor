@@ -250,9 +250,18 @@ func _shortcut_input(event):
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_F:
-					open_popup($Popups.get_node("TextSearchPopup"))
+					if event.is_shift_pressed():
+						open_popup($Popups.get_node("FactsPopup"))
+					else:
+						open_popup($Popups.get_node("TextSearchPopup"))
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
+				KEY_D:
+					open_popup($Popups.get_node("DropdownPopup"))
+				KEY_H:
+					open_popup($Popups.get_node("HeaderPopup"))
+				KEY_R:
+					open_popup($Popups.get_node("InstructionPopup"))
 				KEY_Z:
 					if event.is_shift_pressed():
 						undo_redo.redo()
@@ -510,6 +519,7 @@ func _on_instruction_definition_timer_timeout() -> void:
 
 func update_error_text_box():
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
+	find_child("ErrorTextBox").text += Pages.get_all_invalid_address_pointers()
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	update_error_text_box()

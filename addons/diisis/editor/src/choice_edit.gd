@@ -32,14 +32,16 @@ func deserialize(data:Dictionary):
 	var loopback_target_page : int = data.get("loopback_target_page", 0)
 	var loopback_target_line : int = data.get("loopback_target_line", 0)
 	
+	var jump_address_mode := data.get("jump_address_mode", AddressModeButton.Mode.Objectt)
+	var loop_address_mode := data.get("loop_address_mode", AddressModeButton.Mode.Objectt)
+	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(jump_address_mode)
+	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(loop_address_mode)
+	
+	
 	if find_child("PageSelect").max_value < jump_target_page:
-		#print("target exeeds limit")
 		find_child("PageSelect").max_value = jump_target_page
-		#prints("limit is now ", find_child("PageSelect").max_value)
 	if find_child("LineSelect").max_value < jump_target_line:
-		#print("target exeeds limit l")
 		find_child("LineSelect").max_value = jump_target_line
-		#prints("llimit is now ", find_child("LineSelect").max_value)
 	if find_child("LoopbackPageSelect").max_value < loopback_target_page:
 		find_child("LoopbackPageSelect").max_value = loopback_target_page
 	if find_child("LoopbackLineSelect").max_value < loopback_target_line:
@@ -48,9 +50,7 @@ func deserialize(data:Dictionary):
 	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
 	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
 	
-	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(data.get("jump_address_mode", AddressModeButton.Mode.Objectt))
-	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(data.get("loop_address_mode", AddressModeButton.Mode.Objectt))
-	
+
 	
 
 	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem))[1]
@@ -122,10 +122,10 @@ func serialize() -> Dictionary:
 		"choice_text.enabled": find_child("LineEditEnabled").text,
 		"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
-		"target_page": jump_page_target_page,
-		"target_line": jump_page_target_line,
-		"loopback_target_page": find_child("LoopbackPageSelect").value,
-		"loopback_target_line": find_child("LoopbackLineSelect").value,
+		"target_page": int(jump_page_target_page),
+		"target_line": int(jump_page_target_line),
+		"loopback_target_page": int(find_child("LoopbackPageSelect").value),
+		"loopback_target_line": int(find_child("LoopbackLineSelect").value),
 		"facts": find_child("Facts").serialize(),
 		"conditionals": find_child("Conditionals").serialize(),
 		"do_jump_page": jump_page,
@@ -134,8 +134,8 @@ func serialize() -> Dictionary:
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : get_address(),
 		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id(),
-		"jump_address_mode": find_child("JumpPageContainer").find_child("AddressModeButton").get_mode(),
-		"loop_address_mode": find_child("LoopbackContainer").find_child("AddressModeButton").get_mode(),
+		"jump_address_mode": int(find_child("JumpPageContainer").find_child("AddressModeButton").get_mode()),
+		"loop_address_mode": int(find_child("LoopbackContainer").find_child("AddressModeButton").get_mode()),
 	}
 
 func update_fragile():
@@ -212,22 +212,25 @@ func _on_page_select_value_changed(value: float) -> void:
 	update()
 
 func update():
+	var is_loop_obj : bool = find_child("LoopbackContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
+	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
+	prints( get_address(),"loop", is_loop_obj, "jump", is_jump_obj)
 	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
 	var target_page := int(find_child("PageSelect").value)
-	target_page = min(target_page, max_page_index)
+	if is_jump_obj:
+		target_page = min(target_page, max_page_index)
 	var target_line := int(find_child("LineSelect").value)
-	var max_line_index : int = max(Pages.get_line_count(target_page) - 1, deserialized_loopback_line)
+	var max_line_index : int = max(Pages.get_line_count(target_page) - 1, deserialized_loopback_page)
 	
-	#prints("updating, setting to", max_line_index, " was des w", deserialized_loopback_line)
-	find_child("PageSelect").max_value = max_page_index
-	find_child("LineSelect").max_value = max_line_index
-	
+	if is_jump_obj:
+		find_child("PageSelect").max_value = max_page_index
+		find_child("LineSelect").max_value = max_line_index
+		find_child("PageSelect").value = target_page
 	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
-	#find_child("TargetStringLabel").tooltip = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
-	find_child("PageSelect").value = target_page
 	
-	find_child("LoopbackPageSelect").max_value = max_page_index
-	find_child("LoopbackLineSelect").max_value = max_line_index
+	if is_loop_obj:
+		find_child("LoopbackPageSelect").max_value = max_page_index
+		find_child("LoopbackLineSelect").max_value = max_line_index
 	var loopback_page := int(find_child("LoopbackPageSelect").value)
 	var loopback_line := int(find_child("LoopbackLineSelect").value)
 	
