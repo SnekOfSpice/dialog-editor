@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://djiaiay3ntvfy"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/dropdowns_container.gd" id="1_6xnc2"]
+[ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/dropdowns_container.gd" id="1_6xnc2"]
 
 [node name="MarginContainer" type="MarginContainer"]
 auto_translate_mode = 1

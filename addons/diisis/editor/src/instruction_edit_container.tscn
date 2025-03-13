@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://d33carvc0ulrr"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/instruction_edit_container.gd" id="1_05xxm"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/auto_scroll_container.gd" id="2_ujfyx"]
+[ext_resource type="Script" uid="uid://daqwe1nsq6knk" path="res://addons/diisis/editor/src/instruction_edit_container.gd" id="1_05xxm"]
+[ext_resource type="Script" uid="uid://dd1leluqo2kyk" path="res://addons/diisis/editor/src/auto_scroll_container.gd" id="2_ujfyx"]
 
 [node name="InstructionEditContainer" type="Control"]
 layout_mode = 3

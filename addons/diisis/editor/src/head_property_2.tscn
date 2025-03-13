@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c2equl4umuelj"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/head_property_2.gd" id="1_sdsq2"]
+[ext_resource type="Script" uid="uid://jbfx4wbx87wm" path="res://addons/diisis/editor/src/head_property_2.gd" id="1_sdsq2"]
 [ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_3op7w"]
 
 [node name="HeadProperty2" type="VBoxContainer"]

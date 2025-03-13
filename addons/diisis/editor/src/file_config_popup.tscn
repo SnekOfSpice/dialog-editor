@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cvek8s1fxdfmt" path="res://addons/diisis/editor/src/file_config_container.tscn" id="1_7a7dg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_oberv"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_popup.gd" id="1_pdew5"]
+[ext_resource type="Script" uid="uid://dmiq23qu75lmr" path="res://addons/diisis/editor/src/file_config_popup.gd" id="1_pdew5"]
 
 [node name="FileConfigPopup" type="Window"]
 title = "File Config"

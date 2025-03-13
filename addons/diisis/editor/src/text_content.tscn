@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c7k2h1p5qalaa"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_6al0s"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/text_content.gd" id="1_uudox"]
+[ext_resource type="Script" uid="uid://bfbq7sdndv6fb" path="res://addons/diisis/editor/src/text_content.gd" id="1_uudox"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
 number_color = Color(0.784314, 0.784314, 0.784314, 1)

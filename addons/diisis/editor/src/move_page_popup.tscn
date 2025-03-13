@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d4nhcwdgxbrlm"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_hk1ia"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/move_page_popup.gd" id="1_nrsai"]
+[ext_resource type="Script" uid="uid://c0ijy0qy0dj6d" path="res://addons/diisis/editor/src/move_page_popup.gd" id="1_nrsai"]
 [ext_resource type="PackedScene" uid="uid://dt3k1eclvuiqs" path="res://addons/diisis/editor/src/reset_address_mode_popup.tscn" id="3_p8ppp"]
 
 [node name="MovePagePopup" type="Window"]

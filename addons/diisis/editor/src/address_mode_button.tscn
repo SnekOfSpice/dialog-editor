@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dybsbden6coq5"]
 
 [ext_resource type="Texture2D" uid="uid://4l21mfm1ybnh" path="res://addons/diisis/editor/visuals/address_mode_obj.png" id="1_4lfae"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/address_mode_button.gd" id="1_i1bym"]
+[ext_resource type="Script" uid="uid://djefg46opakh6" path="res://addons/diisis/editor/src/address_mode_button.gd" id="1_i1bym"]
 
 [node name="AddressModeButton" type="TextureButton" groups=["diisis_page_view_sensitive"]]
 offset_right = 31.0

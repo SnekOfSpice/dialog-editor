@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c5vpxjprppa8n"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.gd" id="1_aukyl"]
+[ext_resource type="Script" uid="uid://87v3psq63lot" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.gd" id="1_aukyl"]
 [ext_resource type="Texture2D" uid="uid://cbh8ufq7liv0e" path="res://addons/diisis/editor/src/option_button_embed/icon.png" id="1_lc617"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65j1m"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cvek8s1fxdfmt"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/file_config_container.gd" id="1_yn2ca"]
+[ext_resource type="Script" uid="uid://c0ckdqsxtffs0" path="res://addons/diisis/editor/src/file_config_container.gd" id="1_yn2ca"]
 [ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="2_t4wj7"]
 
 [node name="FileConfigContainer" type="Control"]

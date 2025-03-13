@@ -1,0 +1,140 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjy7vf1xrnq5y"]
+
+[ext_resource type="Script" uid="uid://c6kpc5vp2lvaa" path="res://game/screens/chapter_cover.gd" id="1_kslxu"]
+[ext_resource type="FontFile" uid="uid://jc0pccgisvh0" path="res://game/visuals/fonts/FromSunflowerFie.ttf" id="4_geagf"]
+[ext_resource type="Shader" uid="uid://ljvm5du181nf" path="res://game/screens/crt.gdshader" id="5_qb4b6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w55d1"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahr53"]
+shader = ExtResource("5_qb4b6")
+shader_parameter/resolution = Vector2(320, 180)
+shader_parameter/scan_line_amount = 1.0
+shader_parameter/warp_amount = 0.1
+shader_parameter/noise_amount = 0.03
+shader_parameter/interference_amount = 0.2
+shader_parameter/grille_amount = 0.1
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.6
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/aberation_amount = 0.5
+shader_parameter/roll_line_amount = 0.3
+shader_parameter/roll_speed = 1.0
+shader_parameter/scan_line_strength = -8.0
+shader_parameter/pixel_strength = -2.0
+
+[node name="ChapterCover" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("1_kslxu")
+
+[node name="Parts" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="TextureRect" parent="Parts"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="Parts"]
+custom_minimum_size = Vector2(960, 70)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -480.0
+offset_right = 480.0
+offset_bottom = 70.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Logo" type="Sprite2D" parent="Parts"]
+position = Vector2(482, 241)
+scale = Vector2(0.876667, 0.876667)
+
+[node name="Character" type="Sprite2D" parent="Parts"]
+position = Vector2(460, 453)
+
+[node name="Name" type="RichTextLabel" parent="Parts"]
+custom_minimum_size = Vector2(320, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = 123.0
+offset_right = 380.0
+offset_bottom = 243.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/normal_font = ExtResource("4_geagf")
+theme_override_font_sizes/normal_font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w55d1")
+bbcode_enabled = true
+text = "hiiii"
+
+[node name="ColorRect3" type="ColorRect" parent="Parts"]
+custom_minimum_size = Vector2(960, 70)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -70.0
+offset_right = 480.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 1)
+
+[node name="Black" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AssembledTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_ahr53")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

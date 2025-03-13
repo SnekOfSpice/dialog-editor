@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cgadhdhl3ndao"]
 
-[ext_resource type="Script" path="res://addons/diisis/parser/src/choice_option.gd" id="1_l5ra8"]
+[ext_resource type="Script" uid="uid://bwovsphwn107k" path="res://addons/diisis/parser/src/choice_option.gd" id="1_l5ra8"]
 
 [node name="ChoiceOption" type="Button"]
 offset_right = 8.0

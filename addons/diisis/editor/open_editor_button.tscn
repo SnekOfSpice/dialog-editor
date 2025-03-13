@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dug0luew7u6ds"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
+[ext_resource type="Script" uid="uid://dtrkaopxetmjn" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 40.0

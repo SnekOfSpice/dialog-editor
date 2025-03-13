@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dt4yhnj3n5k5m"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/folder_container.gd" id="1_k5xft"]
+[ext_resource type="Script" uid="uid://cqago1v65gquo" path="res://addons/diisis/editor/src/folder_container.gd" id="1_k5xft"]
 
 [node name="FolderContainer" type="HBoxContainer" groups=["diisis_page_view_sensitive"]]
 script = ExtResource("1_k5xft")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://btvgde5ytnipf"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/labeled_check_box.gd" id="1_lfolx"]
+[ext_resource type="Script" uid="uid://bipbg3qffjtjb" path="res://addons/diisis/editor/src/labeled_check_box.gd" id="1_lfolx"]
 
 [node name="LabeledCheckBox" type="CheckBox"]
 anchors_preset = 15

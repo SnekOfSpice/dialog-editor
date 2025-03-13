@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cnpn8uwlfg1o4"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/hinted_line_edit.gd" id="1_51yrh"]
+[ext_resource type="Script" uid="uid://bpgnh23k5kj8d" path="res://addons/diisis/editor/src/hinted_line_edit.gd" id="1_51yrh"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="2_qlhuc"]
 
 [node name="HintedLineEdit" type="LineEdit"]

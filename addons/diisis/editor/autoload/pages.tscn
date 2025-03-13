@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://djgc8of5qiexy"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/autoload/pages.gd" id="1_swwhv"]
+[ext_resource type="Script" uid="uid://b42bkqnvnt7xr" path="res://addons/diisis/editor/autoload/pages.gd" id="1_swwhv"]
 
 [node name="Pages" type="Node"]
 script = ExtResource("1_swwhv")

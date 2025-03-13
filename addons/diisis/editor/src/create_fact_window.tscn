@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_hbr6i"]
 [ext_resource type="PackedScene" uid="uid://cx2yop3nuky50" path="res://addons/diisis/editor/src/create_fact_container.tscn" id="2_106om"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/create_fact_window.gd" id="2_ye56k"]
+[ext_resource type="Script" uid="uid://b1k5ajv0pdasm" path="res://addons/diisis/editor/src/create_fact_window.gd" id="2_ye56k"]
 
 [node name="CreateFactWindow" type="Window"]
 title = "Create Fact"

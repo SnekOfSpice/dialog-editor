@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://mr0nb3pemylk"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/head_property.gd" id="1_yno0w"]
+[ext_resource type="Script" uid="uid://be5qdrm3hxo8w" path="res://addons/diisis/editor/src/head_property.gd" id="1_yno0w"]
 
 [node name="HeadProperty" type="VBoxContainer"]
 offset_right = 421.0

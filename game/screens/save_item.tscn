@@ -1,0 +1,91 @@
+[gd_scene load_steps=7 format=3 uid="uid://ci8kef6ajk80i"]
+
+[ext_resource type="Script" uid="uid://b6yqwaqnkm2u7" path="res://game/screens/save_item.gd" id="1_qsytn"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_v5j8a"]
+[ext_resource type="Texture2D" uid="uid://dyu323vcu5wwa" path="res://game/systems/save_system/no_data.png" id="2_w4nvg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thoki"]
+content_margin_left = 4.0
+content_margin_top = 14.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0.21, 0.0987, 0.15064, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq2du"]
+content_margin_left = 4.0
+content_margin_top = 14.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0.145281, 0.0609441, 0.100325, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2f127"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 24.0
+bg_color = Color(0.21, 0.0987, 0.15064, 0.615686)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="SaveItem" type="Button"]
+custom_minimum_size = Vector2(124, 182)
+offset_right = 124.0
+offset_bottom = 182.0
+theme = ExtResource("1_v5j8a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_thoki")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_uq2du")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2f127")
+script = ExtResource("1_qsytn")
+
+[node name="Container" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 54.0
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Slot" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Slot 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_filter = 2
+texture = ExtResource("2_w4nvg")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Data" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/line_spacing = -31
+theme_override_font_sizes/font_size = 0
+text = "bla bla bla"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

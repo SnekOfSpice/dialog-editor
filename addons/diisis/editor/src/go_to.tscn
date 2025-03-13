@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bxsq5rsj1i12f"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_0ya0s"]
-[ext_resource type="Script" path="res://addons/diisis/editor/src/go_to.gd" id="1_mfnyd"]
+[ext_resource type="Script" uid="uid://dqohb1ron33q3" path="res://addons/diisis/editor/src/go_to.gd" id="1_mfnyd"]
 
 [node name="GoTo" type="VBoxContainer"]
 custom_minimum_size = Vector2(239, 0)
