@@ -1,25 +1,25 @@
 [gd_scene load_steps=48 format=3 uid="uid://r1ntcqdujfol"]
 
-[ext_resource type="Script" path="res://game/stages/game_stage.gd" id="1_a36me"]
-[ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
+[ext_resource type="Script" uid="uid://j84s4qlkmfxw" path="res://game/stages/game_stage.gd" id="1_a36me"]
+[ext_resource type="Script" uid="uid://rq52trv32gab" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="3_tdgll"]
-[ext_resource type="Script" path="res://game/stages/objects.gd" id="3_x2eff"]
-[ext_resource type="Script" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
+[ext_resource type="Script" uid="uid://brouc1vl1o5us" path="res://game/stages/objects.gd" id="3_x2eff"]
+[ext_resource type="Script" uid="uid://odc5pcwes4bj" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
 [ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
-[ext_resource type="Script" path="res://game/diisis_integration/inline_eval.gd" id="6_8ao3j"]
+[ext_resource type="Script" uid="uid://mewk84fljr5k" path="res://game/diisis_integration/inline_eval.gd" id="6_8ao3j"]
 [ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="6_mh4vb"]
-[ext_resource type="Shader" path="res://game/stages/sun_shader/fade_out.gdshader" id="6_o425v"]
+[ext_resource type="Shader" uid="uid://s1xa6ldfbhsh" path="res://game/stages/sun_shader/fade_out.gdshader" id="6_o425v"]
 [ext_resource type="Texture2D" uid="uid://kl3iyk14qdik" path="res://game/stages/sun_shader/wide_noise.tres" id="8_6l6o8"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Texture2D" uid="uid://c17fgm00bow0b" path="res://game/stages/sun_shader/mask_02_02.png" id="8_mxu8l"]
-[ext_resource type="Script" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="Script" uid="uid://c2vvnjn4tl6a7" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="11_n0ymb"]
 [ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
-[ext_resource type="Script" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
-[ext_resource type="Shader" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
-[ext_resource type="Shader" path="res://game/stages/static.gdshader" id="17_dc0ef"]
+[ext_resource type="Script" uid="uid://byyv78vc44g4u" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
+[ext_resource type="Shader" uid="uid://bhcpxuibbsole" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
+[ext_resource type="Shader" uid="uid://oj2v8kbp13pd" path="res://game/stages/static.gdshader" id="17_dc0ef"]
 [ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://game/stages/rolling_credits.tscn" id="17_gnute"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3ca2q"]
@@ -43,10 +43,10 @@ shader_parameter/steps = 1.8
 shader_parameter/magic = 3.2
 shader_parameter/debug = 0.0
 shader_parameter/color_opacity = 1.0
-shader_parameter/fill_amount = -1.0
-shader_parameter/epsilon = 1e-10
 shader_parameter/noise = ExtResource("8_6l6o8")
 shader_parameter/mask = ExtResource("8_mxu8l")
+shader_parameter/fill_amount = -1.0
+shader_parameter/epsilon = 1e-10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tba1"]
 bg_color = Color(0.05, 0.05, 0.05, 0.756863)

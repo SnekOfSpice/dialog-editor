@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cfwk1hhwqrp2n"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+[ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
 
 [node name="Control" type="VBoxContainer"]
 anchors_preset = 15

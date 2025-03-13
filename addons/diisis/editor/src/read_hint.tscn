@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://unnyq1pkgbh"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/read_hint.gd" id="1_3il64"]
+[ext_resource type="Script" uid="uid://esdheldjeqc3" path="res://addons/diisis/editor/src/read_hint.gd" id="1_3il64"]
 
 [node name="ReadHint" type="Window"]
 gui_disable_input = true

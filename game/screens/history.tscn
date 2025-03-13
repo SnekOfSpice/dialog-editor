@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://b6nbwi7lgrijy"]
 
-[ext_resource type="Script" path="res://game/screens/history.gd" id="1_aiklh"]
+[ext_resource type="Script" uid="uid://crrkao5bv1n7" path="res://game/screens/history.gd" id="1_aiklh"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="1_heid4"]
-[ext_resource type="Script" path="res://game/screens/auto_scroll_container.gd" id="2_esrbb"]
+[ext_resource type="Script" uid="uid://cxhdkxbk2nop" path="res://game/screens/auto_scroll_container.gd" id="2_esrbb"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_cnymx"]
 
 [node name="History" type="Control"]

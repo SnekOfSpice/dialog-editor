@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://u1pd7cjv38qc"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
+[ext_resource type="Script" uid="uid://rwq2ob8rphu8" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
 [ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://addons/diisis/editor/src/editor.tscn" id="2_4owra"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="3_efdl4"]
 [ext_resource type="PackedScene" uid="uid://b3170v1u5of2d" path="res://addons/diisis/editor/quit_dialog.tscn" id="3_h4aux"]

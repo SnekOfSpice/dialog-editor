@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://1yh6ntfadlr4"]
 
-[ext_resource type="Script" path="res://game/objects/letter.gd" id="1_e4jsb"]
+[ext_resource type="Script" uid="uid://d2cngi0f3xshf" path="res://game/objects/letter.gd" id="1_e4jsb"]
 [ext_resource type="Texture2D" uid="uid://b5iuxubpkxbso" path="res://game/visuals/paper.png" id="1_sx7rl"]
 [ext_resource type="FontFile" uid="uid://cms6howfjvtij" path="res://game/visuals/fonts/OnesHandwriting.ttf" id="2_3ya01"]
 

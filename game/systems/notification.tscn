@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qpj1n42rdukw"]
 
-[ext_resource type="Script" path="res://game/systems/notification.gd" id="1_tadhj"]
+[ext_resource type="Script" uid="uid://dcrxju21ducfd" path="res://game/systems/notification.gd" id="1_tadhj"]
 
 [node name="EditorNotification" type="PanelContainer"]
 anchors_preset = 1

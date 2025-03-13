@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://btwo5sdc17l8h"]
 
-[ext_resource type="Script" path="res://game/screens/cw.gd" id="1_8ylhl"]
+[ext_resource type="Script" uid="uid://bjhluji0cw88h" path="res://game/screens/cw.gd" id="1_8ylhl"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="2_xaxk6"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_q4mi2"]
 

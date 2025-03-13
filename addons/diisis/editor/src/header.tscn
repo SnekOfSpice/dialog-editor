@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c23v82ojiuvbs"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/Header.gd" id="1_3rwyw"]
+[ext_resource type="Script" uid="uid://bft0eof8c5jsq" path="res://addons/diisis/editor/src/Header.gd" id="1_3rwyw"]
 
 [node name="Header" type="VBoxContainer"]
 anchors_preset = 15

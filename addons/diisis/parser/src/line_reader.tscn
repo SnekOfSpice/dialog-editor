@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bb8yvsx0g14vl"]
 
-[ext_resource type="Script" path="res://addons/diisis/parser/src/line_reader.gd" id="1_f2s5m"]
+[ext_resource type="Script" uid="uid://rq52trv32gab" path="res://addons/diisis/parser/src/line_reader.gd" id="1_f2s5m"]
 
 [node name="LineReader" type="Control"]
 layout_mode = 3

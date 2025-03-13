@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://63cr5arye1r6"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/dialog_argument_dropdown_item.gd" id="1_j0sk0"]
+[ext_resource type="Script" uid="uid://equfe751mxt4" path="res://addons/diisis/editor/src/dialog_argument_dropdown_item.gd" id="1_j0sk0"]
 
 [node name="DialogArgumentDropdownItem" type="HBoxContainer"]
 anchors_preset = 15

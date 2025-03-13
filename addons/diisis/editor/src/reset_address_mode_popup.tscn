@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dt3k1eclvuiqs"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/reset_address_mode_popup.gd" id="1_8n7sg"]
+[ext_resource type="Script" uid="uid://bfpj3hkxh85wr" path="res://addons/diisis/editor/src/reset_address_mode_popup.gd" id="1_8n7sg"]
 
 [node name="ResetAddressModePopup" type="Popup"]
 size = Vector2i(343, 116)

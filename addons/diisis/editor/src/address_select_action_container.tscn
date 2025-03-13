@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c5eu4io5wokaq"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/address_select_action_container.gd" id="1_1ayp7"]
+[ext_resource type="Script" uid="uid://dnq10putwd1gr" path="res://addons/diisis/editor/src/address_select_action_container.gd" id="1_1ayp7"]
 [ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="2_mdac6"]
 [ext_resource type="Texture2D" uid="uid://dtwp3dhseccat" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 4.png" id="3_ffxrd"]
 [ext_resource type="Texture2D" uid="uid://b6setq8tb5oh5" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 5.png" id="4_udsmb"]

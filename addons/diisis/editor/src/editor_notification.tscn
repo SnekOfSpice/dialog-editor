@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bed1n7jwesl23"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/editor_notification.gd" id="1_vds6m"]
+[ext_resource type="Script" uid="uid://bu6s26nqoo5qw" path="res://addons/diisis/editor/src/editor_notification.gd" id="1_vds6m"]
 
 [node name="EditorNotification" type="PanelContainer"]
 anchors_preset = 1

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cx2yop3nuky50"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/create_fact_container.gd" id="1_7wf80"]
+[ext_resource type="Script" uid="uid://cl58r0ymuh8mf" path="res://addons/diisis/editor/src/create_fact_container.gd" id="1_7wf80"]
 [ext_resource type="ButtonGroup" uid="uid://bolsl1ntt87q" path="res://addons/diisis/editor/src/fact_data_type_button_group.tres" id="1_qfkbe"]
 
 [node name="Control" type="Control"]

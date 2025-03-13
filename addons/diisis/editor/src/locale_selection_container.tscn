@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dyfpbfsqcgyrj"]
 
-[ext_resource type="Script" path="res://addons/diisis/editor/src/locale_selection_container.gd" id="1_onrnk"]
+[ext_resource type="Script" uid="uid://bpgq3ffuwik3n" path="res://addons/diisis/editor/src/locale_selection_container.gd" id="1_onrnk"]
 
 [node name="LocaleSelectionContainer" type="VBoxContainer"]
 auto_translate_mode = 1
