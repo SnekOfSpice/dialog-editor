@@ -68,7 +68,10 @@ var _auto_continue_duration:= auto_continue_delay
 		past_text_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+@export var max_past_lines := -1
+@export var preserve_name_in_past_lines := true
 var auto_advance := false
+var last_raw_name := ""
 
 @export_group("Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
@@ -292,7 +295,7 @@ func _validate_property(property: Dictionary):
 		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
-		if property.name in ["past_text_container"]:
+		if property.name in ["past_text_container", "max_past_lines", "preserve_name_in_past_lines"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not show_choice_title:
 		if property.name in ["choice_title_label"]:
@@ -326,6 +329,9 @@ func serialize() -> Dictionary:
 	result["call_strings"] = call_strings
 	result["current_choice_title"] = current_choice_title
 	result["text_speed_by_character_index"] = text_speed_by_character_index
+	result["max_past_lines"] = max_past_lines
+	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
+	result["last_raw_name"] = last_raw_name
 	
 	return result
 
@@ -355,6 +361,9 @@ func deserialize(data: Dictionary):
 	call_strings = data.get("call_strings", {})
 	current_choice_title = data.get("current_choice_title", "")
 	text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	max_past_lines = data.get("max_past_lines", -1)
+	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
+	last_raw_name = data.get("last_raw_name", "")
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -1284,8 +1293,24 @@ func call_from_position(call_position: int):
 
 func set_text_content_text(text: String):
 	if keep_past_lines:
-		var past_line = RichTextLabel.new()
-		past_line.text = text_content.text
+		if max_past_lines > -1:
+			var child_count := past_text_container.get_child_count()
+			while child_count >= max_past_lines:
+				past_text_container.get_child(0).queue_free()
+				child_count -= 1
+		var past_line := RichTextLabel.new()
+		var past_text := ""
+		
+		if preserve_name_in_past_lines and not last_raw_name in blank_names and not text_content.text.is_empty():
+			if name_colors.has(last_raw_name):
+				var color : Color = name_colors.get(last_raw_name)
+				var code = color.to_html(false)
+				past_text = str("[color=", code, "]", get_actor_name(last_raw_name), "[/color]: ")
+			else:
+				past_text = str(get_actor_name(last_raw_name), ": ")
+		
+		past_text += text_content.text
+		past_line.text = past_text
 		past_text_container.add_child(past_line)
 		past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
 		past_line.fit_content = true
@@ -1295,6 +1320,8 @@ func set_text_content_text(text: String):
 	text_content.visible_characters = visible_prepend_offset
 	characters_visible_so_far = ""
 	started_word_buffer = ""
+	
+	last_raw_name = current_raw_name
 
 func set_visible_characters(value: int):
 	text_content.visible_characters = min(value, text_content.get_parsed_text().length())
