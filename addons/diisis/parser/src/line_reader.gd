@@ -70,6 +70,7 @@ var _auto_continue_duration:= auto_continue_delay
 			update_configuration_warnings()
 @export var max_past_lines := -1
 @export var preserve_name_in_past_lines := true
+@export var past_line_label:PackedScene
 var auto_advance := false
 var last_raw_name := ""
 
@@ -179,7 +180,7 @@ var instruction_handler: InstructionHandler:
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
-@export var button_scene:ChoiceButton
+@export var button_scene:PackedScene
 @export var show_choice_title := false:
 	set(value):
 		show_choice_title = value
@@ -295,7 +296,7 @@ func _validate_property(property: Dictionary):
 		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
-		if property.name in ["past_text_container", "max_past_lines", "preserve_name_in_past_lines"]:
+		if property.name in ["past_text_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not show_choice_title:
 		if property.name in ["choice_title_label"]:
@@ -1298,9 +1299,17 @@ func set_text_content_text(text: String):
 			while child_count >= max_past_lines:
 				past_text_container.get_child(0).queue_free()
 				child_count -= 1
-		var past_line := RichTextLabel.new()
-		var past_text := ""
 		
+		var past_line : RichTextLabel
+		if past_line_label:
+			past_line = past_line_label.instantiate()
+		else:
+			past_line = RichTextLabel.new()
+			past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
+			past_line.fit_content = true
+			past_line.bbcode_enabled = true
+		
+		var past_text := ""
 		if preserve_name_in_past_lines and not last_raw_name in blank_names and not text_content.text.is_empty():
 			if name_colors.has(last_raw_name):
 				var color : Color = name_colors.get(last_raw_name)
@@ -1312,9 +1321,6 @@ func set_text_content_text(text: String):
 		past_text += text_content.text
 		past_line.text = past_text
 		past_text_container.add_child(past_line)
-		past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
-		past_line.fit_content = true
-		past_line.bbcode_enabled = true
 	
 	text_content.text = text
 	text_content.visible_characters = visible_prepend_offset
