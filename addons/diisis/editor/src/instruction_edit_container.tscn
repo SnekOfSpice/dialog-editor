@@ -59,6 +59,7 @@ layout_mode = 2
 always_on_top = true
 item_count = 2
 item_0/text = "Export..."
+item_0/id = 0
 item_1/text = "Import..."
 item_1/id = 1
 
@@ -86,7 +87,7 @@ auto_translate_mode = 1
 mode = 2
 title = "Open a File"
 initial_position = 4
-size = Vector2i(207, 175)
+size = Vector2i(220, 175)
 always_on_top = true
 ok_button_text = "Open"
 file_mode = 0

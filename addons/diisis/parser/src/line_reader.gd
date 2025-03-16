@@ -97,6 +97,10 @@ var visible_prepend_offset := 0
 @export var text_content_prefix := ""
 ## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
 @export var text_content_suffix := ""
+@export_subgroup("Chatlog")
+@export var chatlog := false
+@export var chatlog_name_map : Dictionary[String, String] = {}
+@export var chatlog_name_colors : Dictionary[String, Color] = {}
 
 @export_group("Mandatory References")
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
@@ -329,6 +333,7 @@ func serialize() -> Dictionary:
 	result["current_raw_name"] = current_raw_name
 	result["is_last_actor_name_different"] = is_last_actor_name_different
 	result["name_map"] = name_map
+	result["chatlog_name_map"] = chatlog_name_map
 	result["called_positions"] = called_positions
 	result["call_strings"] = call_strings
 	result["current_choice_title"] = current_choice_title
@@ -641,7 +646,8 @@ func read_new_line(new_line: Dictionary):
 				emit_signal("line_finished", line_index)
 				return
 			
-			if Parser.use_dialog_syntax:
+			
+			if Parser.use_dialog_syntax or chatlog:
 				var lines = content.split("[]>")
 				dialog_actors.clear()
 				dialog_lines.clear()
@@ -654,7 +660,40 @@ func read_new_line(new_line: Dictionary):
 					var line : String = l.trim_prefix(str(actor_name, ":"))
 					while line.begins_with(" "):
 						line = line.trim_prefix(" ")
+					prints(actor_name, "°°°!", line)
+					if chatlog:
+						if "{" in actor_name:
+							var dialog_line_arg_dict := {}
+							var dialog_line_args = actor_name.split("{")[1]
+							actor_name = actor_name.split("{")[0]
+							dialog_line_args = dialog_line_args.trim_suffix("}")
+							dialog_line_args = dialog_line_args.split(",")
+							
+							for arg in dialog_line_args:
+								var arg_key = arg.split("|")[0]
+								var arg_value = arg.split("|")[1]
+								dialog_line_arg_dict[arg_key] = arg_value
+						
+							ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
+							
+						var actor_prefix := ""
+						if not actor_name in blank_names:
+							actor_prefix = chatlog_name_map.get(actor_name, name_map.get(actor_name, actor_name)) + ": "
+						line = str(
+							"[color=", chatlog_name_colors.get(actor_name, name_colors.get(actor_name, Color.WHITE)).to_html(), "]",
+							actor_prefix,
+							line,
+							"[/color]"
+							)
 					dialog_lines.append(line)
+				
+				
+				if chatlog:
+					var chat_text := "\n".join(PackedStringArray(dialog_lines))
+					dialog_lines.clear()
+					dialog_lines = [chat_text]
+					dialog_actors.clear()
+					dialog_actors = [""]
 			else:
 				dialog_lines = [content]
 				dialog_actors.clear()
@@ -803,6 +842,8 @@ func fit_to_max_line_count(lines: Array):
 
 
 func get_end_of_chunk_position() -> int:
+	if chatlog:
+		return text_content.text.length()
 	if pause_positions.size() == 0:
 		return text_content.text.length()
 	elif pause_types[next_pause_position_index] == PauseTypes.EoL:
@@ -1578,7 +1619,7 @@ func handle_header(header: Array):
 func set_dialog_line_index(value: int):
 	dialog_line_index = value
 	
-	if Parser.use_dialog_syntax:
+	if Parser.use_dialog_syntax and not chatlog:
 		var raw_name : String = dialog_actors[dialog_line_index]
 		var actor_name: String
 		var dialog_line_arg_dict := {}
@@ -1601,6 +1642,8 @@ func set_dialog_line_index(value: int):
 	
 	start_showing_text()
 
+
+
 func update_name_label(actor_name: String):
 	is_last_actor_name_different = actor_name != current_raw_name
 	current_raw_name = actor_name
@@ -1612,7 +1655,7 @@ func update_name_label(actor_name: String):
 		name_label.text = display_name
 		name_label.add_theme_color_override("font_color", name_color)
 		
-		if actor_name in blank_names:
+		if actor_name in blank_names or chatlog:
 			name_container.modulate.a = 0.0
 		else:
 			name_container.modulate.a = 1.0
