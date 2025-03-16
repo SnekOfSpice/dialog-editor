@@ -241,8 +241,7 @@ func open_new_file():
 	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 	dia_editor_window.file_path = ""
-	await get_tree().process_frame
-	dia_editor_window.popup()
+	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
 
 func _process(delta: float) -> void:

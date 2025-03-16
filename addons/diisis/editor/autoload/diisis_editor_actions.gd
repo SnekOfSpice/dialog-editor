@@ -18,7 +18,8 @@ func add_line(at_index:int, data:={}, force_new_line_object:=true, change_line_r
 
 
 func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=true, change_line_references:=false):
-	if not Pages.editor.current_page:
+	Pages.editor.opening = false
+	if not Pages.editor._get_current_page():
 		Pages.editor.add_page(0)
 	
 	for i in indices:
@@ -29,13 +30,13 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=true, ch
 		and data_by_index.get(i, {}).is_empty()):
 			var data = cached_lines_at_index.pop_back()
 			cached_lines_on_page[i] = cached_lines_at_index
-			cached_lines[Pages.editor.current_page.number] = cached_lines_on_page
+			cached_lines[Pages.editor._get_current_page().number] = cached_lines_on_page
 			data_by_index[i] = data
 		
-	Pages.editor.current_page.add_lines(indices, data_by_index, force_new_line_object, change_line_references)
+	Pages.editor._get_current_page().add_lines(indices, data_by_index, force_new_line_object, change_line_references)
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 
 
 
@@ -49,49 +50,49 @@ func delete_lines(indices:Array):
 		if cached_lines.has(page_number):
 			var cached_lines_on_page = cached_lines.get(page_number)
 			var cached_lines_at_index = cached_lines_on_page.get(i, [])
-			cached_lines_at_index.append(Pages.editor.current_page.get_line_data(i))
+			cached_lines_at_index.append(Pages.editor._get_current_page().get_line_data(i))
 			cached_lines[page_number][i] = cached_lines_at_index
 		else:
-			cached_lines[page_number] = {i:[Pages.editor.current_page.get_line_data(i)]}
+			cached_lines[page_number] = {i:[Pages.editor._get_current_page().get_line_data(i)]}
 		
 		Pages.change_line_references_directional(
 		Pages.editor.get_current_page_number(),
 		i,
-		Pages.editor.current_page.get_line_count() - 1,
+		Pages.editor._get_current_page().get_line_count() - 1,
 		 - 1
 	)
 	
-	Pages.editor.current_page.delete_lines(indices)
+	Pages.editor._get_current_page().delete_lines(indices)
 	Pages.editor.refresh(false, true)
 	
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 
 func delete_line(at):
 	delete_lines([at])
 
 func go_to(address:String, discard_without_saving:=false):
 	var parts := DiisisEditorUtil.get_split_address(address)
-	
 	# prepare current page to change
-	if Pages.editor.current_page:
-		Pages.editor.current_page.set_page_key(Pages.editor.current_page.find_child("PageKeyLineEdit").text)
-		Pages.editor.current_page.save()
-		Pages.editor.current_page.enable_page_key_edit(false)
+	if Pages.editor._get_current_page():
+		Pages.editor._get_current_page().set_page_key(Pages.editor._get_current_page().find_child("PageKeyLineEdit").text)
+		Pages.editor._get_current_page().save()
+		Pages.editor._get_current_page().enable_page_key_edit(false)
 	
 	if Pages.editor.get_current_page_number() != parts[0]:
 		Pages.local_line_insert_offset = 0
 	
 	Pages.editor.load_page(parts[0], discard_without_saving)
-	if not Pages.editor.current_page:
+	if not Pages.editor._get_current_page():
+		print("sfhjgjdfg")
 		return
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 	
 	if parts.size() >= 2:
 		await get_tree().process_frame
-		Pages.editor.current_page.ensure_control_at_address_is_visible(address)
+		Pages.editor._get_current_page().ensure_control_at_address_is_visible(address)
 
 func load_page(at:int):
 	go_to(str(at))
@@ -107,7 +108,7 @@ func delete_page(at:int):
 	Pages.delete_page_data(at)
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 
 func add_page(at:int, page_reference_change:=1):
 	var cached_versions : Array = cached_pages.get(at, [])
@@ -122,14 +123,14 @@ func add_page(at:int, page_reference_change:=1):
 	Pages.change_page_references_dir(at, page_reference_change)
 	Pages.editor.load_page(at)
 	
-	if not Pages.editor.current_page:
+	if not Pages.editor._get_current_page():
 		return
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 
 func move_line(line:Line, dir:int):
-	Pages.editor.current_page.move_line(line, dir)
+	Pages.editor._get_current_page().move_line(line, dir)
 
 func swap_pages(page_a:int, page_b:int):
 	Pages.swap_pages(page_a, page_b)
@@ -160,7 +161,7 @@ func operate_local_fact(address:String, target:int, action:String, fact_name:Str
 	var address_parts := DiisisEditorUtil.get_split_address(address)
 	var func_name := str(action, "_", "conditional" if conditional else "fact")
 	
-	if Pages.editor.current_page.number != address_parts[0]:
+	if Pages.editor._get_current_page().number != address_parts[0]:
 		push_warning("Current page is not the page of the address")
 		return
 	
@@ -192,7 +193,7 @@ func add_choice_items(item_addresses:Array, choice_data_by_address:={}):
 		target_line.add_choice_item(parts[2], data)
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 
 func add_choice_item(item_address:String, choice_data:={}):
 	add_choice_items([item_address], {item_address:choice_data})
@@ -211,7 +212,7 @@ func delete_choice_items(item_addresses:Array):
 		item.queue_free()
 	
 	await get_tree().process_frame
-	Pages.editor.current_page.update()
+	Pages.editor._get_current_page().update()
 	
 func delete_choice_item(item_address:String):
 	delete_choice_items([item_address])
@@ -220,7 +221,7 @@ func move_choice_item(item_address:String, direction:int):
 	var level := DiisisEditorUtil.get_address_depth(item_address)
 	var address_parts := DiisisEditorUtil.get_split_address(item_address)
 	
-	if Pages.editor.current_page.number != address_parts[0]:
+	if Pages.editor._get_current_page().number != address_parts[0]:
 		push_warning("Current page is not the page of the address")
 		return
 	if level != DiisisEditorUtil.AddressDepth.ChoiceItem:
@@ -228,7 +229,7 @@ func move_choice_item(item_address:String, direction:int):
 		push_warning(str(level))
 		return
 	
-	var choice_line : Line = Pages.editor.current_page.get_line(address_parts[1])
+	var choice_line : Line = Pages.editor._get_current_page().get_line(address_parts[1])
 	choice_line.move_choice_item_by_index(address_parts[2], direction)
 
 

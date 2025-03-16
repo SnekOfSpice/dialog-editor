@@ -16,6 +16,7 @@ signal closing_editor()
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
 
 func _on_about_to_popup() -> void:
+	await get_tree().process_frame
 	editor = find_child("Editor")
 	editor_window = find_child("Window")
 	window_factor_window = find_child("WindowFactorWindow")
@@ -39,8 +40,9 @@ func _on_about_to_popup() -> void:
 	update_content_scale(1.0)
 
 func _on_close_requested() -> void:
-	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
-		close_editor()
+	if is_instance_valid(editor):
+		if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
+			close_editor()
 	last_quit_header = "Do you want to close DIISIS?\n"
 	build_quit_dialog(last_quit_header)
 
@@ -57,6 +59,8 @@ func build_quit_dialog(header_text:String, confirm_callable:Callable=close_edito
 	$QuitDialog.position = Vector2i(size * 0.5) - Vector2i($QuitDialog.size * 0.5)
 
 func update_quit_dialog_text(header_text:String):
+	if not is_instance_valid(editor):
+		return
 	var text := ""
 	text += header_text
 	if editor.active_dir.is_empty() or not editor.has_saved:
@@ -102,7 +106,8 @@ func _on_quit_dialog_canceled() -> void:
 func save_preferences():
 	var config = ConfigFile.new()
 	
-	config.set_value("editor", "content_scale", editor_window.content_scale_factor)
+	if is_instance_valid(editor_window):
+		config.set_value("editor", "content_scale", editor_window.content_scale_factor)
 	config.set_value("editor", "size", size)
 	config.set_value("editor", "position", position)
 	
@@ -111,9 +116,11 @@ func save_preferences():
 func close_editor():
 	emit_signal("closing_editor")
 	save_preferences()
-	editor.is_open = false
+	if is_instance_valid(editor):
+		editor.is_open = false
 	hide()
-	editor.update_page_view(DiisisEditor.PageView.Full)
+	if is_instance_valid(editor):
+		editor.update_page_view(DiisisEditor.PageView.Full)
 	queue_free()
 
 func close_editor_and_open_new_file():

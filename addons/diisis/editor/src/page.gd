@@ -263,7 +263,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 					l.change_folder_range(1)
 		
 		if change_line_references:
-			var to = Pages.editor.current_page.get_line_count() - 1 if Pages.editor.current_page else indices.max()
+			var to = Pages.editor._get_current_page().get_line_count() - 1 if Pages.editor._get_current_page() else indices.max()
 			save()
 			Pages.change_line_references_directional(
 			Pages.editor.get_current_page_number(),
@@ -461,6 +461,7 @@ func get_max_reach_after_indented_index(index: int):
 	return reach
 
 func update():
+	lines = find_child("Lines")
 	for l in lines.get_children():
 		l.set_indent_level(0)
 		l.visible = true

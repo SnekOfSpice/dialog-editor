@@ -9,8 +9,6 @@ var is_open := false
 var opening := true # spaghetti yum
 var undo_redo_count_at_last_save := 0
 
-var _page = preload("res://addons/diisis/editor/src/page.tscn")
-var current_page: Page
 var undo_redo = UndoRedo.new()
 var core:Control
 var page_container:Control
@@ -38,16 +36,22 @@ signal open_new_file()
 signal save_path_set(active_dir:String, active_file_name:String)
 signal history_altered(is_altered:bool)
 
+func _get_current_page() -> Page:
+	if page_container.get_child_count() > 0:
+		if page_container.get_child(0) is Page:
+			return page_container.get_child(0)
+	return null
+
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
 	
 	var cpn:int
-	if current_page:
-		cpn = current_page.number
+	if _get_current_page():
+		cpn = _get_current_page().number
 	else:
 		return
 	if serialize_before_load:
-		current_page.save()
+		_get_current_page().save()
 	await get_tree().process_frame
 	if fragile:
 		for node in get_tree().get_nodes_in_group("diisis_fragile"):
@@ -80,8 +84,7 @@ func init(active_file_path:="") -> void:
 		text_size_button.add_item(str(s))
 	text_size_button.select(3)
 	
-	for c in get_tree().get_nodes_in_group("editor_popup_button"):
-		c.init()
+	tree_entered.connect(on_tree_entered)
 	
 	core.visible = true
 	undo_redo.clear_history()
@@ -106,6 +109,10 @@ func init(active_file_path:="") -> void:
 	undo_redo.version_changed.connect(set_altered_history.bind(true))
 	
 	print("init editor successful")
+
+func on_tree_entered():
+	for c in get_tree().get_nodes_in_group("editor_popup_button"):
+		c.init()
 
 func set_altered_history(value:bool):
 	altered_history = value
@@ -133,7 +140,7 @@ func load_page(number: int, discard_without_saving:=false):
 	
 	var page_instance:Page
 	if page_container.get_child_count() == 0:
-		page_instance = _page.instantiate()
+		page_instance = preload("res://addons/diisis/editor/src/page.tscn").instantiate()
 		page_container.add_child(page_instance)
 	else:
 		page_instance = page_container.get_child(0)
@@ -141,7 +148,6 @@ func load_page(number: int, discard_without_saving:=false):
 		page_instance.request_delete.connect(request_delete_current_page)
 		
 	page_instance.init(number)
-	current_page = page_instance
 	update_controls()
 	await get_tree().process_frame
 
@@ -226,11 +232,11 @@ func _shortcut_input(event):
 					if focused_control_before_ctrl:
 						var scroll := -1
 						if focused_control_before_ctrl is TextEdit or focused_control_before_ctrl is LineEdit:
-							scroll = current_page.find_child("ScrollContainer").scroll_vertical
+							scroll = _get_current_page().find_child("ScrollContainer").scroll_vertical
 						focused_control_before_ctrl.grab_focus()
 						if scroll != -1:
 							await get_tree().process_frame
-							current_page.find_child("ScrollContainer").set_deferred("scroll_vertical", scroll)
+							_get_current_page().find_child("ScrollContainer").set_deferred("scroll_vertical", scroll)
 						focused_control_before_ctrl = null
 				elif ctrl_start:
 					grab_focus()
@@ -310,9 +316,19 @@ func _shortcut_input(event):
 				
 	
 func update_controls():
+	var current_page := _get_current_page()
 	if not current_page:
-		return
-	
+		await get_tree().process_frame
+		if not current_page:
+			print("still no page", page_container.get_child_count())
+			#var page_instance:Page
+			#if page_container.get_child_count() == 0:
+				#page_instance = _page.instantiate()
+				#page_container.add_child(page_instance)
+#
+			#if not page_instance.is_connected("request_delete", request_delete_current_page):
+					#page_instance.request_delete.connect(request_delete_current_page)
+			return
 	find_child("First").disabled = current_page.number <= 0
 	find_child("Prev").disabled = current_page.number <= 0
 	find_child("Next").disabled = current_page.number >= Pages.get_page_count() - 1
@@ -325,9 +341,9 @@ func update_controls():
 	current_page.update()
 
 func get_current_page_number() -> int:
-	if not current_page:
+	if not _get_current_page():
 		return 0
-	return current_page.number
+	return _get_current_page().number
 
 func has_open_popup() -> bool:
 	for popup in $Popups.get_children():
@@ -350,10 +366,10 @@ func _on_next_pressed() -> void:
 
 
 func request_load_previous_page():
-	request_load_page(current_page.number - 1, "Move to previous page")
+	request_load_page(_get_current_page().number - 1, "Move to previous page")
 
 func request_load_next_page():
-	request_load_page(current_page.number + 1, "Move to next page")
+	request_load_page(_get_current_page().number + 1, "Move to next page")
 
 func request_load_first_page():
 	request_load_page(0, "Move to first page")
@@ -411,8 +427,8 @@ func open_save_popup():
 	open_popup($Popups.get_node("FDSave"), true)
 
 func save_to_file(path:String, is_autosave:=false):
-	if current_page and not is_autosave:
-		current_page.save()
+	if _get_current_page() and not is_autosave:
+		_get_current_page().save()
 	
 	if path.begins_with(BACKUP_PATH):
 		if not DirAccess.dir_exists_absolute(BACKUP_PATH):
@@ -503,7 +519,7 @@ func _on_add_line_button_pressed() -> void:
 
 func add_line_to_end_of_page():
 	undo_redo.create_action("Add Line")
-	var line_count = current_page.get_line_count()
+	var line_count = _get_current_page().get_line_count()
 	DiisisEditorActions.blank_override_line_addresses.append(str(get_current_page_number(), ".", line_count))
 	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
@@ -512,7 +528,7 @@ func add_line_to_end_of_page():
 
 func _on_header_popup_update() -> void:
 	await get_tree().process_frame
-	current_page.update()
+	_get_current_page().update()
 
 func _on_instruction_definition_timer_timeout() -> void:
 	update_error_text_box()
