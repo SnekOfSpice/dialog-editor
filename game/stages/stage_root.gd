@@ -11,7 +11,7 @@ func _ready():
 	set_screen("")
 	GameWorld.stage_root = self
 
-func set_screen(screen_path:String):
+func set_screen(screen_path:String, payload := {}):
 	if is_instance_valid(Parser.line_reader):
 		if Parser.line_reader.is_input_locked:
 			return
@@ -36,6 +36,11 @@ func set_screen(screen_path:String):
 		screen = screen_path
 		return
 	var new_stage = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
+	
+	match screen_path:
+		CONST.SCREEN_NOTICE:
+			new_stage.handle_payload(payload)
+	
 	screen_container.add_child(new_stage)
 	screen_container.visible = true
 	screen = screen_path
