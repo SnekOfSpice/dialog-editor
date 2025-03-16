@@ -30,6 +30,8 @@ enum NameStyle {
 @export_subgroup("Text Behavior")
 ## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
+## If true, the text will be read one word at a time instead of character by character.
+@export var full_words := false
 ## The delay that <ap> tags imply, in seconds.
 @export var auto_pause_duration := 0.2
 ## Disables input-based calls of [method advance].
@@ -277,9 +279,10 @@ var terminated := false
 
 var started_word_buffer :=""
 var characters_visible_so_far := ""
+var _full_word_timer := 1.0
 
-var last_visible_ratio := 0.0
-var last_visible_characters := 0
+var _last_visible_ratio := 0.0
+var _last_visible_characters := 0
 var visibilities_before_interrupt := {}
 
 var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
@@ -500,8 +503,9 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
-	last_visible_characters = 0
-	last_visible_ratio = 0
+	_last_visible_characters = 0
+	_last_visible_ratio = 0
+	_full_word_timer = 0
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if showing_text:
@@ -832,7 +836,13 @@ func _process(delta: float) -> void:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
 			var old_text_length : int = text_content.visible_characters
-			text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
+			if full_words:
+				_full_word_timer -= delta
+				if _full_word_timer <= 0 or old_text_length == 0:
+					text_content.visible_characters = text_content.text.find(" ", text_content.visible_characters + 1)
+					_full_word_timer = (MAX_TEXT_SPEED / text_speed) * delta
+			else:
+				text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
 			if old_text_length != text_content.visible_characters:
@@ -869,28 +879,28 @@ func _process(delta: float) -> void:
 	characters_visible_so_far = new_characters_visible_so_far
 	
 	if current_text_speed < MAX_TEXT_SPEED:
-		if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
+		if _last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
 			ParserEvents.text_content_filled.emit()
-		if last_visible_ratio != text_content.visible_ratio:
+		if _last_visible_ratio != text_content.visible_ratio:
 			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
-		if last_visible_characters != text_content.visible_characters:
+		if _last_visible_characters != text_content.visible_characters:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 		
 	for call_position : int in call_strings:
 		if (
-			((not called_positions.has(call_position)) and last_visible_characters >= call_position) or
-			(call_position >= last_visible_characters and call_position <= text_content.visible_characters) or
+			((not called_positions.has(call_position)) and _last_visible_characters >= call_position) or
+			(call_position >= _last_visible_characters and call_position <= text_content.visible_characters) or
 			text_content.visible_characters == -1
 		):
 			call_from_position(call_position)
 	
-	last_visible_ratio = text_content.visible_ratio
-	last_visible_characters = text_content.visible_characters
+	_last_visible_ratio = text_content.visible_ratio
+	_last_visible_characters = text_content.visible_characters
 	if text_content.get_parsed_text().length() == text_content.visible_characters:
-		last_visible_characters = -1
-		last_visible_ratio = 0
+		_last_visible_characters = -1
+		_last_visible_ratio = 0
 	
-	if last_visible_characters == -1 and auto_advance:
+	if _last_visible_characters == -1 and auto_advance:
 		advance()
 		auto_advance = false
 		return

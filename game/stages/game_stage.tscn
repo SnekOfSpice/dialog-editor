@@ -625,6 +625,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("1_h4afo")
+full_words = true
 auto_pause_duration = 0.4
 blank_names = Array[String](["narrator"])
 name_map = Dictionary[String, String]({
