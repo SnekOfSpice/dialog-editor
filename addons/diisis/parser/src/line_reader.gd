@@ -1302,8 +1302,13 @@ func set_text_content_text(text: String):
 		
 		var past_line : RichTextLabel
 		if past_line_label:
-			past_line = past_line_label.instantiate()
-		else:
+			var instance = past_line_label.instantiate()
+			if instance is RichTextLabel:
+				past_line = instance
+			else:
+				push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
+
+		if not past_line:
 			past_line = RichTextLabel.new()
 			past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
 			past_line.fit_content = true
@@ -1415,8 +1420,12 @@ func build_choices(choices, auto_switch:bool):
 		
 		var new_option:ChoiceButton
 		if button_scene:
-			new_option = button_scene.instantiate()
-		else:
+			var instance = button_scene.instantiate()
+			if instance is ChoiceButton:
+				new_option = instance
+			else:
+				push_warning("button_scene is not a ChoiceButton. Falling back to default.")
+		if not new_option:
 			new_option = preload("res://addons/diisis/parser/src/choice_option.tscn").instantiate()
 		new_option.disabled = not enable_option
 		new_option.text = option_text
@@ -1468,6 +1477,8 @@ func build_choices(choices, auto_switch:bool):
 			#choice_option_container.get_child(0).grab_focus.call_deferred()
 		#else:
 			#push_warning("No choice to give focus to.")
+
+
 
 func is_choice_presented():
 	return (not choice_option_container.get_children().is_empty()) and choice_container.visible
