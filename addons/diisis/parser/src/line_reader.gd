@@ -364,7 +364,8 @@ func deserialize(data: Dictionary):
 	line_chunks = data.get("line_chunks")
 	chunk_index = int(data.get("chunk_index"))
 	terminated = data.get("terminated")
-	name_map = data.get("name_map", name_map)
+	set_name_map(data.get("name_map", name_map))
+	set_chatlog_name_map(data.get("chatlog_name_map", chatlog_name_map))
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	called_positions = data.get("called_positions", [])
 	call_strings = data.get("call_strings", {})
@@ -389,7 +390,16 @@ func deserialize(data: Dictionary):
 	
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
 	set_text_content_text(data.get("text_content.text", ""))
-	
+
+# typed dictionaries don't survive saving to json so we need this
+func set_name_map(map:Dictionary):
+	name_map.clear()
+	for key in map.keys():
+		name_map[key] = map.get(key)# typed dictionaries don't survive saving to json so we need this
+func set_chatlog_name_map(map:Dictionary):
+	chatlog_name_map.clear()
+	for key in map.keys():
+		chatlog_name_map[key] = map.get(key)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -660,22 +670,9 @@ func read_new_line(new_line: Dictionary):
 					var line : String = l.trim_prefix(str(actor_name, ":"))
 					while line.begins_with(" "):
 						line = line.trim_prefix(" ")
-					prints(actor_name, "°°°!", line)
 					if chatlog:
-						if "{" in actor_name:
-							var dialog_line_arg_dict := {}
-							var dialog_line_args = actor_name.split("{")[1]
-							actor_name = actor_name.split("{")[0]
-							dialog_line_args = dialog_line_args.trim_suffix("}")
-							dialog_line_args = dialog_line_args.split(",")
-							
-							for arg in dialog_line_args:
-								var arg_key = arg.split("|")[0]
-								var arg_value = arg.split("|")[1]
-								dialog_line_arg_dict[arg_key] = arg_value
+						actor_name = trim_and_emit_args(actor_name)
 						
-							ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
-							
 						var actor_prefix := ""
 						if not actor_name in blank_names:
 							actor_prefix = chatlog_name_map.get(actor_name, name_map.get(actor_name, actor_name)) + ": "
@@ -1621,28 +1618,28 @@ func set_dialog_line_index(value: int):
 	
 	if Parser.use_dialog_syntax and not chatlog:
 		var raw_name : String = dialog_actors[dialog_line_index]
-		var actor_name: String
-		var dialog_line_arg_dict := {}
-		if "{" in raw_name:
-			actor_name = raw_name.split("{")[0]
-			var dialog_line_args = raw_name.split("{")[1]
-			dialog_line_args = dialog_line_args.trim_suffix("}")
-			dialog_line_args = dialog_line_args.split(",")
-			
-			for arg in dialog_line_args:
-				var arg_key = arg.split("|")[0]
-				var arg_value = arg.split("|")[1]
-				dialog_line_arg_dict[arg_key] = arg_value
-		else:
-			actor_name = raw_name
+		var actor_name: String = trim_and_emit_args(raw_name)
 		
 		update_name_label(actor_name)
-		
-		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 	
 	start_showing_text()
 
-
+# returns actor name
+func trim_and_emit_args(raw_name:String) -> String:
+	var dialog_line_arg_dict := {}
+	var actor_name := raw_name
+	if "{" in raw_name:
+		actor_name = raw_name.split("{")[0]
+		var dialog_line_args = raw_name.split("{")[1]
+		dialog_line_args = dialog_line_args.trim_suffix("}")
+		dialog_line_args = dialog_line_args.split(",")
+		
+		for arg in dialog_line_args:
+			var arg_key = arg.split("|")[0]
+			var arg_value = arg.split("|")[1]
+			dialog_line_arg_dict[arg_key] = arg_value
+		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
+	return actor_name
 
 func update_name_label(actor_name: String):
 	is_last_actor_name_different = actor_name != current_raw_name
