@@ -113,6 +113,11 @@ signal function_called(
 	at_index: int
 )
 
+signal comment(
+	comment:String,
+	at_index: int
+)
+
 ## Emitted when [LineReader] has finished displaying an entire word to its text box. See [member LineReader.non_word_characters].
 signal word_read(
 	word: String

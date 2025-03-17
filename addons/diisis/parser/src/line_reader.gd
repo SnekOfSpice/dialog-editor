@@ -265,7 +265,9 @@ var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
 var call_strings := {}
+var comments := {}
 var called_positions := []
+var handled_comments := []
 var next_pause_type := 0
 enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
@@ -335,6 +337,7 @@ func serialize() -> Dictionary:
 	result["name_map"] = name_map
 	result["chatlog_name_map"] = chatlog_name_map
 	result["called_positions"] = called_positions
+	result["handled_comments"] = handled_comments
 	result["call_strings"] = call_strings
 	result["current_choice_title"] = current_choice_title
 	result["text_speed_by_character_index"] = text_speed_by_character_index
@@ -368,6 +371,7 @@ func deserialize(data: Dictionary):
 	set_chatlog_name_map(data.get("chatlog_name_map", chatlog_name_map))
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	called_positions = data.get("called_positions", [])
+	handled_comments = data.get("handled_comments", [])
 	call_strings = data.get("call_strings", {})
 	current_choice_title = data.get("current_choice_title", "")
 	text_speed_by_character_index = data.get("text_speed_by_character_index", [])
@@ -441,14 +445,15 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Choice Title Label is null")
 	
 	return warnings
-
+func printa(comment: String, pos : int):
+	prints(pos, comment)
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
 	Parser.connect("read_new_line", read_new_line)
 	Parser.connect("page_terminated", close)
-	
+	ParserEvents.comment.connect(printa)
 	ParserEvents.go_back_accepted.connect(lmao)
 	
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
@@ -930,13 +935,12 @@ func _process(delta: float) -> void:
 		if _last_visible_characters != text_content.visible_characters:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 		
-	for call_position : int in call_strings:
-		if (
-			((not called_positions.has(call_position)) and _last_visible_characters >= call_position) or
-			(call_position >= _last_visible_characters and call_position <= text_content.visible_characters) or
-			text_content.visible_characters == -1
-		):
-			call_from_position(call_position)
+	for pos : int in call_strings:
+		if _can_handle_text_position(pos, "called_positions"):
+			call_from_position(pos)
+	for pos : int in comments:
+		if _can_handle_text_position(pos, "handled_comments"):
+			_emit_comment(pos)
 	
 	_last_visible_ratio = text_content.visible_ratio
 	_last_visible_characters = text_content.visible_characters
@@ -960,6 +964,13 @@ func _process(delta: float) -> void:
 			_auto_continue_duration -= delta
 			if _auto_continue_duration <= 0.0:
 				advance()
+
+func _can_handle_text_position(pos: int, tracker_array:StringName) -> bool:
+	return (
+			((not get(tracker_array).has(pos)) and _last_visible_characters >= pos) or
+			(pos >= _last_visible_characters and pos <= text_content.visible_characters) or
+			text_content.visible_characters == -1
+		)
 
 func remove_spaces_and_send_word_read_event(word: String):
 	word = word.replace(" ", "")
@@ -1161,6 +1172,7 @@ func read_next_chunk():
 	pause_types.clear()
 	call_strings.clear()
 	called_positions.clear()
+	handled_comments.clear()
 	var text_speed_override := -1.0
 	text_speed_by_character_index.clear()
 	
@@ -1214,6 +1226,14 @@ func read_next_chunk():
 				scan_index = max(scan_index - "<strpos>".length(), -1) # -1 because at the end we add 1
 				target_length -= "<strpos>".length()
 				tag_buffer += "<strpos>".length()
+			elif bbcode_removed_text.find("<comment:", scan_index) == scan_index:
+				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
+				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
+				comments[scan_index] = tag_string
+				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
+				target_length -= tag_string.length()
+				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				tag_buffer += 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
@@ -1222,7 +1242,7 @@ func read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index - tag_buffer] = tag_string
+				call_strings[scan_index] = tag_string
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
@@ -1272,6 +1292,8 @@ func read_next_chunk():
 	cleaned_text = cleaned_text.replace("\\[", "[")
 	for call : String in call_strings.values():
 		cleaned_text = cleaned_text.replace(call, "")
+	for comment : String in comments.values():
+		cleaned_text = cleaned_text.replace(comment, "")
 	for tag : String in text_speed_tags:
 		cleaned_text = cleaned_text.replace(tag, "")
 	
@@ -1345,6 +1367,21 @@ func call_from_position(call_position: int):
 	inline_evaluator.callv(func_name, args)
 	ParserEvents.function_called.emit(func_name, args, call_position)
 	call_strings.erase(call_position)
+
+func _emit_comment(comment_position:int):
+	if not comments.has(comment_position):
+		return
+	var text : String = comments.get(comment_position)
+	handled_comments.append(comment_position)
+	text = text.trim_prefix("<comment:")
+	text = text.trim_suffix(">")
+	while text.begins_with(" "):
+		text = text.trim_prefix(" ")
+	while text.ends_with(" "):
+		text = text.trim_suffix(" ")
+	
+	ParserEvents.comment.emit(text, comment_position)
+	comments.erase(comment_position)
 
 func set_text_content_text(text: String):
 	if keep_past_lines:
