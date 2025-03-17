@@ -263,7 +263,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 					l.change_folder_range(1)
 		
 		if change_line_references:
-			var to = Pages.editor._get_current_page().get_line_count() - 1 if Pages.editor._get_current_page() else indices.max()
+			var to = Pages.editor.get_current_page().get_line_count() - 1 if Pages.editor.get_current_page() else indices.max()
 			save()
 			Pages.change_line_references_directional(
 			Pages.editor.get_current_page_number(),
@@ -406,7 +406,6 @@ func move_folder_up(line:Line):
 			bump = i
 			var l : Line = lines.get_child(i)
 			if l.indent_level < line.indent_level:
-				prints("bump at ", i)
 				break
 		#if start of page: move to 0
 		var lines_in_folder := [line]
@@ -415,12 +414,10 @@ func move_folder_up(line:Line):
 		lines_in_folder.reverse()
 		if bump == 0:
 			for l in lines_in_folder:
-				prints("moving from ", l.get_index(), "to 0")
 				lines.move_child(l, 0)
 				Pages.swap_line_references(number, idx, 0)
 		else:
 			for l in lines_in_folder:
-				prints("moving from ", l.get_index(), "to", bump+1)
 				lines.move_child(l, bump + 1)
 				Pages.swap_line_references(number, idx, bump + 1)
 		#else: move to found line idx + 1

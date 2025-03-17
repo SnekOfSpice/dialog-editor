@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cnpn8uwlfg1o4"]
 
 [ext_resource type="Script" uid="uid://bpgnh23k5kj8d" path="res://addons/diisis/editor/src/hinted_line_edit.gd" id="1_51yrh"]
-[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="2_a5ryj"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="2_a5ryj"]
 
 [node name="HintedLineEdit" type="LineEdit"]
 offset_right = 67.0625
@@ -10,7 +10,6 @@ size_flags_vertical = 0
 script = ExtResource("1_51yrh")
 
 [node name="ArgHint" parent="." instance=ExtResource("2_a5ryj")]
-visible = false
 
 [connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]

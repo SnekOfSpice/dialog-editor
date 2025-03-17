@@ -875,9 +875,15 @@ func _process(delta: float) -> void:
 		else:
 			var old_text_length : int = text_content.visible_characters
 			if full_words:
-				_full_word_timer -= delta
+				var next_space_position = text_content.text.find(" ", text_content.visible_characters + 1)
+				print("TODO BROKEN SHIT")
+				if next_space_position != -1 and text_content.visible_ratio != 1:
+					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
-					text_content.visible_characters = text_content.text.find(" ", text_content.visible_characters + 1)
+					
+					print(next_space_position)
+					text_content.visible_characters = next_space_position
+					
 					_full_word_timer = (MAX_TEXT_SPEED / text_speed) * delta
 			else:
 				text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta

@@ -1,11 +1,6 @@
 @tool
 extends Control
 
-var selected_index := 0
-
-#var text_box : HintedLineEdit
-#var reverse_text_box : HintedLineEdit
-
 var instruction_edit : InstructionTextEdit
 var instruction_edit_reverse : InstructionTextEdit
 
@@ -14,15 +9,6 @@ func init() -> void:
 	instruction_edit_reverse = find_child("InstructionTextEditReverse")
 	instruction_edit.init()
 	instruction_edit_reverse.init()
-	#text_box = find_child("InstructionTextBox")
-	#reverse_text_box = find_child("ReverseInstructionTextBox")
-	#_on_hinted_line_edit_text_entered("")
-#
-#func get_instruction_name(line_edit:=text_box) -> String:
-	#if line_edit.text.contains("("):
-		#return line_edit.text.split("(")[0]
-	#else:
-		#return line_edit.text
 
 func get_instruction_name() -> String:
 	return instruction_edit.get_instruction_name()

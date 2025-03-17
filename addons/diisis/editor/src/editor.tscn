@@ -27,7 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
-[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="28_g0iye"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3

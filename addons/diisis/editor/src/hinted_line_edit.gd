@@ -89,7 +89,6 @@ func _on_gui_input(event: InputEvent) -> void:
 
 
 func _on_text_changed(new_text: String) -> void:
-	#prints("text", new_text)
 	update_hint(new_text)
 	emit_signal("text_entered", new_text)
 	emit_signal("caret_changed")

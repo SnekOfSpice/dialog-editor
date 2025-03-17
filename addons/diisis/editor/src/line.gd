@@ -304,7 +304,7 @@ func _on_insert_line_below_pressed() -> void:
 func _on_select_all_in_range_button_pressed():
 	var range : int = get_folder_range_i()
 	var index := get_index()
-	for line : Line in Pages.editor.current_page.find_child("Lines").get_children():
+	for line : Line in Pages.editor.get_current_page().find_child("Lines").get_children():
 		var line_index := line.get_index()
 		line.set_selected(line_index >= index and line_index <= index + range)
 

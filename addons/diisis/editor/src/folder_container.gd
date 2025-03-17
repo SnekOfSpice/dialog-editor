@@ -47,8 +47,8 @@ func get_folder_contents_visible() -> bool:
 	return find_child("FolderVisibilityCheckBox").button_pressed
 
 func _on_folder_range_spin_container_value_changed(value: float) -> void:
-	Pages.editor.current_page.update()
+	Pages.editor.get_current_page().update()
 
 
 func _on_folder_visibility_check_box_pressed() -> void:
-	Pages.editor.current_page.update()
+	Pages.editor.get_current_page().update()

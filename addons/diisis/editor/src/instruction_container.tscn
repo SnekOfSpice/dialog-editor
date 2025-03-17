@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://co4e6yj2ed45f"]
+[gd_scene load_steps=5 format=3 uid="uid://co4e6yj2ed45f"]
 
 [ext_resource type="Script" uid="uid://duqpwgbdr1oq8" path="res://addons/diisis/editor/src/instruction_container.gd" id="1_mqxig"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="2_dsh57"]
 [ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/theme/buttons_ui/clipboard.png" id="2_lquiu"]
-[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/read_hint.tscn" id="3_gsr40"]
 [ext_resource type="PackedScene" uid="uid://dtmrdrq7nyrh0" path="res://addons/diisis/editor/src/instruction_text_edit.tscn" id="4_hkwpw"]
 
 [node name="InstructionContainer" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
@@ -148,9 +147,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 focus_mode = 0
 text = "reverse"
-
-[node name="ArgHint" parent="." instance=ExtResource("3_gsr40")]
-visible = false
 
 [connection signal="caret_changed" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_caret_changed"]
 [connection signal="focus_entered" from="HBoxContainer/InstructionTextContainer/HBoxContainer/VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_hinted_line_edit_focus_entered"]

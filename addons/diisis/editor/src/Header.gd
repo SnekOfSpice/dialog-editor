@@ -45,5 +45,4 @@ func short_form() -> String:
 	for c in get_children():
 		result += str(c.stringify_value(), ", ")
 	result = result.trim_suffix(", ")
-	#prints("short form ", result, " from ", get_child_count(), " properties")
 	return result

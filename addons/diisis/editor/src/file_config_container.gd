@@ -40,7 +40,7 @@ func _on_evaluator_label_text_changed() -> void:
 
 func _on_use_dialog_syntax_check_box_pressed():
 	Pages.use_dialog_syntax = find_child("UseDialogSyntaxCheckBox").button_pressed
-	for line : Line in Pages.editor.current_page.find_child("Lines").get_children():
+	for line : Line in Pages.editor.get_current_page().find_child("Lines").get_children():
 		line.find_child("TextContent").set_use_dialog_syntax(Pages.use_dialog_syntax)
 
 

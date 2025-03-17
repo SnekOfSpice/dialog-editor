@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bhjckv7pd2eri"]
 
 [ext_resource type="Script" uid="uid://b7v4xhanv4kxy" path="res://addons/diisis/editor/src/fact_item.gd" id="1_kk40s"]
-[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="2_ehjrn"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="2_o88s0"]
+[ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="3_i2pc6"]
 
 [node name="Fact" type="VBoxContainer"]
 offset_right = 289.0
@@ -26,6 +26,7 @@ layout_mode = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "Bool"
+popup/item_0/id = 0
 popup/item_1/text = "Int"
 popup/item_1/id = 1
 
@@ -58,6 +59,7 @@ selected = 0
 allow_reselect = true
 item_count = 6
 popup/item_0/text = "=="
+popup/item_0/id = 0
 popup/item_1/text = "!="
 popup/item_1/id = 1
 popup/item_2/text = "<"
@@ -100,8 +102,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 text = "register"
 
-[node name="ReadHint" parent="." instance=ExtResource("2_ehjrn")]
-visible = false
+[node name="Hint" parent="." instance=ExtResource("3_i2pc6")]
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
 [connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_pressed"]
