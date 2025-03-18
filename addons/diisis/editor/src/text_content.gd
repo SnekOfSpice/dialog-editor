@@ -15,7 +15,7 @@ var tags := []
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset"]
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset", "comment"]
 
 func get_text_before_caret(length:int):
 	var line : String = text_box.get_line(text_box.get_caret_line())
@@ -195,7 +195,7 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "<":
 		# duplicated because some tags have a : and some just end with >
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>", "advance>", "ts_rel:>", "ts_abs:>", "ts_reset>"]:
+		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>", "advance>", "ts_rel:>", "ts_abs:>", "ts_reset>", "comment:>"]:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
@@ -314,7 +314,7 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
-	for control in ["func", "name", "var", "fact", "call", "ts_rel", "ts_abs"]:
+	for control in ["func", "name", "var", "fact", "call", "ts_rel", "ts_abs", "comment"]:
 		if is_text_before_caret(str("<", control, ":>")):
 			caret_movement_to_do = -1
 			Pages.auto_complete_context = control

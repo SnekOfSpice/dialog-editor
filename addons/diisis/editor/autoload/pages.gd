@@ -67,7 +67,7 @@ var editor:DiisisEditor
 
 var page_data := {}
 
-var evaluator_paths := ["res://sample/inline_eval.gd"]
+var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
 var loopback_references_by_page := {}

@@ -423,18 +423,13 @@ func read_line(index: int):
 		index = 0
 	
 	line_index = index
-	#prints("reading line", index, "trail is ", address_trail, " idx is", address_trail_index)
 	address_trail_index += 1
-	#if not address_trail.is_empty():
-		#address_trail.resize(address_trail_index)
+
 		
 	var new_address := str(page_index, ".", line_index)
-	#if address_trail.back() == new_address:
-		#address_trail_index -= 1
-	#else:
+
 	address_trail.append(str(page_index, ".", line_index))
 	emit_signal("read_new_line", lines[index])
-	#prints("line has been read. trail is now", address_trail, "and idx", address_trail_index)
 	
 
 func read_next_line(finished_line_index: int):

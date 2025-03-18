@@ -17,7 +17,7 @@ signal caret_changed()
 
 func update_hint(new_text: String):
 	if new_text.is_empty() or not has_focus():
-		$ReadHint.hide()
+		$ArgHint.hide()
 		return
 	var option_list_string := ""
 	var valid_options := []
@@ -27,7 +27,7 @@ func update_hint(new_text: String):
 	
 	if valid_options.is_empty():
 		virtual_hint_line == 0
-		$ReadHint.hide()
+		$ArgHint.hide()
 		return
 	
 	if virtual_hint_line >= valid_options.size():
@@ -49,29 +49,29 @@ func update_hint(new_text: String):
 	
 	option_list_string = option_list_string.trim_suffix("\n")
 	if not just_submitted:
-		$ReadHint.popup()
+		$ArgHint.popup()
 		just_submitted = false
 	
 	var caret_pos = Vector2i(global_position + Vector2(get_caret_draw_pos().x, 0))
 	caret_pos.y += size.y
-	$ReadHint.build_str(option_list_string)
-	$ReadHint.position = caret_pos
+	$ArgHint.build_str(option_list_string)
+	$ArgHint.position = caret_pos
 
 func _on_gui_input(event: InputEvent) -> void:
 	if Input.is_key_pressed(KEY_DOWN):
 		virtual_hint_line += 1
-		if virtual_hint_line >= $ReadHint.get_hint_line_count():
+		if virtual_hint_line >= $ArgHint.get_hint_line_count():
 			virtual_hint_line = 0
 	if Input.is_key_pressed(KEY_UP):
 		
 		virtual_hint_line -= 1
 		if virtual_hint_line < 0:
-			virtual_hint_line = $ReadHint.get_hint_line_count() - 1
+			virtual_hint_line = $ArgHint.get_hint_line_count() - 1
 	just_submitted = false
 	update_hint(text)
 	if Input.is_key_pressed(KEY_ENTER):
 		just_submitted = true
-		var text_in_hint : String = $ReadHint.get_text_in_line(virtual_hint_line)
+		var text_in_hint : String = $ArgHint.get_text_in_line(virtual_hint_line)
 		if text_in_hint.is_empty():
 			return
 		text_in_hint = text_in_hint.replace(">", "")
@@ -81,7 +81,7 @@ func _on_gui_input(event: InputEvent) -> void:
 		_on_text_changed(text_in_hint)
 		
 		await get_tree().process_frame
-		$ReadHint.hide()
+		$ArgHint.hide()
 		caret_column = text.length() + submission_offset
 	if caret_column != last_caret_column:
 		emit_signal("caret_changed")
@@ -89,7 +89,6 @@ func _on_gui_input(event: InputEvent) -> void:
 
 
 func _on_text_changed(new_text: String) -> void:
-	#prints("text", new_text)
 	update_hint(new_text)
 	emit_signal("text_entered", new_text)
 	emit_signal("caret_changed")
@@ -101,7 +100,7 @@ func get_caret_draw_pos() -> Vector2:
 
 
 func _on_focus_exited() -> void:
-	$ReadHint.hide()
+	$ArgHint.hide()
 
 
 func _on_focus_entered() -> void:

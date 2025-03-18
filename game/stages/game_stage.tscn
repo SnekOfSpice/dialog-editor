@@ -627,9 +627,9 @@ mouse_filter = 2
 script = ExtResource("1_h4afo")
 auto_pause_duration = 0.4
 blank_names = Array[String](["narrator"])
-name_map = {
+name_map = Dictionary[String, String]({
 "amber": "Amber"
-}
+})
 choice_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/ChoiceOptionContainer")
 text_content = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel")

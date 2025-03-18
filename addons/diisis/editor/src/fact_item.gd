@@ -142,11 +142,11 @@ func _input(event: InputEvent) -> void:
 		return
 	if get_rect().has_point(get_local_mouse_position()):
 		return
-	$ReadHint.hide()
+	$Hint.hide()
 
 func update_hint(new_text: String):
 	if new_text.is_empty() or not find_child("FactName").has_focus():
-		$ReadHint.hide()
+		$Hint.hide()
 		return
 	var facts := ""
 	var valid_facts := []
@@ -156,7 +156,7 @@ func update_hint(new_text: String):
 	
 	if valid_facts.is_empty():
 		virtual_hint_line == 0
-		$ReadHint.hide()
+		$Hint.hide()
 		return
 	if virtual_hint_line >= valid_facts.size():
 		virtual_hint_line = max(valid_facts.size() - 1, 0)
@@ -173,15 +173,15 @@ func update_hint(new_text: String):
 		i += 1
 	
 	facts = facts.trim_suffix("\n")
-	$ReadHint.popup()
-	$ReadHint.build(facts)
+	$Hint.popup()
+	$Hint.build_str(facts)
 	
 	var caret_pos = (
 			#get_window().position +
 			Vector2i(global_position)
 			)
 	caret_pos.y -= 140
-	$ReadHint.position = caret_pos
+	$Hint.position = caret_pos
 
 
 
@@ -194,7 +194,7 @@ func _on_register_button_pressed() -> void:
 	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false
 	
-	$ReadHint.hide()
+	$Hint.hide()
 
 
 func _on_delete_button_pressed() -> void:

@@ -30,6 +30,8 @@ enum NameStyle {
 @export_subgroup("Text Behavior")
 ## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
+## If true, the text will be read one word at a time instead of character by character.
+@export var full_words := false
 ## The delay that <ap> tags imply, in seconds.
 @export var auto_pause_duration := 0.2
 ## Disables input-based calls of [method advance].
@@ -68,7 +70,11 @@ var _auto_continue_duration:= auto_continue_delay
 		past_text_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+@export var max_past_lines := -1
+@export var preserve_name_in_past_lines := true
+@export var past_line_label:PackedScene
 var auto_advance := false
+var last_raw_name := ""
 
 @export_group("Text Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
@@ -91,6 +97,10 @@ var visible_prepend_offset := 0
 @export var text_content_prefix := ""
 ## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
 @export var text_content_suffix := ""
+@export_subgroup("Chatlog")
+@export var chatlog := false
+@export var chatlog_name_map : Dictionary[String, String] = {}
+@export var chatlog_name_colors : Dictionary[String, Color] = {}
 
 @export_group("Mandatory References")
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
@@ -176,7 +186,7 @@ var instruction_handler: InstructionHandler:
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
-@export var button_scene:ChoiceButton
+@export var button_scene:PackedScene
 @export var show_choice_title := false:
 	set(value):
 		show_choice_title = value
@@ -255,7 +265,9 @@ var next_pause_position_index := -1
 var pause_positions := []
 var pause_types := []
 var call_strings := {}
+var comments := {}
 var called_positions := []
+var handled_comments := []
 var next_pause_type := 0
 enum PauseTypes {Manual, Auto, EoL}
 var dialog_lines := []
@@ -273,9 +285,10 @@ var terminated := false
 
 var started_word_buffer :=""
 var characters_visible_so_far := ""
+var _full_word_timer := 0.0
 
-var last_visible_ratio := 0.0
-var last_visible_characters := 0
+var _last_visible_ratio := 0.0
+var _last_visible_characters := 0
 var visibilities_before_interrupt := {}
 
 var trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
@@ -292,7 +305,7 @@ func _validate_property(property: Dictionary):
 		if property.name in ["auto_continue_delay"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
-		if property.name in ["past_text_container"]:
+		if property.name in ["past_text_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not show_choice_title:
 		if property.name in ["choice_title_label"]:
@@ -322,10 +335,15 @@ func serialize() -> Dictionary:
 	result["current_raw_name"] = current_raw_name
 	result["is_last_actor_name_different"] = is_last_actor_name_different
 	result["name_map"] = name_map
+	result["chatlog_name_map"] = chatlog_name_map
 	result["called_positions"] = called_positions
+	result["handled_comments"] = handled_comments
 	result["call_strings"] = call_strings
 	result["current_choice_title"] = current_choice_title
 	result["text_speed_by_character_index"] = text_speed_by_character_index
+	result["max_past_lines"] = max_past_lines
+	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
+	result["last_raw_name"] = last_raw_name
 	
 	return result
 
@@ -349,12 +367,17 @@ func deserialize(data: Dictionary):
 	line_chunks = data.get("line_chunks")
 	chunk_index = int(data.get("chunk_index"))
 	terminated = data.get("terminated")
-	name_map = data.get("name_map", name_map)
+	set_name_map(data.get("name_map", name_map))
+	set_chatlog_name_map(data.get("chatlog_name_map", chatlog_name_map))
 	is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	called_positions = data.get("called_positions", [])
+	handled_comments = data.get("handled_comments", [])
 	call_strings = data.get("call_strings", {})
 	current_choice_title = data.get("current_choice_title", "")
 	text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	max_past_lines = data.get("max_past_lines", -1)
+	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
+	last_raw_name = data.get("last_raw_name", "")
 	
 	text_container.visible = can_text_container_be_visible()
 	showing_text = line_type == DIISIS.LineType.Text
@@ -371,7 +394,16 @@ func deserialize(data: Dictionary):
 	
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
 	set_text_content_text(data.get("text_content.text", ""))
-	
+
+# typed dictionaries don't survive saving to json so we need this
+func set_name_map(map:Dictionary):
+	name_map.clear()
+	for key in map.keys():
+		name_map[key] = map.get(key)# typed dictionaries don't survive saving to json so we need this
+func set_chatlog_name_map(map:Dictionary):
+	chatlog_name_map.clear()
+	for key in map.keys():
+		chatlog_name_map[key] = map.get(key)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -413,14 +445,15 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Choice Title Label is null")
 	
 	return warnings
-
+func printa(comment: String, pos : int):
+	prints(pos, comment)
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
 	Parser.connect("read_new_line", read_new_line)
 	Parser.connect("page_terminated", close)
-	
+	ParserEvents.comment.connect(printa)
 	ParserEvents.go_back_accepted.connect(lmao)
 	
 	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
@@ -490,12 +523,13 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
-	last_visible_characters = 0
-	last_visible_ratio = 0
+	_last_visible_characters = 0
+	_last_visible_ratio = 0
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if showing_text:
 		lead_time = 0.0
+		_full_word_timer = 0
 		if text_content.visible_ratio >= 1.0:
 			if chunk_index >= line_chunks.size() - 1:
 				if dialog_line_index >= dialog_lines.size() - 1:
@@ -627,7 +661,8 @@ func read_new_line(new_line: Dictionary):
 				emit_signal("line_finished", line_index)
 				return
 			
-			if Parser.use_dialog_syntax:
+			
+			if Parser.use_dialog_syntax or chatlog:
 				var lines = content.split("[]>")
 				dialog_actors.clear()
 				dialog_lines.clear()
@@ -640,7 +675,27 @@ func read_new_line(new_line: Dictionary):
 					var line : String = l.trim_prefix(str(actor_name, ":"))
 					while line.begins_with(" "):
 						line = line.trim_prefix(" ")
+					if chatlog:
+						actor_name = trim_and_emit_args(actor_name)
+						
+						var actor_prefix := ""
+						if not actor_name in blank_names:
+							actor_prefix = chatlog_name_map.get(actor_name, name_map.get(actor_name, actor_name)) + ": "
+						line = str(
+							"[color=", chatlog_name_colors.get(actor_name, name_colors.get(actor_name, Color.WHITE)).to_html(), "]",
+							actor_prefix,
+							line,
+							"[/color]"
+							)
 					dialog_lines.append(line)
+				
+				
+				if chatlog:
+					var chat_text := "\n".join(PackedStringArray(dialog_lines))
+					dialog_lines.clear()
+					dialog_lines = [chat_text]
+					dialog_actors.clear()
+					dialog_actors = [""]
 			else:
 				dialog_lines = [content]
 				dialog_actors.clear()
@@ -822,7 +877,15 @@ func _process(delta: float) -> void:
 			text_content.visible_characters = get_end_of_chunk_position()
 		else:
 			var old_text_length : int = text_content.visible_characters
-			text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
+			if full_words:
+				var next_space_position = text_content.text.find(" ", text_content.visible_characters + 1)
+				if text_content.visible_ratio != 1:
+					_full_word_timer -= delta
+				if _full_word_timer <= 0 or old_text_length == 0:
+					text_content.visible_characters = min(next_space_position, get_end_of_chunk_position())
+					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta
+			else:
+				text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			text_content.visible_characters = min(text_content.visible_characters, get_end_of_chunk_position())
 			if old_text_length != text_content.visible_characters:
@@ -859,28 +922,27 @@ func _process(delta: float) -> void:
 	characters_visible_so_far = new_characters_visible_so_far
 	
 	if current_text_speed < MAX_TEXT_SPEED:
-		if last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
+		if _last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
 			ParserEvents.text_content_filled.emit()
-		if last_visible_ratio != text_content.visible_ratio:
+		if _last_visible_ratio != text_content.visible_ratio:
 			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
-		if last_visible_characters != text_content.visible_characters:
+		if _last_visible_characters != text_content.visible_characters:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 		
-	for call_position : int in call_strings:
-		if (
-			((not called_positions.has(call_position)) and last_visible_characters >= call_position) or
-			(call_position >= last_visible_characters and call_position <= text_content.visible_characters) or
-			text_content.visible_characters == -1
-		):
-			call_from_position(call_position)
+	for pos : int in call_strings:
+		if _can_handle_text_position(pos, "called_positions"):
+			call_from_position(pos)
+	for pos : int in comments:
+		if _can_handle_text_position(pos, "handled_comments"):
+			_emit_comment(pos)
 	
-	last_visible_ratio = text_content.visible_ratio
-	last_visible_characters = text_content.visible_characters
+	_last_visible_ratio = text_content.visible_ratio
+	_last_visible_characters = text_content.visible_characters
 	if text_content.get_parsed_text().length() == text_content.visible_characters:
-		last_visible_characters = -1
-		last_visible_ratio = 0
+		_last_visible_characters = -1
+		_last_visible_ratio = 0
 	
-	if last_visible_characters == -1 and auto_advance:
+	if _last_visible_characters == -1 and auto_advance:
 		advance()
 		auto_advance = false
 		return
@@ -896,6 +958,13 @@ func _process(delta: float) -> void:
 			_auto_continue_duration -= delta
 			if _auto_continue_duration <= 0.0:
 				advance()
+
+func _can_handle_text_position(pos: int, tracker_array:StringName) -> bool:
+	return (
+			((not get(tracker_array).has(pos)) and _last_visible_characters >= pos) or
+			(pos >= _last_visible_characters and pos <= text_content.visible_characters) or
+			text_content.visible_characters == -1
+		)
 
 func remove_spaces_and_send_word_read_event(word: String):
 	word = word.replace(" ", "")
@@ -1097,6 +1166,7 @@ func read_next_chunk():
 	pause_types.clear()
 	call_strings.clear()
 	called_positions.clear()
+	handled_comments.clear()
 	var text_speed_override := -1.0
 	text_speed_by_character_index.clear()
 	
@@ -1150,6 +1220,14 @@ func read_next_chunk():
 				scan_index = max(scan_index - "<strpos>".length(), -1) # -1 because at the end we add 1
 				target_length -= "<strpos>".length()
 				tag_buffer += "<strpos>".length()
+			elif bbcode_removed_text.find("<comment:", scan_index) == scan_index:
+				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
+				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
+				comments[scan_index] = tag_string
+				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
+				target_length -= tag_string.length()
+				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				tag_buffer += 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
@@ -1158,7 +1236,7 @@ func read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				call_strings[scan_index - tag_buffer] = tag_string
+				call_strings[scan_index] = tag_string
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
@@ -1208,6 +1286,8 @@ func read_next_chunk():
 	cleaned_text = cleaned_text.replace("\\[", "[")
 	for call : String in call_strings.values():
 		cleaned_text = cleaned_text.replace(call, "")
+	for comment : String in comments.values():
+		cleaned_text = cleaned_text.replace(comment, "")
 	for tag : String in text_speed_tags:
 		cleaned_text = cleaned_text.replace(tag, "")
 	
@@ -1282,19 +1362,62 @@ func call_from_position(call_position: int):
 	ParserEvents.function_called.emit(func_name, args, call_position)
 	call_strings.erase(call_position)
 
+func _emit_comment(comment_position:int):
+	if not comments.has(comment_position):
+		return
+	var text : String = comments.get(comment_position)
+	handled_comments.append(comment_position)
+	text = text.trim_prefix("<comment:")
+	text = text.trim_suffix(">")
+	while text.begins_with(" "):
+		text = text.trim_prefix(" ")
+	while text.ends_with(" "):
+		text = text.trim_suffix(" ")
+	
+	ParserEvents.comment.emit(text, comment_position)
+	comments.erase(comment_position)
+
 func set_text_content_text(text: String):
 	if keep_past_lines:
-		var past_line = RichTextLabel.new()
-		past_line.text = text_content.text
+		if max_past_lines > -1:
+			var child_count := past_text_container.get_child_count()
+			while child_count >= max_past_lines:
+				past_text_container.get_child(0).queue_free()
+				child_count -= 1
+		
+		var past_line : RichTextLabel
+		if past_line_label:
+			var instance = past_line_label.instantiate()
+			if instance is RichTextLabel:
+				past_line = instance
+			else:
+				push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
+
+		if not past_line:
+			past_line = RichTextLabel.new()
+			past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
+			past_line.fit_content = true
+			past_line.bbcode_enabled = true
+		
+		var past_text := ""
+		if preserve_name_in_past_lines and not last_raw_name in blank_names and not text_content.text.is_empty():
+			if name_colors.has(last_raw_name):
+				var color : Color = name_colors.get(last_raw_name)
+				var code = color.to_html(false)
+				past_text = str("[color=", code, "]", get_actor_name(last_raw_name), "[/color]: ")
+			else:
+				past_text = str(get_actor_name(last_raw_name), ": ")
+		
+		past_text += text_content.text
+		past_line.text = past_text
 		past_text_container.add_child(past_line)
-		past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
-		past_line.fit_content = true
-		past_line.bbcode_enabled = true
 	
 	text_content.text = text
 	text_content.visible_characters = visible_prepend_offset
 	characters_visible_so_far = ""
 	started_word_buffer = ""
+	
+	last_raw_name = current_raw_name
 
 func set_visible_characters(value: int):
 	text_content.visible_characters = min(value, text_content.get_parsed_text().length())
@@ -1382,8 +1505,12 @@ func build_choices(choices, auto_switch:bool):
 		
 		var new_option:ChoiceButton
 		if button_scene:
-			new_option = button_scene.instantiate()
-		else:
+			var instance = button_scene.instantiate()
+			if instance is ChoiceButton:
+				new_option = instance
+			else:
+				push_warning("button_scene is not a ChoiceButton. Falling back to default.")
+		if not new_option:
 			new_option = preload("res://addons/diisis/parser/src/choice_option.tscn").instantiate()
 		new_option.disabled = not enable_option
 		new_option.text = option_text
@@ -1435,6 +1562,8 @@ func build_choices(choices, auto_switch:bool):
 			#choice_option_container.get_child(0).grab_focus.call_deferred()
 		#else:
 			#push_warning("No choice to give focus to.")
+
+
 
 func is_choice_presented():
 	return (not choice_option_container.get_children().is_empty()) and choice_container.visible
@@ -1524,28 +1653,30 @@ func handle_header(header: Array):
 func set_dialog_line_index(value: int):
 	dialog_line_index = value
 	
-	if Parser.use_dialog_syntax:
+	if Parser.use_dialog_syntax and not chatlog:
 		var raw_name : String = dialog_actors[dialog_line_index]
-		var actor_name: String
-		var dialog_line_arg_dict := {}
-		if "{" in raw_name:
-			actor_name = raw_name.split("{")[0]
-			var dialog_line_args = raw_name.split("{")[1]
-			dialog_line_args = dialog_line_args.trim_suffix("}")
-			dialog_line_args = dialog_line_args.split(",")
-			
-			for arg in dialog_line_args:
-				var arg_key = arg.split("|")[0]
-				var arg_value = arg.split("|")[1]
-				dialog_line_arg_dict[arg_key] = arg_value
-		else:
-			actor_name = raw_name
+		var actor_name: String = trim_and_emit_args(raw_name)
 		
 		update_name_label(actor_name)
-		
-		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 	
 	start_showing_text()
+
+# returns actor name
+func trim_and_emit_args(raw_name:String) -> String:
+	var dialog_line_arg_dict := {}
+	var actor_name := raw_name
+	if "{" in raw_name:
+		actor_name = raw_name.split("{")[0]
+		var dialog_line_args = raw_name.split("{")[1]
+		dialog_line_args = dialog_line_args.trim_suffix("}")
+		dialog_line_args = dialog_line_args.split(",")
+		
+		for arg in dialog_line_args:
+			var arg_key = arg.split("|")[0]
+			var arg_value = arg.split("|")[1]
+			dialog_line_arg_dict[arg_key] = arg_value
+		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
+	return actor_name
 
 func update_name_label(actor_name: String):
 	is_last_actor_name_different = actor_name != current_raw_name
@@ -1558,7 +1689,7 @@ func update_name_label(actor_name: String):
 		name_label.text = display_name
 		name_label.add_theme_color_override("font_color", name_color)
 		
-		if actor_name in blank_names:
+		if actor_name in blank_names or chatlog:
 			name_container.modulate.a = 0.0
 		else:
 			name_container.modulate.a = 1.0

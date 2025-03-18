@@ -62,4 +62,4 @@ func set_address_mode(mode:AddressModeButton.Mode):
 		find_child("AddressModeButton").set_mode(mode)
 	Pages.page_data[number]["meta.address_mode_next"] = mode
 	if Pages.editor.get_current_page_number() == number:
-		Pages.editor.current_page.find_child("AddressModeButton").set_mode(mode)
+		Pages.editor.get_current_page().find_child("AddressModeButton").set_mode(mode)

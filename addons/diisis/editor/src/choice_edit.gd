@@ -214,7 +214,6 @@ func _on_page_select_value_changed(value: float) -> void:
 func update():
 	var is_loop_obj : bool = find_child("LoopbackContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
 	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
-	prints( get_address(),"loop", is_loop_obj, "jump", is_jump_obj)
 	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
 	var target_page := int(find_child("PageSelect").value)
 	if is_jump_obj:
