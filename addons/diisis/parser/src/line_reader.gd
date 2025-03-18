@@ -285,7 +285,7 @@ var terminated := false
 
 var started_word_buffer :=""
 var characters_visible_so_far := ""
-var _full_word_timer := 1.0
+var _full_word_timer := 0.0
 
 var _last_visible_ratio := 0.0
 var _last_visible_characters := 0
@@ -525,11 +525,11 @@ func request_advance():
 func advance():
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
-	_full_word_timer = 0
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if showing_text:
 		lead_time = 0.0
+		_full_word_timer = 0
 		if text_content.visible_ratio >= 1.0:
 			if chunk_index >= line_chunks.size() - 1:
 				if dialog_line_index >= dialog_lines.size() - 1:
@@ -844,8 +844,6 @@ func fit_to_max_line_count(lines: Array):
 
 
 func get_end_of_chunk_position() -> int:
-	if chatlog:
-		return text_content.text.length()
 	if pause_positions.size() == 0:
 		return text_content.text.length()
 	elif pause_types[next_pause_position_index] == PauseTypes.EoL:
@@ -881,15 +879,11 @@ func _process(delta: float) -> void:
 			var old_text_length : int = text_content.visible_characters
 			if full_words:
 				var next_space_position = text_content.text.find(" ", text_content.visible_characters + 1)
-				print("TODO BROKEN SHIT")
-				if next_space_position != -1 and text_content.visible_ratio != 1:
+				if text_content.visible_ratio != 1:
 					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
-					
-					print(next_space_position)
-					text_content.visible_characters = next_space_position
-					
-					_full_word_timer = (MAX_TEXT_SPEED / text_speed) * delta
+					text_content.visible_characters = min(next_space_position, get_end_of_chunk_position())
+					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta
 			else:
 				text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
