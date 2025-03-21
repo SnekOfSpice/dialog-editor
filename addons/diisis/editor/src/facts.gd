@@ -84,11 +84,13 @@ func add_fact(fact_name: String, fact_value, conditional:=false):
 	update()
 
 func update():
-	var button_label := ""# = "Conditionals" if self is Conditionals else "Facts"
+	await get_tree().process_frame
+	var button_label := ""
+	var child_count := facts_container.get_child_count()
 	if visibility_toggle_button:
-		visibility_toggle_button.text = str(button_label, " (", facts_container.get_child_count(), ")")
+		visibility_toggle_button.text = str(button_label, " (", child_count, ")")
 	else:
-		find_child("VisibilityToggleButton").text = str(button_label, " (", facts_container.get_child_count(), ")")
+		find_child("VisibilityToggleButton").text = str(button_label, " (", child_count, ")")
 
 
 func request_delete_fact(fact_name:String):

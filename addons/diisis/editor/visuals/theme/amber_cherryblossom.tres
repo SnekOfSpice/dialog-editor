@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=62 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=63 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://dj2och56hdtg1" path="res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Light.ttf" id="1_4ip30"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
@@ -192,10 +192,18 @@ thickness = 8
 bg_color = Color(0.952645, 0.464453, 0.690744, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wn84l"]
-bg_color = Color(0.1978, 0.134, 0.2, 1)
+bg_color = Color(0.196078, 0.133333, 0.2, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yatom"]
 bg_color = Color(0.318347, 0.200921, 0.313239, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sdbvh"]
+bg_color = Color(0.399025, 0.257466, 0.24004, 1)
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3qf1u"]
 bg_color = Color(0.121569, 0.0980392, 0.129412, 1)
@@ -422,6 +430,7 @@ HSlider/styles/slider = SubResource("StyleBoxLine_fww33")
 ItemList/styles/cursor = SubResource("StyleBoxFlat_jwv2m")
 ItemList/styles/focus = SubResource("StyleBoxFlat_wn84l")
 ItemList/styles/hovered = SubResource("StyleBoxFlat_yatom")
+ItemList/styles/hovered_selected_focus = SubResource("StyleBoxFlat_sdbvh")
 ItemList/styles/panel = SubResource("StyleBoxFlat_3qf1u")
 ItemList/styles/selected = SubResource("StyleBoxFlat_jww1x")
 ItemList/styles/selected_focus = SubResource("StyleBoxFlat_mtga1")

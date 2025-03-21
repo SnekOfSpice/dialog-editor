@@ -563,7 +563,7 @@
 								"amber"
 							],
 							"active_actors_title": "character",
-							"content": "[]>narrator: Thank you<comment:hello> for downloading DIISIS. You seem<comment:another comment> to have set it up so it doesn't <call:shake_camera,20>explode your project. <mp>Good job!\n[]>narrator:In this demo, you will find the fundamentals of DIISIS' functionalities included in the script \"demo_script.json\" so you can<comment:adfsdfsf> get accustomed to how things work.\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator:Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber:That I am!\n[]>narrator:What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator:Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as false. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?"
+							"content": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator:In this demo, you will find the fundamentals of DIISIS' functionalities included in the script \"demo_script.json\" so you can get accustomed to how things work.\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator:Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber:That I am!\n[]>narrator:What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator:Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as false. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -846,7 +846,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 300,
+				"meta.scroll_vertical": 42,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -864,7 +864,7 @@
 					{
 						"address": "1.0",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -873,7 +873,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -892,12 +892,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0,
+						"meta.line_index": 0.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -905,7 +905,7 @@
 					{
 						"address": "1.1",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -914,7 +914,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -939,12 +939,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2,
+						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1,
+						"meta.line_index": 1.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -952,7 +952,7 @@
 					{
 						"address": "1.2",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -961,7 +961,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -980,12 +980,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2,
+						"meta.line_index": 2.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -993,7 +993,7 @@
 					{
 						"address": "1.3",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1002,7 +1002,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1021,12 +1021,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 3.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1034,7 +1034,7 @@
 					{
 						"address": "1.4",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1043,7 +1043,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1070,12 +1070,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2,
+						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4,
+						"meta.line_index": 4.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1083,7 +1083,7 @@
 					{
 						"address": "1.5",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1092,7 +1092,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1111,12 +1111,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5,
+						"meta.line_index": 5.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1124,7 +1124,7 @@
 					{
 						"address": "1.6",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1133,7 +1133,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1152,22 +1152,22 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6,
+						"meta.line_index": 6.0,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
+				"meta.address_mode_next": 0.0,
+				"meta.scroll_vertical": 0.0,
 				"meta.selected": false,
 				"next": 2.0,
-				"number": 1,
+				"number": 1.0,
 				"page_key": "",
 				"terminate": false
 			},
