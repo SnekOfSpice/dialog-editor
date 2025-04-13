@@ -88,9 +88,9 @@ func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index
 		s += str(r)
 		var page_bound_icon:Texture
 		if references.get("ref_pages_page_bound").has(r):
-			page_bound_icon = load("res://addons/diisis/editor/visuals/theme/buttons_ui/fact-on-page.png")
+			page_bound_icon = load("uid://beiogkk2obaqj")
 		else:
-			page_bound_icon = load("res://addons/diisis/editor/visuals/theme/buttons_ui/fact-not-on-page.png")
+			page_bound_icon = load("uid://c8g0a300gcw2c")
 		if not page_key.is_empty():
 			s += str("\t\t\t\t(", page_key, ")")
 		
