@@ -10,6 +10,7 @@ var accept_dialogue:AcceptDialog
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
+const AUTOLOAD_EDITOR_TEXT_TO_DIISIS = "TextToDiisis"
 const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
@@ -143,6 +144,7 @@ func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS, "res://addons/diisis/editor/autoload/text_to_diisis.tscn")
 
 func add_parser_singletons():
 	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
@@ -152,6 +154,7 @@ func remove_editor_singletons():
 	remove_autoload_singleton(AUTOLOAD_PAGES)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS)
 
 func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER)

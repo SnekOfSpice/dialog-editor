@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=30 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bxsq5rsj1i12f" path="res://addons/diisis/editor/src/go_to.tscn" id="4_m6c15"]
 [ext_resource type="Texture2D" uid="uid://cneqtkwtfwwmw" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png" id="5_cfai3"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
+[ext_resource type="PackedScene" uid="uid://cil14m00rtcv7" path="res://addons/diisis/editor/src/ingest_menu.tscn" id="5_ows1f"]
 [ext_resource type="ButtonGroup" uid="uid://47f4hgcrt6xj" path="res://addons/diisis/editor/src/page_view_button_group.tres" id="6_5vieb"]
 [ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://addons/diisis/editor/src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="7_0rrj6"]
@@ -151,6 +152,8 @@ item_8/id = 7
 item_9/text = "Blank Strings"
 item_9/checkable = 1
 item_9/id = 8
+
+[node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -563,6 +566,20 @@ ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json")
 
+[node name="FDIngest" type="FileDialog" parent="Popups"]
+auto_translate_mode = 1
+transparent_bg = true
+gui_embed_subwindows = true
+title = "Open a File"
+initial_position = 4
+size = Vector2i(312, 175)
+transparent = true
+theme = ExtResource("1_nb6ej")
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.txt")
+
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
 title = "Edit Header Defaults"
 visible = false
@@ -605,6 +622,7 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/IngestMenu" to="." method="_on_ingest_menu_id_pressed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
@@ -632,6 +650,7 @@ visible = false
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="dir_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_dir_selected"]
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
+[connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
 [connection signal="validate_saved_instructions" from="Popups/InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
 [connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]

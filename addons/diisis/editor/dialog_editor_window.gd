@@ -157,6 +157,7 @@ func _on_size_changed() -> void:
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
+	update_content_scale(editor_content_scale)
 	for window : Window in get_tree().get_nodes_in_group("diisis_scalable_popup"):
 		window.content_scale_factor = value
 

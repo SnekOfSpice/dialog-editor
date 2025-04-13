@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cil14m00rtcv7"]
+
+[node name="IngestMenu" type="PopupMenu"]
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "From File"
+item_0/id = 0
+item_1/text = "From Clipboard"
+item_1/id = 1

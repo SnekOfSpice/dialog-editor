@@ -108,6 +108,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
+mouse_filter = 2
 script = ExtResource("1_a36me")
 
 [node name="Objects" type="Node2D" parent="."]
@@ -273,7 +274,7 @@ theme_override_constants/margin_bottom = 1
 auto_translate_mode = 1
 custom_minimum_size = Vector2(670, 121.41)
 layout_mode = 2
-mouse_filter = 1
+mouse_filter = 2
 bbcode_enabled = true
 text = "Text Body Here
 dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]

@@ -103,6 +103,8 @@ func init(active_file_path:="") -> void:
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
+	find_child("File").add_separator()
+	find_child("File").add_submenu_node_item("Ingest", find_child("IngestMenu"), 10)
 	
 	open_from_path(active_file_path)
 	
@@ -517,11 +519,11 @@ func notify(message:String, duration:=5.0):
 func _on_add_line_button_pressed() -> void:
 	add_line_to_end_of_page()
 
-func add_line_to_end_of_page():
+func add_line_to_end_of_page(data:={}):
 	undo_redo.create_action("Add Line")
 	var line_count = get_current_page().get_line_count()
 	DiisisEditorActions.blank_override_line_addresses.append(str(get_current_page_number(), ".", line_count))
-	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count))
+	undo_redo.add_do_method(DiisisEditorActions.add_line.bind(line_count, data))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
 	undo_redo.commit_action()
 
@@ -868,3 +870,24 @@ func set_text_size(size_index:int):
 	theme.set_font_size("font_size", "Button",  edit_size)
 	theme.set_font_size("font_size", "CheckButton",  edit_size)
 	theme.set_font_size("font_size", "CheckBox",  edit_size)
+
+
+func _on_ingest_menu_id_pressed(id: int) -> void:
+	match id:
+		0: # file
+			popup_ingest_file_dialog("PAGE")
+		1: # clipboard
+			TextToDiisis.ingest_pages(DisplayServer.clipboard_get())
+
+func popup_ingest_file_dialog(context:String):
+	ingest_context = context
+	$Popups.get_node("FDIngest").title = str("Ingest from file: ", "Page" if context == "PAGE" else "Individual Line")
+	open_popup($Popups.get_node("FDIngest"), true)
+
+var ingest_context : String # either line address or PAGE
+func _on_fd_ingest_file_selected(path: String) -> void:
+	if ingest_context == "PAGE":
+		TextToDiisis.ingest_pages_from_file(path)
+	else:
+		var parts : Array = DiisisEditorUtil.get_split_address(ingest_context)
+		get_current_page().get_line(parts[1]).find_child("TextContent").set_text(TextToDiisis.format_text_from_file(path))

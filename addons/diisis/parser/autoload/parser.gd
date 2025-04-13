@@ -163,11 +163,8 @@ func get_facts_of_value(b: bool) -> Array:
 			result.append(fact)
 	return result
 
-func get_line_position_string() -> String:
-	return str(page_index, ".", line_index)
-
 func get_address() -> String:
-	return get_line_position_string()
+	return str(page_index, ".", line_index)
 
 func get_page_key(page_index:int):
 	return page_data.get(page_index, {}).get("page_key", "")

@@ -39,6 +39,9 @@ func update_drop_downs(select_dd:= 0, select_dd_value:= 0):
 	if Pages.dropdowns.get(Pages.dropdowns.keys()[0]).size() == 0:
 		find_child("UndefinedDropDownsLabel").visible = true
 		return
+	
+	select_dd = min(select_dd, Pages.dropdown_titles.size() - 1)
+	select_dd_value = min(select_dd_value, Pages.dropdowns.get(Pages.dropdowns.keys()[select_dd]).size() - 1)
 	find_child("UndefinedDropDownsLabel").visible = false
 	find_child("DropDownButton").select(select_dd)
 	
@@ -142,6 +145,8 @@ func _on_data_type_button_item_selected(index: int) -> void:
 
 func stringify_value() -> String:
 	if data_type == Pages.DataTypes._DropDown:
+		values[0] = min(values[0], Pages.dropdown_titles.size() - 1)
+		values[1] = min(values[1], Pages.dropdowns.get(Pages.dropdowns.keys()[values[1]]).size() - 1)
 		var title = Pages.dropdown_titles[values[0]]
 		return str(
 			title, "/", Pages.dropdowns.get(title)[values[1]]

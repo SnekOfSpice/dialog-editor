@@ -69,7 +69,7 @@ func _on_gui_input(event: InputEvent) -> void:
 			virtual_hint_line = $ArgHint.get_hint_line_count() - 1
 	just_submitted = false
 	update_hint(text)
-	if Input.is_key_pressed(KEY_ENTER):
+	if Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_TAB):
 		just_submitted = true
 		var text_in_hint : String = $ArgHint.get_text_in_line(virtual_hint_line)
 		if text_in_hint.is_empty():
@@ -78,11 +78,14 @@ func _on_gui_input(event: InputEvent) -> void:
 		text_in_hint = text_in_hint.replace("[b]", "")
 		text_in_hint = text_in_hint.replace("[/b]", "")
 		text = str(text_in_hint, submission_append)
-		_on_text_changed(text_in_hint)
 		
 		await get_tree().process_frame
 		$ArgHint.hide()
+		
+		release_focus()
+		grab_focus()
 		caret_column = text.length() + submission_offset
+		_on_text_changed(text_in_hint)
 	if caret_column != last_caret_column:
 		emit_signal("caret_changed")
 	last_caret_column = caret_column

@@ -31,8 +31,8 @@ func set_screen(screen_path:String, payload := {}):
 		for c in screen_container.get_children():
 			c.queue_free()
 		screen_container.visible = false
-		if $StageContainer.get_child_count() > 0:
-			$StageContainer.get_child(0).grab_focus()
+		#if $StageContainer.get_child_count() > 0:
+			#$StageContainer.get_child(0).grab_focus()
 		screen = screen_path
 		return
 	var new_stage = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
@@ -48,7 +48,7 @@ func set_screen(screen_path:String, payload := {}):
 func set_background(background:String, fade_time:=0.0):
 	if background == "none" or background == "null" or background.is_empty():
 		background = GameWorld.background
-	var path = str(CONST.BACKGROUND_ROOT, CONST.get(str("BACKGROUND_", background.to_upper())))
+	var path = CONST.fetch("BACKGROUND", background)
 	if not path:
 		push_warning(str("COULDN'T FIND BACKGROUND ", background, "!"))
 		return

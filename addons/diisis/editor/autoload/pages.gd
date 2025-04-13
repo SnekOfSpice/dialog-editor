@@ -811,6 +811,34 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 	
 	dropdowns[dropdown_title] = options
 
+func delete_dropdown(title:String, erase_from_text:=true):
+	if erase_from_text and dropdown_dialog_arguments.has(title):
+		var options : Array = dropdowns.get(title, [])
+		for page in page_data.values():
+			var lines : Array = page.get("lines")
+			for line : Dictionary in lines:
+				if line.get("line_type") != DIISIS.LineType.Text:
+					continue
+				
+				var i := 0
+				while i < options.size():
+					var option:String=options[i]
+					
+					var option_str = str(title, "|", option)
+					line["content"]["content"] = line["content"]["content"].replace(option_str + ",", "")
+					line["content"]["content"] = line["content"]["content"].replace(option_str, "")
+					
+					i += 1
+				line["content"]["content"] = line["content"]["content"].replace("{}", "")
+	
+	dropdown_titles.erase(title)
+	dropdown_dialog_arguments.erase(title)
+	dropdowns.erase(title)
+	
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
+
 func register_fact(fact_name : String, value):
 	if has_fact(fact_name):
 		push_warning(str("Fact ", fact_name, " already exists with default value ", facts.get(fact_name), " and won't be registered again."))
