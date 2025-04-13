@@ -416,9 +416,16 @@ func _on_import_id_pressed(id: int) -> void:
 	match id:
 		0: # file
 			var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
-			Pages.editor.popup_ingest_file_dialog(address)
+			Pages.editor.popup_ingest_file_dialog([
+				address,
+				find_child("Import").build_payload()]
+				)
 		1: # clipboard
 			var text : String = TextToDiisis.format_text(DisplayServer.clipboard_get())
 			if text.is_empty():
 				return
 			text_box.text = text
+			if find_child("Import").is_capitalize_checked():
+				text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
+			if find_child("Import").is_whitespace_checked():
+				text_box.text = Pages.neaten_whitespace(text_box.text)

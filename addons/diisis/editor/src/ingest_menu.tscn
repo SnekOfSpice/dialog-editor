@@ -1,9 +1,30 @@
-[gd_scene format=3 uid="uid://cil14m00rtcv7"]
+[gd_scene load_steps=3 format=3 uid="uid://cil14m00rtcv7"]
 
-[node name="IngestMenu" type="PopupMenu"]
+[ext_resource type="Script" uid="uid://sqge8csghgao" path="res://addons/diisis/editor/src/ingest_menu.gd" id="1_nqodx"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_qabkt"]
+
+[node name="IngestMenu" type="PopupMenu" groups=["diisis_ingest_menu"]]
 auto_translate_mode = 1
-item_count = 2
+size = Vector2i(207, 139)
+visible = true
+unfocusable = true
+theme = ExtResource("1_qabkt")
+hide_on_checkable_item_selection = false
+item_count = 5
 item_0/text = "From File"
 item_0/id = 0
 item_1/text = "From Clipboard"
 item_1/id = 1
+item_2/text = "After ingestion do:"
+item_2/id = 4
+item_2/separator = true
+item_3/text = "Capitalize"
+item_3/checkable = 1
+item_3/id = 2
+item_4/text = "Neaten Whitespace"
+item_4/checkable = 1
+item_4/checked = true
+item_4/id = 3
+script = ExtResource("1_nqodx")
+
+[connection signal="index_pressed" from="." to="." method="_on_index_pressed"]

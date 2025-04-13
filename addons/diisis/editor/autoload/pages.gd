@@ -1403,7 +1403,6 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	
-	print(letter_indices_after_elipses)
 	for index in letter_indices_after_elipses.keys():
 		var letter : String = letter_indices_after_elipses.get(index)
 		text[index] = letter

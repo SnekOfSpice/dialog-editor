@@ -875,19 +875,32 @@ func set_text_size(size_index:int):
 func _on_ingest_menu_id_pressed(id: int) -> void:
 	match id:
 		0: # file
-			popup_ingest_file_dialog("PAGE")
+			popup_ingest_file_dialog(
+				["PAGE",
+				find_child("IngestMenu").build_payload()
+				]
+			)
 		1: # clipboard
-			TextToDiisis.ingest_pages(DisplayServer.clipboard_get())
+			TextToDiisis.ingest_pages(
+				DisplayServer.clipboard_get(), find_child("IngestMenu").build_payload()
+			)
 
-func popup_ingest_file_dialog(context:String):
+func popup_ingest_file_dialog(context:Array):
 	ingest_context = context
-	$Popups.get_node("FDIngest").title = str("Ingest from file: ", "Page" if context == "PAGE" else "Individual Line")
+	$Popups.get_node("FDIngest").title = str("Ingest from file: ", "Page" if context[0] == "PAGE" else "Individual Line")
 	open_popup($Popups.get_node("FDIngest"), true)
 
-var ingest_context : String # either line address or PAGE
+var ingest_context : Array # either line address or PAGE
 func _on_fd_ingest_file_selected(path: String) -> void:
-	if ingest_context == "PAGE":
-		TextToDiisis.ingest_pages_from_file(path)
+	if ingest_context[0] == "PAGE":
+		TextToDiisis.ingest_pages_from_file(path, ingest_context[1])
 	else:
-		var parts : Array = DiisisEditorUtil.get_split_address(ingest_context)
-		get_current_page().get_line(parts[1]).find_child("TextContent").set_text(TextToDiisis.format_text_from_file(path))
+		var text : String = TextToDiisis.format_text_from_file(path)
+		
+		if ingest_context[1].get("capitalize", false):
+			text = Pages.capitalize_sentence_beginnings(text)
+		if ingest_context[1].get("neaten_whitespace", false):
+			text = Pages.neaten_whitespace(text)
+		
+		var parts : Array = DiisisEditorUtil.get_split_address(ingest_context[0])
+		get_current_page().get_line(parts[1]).find_child("TextContent").set_text(text)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7k2h1p5qalaa"]
+[gd_scene load_steps=9 format=3 uid="uid://c7k2h1p5qalaa"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_6al0s"]
 [ext_resource type="Script" uid="uid://bfbq7sdndv6fb" path="res://addons/diisis/editor/src/text_content.gd" id="1_uudox"]
 [ext_resource type="Script" uid="uid://dd1leluqo2kyk" path="res://addons/diisis/editor/src/auto_scroll_container.gd" id="3_osost"]
+[ext_resource type="PackedScene" uid="uid://cil14m00rtcv7" path="res://addons/diisis/editor/src/ingest_menu.tscn" id="3_wtkdm"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_srwr3"]
 number_color = Color(0.784314, 0.784314, 0.784314, 1)
@@ -57,12 +58,9 @@ item_1/id = 1
 item_2/id = 2
 item_2/separator = true
 
-[node name="Import" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions"]
-item_count = 2
-item_0/text = "From File"
-item_0/id = 0
-item_1/text = "From Clipboard"
-item_1/id = 1
+[node name="Import" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" instance=ExtResource("3_wtkdm")]
+visible = false
+unfocusable = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="DialogSyntaxContainer"]
 layout_mode = 2
