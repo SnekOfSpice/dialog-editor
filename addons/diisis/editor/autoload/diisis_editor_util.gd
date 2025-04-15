@@ -111,3 +111,31 @@ func get_project_source_file_path() -> String:
 func set_project_file_path(active_dir:String, active_file_name:String):
 	ProjectSettings.set_setting("diisis/project/file/path", str(active_dir, active_file_name))
 	ProjectSettings.save()
+
+## max height is a multiple of the editor size
+func limit_scroll_container_height(
+	scroll_container : ScrollContainer,
+	max_height : float,
+	scroll_hint_top : TextureRect=null,
+	scroll_hint_bottom : TextureRect=null,
+):
+	if scroll_container.get_child_count() != 1:
+		push_warning("Scroll container has not exactly 1 child")
+		return
+	var child_control = scroll_container.get_child(0)
+	max_height *= Pages.editor.size.y
+	var child_height : float = child_control.size.y
+	if child_height <= max_height:
+		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll_container.custom_minimum_size = child_control.custom_minimum_size
+		if scroll_hint_top:
+			scroll_hint_top.visible = false
+		if scroll_hint_bottom:
+			scroll_hint_bottom.visible = false
+	else:
+		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		scroll_container.custom_minimum_size.y = max_height
+		if scroll_hint_top:
+			scroll_hint_top.visible = scroll_container.scroll_vertical == 0
+		if scroll_hint_bottom:
+			scroll_hint_bottom.visible = scroll_container.scroll_vertical >= scroll_container.get_v_scroll_bar().max_value - (scroll_container.size.y + 1)

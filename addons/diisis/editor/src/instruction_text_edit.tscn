@@ -37,14 +37,21 @@ size_flags_vertical = 0
 tooltip_text = "Copy GDScript function signature to clipboard."
 icon = ExtResource("4_m4ncw")
 
-[node name="ComplianceContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="ComplianceContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ComplianceContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ComplianceContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 24
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ComplianceContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ComplianceContainer/HBoxContainer"]
 layout_mode = 2
 text = "!!!"
 
-[node name="ComplianceLabel" type="Label" parent="VBoxContainer/ComplianceContainer"]
+[node name="ComplianceLabel" type="Label" parent="VBoxContainer/ComplianceContainer/HBoxContainer"]
 layout_mode = 2
 
 [connection signal="caret_changed" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_caret_changed"]

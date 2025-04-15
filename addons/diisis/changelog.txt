@@ -1,5 +1,5 @@
 -------------------------------------------------
-DIISIS 0.5.2
+DIISIS 0.6
 - 
 change to godot 4.4.1
 - option to delete dropdowns
@@ -7,6 +7,7 @@ change to godot 4.4.1
 - name style prepend got a few more options and consistency 
 - raw text ingestion into text boxes and files at large
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
+- default args
 
 
 -------------------------------------------------
@@ -90,4 +91,3 @@ visual novel template
 under the hood
 - add a few utility functions to Pages regarding Facts
 - make a custom option button
-

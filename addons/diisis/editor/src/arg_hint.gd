@@ -2,10 +2,12 @@
 extends Window
 
 func build_str(text:String):
+	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	find_child("TextLabel").text = text
 
 func build(instruction_name: String, full_text:String, caret_column:int):
+	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	var arg_names = Pages.get_instruction_arg_names(instruction_name)
 	var arg_types = Pages.get_instruction_arg_types(instruction_name)

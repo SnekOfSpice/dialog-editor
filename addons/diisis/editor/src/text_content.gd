@@ -387,19 +387,14 @@ func _on_text_box_item_rect_changed() -> void:
 		text_box = find_child("TextBox")
 	if not is_instance_valid(Pages.editor):
 		return
-	var half_height : float = Pages.editor.size.y * 0.5
-	var textbox_height : float = text_box.size.y
-	var scroll : ScrollContainer = find_child("ScrollContainer")
-	if textbox_height <= half_height:
-		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		scroll.custom_minimum_size = text_box.custom_minimum_size
-		find_child("ScrollHintTop").visible = false
-		find_child("ScrollHintBottom").visible = false
-	else:
-		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-		scroll.custom_minimum_size.y = half_height
-		find_child("ScrollHintBottom").visible = scroll.scroll_vertical == 0
-		find_child("ScrollHintTop").visible = scroll.scroll_vertical >= scroll.get_v_scroll_bar().max_value - (scroll.size.y + 1)
+	
+	DiisisEditorUtil.limit_scroll_container_height(
+		find_child("ScrollContainer"),
+		0.5,
+		find_child("ScrollHintTop"),
+		find_child("ScrollHintBottom"),
+	)
+
 
 func set_text(text:String):
 	text_box.text = text
