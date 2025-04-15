@@ -1,3 +1,61 @@
+-------------------------------------------------
+DIISIS 0.5.2
+- 
+change to godot 4.4.1
+- option to delete dropdowns
+- text to diisis
+- name style prepend got a few more options and consistency 
+- raw text ingestion into text boxes and files at large
+- improve template by using _unhaled_inout instead of _input, fixing a few input bugs
+
+
+-------------------------------------------------
+DIISIS 0.5.1 2025-03-18
+
+General
+- add comment tag <comment:some info>
+	- will be invisible in the UI but get printed to the console
+	- ParserEvents.comment also added
+
+Editor
+- new file was broken. got fixed
+
+Runtime
+- more features related to LineReader.keep_past_lines
+- add chatlog layouting option to LineReader
+- add LineReader.full_words
+
+VN template
+- generalzed notice screen in template
+
+
+-------------------------------------------------
+DIISIS 0.5 2025-03-13
+
+General
+- Upgrade to Godot 4.4
+- use typed dictionaries where appripriate
+
+Editor
+- more keyboard shortcuts
+- fixes re:address mode
+
+
+-------------------------------------------------
+DIISIS 0.4.1 2025-03-12
+
+General
+- GitHub issue temlates
+
+Editor
+- Handle elipses (...) in the Capitalize function of text lines
+- more features around address mode buttons (page menu reset button and more)
+
+VN template
+- add cg fadeout
+
+
+-------------------------------------------------
 DIISIS 0.4 changelog 2025-03-04
 This is the No Empty Threats update
 
