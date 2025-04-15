@@ -402,6 +402,8 @@ func get_instruction_signature(instruction_name:String) -> String:
 	while i < arg_types.size():
 		var arg_type_name : String
 		var raw_type : String = arg_types[i].trim_suffix(" ").trim_prefix(" ")
+		if raw_type in dropdown_titles:
+			raw_type = "string"
 		if raw_type.containsn("string"):
 			arg_type_name = "String"
 		else:
@@ -795,6 +797,9 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 					i += 1
 	
 	dropdowns[dropdown_title] = options
+
+func is_new_dropdown_title_invalid(title:String, previous_title := "") -> bool:
+	return (title in dropdown_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
 
 func delete_dropdown(title:String, erase_from_text:=true):
 	if erase_from_text and dropdown_dialog_arguments.has(title):
@@ -1204,6 +1209,9 @@ func get_type_compliance(value:String, type_string:String, arg_index:int) -> Str
 		for char in value:
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
 				return str("Float argument ", arg_index + 1, " contains non-float character. (0 - 9 and . and -)")
+	if type_string in dropdown_titles:
+		if not value in dropdowns.get(type_string):
+			return str("Drodown argument ", arg_index + 1, " of type ", type_string, " does not exist.")
 	return ""
 
 func try_delete_instruction_template(instruction_name:String):
@@ -1253,15 +1261,21 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 					default = arg.split("?")[1]
 					arg = arg.trim_suffix(str("?", default))
 				
+				var arg_name := arg.split(":")[0]
 				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
-					return "One or more typed arguments don't end in \":string\", \":bool\", or \":float\""
+					var typed_as_dropdown := false
+					if arg.find(":") < arg.length() - 1:
+						var arg_type := arg.split(":")[1]
+						if arg_type in dropdown_titles:
+							typed_as_dropdown = true
+					if not typed_as_dropdown:
+						return str("Argument ", i+1, " doesn't end in \":string\", \":bool\", or \":float\"")
 				
 				if default != null:
 					var type_compliance := get_type_compliance(default, arg.split(":")[1], i)
 					if not type_compliance.is_empty():
 						return type_compliance
 				
-				var arg_name := arg.split(":")[0]
 				while arg_name.begins_with(" "):
 					arg_name = arg_name.trim_prefix(" ")
 				while arg_name.ends_with(" "):

@@ -23,8 +23,7 @@ func str_to_typed(value:String, type_string:String):
 	match type_string:
 		"float":
 			return float(value)
-		"string":
-			return String(value)
 		"bool":
 			var cast : bool = true if value == "true" else false
 			return cast
+	return String(value)
