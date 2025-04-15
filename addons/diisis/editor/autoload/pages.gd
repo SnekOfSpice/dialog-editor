@@ -1143,6 +1143,14 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 			
 			var old_text : String = line["content"]["meta.text"]
 			
+			var default_positions := []
+			var old_args := old_text.split(",")
+			var i := 0
+			for arg in old_args:
+				if arg.contains("*"):
+					default_positions.append(i)
+				i += 1
+			
 			var old_template_data = parse_instruction_to_handleable_dictionary(old_text, old_template)
 			
 			var old_arg_count : int = old_template.get("args").size()
@@ -1155,10 +1163,13 @@ func update_instruction_from_template(old_name:String, new_full_instruction:Stri
 			var transformed_string := new_entered_name
 			transformed_string += "("
 			
-			var i := 0
+			i = 0
 			var goal_arg_count := min(old_arg_count, new_arg_count)
 			while i < goal_arg_count:
-				transformed_string += str(old_template_data.get("args").get(old_arg_names[i]))
+				if i in default_positions:
+					transformed_string += "*"
+				else:
+					transformed_string += str(old_template_data.get("args").get(old_arg_names[i]))
 				if i < goal_arg_count - 1:
 					transformed_string += ", "
 				i += 1
@@ -1211,7 +1222,6 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 		var default = get_default_arg_value(entered_name, arg_names[i])
 		if value_string == "*" and default != null:
 			value_string = default
-			prints("set default ", default)
 		
 		arg_value = DIISIS.str_to_typed(value_string, arg_type)
 		
