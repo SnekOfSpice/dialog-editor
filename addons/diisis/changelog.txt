@@ -8,6 +8,8 @@ change to godot 4.4.1
 - raw text ingestion into text boxes and files at large
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
 - default args
+- dropdown args
+	- including MULTI_DROPDOWN_TYPE_SEPARATOR
 
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.

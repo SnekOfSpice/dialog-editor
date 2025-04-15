@@ -12,6 +12,7 @@ var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
+const MULTI_DROPDOWN_TYPE_SEPARATOR := "||"
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -1209,9 +1210,15 @@ func get_type_compliance(value:String, type_string:String, arg_index:int) -> Str
 		for char in value:
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
 				return str("Float argument ", arg_index + 1, " contains non-float character. (0 - 9 and . and -)")
-	if type_string in dropdown_titles:
-		if not value in dropdowns.get(type_string):
-			return str("Drodown argument ", arg_index + 1, " of type ", type_string, " does not exist.")
+	
+	var split_types := type_string.split(MULTI_DROPDOWN_TYPE_SEPARATOR)
+	if are_all_of_these_dropdown_titles(split_types) and not type_string.is_empty():
+		# build list of all options
+		var options := []
+		for dd_name in split_types:
+			options.append_array(dropdowns.get(dd_name))
+		if not value in options:
+			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(split_types), ".")
 	return ""
 
 func try_delete_instruction_template(instruction_name:String):
@@ -1262,12 +1269,16 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 					arg = arg.trim_suffix(str("?", default))
 				
 				var arg_name := arg.split(":")[0]
+				if arg.ends_with(MULTI_DROPDOWN_TYPE_SEPARATOR):
+					return "Cannot end with MULTI_DROPDOWN_TYPE_SEPARATOR"
+				
 				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
 					var typed_as_dropdown := false
 					if arg.find(":") < arg.length() - 1:
 						var arg_type := arg.split(":")[1]
-						if arg_type in dropdown_titles:
-							typed_as_dropdown = true
+						var arg_types = arg_type.split(MULTI_DROPDOWN_TYPE_SEPARATOR, false)
+						typed_as_dropdown = are_all_of_these_dropdown_titles(arg_types)
+						
 					if not typed_as_dropdown:
 						return str("Argument ", i+1, " doesn't end in \":string\", \":bool\", or \":float\"")
 				
@@ -1294,6 +1305,13 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 	
 	return "OK"
 
+func are_all_of_these_dropdown_titles(names:PackedStringArray) -> bool:
+	var result := true
+	for dd_name in names:
+		if not dd_name in dropdown_titles:
+			result = false
+			break
+	return result
 
 func capitalize_sentence_beginnings(text:String) -> String:
 	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
