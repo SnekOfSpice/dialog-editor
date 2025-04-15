@@ -19,6 +19,7 @@ func get_raw_entered_text() -> String:
 func set_template(template:String):
 	var args = Pages.instruction_templates.get(template, {}).get("args", [])
 	var arg_types = Pages.instruction_templates.get(template, {}).get("arg_types", [])
+	var arg_defaults = Pages.instruction_templates.get(template, {}).get("arg_defaults", {})
 	
 	var display_string := ""
 	display_string += template
@@ -27,6 +28,10 @@ func set_template(template:String):
 	var i := 0
 	while i < args.size():
 		display_string += str(args[i], ":", arg_types[i])
+		var default = arg_defaults.get(args[i])
+		if default != null:
+			display_string += "?"
+			display_string += default
 		if i < args.size() - 1:
 			display_string += ", "
 		i += 1

@@ -1386,16 +1386,15 @@ func call_from_position(call_position: int):
 	
 	var args := []
 	var i := 0
+	var arg_names : Array = Parser.get_instruction_arg_names(func_name)
 	var arg_types : Array = Parser.get_instruction_arg_types(func_name)
 	for type in arg_types:
-		match type:
-			"float":
-				args.append(float(parts[i]))
-			"string":
-				args.append(String(parts[i]))
-			"bool":
-				var cast : bool = true if parts[i] == "true" else false
-				args.append(cast)
+		var arg_string = parts[i]
+		var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
+		if arg_string == "*" and default != null:
+			arg_string = default
+		args.append(DIISIS.str_to_typed(arg_string, type))
+		
 		i += 1
 	
 	inline_evaluator.callv(func_name, args)

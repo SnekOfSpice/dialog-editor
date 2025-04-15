@@ -35,7 +35,6 @@ func init() -> void:
 	
 	fill_active_actors()
 	set_page_view(Pages.editor.get_selected_page_view())
-	set_use_dialog_syntax(Pages.use_dialog_syntax)
 	
 	# these are  the symbols that need to wrap any position where code completion
 	# should be able to be triggered /on both sides/
@@ -50,15 +49,10 @@ func init() -> void:
 	
 	find_child("Text Actions").add_submenu_node_item("Parse Into Text", find_child("Import"))
 
-func set_use_dialog_syntax(value:bool):
-	#use_dialog_syntax = value
-	find_child("ActiveActorsLabel").visible = value
-
 func serialize() -> Dictionary:
 	var result := {}
 	
 	result["content"] = text_box.text
-	#result["use_dialog_syntax"] = use_dialog_syntax
 	result["active_actors"] = active_actors
 	result["active_actors_title"] = active_actors_title
 	
@@ -69,7 +63,6 @@ func deserialize(data: Dictionary):
 	active_actors = data.get("active_actors", [])
 	active_actors_title = data.get("active_actors_title", "")
 	fill_active_actors()
-	set_use_dialog_syntax(data.get("use_dialog_syntax", Pages.use_dialog_syntax))
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full
@@ -278,7 +271,6 @@ func fill_active_actors():
 	for v in Pages.dropdowns.get(title, []):
 		active_actors.append(v)
 	active_actors_title = title
-	find_child("ActiveActorsLabel").text = ", ".join(active_actors)
 
 
 func _on_text_box_focus_entered() -> void:

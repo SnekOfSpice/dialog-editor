@@ -27,25 +27,16 @@ const LOCALES := ["af_ZA","sq_AL","ar_DZ","ar_BH","ar_EG","ar_IQ","ar_JO","ar_KW
 var facts := {}
 var local_line_insert_offset:int
 
-var instruction_templates := {
-		"show-character": {
-			"args" : [
-				"character_name",
-				"clear_others"
-			],
-			"arg_types" : [
-				"string",
-				"bool"
-			]
-		},
-		"rotate": {
-			"args" : [
-				"angle"
-			],
-			"arg_types":
-				["float"]
-		}
-	}
+	#"rotate": {
+			#"args" : [
+				#"angle"
+			#],
+			#"arg_types":
+				#["float"],
+			#"arg_defaults":
+				#{"angle":20}
+		#}
+var instruction_templates : Dictionary = {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -174,7 +165,6 @@ func swap_line_references(on_page:int, from:int, to:int):
 	
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		print("TODO")
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -200,14 +190,6 @@ func swap_line_references(on_page:int, from:int, to:int):
 							choice["loopback_target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
-					
-	#if loopback_references_by_page.has(on_page):
-		#var references_from : Dictionary = loopback_references_by_page.get(on_page).get(from, {})
-		#var references_to : Dictionary = loopback_references_by_page.get(on_page).get(to, {})
-		#loopback_references_by_page[on_page][from] = references_to.duplicate(true)
-		#loopback_references_by_page[on_page][to] = references_from.duplicate(true)
-		#if on_page == current_page_number and not references_from.is_empty() and not references_to.is_empty():
-			#edited_current_page = true
 	
 	if edited_current_page:
 		await get_tree().process_frame
@@ -511,6 +493,9 @@ func get_instruction_arg_names(instruction_name: String) -> Array:
 
 func get_instruction_arg_types(instruction_name: String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
+
+func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
+	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})
 
 func get_all_invalid_instructions() -> String:
 	var warning := ""
@@ -1102,10 +1087,15 @@ func add_template_from_string(instruction:String):
 	
 	var arg_names := []
 	var arg_types := []
+	var arg_defaults := {}
 	var entered_args := arg_string.split(",")
 	for arg in entered_args:
 		if arg.is_empty():
 			continue
+		var default
+		if arg.contains("?") and arg.find("?") < arg.length() - 1:
+			default = arg.split("?")[1]
+			arg = arg.trim_suffix(str("?", default))
 		if arg.contains(":"): # typed
 			var arg_name := arg.split(":")[0]
 			var arg_type := arg.split(":")[1]
@@ -1126,10 +1116,13 @@ func add_template_from_string(instruction:String):
 				arg = arg.trim_suffix(" ")
 			arg_names.append(arg)
 			arg_types.append("string")
+		if default != null:
+			arg_defaults[arg_names.back()] = default
 	
 	instruction_templates[entered_name] = {
 		"args" : arg_names,
-		"arg_types": arg_types
+		"arg_types": arg_types,
+		"arg_defaults": arg_defaults
 	}
 
 func update_instruction_from_template(old_name:String, new_full_instruction:String):
@@ -1187,6 +1180,7 @@ func get_arg_array_from_instruction_string(text:String, instruction_name:String)
 		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
 	return args
 
+## returns a dict with "name" and "args" as keys
 func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
 	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
 		#push_warning(str(instruction_text, " isn't OK"))
@@ -1212,23 +1206,23 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 		var arg_value
 		var arg_type:String=arg_types[i]
 		var value_string := arg.split(":")[0]
-		if arg_type == "string":
-			arg_value = value_string
-		elif arg_type == "bool":
-			if value_string == "true":
-				arg_value = true
-			if value_string == "false":
-				arg_value = false
-		elif arg_type == "float":
-			if value_string.is_empty():
-				arg_value = str("no value")
-			else:
-				arg_value = float(value_string)
+		
+		
+		var default = get_default_arg_value(entered_name, arg_names[i])
+		if value_string == "*" and default != null:
+			value_string = default
+			prints("set default ", default)
+		
+		arg_value = DIISIS.str_to_typed(value_string, arg_type)
+		
 		args[arg_names[i]] = arg_value
 		i += 1
 	result["args"] = args
 	
 	return result
+
+func get_default_arg_value(instruction_name:String, arg_name:String):
+	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)
 
 func get_argument_order_from_template(instruction_name:String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("args", [])
@@ -1254,6 +1248,7 @@ func get_compliance_with_template(instruction:String) -> String:
 	args_string = args_string.trim_prefix("(")
 	args_string = args_string.trim_suffix(")")
 	var args := args_string.split(",")
+	var template_arg_names : Array = instruction_templates[entered_name].get("args", [])
 	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
 	
 	var i := 0
@@ -1266,16 +1261,25 @@ func get_compliance_with_template(instruction:String) -> String:
 		var arg_value : String = arg_string.split(":")[0]
 		if arg_value.is_empty():
 			return str("Argument ", i+1, " is empty")
-		if template_types[i] == "bool":
-			if arg_value != "true" and arg_value != "false":
-				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
-		if template_types[i] == "float":
-			for char in arg_value:
-				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
-					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and . and -)")
+		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
+			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
+		
+		var type_compliance := get_type_compliance(arg_value, template_types[i], i)
+		if not type_compliance.is_empty() and arg_value != "*":
+			return type_compliance
 		i += 1
 	
 	return "OK"
+
+func get_type_compliance(value:String, type_string:String, arg_index:int) -> String:
+	if type_string == "bool":
+		if value != "true" and value != "false":
+			return str("Bool argument ", arg_index + 1, " is neither \"true\" nor \"false\"")
+	if type_string == "float":
+		for char in value:
+			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
+				return str("Float argument ", arg_index + 1, " contains non-float character. (0 - 9 and . and -)")
+	return ""
 
 func try_delete_instruction_template(instruction_name:String):
 	instruction_templates.erase(instruction_name)
@@ -1311,11 +1315,27 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 			arg_string = arg_string.trim_suffix(")")
 			var args := arg_string.split(",")
 			var arg_names := []
+			var i := 0
 			for arg in args:
 				if arg.count(":") > 1:
-					return "One or more args contain more than one :"
+					return str("Argument ", i+1, " contains more than one :")
+				if arg.contains("?") and not arg.contains(":"):
+					return str("Cannot default nontyped argument ", i+1)
+				var default
+				if arg.contains("?"):
+					if arg.find("?") == arg.length() - 1:
+						return "Empty default"
+					default = arg.split("?")[1]
+					arg = arg.trim_suffix(str("?", default))
+				
 				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
 					return "One or more typed arguments don't end in \":string\", \":bool\", or \":float\""
+				
+				if default != null:
+					var type_compliance := get_type_compliance(default, arg.split(":")[1], i)
+					if not type_compliance.is_empty():
+						return type_compliance
+				
 				var arg_name := arg.split(":")[0]
 				while arg_name.begins_with(" "):
 					arg_name = arg_name.trim_prefix(" ")
@@ -1327,6 +1347,7 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 					return "Duplicate argument names"
 				else:
 					arg_names.append(arg_name)
+				i += 1
 	else: # check as sth that follows the template
 		var template_compliance := get_compliance_with_template(instruction)
 		if template_compliance != "OK":

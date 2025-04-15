@@ -572,5 +572,11 @@ func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> 
 	
 	return data.get("Custom", {})
 
+func get_instruction_arg_names(instruction_name: String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("args", [])
+
 func get_instruction_arg_types(instruction_name: String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
+
+func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
+	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})

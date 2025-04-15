@@ -32,6 +32,8 @@ func _on_clear_search_button_pressed() -> void:
 
 func _on_add_button_pressed() -> void:
 	add_item("")
+	await get_tree().process_frame
+	find_child("ScrollContainer").scroll_vertical = find_child("ScrollContainer").get_v_scroll_bar().max_value
 	find_child("ItemContainer").get_children().back().grab_focus()
 
 

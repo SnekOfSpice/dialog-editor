@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://d33carvc0ulrr"]
+[gd_scene load_steps=2 format=3 uid="uid://d33carvc0ulrr"]
 
 [ext_resource type="Script" uid="uid://daqwe1nsq6knk" path="res://addons/diisis/editor/src/instruction_edit_container.gd" id="1_05xxm"]
-[ext_resource type="Script" uid="uid://dd1leluqo2kyk" path="res://addons/diisis/editor/src/auto_scroll_container.gd" id="2_ujfyx"]
 
 [node name="InstructionEditContainer" type="Control"]
 layout_mode = 3
@@ -66,7 +65,7 @@ item_1/id = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("2_ujfyx")
+follow_focus = true
 
 [node name="ItemContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
@@ -78,7 +77,6 @@ mode = 2
 title = "Export Instructions"
 initial_position = 4
 always_on_top = true
-ok_button_text = "Export to File"
 access = 2
 filters = PackedStringArray("*.json")
 
