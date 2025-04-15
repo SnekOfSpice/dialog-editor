@@ -59,14 +59,14 @@ func _on_save_button_pressed() -> void:
 	save()
 
 func save():
-	# if discardable, overwrite, else add
 	var new_text : String = find_child("InstructionEdit").text
-	if text_before_edit.is_empty():
-		Pages.add_template_from_string(new_text)
-	else:
-		Pages.update_instruction_from_template(text_before_edit.split("(")[0], new_text)
+	Pages.add_template_from_string(new_text)
 	
-	set_template(new_text.split("(")[0])
+	var instruction_name := new_text.split("(")[0]
+	if not text_before_edit.is_empty():
+		Pages.update_compliances(instruction_name)
+	
+	set_template(instruction_name)
 	set_editing(false)
 
 

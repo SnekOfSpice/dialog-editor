@@ -1,11 +1,11 @@
 {
 	"editor": {
-		"current_page_number": 0.0,
-		"page_view": 0.0,
-		"text_size_id": 3.0
+		"current_page_number": 0,
+		"page_view": 0,
+		"text_size_id": 3
 	},
 	"pages": {
-		"default_address_mode_pages": 0.0,
+		"default_address_mode_pages": 0,
 		"dropdown_dialog_arguments": [
 			"amber-emotion"
 		],
@@ -131,7 +131,7 @@
 			"set_background": {
 				"arg_defaults": {
 					"fade_time": "5",
-					"name": "default"
+					"name": "skyline"
 				},
 				"arg_types": [
 					"string",
@@ -405,7 +405,7 @@
 					{
 						"address": "0.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -414,17 +414,13 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								1.0
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
 							"meta.text": "use_ui(1)",
@@ -439,12 +435,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -452,7 +448,7 @@
 					{
 						"address": "0.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -461,18 +457,13 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								"default",
-								0.0
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
 							"meta.text": "set_background(*, 0)",
@@ -487,12 +478,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
 						}
@@ -500,7 +491,7 @@
 					{
 						"address": "0.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -509,18 +500,13 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								"default",
-								2.0
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
 							"meta.text": "set_bgm(default, 2)",
@@ -535,12 +521,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						}
@@ -548,7 +534,7 @@
 					{
 						"address": "0.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -557,7 +543,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -576,12 +562,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						}
@@ -589,7 +575,7 @@
 					{
 						"address": "0.4",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -598,7 +584,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -608,12 +594,12 @@
 							"choices": [
 								{
 									"address": "0.4.0",
-									"behavior_after_first_selection": 0.0,
+									"behavior_after_first_selection": 0,
 									"choice_text.disabled": "",
 									"choice_text.enabled": "Yes I love her",
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
-										"behavior": 0.0,
+										"behavior": 0,
 										"behavior_key": "Show",
 										"facts": {
 											"fact_data_by_name": {
@@ -622,7 +608,7 @@
 											"meta.visible": false
 										},
 										"meta.visible": false,
-										"operand": 0.0,
+										"operand": 0,
 										"operand_args": [],
 										"operand_key": "AND"
 									},
@@ -630,36 +616,36 @@
 									"facts": {
 										"fact_data_by_name": {
 											"liked amber": {
-												"data_type": 0.0,
+												"data_type": 0,
 												"fact_name": "liked amber",
 												"fact_value": true,
-												"int_comparator": 0.0,
-												"int_operator": 0.0,
+												"int_comparator": 0,
+												"int_operator": 0,
 												"is_conditional": false
 											}
 										},
 										"meta.visible": true
 									},
-									"jump_address_mode": 0.0,
-									"loop_address_mode": 0.0,
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
-									"loopback_target_line": 1.0,
-									"loopback_target_page": 0.0,
+									"loopback_target_line": 1,
+									"loopback_target_page": 0,
 									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
 									},
-									"target_line": 1.0,
-									"target_page": 0.0
+									"target_line": 1,
+									"target_page": 0
 								},
 								{
 									"address": "0.4.1",
-									"behavior_after_first_selection": 0.0,
+									"behavior_after_first_selection": 0,
 									"choice_text.disabled": "",
 									"choice_text.enabled": "No actually, robots are scary",
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
-										"behavior": 0.0,
+										"behavior": 0,
 										"behavior_key": "Show",
 										"facts": {
 											"fact_data_by_name": {
@@ -668,7 +654,7 @@
 											"meta.visible": false
 										},
 										"meta.visible": false,
-										"operand": 0.0,
+										"operand": 0,
 										"operand_args": [],
 										"operand_key": "AND"
 									},
@@ -679,17 +665,17 @@
 										},
 										"meta.visible": false
 									},
-									"jump_address_mode": 0.0,
-									"loop_address_mode": 0.0,
+									"jump_address_mode": 0,
+									"loop_address_mode": 0,
 									"loopback": false,
-									"loopback_target_line": 1.0,
-									"loopback_target_page": 0.0,
+									"loopback_target_line": 1,
+									"loopback_target_page": 0,
 									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
 									},
-									"target_line": 1.0,
-									"target_page": 0.0
+									"target_line": 1,
+									"target_page": 0
 								}
 							],
 							"meta.do_jump_page": true
@@ -701,12 +687,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 1.0,
+						"line_type": 1,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4.0,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						}
@@ -714,23 +700,23 @@
 					{
 						"address": "0.5",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
 									"liked amber": {
-										"data_type": 0.0,
+										"data_type": 0,
 										"fact_name": "liked amber",
 										"fact_value": true,
-										"int_comparator": 0.0,
-										"int_operator": 0.0,
+										"int_comparator": 0,
+										"int_operator": 0,
 										"is_conditional": true
 									}
 								},
 								"meta.visible": true
 							},
 							"meta.visible": true,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -749,12 +735,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5.0,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						}
@@ -762,23 +748,23 @@
 					{
 						"address": "0.6",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
 									"liked amber": {
-										"data_type": 0.0,
+										"data_type": 0,
 										"fact_name": "liked amber",
 										"fact_value": false,
-										"int_comparator": 0.0,
-										"int_operator": 0.0,
+										"int_comparator": 0,
+										"int_operator": 0,
 										"is_conditional": true
 									}
 								},
 								"meta.visible": true
 							},
 							"meta.visible": true,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -797,12 +783,12 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6.0,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						}
@@ -810,7 +796,7 @@
 					{
 						"address": "0.7",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -819,7 +805,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -838,22 +824,22 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 7.0,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 179.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 839,
 				"meta.selected": false,
 				"next": 1.0,
-				"number": 0.0,
+				"number": 0,
 				"page_key": "",
 				"terminate": false
 			},
@@ -925,10 +911,6 @@
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								20.0
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": true,
 							"meta.reverse_text": "",
 							"meta.text": "shake_camera(20)",
@@ -1054,12 +1036,6 @@
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								"music",
-								2.0,
-								true
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
 							"meta.text": "show_cg(music, 2.0, true)",
@@ -1243,11 +1219,6 @@
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"line_reader.args": [
-								"skyline",
-								2.0
-							],
-							"line_reader.reverse_args": [],
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
 							"meta.text": "set_background(skyline, 2.0)",

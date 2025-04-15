@@ -24,8 +24,6 @@ func serialize():
 	result["name"] = instruction_name
 	result["reverse_name"] = instruction_name_reverse
 	
-	result["line_reader.args"] = Pages.get_arg_array_from_instruction_string(instruction_text, instruction_name)
-	result["line_reader.reverse_args"] = Pages.get_arg_array_from_instruction_string(instruction_edit_reverse.get_text(), instruction_name_reverse)
 	result["delay_before"] = find_child("DelayBeforeSpinBox").value
 	result["delay_after"] = find_child("DelayAfterSpinBox").value
 	

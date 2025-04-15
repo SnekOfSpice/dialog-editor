@@ -382,10 +382,10 @@ func go_back():
 		if not instruction.get("meta.has_reverse", false):
 			continue
 		var instr_name = instruction.get("reverse_name")
-		var instr_args = instruction.get("line_reader.reverse_args")
+		var instr_args = get_arg_array_from_instruction_string(instruction.get("meta.reverse_text"), instr_name)
 		if instr_name == null or instr_name == "":
 			instr_name = instruction.get("name")
-			instr_args = instruction.get("line_reader.args")
+			instr_args = get_arg_array_from_instruction_string(instruction.get("meta.text"), instr_name)
 		line_reader.instruction_handler.execute(instr_name, instr_args)
 	
 	await get_tree().process_frame
@@ -580,3 +580,58 @@ func get_instruction_arg_types(instruction_name: String) -> Array:
 
 func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
 	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})
+
+
+func get_argument_order_from_template(instruction_name:String) -> Array:
+	return instruction_templates.get(instruction_name, {}).get("args", [])
+
+func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
+	var args := []
+	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args", {})
+	var arg_order := get_argument_order_from_template(instruction_name)
+	for arg_name in arg_order:
+		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
+	return args
+
+## returns a dict with "name" and "args" as keys
+func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
+	#if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
+		##push_warning(str(instruction_text, " isn't OK"))
+		#return {}
+	
+	var result := {}
+	var entered_name = instruction_text.split("(")[0]
+	result["name"] = entered_name
+	
+	var args := {}
+	var arg_names := template_override.get("args", get_instruction_arg_names(entered_name))
+	var arg_types := template_override.get("arg_types", get_instruction_arg_types(entered_name))
+	instruction_text = instruction_text.trim_prefix(str(entered_name, "("))
+	instruction_text = instruction_text.trim_suffix(")")
+	var entered_args := instruction_text.split(",")
+	var i := 0
+	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
+		var arg = entered_args[i]
+		while arg.begins_with(" "):
+			arg = arg.trim_prefix(" ")
+		while arg.ends_with(" "):
+			arg = arg.trim_suffix(" ")
+		var arg_value
+		var arg_type:String=arg_types[i]
+		var value_string := arg.split(":")[0]
+		
+		
+		var default = get_default_arg_value(entered_name, arg_names[i])
+		if value_string == "*" and default != null:
+			value_string = default
+		
+		arg_value = DIISIS.str_to_typed(value_string, arg_type)
+		
+		args[arg_names[i]] = arg_value
+		i += 1
+	result["args"] = args
+	
+	return result
+
+func get_default_arg_value(instruction_name:String, arg_name:String):
+	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)

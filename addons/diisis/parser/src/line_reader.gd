@@ -758,14 +758,13 @@ func read_new_line(new_line: Dictionary):
 				instruction_name = instruction_content.get("reverse_name", "")
 			
 			if (not reverse_next_instruction) or instruction_name.is_empty():
-				args = instruction_content.get("line_reader.args")
-				
 				instruction_name = instruction_content.get("name")
+				args = Parser.get_arg_array_from_instruction_string(instruction_content.get("meta.text"), instruction_name)
 				delay_before = new_line.get("content").get("delay_before")
 				delay_after = new_line.get("content").get("delay_after")
 			else:
 				
-				args = instruction_content.get("line_reader.reverse_args")
+				args = Parser.get_arg_array_from_instruction_string(instruction_content.get("meta.reverse_text"), instruction_name)
 				delay_before = 0.0
 				delay_after = 0.0
 			

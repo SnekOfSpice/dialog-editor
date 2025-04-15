@@ -507,8 +507,8 @@ func get_all_invalid_instructions() -> String:
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Instruction:
 				continue
-			var text = line.get("content").get("meta.text")
-			var compliance := get_entered_instruction_compliance(text)
+			var compliance = line.get("content").get("meta.validation_status")
+			#var compliance := get_entered_instruction_compliance(text)
 			if compliance != "OK":
 				malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
 			line_index += 1
@@ -1125,111 +1125,26 @@ func add_template_from_string(instruction:String):
 		"arg_defaults": arg_defaults
 	}
 
-func update_instruction_from_template(old_name:String, new_full_instruction:String):
-	var old_template : Dictionary = instruction_templates.get(old_name)
-	instruction_templates.erase(old_name)
-	add_template_from_string(new_full_instruction)
-	var new_entered_name := new_full_instruction.split("(")[0]
-	var new_template : Dictionary = instruction_templates.get(new_entered_name)
-	
+func update_compliances(instruction_name:String):
 	for page in page_data.values():
 		var lines : Array = page.get("lines", [])
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Instruction:
 				continue
-			if line.get("content", {}).get("name", "") != old_name:
-				continue
-			line["content"]["name"] = new_entered_name
-			
-			var old_text : String = line["content"]["meta.text"]
-			
-			var default_positions := []
-			var old_args := old_text.split(",")
-			var i := 0
-			for arg in old_args:
-				if arg.contains("*"):
-					default_positions.append(i)
-				i += 1
-			
-			var old_template_data = parse_instruction_to_handleable_dictionary(old_text, old_template)
-			
-			var old_arg_count : int = old_template.get("args").size()
-			var old_arg_names : Array = old_template.get("args")
-			var old_arg_types : Array = old_template.get("arg_types")
-			var new_arg_count : int = new_template.get("args").size()
-			var new_arg_names : Array = new_template.get("args")
-			var new_arg_types : Array = new_template.get("arg_types")
-			
-			var transformed_string := new_entered_name
-			transformed_string += "("
-			
-			i = 0
-			var goal_arg_count := min(old_arg_count, new_arg_count)
-			while i < goal_arg_count:
-				if i in default_positions:
-					transformed_string += "*"
-				else:
-					transformed_string += str(old_template_data.get("args").get(old_arg_names[i]))
-				if i < goal_arg_count - 1:
-					transformed_string += ", "
-				i += 1
-			
-			
-			transformed_string += ")"
-			
-			# instruction container handles it when it inits and finds an empty meta.text but existing args
-			line["content"]["meta.text"] = transformed_string
-			line["content"]["line_reader.args"] = get_arg_array_from_instruction_string(transformed_string, new_entered_name)
-			
-	
+			var content : Dictionary = line.get("content", {})
+			if content.get("name", "") == instruction_name:
+				var text : String = content.get("meta.text", "")
+				var text_reverse : String = content.get("meta.reverse_text", "")
+				var status = get_compliance_with_template(text)
+				if status != "OK":
+					line["content"]["meta.validation_status"] = status
+					continue
+				status = get_compliance_with_template(text_reverse)
+				if status != "OK" and content.get("meta.has_reverse"):
+					line["content"]["meta.validation_status"] = status
+					continue
 
-func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
-	var args := []
-	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args", {})
-	var arg_order := get_argument_order_from_template(instruction_name)
-	for arg_name in arg_order:
-		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
-	return args
 
-## returns a dict with "name" and "args" as keys
-func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
-	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
-		#push_warning(str(instruction_text, " isn't OK"))
-		return {}
-	
-	var result := {}
-	var entered_name = instruction_text.split("(")[0]
-	result["name"] = entered_name
-	
-	var args := {}
-	var arg_names := template_override.get("args", Pages.get_instruction_arg_names(entered_name))
-	var arg_types := template_override.get("arg_types", Pages.get_instruction_arg_types(entered_name))
-	instruction_text = instruction_text.trim_prefix(str(entered_name, "("))
-	instruction_text = instruction_text.trim_suffix(")")
-	var entered_args := instruction_text.split(",")
-	var i := 0
-	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
-		var arg = entered_args[i]
-		while arg.begins_with(" "):
-			arg = arg.trim_prefix(" ")
-		while arg.ends_with(" "):
-			arg = arg.trim_suffix(" ")
-		var arg_value
-		var arg_type:String=arg_types[i]
-		var value_string := arg.split(":")[0]
-		
-		
-		var default = get_default_arg_value(entered_name, arg_names[i])
-		if value_string == "*" and default != null:
-			value_string = default
-		
-		arg_value = DIISIS.str_to_typed(value_string, arg_type)
-		
-		args[arg_names[i]] = arg_value
-		i += 1
-	result["args"] = args
-	
-	return result
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
 	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)
