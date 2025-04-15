@@ -625,13 +625,22 @@ func parse_instruction_to_handleable_dictionary(instruction_text:String, templat
 		if value_string == "*" and default != null:
 			value_string = default
 		
-		arg_value = DIISIS.str_to_typed(value_string, arg_type)
+		arg_value = str_to_typed(value_string, arg_type)
 		
 		args[arg_names[i]] = arg_value
 		i += 1
 	result["args"] = args
 	
 	return result
+
+func str_to_typed(value:String, type_string:String):
+	match type_string:
+		"float":
+			return float(value)
+		"bool":
+			var cast : bool = true if value == "true" else false
+			return cast
+	return String(value)
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
 	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)

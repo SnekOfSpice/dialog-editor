@@ -1392,7 +1392,7 @@ func call_from_position(call_position: int):
 		var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
 		if arg_string == "*" and default != null:
 			arg_string = default
-		args.append(DIISIS.str_to_typed(arg_string, type))
+		args.append(Parser.str_to_typed(arg_string, type))
 		
 		i += 1
 	
