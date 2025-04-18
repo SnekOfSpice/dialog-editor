@@ -1,18 +1,28 @@
 -------------------------------------------------
 DIISIS 0.6
-- 
-change to godot 4.4.1
+This shit breaks compatibility a bit!
+
+General
+- Introduce text IDs
+- Change to Godot 4.4.1
 - option to delete dropdowns
-- text to diisis
+
+Editor
+- Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
+- instructions:
+	- add default args
+	- dropdown args
+		- including MULTI_DROPDOWN_TYPE_SEPARATOR
+
+Runtime
 - name style prepend got a few more options and consistency 
-- raw text ingestion into text boxes and files at large
+
+VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
-- default args
-- dropdown args
-	- including MULTI_DROPDOWN_TYPE_SEPARATOR
 
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.
+- give lines an ID. Isn't used directly but should help with tracking things throughout merge conflicts
 
 
 -------------------------------------------------
