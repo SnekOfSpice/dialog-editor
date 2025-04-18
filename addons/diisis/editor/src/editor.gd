@@ -104,7 +104,8 @@ func init(active_file_path:="") -> void:
 	
 	find_child("ShowErrorsButton").button_pressed = false
 	find_child("File").add_separator()
-	find_child("File").add_submenu_node_item("Ingest", find_child("IngestMenu"), 10)
+	find_child("File").add_submenu_node_item("Ingest", find_child("IngestMenu"))
+	find_child("File").add_submenu_node_item("Localization", find_child("L10NMenu"))
 	
 	open_from_path(active_file_path)
 	
@@ -627,16 +628,20 @@ func _on_file_id_pressed(id: int) -> void:
 		3:
 			# config
 			open_popup($Popups.get_node("FileConfigPopup"), true)
-		5: # locales
-			open_popup($Popups.get_node("LocaleSelectionWindow"), true)
-		6: # export blank l10n
-			open_popup($Popups.get_node("FDExportLocales"), true)
 		8:
 			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
 		9:
 			emit_signal("open_new_file")
 
+func _on_l_10n_menu_id_pressed(id: int) -> void:
+	match id:
+		0: # locales
+			open_popup($Popups.get_node("LocaleSelectionWindow"), true)
+		1: # export blank l10n
+			open_popup($Popups.get_node("FDExportLocales"), true)
+		2: #merge
+			notify("Merging existing L10N is not implemented yet. Sorry.")
 
 func request_arg_hint(text_box:Control):
 	if not (text_box is LineEdit or text_box is TextEdit):
@@ -803,18 +808,20 @@ func _on_funny_debug_button_pressed() -> void:
 		if not uniques.has(d):
 			uniques.append(d)
 
-func _on_fd_export_locales_dir_selected(dir: String) -> void:
-	var addresses : Dictionary = Pages.get_localizable_addresses_with_content()
-	for locale in Pages.locales_to_export:
-		var file = FileAccess.open(str(dir, "/diisis_l10n_", locale, ".json"), FileAccess.WRITE)
-		var data_to_save = {}
-		for address in addresses:
-			if Pages.empty_strings_for_l10n:
-				data_to_save[address] = ""
-			else:
-				data_to_save[address] = addresses.get(address)
-		file.store_string(JSON.stringify(data_to_save, "\t"))
-		file.close()
+func _on_fd_export_locales_file_selected(path: String) -> void:
+	var l10n := {}
+	for text_id in Pages.text_data.keys():
+		var lines_by_locale := {
+			Pages.default_locale : Pages.get_text(text_id)
+		}
+		for locale in Pages.locales_to_export:
+			if locale != Pages.default_locale:
+				lines_by_locale[locale] = ""
+		l10n[text_id] = lines_by_locale
+	
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(l10n, "\t"))
+	file.close()
 
 
 func _on_refresh_button_pressed() -> void:
@@ -904,3 +911,8 @@ func _on_fd_ingest_file_selected(path: String) -> void:
 		
 		var parts : Array = DiisisEditorUtil.get_split_address(ingest_context[0])
 		get_current_page().get_line(parts[1]).find_child("TextContent").set_text(text)
+
+func prompt_change_text_id(id:String):
+	var popup : Window = $Popups.get_node("ChangeTextIDWindow")
+	open_popup(popup)
+	popup.set_id(id)

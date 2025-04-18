@@ -3,7 +3,10 @@ extends Control
 
 var do_jump_page := true
 
+var title_id : String
+
 func init():
+	title_id = Pages.get_new_id()
 	find_child("AddButton").grab_focus()
 
 func serialize() -> Dictionary:
@@ -15,7 +18,8 @@ func serialize() -> Dictionary:
 	result["choices"] = choices
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed
 	result["meta.do_jump_page"] = do_jump_page
-	result["choice_title"] = find_child("ChoiceTitleLineEdit").text
+	Pages.save_text(title_id, find_child("ChoiceTitleLineEdit").text)
+	result["title_id"] = title_id
 	
 	return result
 
@@ -33,7 +37,8 @@ func deserialize(data):
 	var auto_switch = data.get("auto_switch", false)
 	find_child("AutoSwitchButton").button_pressed = auto_switch
 	set_auto_switch(auto_switch)
-	find_child("ChoiceTitleLineEdit").text = data.get("choice_title", "")
+	title_id = data.get("title_id", Pages.get_new_id())
+	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
 	
 	for d in choices:
 		d["auto_switch"] = auto_switch

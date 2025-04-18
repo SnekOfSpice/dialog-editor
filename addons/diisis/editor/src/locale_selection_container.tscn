@@ -11,11 +11,52 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_onrnk")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="DefaultLocaleSelectionButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Select Default"
+
+[node name="DefaultLocaleLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "en_US"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SelectAllButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Select All"
+
+[node name="DeselectAllButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Deselect All"
+
+[node name="SelectDominantButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Select Dominant"
+
+[node name="ResetButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Reset to previous"
+
+[node name="HSeparator2" type="HSeparator" parent="."]
+layout_mode = 2
+
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LocaleContainer" type="GridContainer" parent="ScrollContainer"]
+[node name="LocaleInitialContainer" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-columns = 10
+
+[connection signal="pressed" from="HBoxContainer/DefaultLocaleSelectionButton" to="." method="_on_default_locale_selection_button_pressed"]
+[connection signal="pressed" from="HBoxContainer2/SelectAllButton" to="." method="_on_select_all_button_pressed"]
+[connection signal="pressed" from="HBoxContainer2/DeselectAllButton" to="." method="_on_deselect_all_button_pressed"]
+[connection signal="pressed" from="HBoxContainer2/SelectDominantButton" to="." method="_on_select_dominant_button_pressed"]
+[connection signal="pressed" from="HBoxContainer2/ResetButton" to="." method="_on_reset_button_pressed"]

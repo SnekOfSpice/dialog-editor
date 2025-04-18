@@ -7,16 +7,19 @@ var deserialized_loopback_page := 0
 var deserialized_loopback_line := 0
 var deserialized_line_index := 0
 
+var text_id_enabled : String
+var text_id_disabled : String
+
 signal move_choice_edit(choice_edit, direction)
 
 # Called when the node enters the scene tree for the first time.
 func init() -> void:
+	text_id_enabled = Pages.get_new_id()
+	text_id_disabled = Pages.get_new_id()
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("Conditionals").init()
 	find_child("PageSelect").max_value = Pages.get_page_count() - 1
-	#find_child("Facts").visible = false
-	#find_child("Conditionals").visible = false
 	
 	var behavior_options_button : OptionButton = find_child("BehaviorAfterFirstSelectionButton")
 	for option in DIISIS.ChoiceBehaviorAfterSelection:
@@ -27,6 +30,8 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 
 func deserialize(data:Dictionary):
+	text_id_enabled = data.get("text_id_enabled", Pages.get_new_id())
+	text_id_disabled = data.get("text_id_disabled", Pages.get_new_id())
 	var jump_target_page : int = data.get("target_page", 0)
 	var jump_target_line : int = data.get("target_line", 0)
 	var loopback_target_page : int = data.get("loopback_target_page", 0)
@@ -47,10 +52,9 @@ func deserialize(data:Dictionary):
 	if find_child("LoopbackLineSelect").max_value < loopback_target_line:
 		find_child("LoopbackLineSelect").max_value = loopback_target_line
 	
-	find_child("LineEditEnabled").text = data.get("choice_text.enabled", "choice label")
-	find_child("LineEditDisabled").text = data.get("choice_text.disabled", "")
+	find_child("LineEditEnabled").text =  Pages.get_text(text_id_enabled, data.get("choice_text.enabled", ""))
+	find_child("LineEditDisabled").text = Pages.get_text(text_id_disabled, data.get("choice_text.disabled", ""))
 	
-
 	
 
 	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem))[1]
@@ -117,10 +121,14 @@ func serialize() -> Dictionary:
 		else:
 			Pages.jump_page_references_by_page[jump_page_target_page] = {jump_page_target_line : [get_address()]}
 	
+	Pages.save_text(text_id_enabled, find_child("LineEditEnabled").text)
+	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
 	
 	return {
-		"choice_text.enabled": find_child("LineEditEnabled").text,
-		"choice_text.disabled": find_child("LineEditDisabled").text,
+		"text_id_enabled" : text_id_enabled,
+		"text_id_disabled" : text_id_disabled,
+		#"choice_text.enabled": find_child("LineEditEnabled").text,
+		#"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
 		"target_page": int(jump_page_target_page),
 		"target_line": int(jump_page_target_line),

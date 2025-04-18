@@ -8,7 +8,7 @@ extends Node
 @export var max_history_length := -1
 ## Folder containing all l10n files (starting with "diisis_l10n_").
 ## [br]Leave empty to forego l10n.
-@export_dir var localization_folder
+@export_file("*.json") var localization_file
 
 @export_group("Choices")
 ## If [code]true[/code], will append the text of choice buttons to the history.
@@ -18,12 +18,13 @@ extends Node
 @export var choice_appendation_string := "Choice made:"
 
 var page_data := {}
+var text_data := {}
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
-var locales := {}
 var default_locale := "en_US"
 var locale := "en_US"
+var l10n := {}
 var dropdown_titles := []
 var dropdowns := {}
 
@@ -86,6 +87,11 @@ func _ready() -> void:
 	
 	init(data)
 	
+	if localization_file:
+		var file := FileAccess.open(localization_file, FileAccess.READ)
+		l10n = JSON.parse_string(file.get_as_text())
+		file.close()
+	
 	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
 func init(data:Dictionary):
@@ -106,6 +112,8 @@ func init(data:Dictionary):
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
 	instruction_templates = data.get("instruction_templates", {})
+	text_data = data.get("text_data", {})
+	default_locale = data.get("default_locale", "en_US")
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
@@ -135,20 +143,6 @@ func set_paused(value:bool, suppress_event:=false):
 	if not suppress_event:
 		ParserEvents.parser_paused_changed.emit(paused)
 
-func replace_from_locale(address:String, locale:String) -> String:
-	if not locales.has(locale):
-		try_load_locale(locale)
-	if not locales.has(locale):
-		return ""
-	return locales[locale][address]
-
-func try_load_locale(locale:String):
-	if not localization_folder:
-		return
-	
-	var file := FileAccess.open(str(localization_folder, "/diisis_l10n_", locale, ".json"), FileAccess.READ)
-	locales[locale] = JSON.parse_string(file.get_as_text())
-	file.close()
 
 func get_fact(fact_name: String):
 	if not facts.has(fact_name):
@@ -324,6 +318,15 @@ func get_line_content(address:String) -> Dictionary:
 	var prev_line = parts[1]
 	
 	return page_data.get(prev_page).get("lines")[prev_line].get("content")
+
+func get_text(id:String) -> String:
+	if locale == default_locale:
+		return text_data.get(id, "")
+	if l10n.has(id):
+		var text : String = l10n.get(id, {}).get(locale, "")
+		if not text.is_empty():
+			return text
+	return text_data.get(id, "")
 
 func get_previous_address_line_type() -> DIISIS.LineType:
 	if address_trail_index <= 0 or address_trail.is_empty():

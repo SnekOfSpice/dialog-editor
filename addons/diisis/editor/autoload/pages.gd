@@ -13,6 +13,8 @@ var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
 const MULTI_DROPDOWN_TYPE_SEPARATOR := "||"
+const NEGATIVE_INF := -int(INF)
+var id_counter := NEGATIVE_INF
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -24,6 +26,7 @@ var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const DOMINANT_LOCALES := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const LOCALES := ["af_ZA","sq_AL","ar_DZ","ar_BH","ar_EG","ar_IQ","ar_JO","ar_KW","ar_LB","ar_LY","ar_MA","ar_OM","ar_QA","ar_SA","ar_SY","ar_TN","ar_AE","ar_YE","hy_AM","az_AZ","eu_ES","be_BY","bn_IN","bs_BA","bg_BG","ca_ES","zh_CN","zh_HK","zh_MO","zh_SG","zh_TW","hr_HR","cs_CZ","da_DK","nl_BE","nl_NL","en_AU","en_BZ","en_CA","en_IE","en_JM","en_NZ","en_PH","en_ZA","en_TT","en_VI","en_GB","en_US","en_ZW","et_EE","fo_FO","fi_FI","fr_BE","fr_CA","fr_FR","fr_LU","fr_MC","fr_CH","gl_ES","ka_GE","de_AT","de_DE","de_LI","de_LU","de_CH","el_GR","gu_IN","he_IL","hi_IN","hu_HU","is_IS","id_ID","it_IT","it_CH","ja_JP","kn_IN","kk_KZ","kok_IN","ko_KR","lv_LV","lt_LT","mk_MK","ms_BN","ms_MY","ml_IN","mt_MT","mr_IN","mn_MN","se_NO","nb_NO","nn_NO","fa_IR","pl_PL","pt_BR","pt_PT","pa_IN","ro_RO","ru_RU","sr_BA","sr_CS","sk_SK","sl_SI","es_AR","es_BO","es_CL","es_CO","es_CR","es_DO","es_EC","es_SV","es_GT","es_HN","es_MX","es_NI","es_PA","es_PY","es_PE","es_PR","es_ES","es_UY","es_VE","sw_KE","sv_FI","sv_SE","syr_SY","ta_IN","te_IN","th_TH","tn_ZA","tr_TR","uk_UA","uz_UZ","vi_VN","cy_GB","xh_ZA","zu_ZA",]
+var default_locale := "en_US"
 
 var facts := {}
 var local_line_insert_offset:int
@@ -58,6 +61,7 @@ var head_data_types := {
 var editor:DiisisEditor
 
 var page_data := {}
+var text_data := {}
 
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
@@ -73,7 +77,10 @@ func is_header_schema_empty():
 func serialize() -> Dictionary:
 	return {
 		"head_defaults" : head_defaults,
+		"id_counter" : id_counter,
 		"page_data" : page_data,
+		"text_data" : text_data,
+		"default_locale" : default_locale,
 		"instruction_templates": instruction_templates,
 		"facts": facts,
 		"dropdowns": dropdowns,
@@ -114,11 +121,14 @@ func deserialize(data:Dictionary):
 	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
 	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
+	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
+	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
+	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
 	apply_file_config(data.get("file_config", {}))
 
@@ -703,12 +713,13 @@ func get_character_count_on_page_approx(page_number: int) -> int:
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
-		if line_type ==	DIISIS.LineType.Choice:
+		if line_type == DIISIS.LineType.Choice:
 			for choice in content.get("choices"):
-				count += str(choice.get("choice_text.enabled")).length()
-				count += str(choice.get("choice_text.disabled")).length()
-		elif line_type ==	DIISIS.LineType.Text:
-			count += str(content.get("content")).length()
+				count +=  Pages.get_text(choice.get("text_id_enabled", "")).length()
+				count +=  Pages.get_text(choice.get("text_id_disabled", "")).length()
+		elif line_type == DIISIS.LineType.Text:
+			var text = Pages.get_text(content.get("text_id", ""))
+			count += text.length()
 	return count
 
 func get_word_count_on_page_approx(page_number: int) -> int:
@@ -716,13 +727,14 @@ func get_word_count_on_page_approx(page_number: int) -> int:
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type", null)
 		var content = line.get("content")
-		if line_type ==	DIISIS.LineType.Choice:
+		if line_type == DIISIS.LineType.Choice:
 			for choice in content.get("choices"):
-				count += str(choice.get("choice_text.enabled")).count(" ") + 1
-				count += str(choice.get("choice_text.disabled")).count(" ") + 1
+				count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
+				count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
 		elif line_type == DIISIS.LineType.Text:
-			count += str(content.get("content")).count(" ") + 1
-			count -= str(content.get("content")).count("[]>")
+			var text = Pages.get_text(content.get("text_id", ""))
+			count += text.count(" ") + 1
+			count -= text.count("[]>")
 				
 	return count
 
@@ -764,8 +776,11 @@ func rename_dropdown_title(from:String, to:String):
 				continue
 			if line["content"]["active_actors_title"] == from:
 				line["content"]["active_actors_title"] = to
-			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
-			line["content"]["content"] = line["content"]["content"].replace(str("[]>", from), str("[]>", to))
+			var text_id : String = line.get("content", {}).get("text_id")
+			var content : String = Pages.get_text(text_id)
+			content = content.replace(str("{", from, "|"), str("{", to, "|"))
+			content = content.replace(str("[]>", from), str("[]>", to))
+			Pages.save_text(text_id, content)
 
 func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
@@ -778,7 +793,6 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
 				
-				
 				var i := 0
 				while i < min(old_options.size(), options.size()):
 					var old_option:String=old_options[i]
@@ -788,12 +802,17 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 						continue
 					var old_arg := str(dropdown_title, "|", old_option)
 					var new_arg := str(dropdown_title, "|", new_option)
-					line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
+					
+					var text_id : String = line.get("content", {}).get("text_id")
+					var content : String = Pages.get_text(text_id)
+					content = content.replace(old_arg, new_arg)
 					
 					if is_speaker and replace_speaker:
 						var old_speaker := str("[]>", old_option)
 						var new_speaker := str("[]>", new_option)
-						line["content"]["content"] = line["content"]["content"].replace(old_speaker, new_speaker)
+						content = content.replace(old_speaker, new_speaker)
+					
+					Pages.save_text(text_id, content)
 					
 					i += 1
 	
@@ -811,16 +830,17 @@ func delete_dropdown(title:String, erase_from_text:=true):
 				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
 				
+				var text_id : String = line.get("content", {}).get("text_id")
+				var content : String = Pages.get_text(text_id)
 				var i := 0
 				while i < options.size():
 					var option:String=options[i]
-					
 					var option_str = str(title, "|", option)
-					line["content"]["content"] = line["content"]["content"].replace(option_str + ",", "")
-					line["content"]["content"] = line["content"]["content"].replace(option_str, "")
-					
+					content = content.replace(option_str + ",", "")
+					content = content.replace(option_str, "")
 					i += 1
-				line["content"]["content"] = line["content"]["content"].replace("{}", "")
+				content = content.replace("{}", "")
+				Pages.save_text(text_id, content)
 	
 	dropdown_titles.erase(title)
 	dropdown_dialog_arguments.erase(title)
@@ -1017,13 +1037,15 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var choice_index := 0
 				for choice in line.get("content", {}).get("choices", []):
-					if (case_insensitive and choice.get("choice_text.enabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.enabled").find(substr) != -1):
-						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = choice.get("choice_text.enabled")
-					if (case_insensitive and choice.get("choice_text.disabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.disabled").find(substr) != -1):
-						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = choice.get("choice_text.disabled")
+					var text_enabled : String = Pages.get_text(choice.get("text_id_enabled"))
+					var text_disabled : String = Pages.get_text(choice.get("text_id_disabled"))
+					if (case_insensitive and text_enabled.findn(substr) != -1) or (not case_insensitive and text_enabled.find(substr) != -1):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = text_enabled
+					if (case_insensitive and text_disabled.findn(substr) != -1) or (not case_insensitive and text_disabled.find(substr) != -1):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = text_disabled
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
-				var text : String = line.get("content", {}).get("content", "")
+				var text : String = Pages.get_text(line.get("content", {}).get("text_id", ""))
 				if not include_tags:
 					var scan_index := 0
 					var pairs = ["<>", "[]"]
@@ -1421,3 +1443,72 @@ func neaten_whitespace(text:String) -> String:
 		closing_bb_lead_space_position = text.find(" [/")
 	
 	return text
+
+func save_text(id:String, text:String) -> void:
+	text_data[id] = text
+
+func get_text(id:String, default:="") -> String:
+	return text_data.get(id, default)
+
+func does_text_id_exist(id:String) -> bool:
+	return id in text_data.keys()
+
+func get_text_id_address_and_type(id:String) -> Array:
+	for page in page_data.values():
+		var page_index = page.get("number")
+		var line_index := 0
+		for line in page.get("lines"):
+			var content = line.get("content")
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				if content.get("title_id") == id:
+					var address := str(page_index, ".", line_index)
+					return [address, "Choice Title"]
+				var choice_index := 0
+				for choice in content.get("choices"):
+					if choice.get("text_id_enabled") == id or choice.get("text_id_disabled") == id:
+						var address := str(page_index, ".", line_index, ".", choice_index)
+						return [address, "Choice"]
+					choice_index += 1
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				if content.get("text_id") == id:
+					var address := str(page_index, ".", line_index)
+					return [address, "Text Line"]
+			line_index += 1
+	return ["0.0", "Not Found"]
+
+func change_text_id(old_id:String, new_id:String) -> void:
+	for page in page_data.values():
+		var page_index = page.get("number")
+		var broken:=false
+		for line in page.get("lines"):
+			var content = line.get("content")
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				if content.get("title_id") == old_id:
+					content["title_id"] = new_id
+					broken = true
+					break
+				for choice in content.get("choices"):
+					if choice.get("text_id_enabled") == old_id:
+						choice["text_id_enabled"] = new_id
+						broken = true
+						break
+					if choice.get("text_id_disabled") == old_id:
+						choice["text_id_disabled"] = new_id
+						broken = true
+						break
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				if content.get("text_id") == old_id:
+					content["text_id"] = new_id
+					broken = true
+					break
+		if broken:
+			break
+	
+	if text_data.has(old_id):
+		var old_value : String = text_data.get(old_id)
+		text_data[new_id] = old_value
+		text_data.erase(old_id)
+	
+func get_new_id() -> String:
+	id_counter += 1
+	return str(str("%0.3f" % Time.get_unix_time_from_system()), "-", id_counter)

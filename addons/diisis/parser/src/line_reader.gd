@@ -408,7 +408,7 @@ func deserialize(data: Dictionary):
 		var content = line_data.get("content").get("content")
 		var choices = line_data.get("content").get("choices")
 		var auto_switch : bool = raw_content.get("auto_switch")
-		current_choice_title = raw_content.get("choice_title", "")
+		current_choice_title = Parser.get_text(raw_content.get("title_id", ""))
 
 		build_choices(choices, auto_switch)
 	
@@ -657,6 +657,8 @@ func read_new_line(new_line: Dictionary):
 	var choices
 	if line_type == DIISIS.LineType.Choice:
 		choices = line_data.get("content").get("choices")
+	if line_type == DIISIS.LineType.Text:
+		content = Parser.get_text(raw_content.get("text_id"))
 	var content_name = line_data.get("content").get("name")
 	
 	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
@@ -678,9 +680,9 @@ func read_new_line(new_line: Dictionary):
 	
 	match line_type:
 		DIISIS.LineType.Text:
-			var localized : String = Parser.replace_from_locale(line_data.get("address"), Parser.locale)
-			if not localized.is_empty():
-				content = localized
+			#var localized : String = Parser.replace_from_locale(line_data.get("address"), Parser.locale)
+			#if not localized.is_empty():
+				#content = localized
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
 				return
@@ -1540,17 +1542,9 @@ func build_choices(choices, auto_switch:bool):
 					continue
 		
 		if enable_option:
-			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "enabled"), Parser.locale)
-			if not localized.is_empty():
-				option_text = localized
-			else:
-				option_text = option.get("choice_text.enabled")
+			option_text = Parser.get_text(option.get("text_id_enabled"))
 		else:
-			var localized : String = Parser.replace_from_locale(str(option.get("address", ""), "disabled"), Parser.locale)
-			if not localized.is_empty():
-				option_text = localized
-			else:
-				option_text = option.get("choice_text.disabled")
+			option_text = Parser.get_text(option.get("text_id_disabled"))
 		
 		# give to option to signal
 		var do_jump_page = option.get("do_jump_page", false)

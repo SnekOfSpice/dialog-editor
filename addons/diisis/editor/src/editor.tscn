@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=31 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
+[ext_resource type="PackedScene" uid="uid://b81qxlexbcshc" path="res://addons/diisis/editor/src/change_text_id_window.tscn" id="29_jb16f"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -129,7 +130,7 @@ theme = ExtResource("1_nb6ej")
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
 content_scale_aspect = 4
-item_count = 10
+item_count = 6
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
@@ -142,18 +143,18 @@ item_4/id = 4
 item_4/separator = true
 item_5/text = "Config"
 item_5/id = 3
-item_6/text = "Localization"
-item_6/id = 5
-item_6/separator = true
-item_7/text = "Locales"
-item_7/id = 6
-item_8/text = "Export New L10ns"
-item_8/id = 7
-item_9/text = "Blank Strings"
-item_9/checkable = 1
-item_9/id = 8
 
 [node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
+size = Vector2i(207, 143)
+
+[node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File"]
+item_count = 3
+item_0/text = "Select Locales..."
+item_0/id = 0
+item_1/text = "Export L10N File..."
+item_1/id = 1
+item_2/text = "Merge with existing..."
+item_2/id = 2
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -544,14 +545,10 @@ filters = PackedStringArray("*.json")
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
-title = "Open a Directory"
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
 theme = ExtResource("1_nb6ej")
-ok_button_text = "Select Current Folder"
-file_mode = 2
-access = 2
 filters = PackedStringArray("*.json")
 
 [node name="FDOpen" type="FileDialog" parent="Popups"]
@@ -612,6 +609,9 @@ visible = false
 [node name="LocaleSelectionWindow" parent="Popups" instance=ExtResource("20_nu372")]
 visible = false
 
+[node name="ChangeTextIDWindow" parent="Popups" instance=ExtResource("29_jb16f")]
+visible = false
+
 [node name="Camera" type="Camera2D" parent="."]
 
 [node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
@@ -623,6 +623,7 @@ visible = false
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/IngestMenu" to="." method="_on_ingest_menu_id_pressed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/L10NMenu" to="." method="_on_l_10n_menu_id_pressed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
@@ -641,14 +642,11 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/DeleteCurrent" to="." method="_on_delete_current_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewFullButton" to="." method="update_page_view" binds= [0]]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewTruncatedButton" to="." method="update_page_view" binds= [1]]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
 [connection signal="item_selected" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
 [connection signal="pressed" from="ScrollContainer/Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
-[connection signal="dir_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_dir_selected"]
+[connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]

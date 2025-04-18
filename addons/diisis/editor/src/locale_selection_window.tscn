@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dyfpbfsqcgyrj" path="res://addons/diisis/editor/src/locale_selection_container.tscn" id="2_wmqid"]
 
 [node name="LocaleSelectionWindow" type="Window"]
+title = "Locales"
 initial_position = 4
 transient = true
 theme = ExtResource("1_vdxkc")
