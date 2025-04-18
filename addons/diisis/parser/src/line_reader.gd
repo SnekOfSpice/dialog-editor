@@ -733,7 +733,7 @@ func read_new_line(new_line: Dictionary):
 			set_dialog_line_index(0)
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
-			current_choice_title = raw_content.get("choice_title")
+			current_choice_title = Parser.get_text(raw_content.get("title_id"))
 			build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
 			if not instruction_handler:

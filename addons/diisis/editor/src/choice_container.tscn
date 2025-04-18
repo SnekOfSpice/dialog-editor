@@ -23,6 +23,11 @@ layout_mode = 2
 placeholder_text = "Choice Title (optional)"
 expand_to_text_length = true
 
+[node name="EditIDButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "..."
+
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 
@@ -68,6 +73,7 @@ text = "auto switch"
 [node name="ChoiceList" type="VBoxContainer" parent="."]
 layout_mode = 2
 
+[connection signal="pressed" from="HBoxContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
 [connection signal="index_pressed" from="Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
 [connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]

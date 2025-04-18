@@ -131,3 +131,7 @@ func _on_select_index_pressed(index: int) -> void:
 			for container in get_tree().get_nodes_in_group("diisis_choice_container"):
 				if not container == self:
 					container.set_all_items_selected(false)
+
+
+func _on_edit_id_button_pressed() -> void:
+	Pages.editor.prompt_change_text_id(title_id)

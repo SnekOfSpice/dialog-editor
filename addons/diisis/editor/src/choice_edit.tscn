@@ -248,7 +248,7 @@ size_flags_horizontal = 3
 [node name="TextLines" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-columns = 2
+columns = 3
 
 [node name="DefaultEnabledTexture" type="TextureRect" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines"]
 layout_mode = 2
@@ -263,6 +263,11 @@ placeholder_text = "[EMPTY] Text when enabled"
 caret_blink = true
 caret_blink_interval = 0.5
 
+[node name="EditEnabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines"]
+layout_mode = 2
+focus_mode = 0
+text = "..."
+
 [node name="DefaultDisabledTexture" type="TextureRect" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -276,6 +281,11 @@ size_flags_vertical = 0
 placeholder_text = "[EMPTY] Text when disabled"
 caret_blink = true
 caret_blink_interval = 0.5
+
+[node name="EditDisabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines"]
+layout_mode = 2
+focus_mode = 0
+text = "..."
 
 [node name="DefaultTextEmptyWarningLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -299,4 +309,6 @@ address_depth = 2
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]
 [connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/LineEditEnabled" to="." method="_on_line_edit_enabled_text_changed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/EditEnabledIDButton" to="." method="_on_edit_enabled_id_button_pressed"]
 [connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/LineEditDisabled" to="." method="_on_line_edit_disabled_text_changed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/EditDisabledIDButton" to="." method="_on_edit_disabled_id_button_pressed"]

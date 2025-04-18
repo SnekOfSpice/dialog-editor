@@ -1465,9 +1465,11 @@ func get_text_id_address_and_type(id:String) -> Array:
 					return [address, "Choice Title"]
 				var choice_index := 0
 				for choice in content.get("choices"):
-					if choice.get("text_id_enabled") == id or choice.get("text_id_disabled") == id:
-						var address := str(page_index, ".", line_index, ".", choice_index)
-						return [address, "Choice"]
+					var address := str(page_index, ".", line_index, ".", choice_index)
+					if choice.get("text_id_enabled") == id:
+						return [address, "Choice Enabled"]
+					elif choice.get("text_id_disabled") == id:
+						return [address, "Choice Disabled"]
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				if content.get("text_id") == id:

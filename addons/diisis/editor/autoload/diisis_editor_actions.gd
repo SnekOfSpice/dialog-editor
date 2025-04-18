@@ -418,3 +418,13 @@ func replace_line_content_text(line_address:String, what:String, with:String, ca
 
 func replace_choice_content_text(item_address:String, what:String, with:String, case_insensitive:=false):
 	replace_choice_content_texts([item_address], what, with, case_insensitive)
+
+func change_text_id(old_id:String, new_id:String) -> void:
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Change Text ID")
+	undo_redo.add_do_method(Pages.change_text_id.bind(old_id, new_id))
+	undo_redo.add_undo_method(Pages.change_text_id.bind(new_id, old_id))
+	undo_redo.commit_action()
+	
+	await get_tree().process_frame
+	Pages.editor.refresh(false)

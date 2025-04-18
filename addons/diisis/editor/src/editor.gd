@@ -827,11 +827,13 @@ func _on_fd_export_locales_file_selected(path: String) -> void:
 func _on_refresh_button_pressed() -> void:
 	refresh()
 
-
-func _on_error_text_box_meta_clicked(meta: Variant) -> void:
+func goto_with_meta(meta:Variant):
 	if str(meta).begins_with("goto-"):
 		var target_address := str(meta).trim_prefix("goto-")
 		request_go_to_address(target_address, str("Go to ", target_address))
+
+func _on_error_text_box_meta_clicked(meta: Variant) -> void:
+	goto_with_meta(meta)
 
 
 

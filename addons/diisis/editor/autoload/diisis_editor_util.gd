@@ -123,6 +123,8 @@ func limit_scroll_container_height(
 		push_warning("Scroll container has not exactly 1 child")
 		return
 	var child_control = scroll_container.get_child(0)
+	if not is_instance_valid(Pages.editor):
+		return
 	max_height *= Pages.editor.size.y
 	var child_height : float = child_control.size.y
 	if child_height <= max_height:

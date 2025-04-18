@@ -64,6 +64,7 @@ func serialize() -> Dictionary:
 
 func deserialize(data: Dictionary):
 	text_id = data.get("text_id", Pages.get_new_id())
+	#find_child("TextIDLabel").text = text_id
 	text_box.text = Pages.get_text(text_id)
 	if text_box.text.is_empty(): # compat
 		text_box.text = data.get("content", "")
@@ -335,6 +336,8 @@ func _on_text_actions_id_pressed(id: int) -> void:
 			text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
 		1:
 			text_box.text = Pages.neaten_whitespace(text_box.text)
+		3:
+			Pages.editor.prompt_change_text_id(text_id)
 
 func index_all_tags():
 	tags.clear()

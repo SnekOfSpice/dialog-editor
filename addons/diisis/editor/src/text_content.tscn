@@ -50,23 +50,21 @@ layout_mode = 2
 
 [node name="Text Actions" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar"]
 size = Vector2i(167, 100)
-item_count = 3
+item_count = 5
 item_0/text = "Capitalize"
 item_0/id = 0
 item_1/text = "Neaten Whitespace"
 item_1/id = 1
 item_2/id = 2
 item_2/separator = true
+item_3/text = "Set Text ID..."
+item_3/id = 3
+item_4/id = 4
+item_4/separator = true
 
 [node name="Import" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" instance=ExtResource("3_wtkdm")]
 visible = false
 unfocusable = false
-
-[node name="HBoxContainer" type="HBoxContainer" parent="DialogSyntaxContainer"]
-layout_mode = 2
-
-[node name="ActiveActorsLabel" type="Label" parent="DialogSyntaxContainer/HBoxContainer"]
-layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

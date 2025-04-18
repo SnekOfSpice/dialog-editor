@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctyeuvwh0s02v"]
+[gd_scene load_steps=4 format=3 uid="uid://ctyeuvwh0s02v"]
 
 [ext_resource type="Script" uid="uid://bu8032t1fcm7o" path="res://addons/diisis/editor/src/change_text_id_container.gd" id="1_doaff"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_doaff"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pp63c"]
 
 [node name="ChangeTextIDContainer" type="Control"]
 layout_mode = 3
@@ -44,18 +48,23 @@ text = "@"
 [node name="AddressLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("StyleBoxEmpty_doaff")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pp63c")
 bbcode_enabled = true
 text = "ADR HERE"
 fit_content = true
+vertical_alignment = 1
 
 [node name="NewIDLineEdit" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 placeholder_text = "New ID"
 
-[node name="AlreadyExistsLabel" type="Label" parent="VBoxContainer"]
+[node name="AlreadyExistsLabel" type="RichTextLabel" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.928783, 0.538227, 0.205554, 1)
+theme_override_colors/default_color = Color(0.972216, 0.590869, 0.518663, 1)
+bbcode_enabled = true
 text = "ID \"\" already exists at Address GOTO"
+fit_content = true
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -104,7 +113,9 @@ size_flags_vertical = 4
 focus_mode = 0
 text = "Discard"
 
+[connection signal="meta_clicked" from="VBoxContainer/HBoxContainer2/AddressLabel" to="." method="goto"]
 [connection signal="text_changed" from="VBoxContainer/NewIDLineEdit" to="." method="_on_new_id_line_edit_text_changed"]
+[connection signal="meta_clicked" from="VBoxContainer/AlreadyExistsLabel" to="." method="goto"]
 [connection signal="item_rect_changed" from="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ContentLabel" to="." method="_on_content_label_item_rect_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/DiscardButton" to="." method="_on_discard_button_pressed"]

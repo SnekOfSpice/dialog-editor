@@ -362,3 +362,14 @@ func _on_line_edit_enabled_text_changed(_new_text: String) -> void:
 
 func _on_line_edit_disabled_text_changed(_new_text: String) -> void:
 	update_default_text_warning()
+
+
+
+
+
+func _on_edit_enabled_id_button_pressed() -> void:
+	Pages.editor.prompt_change_text_id(text_id_enabled)
+
+
+func _on_edit_disabled_id_button_pressed() -> void:
+	Pages.editor.prompt_change_text_id(text_id_disabled)

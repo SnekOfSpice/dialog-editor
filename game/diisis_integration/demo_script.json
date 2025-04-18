@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 0,
+		"current_page_number": 2,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854775730,
+		"id_counter": -9223372036854774698,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -437,6 +437,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.471--9223372036854774780",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -480,6 +481,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.520--9223372036854774776",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -523,6 +525,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.570--9223372036854774772",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -564,6 +567,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.621--9223372036854774767",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -689,6 +693,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.763--9223372036854774754",
 						"line_type": 1,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -728,7 +733,7 @@
 								"amber"
 							],
 							"active_actors_title": "character",
-							"text_id": "1744987729.690--9223372036854775785"
+							"text_id": "amber-is-happy"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -737,6 +742,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.822--9223372036854774749",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
@@ -785,6 +791,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.881--9223372036854774744",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
@@ -826,6 +833,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999497.931--9223372036854774739",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -838,7 +846,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
+				"meta.scroll_vertical": 1157,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -856,7 +864,7 @@
 					{
 						"address": "1.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -865,7 +873,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -884,12 +892,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"id": "1744999498.626--9223372036854774735",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -897,7 +906,7 @@
 					{
 						"address": "1.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -906,7 +915,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -927,12 +936,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2.0,
+						"id": "1744999498.627--9223372036854774732",
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
 						}
@@ -940,7 +950,7 @@
 					{
 						"address": "1.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -949,7 +959,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -968,12 +978,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"id": "1744999498.628--9223372036854774728",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						}
@@ -981,7 +992,7 @@
 					{
 						"address": "1.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -990,7 +1001,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1009,12 +1020,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"id": "1744999498.628--9223372036854774724",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1022,7 +1034,7 @@
 					{
 						"address": "1.4",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1031,7 +1043,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1052,12 +1064,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 2.0,
+						"id": "1744999498.629--9223372036854774721",
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4.0,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1065,7 +1078,7 @@
 					{
 						"address": "1.5",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1074,7 +1087,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1093,12 +1106,13 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"id": "1744999498.630--9223372036854774717",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5.0,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1106,7 +1120,7 @@
 					{
 						"address": "1.6",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1115,7 +1129,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1134,22 +1148,23 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"line_type": 0.0,
+						"id": "1744999498.630--9223372036854774713",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6.0,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 2.0,
-				"number": 1.0,
+				"number": 1,
 				"page_key": "",
 				"terminate": false
 			},
@@ -1192,6 +1207,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999499.058--9223372036854774709",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -1235,6 +1251,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999499.059--9223372036854774706",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -1276,6 +1293,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999499.060--9223372036854774702",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -1317,6 +1335,7 @@
 							"meta.visible": false
 						},
 						"header": [],
+						"id": "1744999499.060--9223372036854774698",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -1344,7 +1363,6 @@
 			"1744987729.575--9223372036854775793": "Yes I love her",
 			"1744987729.626--9223372036854775788": "",
 			"1744987729.626--9223372036854775789": "No actually, robots are scary",
-			"1744987729.690--9223372036854775785": "[]>amber{amber-emotion|happy}:I'm really happy to hear that! <mp>I think you're cool too!",
 			"1744987729.749--9223372036854775782": "[]>amber{amber-emotion|sad}:I promise I'm not scary!",
 			"1744987729.798--9223372036854775779": "[]>narrator:And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}:Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator:You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].",
 			"1744987741.530--9223372036854775777": "[]>narrator:Diisis uses so-called \"Instructions\" for more complex behavior. Read up on how to implement them on GitHub. The rough gist is that they work like functions in Godot. You give them names and arguments, and can then call them inside DIISIS.\n[]>narrator:For this, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to an Instruction, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
@@ -1354,7 +1372,8 @@
 			"1744987741.535--9223372036854775767": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg,2>",
 			"1744987742.696--9223372036854775765": "[]>narrator:With that, we can start to wrap up.\n[]>amber:Change of scenery please!",
 			"1744987742.697--9223372036854775760": "[]>narrator:How can you leave this place again? Well you can just terminate the page by not having it point to a page again. <mp>[rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]\n[]>narrator:This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator:Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url].\n[]>narrator:Amber art by [url=https://x.com/_10qi]10qi[/url].",
-			"1744987742.697--9223372036854775762": "[]>narrator:There you go <3\n[]>narrator:Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes."
+			"1744987742.697--9223372036854775762": "[]>narrator:There you go <3\n[]>narrator:Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
+			"amber-is-happy": "[]>amber{amber-emotion|happy}:I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,
 		"text_lead_time_same_actor": 0.0,

@@ -5,6 +5,7 @@ class_name Line
 var line_type := DIISIS.LineType.Text
 var is_head_editable := false
 var indent_level := 0
+var id : String
 
 signal move_line (child, dir)
 signal insert_line (at)
@@ -12,6 +13,7 @@ signal move_to (child, idx)
 signal delete_line
 
 func init() -> void:
+	id = Pages.get_new_id()
 	grab_focus()
 	find_child("Header").init()
 	find_child("Conditionals").init()
@@ -130,6 +132,7 @@ func serialize() -> Dictionary:
 	data["meta.indent_level"] = indent_level
 	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
 	data["address"] = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	data["id"] = id
 	
 	# content match
 	match line_type:
@@ -172,6 +175,7 @@ func deserialize(data: Dictionary):
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
+	id = data.get("id", Pages.get_new_id())
 
 func get_choice_item_count() -> int:
 	if line_type != DIISIS.LineType.Choice:
