@@ -167,13 +167,80 @@ text = "Delay"
 [node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu"]
+[node name="GridContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+text = "Window"
 
 [node name="FullscreenCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 text = "Fullscreen
 "
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+text = "Fonts"
+
+[node name="HBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="LabelFontOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "Open Dyslexic"
+popup/item_1/id = 1
+
+[node name="LabelFontLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "Text Label"
+
+[node name="RTLFontOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "Open Dyslexic"
+popup/item_1/id = 1
+
+[node name="RTLFontLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "Text Body"
+fit_content = true
+scroll_active = false
+
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+text = "Font Size"
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="LabelFontSizeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+focus_mode = 0
+min_value = 12.0
+max_value = 70.0
+value = 24.0
+
+[node name="ResetLabelFontSizeButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "R"
 
 [node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer"]
 auto_translate_mode = 1
@@ -257,6 +324,10 @@ text = "Close"
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/TextMenu/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_value_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/FullscreenCheckBox" to="." method="_on_fullscreen_check_box_pressed"]
+[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer/LabelFontOptionButton" to="." method="_on_label_font_option_button_item_selected"]
+[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer/RTLFontOptionButton" to="." method="_on_rtl_font_option_button_item_selected"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/GridContainer/LabelFontSizeSlider" to="." method="_on_label_font_size_slider_value_changed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/DisplayMenu/GridContainer/GridContainer/ResetLabelFontSizeButton" to="." method="_on_reset_label_font_size_button_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]

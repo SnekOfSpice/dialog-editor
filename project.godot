@@ -39,6 +39,7 @@ project/file/path="res://game/diisis_integration/demo_script.json"
 
 window/subwindows/embed_subwindows=false
 window/stretch/mode="canvas_items"
+window/per_pixel_transparency/allowed=true
 
 [editor_plugins]
 

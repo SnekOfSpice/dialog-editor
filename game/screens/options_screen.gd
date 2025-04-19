@@ -27,6 +27,8 @@ func _ready() -> void:
 	find_child("MusicVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music")))
 	find_child("SFXVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX")))
 	
+	
+	
 	set_menu(0)
 	set_menu_available(0, GameWorld.stage_root.stage != CONST.STAGE_MAIN)
 
@@ -129,3 +131,34 @@ func _on_quit_button_pressed() -> void:
 		Options.save_gamestate()
 	Options.save_prefs()
 	get_tree().quit()
+
+
+func _on_label_font_option_button_item_selected(index: int) -> void:
+	var font
+	match index:
+		0:
+			font = load("res://game/visuals/theme/fonts/justabit.ttf")
+		1:
+			font = load("res://game/visuals/theme/fonts/open-dyslexic/OpenDyslexic-Regular.otf")
+			
+	theme.set_font("font", "Label", font)
+
+
+func _on_rtl_font_option_button_item_selected(index: int) -> void:
+	var font
+	match index:
+		0:
+			font = load("res://game/visuals/theme/fonts/HelvetiPixel.ttf")
+		1:
+			font = load("res://game/visuals/theme/fonts/open-dyslexic/OpenDyslexic-Regular.otf")
+			
+	theme.set_font("normal_font", "RichTextLabel", font)
+
+
+func _on_label_font_size_slider_value_changed(value: float) -> void:
+	theme.set_font_size("font_size", "Label", value)
+
+
+func _on_reset_label_font_size_button_pressed() -> void:
+	find_child("LabelFontSizeSlider").value = 24
+	theme.set_font_size("font_size", "Label", 24)
