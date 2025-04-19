@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 2,
+		"current_page_number": 0,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774698,
+		"id_counter": -9223372036854774734,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -322,78 +322,9 @@
 			}
 		},
 		"locales_to_export": [
-			"af_ZA",
-			"sq_AL",
-			"ar_SA",
-			"hy_AM",
-			"az_AZ",
-			"eu_ES",
-			"be_BY",
-			"bn_IN",
-			"bs_BA",
-			"bg_BG",
-			"ca_ES",
-			"zh_CN",
-			"zh_TW",
-			"hr_HR",
-			"cs_CZ",
-			"da_DK",
-			"nl_NL",
-			"en_US",
-			"et_EE",
-			"fo_FO",
-			"fi_FI",
-			"fr_FR",
-			"gl_ES",
-			"ka_GE",
 			"de_DE",
-			"el_GR",
-			"gu_IN",
-			"he_IL",
-			"hi_IN",
-			"hu_HU",
-			"is_IS",
-			"id_ID",
-			"it_IT",
-			"ja_JP",
-			"kn_IN",
-			"kk_KZ",
-			"kok_IN",
-			"ko_KR",
-			"lv_LV",
-			"lt_LT",
-			"mk_MK",
-			"ms_MY",
-			"ml_IN",
-			"mt_MT",
-			"mr_IN",
-			"mn_MN",
-			"se_NO",
-			"nb_NO",
-			"nn_NO",
-			"fa_IR",
-			"pl_PL",
-			"pt_BR",
-			"pa_IN",
-			"ro_RO",
-			"ru_RU",
-			"sr_BA",
-			"sk_SK",
-			"es_ES",
-			"sw_KE",
-			"sv_SE",
-			"syr_SY",
-			"ta_IN",
-			"te_IN",
-			"th_TH",
-			"tn_ZA",
-			"tr_TR",
-			"uk_UA",
-			"uz_UZ",
-			"vi_VN",
-			"cy_GB",
-			"xh_ZA",
-			"zu_ZA"
+			"en_US",
+			"en_US"
 		],
 		"page_data": {
 			"0": {
@@ -553,11 +484,6 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987729.490--9223372036854775799"
 						},
 						"facts": {
@@ -728,11 +654,6 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "amber-is-happy"
 						},
 						"facts": {
@@ -777,11 +698,6 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987729.749--9223372036854775782"
 						},
 						"facts": {
@@ -819,11 +735,6 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987729.798--9223372036854775779"
 						},
 						"facts": {
@@ -846,7 +757,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 1157,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -864,7 +775,7 @@
 					{
 						"address": "1.0",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -873,16 +784,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987741.530--9223372036854775777"
 						},
 						"facts": {
@@ -893,12 +799,12 @@
 						},
 						"header": [],
 						"id": "1744999498.626--9223372036854774735",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0,
+						"meta.line_index": 0.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -906,7 +812,7 @@
 					{
 						"address": "1.1",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -915,7 +821,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -937,12 +843,12 @@
 						},
 						"header": [],
 						"id": "1744999498.627--9223372036854774732",
-						"line_type": 2,
+						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1,
+						"meta.line_index": 1.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -950,7 +856,7 @@
 					{
 						"address": "1.2",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -959,16 +865,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987741.532--9223372036854775774"
 						},
 						"facts": {
@@ -979,12 +880,12 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774728",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2,
+						"meta.line_index": 2.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -992,7 +893,7 @@
 					{
 						"address": "1.3",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1001,16 +902,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987741.532--9223372036854775772"
 						},
 						"facts": {
@@ -1021,12 +917,12 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774724",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 3.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1034,7 +930,7 @@
 					{
 						"address": "1.4",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1043,7 +939,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1065,12 +961,12 @@
 						},
 						"header": [],
 						"id": "1744999498.629--9223372036854774721",
-						"line_type": 2,
+						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4,
+						"meta.line_index": 4.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1078,7 +974,7 @@
 					{
 						"address": "1.5",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1087,16 +983,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987741.534--9223372036854775769"
 						},
 						"facts": {
@@ -1107,12 +998,12 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774717",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5,
+						"meta.line_index": 5.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1120,7 +1011,7 @@
 					{
 						"address": "1.6",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1129,16 +1020,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987741.535--9223372036854775767"
 						},
 						"facts": {
@@ -1149,22 +1035,22 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774713",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6,
+						"meta.line_index": 6.0,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
+				"meta.address_mode_next": 0.0,
+				"meta.scroll_vertical": 572.0,
 				"meta.selected": false,
 				"next": 2.0,
-				"number": 1,
+				"number": 1.0,
 				"page_key": "",
 				"terminate": false
 			},
@@ -1179,7 +1065,7 @@
 					{
 						"address": "2.0",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1188,16 +1074,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987742.696--9223372036854775765"
 						},
 						"facts": {
@@ -1208,12 +1089,12 @@
 						},
 						"header": [],
 						"id": "1744999499.058--9223372036854774709",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0,
+						"meta.line_index": 0.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1221,7 +1102,7 @@
 					{
 						"address": "2.1",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1230,7 +1111,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1252,12 +1133,12 @@
 						},
 						"header": [],
 						"id": "1744999499.059--9223372036854774706",
-						"line_type": 2,
+						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1,
+						"meta.line_index": 1.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1265,7 +1146,7 @@
 					{
 						"address": "2.2",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1274,16 +1155,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987742.697--9223372036854775762"
 						},
 						"facts": {
@@ -1294,12 +1170,12 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774702",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2,
+						"meta.line_index": 2.0,
 						"meta.selector": {
 							"selected": false
 						}
@@ -1307,7 +1183,7 @@
 					{
 						"address": "2.3",
 						"conditionals": {
-							"behavior": 0,
+							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1316,16 +1192,11 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0,
+							"operand": 0.0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
-							"active_actors": [
-								"narrator",
-								"amber"
-							],
-							"active_actors_title": "character",
 							"text_id": "1744987742.697--9223372036854775760"
 						},
 						"facts": {
@@ -1336,22 +1207,22 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774698",
-						"line_type": 0,
+						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 0.0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 3.0,
 						"meta.selector": {
 							"selected": false
 						}
 					}
 				],
-				"meta.address_mode_next": 1,
-				"meta.scroll_vertical": 0,
+				"meta.address_mode_next": 1.0,
+				"meta.scroll_vertical": 0.0,
 				"meta.selected": false,
 				"next": 0.0,
-				"number": 2,
+				"number": 2.0,
 				"page_key": "",
 				"terminate": true
 			}

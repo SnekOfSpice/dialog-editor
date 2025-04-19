@@ -27,6 +27,7 @@ layout_mode = 2
 item_count = 7
 item_0/text = "Copy this"
 item_0/icon = ExtResource("2_mdac6")
+item_0/id = 0
 item_1/text = "Copy selection"
 item_1/icon = ExtResource("3_ffxrd")
 item_1/id = 1

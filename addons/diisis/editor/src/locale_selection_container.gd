@@ -38,6 +38,7 @@ func fill():
 		button.text = locale
 		button.button_pressed = locale in Pages.locales_to_export
 		button.toggled.connect(on_locale_toggled.bind(locale))
+		button.disabled = locale == Pages.default_locale
 		
 		var hbox : HBoxContainer = find_child("LocaleInitialContainer").get_node(locale[0])
 		hbox.add_child(button)
@@ -59,17 +60,19 @@ func get_locale_button(locale:String) -> CheckBox:
 func on_locale_toggled(button_pressed:bool, locale:String):
 	if selecting_default:
 		find_child("DefaultLocaleLabel").text = locale
+		get_locale_button(Pages.default_locale).disabled = false
 		Pages.default_locale = locale
 		selecting_default = false
-		get_locale_button(locale).button_pressed = not button_pressed
+		get_locale_button(locale).button_pressed = true
+		get_locale_button(locale).disabled = true
 		return
 	if button_pressed:
 		Pages.locales_to_export.append(locale)
 	else:
 		Pages.locales_to_export.erase(locale)
 	
-	for button : CheckBox in get_all_buttons():
-		button.disabled = Pages.locales_to_export.size() <= 1 and button.button_pressed
+	#for button : CheckBox in get_all_buttons():
+		#button.disabled = Pages.locales_to_export.size() <= 1 and button.button_pressed
 
 func set_selecting_default(value:bool):
 	selecting_default = value

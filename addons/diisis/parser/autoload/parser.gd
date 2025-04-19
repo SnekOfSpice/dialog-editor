@@ -22,7 +22,7 @@ var text_data := {}
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
-var default_locale := "en_US"
+var _default_locale := "en_US"
 var locale := "en_US"
 var l10n := {}
 var dropdown_titles := []
@@ -113,7 +113,8 @@ func init(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 	instruction_templates = data.get("instruction_templates", {})
 	text_data = data.get("text_data", {})
-	default_locale = data.get("default_locale", "en_US")
+	_default_locale = data.get("default_locale", "en_US")
+	locale = _default_locale
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
@@ -320,7 +321,7 @@ func get_line_content(address:String) -> Dictionary:
 	return page_data.get(prev_page).get("lines")[prev_line].get("content")
 
 func get_text(id:String) -> String:
-	if locale == default_locale:
+	if locale == _default_locale:
 		return text_data.get(id, "")
 	if l10n.has(id):
 		var text : String = l10n.get(id, {}).get(locale, "")

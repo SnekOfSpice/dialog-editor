@@ -31,7 +31,6 @@ func get_text_after_caret(length:int):
 	return line.substr(text_box.get_caret_column(), length)
 
 func init() -> void:
-	text_id = Pages.get_new_id()
 	text_box = find_child("TextBox")
 	await get_tree().process_frame
 	
@@ -52,19 +51,18 @@ func init() -> void:
 	find_child("Text Actions").add_submenu_node_item("Parse Into Text", find_child("Import"))
 
 func serialize() -> Dictionary:
+	if not text_id:
+		text_id = Pages.get_new_id()
+	
 	var result := {}
 	
-	#result["content"] = text_box.text
 	result["text_id"] = text_id
 	Pages.save_text(text_id, text_box.text)
-	result["active_actors"] = active_actors
-	result["active_actors_title"] = active_actors_title
 	
 	return result
 
 func deserialize(data: Dictionary):
 	text_id = data.get("text_id", Pages.get_new_id())
-	#find_child("TextIDLabel").text = text_id
 	text_box.text = Pages.get_text(text_id)
 	if text_box.text.is_empty(): # compat
 		text_box.text = data.get("content", "")

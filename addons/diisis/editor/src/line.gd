@@ -13,7 +13,6 @@ signal move_to (child, idx)
 signal delete_line
 
 func init() -> void:
-	id = Pages.get_new_id()
 	grab_focus()
 	find_child("Header").init()
 	find_child("Conditionals").init()
@@ -118,6 +117,9 @@ func set_head_editable(value: bool):
 
 
 func serialize() -> Dictionary:
+	if not id:
+		id = Pages.get_new_id()
+	
 	var data = {}
 	
 	data["line_type"] = line_type

@@ -14,8 +14,6 @@ signal move_choice_edit(choice_edit, direction)
 
 # Called when the node enters the scene tree for the first time.
 func init() -> void:
-	text_id_enabled = Pages.get_new_id()
-	text_id_disabled = Pages.get_new_id()
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("Conditionals").init()
@@ -86,6 +84,11 @@ func deserialize(data:Dictionary):
 	update()
 
 func serialize() -> Dictionary:
+	if not text_id_enabled:
+		text_id_enabled = Pages.get_new_id()
+	if not text_id_disabled:
+		text_id_disabled = Pages.get_new_id()
+	
 	var loopback : bool = find_child("LoopbackToggle").button_pressed
 	var jump_page : bool = find_child("JumpPageToggle").button_pressed
 	

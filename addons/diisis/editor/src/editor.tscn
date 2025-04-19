@@ -134,7 +134,7 @@ item_count = 6
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
-item_1/id = 1
+item_1/id = 0
 item_2/text = "Save As..."
 item_2/id = 1
 item_3/text = "Open    (Ctrl+O)"
@@ -153,7 +153,7 @@ item_0/text = "Select Locales..."
 item_0/id = 0
 item_1/text = "Export L10N File..."
 item_1/id = 1
-item_2/text = "Merge with existing..."
+item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
@@ -551,6 +551,17 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 filters = PackedStringArray("*.json")
 
+[node name="FDMergeL10N" type="FileDialog" parent="Popups"]
+auto_translate_mode = 1
+transparent_bg = true
+gui_embed_subwindows = true
+title = "Merge"
+initial_position = 4
+size = Vector2i(827, 377)
+transparent = true
+theme = ExtResource("1_nb6ej")
+filters = PackedStringArray("*.json")
+
 [node name="FDOpen" type="FileDialog" parent="Popups"]
 transparent_bg = true
 gui_embed_subwindows = true
@@ -647,6 +658,7 @@ visible = false
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]
+[connection signal="file_selected" from="Popups/FDMergeL10N" to="." method="_on_fd_merge_l_10n_file_selected"]
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]

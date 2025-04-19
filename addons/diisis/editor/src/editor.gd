@@ -103,9 +103,10 @@ func init(active_file_path:="") -> void:
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
-	find_child("File").add_separator()
-	find_child("File").add_submenu_node_item("Ingest", find_child("IngestMenu"))
-	find_child("File").add_submenu_node_item("Localization", find_child("L10NMenu"))
+	var file_item = find_child("File")
+	file_item.add_separator()
+	file_item.add_submenu_node_item("Ingest Pages", file_item.get_node("IngestMenu"))
+	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	
 	open_from_path(active_file_path)
 	
@@ -641,7 +642,7 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 		1: # export blank l10n
 			open_popup($Popups.get_node("FDExportLocales"), true)
 		2: #merge
-			notify("Merging existing L10N is not implemented yet. Sorry.")
+			open_popup($Popups.get_node("FDMergeL10N"), true)
 
 func request_arg_hint(text_box:Control):
 	if not (text_box is LineEdit or text_box is TextEdit):
@@ -812,6 +813,7 @@ func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}
 	for text_id in Pages.text_data.keys():
 		var lines_by_locale := {
+			"changed" : true,
 			Pages.default_locale : Pages.get_text(text_id)
 		}
 		for locale in Pages.locales_to_export:
@@ -823,6 +825,42 @@ func _on_fd_export_locales_file_selected(path: String) -> void:
 	file.store_string(JSON.stringify(l10n, "\t"))
 	file.close()
 
+
+func _on_fd_merge_l_10n_file_selected(path: String) -> void:
+	var input_file = FileAccess.open(path, FileAccess.READ)
+	var input_data : Dictionary = JSON.parse_string(input_file.get_as_text())
+	input_file.close()
+	
+	var l10n := {}
+	var handled_locales := []
+	for text_id in Pages.text_data.keys():
+		printt(str("\"", text_id, "\""), input_data.get(text_id))
+		var previous_default_text : String = input_data.get(text_id, {}).get(Pages.default_locale)
+		var lines_by_locale := {
+			"changed" : previous_default_text != Pages.get_text(text_id),
+			Pages.default_locale : Pages.get_text(text_id)
+		}
+		
+		for locale in Pages.locales_to_export:
+			handled_locales.append(locale)
+			if locale != Pages.default_locale and input_data.get(text_id).has(locale):
+				lines_by_locale[locale] = input_data.get(text_id).get(locale)
+		
+		l10n[text_id] = lines_by_locale
+	
+	for text_id : String in input_data.keys():
+		if not l10n.has(text_id):
+			l10n[text_id] = {}
+		for locale in input_data.get(text_id):
+			if locale in handled_locales:
+				continue
+			var new_file_has_locale = l10n.get(text_id).has(locale)
+			if not new_file_has_locale:
+				l10n[text_id][locale] = input_data.get(text_id).get(locale)
+	
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(l10n, "\t"))
+	file.close()
 
 func _on_refresh_button_pressed() -> void:
 	refresh()

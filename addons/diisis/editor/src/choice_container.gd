@@ -6,10 +6,12 @@ var do_jump_page := true
 var title_id : String
 
 func init():
-	title_id = Pages.get_new_id()
 	find_child("AddButton").grab_focus()
 
 func serialize() -> Dictionary:
+	if not title_id:
+		title_id = Pages.get_new_id()
+	
 	var result = {}
 	
 	var choices = []
