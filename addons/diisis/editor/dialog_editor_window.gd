@@ -35,6 +35,7 @@ func _on_about_to_popup() -> void:
 		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
+		mode = config.get_value("editor", "mode", mode)
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
@@ -110,6 +111,7 @@ func save_preferences():
 		config.set_value("editor", "content_scale", editor_window.content_scale_factor)
 	config.set_value("editor", "size", size)
 	config.set_value("editor", "position", position)
+	config.set_value("editor", "mode", mode)
 	
 	config.save(PREFERENCE_PATH)
 
