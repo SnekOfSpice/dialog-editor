@@ -6,6 +6,7 @@ General
 - Introduce text IDs
 - Change to Godot 4.4.1
 - option to delete dropdowns
+- Skip line option
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
