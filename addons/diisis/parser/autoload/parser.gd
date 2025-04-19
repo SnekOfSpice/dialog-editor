@@ -114,7 +114,7 @@ func init(data:Dictionary):
 	instruction_templates = data.get("instruction_templates", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
-	locale = _default_locale
+	#locale = _default_locale
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
