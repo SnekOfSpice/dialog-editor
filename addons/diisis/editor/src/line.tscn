@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=27 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" uid="uid://bpc55ta1uccyf" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_viyfr"]
@@ -6,10 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="3_01wq6"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://addons/diisis/editor/src/choice_container.tscn" id="3_jjtdq"]
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="3_k7b5x"]
+[ext_resource type="Texture2D" uid="uid://bvfeiavga4a2q" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_enabled.png" id="3_ly3u8"]
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="3_pymyd"]
 [ext_resource type="PackedScene" uid="uid://c7k2h1p5qalaa" path="res://addons/diisis/editor/src/text_content.tscn" id="3_ty44c"]
 [ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="4_1c1vd"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="4_4weov"]
+[ext_resource type="Texture2D" uid="uid://cmdgrenadfgy7" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_disabled.png" id="4_hl0su"]
 [ext_resource type="PackedScene" uid="uid://co4e6yj2ed45f" path="res://addons/diisis/editor/src/instruction_container.tscn" id="4_phdce"]
 [ext_resource type="Texture2D" uid="uid://co44uwwjikn2w" path="res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png" id="5_hfdyk"]
 [ext_resource type="Texture2D" uid="uid://blqrtjgc0d8f4" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_down.png" id="5_pyps8"]
@@ -28,6 +30,27 @@ colors = PackedColorArray(0.7663, 0.776485, 0.97, 1, 0.0844793, 0.0806588, 0.175
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_rtjbl"]
 gradient = SubResource("Gradient_0yd78")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ly3u8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hl0su"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gphhn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+skew = Vector2(0.14, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.439216, 0.192157, 0.415686)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gphhn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f7stu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ynk1p"]
 
@@ -81,10 +104,28 @@ layout_mode = 2
 [node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
+[node name="HBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "Skip line in Parser"
+focus_mode = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ly3u8")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_hl0su")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_gphhn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gphhn")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_gphhn")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f7stu")
+theme_override_icons/checked = ExtResource("3_ly3u8")
+theme_override_icons/unchecked = ExtResource("4_hl0su")
+
+[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
+layout_mode = 2
+size_flags_vertical = 3
 address_depth = 1
-status_panels = [NodePath("../../../PanelContainer"), NodePath("../../../../../..")]
+status_panels = [NodePath("../../../../PanelContainer"), NodePath("../../../../../../..")]
 
 [node name="MetaControls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 visible = false
@@ -260,6 +301,7 @@ layout_mode = 2
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
 
+[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/SkipCheckBox" to="." method="set_skip"]
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/VisibleToggle" to="." method="_on_visible_toggle_toggled"]
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/MetaControls/LockToggle" to="." method="_on_lock_toggle_toggled"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveUp" to="." method="_on_move_up_pressed"]

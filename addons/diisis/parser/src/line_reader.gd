@@ -624,10 +624,12 @@ func close(_terminating_page):
 
 func read_new_line(new_line: Dictionary):
 	line_data = new_line
+	var skip : bool = line_data.get("skip", false)
 	line_index = new_line.get("meta.line_index")
 	line_type = int(line_data.get("line_type"))
 	terminated = false
-	ParserEvents.read_new_line.emit(line_index)
+	if not skip:
+		ParserEvents.read_new_line.emit(line_index)
 	
 	var eval = evaluate_conditionals(line_data.get("conditionals"))
 	var conditional_is_true = eval[0]
@@ -639,6 +641,9 @@ func read_new_line(new_line: Dictionary):
 		last_line_index = line_index + range
 	else:
 		last_line_index = line_index
+	
+	if skip:
+		emit_signal("line_finished", last_line_index)
 	
 	if behavior == "Show" or behavior == "Enable":
 		if not conditional_is_true:

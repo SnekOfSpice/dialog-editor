@@ -115,6 +115,18 @@ func set_head_editable(value: bool):
 	
 	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
 
+func set_skip(value:bool):
+	modulate.a = 0.6 if value else 1
+	find_child("SkipCheckBox").button_pressed = value
+	
+	if line_type == DIISIS.LineType.Folder:
+		var page : Page = Pages.editor.get_current_page()
+		var range := get_folder_range_v()
+		for index in range(range.x + 1, range.y + 2):
+			page.get_line(index).set_skip_folder_override(value)
+
+func set_skip_folder_override(value:bool):
+	modulate.a = 0.6 if value or find_child("SkipCheckBox").button_pressed else 1
 
 func serialize() -> Dictionary:
 	if not id:
@@ -135,6 +147,7 @@ func serialize() -> Dictionary:
 	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
 	data["address"] = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	data["id"] = id
+	data["skip"] = find_child("SkipCheckBox").button_pressed
 	
 	# content match
 	match line_type:
@@ -178,6 +191,7 @@ func deserialize(data: Dictionary):
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
 	id = data.get("id", Pages.get_new_id())
+	set_skip(data.get("skip", false))
 
 func get_choice_item_count() -> int:
 	if line_type != DIISIS.LineType.Choice:
