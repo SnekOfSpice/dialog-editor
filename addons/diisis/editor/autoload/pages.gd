@@ -65,6 +65,7 @@ var text_data := {}
 
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
+var save_on_play := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -94,6 +95,7 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"default_address_mode_pages": default_address_mode_pages,
+		"save_on_play": save_on_play,
 	}
 
 func deserialize(data:Dictionary):
@@ -128,6 +130,7 @@ func deserialize(data:Dictionary):
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
+	save_on_play = data.get("save_on_play", true)
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
 	apply_file_config(data.get("file_config", {}))

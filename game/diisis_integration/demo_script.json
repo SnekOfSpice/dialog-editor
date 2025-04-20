@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774734,
+		"id_counter": -9223372036854774701,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -377,7 +377,8 @@
 						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.1",
@@ -421,7 +422,8 @@
 						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.2",
@@ -465,7 +467,8 @@
 						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.3",
@@ -502,7 +505,8 @@
 						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.4",
@@ -553,13 +557,14 @@
 												"is_conditional": false
 											}
 										},
-										"meta.visible": true
+										"meta.visible": false
 									},
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
+									"meta.disabled_visible": false,
 									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
@@ -599,6 +604,7 @@
 									"loopback": false,
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
+									"meta.disabled_visible": false,
 									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
@@ -628,7 +634,8 @@
 						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.5",
@@ -672,7 +679,8 @@
 						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.6",
@@ -716,7 +724,8 @@
 						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "0.7",
@@ -753,11 +762,12 @@
 						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
+				"meta.scroll_vertical": 653,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -1227,6 +1237,7 @@
 				"terminate": true
 			}
 		},
+		"save_on_play": true,
 		"text_data": {
 			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator:In this demo, you will find the fundamentals of DIISIS' functionalities included in the script \"demo_script.json\" so you can get accustomed to how things work.\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator:Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber:That I am!\n[]>narrator:What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator:Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as false. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "",

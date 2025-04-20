@@ -107,6 +107,8 @@ func init(active_file_path:="") -> void:
 	file_item.add_separator()
 	file_item.add_submenu_node_item("Ingest Pages", file_item.get_node("IngestMenu"))
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
+	file_item.add_separator()
+	file_item.add_item("Preferences...", 3)
 	
 	open_from_path(active_file_path)
 	
@@ -614,6 +616,10 @@ func attempt_save_to_dir():
 		open_save_popup()
 		return
 	save_to_file(str(active_dir, active_file_name))
+
+func save_to_dir_if_active_dir():
+	if not active_dir.is_empty():
+		save_to_file(str(active_dir, active_file_name))
 
 func _on_file_id_pressed(id: int) -> void:
 	match id:

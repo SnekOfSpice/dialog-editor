@@ -26,11 +26,11 @@ GameWorld="*res://game/autoloads/game_world.tscn"
 GoBackHandler="*res://game/autoloads/go_back_handler.tscn"
 Options="*res://game/autoloads/options.tscn"
 Sound="*res://game/autoloads/sound.tscn"
+Style="*res://game/autoloads/style.tscn"
 Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
 DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
 TextToDiisis="*res://addons/diisis/editor/autoload/text_to_diisis.tscn"
-Style="*res://game/autoloads/style.tscn"
 
 [diisis]
 

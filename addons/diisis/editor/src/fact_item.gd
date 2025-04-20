@@ -128,7 +128,8 @@ func update_unregsitered_prompt():
 		if new_text.is_empty():
 			find_child("RegisterLabel").text = str("Can't be empty!")
 		else:
-			find_child("RegisterLabel").text = str(
+			find_child("RegisterLabel").text = ""
+			find_child("FactName").tooltip_text = str(
 				"Registered as ",
 				Pages.facts.get(new_text)
 			)
@@ -193,6 +194,10 @@ func _on_register_button_pressed() -> void:
 		value = 0
 	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false
+	find_child("FactName").tooltip_text = str(
+				"Registered as ",
+				Pages.facts.get(entered_text)
+			)
 	
 	$Hint.hide()
 

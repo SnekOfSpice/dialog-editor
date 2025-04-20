@@ -237,7 +237,12 @@ func open_new_file():
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
 
+var was_playing_scene := false
 func _process(delta: float) -> void:
+	if not was_playing_scene and EditorInterface.is_playing_scene():
+		if is_instance_valid(Pages.editor):
+			Pages.editor.save_to_dir_if_active_dir()
+	was_playing_scene = EditorInterface.is_playing_scene()
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.wrap_controls = true
 

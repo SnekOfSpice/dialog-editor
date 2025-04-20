@@ -26,6 +26,8 @@ func init() -> void:
 	set_do_jump_page(false)
 	set_loopback(false)
 	set_page_view(Pages.editor.get_selected_page_view())
+	
+	find_child("TextLinesDisabled").visible = false
 
 func deserialize(data:Dictionary):
 	text_id_enabled = data.get("text_id_enabled", Pages.get_new_id())
@@ -39,7 +41,7 @@ func deserialize(data:Dictionary):
 	var loop_address_mode := data.get("loop_address_mode", AddressModeButton.Mode.Objectt)
 	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(jump_address_mode)
 	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(loop_address_mode)
-	
+	find_child("TextLinesDisabled").visible = data.get("meta.disabled_visible", false)
 	
 	if find_child("PageSelect").max_value < jump_target_page:
 		find_child("PageSelect").max_value = jump_target_page
@@ -130,6 +132,7 @@ func serialize() -> Dictionary:
 	return {
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
+		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
 		#"choice_text.enabled": find_child("LineEditEnabled").text,
 		#"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
@@ -303,11 +306,13 @@ func request_delete():
 func set_do_jump_page(do: bool):
 	find_child("JumpPageContainer").visible = do
 	find_child("JumpPageToggle").button_pressed = do
+	find_child("TargetStringLabel").modulate.a = 1 if do else 0
 	jump_page_before_auto_switch = do
 
 func set_loopback(do:bool):
 	find_child("LoopbackContainer").visible = do
 	find_child("LoopbackToggle").button_pressed = do
+	find_child("LoopbackTargetStringLabel").modulate.a = 1 if do else 0
 
 func get_loopback_target_address() -> String:
 	return str(find_child("LoopbackPageSelect").value, ".", find_child("LoopbackLineSelect").value)
@@ -376,3 +381,8 @@ func _on_edit_enabled_id_button_pressed() -> void:
 
 func _on_edit_disabled_id_button_pressed() -> void:
 	Pages.editor.prompt_change_text_id(text_id_disabled)
+
+
+func _on_text_lines_enabled_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
+		find_child("TextLinesDisabled").visible = not find_child("TextLinesDisabled").visible

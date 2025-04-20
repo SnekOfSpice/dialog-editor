@@ -5,13 +5,13 @@
 
 [node name="IngestMenu" type="PopupMenu" groups=["diisis_ingest_menu"]]
 auto_translate_mode = 1
-size = Vector2i(207, 139)
+size = Vector2i(207, 143)
 visible = true
 unfocusable = true
 theme = ExtResource("1_qabkt")
 hide_on_checkable_item_selection = false
 item_count = 5
-item_0/text = "From File"
+item_0/text = "From File..."
 item_0/id = 0
 item_1/text = "From Clipboard"
 item_1/id = 1

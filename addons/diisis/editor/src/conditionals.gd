@@ -25,6 +25,9 @@ func init() -> void:
 		find_child("OperandOptionButton").add_item(a)
 	
 	for a in Behavior:
+		# depth 2 is choice item. only choice item has a meaningful difference between hide/show and enable/disable
+		if (a == "Enable" or a == "Disable") and address_depth != 2:
+			continue
 		find_child("BehaviorButton").add_item(a)
 	
 	set_operand(ConditionalOperand.AND)
