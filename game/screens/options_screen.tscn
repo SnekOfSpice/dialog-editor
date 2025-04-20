@@ -88,10 +88,10 @@ size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_constants/margin_left = 6
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 76
 theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
+theme_override_constants/margin_right = 76
 theme_override_constants/margin_bottom = 4
 
 [node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
@@ -332,18 +332,9 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="CloseButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -47.5
-offset_top = -31.0
-offset_right = 47.5
-grow_horizontal = 2
-grow_vertical = 0
+[node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 text = "Close"
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/GameButton" to="." method="set_menu" binds= [0]]
@@ -368,4 +359,4 @@ text = "Close"
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
-[connection signal="pressed" from="CloseButton" to="." method="close"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/CloseButton" to="." method="close"]

@@ -41,6 +41,8 @@ func set_label_font(idx:int):
 	var font = load(LABEL_FONTS[idx])
 	theme.set_font("font", "Label", font)
 	theme.set_font("font", "Button", font)
+	theme.set_font("title_font", "PopupMenu", font)
+	theme.set_font("font", "PopupMenu", font)
 	_save_font_prefs()
 
 
@@ -60,6 +62,8 @@ func set_rich_text_label_font(idx:int):
 
 func set_label_font_size(value:int):
 	theme.set_font_size("font_size", "Label", value)
+	theme.set_font_size("font_size", "PopupMenu", value)
+	theme.set_font_size("title_font_size", "PopupMenu", value)
 	theme.set_font_size("font_size", "Button", value + button_to_label_size_difference)
 	_save_font_prefs()
 

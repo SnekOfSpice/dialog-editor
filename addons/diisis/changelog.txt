@@ -14,12 +14,15 @@ Editor
 	- add default args
 	- dropdown args
 		- including MULTI_DROPDOWN_TYPE_SEPARATOR
+- Option for Save on Play (true by default)
+- General layout improvements
 
 Runtime
 - name style prepend got a few more options and consistency 
 
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
+- add screen fade in / out
 
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.

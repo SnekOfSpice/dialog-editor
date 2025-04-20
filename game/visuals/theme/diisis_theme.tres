@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://drk5fhsdjoewf"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://drk5fhsdjoewf"]
 
 [ext_resource type="FontFile" uid="uid://crmw2vdncpny" path="res://game/visuals/theme/fonts/justabit.ttf" id="1_65631"]
 [ext_resource type="FontFile" uid="uid://dhsrlx0q1hgjb" path="res://game/visuals/theme/fonts/HelvetiPixel.ttf" id="2_bxkip"]
@@ -71,6 +71,24 @@ expand_margin_right = 4.0
 anti_aliasing = false
 anti_aliasing_size = 4.633
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fix0h"]
+bg_color = Color(0.464275, 0.3185, 0.49, 0.364706)
+border_width_bottom = 2
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jvadt"]
+bg_color = Color(0.08382, 0.0539, 0.11, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.656904, 0.221189, 0.775251, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 2
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 2
+
 [resource]
 Button/colors/font_color = Color(0.976146, 0.96172, 0.954421, 1)
 Button/colors/font_hover_color = Color(0.0431373, 0.0431373, 0.0431373, 1)
@@ -82,6 +100,8 @@ Button/styles/pressed = SubResource("StyleBoxFlat_fo65i")
 Label/font_sizes/font_size = 24
 Label/fonts/font = ExtResource("1_65631")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_76e30")
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_fix0h")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_jvadt")
 RichTextLabel/font_sizes/bold_font_size = 24
 RichTextLabel/font_sizes/bold_italics_font_size = 16
 RichTextLabel/font_sizes/italics_font_size = 27
