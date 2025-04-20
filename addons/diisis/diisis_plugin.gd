@@ -20,6 +20,7 @@ const TEMPLATE_VN_AUTOLOAD_GAME_WORLD = "GameWorld"
 const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
 const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
+const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
 
 func setup_vn_template():
 	var e1 = InputEventMouseButton.new()
@@ -90,21 +91,10 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name in ["const", "game_world", "go_back_handler", "options", "sound"]:
+	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
-		var autoload_name:String
-		match file_name:
-			"const":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_CONST
-			"game_world":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_GAME_WORLD
-			"go_back_handler":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER
-			"options":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_OPTIONS
-			"sound":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_SOUND
+		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
 		if FileAccess.file_exists(path_game):
 			add_autoload_singleton(autoload_name, path_game)
 		elif FileAccess.file_exists(path_plugin):

@@ -27,7 +27,18 @@ func _ready() -> void:
 	find_child("MusicVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music")))
 	find_child("SFXVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX")))
 	
-	
+	for font in Style.LABEL_FONTS:
+		var loaded : Font = load(font)
+		find_child("LabelFontOptionButton").add_item(loaded.get_font_name())
+	find_child("LabelFontOptionButton").select(Options.font_prefs.get("label_font", 0))
+	for family : Dictionary in Style.RICH_TEXT_LABEL_FONTS:
+		var loaded : Font = load(family.get("normal_font"))
+		find_child("RTLFontOptionButton").add_item(loaded.get_font_name())
+	find_child("RTLFontOptionButton").select(Options.font_prefs.get("rich_text_label_font", 0))
+	find_child("LabelFontSizeSlider").value = theme.get_font_size("font_size", "Label")
+	find_child("LabelFontSizeLabel").text = str(int(find_child("LabelFontSizeSlider").value))
+	find_child("RTLFontSizeSlider").value = theme.get_font_size("normal_font_size", "RichTextLabel")
+	find_child("RTLFontSizeLabel").text = str(int(find_child("RTLFontSizeSlider").value))
 	
 	set_menu(0)
 	set_menu_available(0, GameWorld.stage_root.stage != CONST.STAGE_MAIN)
@@ -65,7 +76,6 @@ func _on_master_volume_slider_value_changed(value: float) -> void:
 		AudioServer.get_bus_index("Master"),
 		linear_to_db(find_child("MasterVolumeSlider").value)
 	)
-
 
 
 func _on_music_volume_slider_value_changed(value: float) -> void:
@@ -134,31 +144,33 @@ func _on_quit_button_pressed() -> void:
 
 
 func _on_label_font_option_button_item_selected(index: int) -> void:
-	var font
-	match index:
-		0:
-			font = load("res://game/visuals/theme/fonts/justabit.ttf")
-		1:
-			font = load("res://game/visuals/theme/fonts/open-dyslexic/OpenDyslexic-Regular.otf")
-			
-	theme.set_font("font", "Label", font)
+	Style.set_label_font(index)
 
 
 func _on_rtl_font_option_button_item_selected(index: int) -> void:
-	var font
-	match index:
-		0:
-			font = load("res://game/visuals/theme/fonts/HelvetiPixel.ttf")
-		1:
-			font = load("res://game/visuals/theme/fonts/open-dyslexic/OpenDyslexic-Regular.otf")
-			
-	theme.set_font("normal_font", "RichTextLabel", font)
+	Style.set_rich_text_label_font(index)
 
 
 func _on_label_font_size_slider_value_changed(value: float) -> void:
-	theme.set_font_size("font_size", "Label", value)
+	find_child("LabelFontSizeLabel").text = str(int(value))
 
 
 func _on_reset_label_font_size_button_pressed() -> void:
-	find_child("LabelFontSizeSlider").value = 24
-	theme.set_font_size("font_size", "Label", 24)
+	find_child("LabelFontSizeSlider").value = Style.DEFAULT_LABEL_FONT_SIZE
+	Style.set_label_font_size(Style.DEFAULT_LABEL_FONT_SIZE)
+
+
+func _on_label_font_size_slider_drag_ended(value_changed: bool) -> void:
+	Style.set_label_font_size(find_child("LabelFontSizeSlider").value)
+
+
+func _on_rtl_font_size_slider_drag_ended(value_changed: bool) -> void:
+	Style.set_rich_text_label_font_size(find_child("RTLFontSizeSlider").value)
+
+
+func _on_rtl_font_size_slider_value_changed(value: float) -> void:
+	find_child("RTLFontSizeLabel").text = str(int(value))
+
+func _on_reset_rtl_font_size_button_pressed() -> void:
+	find_child("RTLFontSizeSlider").value = Style.DEFAULT_RTL_FONT_SIZE
+	Style.set_rich_text_label_font_size(Style.DEFAULT_RTL_FONT_SIZE)

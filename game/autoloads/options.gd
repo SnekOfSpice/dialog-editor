@@ -36,6 +36,7 @@ func _ready() -> void:
 	auto_continue = config.get_value("preferences", "auto_continue", false)
 	set_fullscreen(config.get_value("preferences", "fullscreen", false))
 	save_slot = config.get_value("preferences", "save_slot", 0)
+	apply_font_prefs(config.get_value("preferences", "font_prefs", {}))
 	
 	just_finished_game = config.get_value("state", "just_finished_game", false)
 	unlocked_epilogue = config.get_value("state", "unlocked_epilogue", false)
@@ -59,7 +60,18 @@ func set_fullscreen(value:bool):
 	else:
 		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
-	
+
+var font_prefs : Dictionary
+func store_font_prefs(prefs:Dictionary):
+	font_prefs = prefs
+
+func apply_font_prefs(prefs:Dictionary):
+	font_prefs = prefs
+	Style.set_label_font(prefs.get("label_font", 0))
+	Style.set_rich_text_label_font(prefs.get("rich_text_label_font", 0))
+	Style.set_rich_text_label_font_size(prefs.get("rich_text_label_font_size", Style.DEFAULT_RTL_FONT_SIZE))
+	Style.set_label_font_size(prefs.get("label_font_size", Style.DEFAULT_LABEL_FONT_SIZE))
+
 func save_prefs():
 	var config = ConfigFile.new()
 
@@ -72,6 +84,7 @@ func save_prefs():
 	config.set_value("preferences", "auto_continue_delay", auto_continue_delay)
 	config.set_value("preferences", "fullscreen", fullscreen)
 	config.set_value("preferences", "save_slot", save_slot)
+	config.set_value("preferences", "font_prefs", font_prefs)
 	
 	config.set_value("state", "just_finished_game", just_finished_game)
 	config.set_value("state", "unlocked_epilogue", unlocked_epilogue)
