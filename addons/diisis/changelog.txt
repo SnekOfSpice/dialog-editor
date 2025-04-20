@@ -19,6 +19,7 @@ Editor
 
 Runtime
 - name style prepend got a few more options and consistency 
+- add LineReader.virtual_choices and LineReader.choice_pressed_virtual
 
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs

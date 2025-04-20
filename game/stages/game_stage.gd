@@ -134,7 +134,6 @@ func cum(_voice:String):
 	
 	get_tree().create_timer(1.5).timeout.connect(orgasm_mat.set_shader_parameter.bind("lod", 1.4))
 
-
 func _unhandled_input(event: InputEvent) -> void:
 	if advance_blockers > 0:
 		return
@@ -183,7 +182,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		find_child("LineReader").go_back()
 
 func show_ui():
-	find_child("VNUI").visible = true
+	if is_instance_valid(find_child("VNUI").visible):
+		find_child("VNUI").visible = true
 
 func hide_ui():
 	find_child("VNUI").visible = false

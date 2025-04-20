@@ -182,6 +182,11 @@ var instruction_handler: InstructionHandler:
 ## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
 ## Choice Buttons are currently presented to the player.
 @export var block_advance_during_choices:=true
+## Hides all built choice buttons during choices. Instead, the LineReader
+## must be advanced by calling [method LineReader.choice_pressed_virtual]. Useful if you want
+## a custom override for how choices are selected beyond buttons.
+@export var virtual_choices := false
+var built_virtual_choices := []
 #@export var give_focus_to_choice_button := false
 @export var choice_button_focus_mode := ChoiceButtonFocusMode.None
 ## Button scene that gets instantiated as children of [member choice_option_container].[br]
@@ -364,6 +369,7 @@ func serialize() -> Dictionary:
 	result["max_past_lines"] = max_past_lines
 	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
 	result["_last_raw_name"] = _last_raw_name
+	result["built_virtual_choices"] = built_virtual_choices
 	
 	return result
 
@@ -1502,7 +1508,7 @@ func build_choices(choices, auto_switch:bool):
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	
-	var built_choices : Array[Dictionary] = []
+	var built_choices : Array = []
 	for option in choices:
 		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
@@ -1615,6 +1621,10 @@ func build_choices(choices, auto_switch:bool):
 		else:
 			push_warning(str("Choice Title Label not set. Choice Title \"", current_choice_title,"\" will be ignored."))
 	
+	if virtual_choices:
+		built_virtual_choices = built_choices
+		for c in choice_option_container.get_children():
+			c.visible = false
 	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
 		#if choice_option_container.get_child_count() > 0:
 			#choice_option_container.get_child(0).grab_focus.call_deferred()
@@ -1622,11 +1632,19 @@ func build_choices(choices, auto_switch:bool):
 			#push_warning("No choice to give focus to.")
 
 
-
-func is_choice_presented():
+func is_choice_presented() -> bool:
+	if virtual_choices:
+		return not built_virtual_choices.is_empty()
 	return (not choice_option_container.get_children().is_empty()) and choice_container.visible
 
+## [param index] is the index of the choice emitted in [signal ParserEvents.choices_presented].
+func choice_pressed_virtual(index:int):
+	var choice_data : Dictionary = built_virtual_choices[index]
+	var button : ChoiceButton = choice_data.get("button")
+	button.on_pressed()
+
 func choice_pressed(do_jump_page, target_page, target_line):
+	built_virtual_choices.clear()
 	for c in choice_option_container.get_children():
 		c.queue_free()
 	if do_jump_page:
