@@ -496,7 +496,6 @@ stretch_mode = 2
 
 [node name="ChoiceContainer" type="PanelContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI"]
 auto_translate_mode = 1
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -505,7 +504,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5tba1")
 
-[node name="ChoiceOptionContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ChoiceOptionContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 4
@@ -619,7 +627,7 @@ mouse_filter = 2
 [node name="InstructionHandler" type="Node" parent="."]
 script = ExtResource("4_u8vmc")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "text_content", "text_container", "name_label", "name_container", "instruction_handler", "inline_evaluator", "prompt_unfinished", "prompt_finished")]
+[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("choice_container", "choice_option_container", "text_content", "text_container", "name_label", "name_container", "instruction_handler", "inline_evaluator", "choice_title_label", "prompt_unfinished", "prompt_finished")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -632,13 +640,14 @@ name_map = Dictionary[String, String]({
 "amber": "Amber"
 })
 choice_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
-choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/ChoiceOptionContainer")
+choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
 text_content = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel")
 text_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1")
 name_label = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/Label")
 name_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer")
 instruction_handler = NodePath("../InstructionHandler")
 inline_evaluator = NodePath("../InstructionHandler")
+choice_title_label = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/Label")
 show_input_prompt = true
 input_prompt_delay = 1.29
 input_prompt_lerp_weight = 0.233

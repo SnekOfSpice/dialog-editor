@@ -193,20 +193,8 @@ var built_virtual_choices := []
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:PackedScene
-## Puts the choice title set in DIISIS into [param choice_title_label]. Pushes a warning if [param choice_title_label] is null.
-@export var show_choice_title := false:
-	set(value):
-		show_choice_title = value
-		notify_property_list_changed()
-		update_configuration_warnings()
-@export
-var choice_title_label: Label:
-	get:
-		return choice_title_label
-	set(value):
-		choice_title_label = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
+## [Label] used to display the choice title. Invisible if the choice title is empty. Not setting it will result in the choice title not being shown.
+@export var choice_title_label: Label
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -332,9 +320,6 @@ func _validate_property(property: Dictionary):
 	if not keep_past_lines:
 		if property.name in ["past_text_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
-	if not show_choice_title:
-		if property.name in ["choice_title_label"]:
-			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -399,7 +384,7 @@ func deserialize(data: Dictionary):
 	called_positions = data.get("called_positions", [])
 	handled_comments = data.get("handled_comments", [])
 	call_strings = data.get("call_strings", {})
-	current_choice_title = data.get("current_choice_title", "")
+	_set_choice_title_or_warn(data.get("current_choice_title", ""))
 	text_speed_by_character_index = data.get("text_speed_by_character_index", [])
 	max_past_lines = data.get("max_past_lines", -1)
 	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
@@ -414,7 +399,7 @@ func deserialize(data: Dictionary):
 		var content = line_data.get("content").get("content")
 		var choices = line_data.get("content").get("choices")
 		var auto_switch : bool = raw_content.get("auto_switch")
-		current_choice_title = Parser.get_text(raw_content.get("title_id", ""))
+		_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id", "")))
 
 		build_choices(choices, auto_switch)
 	
@@ -467,8 +452,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
 	if keep_past_lines and not past_text_container:
 		warnings.append("Past Text Container is null")
-	if show_choice_title and not choice_title_label:
-		warnings.append("Choice Title Label is null")
 	
 	return warnings
 
@@ -744,7 +727,7 @@ func read_new_line(new_line: Dictionary):
 			set_dialog_line_index(0)
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
-			current_choice_title = Parser.get_text(raw_content.get("title_id"))
+			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id")))
 			build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
 			if not instruction_handler:
@@ -1614,13 +1597,7 @@ func build_choices(choices, auto_switch:bool):
 	if choice_option_container.get_child_count() > 0 and choice_button_focus_mode == ChoiceButtonFocusMode.Keyboard:
 		choice_option_container.get_child(0).call_deferred("grab_focus")
 	ParserEvents.choices_presented.emit(built_choices)
-	
-	if show_choice_title:
-		if choice_title_label:
-			choice_title_label.text = current_choice_title
-		else:
-			push_warning(str("Choice Title Label not set. Choice Title \"", current_choice_title,"\" will be ignored."))
-	
+		
 	if virtual_choices:
 		built_virtual_choices = built_choices
 		for c in choice_option_container.get_children():
@@ -1630,6 +1607,14 @@ func build_choices(choices, auto_switch:bool):
 			#choice_option_container.get_child(0).grab_focus.call_deferred()
 		#else:
 			#push_warning("No choice to give focus to.")
+
+func _set_choice_title_or_warn(title: String):
+	current_choice_title = title
+	if choice_title_label:
+		choice_title_label.visible = not title.is_empty()
+		choice_title_label.text = title
+	elif not title.is_empty():
+		push_warning(str("Choice Title Label not set. Choice Title \"", title,"\" will be not be displayed."))
 
 
 func is_choice_presented() -> bool:

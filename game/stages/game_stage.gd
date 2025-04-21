@@ -182,7 +182,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		find_child("LineReader").go_back()
 
 func show_ui():
-	if is_instance_valid(find_child("VNUI").visible):
+	if is_instance_valid(find_child("VNUI")):
 		find_child("VNUI").visible = true
 
 func hide_ui():
