@@ -334,17 +334,23 @@ func get_line_type_str(page_index:int, line_index:int) -> String:
 			return "Folder"
 	return "undefined"
 
-func get_choice_text_shortened(page_index:int, line_index:int, choice_index:int):
+func get_choice_text_adr(address:String, length:=-1):
+	var parts := DiisisEditorUtil.get_split_address(address)
+	return get_choice_text(parts[0], parts[1], parts[2], length)
+
+func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1):
 	var page = page_data.get(page_index, {})
 	var lines = page.get("lines")
 	var line = lines[line_index]
 	var choice = line.get("content").get("choices")[choice_index]
 	var choice_text:String
 	if choice.get("choice_text.enabled_as_default", true):
-		choice_text = choice.get("choice_text.enabled")
+		choice_text = Pages.get_text(choice.get("text_id_enabled", ""))
 	else:
-		choice_text = choice.get("choice_text.disabled")
-	return choice_text.left(25)
+		choice_text = Pages.get_text(choice.get("text_id_disabled", ""))
+	if length == -1:
+		return choice_text
+	return choice_text.left(length)
 
 func get_page_references(page_index:int) -> Array:
 	if not page_data.has(page_index):
@@ -1085,29 +1091,29 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 	}
 	return result
 
-func get_localizable_addresses() -> Array:
-	return get_localizable_addresses_with_content().keys()
-
-func get_localizable_addresses_with_content() -> Dictionary:
-	var localizable_addresses := {}
-	var page_index := 0
-	for page in page_data.values():
-		var line_index := 0
-		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Text:
-				localizable_addresses[(str(page_index, ".", line_index))] = line.get("content", {}).get("content", "")
-			elif line.get("line_type") == DIISIS.LineType.Choice:
-				var choice_index := 0
-				for choice in line.get("content", {}).get("choices", []):
-					if not choice.get("choice_text.enabled").is_empty():
-						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "enabled"))] = choice.get("choice_text.enabled")
-					if not choice.get("choice_text.disabled").is_empty():
-						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "disabled"))] = choice.get("choice_text.disabled")
-					choice_index += 1
-			line_index += 1
-		page_index += 1
-
-	return localizable_addresses
+#func get_localizable_addresses() -> Array:
+	#return get_localizable_addresses_with_content().keys()
+#
+#func get_localizable_addresses_with_content() -> Dictionary:
+	#var localizable_addresses := {}
+	#var page_index := 0
+	#for page in page_data.values():
+		#var line_index := 0
+		#for line in page.get("lines"):
+			#if line.get("line_type") == DIISIS.LineType.Text:
+				#localizable_addresses[(str(page_index, ".", line_index))] = line.get("content", {}).get("content", "")
+			#elif line.get("line_type") == DIISIS.LineType.Choice:
+				#var choice_index := 0
+				#for choice in line.get("content", {}).get("choices", []):
+					#if not choice.get("choice_text.enabled").is_empty():
+						#localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "enabled"))] = choice.get("choice_text.enabled")
+					#if not choice.get("choice_text.disabled").is_empty():
+						#localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "disabled"))] = choice.get("choice_text.disabled")
+					#choice_index += 1
+			#line_index += 1
+		#page_index += 1
+#
+	#return localizable_addresses
 
 
 func add_template_from_string(instruction:String):
@@ -1517,3 +1523,13 @@ func change_text_id(old_id:String, new_id:String) -> void:
 func get_new_id() -> String:
 	id_counter += 1
 	return str(str("%0.3f" % Time.get_unix_time_from_system()), "-", id_counter)
+
+func get_loopback_references_to(page_index:int, line_index:int) -> Array:
+	return loopback_references_by_page.get(page_index, {}).get(line_index, [])
+	
+func get_jump_references_to(page_index:int, line_index:int) -> Array:
+	return jump_page_references_by_page.get(page_index, {}).get(line_index, [])
+	
+	
+	
+	

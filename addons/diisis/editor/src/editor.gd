@@ -962,3 +962,8 @@ func prompt_change_text_id(id:String):
 	var popup : Window = $Popups.get_node("ChangeTextIDWindow")
 	open_popup(popup)
 	popup.set_id(id)
+
+func view_incoming_references(page_index:int, line_index:int):
+	var popup : Window = $Popups.get_node("IncomingReferencesWindow")
+	open_popup(popup)
+	popup.display_references(page_index, line_index)

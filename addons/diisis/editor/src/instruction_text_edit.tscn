@@ -1,9 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtmrdrq7nyrh0"]
+[gd_scene load_steps=7 format=3 uid="uid://dtmrdrq7nyrh0"]
 
 [ext_resource type="Texture2D" uid="uid://b8jl3084itnxs" path="res://addons/diisis/editor/src/instruction_container.tres" id="1_nbbrw"]
 [ext_resource type="Script" uid="uid://drc2jy0i4v4la" path="res://addons/diisis/editor/src/instruction_text_edit.gd" id="2_2ingb"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="3_1si4p"]
 [ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/theme/buttons_ui/clipboard.png" id="4_m4ncw"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_83uww"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+texture = ExtResource("1_nbbrw")
+modulate_color = Color(1, 1, 1, 0.490196)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mmgt"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0.154876, 0.154876, 0.154876, 0.823529)
 
 [node name="InstructionTextEdit" type="MarginContainer"]
 anchors_preset = 10
@@ -13,10 +28,6 @@ grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_2ingb")
-
-[node name="ColorRect" type="TextureRect" parent="."]
-layout_mode = 2
-texture = ExtResource("1_nbbrw")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -37,22 +48,26 @@ size_flags_vertical = 0
 tooltip_text = "Copy GDScript function signature to clipboard."
 icon = ExtResource("4_m4ncw")
 
-[node name="ComplianceContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="ComplianceContainer" type="Control" parent="."]
+z_index = 2
 layout_mode = 2
+size_flags_horizontal = 8
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ComplianceContainer"]
-layout_mode = 2
-theme_override_constants/margin_top = 24
+[node name="PanelContainer" type="PanelContainer" parent="ComplianceContainer"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = -208.0
+offset_top = -41.0
+offset_bottom = -1.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_83uww")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ComplianceContainer"]
+[node name="ComplianceLabel" type="RichTextLabel" parent="ComplianceContainer/PanelContainer"]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/ComplianceContainer/HBoxContainer"]
-layout_mode = 2
-text = "!!!"
-
-[node name="ComplianceLabel" type="Label" parent="VBoxContainer/ComplianceContainer/HBoxContainer"]
-layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mmgt")
+fit_content = true
+vertical_alignment = 2
 
 [connection signal="caret_changed" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_caret_changed"]
 [connection signal="focus_entered" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_focus_entered"]

@@ -47,7 +47,7 @@ func deserialize(data: Dictionary):
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
-	find_child("DelayContainer").columns = 2 if view == DiisisEditor.PageView.Full else 4
+	#find_child("DelayContainer").columns = 2 if view == DiisisEditor.PageView.Full else 4
 
 func _on_has_reverse_check_box_toggled(toggled_on: bool) -> void:
 	instruction_edit_reverse.visible = toggled_on

@@ -40,10 +40,10 @@ func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	compliance_container.visible = compliance != "OK"
 	compliance_label.text = compliance
 	
-	if compliance == "OK":
-		find_child("ColorRect").self_modulate.a = 0.0
-	else:
-		find_child("ColorRect").self_modulate.a = 0.5
+	#if compliance == "OK":
+		#find_child("ColorRect").self_modulate.a = 0.0
+	#else:
+		#find_child("ColorRect").self_modulate.a = 0.5
 
 
 func _on_instruction_text_box_focus_entered() -> void:

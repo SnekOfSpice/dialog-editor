@@ -233,11 +233,21 @@ func update():
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
 	
-	find_child("LoopbackReferenceLabel").text = str(
-		"LB->", Pages.loopback_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size(),
-		"\n",
-		"JP->", Pages.jump_page_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size()
+	var cpn := Pages.editor.get_current_page_number()
+	var index := get_index()
+	var loopback_reference_count : int = Pages.get_loopback_references_to(cpn, index).size()
+	var jump_reference_count : int = Pages.get_jump_references_to(cpn, index).size()
+	var reference_text := str(
+		str("LB->", loopback_reference_count, "\n") if loopback_reference_count > 0 else "",
+		str("JP->", jump_reference_count) if jump_reference_count > 0 else "",
 		)
+	if not reference_text.is_empty():
+		reference_text = str(
+			"[hint=Click to view incoming references :3][url=kissyoursister]",
+			reference_text,
+			"[/url][/hint]"
+		)
+	find_child("LoopbackReferenceLabel").text = reference_text
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:
@@ -332,3 +342,7 @@ func _on_select_all_in_range_button_pressed():
 func _on_text_content_drop_focus() -> void:
 	#grab_click_focus()
 	$PanelContainer.grab_focus()
+
+
+func _on_loopback_reference_label_meta_clicked(meta: Variant) -> void:
+	Pages.editor.view_incoming_references(Pages.editor.get_current_page_number(), get_index())

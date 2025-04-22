@@ -133,8 +133,6 @@ func serialize() -> Dictionary:
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
 		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
-		#"choice_text.enabled": find_child("LineEditEnabled").text,
-		#"choice_text.disabled": find_child("LineEditDisabled").text,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
 		"target_page": int(jump_page_target_page),
 		"target_line": int(jump_page_target_line),

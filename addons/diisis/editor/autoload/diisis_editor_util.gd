@@ -102,7 +102,7 @@ func humanize_address(address:String) -> String:
 	if parts.size() > 1:
 		address_string += str(" / ", Pages.get_line_type_str(parts[0], parts[1]))
 	if parts.size() > 2:
-		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
+		address_string += str(" / ", Pages.get_choice_text(parts[0], parts[1], parts[2], 25))
 	return address_string
 
 func get_project_source_file_path() -> String:

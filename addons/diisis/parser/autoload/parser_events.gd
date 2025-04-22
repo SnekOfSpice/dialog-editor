@@ -194,10 +194,27 @@ signal text_content_visible_ratio_changed(
 	visible_ratio:float
 )
 
-## Emitted when [method Parser.go_back] fails. This can be because the trail of visited line indices is empty or because the line type of the would-be previous line is non-Text.
+## Emitted when [method LineReader.request_go_back] fails. This can be because the trail of visited line indices is empty or because the line type of the would-be previous line is non-Text.
 signal go_back_declined()
 
-## Emitted when [method Parser.go_back] successfully goes back to the last visited index.
+## Emitted when a new line is read because of a successful [method LineReader.request_go_back] call. [param page] and [param line] are the indices of the new line.[br]
+## Note: Is not emitted when going back through chunks, such as when going back through individual lines inside of a single Text Line with dialog syntax.[br]
+## 
+## Going from displaying "More text!" to "Text!", this will emit:
+## [codeblock]
+## ---- Line ----
+## []>narrator: Text!
+## ---- Line ----
+## []>narrator: More text!
+## [/codeblock]
+## 
+## 
+## Going from displaying "More text!" to "Text!", this will [b]not[/b] emit:
+## [codeblock]
+## ---- Line ----
+## []>narrator: Text!
+## []>narrator: More text!
+## [/codeblock]
 signal go_back_accepted(page:int, line:int)
 
 signal read_new_line(line_index:int)
