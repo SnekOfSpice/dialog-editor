@@ -639,6 +639,7 @@ blank_names = Array[String](["narrator"])
 name_map = Dictionary[String, String]({
 "amber": "Amber"
 })
+chatlog_tint_full_line = null
 choice_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_option_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
 text_content = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel")

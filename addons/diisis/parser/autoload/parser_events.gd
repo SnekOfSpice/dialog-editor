@@ -201,3 +201,9 @@ signal go_back_declined()
 signal go_back_accepted(page:int, line:int)
 
 signal read_new_line(line_index:int)
+
+## Emitted when [LineReader] skips a line. A line is skipped when it's toggled off with the eye icon in the top left corner in DIISIS.
+signal line_skipped()
+
+## Emitted when [method LineReader.request_advance] successfully advances the [LineReader].
+signal advanced()

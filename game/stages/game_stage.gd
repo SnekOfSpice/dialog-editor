@@ -179,7 +179,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		find_child("LineReader").request_advance()
 	elif event.is_action_pressed("go_back"):
-		find_child("LineReader").go_back()
+		find_child("LineReader").request_go_back()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):

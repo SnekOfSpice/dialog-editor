@@ -16,7 +16,6 @@ func str_to_vec2(s) -> Vector2:
 	if s is Vector2:
 		return s
 	if not s is String:
-		push_warning("lmao")
 		return Vector2.ZERO
 	s = s.replace("(", "")
 	s = s.replace(")", "")

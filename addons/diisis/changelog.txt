@@ -7,6 +7,7 @@ General
 - Change to Godot 4.4.1
 - option to delete dropdowns
 - Skip line option
+- clean up linereader documentation
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
@@ -20,6 +21,9 @@ Editor
 Runtime
 - name style prepend got a few more options and consistency 
 - add LineReader.virtual_choices and LineReader.choice_pressed_virtual
+- add ParserEvents: skipped, advanced
+- add LineReader.chatlog_tint_full_line
+
 
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs

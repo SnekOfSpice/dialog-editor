@@ -1,4 +1,7 @@
 extends Node
+## The beating heart of runtime-side DIISIS <3
+##
+## uwu
 
 ## Set this to manually set any DIISIS-generated file to be used as source, irregardless of project.
 @export_file("*.json") var source_file_override: String

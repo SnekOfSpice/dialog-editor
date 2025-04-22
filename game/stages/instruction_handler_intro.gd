@@ -207,9 +207,9 @@ func roll_credits() -> bool:
 	emit_signal("start_rolling_credits")
 	return true
 
-func set_character_name(character: String, nname: String) -> bool:
+func set_character_name(character: String, new_name: String) -> bool:
 	if Parser.line_reader:
-		Parser.line_reader.set_actor_name(character, nname)
+		Parser.line_reader.set_actor_name(character, new_name)
 	
 	return false
 
