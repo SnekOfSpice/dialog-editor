@@ -343,6 +343,8 @@ func update_controls():
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
 	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1
 	
+	Pages.sync_line_references()
+	
 	await get_tree().process_frame
 	current_page.update()
 
@@ -490,6 +492,9 @@ func open_from_path(path:String):
 	#load_page(editor_data.get("current_page_number", 0), true)
 	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
+	
+	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
+		button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
 	set_text_size(editor_data.get("text_size_id", 3))

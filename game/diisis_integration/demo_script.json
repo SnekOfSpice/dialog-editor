@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 0,
+		"current_page_number": 2,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774625,
+		"id_counter": -9223372036854774726,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -767,7 +767,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 936,
+				"meta.scroll_vertical": 946,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -1064,7 +1064,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 65,
+				"meta.scroll_vertical": 468,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1,
@@ -1082,7 +1082,7 @@
 					{
 						"address": "2.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1091,7 +1091,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1106,20 +1106,21 @@
 						},
 						"header": [],
 						"id": "1744999499.058--9223372036854774709",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "2.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1128,7 +1129,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1150,20 +1151,21 @@
 						},
 						"header": [],
 						"id": "1744999499.059--9223372036854774706",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "2.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1172,7 +1174,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1187,20 +1189,21 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774702",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "2.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1209,7 +1212,7 @@
 								"meta.visible": false
 							},
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1224,22 +1227,23 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774698",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					}
 				],
-				"meta.address_mode_next": 1.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 1,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 0.0,
-				"number": 2.0,
+				"number": 2,
 				"page_key": "",
 				"terminate": true
 			}
@@ -1257,7 +1261,7 @@
 			"1744987741.530--9223372036854775777": "[]>narrator:Diisis uses so-called \"Instructions\" for more complex behavior. Read up on how to implement them on GitHub. The rough gist is that they work like functions in Godot. You give them names and arguments, and can then call them inside DIISIS.\n[]>narrator:For this, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to an Instruction, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
 			"1744987741.532--9223372036854775772": "[]>narrator:This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
 			"1744987741.532--9223372036854775774": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera,40>so :3",
-			"1744987741.534--9223372036854775769": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too. (As you can see in the script, newline characters don't need to be escaped in any capacity.)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
+			"1744987741.534--9223372036854775769": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too.<mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity.<mp> But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
 			"1744987741.535--9223372036854775767": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg,2>",
 			"1744987742.696--9223372036854775765": "[]>narrator:With that, we can start to wrap up.\n[]>amber:Change of scenery please!",
 			"1744987742.697--9223372036854775760": "[]>narrator:How can you leave this place again? Well you can just terminate the page by not having it point to a page again. <mp>[rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]\n[]>narrator:This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator:Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url].\n[]>narrator:Amber art by [url=https://x.com/_10qi]10qi[/url].",

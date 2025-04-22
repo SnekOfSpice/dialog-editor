@@ -274,6 +274,7 @@ text = "delete"
 
 [node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Conditionals" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_pymyd")]
 layout_mode = 2

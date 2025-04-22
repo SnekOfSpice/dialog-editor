@@ -72,6 +72,45 @@ var jump_page_references_by_page := {}
 
 signal pages_modified
 
+func sync_line_references():
+	loopback_references_by_page.clear()
+	jump_page_references_by_page.clear()
+	for page in page_data.values():
+		var page_index := int(page.get("number"))
+		var line_index := 0
+		for line in page.get("lines", []):
+			if line.get("line_type") != DIISISGlobal.LineType.Choice:
+				line_index += 1
+				continue
+			
+			for choice in line.get("content").get("choices"):
+				var loopback_page : int = choice.get("loopback_target_page")
+				var loopback_line : int = choice.get("loopback_target_line")
+				var jump_page : int = choice.get("target_page")
+				var jump_line : int = choice.get("target_line")
+				
+				var address : String = choice.get("address")
+				
+				if choice.get("loopback"):
+					if loopback_references_by_page.has(loopback_page):
+						if loopback_references_by_page.get(loopback_page).has(loopback_line):
+							loopback_references_by_page.get(loopback_page).get(loopback_line).append(address)
+						else:
+							loopback_references_by_page[loopback_page][loopback_line] = [address]
+					else:
+						loopback_references_by_page[loopback_page] = {loopback_line : [address]}
+
+				if choice.get("do_jump_page"):
+					if jump_page_references_by_page.has(jump_page):
+						if jump_page_references_by_page.get(jump_page).has(jump_line):
+							jump_page_references_by_page.get(jump_page).get(jump_line).append(address)
+						else:
+							jump_page_references_by_page[jump_page][jump_line] = [address]
+					else:
+						jump_page_references_by_page[jump_page] = {jump_line : [address]}
+		
+			line_index += 1
+
 func is_header_schema_empty():
 	return head_defaults.is_empty()
 
@@ -335,7 +374,7 @@ func get_line_type_str(page_index:int, line_index:int) -> String:
 	return "undefined"
 
 func get_choice_text_adr(address:String, length:=-1):
-	var parts := DiisisEditorUtil.get_split_address(address)
+	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
 	return get_choice_text(parts[0], parts[1], parts[2], length)
 
 func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1):
@@ -930,7 +969,7 @@ func has_fact(fact_name:String) -> bool:
 func does_address_exist(address:String) -> bool:
 	if address.ends_with(".") or address.is_empty():
 		return false
-	var parts :Array[int]= DiisisEditorUtil.get_split_address(address)
+	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:
 		return false
 	

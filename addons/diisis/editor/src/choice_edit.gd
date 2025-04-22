@@ -97,35 +97,6 @@ func serialize() -> Dictionary:
 	var jump_page_target_page : int = find_child("PageSelect").value
 	var jump_page_target_line : int = find_child("LineSelect").value
 	
-	# remove the loopback / jump page pointers
-	if Pages.loopback_references_by_page.has(deserialized_loopback_page):
-		if Pages.loopback_references_by_page.get(deserialized_loopback_page).has(deserialized_loopback_line):
-			Pages.loopback_references_by_page[deserialized_loopback_page][deserialized_loopback_line].erase(get_address())
-	# tbh idk if this also works if we don't save the deserialized value but I think it should
-	if Pages.jump_page_references_by_page.has(jump_page_target_page):
-		if Pages.jump_page_references_by_page.get(jump_page_target_page).has(jump_page_target_line):
-			Pages.jump_page_references_by_page[jump_page_target_page][jump_page_target_line].erase(get_address())
-	
-	if loopback:
-		var loopback_page :int= find_child("LoopbackPageSelect").value
-		var loopback_line :int= find_child("LoopbackLineSelect").value
-		if Pages.loopback_references_by_page.has(loopback_page):
-			if Pages.loopback_references_by_page.get(loopback_page).has(loopback_line):
-				Pages.loopback_references_by_page.get(loopback_page).get(loopback_line).append(get_address())
-			else:
-				Pages.loopback_references_by_page[loopback_page][loopback_line] = [get_address()]
-		else:
-			Pages.loopback_references_by_page[loopback_page] = {loopback_line : [get_address()]}
-	
-	if jump_page:
-		if Pages.jump_page_references_by_page.has(jump_page_target_page):
-			if Pages.jump_page_references_by_page.get(jump_page_target_page).has(jump_page_target_line):
-				Pages.jump_page_references_by_page.get(jump_page_target_page).get(jump_page_target_line).append(get_address())
-			else:
-				Pages.jump_page_references_by_page[jump_page_target_page][jump_page_target_line] = [get_address()]
-		else:
-			Pages.jump_page_references_by_page[jump_page_target_page] = {jump_page_target_line : [get_address()]}
-	
 	Pages.save_text(text_id_enabled, find_child("LineEditEnabled").text)
 	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
 	
@@ -197,6 +168,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.Minimal
 	find_child("BehaviorAfterFirstLabel").visible = view == DiisisEditor.PageView.Full
 	find_child("BehaviorAfterFirstSelectionButton").visible = view == DiisisEditor.PageView.Full
+	find_child("LoopbackPanelContainer").visible = view != DiisisEditor.PageView.Minimal
 	
 	if view == DiisisEditor.PageView.Full:
 		default_dropdown.visible = true

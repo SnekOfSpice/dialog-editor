@@ -96,6 +96,7 @@ func get_item(at_index:int) -> ChoiceEdit:
 	return find_child("ChoiceList").get_child(at_index)
 
 func set_page_view(view:DiisisEditor.PageView):
+	find_child("TitleContainer").visible = view != DiisisEditor.PageView.Minimal
 	$Controls.visible = view != DiisisEditor.PageView.Minimal
 
 func _on_add_button_pressed() -> void:

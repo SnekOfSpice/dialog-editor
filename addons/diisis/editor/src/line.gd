@@ -233,7 +233,7 @@ func update():
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
 	
-	var cpn := Pages.editor.get_current_page_number()
+	var cpn : int = Pages.editor.get_current_page_number()
 	var index := get_index()
 	var loopback_reference_count : int = Pages.get_loopback_references_to(cpn, index).size()
 	var jump_reference_count : int = Pages.get_jump_references_to(cpn, index).size()

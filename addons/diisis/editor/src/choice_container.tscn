@@ -15,15 +15,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_22qh4")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="TitleContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="ChoiceTitleLineEdit" type="LineEdit" parent="HBoxContainer"]
+[node name="ChoiceTitleLineEdit" type="LineEdit" parent="TitleContainer"]
 layout_mode = 2
 placeholder_text = "Choice Title (optional)"
 expand_to_text_length = true
 
-[node name="EditIDButton" type="Button" parent="HBoxContainer"]
+[node name="EditIDButton" type="Button" parent="TitleContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "..."
@@ -66,14 +66,14 @@ text = "+"
 
 [node name="AutoSwitchButton" type="CheckBox" parent="Controls"]
 layout_mode = 2
-tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices. Needs \"jump page\" enabled to work."
+tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices."
 focus_mode = 0
 text = "auto switch"
 
 [node name="ChoiceList" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[connection signal="pressed" from="HBoxContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
+[connection signal="pressed" from="TitleContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
 [connection signal="index_pressed" from="Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
 [connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]
