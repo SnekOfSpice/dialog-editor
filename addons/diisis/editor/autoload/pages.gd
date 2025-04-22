@@ -562,12 +562,12 @@ func get_all_invalid_address_pointers() -> String:
 			for choice : Dictionary in choices:
 				var choice_address := str(int(page_index), ".", int(line_index), ".", choice_index)
 				if choice.get("do_jump_page", false):
-					var address := str(choice.get("target_page"), ".", choice.get("target_line"))
+					var address := str(int(choice.get("target_page")), ".", int(choice.get("target_line")))
 					if not does_address_exist(address):
 						invalid_addresses.append(str("jump ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
 				
 				if choice.get("loopback", false):
-					var address := str(choice.get("loopback_target_page"), ".", choice.get("loopback_target_line"))
+					var address := str(int(choice.get("loopback_target_page")), ".", int(choice.get("loopback_target_line")))
 					if not does_address_exist(address):
 						invalid_addresses.append(str("loop ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
 				choice_index += 1

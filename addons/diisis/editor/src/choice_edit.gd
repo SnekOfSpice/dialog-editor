@@ -313,10 +313,18 @@ func set_loopback(do:bool):
 	find_child("LoopbackTargetStringLabel").modulate.a = 1 if do else 0
 
 func get_loopback_target_address() -> String:
-	return str(find_child("LoopbackPageSelect").value, ".", find_child("LoopbackLineSelect").value)
+	return str(
+		int(find_child("LoopbackPageSelect").value),
+		".",
+		int(find_child("LoopbackLineSelect").value)
+	)
 
 func get_jump_target_address() -> String:
-	return str(find_child("PageSelect").value, ".", find_child("LineSelect").value)
+	return str(
+		int(find_child("PageSelect").value),
+		".",
+		int(find_child("LineSelect").value)
+	)
 
 
 func _on_up_button_pressed() -> void:

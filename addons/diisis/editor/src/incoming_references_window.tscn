@@ -9,7 +9,6 @@ initial_position = 4
 size = Vector2i(400, 300)
 wrap_controls = true
 transient = true
-exclusive = true
 always_on_top = true
 theme = ExtResource("1_okfbl")
 script = ExtResource("1_l47po")
@@ -56,32 +55,43 @@ self_modulate = Color(1, 1, 1, 0.647059)
 layout_mode = 2
 text = "Click on the addresses to go there!"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
+[node name="NoReferencesLabel" type="Label" parent="Control/ScrollContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.647059)
+layout_mode = 2
+text = "No references!"
+
+[node name="LoopbackSection" type="VBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="Control/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/ScrollContainer/VBoxContainer/LoopbackSection"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Control/ScrollContainer/VBoxContainer/LoopbackSection/HBoxContainer"]
 layout_mode = 2
 text = "Loopback"
 
-[node name="HSeparator" type="HSeparator" parent="Control/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Control/ScrollContainer/VBoxContainer/LoopbackSection/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LoopbackContainer" type="GridContainer" parent="Control/ScrollContainer/VBoxContainer"]
+[node name="LoopbackContainer" type="GridContainer" parent="Control/ScrollContainer/VBoxContainer/LoopbackSection"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
+[node name="JumpSection" type="VBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="Control/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/ScrollContainer/VBoxContainer/JumpSection"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Control/ScrollContainer/VBoxContainer/JumpSection/HBoxContainer2"]
 layout_mode = 2
 text = "Jump"
 
-[node name="HSeparator" type="HSeparator" parent="Control/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="HSeparator" type="HSeparator" parent="Control/ScrollContainer/VBoxContainer/JumpSection/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="JumpContainer" type="GridContainer" parent="Control/ScrollContainer/VBoxContainer"]
+[node name="JumpContainer" type="GridContainer" parent="Control/ScrollContainer/VBoxContainer/JumpSection"]
 layout_mode = 2
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]

@@ -25,6 +25,10 @@ func display_references(page_index:int, line_index:int):
 		add_label_to_container(address, find_child("LoopbackContainer"))
 	for address in jump_references:
 		add_label_to_container(address, find_child("JumpContainer"))
+	
+	find_child("LoopbackSection").visible = not loopback_references.is_empty()
+	find_child("JumpSection").visible = not jump_references.is_empty()
+	find_child("NoReferencesLabel").visible = loopback_references.is_empty() and jump_references.is_empty()
 
 func add_label_to_container(address:String, container:Control):
 	var label = RichTextLabel.new()
