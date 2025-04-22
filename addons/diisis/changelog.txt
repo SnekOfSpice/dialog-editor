@@ -7,7 +7,7 @@ General
 - Change to Godot 4.4.1
 - option to delete dropdowns
 - Skip line option
-- clean up linereader documentation
+- clean up documentation, especially LineReader and ParserEvents
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
@@ -16,7 +16,8 @@ Editor
 	- dropdown args
 		- including MULTI_DROPDOWN_TYPE_SEPARATOR
 - Option for Save on Play (true by default)
-- General layout improvements
+- General layout improvements & slimmification
+- Incoming references window for JP/LB
 
 Runtime
 - name style prepend got a few more options and consistency 
