@@ -526,6 +526,7 @@ func _ready() -> void:
 ## oh shit code highlighting lmfao
 ## rest now, my child
 func _lmao(a, b):
+	printt(a,b)
 	_reverse_next_instruction = true
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
@@ -994,10 +995,10 @@ func _process(delta: float) -> void:
 			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
 		
 	for pos : int in _call_strings:
-		if _can_handle_text_position(pos, "called_positions"):
+		if _can_handle_text_position(pos, "_called_positions"):
 			_call_from_position(pos)
 	for pos : int in _comments:
-		if _can_handle_text_position(pos, "handled_comments"):
+		if _can_handle_text_position(pos, "_handled_comments"):
 			_emit_comment(pos)
 	
 	_last_visible_ratio = text_content.visible_ratio

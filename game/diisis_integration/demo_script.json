@@ -592,7 +592,7 @@
 										"operand_args": [],
 										"operand_key": "AND"
 									},
-									"do_jump_page": false,
+									"do_jump_page": true,
 									"facts": {
 										"fact_data_by_name": {
 
@@ -605,12 +605,12 @@
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
 									"meta.disabled_visible": false,
-									"meta.jump_page_before_auto_switch": false,
+									"meta.jump_page_before_auto_switch": true,
 									"meta.selector": {
 										"selected": false
 									},
 									"target_line": 1,
-									"target_page": 0,
+									"target_page": 1,
 									"text_id_disabled": "1744987729.626--9223372036854775788",
 									"text_id_enabled": "1744987729.626--9223372036854775789"
 								}
@@ -767,7 +767,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 738,
+				"meta.scroll_vertical": 383,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -817,7 +817,8 @@
 						"meta.line_index": 0.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.1",
@@ -839,11 +840,11 @@
 							"delay_after": 0.0,
 							"delay_before": 0.0,
 							"meta.has_reverse": true,
-							"meta.reverse_text": "",
+							"meta.reverse_text": "shake_camera(20)",
 							"meta.text": "shake_camera(20)",
 							"meta.validation_status": "OK",
 							"name": "shake_camera",
-							"reverse_name": ""
+							"reverse_name": "shake_camera"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -861,7 +862,8 @@
 						"meta.line_index": 1.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.2",
@@ -898,7 +900,8 @@
 						"meta.line_index": 2.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.3",
@@ -935,7 +938,8 @@
 						"meta.line_index": 3.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.4",
@@ -979,7 +983,8 @@
 						"meta.line_index": 4.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.5",
@@ -1016,7 +1021,8 @@
 						"meta.line_index": 5.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					},
 					{
 						"address": "1.6",
@@ -1053,11 +1059,12 @@
 						"meta.line_index": 6.0,
 						"meta.selector": {
 							"selected": false
-						}
+						},
+						"skip": false
 					}
 				],
 				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 572.0,
+				"meta.scroll_vertical": 49.0,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1.0,

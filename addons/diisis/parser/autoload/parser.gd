@@ -379,6 +379,7 @@ func go_back():
 		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
 		trail_shift -= 1
 		if address_trail_index + trail_shift <= 0:
+			a = false
 			trail_shift = 0
 			break
 	if a:
