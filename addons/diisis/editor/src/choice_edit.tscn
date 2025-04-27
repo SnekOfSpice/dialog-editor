@@ -196,13 +196,11 @@ text = "Default text is empty!"
 [node name="Movement" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement"]
+[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement"]
 layout_mode = 2
-columns = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
 
 [node name="JumpPage" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer"]
 layout_mode = 2
@@ -210,52 +208,46 @@ layout_mode = 2
 [node name="JumpPageToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage"]
 layout_mode = 2
 size_flags_vertical = 0
-tooltip_text = "Jumps to a different part of the file. (var is auto_switch)"
+tooltip_text = "Jumps to a different part of the file."
 focus_mode = 0
 text = "jump"
 
 [node name="JumpPageContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage"]
 layout_mode = 2
-size_flags_horizontal = 2
 theme_override_constants/margin_right = 15
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer"]
+[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+visible = false
 layout_mode = 2
-columns = 6
-
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
-layout_mode = 2
-address_source = NodePath("../../../../../../../../../../../..")
+address_source = NodePath("../../../../../../../../../../..")
 address_function = "get_jump_target_address"
 
-[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer"]
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 text = "P"
 
-[node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer"]
+[node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 max_value = 1e+07
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer"]
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 text = "L"
 
-[node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer"]
+[node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 max_value = 1e+07
 
-[node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer"]
+[node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text_overrun_behavior = 1
 
 [node name="LoopbackPanelContainer" type="PanelContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 2
 
 [node name="Loopback" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer"]
 layout_mode = 2
@@ -271,45 +263,39 @@ text = "loopback"
 
 [node name="LoopbackContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback"]
 layout_mode = 2
-size_flags_horizontal = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer"]
+[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="GridContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
-auto_translate_mode = 1
+[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+visible = false
 layout_mode = 2
-columns = 6
-
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
-layout_mode = 2
-address_source = NodePath("../../../../../../../../../../../..")
+address_source = NodePath("../../../../../../../../../../..")
 address_function = "get_loopback_target_address"
 
-[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer"]
+[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "P"
 
-[node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer"]
+[node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 max_value = 1e+07
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer"]
+[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "L"
 
-[node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer"]
+[node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 max_value = 1e+07
 
-[node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer"]
+[node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
-text_overrun_behavior = 1
 
 [node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_bcn4k")]
 layout_mode = 2
@@ -326,10 +312,10 @@ address_depth = 2
 [connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/TextLinesDisabled/LineEditDisabled" to="." method="_on_line_edit_disabled_text_changed"]
 [connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines/TextLinesDisabled/EditDisabledIDButton" to="." method="_on_edit_disabled_id_button_pressed"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer/AddressModeButton" to="." method="update"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer/PageSelect" to="." method="_on_page_select_value_changed"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/VBoxContainer/LineSelect" to="." method="_on_line_select_value_changed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="_on_page_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="_on_line_select_value_changed"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer/AddressModeButton" to="." method="update"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/VBoxContainer/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]
+[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
+[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]

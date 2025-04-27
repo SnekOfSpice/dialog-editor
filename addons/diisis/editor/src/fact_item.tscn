@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bhjckv7pd2eri"]
+[gd_scene load_steps=6 format=3 uid="uid://bhjckv7pd2eri"]
 
 [ext_resource type="Script" uid="uid://b7v4xhanv4kxy" path="res://addons/diisis/editor/src/fact_item.gd" id="1_kk40s"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="2_o88s0"]
+[ext_resource type="Texture2D" uid="uid://nakfxqdgr4pg" path="res://addons/diisis/editor/visuals/true.png" id="2_s4vmr"]
+[ext_resource type="Texture2D" uid="uid://cyiecfr2eyp2o" path="res://addons/diisis/editor/visuals/false.png" id="3_02amc"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="3_i2pc6"]
 
 [node name="Fact" type="VBoxContainer"]
@@ -29,11 +31,6 @@ popup/item_0/text = "Bool"
 popup/item_0/id = 0
 popup/item_1/text = "Int"
 popup/item_1/id = 1
-
-[node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer"]
-layout_mode = 2
-size_flags_horizontal = 2
-size_flags_vertical = 8
 
 [node name="FactName" parent="FactItem/HBoxContainer/FactValueContainer" instance=ExtResource("2_o88s0")]
 custom_minimum_size = Vector2(144, 0)
@@ -76,6 +73,13 @@ layout_mode = 2
 min_value = -93696.0
 max_value = 93696.0
 
+[node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 8
+theme_override_icons/checked = ExtResource("2_s4vmr")
+theme_override_icons/unchecked = ExtResource("3_02amc")
+
 [node name="DeleteButton" type="Button" parent="FactItem"]
 layout_mode = 2
 size_flags_horizontal = 10
@@ -105,11 +109,11 @@ text = "register"
 [node name="Hint" parent="." instance=ExtResource("3_i2pc6")]
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
-[connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_pressed"]
-[connection signal="toggled" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_toggled"]
 [connection signal="text_entered" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_entered"]
 [connection signal="text_submitted" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_submitted"]
 [connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntOperandButton" to="." method="_on_int_operand_button_pressed"]
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer/IntComparatorButton" to="." method="set_int_comparator"]
+[connection signal="pressed" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_pressed"]
+[connection signal="toggled" from="FactItem/HBoxContainer/FactValueContainer/FactBoolValue" to="." method="_on_fact_value_toggled"]
 [connection signal="pressed" from="FactItem/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="RegisterContainer/RegisterButton" to="." method="_on_register_button_pressed"]

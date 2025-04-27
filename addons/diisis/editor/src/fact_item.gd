@@ -117,7 +117,6 @@ func get_fact_name():
 
 func update_unregsitered_prompt():
 	var new_text = entered_text
-	find_child("RegisterContainer").visible = true
 	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(entered_text)
 	if not Pages.has_fact(new_text) and not new_text.is_empty():
 		find_child("RegisterLabel").text = str(
@@ -137,6 +136,8 @@ func update_unregsitered_prompt():
 				set_data_type(DataType.Bool)
 			else:
 				set_data_type(DataType.Int)
+		
+	find_child("RegisterContainer").visible = not find_child("RegisterLabel").text.is_empty()
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:

@@ -5,6 +5,14 @@ class_name Conditionals
 enum ConditionalOperand {
 	AND, OR, nOrMore, nOrLess, betweenNMincl
 }
+
+const OPERAND_NAMES := {
+	ConditionalOperand.AND : "All",
+	ConditionalOperand.OR : "Any",
+	ConditionalOperand.nOrMore : "At Least",
+	ConditionalOperand.nOrLess : "At Most",
+	ConditionalOperand.betweenNMincl : "Between",
+}
 enum Behavior {
 	Show,
 	Hide,
@@ -21,8 +29,8 @@ func init() -> void:
 	find_child("OperandOptionButton").clear()
 	find_child("BehaviorButton").clear()
 	
-	for a in ConditionalOperand:
-		find_child("OperandOptionButton").add_item(a)
+	for a in ConditionalOperand.size():
+		find_child("OperandOptionButton").add_item(OPERAND_NAMES.get(a))
 	
 	for a in Behavior:
 		# depth 2 is choice item. only choice item has a meaningful difference between hide/show and enable/disable

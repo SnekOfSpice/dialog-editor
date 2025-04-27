@@ -1154,7 +1154,14 @@ func _replace_tags(lines:Array) -> Array:
 						if not a.is_empty():
 							func_args.append(a)
 					if inline_evaluator.has_method(func_name):
-						new_text = new_text.replace(control_to_replace, str(inline_evaluator.callv(func_name, func_args)))
+						var call_result = inline_evaluator.callv(func_name, func_args)
+						if not call_result is String:
+							if call_result == null:
+								call_result = ""
+							else:
+								push_warning(str(func_name, " was called but didn't return String. Hoping this looks good ^^"))
+								call_result = str(call_result)
+						new_text = new_text.replace(control_to_replace, call_result)
 					else:
 						push_warning(str(func_name, " doesn't exist in inline_evaluator."))
 				elif new_text.find("<name:", scan_index) == scan_index:
