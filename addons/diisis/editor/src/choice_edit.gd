@@ -365,7 +365,7 @@ func _update_text_line_visibilities(event: InputEvent):
 	var enabled : bool = find_child("DefaultApparenceSelectionButton").button_pressed
 	var lines_disabled : Control = find_child("TextLinesDisabled")
 	var lines_enabled : Control = find_child("TextLinesEnabled")
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 		if enabled:
 			lines_disabled.visible = not lines_disabled.visible
 		else:

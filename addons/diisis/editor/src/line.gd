@@ -21,6 +21,7 @@ func init() -> void:
 	find_child("InstructionContainer").init()
 	find_child("ChoiceContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
+	
 	await get_tree().process_frame
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	set_head_editable(Pages.is_header_schema_empty())

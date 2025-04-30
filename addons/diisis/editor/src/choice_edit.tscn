@@ -141,7 +141,7 @@ size_flags_horizontal = 3
 [node name="TextLines" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "Double click on the true/false to toggle non-default line"
+tooltip_text = "Click on the true/false to toggle non-default line"
 
 [node name="TextLinesEnabled" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/VBoxContainer/TextLines"]
 layout_mode = 2
