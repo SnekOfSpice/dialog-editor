@@ -9,30 +9,35 @@ class_name Facts
 @export var facts_container:VBoxContainer
 
 func init():
+	var button := _get_visibility_toggle_button()
+	if not button.pressed.is_connected(toggle_visibility):
+		button.connect("pressed", toggle_visibility)
+	button.add_theme_icon_override("checked", load("uid://3gqp3bocdpbm"))
+	button.add_theme_icon_override("unchecked", load("uid://3gqp3bocdpbm"))
+	set_visibility(button.button_pressed)
+	
 	if visibility_toggle_button:
 		find_child("VisibilityToggleButton").visible = false
-		if not visibility_toggle_button.pressed.is_connected(toggle_visibility):
-			visibility_toggle_button.connect("pressed", toggle_visibility)
-		visibility_toggle_button.add_theme_icon_override("checked", load("uid://3gqp3bocdpbm"))
-		visibility_toggle_button.add_theme_icon_override("unchecked", load("uid://3gqp3bocdpbm"))
-		set_visibility(visibility_toggle_button.button_pressed)
-	else:
-		if not find_child("VisibilityToggleButton").pressed.is_connected(toggle_visibility):
-			find_child("VisibilityToggleButton").connect("pressed", toggle_visibility)
-		set_visibility(find_child("VisibilityToggleButton").button_pressed)
-		find_child("VisibilityToggleButton").add_theme_icon_override("checked", load("uid://3gqp3bocdpbm"))
-		find_child("VisibilityToggleButton").add_theme_icon_override("unchecked", load("uid://3gqp3bocdpbm"))
+	
+	if not gui_input.is_connected(_on_gui_input):
+		gui_input.connect(_on_gui_input)
 	
 	update()
 
-func set_visibility(value:bool):
+func _get_visibility_toggle_button() -> CheckButton:
 	if visibility_toggle_button:
-		visibility_toggle_button.set_pressed_no_signal(value)
+		return visibility_toggle_button
+	else:
+		return find_child("VisibilityToggleButton")
+
+func set_visibility(value:bool):
+	_get_visibility_toggle_button().set_pressed_no_signal(value)
+	
+	if visibility_toggle_button:
 		visible = value
 	else:
 		find_child("Controls").visible = value
 		facts_container.visible = value
-		find_child("VisibilityToggleButton").set_pressed_no_signal(value)
 
 func toggle_visibility():
 	if visibility_toggle_button:
