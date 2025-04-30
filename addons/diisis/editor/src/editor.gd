@@ -306,17 +306,17 @@ func _shortcut_input(event):
 					emit_signal("scale_editor_up")
 		if event.is_alt_pressed():
 			match event.key_label:
-				KEY_LEFT:
+				KEY_LEFT, KEY_A:
 					if event.is_command_or_control_pressed():
 						request_load_first_page()
 					else:
 						request_load_previous_page()
-				KEY_RIGHT:
+				KEY_RIGHT, KEY_D:
 					if event.is_command_or_control_pressed():
 						request_load_last_page()
 					else:
 						request_load_next_page()
-				KEY_A:
+				KEY_S:
 					if event.is_shift_pressed():
 						request_add_last_page()
 					else:
