@@ -993,6 +993,18 @@ func view_incoming_references(page_index:int, line_index:int):
 	open_popup(popup)
 	popup.display_references(page_index, line_index)
 
+func popup_confirm_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextConfirmationDialog:
+	var dialog = preload("res://addons/diisis/editor/src/rich_text_confirmation_dialog.tscn").instantiate()
+	$Popups.add_child(dialog)
+	dialog.close_requested.connect(dialog.hide)
+	dialog.set_rich_text(rich_text)
+	dialog.popup_centered()
+	if not title.is_empty():
+		dialog.title = title
+	if at != Vector2.ZERO:
+		dialog.position = at
+	return dialog
+
 # returns true if the prompt got opened
 func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Callable) -> bool:
 	if not Pages.warn_on_fact_deletion:
@@ -1002,9 +1014,7 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 	if fact_data.is_empty():
 		return false
 	
-	var dialog := preload("res://addons/diisis/editor/src/rich_text_confirmation_dialog.tscn").instantiate()
-	$Popups.add_child(dialog)
-	dialog.close_requested.connect(dialog.hide)
+	var dialog : RichTextConfirmationDialog = popup_confirm_dialogue()
 	dialog.confirmed.connect(delete_callable)
 	
 	var text := ""
@@ -1034,7 +1044,7 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 	if not choice_text.is_empty(): choice_text = "  = In Choices:\n" + choice_text
 	text = page_text + "\n" + line_text + "\n" + choice_text
 	
-	dialog.set_text(str(
+	dialog.set_rich_text(str(
 		"[b]The following object contains facts: ",
 		object_type_str, " at address ", address,
 		"[/b]\n",
@@ -1043,5 +1053,5 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 		"[b]Are you sure you want to delete it?[/b]"
 	))
 	
-	dialog.popup_centered()
+	
 	return true

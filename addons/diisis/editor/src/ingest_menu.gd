@@ -23,16 +23,51 @@ func build_payload() -> Dictionary:
 		"neaten_whitespace" : is_whitespace_checked()
 	}
 
-func _on_index_pressed(index: int) -> void:
+func _on_id_pressed(id: int) -> void:
 	var target_value:bool
-	match index:
+	match id:
 		CAPITALIZE_INDEX:
 			target_value = not is_capitalize_checked()
 		WHITESPACE_INDEX:
 			target_value = not is_whitespace_checked()
 	for item in get_tree().get_nodes_in_group("diisis_ingest_menu"):
-		match index:
+		match id:
 			CAPITALIZE_INDEX:
 				item.set_capitalize_checked(target_value)
 			WHITESPACE_INDEX:
 				item.set_whitespace_checked(target_value)
+	if id == 6:
+		Pages.editor.popup_confirm_dialogue(str(
+			"For Lines -------------",
+			"
+			a: amber
+			n: narrator
+
+			CONTENT
+			a: this line will be ingested and inserted into the text box!
+			n: uwu
+			n: uwuwuwu",
+			"\n\nFor Pages --------------",
+			"
+			a: amber
+			n: narrator
+			END ACTORS
+
+			CONTENT
+			a: this first line will be ingested
+			n: uwu
+			n: uwuwuwu
+
+			CONTENT
+			n: This is a second line
+			h: wow im not defined
+			a: uuuuuuuuu
+
+			PAGE
+
+			CONTENT
+			n: a second page
+			n: waow"
+		),
+		"Ingestion Syntax",
+		canvas_transform.get_origin())

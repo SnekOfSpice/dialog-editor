@@ -15,6 +15,8 @@ func init(n:=number):
 	number = n
 	lines = find_child("Lines")
 	find_child("Number").text = str(n)
+	find_child("DeleteButton").disabled = n == 0
+	find_child("DeleteButton").tooltip_text = "Page 0 cannot be deleted." if n == 0 else "Delete page."
 	set_next(n+1)
 	find_child("Facts").init()
 	deserialize(data)

@@ -1,7 +1,8 @@
 @tool
 extends ConfirmationDialog
+class_name RichTextConfirmationDialog
 
-func set_text(text:String):
+func set_rich_text(text:String):
 	find_child("RichTextLabel").text = text
 
 func _on_rich_text_label_item_rect_changed() -> void:

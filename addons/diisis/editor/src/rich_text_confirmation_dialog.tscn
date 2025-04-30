@@ -5,6 +5,7 @@
 [node name="RichTextConfirmationDialog" type="ConfirmationDialog"]
 position = Vector2i(0, 36)
 visible = true
+exclusive = false
 always_on_top = true
 script = ExtResource("1_kqefd")
 
@@ -15,6 +16,7 @@ offset_right = 192.0
 offset_bottom = 51.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer"]
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

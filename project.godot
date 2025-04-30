@@ -14,7 +14,7 @@ config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="res://game/stages/stage_root.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/icon="res://addons/diisis/final1alt.png"
+config/icon="uid://beurjskbrwsnc"
 
 [autoload]
 
