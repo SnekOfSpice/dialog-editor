@@ -65,11 +65,19 @@ var text_data := {}
 
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
+
+
+#region toggle settings
+const TOGGLE_SETTINGS := {
+	"save_on_play" : "Saves the DIISIS script when you start playing in Godot (with F5 or otherwise)",
+	"warn_on_fact_deletion" : "Prompts you to confirm the deletion of a page, line, or choice item if that object or any of its children contains facts. (not conditionals)",
+}
 var save_on_play := true
 var warn_on_fact_deletion := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
+#endregion
 
 signal pages_modified
 
@@ -116,7 +124,7 @@ func is_header_schema_empty():
 	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
-	return {
+	var data := {
 		"head_defaults" : head_defaults,
 		"id_counter" : id_counter,
 		"page_data" : page_data,
@@ -135,9 +143,10 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"default_address_mode_pages": default_address_mode_pages,
-		"save_on_play": save_on_play,
-		"warn_on_fact_deletion": warn_on_fact_deletion,
 	}
+	for setting in TOGGLE_SETTINGS.keys():
+		data[setting] = get(setting)
+	return data
 
 func deserialize(data:Dictionary):
 	# all keys are now strings instead of ints
@@ -171,8 +180,10 @@ func deserialize(data:Dictionary):
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
-	save_on_play = data.get("save_on_play", true)
-	warn_on_fact_deletion = data.get("warn_on_fact_deletion", true)
+	
+	for setting in TOGGLE_SETTINGS.keys():
+		set(setting, data.get(setting, true))
+		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
 	apply_file_config(data.get("file_config", {}))
@@ -1634,3 +1645,6 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 				facts_by_address[address] = facts_data
 	
 	return facts_by_address
+
+func set_toggle_setting(value:bool, setting:StringName):
+	set(setting, value)

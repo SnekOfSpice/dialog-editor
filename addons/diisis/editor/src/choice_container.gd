@@ -139,4 +139,6 @@ func _on_select_index_pressed(index: int) -> void:
 
 
 func _on_edit_id_button_pressed() -> void:
+	if not title_id:
+		title_id = Pages.get_new_id()
 	Pages.editor.prompt_change_text_id(title_id)

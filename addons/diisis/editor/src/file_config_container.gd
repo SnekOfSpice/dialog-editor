@@ -8,8 +8,24 @@ func init():
 	find_child("LeadTimeSpinBoxSameActor").value = Pages.text_lead_time_same_actor
 	find_child("LeadTimeSpinBoxOtherActor").value = Pages.text_lead_time_other_actor
 	find_child("AddressModeButtonPage").set_mode(Pages.default_address_mode_pages)
-	find_child("SaveOnPlayCheckBox").button_pressed = Pages.save_on_play
-	find_child("WarnOnFactDeletionCheckBox").button_pressed = Pages.warn_on_fact_deletion
+	
+	for child in find_child("ToggleSettings").get_children():
+		child.queue_free()
+	for setting : String in Pages.TOGGLE_SETTINGS.keys():
+		var container = HBoxContainer.new()
+		var button = CheckBox.new()
+		button.toggled.connect(Pages.set_toggle_setting.bind(setting))
+		var label = Label.new()
+		label.text = Pages.TOGGLE_SETTINGS.get(setting)
+		container.add_child(button)
+		container.add_child(label)
+		button.mouse_entered.connect(label.set.bind("visible", true))
+		button.mouse_exited.connect(label.set.bind("visible", false))
+		label.visible = false
+		find_child("ToggleSettings").add_child(container)
+		button.button_pressed = Pages.get(setting)
+		button.text = setting.capitalize()
+	
 	find_child("ItemList").select(0)
 	_on_item_list_item_selected(0)
 
@@ -56,9 +72,10 @@ func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void
 	Pages.default_address_mode_pages = mode
 
 
-func _on_save_on_play_check_box_toggled(toggled_on: bool) -> void:
-	Pages.save_on_play = toggled_on
 
-
-func _on_warn_on_fact_deletion_check_box_toggled(toggled_on: bool) -> void:
-	Pages.warn_on_fact_deletion = toggled_on
+#func _on_save_on_play_check_box_toggled(toggled_on: bool) -> void:
+	#Pages.save_on_play = toggled_on
+#
+#
+#func _on_warn_on_fact_deletion_check_box_toggled(toggled_on: bool) -> void:
+	#Pages.warn_on_fact_deletion = toggled_on

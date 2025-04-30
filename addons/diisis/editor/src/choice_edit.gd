@@ -12,7 +12,6 @@ var text_id_disabled : String
 
 signal move_choice_edit(choice_edit, direction)
 
-# Called when the node enters the scene tree for the first time.
 func init() -> void:
 	find_child("Conditionals").init()
 	find_child("Facts").init()
@@ -74,16 +73,11 @@ func deserialize(data:Dictionary):
 	
 	find_child("BehaviorAfterFirstSelectionButton").select(data.get("behavior_after_first_selection", 0))
 	
-	prints("deserializing", jump_page_before_auto_switch)
 	if jump_page_before_auto_switch:
 		set_do_jump_page(data.get("do_jump_page", false))
 	else:
 		set_do_jump_page(jump_page_before_auto_switch)
 	set_loopback(data.get("loopback", false))
-	
-	# this has to be done last. choice_container injects the data into this
-	# but this function relies on jump_page_before_auto_switch to be set
-	#set_auto_switch(data.get("auto_switch", false))
 	
 	update()
 
@@ -259,7 +253,6 @@ func set_auto_switch(value:bool):
 	find_child("Conditionals").set_behavior_container_visible(not value)
 	if value:
 		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
-		prints(get_index(), "jump before", jump_page_before_auto_switch)
 		set_do_jump_page(true)
 	else:
 		set_do_jump_page(jump_page_before_auto_switch)
@@ -277,15 +270,11 @@ func request_delete():
 
 func delete_with_action():
 	var address = get_address()
-	#var line_address = DiisisEditorUtil.truncate_address(address, DiisisEditorUtil.AddressDepth.Line)
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Delete Choice Item")
 	undo_redo.add_do_method(DiisisEditorActions.delete_choice_item.bind(address))
 	undo_redo.add_undo_method(DiisisEditorActions.add_choice_item.bind(address))
 	undo_redo.commit_action()
-
-#func set_jump_page_toggle_visible(value:bool):
-	#find_child("JumpPageToggle").visible = value
 
 func set_do_jump_page(do: bool):
 	find_child("JumpPageContainer").visible = do
@@ -342,9 +331,6 @@ func _on_loopback_toggle_toggled(toggled_on: bool) -> void:
 func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
 	set_do_jump_page(toggled_on)
 
-
-#func _on_default_apparence_selection_button_item_selected(_index: int) -> void:
-	#update_default_text_warning()
 
 func update_default_text_warning():
 	var label : Label = find_child("DefaultTextEmptyWarningLabel")

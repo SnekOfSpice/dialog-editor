@@ -11,14 +11,13 @@ border_width_bottom = 4
 border_color = Color(0.0110876, 0.0110876, 0.0110876, 1)
 border_blend = true
 
-[node name="Facts" type="PanelContainer" node_paths=PackedStringArray("add_button", "facts_container")]
+[node name="Facts" type="PanelContainer" node_paths=PackedStringArray("facts_container")]
 custom_minimum_size = Vector2(183.315, 0)
 offset_right = 183.315
 offset_bottom = 60.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q3fnj")
 script = ExtResource("1_7jlfu")
 address_depth = 1
-add_button = NodePath("VBox/Controls/AddFactButton")
 facts_container = NodePath("VBox/FactsContainer")
 
 [node name="VBox" type="VBoxContainer" parent="."]

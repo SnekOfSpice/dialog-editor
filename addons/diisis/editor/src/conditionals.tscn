@@ -11,14 +11,13 @@ border_width_top = 4
 border_color = Color(0.23, 0.0621, 0.115268, 0.901961)
 border_blend = true
 
-[node name="Conditionals" type="PanelContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container")]
+[node name="Conditionals" type="PanelContainer" node_paths=PackedStringArray("visibility_toggle_button", "facts_container")]
 offset_right = 325.0
 offset_bottom = 95.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_tpir1")
 script = ExtResource("1_jnmdf")
 visibility_toggle_button = NodePath("VBoxContainer/VisibilityToggleButton")
 address_depth = 1
-add_button = NodePath("VBoxContainer/Controls/BehaviorContainer/AddConditionButton")
 facts_container = NodePath("VBoxContainer/PanelContainer/FactsContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]

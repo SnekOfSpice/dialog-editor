@@ -335,6 +335,8 @@ func _on_text_actions_id_pressed(id: int) -> void:
 		1:
 			text_box.text = Pages.neaten_whitespace(text_box.text)
 		3:
+			if not text_id:
+				text_id = Pages.get_new_id()
 			Pages.editor.prompt_change_text_id(text_id)
 
 func index_all_tags():
