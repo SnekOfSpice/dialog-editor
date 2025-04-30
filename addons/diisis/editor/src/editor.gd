@@ -614,6 +614,8 @@ func _on_utility_index_pressed(index: int) -> void:
 			open_popup($Popups.get_node("WordCountDialog"))
 		1: 
 			open_popup($Popups.get_node("TextSearchPopup"))
+		2:
+			step_through_pages()
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
@@ -680,7 +682,23 @@ func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:
 func hide_arg_hint():
 	find_child("ArgHint").hide()
 
+func step_through_pages():
+	var next_page = get_current_page_number() + 1
+	if next_page >= Pages.get_page_count():
+		next_page = 0
+	var steps := Pages.get_page_count()
+	var i := 0
+	while i < steps:
+		load_page(next_page)
+		await get_tree().process_frame
+		next_page = get_current_page_number() + 1
+		if next_page >= Pages.get_page_count():
+			next_page = 0
+		i += 1
+
 func _on_funny_debug_button_pressed() -> void:
+	step_through_pages()
+	return
 	var doms := ["af_ZA",
 "sq_AL",
 "ar_SA",

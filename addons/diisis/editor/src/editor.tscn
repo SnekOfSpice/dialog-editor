@@ -155,11 +155,13 @@ item_2/id = 2
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
-item_count = 2
+item_count = 3
 item_0/text = "Word & Character Count"
 item_0/id = 0
 item_1/text = "Search Text    (Ctrl+F)"
 item_1/id = 1
+item_2/text = "Step through pages"
+item_2/id = 2
 
 [node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
