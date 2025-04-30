@@ -38,13 +38,15 @@ func deserialize(data):
 	
 	var auto_switch = data.get("auto_switch", false)
 	find_child("AutoSwitchButton").button_pressed = auto_switch
-	set_auto_switch(auto_switch)
+	#set_auto_switch(auto_switch)
 	title_id = data.get("title_id", Pages.get_new_id())
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
 	
 	for d in choices:
-		d["auto_switch"] = auto_switch
+		#d["auto_switch"] = auto_switch
 		add_choice(-1, d)
+	
+	set_auto_switch(auto_switch)
 	
 	update()
 	

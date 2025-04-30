@@ -84,6 +84,7 @@ theme_override_icons/unchecked = ExtResource("3_02amc")
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 8
+tooltip_text = "delete"
 text = "x"
 
 [node name="TypeMismatchLabel" type="Label" parent="."]

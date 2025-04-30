@@ -1,11 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpuqu3kymqlwb"]
+[gd_scene load_steps=5 format=3 uid="uid://bpuqu3kymqlwb"]
 
 [ext_resource type="Script" uid="uid://3yjr5tsxahjl" path="res://addons/diisis/editor/src/conditionals.gd" id="1_jnmdf"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="2_i1sb1"]
 [ext_resource type="Texture2D" uid="uid://cosv2ahbynvkc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond_add.png" id="3_y885n"]
 
-[node name="Conditionals" type="MarginContainer" node_paths=PackedStringArray("add_button", "facts_container")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpir1"]
+bg_color = Color(0.41, 0.1271, 0.23083, 0.152941)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.23, 0.0621, 0.115268, 0.901961)
+border_blend = true
+
+[node name="Conditionals" type="PanelContainer" node_paths=PackedStringArray("visibility_toggle_button", "add_button", "facts_container")]
+offset_right = 325.0
+offset_bottom = 95.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_tpir1")
 script = ExtResource("1_jnmdf")
+visibility_toggle_button = NodePath("VBoxContainer/VisibilityToggleButton")
+address_depth = 1
 add_button = NodePath("VBoxContainer/Controls/BehaviorContainer/AddConditionButton")
 facts_container = NodePath("VBoxContainer/PanelContainer/FactsContainer")
 
@@ -54,6 +66,7 @@ layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="FactsContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2

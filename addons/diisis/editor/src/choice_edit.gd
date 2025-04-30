@@ -74,12 +74,16 @@ func deserialize(data:Dictionary):
 	
 	find_child("BehaviorAfterFirstSelectionButton").select(data.get("behavior_after_first_selection", 0))
 	
-	set_do_jump_page(data.get("do_jump_page", false))
+	prints("deserializing", jump_page_before_auto_switch)
+	if jump_page_before_auto_switch:
+		set_do_jump_page(data.get("do_jump_page", false))
+	else:
+		set_do_jump_page(jump_page_before_auto_switch)
 	set_loopback(data.get("loopback", false))
 	
 	# this has to be done last. choice_container injects the data into this
 	# but this function relies on jump_page_before_auto_switch to be set
-	set_auto_switch(data.get("auto_switch", false))
+	#set_auto_switch(data.get("auto_switch", false))
 	
 	update()
 
@@ -245,14 +249,17 @@ func delete_conditional(fact_name:String):
 
 func set_text_lines_visible(value:bool):
 	find_child("TextLines").visible = value
-	
+
+var _auto_switch := false
 func set_auto_switch(value:bool):
+	_auto_switch = value
 	set_text_lines_visible(not value)
 	find_child("JumpPageToggle").visible = not value
 	find_child("BehaviorContainer").visible = not value
 	find_child("Conditionals").set_behavior_container_visible(not value)
 	if value:
 		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
+		prints(get_index(), "jump before", jump_page_before_auto_switch)
 		set_do_jump_page(true)
 	else:
 		set_do_jump_page(jump_page_before_auto_switch)
@@ -284,7 +291,8 @@ func set_do_jump_page(do: bool):
 	find_child("JumpPageContainer").visible = do
 	find_child("JumpPageToggle").button_pressed = do
 	find_child("TargetStringLabel").modulate.a = 1 if do else 0
-	jump_page_before_auto_switch = do
+	if not _auto_switch:
+		jump_page_before_auto_switch = do
 
 func set_loopback(do:bool):
 	find_child("LoopbackContainer").visible = do
@@ -367,18 +375,21 @@ func _on_edit_enabled_id_button_pressed() -> void:
 func _on_edit_disabled_id_button_pressed() -> void:
 	Pages.editor.prompt_change_text_id(text_id_disabled)
 
+func _update_text_line_visibilities(event: InputEvent):
+	var enabled : bool = find_child("DefaultApparenceSelectionButton").button_pressed
+	var lines_disabled : Control = find_child("TextLinesDisabled")
+	var lines_enabled : Control = find_child("TextLinesEnabled")
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
+		if enabled:
+			lines_disabled.visible = not lines_disabled.visible
+		else:
+			lines_enabled.visible = not lines_enabled.visible
 
 func _on_text_lines_enabled_gui_input(event: InputEvent) -> void:
-	if not find_child("DefaultApparenceSelectionButton").button_pressed:
-		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
-		find_child("TextLinesDisabled").visible = not find_child("TextLinesDisabled").visible
+	_update_text_line_visibilities(event)
 
 func _on_text_lines_disabled_gui_input(event: InputEvent) -> void:
-	if find_child("DefaultApparenceSelectionButton").button_pressed:
-		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
-		find_child("TextLinesEnabled").visible = not find_child("TextLinesEnabled").visible
+	_update_text_line_visibilities(event)
 
 func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
 	var both_visible = find_child("TextLinesEnabled").visible and find_child("TextLinesDisabled").visible

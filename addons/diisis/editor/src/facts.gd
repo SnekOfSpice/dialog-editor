@@ -1,12 +1,11 @@
 @tool
-extends MarginContainer
+extends PanelContainer
 class_name Facts
 
 ## Override this to hide the built-in visibility toggle button.
 @export var visibility_toggle_button:Button
 @export_enum("Page", "Line", "Choice Item") var address_depth := 0
 
-@export var add_button:Button
 @export var facts_container:VBoxContainer
 
 func init():
