@@ -41,6 +41,7 @@ func deserialize(data:Dictionary):
 	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(jump_address_mode)
 	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(loop_address_mode)
 	find_child("TextLinesDisabled").visible = data.get("meta.disabled_visible", false)
+	find_child("TextLinesEnabled").visible = data.get("meta.enabled_visible", false)
 	
 	if find_child("PageSelect").max_value < jump_target_page:
 		find_child("PageSelect").max_value = jump_target_page
@@ -100,6 +101,7 @@ func serialize() -> Dictionary:
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
 		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
+		"meta.enabled_visible" : find_child("TextLinesEnabled").visible,
 		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").button_pressed,
 		"target_page": int(jump_page_target_page),
 		"target_line": int(jump_page_target_line),
