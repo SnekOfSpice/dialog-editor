@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://odbj7ownql7u"]
+
+[ext_resource type="Script" uid="uid://b73j47aajei7u" path="res://addons/diisis/editor/src/rich_text_confirmation_dialog.gd" id="1_kqefd"]
+
+[node name="RichTextConfirmationDialog" type="ConfirmationDialog"]
+position = Vector2i(0, 36)
+visible = true
+always_on_top = true
+script = ExtResource("1_kqefd")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 51.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+
+[connection signal="item_rect_changed" from="ScrollContainer/RichTextLabel" to="." method="_on_rich_text_label_item_rect_changed"]

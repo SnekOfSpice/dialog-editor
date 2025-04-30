@@ -208,7 +208,16 @@ func set_selected(value:bool):
 func _on_delete_pressed() -> void:
 	request_delete()
 
+
+func get_address() -> String:
+	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+
 func request_delete():
+	if Pages.editor.try_prompt_fact_deletion_confirmation(
+		get_address(),
+		delete_line.emit.bind(get_index())
+	):
+		return
 	emit_signal("delete_line", get_index())
 
 func move(dir: int):

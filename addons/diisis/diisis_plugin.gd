@@ -240,7 +240,7 @@ func open_new_file():
 var was_playing_scene := false
 func _process(delta: float) -> void:
 	if not was_playing_scene and EditorInterface.is_playing_scene():
-		if is_instance_valid(Pages.editor):
+		if is_instance_valid(Pages.editor) and Pages.save_on_play:
 			Pages.editor.save_to_dir_if_active_dir()
 	was_playing_scene = EditorInterface.is_playing_scene()
 	if is_instance_valid(dia_editor_window):

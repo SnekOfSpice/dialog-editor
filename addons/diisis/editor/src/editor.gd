@@ -977,15 +977,53 @@ func view_incoming_references(page_index:int, line_index:int):
 
 # returns true if the prompt got opened
 func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Callable) -> bool:
+	if not Pages.warn_on_fact_deletion:
+		return false
+	
 	var fact_data : Dictionary = Pages.get_fact_data_payload_before_deletion(address)
 	if fact_data.is_empty():
 		return false
 	
-	var dialog := ConfirmationDialog.new()
+	var dialog := preload("res://addons/diisis/editor/src/rich_text_confirmation_dialog.tscn").instantiate()
 	$Popups.add_child(dialog)
-	dialog.dialog_text = str(fact_data)
 	dialog.close_requested.connect(dialog.hide)
 	dialog.confirmed.connect(delete_callable)
-	dialog.popup_centered()
 	
+	var text := ""
+	var object_type_str : String
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Page:
+			object_type_str = "Page"
+		DiisisEditorUtil.AddressDepth.Line:
+			object_type_str = "Line"
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			object_type_str = "Choice"
+	
+	var page_text := ""
+	var line_text := ""
+	var choice_text := ""
+	for address_in_payload in fact_data.keys():
+		for fact : Dictionary in fact_data.get(address_in_payload).values():
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.Page:
+				page_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.Line:
+				line_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.ChoiceItem:
+				choice_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
+	
+	if not page_text.is_empty(): page_text = "  = In Page:\n" + page_text
+	if not line_text.is_empty(): line_text = "  = In Lines:\n" + line_text
+	if not choice_text.is_empty(): choice_text = "  = In Choices:\n" + choice_text
+	text = page_text + "\n" + line_text + "\n" + choice_text
+	
+	dialog.set_text(str(
+		"[b]The following object contains facts: ",
+		object_type_str, " at address ", address,
+		"[/b]\n",
+		text,
+		"\n",
+		"[b]Are you sure you want to delete it?[/b]"
+	))
+	
+	dialog.popup_centered()
 	return true

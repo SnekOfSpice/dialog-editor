@@ -9,6 +9,7 @@ func init():
 	find_child("LeadTimeSpinBoxOtherActor").value = Pages.text_lead_time_other_actor
 	find_child("AddressModeButtonPage").set_mode(Pages.default_address_mode_pages)
 	find_child("SaveOnPlayCheckBox").button_pressed = Pages.save_on_play
+	find_child("WarnOnFactDeletionCheckBox").button_pressed = Pages.warn_on_fact_deletion
 	find_child("ItemList").select(0)
 	_on_item_list_item_selected(0)
 
@@ -57,3 +58,7 @@ func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void
 
 func _on_save_on_play_check_box_toggled(toggled_on: bool) -> void:
 	Pages.save_on_play = toggled_on
+
+
+func _on_warn_on_fact_deletion_check_box_toggled(toggled_on: bool) -> void:
+	Pages.warn_on_fact_deletion = toggled_on

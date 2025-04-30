@@ -66,6 +66,7 @@ var text_data := {}
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 var save_on_play := true
+var warn_on_fact_deletion := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -135,6 +136,7 @@ func serialize() -> Dictionary:
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"default_address_mode_pages": default_address_mode_pages,
 		"save_on_play": save_on_play,
+		"warn_on_fact_deletion": warn_on_fact_deletion,
 	}
 
 func deserialize(data:Dictionary):
@@ -170,6 +172,7 @@ func deserialize(data:Dictionary):
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	save_on_play = data.get("save_on_play", true)
+	warn_on_fact_deletion = data.get("warn_on_fact_deletion", true)
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
 	apply_file_config(data.get("file_config", {}))
@@ -1610,7 +1613,8 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 				var line_address := str(address, ".", i)
 				var line_payload = get_fact_data_payload_before_deletion(line_address)
 				if not line_payload.is_empty():
-					facts_by_address[line_address] = line_payload#.get(line_address)
+					for key : String in line_payload.keys():
+						facts_by_address[key] = line_payload.get(key)#.get(line_address)
 		DiisisEditorUtil.AddressDepth.Line:
 			var line_type := get_line_type(parts[0], parts[1])
 			var line_data = get_line_data(parts[0], parts[1])
@@ -1619,10 +1623,8 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 				facts_by_address[address] = line_facts_data
 			if line_type == DIISIS.LineType.Choice:
 				var choices : Array = line_data.get("content", {}).get("choices", [])
-				#print(line_data)
 				for i in choices.size():
 					var choice_address := str(address, ".", i)
-					print("choice ", choice_address)
 					var choice_payload = get_fact_data_payload_before_deletion(choice_address)
 					if not choice_payload.is_empty():
 						facts_by_address[choice_address] = choice_payload.get(choice_address)

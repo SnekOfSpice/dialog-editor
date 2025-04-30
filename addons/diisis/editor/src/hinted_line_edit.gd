@@ -63,7 +63,6 @@ func _on_gui_input(event: InputEvent) -> void:
 		if virtual_hint_line >= $ArgHint.get_hint_line_count():
 			virtual_hint_line = 0
 	if Input.is_key_pressed(KEY_UP):
-		
 		virtual_hint_line -= 1
 		if virtual_hint_line < 0:
 			virtual_hint_line = $ArgHint.get_hint_line_count() - 1

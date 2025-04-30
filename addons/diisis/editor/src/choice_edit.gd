@@ -262,7 +262,15 @@ func _on_delete_pressed() -> void:
 	request_delete()
 
 func request_delete():
-	var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
+	if Pages.editor.try_prompt_fact_deletion_confirmation(
+		get_address(),
+		delete_with_action
+	):
+		return
+	delete_with_action()
+
+func delete_with_action():
+	var address = get_address()
 	#var line_address = DiisisEditorUtil.truncate_address(address, DiisisEditorUtil.AddressDepth.Line)
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Delete Choice Item")

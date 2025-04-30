@@ -50,6 +50,8 @@ func get_hint_line_count() -> int:
 
 func get_text_in_line(line:int) -> String:
 	var label_text : String = find_child("TextLabel").text
+	if not visible:
+		return ""
 	var segments = label_text.split("\n")
 	if segments.size() <= line:
 		push_warning("Text too short.")
