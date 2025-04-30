@@ -50,7 +50,7 @@ func _on_pressed() -> void:
 func set_page_view(view:DiisisEditor.PageView):
 	if not address_source:
 		return
-	visible = view == DiisisEditor.PageView.Full and visible
+	visible = view == DiisisEditor.PageView.Full
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

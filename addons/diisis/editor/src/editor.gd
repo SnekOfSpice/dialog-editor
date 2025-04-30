@@ -686,7 +686,7 @@ func step_through_pages():
 	var next_page = get_current_page_number() + 1
 	if next_page >= Pages.get_page_count():
 		next_page = 0
-	var steps := Pages.get_page_count()
+	var steps : int = Pages.get_page_count()
 	var i := 0
 	while i < steps:
 		load_page(next_page)

@@ -94,7 +94,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-tooltip_text = "Function that gets called when LineReader goes back. Ignores execution pre-/post-delays"
+tooltip_text = "Function that gets called when LineReader goes back. Ignores execution pre-/post-delays.
+If checked and left empty, will use the default instruction."
 focus_mode = 0
 text = "reverse"
 

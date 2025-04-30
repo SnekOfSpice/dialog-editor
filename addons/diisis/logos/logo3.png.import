@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccjqigqmiwsaw"
-path="res://.godot/imported/final1alt.png-96c5d4f4cbd1650b8db8e8975b6c66f5.ctex"
+uid="uid://c77v4a0frlbqv"
+path="res://.godot/imported/logo3.png-b43880b4d191953935938ed2d1ba749f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/diisis/final1alt.png"
-dest_files=["res://.godot/imported/final1alt.png-96c5d4f4cbd1650b8db8e8975b6c66f5.ctex"]
+source_file="res://addons/diisis/logos/logo3.png"
+dest_files=["res://.godot/imported/logo3.png-b43880b4d191953935938ed2d1ba749f.ctex"]
 
 [params]
 

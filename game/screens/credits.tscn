@@ -43,7 +43,7 @@ custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
 bbcode_enabled = true
-text = "[center][img=400]res://addons/diisis/logo3.png[/img]
+text = "[center][img=400]res://addons/diisis/logos/logo3.png[/img]
 ~ Visual Novel Template ~
 
 Programmed by [url=https://snekofspice.itch.io/]Snek[/url]
