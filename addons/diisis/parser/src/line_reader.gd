@@ -494,7 +494,7 @@ func _ready() -> void:
 	Parser.connect("read_new_line", _read_new_line)
 	Parser.connect("page_terminated", _close)
 	ParserEvents.comment.connect(_on_comment)
-	ParserEvents.go_back_accepted.connect(_lmao)
+	ParserEvents.go_back_accepted.connect(_on_go_back_accepted)
 	
 	ParserEvents.text_content_text_changed.connect(_on_text_content_text_changed)
 	ParserEvents.display_name_changed.connect(_on_name_label_updated)
@@ -522,11 +522,8 @@ func _ready() -> void:
 	
 	emit_signal("line_reader_ready")
 
-## AH FUCK THIS IS CRITICAL AND I FORGOT WHY
-## oh shit code highlighting lmfao
-## rest now, my child
-func _lmao(a, b):
-	printt(a,b)
+# nts this is where _lmao(a, b) lies RIP
+func _on_go_back_accepted(_page_index:int, _line_index:int):
 	_reverse_next_instruction = true
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].

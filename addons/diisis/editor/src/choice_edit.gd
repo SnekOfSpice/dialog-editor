@@ -67,10 +67,8 @@ func deserialize(data:Dictionary):
 	
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
-	if data.get("choice_text.enabled_as_default", true):
-		find_child("DefaultApparenceSelectionButton").select(0)
-	else:
-		find_child("DefaultApparenceSelectionButton").select(1)
+	find_child("DefaultApparenceSelectionButton").button_pressed = data.get("choice_text.enabled_as_default", true)
+	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
@@ -104,7 +102,7 @@ func serialize() -> Dictionary:
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
 		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
-		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").get_selected_id() == 0,
+		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").button_pressed,
 		"target_page": int(jump_page_target_page),
 		"target_line": int(jump_page_target_line),
 		"loopback_target_page": int(find_child("LoopbackPageSelect").value),
@@ -161,7 +159,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	var default_enabled_texture : TextureRect = find_child("DefaultEnabledTexture")
 	var line_edit_enabled : LineEdit = find_child("LineEditEnabled")
 	var default_disabled_texture : TextureRect = find_child("DefaultDisabledTexture")
-	var default_dropdown : OptionButton = find_child("DefaultApparenceSelectionButton")
+	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")
 	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
@@ -251,6 +249,7 @@ func set_text_lines_visible(value:bool):
 func set_auto_switch(value:bool):
 	set_text_lines_visible(not value)
 	find_child("JumpPageToggle").visible = not value
+	find_child("BehaviorContainer").visible = not value
 	find_child("Conditionals").set_behavior_container_visible(not value)
 	if value:
 		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
@@ -336,14 +335,14 @@ func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
 	set_do_jump_page(toggled_on)
 
 
-func _on_default_apparence_selection_button_item_selected(_index: int) -> void:
-	update_default_text_warning()
+#func _on_default_apparence_selection_button_item_selected(_index: int) -> void:
+	#update_default_text_warning()
 
 func update_default_text_warning():
 	var label : Label = find_child("DefaultTextEmptyWarningLabel")
-	if find_child("LineEditEnabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").get_selected_id() == 0:
+	if find_child("LineEditEnabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").button_pressed:
 		label.visible = true
-	elif find_child("LineEditDisabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").get_selected_id() == 1:
+	elif find_child("LineEditDisabled").text.is_empty() and not find_child("DefaultApparenceSelectionButton").button_pressed:
 		label.visible = true
 	else:
 		label.visible = false
@@ -370,5 +369,27 @@ func _on_edit_disabled_id_button_pressed() -> void:
 
 
 func _on_text_lines_enabled_gui_input(event: InputEvent) -> void:
+	if not find_child("DefaultApparenceSelectionButton").button_pressed:
+		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
 		find_child("TextLinesDisabled").visible = not find_child("TextLinesDisabled").visible
+
+func _on_text_lines_disabled_gui_input(event: InputEvent) -> void:
+	if find_child("DefaultApparenceSelectionButton").button_pressed:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
+		find_child("TextLinesEnabled").visible = not find_child("TextLinesEnabled").visible
+
+func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
+	var both_visible = find_child("TextLinesEnabled").visible and find_child("TextLinesDisabled").visible
+	update_default_text_warning()
+	find_child("DefaultApparenceSelectionButton").text = "enabled" if toggled_on else "disabled"
+	if not both_visible:
+		find_child("TextLinesEnabled").visible = toggled_on
+		find_child("TextLinesDisabled").visible = not toggled_on
+	
+	var text_lines : VBoxContainer = find_child("TextLines")
+	if toggled_on:
+		text_lines.move_child(text_lines.find_child("TextLinesEnabled"), 0)
+	else:
+		text_lines.move_child(text_lines.find_child("TextLinesDisabled"), 0)
