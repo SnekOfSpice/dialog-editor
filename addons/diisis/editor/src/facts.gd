@@ -13,23 +13,26 @@ func init():
 		find_child("VisibilityToggleButton").visible = false
 		if not visibility_toggle_button.pressed.is_connected(toggle_visibility):
 			visibility_toggle_button.connect("pressed", toggle_visibility)
+		visibility_toggle_button.add_theme_icon_override("checked", load("uid://3gqp3bocdpbm"))
+		visibility_toggle_button.add_theme_icon_override("unchecked", load("uid://3gqp3bocdpbm"))
 		set_visibility(visibility_toggle_button.button_pressed)
 	else:
 		if not find_child("VisibilityToggleButton").pressed.is_connected(toggle_visibility):
 			find_child("VisibilityToggleButton").connect("pressed", toggle_visibility)
-		#find_child("VisibilityToggleButton").button_pressed = find_child("Controls").visible
 		set_visibility(find_child("VisibilityToggleButton").button_pressed)
+		find_child("VisibilityToggleButton").add_theme_icon_override("checked", load("uid://3gqp3bocdpbm"))
+		find_child("VisibilityToggleButton").add_theme_icon_override("unchecked", load("uid://3gqp3bocdpbm"))
 	
 	update()
 
 func set_visibility(value:bool):
 	if visibility_toggle_button:
-		#visibility_toggle_button.button_pressed = value
+		visibility_toggle_button.set_pressed_no_signal(value)
 		visible = value
 	else:
 		find_child("Controls").visible = value
 		facts_container.visible = value
-		#find_child("VisibilityToggleButton").button_pressed = value
+		find_child("VisibilityToggleButton").set_pressed_no_signal(value)
 
 func toggle_visibility():
 	if visibility_toggle_button:
@@ -134,3 +137,9 @@ func request_add_fact():
 	undo_redo.add_do_method(DiisisEditorActions.add_fact.bind(address, address_depth, fact_name, true))
 	undo_redo.add_undo_method(DiisisEditorActions.delete_fact_local.bind(address, address_depth, fact_name))
 	undo_redo.commit_action()
+
+
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			set_visibility(false)

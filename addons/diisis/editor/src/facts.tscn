@@ -44,4 +44,5 @@ layout_mode = 2
 [node name="FactsContainer" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="pressed" from="VBox/Controls/AddFactButton" to="." method="request_add_fact"]

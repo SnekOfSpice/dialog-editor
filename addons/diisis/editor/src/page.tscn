@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bl3r0kwwycrmw"]
+[gd_scene load_steps=12 format=3 uid="uid://bl3r0kwwycrmw"]
 
 [ext_resource type="Script" uid="uid://subqq2sc1dmq" path="res://addons/diisis/editor/src/page.gd" id="1_2lug2"]
 [ext_resource type="Texture2D" uid="uid://c5jprlaidnag" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_goto.png" id="2_2dyyr"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_eeb01"]
 [ext_resource type="Texture2D" uid="uid://ddfoy8nqykk88" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png" id="3_m7kjo"]
 [ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="4_rsy28"]
+[ext_resource type="Texture2D" uid="uid://bl7wslwydkk7g" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_page.png" id="6_yg0hh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6srl"]
 bg_color = Color(0.28, 0.0924, 0.229973, 0.156863)
@@ -126,7 +127,7 @@ size_flags_horizontal = 10
 layout_mode = 2
 size_flags_horizontal = 10
 focus_mode = 0
-text = "X"
+icon = ExtResource("6_yg0hh")
 
 [node name="DeletePromptContainer" type="HBoxContainer" parent="PanelContainer/Info/VBoxContainer"]
 visible = false

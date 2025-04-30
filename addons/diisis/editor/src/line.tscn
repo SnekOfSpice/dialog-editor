@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=30 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" uid="uid://bpc55ta1uccyf" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_viyfr"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dunbgel2canl3" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_above.png" id="7_gphhn"]
 [ext_resource type="PackedScene" uid="uid://dt4yhnj3n5k5m" path="res://addons/diisis/editor/src/folder_container.tscn" id="9_23thg"]
 [ext_resource type="Texture2D" uid="uid://dsvibekcrdxsf" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_below.png" id="9_f7stu"]
+[ext_resource type="Texture2D" uid="uid://bfq88g5gsnics" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_line.png" id="13_f7stu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5f2i"]
 bg_color = Color(0.66, 0.529, 0.561, 0.033)
@@ -275,8 +276,9 @@ size_flags_horizontal = 10
 
 [node name="DeleteButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Controls/DeleteContainer"]
 layout_mode = 2
+tooltip_text = "Delete line."
 focus_mode = 0
-text = "delete"
+icon = ExtResource("13_f7stu")
 
 [node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
