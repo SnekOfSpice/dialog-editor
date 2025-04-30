@@ -435,7 +435,7 @@ func delete_page_data(at: int):
 	
 	# reindex all after at, this automatically overwrites the page at at
 	for i in range(at + 1, get_page_count()):
-		var data = page_data.get(i)
+		var data = page_data.get(i).duplicate(true)
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
 		page_data[new_number] = data
@@ -1568,7 +1568,67 @@ func get_loopback_references_to(page_index:int, line_index:int) -> Array:
 	
 func get_jump_references_to(page_index:int, line_index:int) -> Array:
 	return jump_page_references_by_page.get(page_index, {}).get(line_index, [])
+
+func get_facts_data(address:String) -> Dictionary:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var cpn : int = editor.get_current_page_number()
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Page:
+			var data : Dictionary = editor.get_current_page().serialize()
+			return data.get("facts", {}).get("fact_data_by_name", {})
+		DiisisEditorUtil.AddressDepth.Line:
+			var data := get_line_data(parts[0], parts[1])
+			return data.get("facts", {}).get("fact_data_by_name", {})
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			var data : Dictionary = get_line_data(parts[0], parts[1]).get("content").get("choices")[parts[2]]
+			return data.get("facts", {}).get("fact_data_by_name", {})
 	
+	return {}
+
+func get_line_data_adr(address:String) -> Dictionary:
+	var data := {}
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var cpn : int = editor.get_current_page_number()
+	if cpn == parts[0]:
+		data = editor.get_current_page().get_line_data(parts[1])
+	else:
+		data = page_data.get(cpn).get("lines")[parts[1]]
+	return data
+
+func get_line_data(page_index:int, line_index:int) -> Dictionary:
+	return get_line_data_adr(str(page_index, ".", line_index))
+
+func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
+	var facts_by_address := {}
+	var parts = DiisisEditorUtil.get_split_address(address)
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Page:
+			var facts_data : Dictionary = get_facts_data(address)
+			if not facts_data.is_empty():
+				facts_by_address[address] = facts_data
+			for i in editor.get_current_page().get_line_count():
+				var line_address := str(address, ".", i)
+				var line_payload = get_fact_data_payload_before_deletion(line_address)
+				if not line_payload.is_empty():
+					facts_by_address[line_address] = line_payload#.get(line_address)
+		DiisisEditorUtil.AddressDepth.Line:
+			var line_type := get_line_type(parts[0], parts[1])
+			var line_data = get_line_data(parts[0], parts[1])
+			var line_facts_data = get_facts_data(address)
+			if not line_facts_data.is_empty():
+				facts_by_address[address] = line_facts_data
+			if line_type == DIISIS.LineType.Choice:
+				var choices : Array = line_data.get("content", {}).get("choices", [])
+				#print(line_data)
+				for i in choices.size():
+					var choice_address := str(address, ".", i)
+					print("choice ", choice_address)
+					var choice_payload = get_fact_data_payload_before_deletion(choice_address)
+					if not choice_payload.is_empty():
+						facts_by_address[choice_address] = choice_payload.get(choice_address)
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			var facts_data = get_facts_data(address)
+			if not facts_data.is_empty():
+				facts_by_address[address] = facts_data
 	
-	
-	
+	return facts_by_address

@@ -157,6 +157,8 @@ func load_page(number: int, discard_without_saving:=false):
 	update_controls()
 	await get_tree().process_frame
 
+func get_line_data(index:int):
+	return 
 
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text
@@ -972,3 +974,18 @@ func view_incoming_references(page_index:int, line_index:int):
 	var popup : Window = $Popups.get_node("IncomingReferencesWindow")
 	open_popup(popup)
 	popup.display_references(page_index, line_index)
+
+# returns true if the prompt got opened
+func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Callable) -> bool:
+	var fact_data : Dictionary = Pages.get_fact_data_payload_before_deletion(address)
+	if fact_data.is_empty():
+		return false
+	
+	var dialog := ConfirmationDialog.new()
+	$Popups.add_child(dialog)
+	dialog.dialog_text = str(fact_data)
+	dialog.close_requested.connect(dialog.hide)
+	dialog.confirmed.connect(delete_callable)
+	dialog.popup_centered()
+	
+	return true

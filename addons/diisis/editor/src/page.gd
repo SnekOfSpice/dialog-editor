@@ -505,6 +505,11 @@ func _on_line_selector_toggled(toggled_on: bool) -> void:
 
 
 func _on_delete_button_pressed() -> void:
+	if Pages.editor.try_prompt_fact_deletion_confirmation(
+		str(number),
+		request_delete.emit
+	):
+		return
 	if find_child("DeletePromptContainer").visible:
 		find_child("DeletePromptContainer").visible = false
 		emit_signal("request_delete")
