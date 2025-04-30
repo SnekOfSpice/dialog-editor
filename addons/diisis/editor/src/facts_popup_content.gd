@@ -22,6 +22,7 @@ func fill():
 	ref_choices_condition = find_child("RefChoicesCondition")
 	ref_lists = [ref_pages_fact, ref_lines_fact, ref_lines_condition, ref_choices_fact, ref_choices_condition]
 	find_child("Facts").clear()
+	find_child("LoveLabel").visible = Pages.silly
 	
 	for list : ItemList in ref_lists:
 		list.clear()

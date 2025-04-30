@@ -38,6 +38,9 @@ size_flags_horizontal = 0
 tooltip_text = "add fact"
 icon = ExtResource("3_351dh")
 
+[node name="PuppyLabel" type="Label" parent="VBox/Controls"]
+layout_mode = 2
+
 [node name="FactsContainer" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
 

@@ -59,6 +59,8 @@ func deserialize(data: Dictionary):
 		visibility_toggle_button.button_pressed = data.get("meta.visible", false)
 	else:
 		find_child("VisibilityToggleButton").button_pressed = data.get("meta.visible", false)
+	if find_child("PuppyLabel"):
+		find_child("PuppyLabel").text = Pages.make_puppy() if Pages.silly else ""
 	update()
 
 func add_fact_from_serialized(fact_data:Dictionary):

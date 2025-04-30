@@ -71,9 +71,11 @@ var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode
 const TOGGLE_SETTINGS := {
 	"save_on_play" : "Saves the DIISIS script when you start playing in Godot (with F5 or otherwise)",
 	"warn_on_fact_deletion" : "Prompts you to confirm the deletion of a page, line, or choice item if that object or any of its children contains facts. (not conditionals)",
+	"silly" : "Adds a bit of visual fluff to the editor :3"
 }
 var save_on_play := true
 var warn_on_fact_deletion := true
+var silly := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -1648,3 +1650,59 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 
 func set_toggle_setting(value:bool, setting:StringName):
 	set(setting, value)
+
+func make_puppy() -> String:
+	var eyes := [
+		[">", "<"],
+		[",,>", "<,,"],
+		["o", "o"],
+		["O", "O"],
+		["U", "U"],
+		["u", "u"],
+		["-", "-"],
+		["^", "^"],
+		["*^", "^*"],
+		[".", "."],
+		[";", ";"],
+		["q", "q"],
+		["e", "e"],
+		["x", "x"],
+		[",;,", ",;,"],
+		]
+
+	var whiskers := [
+		[">", "<"],
+		["-", "-"],
+		["=", "="],
+		["☆⌒", "⌒☆"],
+	]
+
+	var mouths := [
+		"w",
+		"w",
+		"//w//",
+		"w",
+		"v",
+		"m",
+		"ω",
+		"//ω//",
+		"_",
+		"∀",
+		"▽",
+		"﹏",
+	]
+	randomize()
+	
+	var has_whiskers = randf() < 0.7
+	
+	var emoticon = ""
+	var w = whiskers.pick_random()
+	if has_whiskers:
+		emoticon += w[0]
+	var e = eyes.pick_random()
+	emoticon += e[0]
+	emoticon += mouths.pick_random()
+	emoticon += e[1]
+	if has_whiskers:
+		emoticon += w[1]
+	return emoticon
