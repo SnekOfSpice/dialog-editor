@@ -124,7 +124,25 @@ func update_query(query:String) -> void:
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
 	var details : String = details_by_address.get(address)
-	details = details.replacen(last_search_query, str("[color=#f8f6f8][b]", last_search_query, "[/b][/color]"))
+	
+	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
+	var substrings_to_highlight := []
+	var highlight_index : int
+	if case_insensitive:
+		highlight_index = details.findn(last_search_query)
+	else:
+		highlight_index = details.find(last_search_query)
+	while highlight_index != -1:
+		var substring_to_highlight = details.substr(highlight_index, last_search_query.length())
+		if not substrings_to_highlight.has(substring_to_highlight):
+			substrings_to_highlight.append(substring_to_highlight)
+		if case_insensitive:
+			highlight_index = details.findn(last_search_query, highlight_index + 1)
+		else:
+			highlight_index = details.find(last_search_query, highlight_index + 1)
+	
+	for substr in substrings_to_highlight:
+		details = details.replace(substr, str("[color=#f8f6f8][b]", substr, "[/b][/color]"))
 	find_child("ResultLabel").text = details
 	
 	find_child("GoToButton").text = str("Go To ", address)
@@ -142,7 +160,7 @@ func _on_item_list_item_selected(index: int) -> void:
 	find_child("GoToButton").disabled = index >= fact_start_index
 	if fact_start_index == -1:
 		find_child("GoToButton").disabled = false
-	printt(index, fact_start_index)
+	
 	if fact_start_index == -1 and instruction_start_index == -1:
 		find_child("ReplaceLocallyButton").disabled = false
 		find_child("ReplaceAllInTypeButton").disabled = false

@@ -56,13 +56,15 @@ size_flags_horizontal = 8
 [node name="PanelContainer" type="PanelContainer" parent="ComplianceContainer"]
 layout_mode = 1
 anchors_preset = -1
-offset_left = -208.0
-offset_top = -41.0
-offset_bottom = -1.0
+offset_left = -117.0
+offset_top = -8.0
+offset_right = 291.0
+offset_bottom = 32.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_83uww")
 
 [node name="ComplianceLabel" type="RichTextLabel" parent="ComplianceContainer/PanelContainer"]
+clip_contents = false
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mmgt")

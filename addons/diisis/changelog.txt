@@ -8,6 +8,7 @@ General
 - option to delete dropdowns
 - Skip line option
 - clean up documentation, especially LineReader and ParserEvents
+- fixes all around
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
@@ -18,6 +19,9 @@ Editor
 - Option for Save on Play (true by default)
 - General layout improvements & slimmification
 - Incoming references window for JP/LB
+- fact deletion warning (if a page, line, or choice item contains a fact, this warns you of it. can be disabled in preferences)
+- utility > step through pages
+- silly.
 
 Runtime
 - name style prepend got a few more options and consistency 
@@ -29,6 +33,7 @@ Runtime
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
 - add screen fade in / out
+- tscn CG support
 
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.

@@ -1085,7 +1085,7 @@ func get_evaluator_properties() -> Array:
 	
 	return methods
 
-func search_string(substr:String, case_insensitive:=false, include_tags:=false):
+func search_string(substr:String, case_insensitive:=false, include_tags:=false) -> Dictionary:
 	var found_facts := {}
 	for fact : String in facts:
 		if (case_insensitive and fact.findn(substr) != -1) or (not case_insensitive and fact.find(substr) != -1):
@@ -1295,7 +1295,7 @@ func get_type_compliance(value:String, type_string:String, arg_index:int) -> Str
 	if type_string == "float":
 		for char in value:
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
-				return str("Float argument ", arg_index + 1, " contains non-float character. (0 - 9 and . and -)")
+				return str("Float argument ", arg_index + 1, " contains non-float character.\n(Valid characters are 0 - 9 and . and -)")
 	
 	var split_types := type_string.split(MULTI_DROPDOWN_TYPE_SEPARATOR)
 	if are_all_of_these_dropdown_titles(split_types) and not type_string.is_empty():
