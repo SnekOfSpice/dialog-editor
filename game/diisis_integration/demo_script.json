@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 1,
+		"current_page_number": 0,
 		"page_view": 0,
 		"text_size_id": 3
 	},
@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774483,
+		"id_counter": -9223372036854774715,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -565,6 +565,7 @@
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
 									"meta.disabled_visible": false,
+									"meta.enabled_visible": true,
 									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
@@ -592,7 +593,7 @@
 										"operand_args": [],
 										"operand_key": "AND"
 									},
-									"do_jump_page": true,
+									"do_jump_page": false,
 									"facts": {
 										"fact_data_by_name": {
 
@@ -605,7 +606,8 @@
 									"loopback_target_line": 1,
 									"loopback_target_page": 0,
 									"meta.disabled_visible": false,
-									"meta.jump_page_before_auto_switch": true,
+									"meta.enabled_visible": true,
+									"meta.jump_page_before_auto_switch": false,
 									"meta.selector": {
 										"selected": false
 									},
@@ -767,7 +769,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 858,
+				"meta.scroll_vertical": 828,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -1064,7 +1066,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 367,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1,

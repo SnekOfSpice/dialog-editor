@@ -125,7 +125,7 @@ size_flags_horizontal = 10
 
 [node name="DeleteButton" type="Button" parent="PanelContainer/Info/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 focus_mode = 0
 icon = ExtResource("6_yg0hh")
 

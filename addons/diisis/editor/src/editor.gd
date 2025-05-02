@@ -593,6 +593,9 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.size.x = min(popup.size.x, size.x)
 	popup.size.y = min(popup.size.y, size.y)
 	popup.position.y = max(popup.position.y, 35)
+	
+	popup.content_scale_factor = content_scale
+	popup.size *= content_scale
 
 
 func _on_setup_index_pressed(index: int) -> void:
@@ -1052,6 +1055,7 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 		"\n",
 		"[b]Are you sure you want to delete it?[/b]"
 	))
-	
+	dialog.content_scale_factor = content_scale
+	dialog.size *= content_scale
 	
 	return true
