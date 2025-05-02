@@ -12,6 +12,8 @@ const SCREEN_NOTICE := "notice.tscn"
 const SCREEN_OPTIONS := "options_screen.tscn"
 const SCREEN_SAVE := "save_screen.tscn"
 
+const CG_ROOT := "res://game/cg/"
+
 const BACKGROUND_ROOT := "res://game/backgrounds/"
 const BACKGROUND_DEFAULT := "void.png"
 const BACKGROUND_SKYLINE := "skyline.png"
@@ -33,8 +35,8 @@ func fetch(type:String, key:String) -> String:
 	var extensions : Array
 	if type == "MUSIC" or type == "SFX":
 		extensions = ["mp3", "wav", "ogg"]
-	elif type == "BACKGROUND":
-		extensions == ["tscn", "png", "jpg"]
+	elif type == "BACKGROUND" or type == "CG":
+		extensions = ["tscn", "png", "jpg"]
 	elif type == "SCREEN" or type == "STAGE":
 		extensions = ["tscn"]
 	for extension in extensions:

@@ -196,15 +196,21 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	cg_root.visible = true
 	
-	var cg_node = TextureRect.new()
-	cg_root.add_child(cg_node)
-	cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var cg_path := str("res://game/cg/", cg_name, ".png")
-	if not ResourceLoader.exists(cg_path):
-		cg_name = cg
-		str("res://game/cg/", cg_name, ".png")
+	var cg_path := CONST.fetch("CG", cg_name)
+	var cg_node : Control
+	
+	if cg_path.is_empty():
 		push_warning(str("Couldn't find CG \"", cg_name, "\"."))
-	cg_node.texture = load(cg_path)
+		return
+	if cg_path.ends_with(".tscn"):
+		cg_node = load(cg_path).instantiate()
+	else:
+		cg_node = TextureRect.new()
+		cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cg_node.texture = load(cg_path)
+	
+	cg_root.add_child(cg_node)
+	
 	var t = create_tween()
 	
 	if cg_root.modulate.a == 1.0:
@@ -214,7 +220,11 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
 	
 	
-	var background_size : Vector2 = cg_node.texture.get_size()
+	var background_size : Vector2
+	if cg_node is TextureRect:
+		background_size = cg_node.texture.get_size()
+	else:
+		background_size = cg_node.size
 	var overshoot = background_size - Vector2(
 		ProjectSettings.get_setting("display/window/size/viewport_width"),
 		ProjectSettings.get_setting("display/window/size/viewport_height")
