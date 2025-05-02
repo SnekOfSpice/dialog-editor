@@ -20,6 +20,11 @@ extends Node
 ## If this is an empty string, no space will be inserted.
 @export var choice_appendation_string := "Choice made:"
 
+@export_group("Progress")
+## When calling [method _get_game_progress], the Parser will assume that any terminating page means full progress (1.0).
+## Mostly useful for visual novels and other linear stories that have few end points.
+@export var full_progress_on_last_page := true
+
 var page_data := {}
 var text_data := {}
 var use_dialog_syntax := true
@@ -236,12 +241,12 @@ func get_page_number(key:String) -> int:
 			return data.get("number")
 	return -1
 
-func read_page_by_key(key:String):
+func read_page_by_key(key:String, starting_line_index := 0):
 	var number = get_page_number(key)
 	if number == -1:
 		push_error(str("Couldn't find page with key \"", key, "\"."))
 		return
-	read_page(number)
+	read_page(number, starting_line_index)
 
 func read_page(number: int, starting_line_index := 0):
 	if not page_data.keys().has(number):
@@ -285,29 +290,57 @@ func get_game_progress_from_file(savepath:String) -> float:
 	data = data.get("Parser", {})
 	return data.get("Parser.game_progress", 0.0)
 
-func _get_game_progress(full_if_on_last_page:= true) -> float:
-	var max_line_index_used_for_calc := 0
+func _get_game_progress() -> float:
+	var index_trails := []
+	var handled_page_indices := []
+	var page_count : int = max(page_data.size(), 1)
+	var current_trail := []
+	var current_handled_page := 0
+	while handled_page_indices.size() < page_count:
+		current_trail.append(current_handled_page)
+		handled_page_indices.append(current_handled_page)
+		var terminate : bool = page_data.get(current_handled_page).get("terminate", false)
+		if terminate:
+			index_trails.append(current_trail.duplicate(true))
+			current_trail.clear()
+			if handled_page_indices.size() >= page_count:
+				break
+			for i in page_count:
+				if not i in handled_page_indices:
+					current_handled_page = i
+					break
+		else:
+			current_handled_page = page_data.get(current_handled_page).get("next")
+	
+	var trail : Array
+	for t : Array in index_trails:
+		if page_index in t:
+			trail = t
+			break
+	
+	if not trail:
+		return 0.0
+	
 	var calc_lines = page_data.get(page_index).get("lines")
-	max_line_index_used_for_calc = calc_lines.size() - 1
-	var max_page_index :int= max(page_data.keys().size(), 1)
-	var page_index_used_for_calc := page_index
-	var line_index_used_for_calc := line_index
-	
+	var line_count_on_page : int = calc_lines.size() - 1
+	var page_index_in_trail := trail.find(page_index)
+	var trail_size := trail.size()
 
-	if max_line_index_used_for_calc <= 0:
+	if line_count_on_page <= 0:
 		return 0.0
 	
+	var page_progress = (int(page_index_in_trail) / float(trail_size))
+	var line_progress = float(line_index) / float(line_count_on_page)
 	
-	if max_page_index <= 0:
-		return 0.0
-	
-	var page_progress = (int(page_index_used_for_calc) / float(max_page_index))
-	var line_progress = float(line_index_used_for_calc) / float(max_line_index_used_for_calc)
-	
-	if full_if_on_last_page and page_index_used_for_calc == max_page_index:
+	if full_progress_on_last_page and page_index_in_trail + 1 == trail_size:
 		return 1.0
 	
-	return page_progress + (line_progress / float(max_page_index))
+	var chunk_progress := 0.0
+	if line_reader:
+		if line_reader.line_type == DIISIS.LineType.Text and line_reader._dialog_lines.size() > 0:
+			chunk_progress = float(line_reader._dialog_line_index) / float(line_reader._dialog_lines.size())
+	
+	return page_progress + (line_progress / float(trail_size)) + ((chunk_progress / float(line_count_on_page)) / float(trail_size))
 
 func get_line_type(address:String) -> DIISIS.LineType:
 	var parts = DiisisEditorUtil.get_split_address(address)
