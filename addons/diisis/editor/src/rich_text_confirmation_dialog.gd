@@ -12,6 +12,6 @@ func _on_rich_text_label_item_rect_changed() -> void:
 	DiisisEditorUtil.limit_scroll_container_height(
 		find_child("ScrollContainer"),
 		0.5,
-		#find_child("ScrollHintTop"),
-		#find_child("ScrollHintBottom"),
+		find_child("ScrollHintTop"),
+		find_child("ScrollHintBottom"),
 	)

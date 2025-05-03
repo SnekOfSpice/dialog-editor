@@ -190,6 +190,8 @@ visible = false
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FactInteractionContainer/DeleteFactButton" to="." method="_on_delete_fact_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FactRenameEditContainer/ConfirmRenameButton" to="." method="_on_confirm_rename_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/FactRenameEditContainer/NewNameEdit" to="." method="_on_new_name_edit_text_changed"]
+[connection signal="text_submitted" from="HBoxContainer/VBoxContainer/FactRenameEditContainer/NewNameEdit" to="." method="_on_new_name_edit_text_submitted"]
+[connection signal="toggled" from="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer/NewDefaultCheckBox" to="." method="_on_new_default_check_box_toggled"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer/SaveNewDefaultButton" to="." method="_on_save_new_default_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToAddressButton" to="." method="_on_go_to_address_button_pressed"]
 [connection signal="canceled" from="ConfirmDelete" to="." method="_on_confirm_delete_canceled"]

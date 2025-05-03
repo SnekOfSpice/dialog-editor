@@ -17,18 +17,18 @@ color_regions = {
 "{ }": Color(0.87, 0.4002, 0.4002, 1)
 }
 
-[sub_resource type="Gradient" id="Gradient_osost"]
+[sub_resource type="Gradient" id="Gradient_wtkdm"]
 offsets = PackedFloat32Array(0.442786, 1)
 colors = PackedColorArray(0.764706, 0, 0.494118, 0, 0.765423, 5.77569e-06, 0.494295, 0.545098)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_osost"]
-gradient = SubResource("Gradient_osost")
+gradient = SubResource("Gradient_wtkdm")
 height = 20
 fill_from = Vector2(0, 1)
 fill_to = Vector2(0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_wtkdm"]
-gradient = SubResource("Gradient_osost")
+gradient = SubResource("Gradient_wtkdm")
 height = 20
 fill_to = Vector2(0, 1)
 

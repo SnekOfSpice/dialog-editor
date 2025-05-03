@@ -138,6 +138,6 @@ func limit_scroll_container_height(
 		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 		scroll_container.custom_minimum_size.y = max_height
 		if scroll_hint_top:
-			scroll_hint_top.visible = scroll_container.scroll_vertical == 0
+			scroll_hint_top.visible = scroll_container.scroll_vertical > 0
 		if scroll_hint_bottom:
-			scroll_hint_bottom.visible = scroll_container.scroll_vertical >= scroll_container.get_v_scroll_bar().max_value - (scroll_container.size.y + 1)
+			scroll_hint_bottom.visible = scroll_container.scroll_vertical < scroll_container.get_v_scroll_bar().max_value - (scroll_container.size.y + 1)

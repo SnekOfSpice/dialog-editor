@@ -11,6 +11,9 @@ var ref_lists := []
 signal request_hide
 signal request_popup
 
+var facts : ItemList
+var previous_selection := 0
+
 func fill():
 	for child in get_children():
 		if child is SubViewport:
@@ -21,7 +24,8 @@ func fill():
 	ref_choices_fact = find_child("RefChoicesFact")
 	ref_choices_condition = find_child("RefChoicesCondition")
 	ref_lists = [ref_pages_fact, ref_lines_fact, ref_lines_condition, ref_choices_fact, ref_choices_condition]
-	find_child("Facts").clear()
+	facts = find_child("Facts")
+	facts.clear()
 	find_child("LoveLabel").visible = Pages.silly
 	
 	for list : ItemList in ref_lists:
@@ -48,16 +52,21 @@ func fill():
 			vp.size = label.size
 			await RenderingServer.frame_post_draw
 			texture = vp.get_texture()
-		find_child("Facts").add_item(fact_reg, texture)
+		facts.add_item(fact_reg, texture)
 	find_child("RenameFactButton").visible = true
 	find_child("DeleteFactButton").visible = true
 	find_child("FactRenameEditContainer").visible = false
 	find_child("FactInteractionContainer").visible = false
 	find_child("CancelRenameButton").visible = false
 	find_child("CancelChangeDefaultButton").visible = false
+	find_child("ChangeDefaultButton").visible = true
+	find_child("ChangeDefaultEditContainer").visible = false
 	find_child("FactDuplicateLabel").visible = false
 	find_child("FactNameLabel").text = ""
 	drop_other_focused()
+	facts.select(previous_selection)
+	facts.grab_focus()
+	_on_facts_item_clicked(previous_selection)
 
 func drop_other_focused(selected_index:=0, clicked_item_list:ItemList=null):
 	for list in ref_lists:
@@ -74,7 +83,7 @@ func go_to_selected(selected_index:=0, activateded_item_list:ItemList=null):
 	if activateded_item_list != null:
 		go_to(activateded_item_list.get_item_text(selected_index))
 
-func _on_facts_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_facts_item_clicked(index: int, _at_position:=Vector2.ZERO, _mouse_button_index:=0) -> void:
 	find_child("FactInteractionContainer").visible = true
 	for list in ref_lists:
 		list.clear()
@@ -188,6 +197,7 @@ func _on_change_default_button_pressed() -> void:
 	if Pages.facts.get(fact) is bool:
 		find_child("NewDefaultCheckBox").visible = true
 		find_child("NewDefaultCheckBox").button_pressed = Pages.facts.get(fact)
+		find_child("NewDefaultCheckBox").text = str(Pages.facts.get(fact))
 		find_child("NewDefaultSpinBox").visible = false
 	elif Pages.facts.get(fact) is int:
 		find_child("NewDefaultCheckBox").visible = false
@@ -206,6 +216,9 @@ func _on_save_new_default_button_pressed() -> void:
 		Pages.facts[fact] = int(find_child("NewDefaultSpinBox").value)
 	find_child("ChangeDefaultEditContainer").visible = false
 	find_child("ChangeDefaultButton").visible = true
+	
+	if facts.get_selected_items().size() > 0:
+		previous_selection = facts.get_selected_items()[0]
 	fill()
 	
 
@@ -221,4 +234,14 @@ func _on_create_button_pressed() -> void:
 
 
 func _on_create_fact_window_fact_created() -> void:
+	if facts.get_selected_items().size() > 0:
+		previous_selection = facts.get_selected_items()[0]
 	fill()
+
+
+func _on_new_default_check_box_toggled(toggled_on: bool) -> void:
+	find_child("NewDefaultCheckBox").text = str(toggled_on)
+
+
+func _on_new_name_edit_text_submitted(_new_text: String) -> void:
+	_on_confirm_rename_button_pressed()

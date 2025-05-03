@@ -922,13 +922,14 @@ func register_fact(fact_name : String, value):
 
 func alter_fact(from:String, to=null):
 	for page in page_data.values():
-		
 		var page_facts:Dictionary
 		page_facts = page.get("facts", {}).get("fact_data_by_name", {})
 		for fact in page_facts.keys():
 			if fact == from:
 				if to is String:
-					page_facts[to] = page_facts[from]
+					var fact_data = page_facts.get(fact)
+					fact_data["fact_name"] = to
+					page_facts[to] = fact_data
 				page_facts.erase(from)
 		
 		for i in page.get("lines", []).size():
@@ -938,7 +939,9 @@ func alter_fact(from:String, to=null):
 			for fact in line_facts.keys():
 				if fact == from:
 					if to is String:
-						line_facts[to] = line_facts[from]
+						var fact_data = line_facts.get(fact)
+						fact_data["fact_name"] = to
+						line_facts[to] = fact_data
 					line_facts.erase(from)
 			
 			var line_conditionals:Dictionary
@@ -946,9 +949,18 @@ func alter_fact(from:String, to=null):
 			for fact in line_conditionals:
 				if fact == from:
 					if to is String:
-						line_conditionals[to] = line_conditionals[from]
+						var fact_data = line_conditionals.get(fact)
+						fact_data["fact_name"] = to
+						line_conditionals[to] = fact_data
 					line_conditionals.erase(from)
-			
+			if line.get("line_type") == DIISIS.LineType.Text:
+				var text_id =  line.get("content").get("text_id")
+				var text := get_text(text_id)
+				text = text.replace(
+					str("<fact:", from, ">"),
+					str("<fact:", to, ">")
+				)
+				save_text(text_id, text)
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
 				var choice_index := 0
@@ -958,7 +970,9 @@ func alter_fact(from:String, to=null):
 					for fact in option_conditionals:
 						if fact == from:
 							if to is String:
-								option_conditionals[to] = option_conditionals[from]
+								var fact_data = option_conditionals.get(fact)
+								fact_data["fact_name"] = to
+								option_conditionals[to] = fact_data
 							option_conditionals.erase(from)
 					
 					var option_facts:Dictionary
@@ -966,7 +980,9 @@ func alter_fact(from:String, to=null):
 					for fact in option_facts:
 						if fact == from:
 							if to is String:
-								option_facts[to] = option_facts[from]
+								var fact_data = option_facts.get(fact)
+								fact_data["fact_name"] = to
+								option_facts[to] = fact_data
 							option_facts.erase(from)
 					choice_index += 1
 	

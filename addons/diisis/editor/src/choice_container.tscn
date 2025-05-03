@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://btcdvjuk2ku18"]
+[gd_scene load_steps=8 format=3 uid="uid://btcdvjuk2ku18"]
 
 [ext_resource type="Script" uid="uid://dcf48jp7s5mo6" path="res://addons/diisis/editor/src/choice_container.gd" id="1_22qh4"]
 [ext_resource type="Texture2D" uid="uid://bfj2h1pk5gj5j" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 8.png" id="2_6u1sp"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="2_r34yr"]
 [ext_resource type="Texture2D" uid="uid://c385ybtobabdb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 9.png" id="3_u4gig"]
 [ext_resource type="Texture2D" uid="uid://ctg7s4q3jhcgg" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 10.png" id="4_arn3v"]
 [ext_resource type="Texture2D" uid="uid://btw7w3aypt2nc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 11.png" id="5_6apmx"]
@@ -26,7 +27,8 @@ expand_to_text_length = true
 [node name="EditIDButton" type="Button" parent="TitleContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "..."
+theme_override_fonts/font = ExtResource("2_r34yr")
+text = "e"
 
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2

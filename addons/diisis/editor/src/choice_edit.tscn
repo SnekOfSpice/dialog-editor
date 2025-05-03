@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=21 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" uid="uid://cb8xoqufpekv5" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_vdkak"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://nakfxqdgr4pg" path="res://addons/diisis/editor/visuals/true.png" id="7_qdd2f"]
 [ext_resource type="Texture2D" uid="uid://cyiecfr2eyp2o" path="res://addons/diisis/editor/visuals/false.png" id="8_ykt7a"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="12_0x8br"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="13_av1qi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0ndw"]
 bg_color = Color(0, 0, 0, 0.064)
@@ -190,7 +191,8 @@ caret_blink_interval = 0.5
 [node name="EditEnabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled"]
 layout_mode = 2
 focus_mode = 0
-text = "..."
+theme_override_fonts/font = ExtResource("13_av1qi")
+text = "e"
 
 [node name="TextLinesDisabled" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines"]
 layout_mode = 2
@@ -218,7 +220,8 @@ caret_blink_interval = 0.5
 [node name="EditDisabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled"]
 layout_mode = 2
 focus_mode = 0
-text = "..."
+theme_override_fonts/font = ExtResource("13_av1qi")
+text = "e"
 
 [node name="DefaultTextEmptyWarningLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines"]
 custom_minimum_size = Vector2(0, 20)
