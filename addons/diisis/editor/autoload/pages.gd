@@ -184,7 +184,7 @@ func deserialize(data:Dictionary):
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
 	for setting in TOGGLE_SETTINGS.keys():
-		set(setting, data.get(setting, true))
+		set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
