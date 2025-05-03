@@ -11,10 +11,12 @@ func init():
 	
 	for child in find_child("ToggleSettings").get_children():
 		child.queue_free()
+	for child in find_child("StringSettings").get_children():
+		child.queue_free()
 	for setting : String in Pages.TOGGLE_SETTINGS.keys():
 		var container = HBoxContainer.new()
 		var button = CheckBox.new()
-		button.toggled.connect(Pages.set_toggle_setting.bind(setting))
+		button.toggled.connect(Pages.set_setting.bind(setting))
 		var label = Label.new()
 		label.text = Pages.TOGGLE_SETTINGS.get(setting)
 		container.add_child(button)
@@ -25,6 +27,24 @@ func init():
 		find_child("ToggleSettings").add_child(container)
 		button.button_pressed = Pages.get(setting)
 		button.text = setting.capitalize()
+	
+	for setting : String in Pages.STRING_SETTINGS.keys():
+		var container = HBoxContainer.new()
+		var label = Label.new()
+		label.text = setting.capitalize()
+		container.add_child(label)
+		var edit := LineEdit.new()
+		edit.placeholder_text = Pages.STRING_SETTINGS.get(setting)
+		edit.text = Pages.get(setting)
+		edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		edit.text_changed.connect(Pages.set_setting.bind(setting))
+		container.add_child(edit)
+		var button = Button.new()
+		button.text = "Reset"
+		button.pressed.connect(edit.set.bind("text", ""))
+		button.pressed.connect(Pages.set_setting.bind("", setting))
+		container.add_child(button)
+		find_child("StringSettings").add_child(container)
 	
 	find_child("ItemList").select(0)
 	_on_item_list_item_selected(0)

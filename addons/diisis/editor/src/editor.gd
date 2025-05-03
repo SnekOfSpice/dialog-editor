@@ -115,6 +115,18 @@ func init(active_file_path:="") -> void:
 	
 	undo_redo.version_changed.connect(set_altered_history.bind(true))
 	
+	print(Pages.shader)
+	if not Pages.shader.is_empty():
+		var layer = CanvasLayer.new()
+		add_child(layer)
+		var rect = ColorRect.new()
+		rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.add_child(rect)
+		var mat = ShaderMaterial.new()
+		mat.shader = load(Pages.shader)
+		rect.material = mat
+	
 	print("init editor successful")
 
 func on_tree_entered():

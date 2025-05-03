@@ -81,6 +81,11 @@ var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
 #endregion
 
+const STRING_SETTINGS := {
+	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
+}
+var shader := ""
+
 signal pages_modified
 
 func sync_line_references():
@@ -148,6 +153,9 @@ func serialize() -> Dictionary:
 	}
 	for setting in TOGGLE_SETTINGS.keys():
 		data[setting] = get(setting)
+	for setting in STRING_SETTINGS.keys():
+		data[setting] = get(setting)
+		printt(setting, get(setting))
 	return data
 
 func deserialize(data:Dictionary):
@@ -184,6 +192,8 @@ func deserialize(data:Dictionary):
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
 	for setting in TOGGLE_SETTINGS.keys():
+		set(setting, data.get(setting, get(setting)))
+	for setting in STRING_SETTINGS.keys():
 		set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
@@ -1664,7 +1674,11 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 	
 	return facts_by_address
 
-func set_toggle_setting(value:bool, setting:StringName):
+func set_setting(value, setting:StringName):
+	print(value is String)
+	if value is String:
+		print(value.is_empty())
+	printt(setting, value)
 	set(setting, value)
 
 func make_puppy() -> String:

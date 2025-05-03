@@ -63,6 +63,7 @@ func fill():
 	find_child("ChangeDefaultEditContainer").visible = false
 	find_child("FactDuplicateLabel").visible = false
 	find_child("FactNameLabel").text = ""
+	find_child("NewNameEdit").text = ""
 	drop_other_focused()
 	facts.select(previous_selection)
 	facts.grab_focus()

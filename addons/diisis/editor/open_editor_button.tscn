@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dug0luew7u6ds"]
+[gd_scene load_steps=4 format=3 uid="uid://dug0luew7u6ds"]
 
 [ext_resource type="Script" uid="uid://dtrkaopxetmjn" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
 [ext_resource type="Texture2D" uid="uid://yfkxqfkru4ke" path="res://addons/diisis/logos/icon_buttonbw smooth.png" id="2_uo8im"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="3_72chw"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 40.0
@@ -16,7 +17,9 @@ icon = ExtResource("2_uo8im")
 
 [node name="MenuBar" type="MenuBar" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("3_72chw")
 
 [node name="v" type="PopupMenu" parent="MenuBar"]
 item_count = 1
