@@ -181,6 +181,10 @@ var instruction_handler: InstructionHandler:
 @export var text_content_prefix := ""
 ## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
 @export var text_content_suffix := ""
+## Wraps all case-sensitive matches of individual words in custom defined wrappers. (Adds prefix and suffix)
+## The dictionary key is the word to wrap. The value is the prefix and suffix for that word, separated by a space.[br]
+## For example; [code]"DIISIS" : "[b] [/b]"[/code].
+@export var text_content_word_wrappers : Dictionary[String, String]
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
@@ -203,7 +207,8 @@ var instruction_handler: InstructionHandler:
 @export var choice_button_keyboard_focus := true
 ## Hides all built choice buttons during choices. Instead, the LineReader
 ## must be advanced by calling [method LineReader.choice_pressed_virtual]. Useful if you want
-## a custom override for how choices are selected beyond buttons.
+## a custom override for how choices are selected beyond buttons.[br][br]
+## See also, [signal ParserEvents.choices_presented].
 @export var virtual_choices := false
 var _built_virtual_choices := []
 ## [b]Optional[/b] button scene that gets instantiated as children of [member choice_option_container].[br]
@@ -215,7 +220,7 @@ var _built_virtual_choices := []
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
-## Both references have to be set, and cannot be the same node.
+## Both references have to be set, and [b]cannot be the same node[/b].
 @export var show_input_prompt := false:
 	set(value):
 		show_input_prompt = value
@@ -246,7 +251,6 @@ var prompt_finished: Control:
 var _remaining_prompt_delay := input_prompt_delay
 
 @export_group("Internal Config")
-## ASDHJFBSH
 @export_subgroup("Inline Name Separator Sequence", "inline_name_")
 ## [enum NameStyle.Prepend] and [param preserve_name_in_past_lines] use this.
 @export var inline_name_separator := "-"
@@ -1263,6 +1267,13 @@ func _read_next_chunk():
 	new_text = new_text.trim_suffix("<advance>")
 	
 	new_text = str(text_content_prefix, new_text, text_content_suffix)
+	
+	for word in text_content_word_wrappers.keys():
+		var wrapper : PackedStringArray = text_content_word_wrappers.get(word).split(" ")
+		if wrapper.size() != 2:
+			push_error(str("Word ", word, " has invalid wrapper!"))
+			continue
+		new_text = new_text.replace(word, str(wrapper[0], word, wrapper[1]))
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")

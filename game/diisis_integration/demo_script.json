@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774767,
+		"id_counter": -9223372036854774635,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -557,7 +557,7 @@
 												"is_conditional": false
 											}
 										},
-										"meta.visible": true
+										"meta.visible": false
 									},
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
@@ -769,11 +769,11 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 502,
+				"meta.scroll_vertical": 831,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
-				"page_key": "",
+				"page_key": "beginning",
 				"terminate": false
 			},
 			"1": {
@@ -1065,12 +1065,12 @@
 						"skip": false
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 442.0,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1.0,
-				"page_key": "",
+				"page_key": "about instructions",
 				"terminate": false
 			},
 			"2": {
@@ -1241,12 +1241,12 @@
 						"skip": false
 					}
 				],
-				"meta.address_mode_next": 1.0,
+				"meta.address_mode_next": 0,
 				"meta.scroll_vertical": 0.0,
 				"meta.selected": false,
 				"next": 0.0,
 				"number": 2.0,
-				"page_key": "",
+				"page_key": "the end",
 				"terminate": true
 			}
 		},

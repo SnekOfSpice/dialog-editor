@@ -25,15 +25,14 @@ Editor
 
 Runtime
 - name style prepend got a few more options and consistency 
-- add LineReader.virtual_choices and LineReader.choice_pressed_virtual
 - add ParserEvents: skipped, advanced
-- add LineReader.chatlog_tint_full_line
+- add LineReader: virtual_choices, choice_pressed_virtual, chatlog_tint_full_line, text_content_word_wrappers
 
 
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
 - add screen fade in / out
-- tscn CG support
+- tscn CG support (they have to be Control nodes)
 
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.

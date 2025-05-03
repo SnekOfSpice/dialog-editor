@@ -2,9 +2,12 @@
 
 [ext_resource type="Script" uid="uid://bfpj3hkxh85wr" path="res://addons/diisis/editor/src/reset_address_mode_popup.gd" id="1_8n7sg"]
 
-[node name="ResetAddressModePopup" type="Popup"]
-size = Vector2i(343, 116)
-visible = true
+[node name="ResetAddressModePopup" type="Window"]
+size = Vector2i(343, 1864)
+wrap_controls = true
+transient = true
+exclusive = true
+borderless = true
 always_on_top = true
 script = ExtResource("1_8n7sg")
 
@@ -14,6 +17,8 @@ offset_bottom = 40.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2

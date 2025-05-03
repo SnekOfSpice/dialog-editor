@@ -1,5 +1,5 @@
 @tool
-extends Popup
+extends Window
 
 signal change_to_mode(mode : AddressModeButton.Mode)
 

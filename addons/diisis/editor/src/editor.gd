@@ -91,7 +91,7 @@ func init(active_file_path:="") -> void:
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
 	
-	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
@@ -105,6 +105,7 @@ func init(active_file_path:="") -> void:
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item = find_child("File")
 	file_item.add_separator()
+	# nts those submenus have to be invisible otherwise they break for the first hover
 	file_item.add_submenu_node_item("Ingest Pages", file_item.get_node("IngestMenu"))
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	file_item.add_separator()
@@ -486,7 +487,7 @@ func open_from_path(path:String):
 	set_save_path(path)
 	
 	Pages.deserialize(data.get("pages"))
-	find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	await get_tree().process_frame
 	var editor_data = data.get("editor", {})
@@ -647,9 +648,9 @@ func _on_file_id_pressed(id: int) -> void:
 		3:
 			# config
 			open_popup($Popups.get_node("FileConfigPopup"), true)
-		8:
-			Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
-			find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
+		#8:
+			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
+			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
 		9:
 			emit_signal("open_new_file")
 

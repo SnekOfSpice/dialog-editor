@@ -156,9 +156,9 @@ func get_address() -> String:
 
 # TODO: Add enabled / disabled icons
 func set_page_view(view:DiisisEditor.PageView):
-	var default_enabled_texture : TextureRect = find_child("DefaultEnabledTexture")
+	var default_enabled_texture : Button = find_child("DefaultEnabledTexture")
 	var line_edit_enabled : LineEdit = find_child("LineEditEnabled")
-	var default_disabled_texture : TextureRect = find_child("DefaultDisabledTexture")
+	var default_disabled_texture : Button = find_child("DefaultDisabledTexture")
 	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")
 	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
@@ -177,15 +177,16 @@ func set_page_view(view:DiisisEditor.PageView):
 		buttons.columns = 1
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
+		find_child("Movement").reparent(find_child("OptionContainer"))
 	else:
-		default_enabled_texture.visible = default_dropdown.get_selected_id() == 0
-		line_edit_enabled.visible = default_dropdown.get_selected_id() == 0
-		default_disabled_texture.visible = default_dropdown.get_selected_id() == 1
-		line_edit_disabled.visible = default_dropdown.get_selected_id() == 1
+		default_enabled_texture.visible = default_dropdown.button_pressed
+		line_edit_enabled.visible = default_dropdown.button_pressed
+		default_disabled_texture.visible = not default_dropdown.button_pressed
+		line_edit_disabled.visible = not default_dropdown.button_pressed
 		buttons.columns = 3
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
-	
+		find_child("Movement").reparent(find_child("BehaviorContainer"))
 	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.Minimal
 	
 	
