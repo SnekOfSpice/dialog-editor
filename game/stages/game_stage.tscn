@@ -647,6 +647,7 @@ name_label = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/Marg
 name_container = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer")
 instruction_handler = NodePath("../InstructionHandler")
 inline_evaluator = NodePath("../InstructionHandler")
+choice_button_keyboard_focus = false
 choice_title_label = NodePath("../Camera2D/CanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/Label")
 show_input_prompt = true
 input_prompt_delay = 1.29

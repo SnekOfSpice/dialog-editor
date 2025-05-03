@@ -11,14 +11,6 @@ class_name LineReader
 ## Text speed at which text will be shown instantly instead of gradually revealed.
 const MAX_TEXT_SPEED := 201
 
-## @experimental
-enum ChoiceButtonFocusMode {
-	## The first [ChoiceButton] of [member choice_button_container] will receive focus upon build. Items can be navigated and selected with keyboard UI inputs. Mouse can still be used.
-	Keyboard,
-	## No [ChoiceButton] will receive focus. An option has to be clicked to be selected.
-	None
-}
-
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member name_colors].
 enum NameStyle {
@@ -29,11 +21,13 @@ enum NameStyle {
 }
 
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
-## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Quick-Start-Guide-%E2%80%90-LineReader-&-Parser
+## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/LineReader-&-Parser
+## @tutorial(Visual Novel Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template
 
 @export_group("UX")
 @export_subgroup("Text Behavior")
-## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.
+## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.[br]
+## If [member full_words] is [code]true[/code], will instead pause between words for [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
 ## If true, the text will be read one word at a time instead of character by character.
 @export var full_words := false
@@ -85,14 +79,13 @@ var _auto_continue_duration:= auto_continue_delay
 ## If true, the displayed actor names will also be prepended to the text
 ## saved with [member keep_past_lines].
 @export var preserve_name_in_past_lines := true
-## A [RichTextLabel] scene that. By default, the 
+## [b]Optional[/b] [RichTextLabel] scene that gets used to deposit past lines saved by [member keep_past_lines]. By default, the [LineReader] will create a [RichTextLabel] by itself.
 @export var past_line_label:PackedScene
 var _auto_advance := false
 var _last_raw_name := ""
 
-@export_group("Text Display")
+@export_group("Name Display")
 ## The name of the dropdown property used for keying names. Usually something like "character"
-@export_subgroup("Names")
 ## Name of the DropDown in DIISIS that gets used for dialog syntax. [br]
 ## ("character" in the demo)
 @export var property_for_name := ""
@@ -107,23 +100,6 @@ var _last_raw_name := ""
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
 @export var name_style : NameStyle = NameStyle.NameLabel
 var _visible_prepend_offset := 0
-@export_subgroup("Text Content", "text_content")
-## A prefix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][center][/code].
-@export var text_content_prefix := ""
-## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
-@export var text_content_suffix := ""
-@export_subgroup("Chatlog", "chatlog")
-## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
-## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
-## [member text_speed] will still act as normal, though you probably want to use [constant LineReader.MAX_TEXT_SPEED]. [br][br]
-## [s]I've been reading homestuck[/s]
-@export var chatlog_enabled := false
-## When [member chatlog_enabled] is true, instead these names will be used if set. If not, defaults to [member name_map.]
-@export var chatlog_name_map : Dictionary[String, String] = {}
-## Chatlog override for colors. Tints the names displayed when [member chatlog_enabled] is true. If not set, no tint is used.
-@export var chatlog_name_colors : Dictionary[String, Color] = {}
-## If set, the entire line is tinted in the appropriate color set in [member chatlog_name_colors]. If false, only the actor name is tinted.
-@export var chatlog_tint_full_line := true
 
 @export_group("Mandatory References")
 ## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
@@ -199,20 +175,38 @@ var instruction_handler: InstructionHandler:
 ## Any function called by one of these tags has to return a [String] (can be empty).
 @export var inline_evaluator: Node
 
+@export_group("Advanced Text Display")
+@export_subgroup("Text Content", "text_content")
+## A prefix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][center][/code].
+@export var text_content_prefix := ""
+## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
+@export var text_content_suffix := ""
+@export_subgroup("Chatlog", "chatlog")
+## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
+## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
+## [member text_speed] will still act as normal, though you probably want to use [constant LineReader.MAX_TEXT_SPEED]. [br][br]
+## [s]I've been reading homestuck[/s]
+@export var chatlog_enabled := false
+## When [member chatlog_enabled] is true, instead these names will be used if set. If not, defaults to [member name_map.]
+@export var chatlog_name_map : Dictionary[String, String] = {}
+## Chatlog override for colors. Tints the names displayed when [member chatlog_enabled] is true. If not set, no tint is used.
+@export var chatlog_name_colors : Dictionary[String, Color] = {}
+## If set, the entire line is tinted in the appropriate color set in [member chatlog_name_colors]. If false, only the actor name is tinted.
+@export var chatlog_tint_full_line := true
+
 @export_group("Advanced UX")
 @export_subgroup("Choices")
 ## If [code]false[/code], the [LineReader] can still be advanced with [method LineReader.advance], even if
 ## Choice Buttons are currently presented to the player.
-@export var block_advance_during_choices:=true
+@export var block_advance_during_choices := true
+## Focuses the first button when choices are built to allow keyboard navigation in the UI.
+@export var choice_button_keyboard_focus := true
 ## Hides all built choice buttons during choices. Instead, the LineReader
 ## must be advanced by calling [method LineReader.choice_pressed_virtual]. Useful if you want
 ## a custom override for how choices are selected beyond buttons.
 @export var virtual_choices := false
 var _built_virtual_choices := []
-#@export var give_focus_to_choice_button := false
-## @experimental
-@export var choice_button_focus_mode := ChoiceButtonFocusMode.None
-## Button scene that gets instantiated as children of [member choice_option_container].[br]
+## [b]Optional[/b] button scene that gets instantiated as children of [member choice_option_container].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:PackedScene
@@ -1635,26 +1629,18 @@ func _build_choices(choices, auto_switch:bool):
 			"loopback_target_line" : loopback_target_line,
 		})
 		
-		match choice_button_focus_mode:
-			ChoiceButtonFocusMode.Keyboard:
-				new_option.focus_mode = Control.FOCUS_ALL
-				new_option.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			ChoiceButtonFocusMode.None:
-				new_option.focus_mode = Control.FOCUS_NONE
-				new_option.mouse_filter = Control.MOUSE_FILTER_STOP
-	if choice_option_container.get_child_count() > 0 and choice_button_focus_mode == ChoiceButtonFocusMode.Keyboard:
+		if choice_button_keyboard_focus:
+			new_option.focus_mode = Control.FOCUS_ALL
+	
+	if choice_option_container.get_child_count() > 0 and choice_button_keyboard_focus:
 		choice_option_container.get_child(0).call_deferred("grab_focus")
+	
 	ParserEvents.choices_presented.emit(built_choices)
-		
+	
 	if virtual_choices:
 		_built_virtual_choices = built_choices
 		for c in choice_option_container.get_children():
 			c.visible = false
-	#if give_focus_to_choice_button or ChoiceButtonFocusMode.KeyboardOnly == choice_button_focus_mode:
-		#if choice_option_container.get_child_count() > 0:
-			#choice_option_container.get_child(0).grab_focus.call_deferred()
-		#else:
-			#push_warning("No choice to give focus to.")
 
 func _set_choice_title_or_warn(title: String):
 	current_choice_title = title
