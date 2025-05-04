@@ -20,8 +20,6 @@ signal splatter(amount:int)
 signal start_chapter_cover(pov_name:String)
 signal request_object_visible(object_name:String, visibility:bool)
 
-signal sun(property:String, value:float)
-
 func play_sfx(_name:String):
 	Sound.play_sfx(_name)
 	return false
@@ -194,14 +192,6 @@ func control_camera(zoom, x, y, duration) -> bool:
 	zoom_to(zoom, duration)
 	move_camera_to(x, y, duration)
 	return false
-
-
-func set_sun(property: String, value: float) -> bool:
-	emit_signal("sun", property, value)
-	return false
-
-func set_sun_str(property: String, value: String):
-	set_sun(property, float(value))
 
 func roll_credits() -> bool:
 	emit_signal("start_rolling_credits")

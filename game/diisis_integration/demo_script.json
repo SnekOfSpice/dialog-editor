@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774734,
+		"id_counter": -9223372036854774767,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [
@@ -208,16 +208,6 @@
 				],
 				"args": [
 					"level"
-				]
-			},
-			"set_sun": {
-				"arg_types": [
-					"string",
-					"float"
-				],
-				"args": [
-					"property",
-					"value"
 				]
 			},
 			"set_text_style": {

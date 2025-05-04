@@ -34,7 +34,6 @@ var callable_upon_blocker_clear:Callable
 
 @onready var camera = $Camera2D
 @onready var overlay_static = find_child("Static").get_node("ColorRect")
-@onready var overlay_sun = find_child("Sun").get_node("ColorRect")
 @onready var overlay_fade_out = find_child("FadeOut").get_node("ColorRect")
 @onready var overlay_orgasm = find_child("Orgasm").get_node("ColorRect")
 
@@ -45,8 +44,6 @@ var callable_upon_blocker_clear:Callable
 
 var target_lod := 0.0
 var target_mix := 0.0
-var target_sun_steps := 1.8
-var target_sun_fill_amount := -1.0
 var target_static := 0.0
 
 func _ready():
@@ -74,7 +71,6 @@ func _ready():
 	
 	tree_exiting.connect(on_tree_exit)
 	
-	overlay_sun.get_material().set_shader_parameter("fill_amount", -1.0)
 	hide_cg()
 	
 	await get_tree().process_frame
@@ -113,11 +109,6 @@ func go_to_main_menu(_unused):
 
 
 func _process(_delta: float) -> void:
-	#sun_mat.set_shader_parameter("steps", lerp(sun_mat.get_shader_parameter("steps"), target_sun_steps, 0.02))
-	#sun_mat.set_shader_parameter("fill_amount", lerp(sun_mat.get_shader_parameter("fill_amount"), target_sun_fill_amount, 0.02))
-	#if sun_mat.get_shader_parameter("fill_amount") > -1:
-	#sun_mat.set_shader_parameter("texture_channel0", get_viewport().get_texture())
-	
 	fade_mat.set_shader_parameter("lod", lerp(fade_mat.get_shader_parameter("lod"), target_lod, 0.02))
 	fade_mat.set_shader_parameter("mix_percentage", lerp(fade_mat.get_shader_parameter("mix_percentage"), target_mix, 0.02))
 	
@@ -125,7 +116,6 @@ func _process(_delta: float) -> void:
 	static_mat.set_shader_parameter("border_size", lerp(static_mat.get_shader_parameter("border_size"), 1 - target_static, 0.02))
 	
 	orgasm_mat.set_shader_parameter("lod", lerp(orgasm_mat.get_shader_parameter("lod"), 0.0, 0.000175))
-
 	
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
 
@@ -350,8 +340,6 @@ func serialize() -> Dictionary:
 	
 	result["start_cover_visible"] = find_child("StartCover").visible
 	result["static"] = overlay_static.get_material().get_shader_parameter("intensity")
-	result["sun_steps"] = overlay_sun.get_material().get_shader_parameter("steps")
-	result["sun_fill_amount"] = overlay_sun.get_material().get_shader_parameter("fill_amount")
 	result["fade_out_lod"] = overlay_fade_out.get_material().get_shader_parameter("lod")
 	result["fade_out_mix_percentage"] = overlay_fade_out.get_material().get_shader_parameter("mix_percentage")
 	
@@ -398,10 +386,6 @@ func deserialize(data:Dictionary):
 			push_warning("Deserialized game_stage with something wild.")
 			return
 		find_child("TextContainer1").position = fixed_position
-	target_sun_fill_amount = data.get("sun_fill_amount", -1.0)
-	target_sun_steps = data.get("sun_steps", 10.0)
-	overlay_sun.get_material().set_shader_parameter("fill_amount", target_sun_fill_amount)
-	overlay_sun.get_material().set_shader_parameter("steps", target_sun_steps)
 	
 	target_lod = data.get("fade_out_lod", 0.0)
 	target_mix = data.get("fade_out_mix_percentage", 0.0)
@@ -502,10 +486,6 @@ func set_static(level:float):
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
-
-func _on_instruction_handler_sun(property: String, value: float) -> void:
-	set(str("target_sun_", property), value)
-	#overlay_sun.get_material().set_shader_parameter(property, value)
 
 func increment_advance_blocker():
 	advance_blockers += 1
