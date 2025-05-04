@@ -25,7 +25,6 @@ func init() -> void:
 	await get_tree().process_frame
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	set_head_editable(Pages.is_header_schema_empty())
-	set_non_meta_parts_visible(true)
 	
 	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"), _on_delete_button_mouse_exited)
 
@@ -33,16 +32,16 @@ func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
 	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
-	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full
+	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full and not find_child("LoopbackReferenceLabel").text.is_empty()
 	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	if view == DiisisEditor.PageView.Full:
 		move_controls_buttons.columns = 2
-		move_controls.find_child("Spacer").visible = true
+		#move_controls.find_child("Spacer").visible = true
 		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 1)
 	else:
 		move_controls_buttons.columns = 5
-		move_controls.find_child("Spacer").visible = false
+		#move_controls.find_child("Spacer").visible = false
 		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 0)
 
 func set_indent_level(to:int):
@@ -304,29 +303,6 @@ func _on_facts_visibility_toggle_toggled(button_pressed: bool) -> void:
 func _on_conditionals_visibility_toggle_toggled(button_pressed: bool) -> void:
 	find_child("Conditionals").visible = button_pressed
 
-func getNonMetaParts() -> Array:
-	var parts := []
-	for control in find_child("Controls").get_children():
-		if control.name != "MetaControls" and control.name != "DeleteContainer":
-			parts.append(control)
-	
-	parts.append(find_child("Content"))
-	
-	return parts
-
-
-func set_non_meta_parts_visible(value: bool):
-	find_child("VisibleToggle").button_pressed = value
-	for p in getNonMetaParts():
-		p.visible = value
-
-func _on_lock_toggle_toggled(button_pressed: bool) -> void:
-	pass # Replace with function body.
-
-
-func _on_visible_toggle_toggled(button_pressed: bool) -> void:
-	set_non_meta_parts_visible(button_pressed)
-
 
 func _on_insert_line_above_pressed() -> void:
 	var insert_index := get_index()
@@ -336,10 +312,6 @@ func _on_insert_line_above_pressed() -> void:
 func _on_insert_line_below_pressed() -> void:
 	var insert_index := get_index() + 1
 	emit_signal("insert_line", insert_index)
-
-#
-#func _on_move_to_index_button_pressed() -> void:
-	#emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)
 
 
 func _on_select_all_in_range_button_pressed():
@@ -360,4 +332,7 @@ func _on_loopback_reference_label_meta_clicked(meta: Variant) -> void:
 
 
 func _on_delete_button_mouse_exited() -> void:
+	# can happen when we actually delete the thing
+	if not is_instance_valid(find_child("SkipCheckBox")):
+		return
 	set_skip(find_child("SkipCheckBox").button_pressed)

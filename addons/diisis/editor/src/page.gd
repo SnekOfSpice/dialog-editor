@@ -20,6 +20,7 @@ func init(n:=number):
 	set_next(n+1)
 	find_child("Facts").init()
 	deserialize(data)
+	page_key_line_edit.placeholder_text = "Page " + str(n)
 
 func get_next():
 	if find_child("TerminateCheck").button_pressed:

@@ -266,6 +266,10 @@ func get_selected_addresses(depth:int) -> Array:
 	selected_on_page = DiisisEditorUtil.sort_addresses(selected_on_page)
 	return selected_on_page
 
+func get_clipboard_for_start_address(address:String) -> Dictionary:
+	var insert_depth = DiisisEditorUtil.get_address_depth(address)
+	return clipboard.get(insert_depth, {})
+
 func insert_from_clipboard(start_address:String):
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
 	var data_at_depth = clipboard.get(insert_depth, {})

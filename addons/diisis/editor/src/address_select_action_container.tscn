@@ -12,7 +12,6 @@
 [node name="AddressSelectActionContainer" type="CenterContainer" groups=["address_selectors"]]
 auto_translate_mode = 1
 script = ExtResource("1_1ayp7")
-address_depth = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -51,4 +50,5 @@ item_6/text = "Replace + Insert"
 item_6/id = 6
 
 [connection signal="toggled" from="HBoxContainer/SelectCheckBox" to="." method="_on_select_check_box_toggled"]
+[connection signal="about_to_popup" from="HBoxContainer/MenuBar/v" to="." method="_on_v_about_to_popup"]
 [connection signal="index_pressed" from="HBoxContainer/MenuBar/v" to="." method="_on_a_index_pressed"]

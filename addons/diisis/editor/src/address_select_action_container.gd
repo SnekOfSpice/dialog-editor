@@ -63,3 +63,11 @@ func request_insert_items(above:bool):
 		new_address = new_address.trim_suffix(".")
 		selected_address = new_address
 	DiisisEditorActions.insert_from_clipboard(selected_address)
+
+
+func _on_v_about_to_popup() -> void:
+	var address = DiisisEditorUtil.get_address(self, address_depth)
+	var menu : PopupMenu = find_child("v")
+	menu.set_item_disabled(4, DiisisEditorActions.get_clipboard_for_start_address(address).is_empty())
+	menu.set_item_disabled(5, DiisisEditorActions.get_clipboard_for_start_address(address).is_empty())
+	menu.set_item_disabled(6, DiisisEditorActions.get_clipboard_for_start_address(address).is_empty())
