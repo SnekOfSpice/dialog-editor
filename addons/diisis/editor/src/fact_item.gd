@@ -33,6 +33,8 @@ var virtual_hint_line := 0
 func init() -> void:
 	find_child("RegisterContainer").visible = false
 	find_child("RegisterButton").visible = false
+	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func serialize() -> Dictionary:
 	var result := {}

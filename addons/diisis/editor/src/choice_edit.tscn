@@ -62,7 +62,7 @@ status_panels = [NodePath("../..")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Delete" type="Button" parent="ChoiceEdit/MarginContainer"]
+[node name="DeleteButton" type="Button" parent="ChoiceEdit/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Delete option"
@@ -337,7 +337,7 @@ layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/FactsVisibilityToggle")
 address_depth = 2
 
-[connection signal="pressed" from="ChoiceEdit/MarginContainer/Delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="ChoiceEdit/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_toggled"]

@@ -14,6 +14,7 @@ func init():
 	for child in find_child("StringSettings").get_children():
 		child.queue_free()
 	for setting : String in Pages.TOGGLE_SETTINGS.keys():
+		print(setting)
 		var container = HBoxContainer.new()
 		var button = CheckBox.new()
 		button.toggled.connect(Pages.set_setting.bind(setting))

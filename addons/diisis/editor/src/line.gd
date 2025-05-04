@@ -27,6 +27,7 @@ func init() -> void:
 	set_head_editable(Pages.is_header_schema_empty())
 	set_non_meta_parts_visible(true)
 	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
@@ -110,9 +111,9 @@ func move_choice_item_by_index(at_index:int, direction:int):
 
 func set_head_editable(value: bool):
 	is_head_editable = value
-	find_child("Header").visible = is_head_editable
-	find_child("HeaderShort").visible = not is_head_editable
-	find_child("HeaderShort").text = find_child("Header").short_form()
+	find_child("Header").set_editable(is_head_editable)
+	#find_child("HeaderShort").visible = not is_head_editable
+	#find_child("HeaderShort").text = find_child("Header").short_form()
 	
 	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
 

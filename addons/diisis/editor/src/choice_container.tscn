@@ -16,27 +16,50 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_22qh4")
 
-[node name="TitleContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 13
 
-[node name="ChoiceTitleLineEdit" type="LineEdit" parent="TitleContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
+
+[node name="TitleContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ChoiceTitleLineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer/TitleContainer"]
+layout_mode = 2
+size_flags_vertical = 4
 placeholder_text = "Choice Title (optional)"
 expand_to_text_length = true
 
-[node name="EditIDButton" type="Button" parent="TitleContainer"]
+[node name="EditIDButton" type="Button" parent="HBoxContainer/PanelContainer/TitleContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 focus_mode = 0
 theme_override_fonts/font = ExtResource("2_r34yr")
 text = "e"
 
-[node name="Controls" type="HBoxContainer" parent="."]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="MenuBar" type="MenuBar" parent="Controls"]
+[node name="Controls" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="Select" type="PopupMenu" parent="Controls/MenuBar"]
+[node name="AddButton" type="Button" parent="HBoxContainer/Controls"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "+"
+
+[node name="MenuBar" type="MenuBar" parent="HBoxContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+
+[node name="Select" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar"]
 item_count = 7
 item_0/text = "Select all items in this choice and..."
 item_0/id = 0
@@ -60,14 +83,9 @@ item_6/text = "Other Choices"
 item_6/icon = ExtResource("6_iqpwk")
 item_6/id = 6
 
-[node name="AddButton" type="Button" parent="Controls"]
-custom_minimum_size = Vector2(40, 40)
+[node name="AutoSwitchButton" type="CheckBox" parent="HBoxContainer/Controls"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 23
-text = "+"
-
-[node name="AutoSwitchButton" type="CheckBox" parent="Controls"]
-layout_mode = 2
+size_flags_vertical = 4
 tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices."
 focus_mode = 0
 text = "auto switch"
@@ -75,7 +93,7 @@ text = "auto switch"
 [node name="ChoiceList" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[connection signal="pressed" from="TitleContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
-[connection signal="index_pressed" from="Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
-[connection signal="pressed" from="Controls/AddButton" to="." method="_on_add_button_pressed"]
-[connection signal="pressed" from="Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/PanelContainer/TitleContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Controls/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="index_pressed" from="HBoxContainer/Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
+[connection signal="pressed" from="HBoxContainer/Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]

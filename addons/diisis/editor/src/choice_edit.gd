@@ -27,6 +27,8 @@ func init() -> void:
 	set_page_view(Pages.editor.get_selected_page_view())
 	
 	find_child("TextLinesDisabled").visible = false
+	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func deserialize(data:Dictionary):
 	text_id_enabled = data.get("text_id_enabled", Pages.get_new_id())

@@ -36,6 +36,8 @@ signal open_new_file()
 signal save_path_set(active_dir:String, active_file_name:String)
 signal history_altered(is_altered:bool)
 
+const DELETE_MODULATE := "#b8b8d1b3"
+
 func get_current_page() -> Page:
 	if page_container.get_child_count() > 0:
 		if page_container.get_child(0) is Page:

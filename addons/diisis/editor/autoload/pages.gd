@@ -71,11 +71,13 @@ var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode
 const TOGGLE_SETTINGS := {
 	"save_on_play" : "Saves the DIISIS script when you start playing in Godot (with F5 or otherwise)",
 	"warn_on_fact_deletion" : "Prompts you to confirm the deletion of a page, line, or choice item if that object or any of its children contains facts. (not conditionals)",
+	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"silly" : "Adds a bit of visual fluff to the editor :3"
 }
 var save_on_play := true
 var warn_on_fact_deletion := true
 var silly := true
+var show_facts_buttons := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -155,7 +157,6 @@ func serialize() -> Dictionary:
 		data[setting] = get(setting)
 	for setting in STRING_SETTINGS.keys():
 		data[setting] = get(setting)
-		printt(setting, get(setting))
 	return data
 
 func deserialize(data:Dictionary):

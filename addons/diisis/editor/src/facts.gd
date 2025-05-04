@@ -22,6 +22,11 @@ func init():
 	if not gui_input.is_connected(_on_gui_input):
 		gui_input.connect(_on_gui_input)
 	
+	_get_visibility_toggle_button().tooltip_text = "Toggle " + "conditionals" if self is Conditionals else "facts"
+	_get_visibility_toggle_button().add_theme_font_override("font", load("uid://clp0ef7vbq100"))
+	_get_visibility_toggle_button().add_theme_font_size_override("font_size", 20)
+	_get_visibility_toggle_button().visible = Pages.show_facts_buttons
+	visible = Pages.show_facts_buttons
 	update()
 
 func _get_visibility_toggle_button() -> CheckButton:
@@ -94,12 +99,12 @@ func add_fact(fact_name: String, fact_value, conditional:=false):
 
 func update():
 	await get_tree().process_frame
-	var button_label := ""
 	var child_count := facts_container.get_child_count()
+	var button_label := str(child_count) if child_count > 0 else ""
 	if visibility_toggle_button:
-		visibility_toggle_button.text = str(button_label, " (", child_count, ")")
+		visibility_toggle_button.text = button_label
 	else:
-		find_child("VisibilityToggleButton").text = str(button_label, " (", child_count, ")")
+		find_child("VisibilityToggleButton").text = button_label
 
 
 func request_delete_fact(fact_name:String):
