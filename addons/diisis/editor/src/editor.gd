@@ -117,7 +117,6 @@ func init(active_file_path:="") -> void:
 	
 	undo_redo.version_changed.connect(set_altered_history.bind(true))
 	
-	print(Pages.shader)
 	if not Pages.shader.is_empty():
 		var layer = CanvasLayer.new()
 		add_child(layer)
@@ -272,6 +271,8 @@ func _shortcut_input(event):
 		
 		if event.is_command_or_control_pressed():
 			match event.key_label:
+				KEY_E:
+					get_current_page().set_editing_page_key(true)
 				KEY_G:
 					find_child("GoTo").toggle_active()
 				KEY_N:

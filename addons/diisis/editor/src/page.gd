@@ -27,10 +27,10 @@ func get_next():
 	return next
 
 func get_page_key() -> String:
-	return str(find_child("PageKey").text)
+	return str(find_child("PageKeyLineEdit").text)
 
 func set_page_key(value:String):
-	find_child("PageKey").text = value
+	find_child("PageKeyLineEdit").text = value
 
 func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
@@ -40,7 +40,9 @@ func delete_fact(fact_name:String):
 	var facts = find_child("Facts")
 	facts.delete_fact(fact_name)
 
+var block_next_duplicate_key_warning := false
 func save():
+	block_next_duplicate_key_warning = true
 	Pages.page_data[number] = serialize()
 
 func serialize() -> Dictionary:
@@ -67,6 +69,7 @@ func serialize() -> Dictionary:
 	return data
 
 func deserialize(data: Dictionary):
+	block_next_duplicate_key_warning = false
 	if not lines:
 		init(int(data.get("next", number+1)))
 	set_page_key(data.get("page_key", "")) 
@@ -118,33 +121,37 @@ func set_next(next_page: int):
 
 
 func enable_page_key_edit(value: bool):
-	find_child("PageKey").visible = not value
-	page_key_line_edit.visible = value
-	page_key_line_edit.text = get_page_key()
+	find_child("PageKeyLineEdit").editable = value
 	
 	find_child("Seperator").visible = get_page_key() != ""
 	
 	if value:
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
+	else:
+		find_child("PageKeyEditButton").grab_focus()
 
 func save_page_key_from_line_edit():
-	set_page_key(page_key_line_edit.text)
 	save()
 	enable_page_key_edit(false)
 	find_child("PageKeyEditButton").button_pressed = false
 
 
 func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
-	if not button_pressed:
-		# add check for duplicates later
+	set_editing_page_key(button_pressed)
+
+var page_key_before_edit := ""
+func set_editing_page_key(value:bool):
+	if value:
+		if not page_key_line_edit.editable:
+			page_key_before_edit = get_page_key()
+	else:
 		save_page_key_from_line_edit()
-	
-	enable_page_key_edit(button_pressed)
+	enable_page_key_edit(value)
 
 
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
-	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text)
+	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
 
 func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = lines.get_child(at_index)
@@ -523,7 +530,41 @@ func _on_cancel_deletion_button_pressed() -> void:
 
 
 func _on_page_key_line_edit_text_submitted(new_text: String) -> void:
-	if Pages.key_exists(new_text):
-		Pages.editor.notify(str("Page ", new_text, " already exists at ", Pages.get_page_number_by_key(new_text)))
+	try_save_page_key(new_text)
+
+func try_save_page_key(new_key):
+	if Pages.key_exists(new_key) and page_key_before_edit != new_key:
+		page_key_line_edit.grab_focus()
+		page_key_line_edit.caret_column = page_key_line_edit.text.length()
+		if block_next_duplicate_key_warning:
+			block_next_duplicate_key_warning = false
+			return
+		Pages.editor.notify(str("Page ", new_key, " already exists at ", Pages.get_page_number_by_key(new_key)))
 		return
 	save_page_key_from_line_edit()
+
+
+func _on_page_key_line_edit_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if not page_key_line_edit.editable:
+				set_editing_page_key(true)
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			page_key_line_edit.text = page_key_before_edit
+			set_editing_page_key(false)
+
+
+func _on_page_key_line_edit_focus_exited() -> void:
+	
+	try_save_page_key(page_key_line_edit.text)
+
+
+func _on_page_key_line_edit_mouse_entered() -> void:
+	page_key_line_edit.add_theme_stylebox_override("normal", load("uid://wygkuwnsf32l"))
+	page_key_line_edit.add_theme_stylebox_override("read_only", load("uid://wygkuwnsf32l"))
+
+
+func _on_page_key_line_edit_mouse_exited() -> void:
+	page_key_line_edit.remove_theme_stylebox_override("normal")
+	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())

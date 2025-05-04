@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://nos2emfmvumf" path="res://addons/diisis/editor/visuals/theme/buttons_ui/toggled.png" id="4_leuoi"]
 [ext_resource type="Texture2D" uid="uid://25ko4taht03a" path="res://addons/diisis/editor/visuals/theme/buttons_ui/unchecked_disabled.png" id="5_kmvxr"]
 [ext_resource type="Texture2D" uid="uid://d3mybdc13ox0t" path="res://addons/diisis/editor/visuals/theme/buttons_ui/untoggled.png" id="5_wd1oj"]
+[ext_resource type="StyleBox" uid="uid://br7n6y7nn3rxd" path="res://addons/diisis/editor/visuals/theme/buttons_ui/check_button_intense.tres" id="8_behik"]
 [ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://addons/diisis/editor/visuals/theme/fonts/Fragmentcore.otf" id="9_iln6p"]
 [ext_resource type="StyleBox" uid="uid://cbtvpop26qltu" path="res://addons/diisis/editor/visuals/window_background_focused.tres" id="14_a66xj"]
 [ext_resource type="StyleBox" uid="uid://cxlwxyw50kv08" path="res://addons/diisis/editor/visuals/window_background_unfocused.tres" id="15_sadi4"]
@@ -63,9 +64,6 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.886323, 0.3205, 0.511805, 1)
 border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a804k"]
-bg_color = Color(0.172549, 0.172549, 0.172549, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fdkta"]
 bg_color = Color(0.17, 0.1003, 0.146767, 1)
@@ -405,7 +403,7 @@ CheckButton/icons/unchecked = ExtResource("5_wd1oj")
 CheckButton/styles/focus = SubResource("StyleBoxFlat_khss8")
 CheckButton/styles/hover = SubResource("StyleBoxFlat_e1agr")
 CheckButton/styles/hover_pressed = SubResource("StyleBoxFlat_b3pbo")
-CheckButton/styles/normal = SubResource("StyleBoxFlat_a804k")
+CheckButton/styles/normal = ExtResource("8_behik")
 CheckButton/styles/pressed = SubResource("StyleBoxFlat_fdkta")
 CodeEdit/font_sizes/font_size = 14
 FileDialog/icons/back_folder = SubResource("ImageTexture_35ynx")

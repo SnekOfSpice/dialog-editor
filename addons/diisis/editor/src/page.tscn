@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bl3r0kwwycrmw"]
+[gd_scene load_steps=13 format=3 uid="uid://bl3r0kwwycrmw"]
 
 [ext_resource type="Script" uid="uid://subqq2sc1dmq" path="res://addons/diisis/editor/src/page.gd" id="1_2lug2"]
 [ext_resource type="Texture2D" uid="uid://c5jprlaidnag" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_goto.png" id="2_2dyyr"]
@@ -15,6 +15,8 @@ border_width_right = 1
 border_width_bottom = 4
 border_color = Color(0.09, 0.09, 0.09, 0.764706)
 border_blend = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yg0hh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gmiuk"]
 
@@ -57,9 +59,9 @@ size_flags_vertical = 8
 focus_mode = 0
 
 [node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/Info"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
-focus_mode = 0
 text = "edit page key"
 
 [node name="Number" type="Label" parent="PanelContainer/Info"]
@@ -71,14 +73,18 @@ visible = false
 layout_mode = 2
 text = "|"
 
-[node name="PageKey" type="Label" parent="PanelContainer/Info"]
-visible = false
-layout_mode = 2
-text = "key"
-
 [node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/Info"]
-visible = false
 layout_mode = 2
+tooltip_text = "Edit page key (click or Ctrl+E)
+[Escape] to cancel
+[Enter] to save"
+theme_override_colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
+theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 16
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_yg0hh")
+expand_to_text_length = true
 
 [node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
 layout_mode = 2
@@ -169,6 +175,10 @@ mouse_filter = 2
 
 [connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
 [connection signal="toggled" from="PanelContainer/Info/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
+[connection signal="focus_exited" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_focus_exited"]
+[connection signal="gui_input" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_gui_input"]
+[connection signal="mouse_entered" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_mouse_entered"]
+[connection signal="mouse_exited" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_mouse_exited"]
 [connection signal="text_changed" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_changed"]
 [connection signal="text_submitted" from="PanelContainer/Info/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_submitted"]
 [connection signal="toggled" from="PanelContainer/Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]
