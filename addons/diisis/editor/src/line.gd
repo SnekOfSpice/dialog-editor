@@ -27,7 +27,7 @@ func init() -> void:
 	set_head_editable(Pages.is_header_schema_empty())
 	set_non_meta_parts_visible(true)
 	
-	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"), _on_delete_button_mouse_exited)
 
 func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
@@ -357,3 +357,7 @@ func _on_text_content_drop_focus() -> void:
 
 func _on_loopback_reference_label_meta_clicked(meta: Variant) -> void:
 	Pages.editor.view_incoming_references(Pages.editor.get_current_page_number(), get_index())
+
+
+func _on_delete_button_mouse_exited() -> void:
+	set_skip(find_child("SkipCheckBox").button_pressed)

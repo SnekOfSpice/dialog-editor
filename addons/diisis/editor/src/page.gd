@@ -556,7 +556,6 @@ func _on_page_key_line_edit_gui_input(event: InputEvent) -> void:
 
 
 func _on_page_key_line_edit_focus_exited() -> void:
-	
 	try_save_page_key(page_key_line_edit.text)
 
 

@@ -142,8 +142,10 @@ func limit_scroll_container_height(
 		if scroll_hint_bottom:
 			scroll_hint_bottom.visible = scroll_container.scroll_vertical < scroll_container.get_v_scroll_bar().max_value - (scroll_container.size.y + 1)
 
-func set_up_delete_modulate(node : Control, button : Button):
+func set_up_delete_modulate(node : Control, button : Button, exit_callable:Callable=Callable()):
 	if not button.mouse_entered.is_connected(node.set):
 		button.mouse_entered.connect(node.set.bind("modulate", DiisisEditor.DELETE_MODULATE))
 	if not button.mouse_exited.is_connected(node.set):
 		button.mouse_exited.connect(node.set.bind("modulate", "#ffffffff"))
+		if exit_callable:
+			button.mouse_exited.connect(exit_callable)

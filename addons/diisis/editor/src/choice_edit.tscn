@@ -106,7 +106,7 @@ size_flags_vertical = 3
 [node name="ConditionalVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 0
+size_flags_vertical = 8
 focus_mode = 0
 icon = ExtResource("4_x4tpw")
 
