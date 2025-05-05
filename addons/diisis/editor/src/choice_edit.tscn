@@ -58,16 +58,6 @@ layout_mode = 2
 address_depth = 2
 status_panels = [NodePath("../..")]
 
-[node name="MarginContainer" type="MarginContainer" parent="ChoiceEdit"]
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="DeleteButton" type="Button" parent="ChoiceEdit/MarginContainer"]
-layout_mode = 2
-size_flags_vertical = 4
-tooltip_text = "Delete option"
-icon = ExtResource("4_n7uph")
-
 [node name="MoveChoiceItemContainer" type="MarginContainer" parent="ChoiceEdit"]
 custom_minimum_size = Vector2(32.665, 0)
 layout_mode = 2
@@ -337,7 +327,16 @@ layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/FactsVisibilityToggle")
 address_depth = 2
 
-[connection signal="pressed" from="ChoiceEdit/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]
+[node name="MarginContainer" type="MarginContainer" parent="ChoiceEdit"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="DeleteButton" type="Button" parent="ChoiceEdit/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Delete option"
+icon = ExtResource("4_n7uph")
+
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_toggled"]
@@ -357,3 +356,4 @@ address_depth = 2
 [connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="_on_loopback_page_select_value_changed"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="_on_loopback_line_select_value_changed"]
+[connection signal="pressed" from="ChoiceEdit/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]

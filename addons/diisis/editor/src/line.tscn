@@ -122,6 +122,7 @@ layout_mode = 2
 [node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
 layout_mode = 2
 size_flags_vertical = 3
+address_depth = 1
 status_panels = [NodePath("../../../../PanelContainer"), NodePath("../../../../../../..")]
 
 [node name="HBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]

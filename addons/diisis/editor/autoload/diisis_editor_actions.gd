@@ -51,7 +51,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=true, ch
 
 
 func delete_lines(indices:Array):
-	var page_number := Pages.editor.get_current_page_number()
+	var page_number : int = Pages.editor.get_current_page_number()
 	for i in indices:
 		var address := str(page_number, ".", i)
 		while blank_override_line_addresses.has(address):
@@ -303,7 +303,7 @@ func insert_from_clipboard(start_address:String):
 		
 		# deselect
 		var addresses := []
-		var page_number := Pages.editor.get_current_page_number()
+		var page_number : int = Pages.editor.get_current_page_number()
 		for j in indices:
 			addresses.append(str(page_number, ".", j))
 		for address in addresses:

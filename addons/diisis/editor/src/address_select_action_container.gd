@@ -72,6 +72,6 @@ func _on_v_about_to_popup() -> void:
 	menu.set_item_disabled(5, DiisisEditorActions.get_clipboard_for_start_address(address).is_empty())
 	menu.set_item_disabled(6, DiisisEditorActions.get_clipboard_for_start_address(address).is_empty())
 	
-	var selection_count := DiisisEditorActions.get_selected_addresses(address_depth).size()
+	var selection_count : int = DiisisEditorActions.get_selected_addresses(address_depth).size()
 	menu.set_item_disabled(1, selection_count == 0)
 	menu.set_item_disabled(3, selection_count == 0)
