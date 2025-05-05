@@ -125,6 +125,7 @@ func enable_page_key_edit(value: bool):
 	find_child("PageKeyLineEdit").editable = value
 	
 	find_child("Seperator").visible = get_page_key() != ""
+	find_child("Number").visible = get_page_key() != ""
 	
 	if value:
 		page_key_line_edit.grab_focus()
