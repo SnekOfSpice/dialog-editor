@@ -1298,6 +1298,9 @@ func _read_next_chunk():
 	var tag_buffer := 0
 	var target_length := bbcode_removed_text.length()
 	while scan_index < target_length:
+		var call_strings_at_index : Array = _call_strings.get(scan_index, [])
+		var scan_index_calls := scan_index
+		var comments_at_index : Array = _comments.get(scan_index, [])
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
@@ -1309,7 +1312,7 @@ func _read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				_comments[scan_index] = tag_string
+				comments_at_index.append(tag_string)
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
@@ -1321,7 +1324,7 @@ func _read_next_chunk():
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				_call_strings[scan_index] = tag_string
+				call_strings_at_index.append(tag_string)
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
@@ -1341,8 +1344,15 @@ func _read_next_chunk():
 				tag_buffer += tag_string.length()
 				text_speed_tags.append(tag_string)
 		
+		
 		_text_speed_by_character_index.append(text_speed_override)
+		if not call_strings_at_index.is_empty():
+			_call_strings[scan_index_calls] = call_strings_at_index.duplicate()
+		if not comments_at_index.is_empty():
+			_comments[scan_index_calls] = comments_at_index.duplicate()
 		scan_index += 1
+		call_strings_at_index.clear()
+		comments_at_index.clear()
 	
 	scan_index = 0
 	while scan_index < bbcode_removed_text.length():
@@ -1369,10 +1379,12 @@ func _read_next_chunk():
 	cleaned_text = cleaned_text.replace("<ap>", "")
 	cleaned_text = cleaned_text.replace("<strpos>", "")
 	cleaned_text = cleaned_text.replace("\\[", "[")
-	for call : String in _call_strings.values():
-		cleaned_text = cleaned_text.replace(call, "")
-	for comment : String in _comments.values():
-		cleaned_text = cleaned_text.replace(comment, "")
+	for call_array : Array in _call_strings.values():
+		for call in call_array:
+			cleaned_text = cleaned_text.replace(call, "")
+	for comment_array : Array in _comments.values():
+		for comment in comment_array:
+			cleaned_text = cleaned_text.replace(comment, "")
 	for tag : String in text_speed_tags:
 		cleaned_text = cleaned_text.replace(tag, "")
 	
@@ -1421,48 +1433,51 @@ func _ends_with_trimmable(text:String) -> bool:
 	return false
 
 func _call_from_position(call_position: int):
-	var text : String = _call_strings.get(call_position)
+	var strings : Array = _call_strings.get(call_position)
 	_called_positions.append(call_position)
-	text = text.trim_prefix("<call:")
-	text = text.trim_suffix(">")
-	var parts := text.split(",")
-	var func_name = parts[0]
-	while func_name.begins_with(" "):
-		func_name = func_name.trim_prefix(" ")
-	while func_name.ends_with(" "):
-		func_name = func_name.trim_suffix(" ")
-	parts.remove_at(0)
-	
-	var args := []
-	var i := 0
-	var arg_names : Array = Parser.get_instruction_arg_names(func_name)
-	var arg_types : Array = Parser.get_instruction_arg_types(func_name)
-	for type in arg_types:
-		var arg_string = parts[i]
-		var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
-		if arg_string == "*" and default != null:
-			arg_string = default
-		args.append(Parser.str_to_typed(arg_string, type))
+	for text : String in strings:
+		prints("calling", text, "at", call_position)
+		text = text.trim_prefix("<call:")
+		text = text.trim_suffix(">")
+		var parts := text.split(",")
+		var func_name = parts[0]
+		while func_name.begins_with(" "):
+			func_name = func_name.trim_prefix(" ")
+		while func_name.ends_with(" "):
+			func_name = func_name.trim_suffix(" ")
+		parts.remove_at(0)
 		
-		i += 1
-	
-	inline_evaluator.callv(func_name, args)
-	ParserEvents.function_called.emit(func_name, args, call_position)
+		var args := []
+		var i := 0
+		var arg_names : Array = Parser.get_instruction_arg_names(func_name)
+		var arg_types : Array = Parser.get_instruction_arg_types(func_name)
+		for type in arg_types:
+			var arg_string = parts[i]
+			var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
+			if arg_string == "*" and default != null:
+				arg_string = default
+			args.append(Parser.str_to_typed(arg_string, type))
+			
+			i += 1
+		
+		inline_evaluator.callv(func_name, args)
+		ParserEvents.function_called.emit(func_name, args, call_position)
 	_call_strings.erase(call_position)
 
 func _emit_comment(comment_position:int):
 	if not _comments.has(comment_position):
 		return
-	var text : String = _comments.get(comment_position)
+	var comments = _comments.get(comment_position)
+	for text : String in comments:
+		text = text.trim_prefix("<comment:")
+		text = text.trim_suffix(">")
+		while text.begins_with(" "):
+			text = text.trim_prefix(" ")
+		while text.ends_with(" "):
+			text = text.trim_suffix(" ")
+		
+		ParserEvents.comment.emit(text, comment_position)
 	_handled_comments.append(comment_position)
-	text = text.trim_prefix("<comment:")
-	text = text.trim_suffix(">")
-	while text.begins_with(" "):
-		text = text.trim_prefix(" ")
-	while text.ends_with(" "):
-		text = text.trim_suffix(" ")
-	
-	ParserEvents.comment.emit(text, comment_position)
 	_comments.erase(comment_position)
 
 func _set_text_content_text(text: String):
