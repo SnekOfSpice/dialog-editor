@@ -1436,7 +1436,6 @@ func _call_from_position(call_position: int):
 	var strings : Array = _call_strings.get(call_position)
 	_called_positions.append(call_position)
 	for text : String in strings:
-		prints("calling", text, "at", call_position)
 		text = text.trim_prefix("<call:")
 		text = text.trim_suffix(">")
 		var parts := text.split(",")
