@@ -130,6 +130,10 @@ func setup_vn_template():
 	ProjectSettings.save()
 	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
+func clear_editor_singletons():
+	Pages.clear()
+	DiisisEditorActions.clear()
+
 func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
@@ -214,8 +218,7 @@ func open_editor():
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.grab_focus()
 	else:
-		remove_editor_singletons()
-		add_editor_singletons()
+		clear_editor_singletons()
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		
@@ -229,8 +232,7 @@ func open_editor():
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
 func open_new_file():
-	remove_editor_singletons()
-	add_editor_singletons()
+	clear_editor_singletons()
 	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 	dia_editor_window.file_path = ""

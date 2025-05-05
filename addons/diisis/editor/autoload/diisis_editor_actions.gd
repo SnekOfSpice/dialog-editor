@@ -13,6 +13,16 @@ var clipboard := {}
 var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
 var delete_from_selected_addresses_on_insert := false
 
+func clear():
+	blank_override_line_addresses.clear()
+	blank_override_choice_item_addresses.clear()
+	cached_pages.clear()
+	cached_lines.clear()
+	cached_choice_items.clear()
+	clipboard.clear()
+	current_selection_address_depth = -1
+	delete_from_selected_addresses_on_insert = false
+
 func add_line(at_index:int, data:={}, force_new_line_object:=true, change_line_references:=false):
 	add_lines([at_index], {at_index:data}, force_new_line_object, change_line_references)
 

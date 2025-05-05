@@ -66,7 +66,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
-	print("init editor")
+	#print("init editor")
 	opening = true
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")

@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+func clear():
+	deserialize({})
 
 var head_defaults := []
 var auto_complete_context := ""
@@ -162,7 +164,7 @@ func serialize() -> Dictionary:
 func deserialize(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data = {}
-	var local_page_data = data.get("page_data")
+	var local_page_data = data.get("page_data", {})
 	for i in local_page_data.size():
 		var where = int(local_page_data.get(str(i)).get("number"))
 		int_data[where] = local_page_data.get(str(i)).duplicate()
