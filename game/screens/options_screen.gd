@@ -161,11 +161,13 @@ func _on_reset_label_font_size_button_pressed() -> void:
 
 
 func _on_label_font_size_slider_drag_ended(value_changed: bool) -> void:
-	Style.set_label_font_size(find_child("LabelFontSizeSlider").value)
+	if value_changed:
+		Style.set_label_font_size(find_child("LabelFontSizeSlider").value)
 
 
 func _on_rtl_font_size_slider_drag_ended(value_changed: bool) -> void:
-	Style.set_rich_text_label_font_size(find_child("RTLFontSizeSlider").value)
+	if value_changed:
+		Style.set_rich_text_label_font_size(find_child("RTLFontSizeSlider").value)
 
 
 func _on_rtl_font_size_slider_value_changed(value: float) -> void:

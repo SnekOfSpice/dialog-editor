@@ -144,11 +144,11 @@ func set_emotion(emotion_name:String):
 	if not special_extra and $Extras.get_node("default"):
 		$Extras.get_node("default").visible = true
 
-func set_extra_visible(extra_name : String, is_visible : bool, hide_others:=false):
+func set_extra_visible(extra_name : String, visibility : bool, hide_others:=false):
 	for group : Node2D in $Extras.get_children():
 		for item : Sprite2D in group.get_children():
 			if item.name == extra_name:
-				item.visible = is_visible
+				item.visible = visibility
 			elif hide_others:
 				item.visible = false
 
