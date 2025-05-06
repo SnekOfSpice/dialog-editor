@@ -515,7 +515,7 @@ func open_from_path(path:String):
 		button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 3))
+	set_text_size(editor_data.get("text_size_id", 2))
 	update_page_view(editor_data.get("page_view", PageView.Full))
 	
 	await get_tree().process_frame

@@ -23,7 +23,7 @@ func init():
 		gui_input.connect(_on_gui_input)
 	
 	_get_visibility_toggle_button().tooltip_text = "Toggle " + ("conditionals" if self is Conditionals else "facts")
-	_get_visibility_toggle_button().add_theme_font_override("font", load("uid://clp0ef7vbq100"))
+	_get_visibility_toggle_button().add_theme_font_override("font", load("uid://b1go3dnopnsup"))
 	_get_visibility_toggle_button().add_theme_font_size_override("font_size", 20)
 	_get_visibility_toggle_button().visible = Pages.show_facts_buttons
 	#visible = Pages.show_facts_buttons

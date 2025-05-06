@@ -2,7 +2,7 @@
 	"editor": {
 		"current_page_number": 0,
 		"page_view": 0,
-		"text_size_id": 3
+		"text_size_id": 2
 	},
 	"pages": {
 		"default_address_mode_pages": 0,
@@ -36,7 +36,7 @@
 			]
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854774767,
+		"id_counter": -9223372036854774768,
 		"instruction_templates": {
 			"black_fade": {
 				"arg_types": [

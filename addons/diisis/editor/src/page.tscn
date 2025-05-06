@@ -72,6 +72,8 @@ text = "edit page key"
 
 [node name="Number" type="Label" parent="PanelContainer/Info/PageKeyEditContainer"]
 layout_mode = 2
+tooltip_text = "Page index (address[0])"
+mouse_filter = 1
 text = "0"
 
 [node name="Seperator" type="Label" parent="PanelContainer/Info/PageKeyEditContainer"]

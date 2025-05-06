@@ -154,8 +154,9 @@ func _on_item_list_item_selected(index: int) -> void:
 		find_child("ReplaceContainer").visible = true
 		find_child("ReplaceAllInTypeButton").text = "Replace all in Choices"
 	
-	find_child("ReplaceLocallyButton").disabled = index >= fact_start_index or index >= instruction_start_index
-	find_child("ReplaceAllInTypeButton").disabled = index >= fact_start_index or index >= instruction_start_index
+	var after_valid_region = (index >= fact_start_index and fact_start_index != -1) or (index >= instruction_start_index and instruction_start_index != -1)
+	find_child("ReplaceLocallyButton").disabled = after_valid_region
+	find_child("ReplaceAllInTypeButton").disabled = after_valid_region
 	find_child("FactEditHintLabel").visible = index >= fact_start_index
 	find_child("GoToButton").disabled = index >= fact_start_index
 	if fact_start_index == -1:

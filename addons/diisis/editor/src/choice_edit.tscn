@@ -75,6 +75,8 @@ icon = ExtResource("5_s3d4i")
 
 [node name="IndexLabel" type="Label" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons"]
 layout_mode = 2
+tooltip_text = "Choice index (address[2])"
+mouse_filter = 1
 text = "0"
 horizontal_alignment = 1
 
@@ -127,6 +129,7 @@ horizontal_alignment = 1
 
 [node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 tooltip_text = "Behavior Override.
 When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
 

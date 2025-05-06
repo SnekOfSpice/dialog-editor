@@ -118,6 +118,8 @@ theme_override_icons/unchecked = ExtResource("4_hl0su")
 
 [node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
+tooltip_text = "Line index (address[1])"
+mouse_filter = 1
 
 [node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
 layout_mode = 2
@@ -182,6 +184,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0

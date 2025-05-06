@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=33 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="7_0rrj6"]
 [ext_resource type="Script" uid="uid://chvelp1kqeoya" path="res://addons/diisis/editor/src/page_view_button.gd" id="7_7syci"]
 [ext_resource type="Texture2D" uid="uid://c0hn50yuea61r" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_full.png" id="7_32dog"]
+[ext_resource type="Texture2D" uid="uid://c86yl4b0qgwwf" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_line.png" id="7_67kpi"]
 [ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="7_eshag"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
@@ -368,10 +369,10 @@ theme_override_constants/separation = 10
 [node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
-tooltip_text = "Ctrl+A
+tooltip_text = "Add Line (Ctrl+A)
 Adds a line to the end of the current page."
 focus_mode = 0
-text = "add line"
+icon = ExtResource("7_67kpi")
 icon_alignment = 1
 
 [node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
