@@ -19,6 +19,9 @@ func _ready() -> void:
 	
 	find_child("SaveContainer").visible = Options.has_savedata(0)
 	
+	find_child("StartButton").pressed.connect(emit_signal.bind("start_game"))
+	find_child("LoadButton").pressed.connect(emit_signal.bind("load_game"))
+	find_child("EpilogueButton").pressed.connect(emit_signal.bind("start_epilogue"))
 	#if Options.just_finished_game:
 		#Options.just_finished_game = false
 		#if not Options.unlocked_epilogue:

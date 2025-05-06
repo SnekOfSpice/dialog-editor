@@ -137,11 +137,11 @@ func _process(delta: float) -> void:
 	last_modified_time = FileAccess.get_modified_time(source_path)
 
 ## Call this one for a blank, new game.
-func reset_and_start(start_page_index:=0):
+func reset_and_start(start_page_index := 0, start_line_index := 0):
 	line_reader.terminated = false
 	set_paused(false)
 	reset_facts()
-	read_page(start_page_index)
+	read_page(start_page_index, start_line_index)
 	history = []
 	selected_choices = []
 

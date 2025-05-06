@@ -7,7 +7,3 @@ layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
 script = ExtResource("1_f2s5m")
-body_label_max_lines = null
-body_label_prefix = null
-body_label_suffix = null
-body_label_word_wrappers = null

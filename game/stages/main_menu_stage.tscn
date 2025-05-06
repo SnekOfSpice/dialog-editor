@@ -252,9 +252,6 @@ text = "Got it"
 
 [connection signal="pressed" from="HBoxContainer/DiscordButton" to="." method="_on_discord_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/GitHubButton" to="." method="_on_git_hub_button_pressed"]
-[connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer/StartButton" to="." method="emit_signal" binds= ["start_game"]]
-[connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer/LoadButton" to="." method="emit_signal" binds= ["load_game"]]
-[connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer/EpilogueButton" to="." method="emit_signal" binds= ["start_epilogue"]]
 [connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer2/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer2/CWButton" to="." method="_on_cw_button_pressed"]
 [connection signal="pressed" from="CanvasLayer2/MarginContainer/VBoxContainer/HBoxContainer2/CreditsButton" to="." method="_on_credits_button_pressed"]
