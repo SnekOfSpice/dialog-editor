@@ -35,7 +35,7 @@ enum NameStyle {
 ## If true, the text will be read one word at a time instead of character by character.
 @export var full_words := false
 ## The delay that <ap> tags imply, in seconds.
-@export var auto_pause_duration := 0.2
+@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_pause_duration := 0.2
 ## Disables input-based calls of [method advance].
 ## Instead, when hitting the end of a line or <mp> tag, LineReader
 ## will wait [param auto_continue_delay] seconds until continuing automatically.
@@ -44,7 +44,7 @@ enum NameStyle {
 		auto_continue = value
 		notify_property_list_changed()
 ## If [member auto_continue] is [code]true[/code], this is the time before the line reader automatically continues, in seconds.
-@export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
+@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_continue_delay := 0.2
 var _auto_continue_duration:= auto_continue_delay
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export_subgroup("Show Text During", "show_text_during")
@@ -53,7 +53,7 @@ var _auto_continue_duration:= auto_continue_delay
 ## If [code]true[/code], shows [param text_container] when instructions are being executed.
 @export var show_text_during_instructions := false
 @export_subgroup("Past Lines")
-## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member text_content] is reset.
+## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.
 @export var keep_past_lines := false:
 	set(value):
 		keep_past_lines = value
@@ -86,54 +86,18 @@ var _last_raw_name := ""
 ## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
 @export var blank_names : Array[String] = []
 ## A String:String Dictionary. The keys are the actor names set in the options of [member property_for_name].
-## The respective value is the name to be displayed in the [member name_label] or [member text_content], depending on [member name_style].
+## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
 @export var name_map : Dictionary[String, String] = {}
 ## A String:Color Dictionary. The keys are the actor names set in the options of [member property_for_name].
-## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member text_content], depending on [member name_style].
+## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
 @export var name_colors : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
 @export var name_style : NameStyle = NameStyle.NameLabel
 var _visible_prepend_offset := 0
 
 @export_group("Mandatory References")
-## The Control holding [member choice_option_container]. Should have its [code]mouse_filter[/code] set to [code]Stop[/code] and [b]FullRect Layout[/b].
-@export var choice_container:PanelContainer:
-	get:
-		return choice_container
-	set(value):
-		choice_container = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-
-## The Control used for enumerating options when they are presented. Should be [HBoxContainer], [VBoxContainer], or [GridContainer].
-@export
-var choice_option_container:Control:
-	get:
-		return choice_option_container
-	set(value):
-		choice_option_container = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-
-## The [RichTextLabel] used to display text as it gets read out. [member RichTextLabel.bbcode_enabled] will be set to [param true] by the [LineReader].
-@export var text_content: RichTextLabel:
-	get:
-		return text_content
-	set(value):
-		text_content = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-
-## Any [Control] that is a parent of both nodes used for; [member name_label] and [member text_content].
-@export var text_container: Control:
-	get:
-		return text_container
-	set(value):
-		text_container = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-
-## A [class Label] or [class RichTextLabel] that displays a currently speaking character's name.
+@export_subgroup("Content")
+## A [Label] or [RichTextLabel] that displays a currently speaking character's name.
 @export
 var name_label: Control:
 	get:
@@ -142,17 +106,23 @@ var name_label: Control:
 		name_label = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-
-## The Control holding [member name_label]. Has its visiblity toggled by [member blank_names]. May be the same Node as [member name_label].
-@export
-var name_container: Control:
+## The [RichTextLabel] used to display text as it gets read out. [member RichTextLabel.bbcode_enabled] will be set to [param true] by the [LineReader].
+@export var body_label: RichTextLabel:
 	get:
-		return name_container
+		return body_label
 	set(value):
-		name_container = value
+		body_label = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-
+## The Control used for enumerating options when they are presented. Should be [HBoxContainer], [VBoxContainer], or [GridContainer].
+@export
+var choice_list:Control:
+	get:
+		return choice_list
+	set(value):
+		choice_list = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
 ## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
 @export
 var instruction_handler: InstructionHandler:
@@ -162,32 +132,61 @@ var instruction_handler: InstructionHandler:
 		instruction_handler = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
+@export_subgroup("Containers")
+## Any [Control] that is a parent of both nodes used for; [member name_label] and [member body_label].
+@export var text_container: Control:
+	get:
+		return text_container
+	set(value):
+		text_container = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+## The Control holding [member name_label]. This is the control that actually gets its visibility toggled by [member blank_names] and other settings. Can be the same Node as [member name_label].
+@export
+var name_container: Control:
+	get:
+		return name_container
+	set(value):
+		name_container = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+## The Control holding [member choice_list].[br][br]
+## I like setting using [code]mouse_filter[/code] [code]Stop[/code] and [b]FullRect Layout[/b].
+@export var choice_container:PanelContainer:
+	get:
+		return choice_container
+	set(value):
+		choice_container = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+
 
 @export_group("Optional References")
-
+## [Label] used to display the choice title. Invisible if the choice title is empty. Not setting it will result in the choice title not being shown.
+@export var choice_title_label: Label
 ## Node that evaluates [code]<var:>[/code] and [code]<func:>[/code] tags.
 ## Any function called by one of these tags has to return a [String] (can be empty).
 @export var inline_evaluator: Node
 
 @export_group("Advanced Text Display")
-@export_subgroup("Text Content", "text_content")
-## If [code]0[/code], [param text_content] will be filled as far as possible.
+@export_subgroup("Text Content", "body_label")
+## If [code]0[/code], [param body_label] will be filled as far as possible.
 ## Breaks will be caused by <lc> tags, 
 ## a file with [param Pages.use_dialog_syntax] enabled, and a
 ## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
 ## If set to more than [code]0[/code], the text will additionally be split to
 ## ensure it never runs more than that amount of lines. [br]
-## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
+## [b]Note:[/b] Resizing the [param body_label] after a Line has started to be read will
 ## throw this alignment off.
-@export_range(0, 1, 1.0, "or_greater") var text_content_max_lines := 0
-## A prefix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][center][/code].
-@export var text_content_prefix := ""
-## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
-@export var text_content_suffix := ""
+@export_range(0, 1, 1.0, "or_greater") var body_label_max_lines := 0
+## A prefix to add to all strings that are displayed in [member body_label]. Respects bbcode such as [code][center][/code].
+@export var body_label_prefix := ""
+## A suffix to add to all strings that are displayed in [member body_label]. Respects bbcode such as [code][/center][/code].
+@export var body_label_suffix := ""
 ## Wraps all case-sensitive matches of individual words in custom defined wrappers. (Adds prefix and suffix)
 ## The dictionary key is the word to wrap. The value is the prefix and suffix for that word, separated by a space.[br]
 ## For example; [code]"DIISIS" : "[b] [/b]"[/code].
-@export var text_content_word_wrappers : Dictionary[String, String]
+@export var body_label_word_wrappers : Dictionary[String, String]
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
@@ -214,12 +213,10 @@ var instruction_handler: InstructionHandler:
 ## See also, [signal ParserEvents.choices_presented].
 @export var virtual_choices := false
 var _built_virtual_choices := []
-## [b]Optional[/b] button scene that gets instantiated as children of [member choice_option_container].[br]
+## [b]Optional[/b] button scene that gets instantiated as children of [member choice_list].[br]
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:PackedScene
-## [Label] used to display the choice title. Invisible if the choice title is empty. Not setting it will result in the choice title not being shown.
-@export var choice_title_label: Label
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -242,7 +239,7 @@ var prompt_unfinished: Control:
 		prompt_unfinished = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## The node that gets shown when advancing the [LineReader] will clear [member text_content].
+## The node that gets shown when advancing the [LineReader] will clear [member body_label].
 @export
 var prompt_finished: Control:
 	get:
@@ -348,9 +345,6 @@ func _validate_property(property: Dictionary):
 	if not show_input_prompt:
 		if property.name in ["input_prompt_delay", "input_prompt_lerp_weight", "prompt_finished", "prompt_unfinished"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
-	if not auto_continue:
-		if property.name in ["auto_continue_delay"]:
-			property.usage = PROPERTY_USAGE_NO_EDITOR
 	if not keep_past_lines:
 		if property.name in ["past_lines_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
@@ -360,36 +354,38 @@ func _validate_property(property: Dictionary):
 func serialize() -> Dictionary:
 	var result := {}
 	
+	result["built_virtual_choices"] = _built_virtual_choices
+	result["body_label.text"] = body_label.text
+	result["call_strings"] = _call_strings
+	result["called_positions"] = _called_positions
+	result["chatlog_enabled"] = chatlog_enabled
+	result["chatlog_name_map"] = chatlog_name_map
+	result["chunk_index"] = _chunk_index 
+	result["current_choice_title"] = current_choice_title
+	result["current_raw_name"] = current_raw_name
+	result["custom_text_speed_override"] = custom_text_speed_override
+	result["dialog_actors"] = _dialog_actors 
+	result["dialog_line_index"] = _dialog_line_index 
+	result["dialog_lines"] = _dialog_lines 
+	result["handled_comments"] = _handled_comments
+	result["is_input_locked"] = is_input_locked 
+	result["is_last_actor_name_different"] = _is_last_actor_name_different
+	result["_last_raw_name"] = _last_raw_name
+	result["line_chunks"] = _line_chunks 
 	result["line_data"] = _line_data 
 	result["line_index"] = line_index 
 	result["line_type"] = line_type 
-	result["remaining_auto_pause_duration"] = _remaining_auto_pause_duration 
-	result["is_input_locked"] = is_input_locked 
-	result["showing_text"] = _showing_text 
-	result["next_pause_position_index"] = _next_pause_position_index 
-	result["pause_positions"] = _pause_positions 
-	result["pause_types"] = _pause_types 
-	result["next_pause_type"] = _next_pause_type 
-	result["dialog_lines"] = _dialog_lines 
-	result["dialog_actors"] = _dialog_actors 
-	result["dialog_line_index"] = _dialog_line_index 
-	result["line_chunks"] = _line_chunks 
-	result["chunk_index"] = _chunk_index 
-	result["terminated"] = terminated 
-	result["text_content.text"] = text_content.text
-	result["current_raw_name"] = current_raw_name
-	result["is_last_actor_name_different"] = _is_last_actor_name_different
-	result["name_map"] = name_map
-	result["chatlog_name_map"] = chatlog_name_map
-	result["called_positions"] = _called_positions
-	result["handled_comments"] = _handled_comments
-	result["call_strings"] = _call_strings
-	result["current_choice_title"] = current_choice_title
-	result["text_speed_by_character_index"] = _text_speed_by_character_index
 	result["max_past_lines"] = max_past_lines
+	result["name_map"] = name_map
+	result["next_pause_position_index"] = _next_pause_position_index 
+	result["next_pause_type"] = _next_pause_type 
+	result["pause_positions"] = _pause_positions 
+	result["pause_types"] = _pause_types
 	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
-	result["_last_raw_name"] = _last_raw_name
-	result["built_virtual_choices"] = _built_virtual_choices
+	result["remaining_auto_pause_duration"] = _remaining_auto_pause_duration 
+	result["showing_text"] = _showing_text 
+	result["terminated"] = terminated
+	result["text_speed_by_character_index"] = _text_speed_by_character_index
 	
 	return result
 
@@ -398,33 +394,39 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if not data:
 		return
+	_built_virtual_choices = data.get("built_virtual_choices", {})
+	_call_strings = data.get("call_strings", {})
+	_called_positions = data.get("called_positions", [])
+	chatlog_enabled = data.get("chatlog_enabled", "")
+	_chunk_index = int(data.get("chunk_index"))
+	current_choice_title = data.get("current_choice_title", "")
+	current_raw_name = data.get("current_raw_name", "")
+	custom_text_speed_override = data.get("custom_text_speed_override", "")
+	_dialog_actors = data.get("dialog_actors")
+	_dialog_line_index = int(data.get("dialog_line_index"))
+	_dialog_lines = data.get("dialog_lines")
+	_handled_comments = data.get("handled_comments", [])
+	is_input_locked = data.get("is_input_locked")
+	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
+	_last_raw_name = data.get("_last_raw_name", "")
+	_line_chunks = data.get("line_chunks")
 	_line_data = data.get("line_data", {})
 	line_index = int(data.get("line_index", 0))
 	line_type = int(data.get("line_type", DIISIS.LineType.Text))
-	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
-	is_input_locked = data.get("is_input_locked")
-	_showing_text = data.get("showing_text")
+	max_past_lines = data.get("max_past_lines", -1)
 	_next_pause_position_index = int(data.get("next_pause_position_index"))
+	_next_pause_type = int(data.get("next_pause_type"))
 	_pause_positions = data.get("pause_positions")
 	_pause_types = data.get("pause_types")
-	_next_pause_type = int(data.get("next_pause_type"))
-	_dialog_lines = data.get("dialog_lines")
-	_dialog_actors = data.get("dialog_actors")
-	_dialog_line_index = int(data.get("dialog_line_index"))
-	_line_chunks = data.get("line_chunks")
-	_chunk_index = int(data.get("chunk_index"))
+	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
+	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
+	_showing_text = data.get("showing_text")
 	terminated = data.get("terminated")
+	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	
+	_set_choice_title_or_warn(data.get("current_choice_title", ""))
 	_set_dict_to_str_str_dict("name_map", data.get("name_map", name_map))
 	_set_dict_to_str_str_dict("chatlog_name_map", data.get("chatlog_name_map", chatlog_name_map))
-	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
-	_called_positions = data.get("called_positions", [])
-	_handled_comments = data.get("handled_comments", [])
-	_call_strings = data.get("call_strings", {})
-	_set_choice_title_or_warn(data.get("current_choice_title", ""))
-	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
-	max_past_lines = data.get("max_past_lines", -1)
-	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
-	_last_raw_name = data.get("_last_raw_name", "")
 	
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
@@ -440,7 +442,7 @@ func deserialize(data: Dictionary):
 		_build_choices(choices, auto_switch)
 	
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
-	_set_text_content_text(data.get("text_content.text", ""))
+	_set_body_label_text(data.get("body_label.text", ""))
 
 ## typed dictionaries don't survive saving to json so we need this
 func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
@@ -454,17 +456,17 @@ func _get_configuration_warnings() -> PackedStringArray:
 	
 	if not choice_container:
 		warnings.append("Choice Container is null")
-	if not choice_option_container:
+	if not choice_list:
 		warnings.append("Choice Option Container is null")
 	elif not (
-			choice_option_container is HBoxContainer or 
-			choice_option_container is VBoxContainer or 
-			choice_option_container is GridContainer 
+			choice_list is HBoxContainer or 
+			choice_list is VBoxContainer or 
+			choice_list is GridContainer 
 			):
 			warnings.append("Choice Option Container is not HBoxContainer, VBoxContainer, or GridContainer")
 	if not instruction_handler:
 		warnings.append("Instruction Handler is null")
-	if not text_content:
+	if not body_label:
 		warnings.append("Text Content is null")
 	if not text_container:
 		warnings.append("Text Container is null")
@@ -497,7 +499,7 @@ func _ready() -> void:
 	ParserEvents.comment.connect(_on_comment)
 	ParserEvents.go_back_accepted.connect(_on_go_back_accepted)
 	
-	ParserEvents.text_content_text_changed.connect(_on_text_content_text_changed)
+	ParserEvents.body_label_text_changed.connect(_on_body_label_text_changed)
 	ParserEvents.display_name_changed.connect(_on_name_label_updated)
 	
 	Parser.open_connection(self)
@@ -511,9 +513,9 @@ func _ready() -> void:
 	
 	instruction_handler.connect("set_input_lock", set_is_input_locked)
 	instruction_handler.connect("instruction_wrapped_completed", _on_instruction_handler_wrapped_completed)
-	text_content.visible_ratio = 0
-	text_content.bbcode_enabled = true
-	text_content.text = ""
+	body_label.visible_ratio = 0
+	body_label.bbcode_enabled = true
+	body_label.text = ""
 	name_label.text = ""
 	
 	if not show_input_prompt and prompt_unfinished:
@@ -577,7 +579,7 @@ func advance():
 	if _showing_text:
 		_lead_time = 0.0
 		_full_word_timer = 0
-		if text_content.visible_ratio >= 1.0:
+		if body_label.visible_ratio >= 1.0:
 			if _chunk_index >= _line_chunks.size() - 1:
 				if _dialog_line_index >= _dialog_lines.size() - 1:
 					_remaining_prompt_delay = input_prompt_delay
@@ -589,7 +591,7 @@ func advance():
 				_read_next_chunk()
 		else:
 			if _next_pause_position_index < _pause_positions.size():
-				text_content.visible_characters = _get_end_of_chunk_position() 
+				body_label.visible_characters = _get_end_of_chunk_position() 
 				if _next_pause_type != _PauseTypes.EoL:
 					if _next_pause_position_index < _pause_positions.size() - 1:
 						_next_pause_position_index += 1
@@ -621,7 +623,7 @@ func interrupt(hide_controls := true):
 	ParserEvents.line_reader_interrupted.emit(self)
 	Parser.set_paused(true)
 	if hide_controls:
-		for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+		for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
 			visibilities_before_interrupt[key] = get(key).visible
 			get(key).visible = false
 
@@ -629,7 +631,7 @@ func interrupt(hide_controls := true):
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 ## @experimental
 func continue_after_interrupt(read_page := -1, read_line := 0):
-	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+	for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
 		if not visibilities_before_interrupt.has(key):
 			push_warning("Visibilities after interrupt have not been set")
 		else:
@@ -696,7 +698,7 @@ func _read_new_line(new_line: Dictionary):
 		content = Parser.get_text(raw_content.get("text_id"))
 	var content_name = _line_data.get("content").get("name")
 	
-	for key in ["choice_container", "choice_option_container", "text_content", "text_container", "name_container", "name_label"]:
+	for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
 		get(key).visible = true
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
@@ -822,7 +824,7 @@ func _read_new_line(new_line: Dictionary):
 	_reverse_next_instruction = false
 
 func _fit_to_max_line_count(lines: Array):
-	if text_content_max_lines <= 0:
+	if body_label_max_lines <= 0:
 		return
 	
 	var new_chunks := []
@@ -830,8 +832,8 @@ func _fit_to_max_line_count(lines: Array):
 	add_child(label)
 	label.visible = false
 	label.bbcode_enabled = true
-	label.theme = text_content.get_theme()
-	label.size = text_content.size
+	label.theme = body_label.get_theme()
+	label.size = body_label.size
 	
 	var i := 0
 	while i < lines.size():
@@ -859,14 +861,14 @@ func _fit_to_max_line_count(lines: Array):
 		if line_height == 0:
 			line_height = label.get_content_height()
 		
-		label.text = str(text_content_prefix, name_prefix, line, text_content_suffix)
+		label.text = str(body_label_prefix, name_prefix, line, body_label_suffix)
 		
-		while content_height <= line_height * text_content_max_lines:
+		while content_height <= line_height * body_label_max_lines:
 			if label.text.is_empty():
 				break
 			label.visible_characters += 1
 			content_height = label.get_content_height()
-			if content_height > line_height * text_content_max_lines:
+			if content_height > line_height * body_label_max_lines:
 				label.text = label.text.trim_prefix(name_prefix)
 				label.visible_characters -= 1
 				label.visible_characters -= name_length
@@ -907,9 +909,9 @@ func _get_prepend_separator_sequence() -> String:
 
 func _get_end_of_chunk_position() -> int:
 	if _pause_positions.size() == 0:
-		return text_content.text.length()
+		return body_label.text.length()
 	elif _pause_types[_next_pause_position_index] == _PauseTypes.EoL:
-		return text_content.text.length()
+		return body_label.text.length()
 	else:
 		return _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index# - prepend_offset
 
@@ -918,8 +920,8 @@ func _get_current_text_speed() -> float:
 		return custom_text_speed_override
 	
 	var current_text_speed := text_speed
-	if text_content.visible_characters < _text_speed_by_character_index.size() and text_content.visible_characters != -1:
-		var value = _text_speed_by_character_index[text_content.visible_characters]
+	if body_label.visible_characters < _text_speed_by_character_index.size() and body_label.visible_characters != -1:
+		var value = _text_speed_by_character_index[body_label.visible_characters]
 		current_text_speed = value if value != -1 else text_speed
 	
 	return current_text_speed
@@ -942,24 +944,24 @@ func _process(delta: float) -> void:
 	
 	if _next_pause_position_index < _pause_positions.size() and _next_pause_position_index != -1:
 		_find_next_pause()
-	if text_content.visible_characters < _get_end_of_chunk_position():
+	if body_label.visible_characters < _get_end_of_chunk_position():
 		if current_text_speed == MAX_TEXT_SPEED:
-			text_content.visible_characters = _get_end_of_chunk_position()
+			body_label.visible_characters = _get_end_of_chunk_position()
 		else:
-			var old_text_length : int = text_content.visible_characters
+			var old_text_length : int = body_label.visible_characters
 			if full_words:
-				var next_space_position = text_content.text.find(" ", text_content.visible_characters + 1)
-				if text_content.visible_ratio != 1:
+				var next_space_position = body_label.text.find(" ", body_label.visible_characters + 1)
+				if body_label.visible_ratio != 1:
 					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
-					text_content.visible_characters = min(next_space_position, _get_end_of_chunk_position())
+					body_label.visible_characters = min(next_space_position, _get_end_of_chunk_position())
 					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta
 			else:
-				text_content.visible_ratio += (float(current_text_speed) / text_content.get_parsed_text().length()) * delta
+				body_label.visible_ratio += (float(current_text_speed) / body_label.get_parsed_text().length()) * delta
 			# fast text speed can make it go over the end  of the chunk
-			text_content.visible_characters = min(text_content.visible_characters, _get_end_of_chunk_position())
-			if old_text_length != text_content.visible_characters:
-				ParserEvents.visible_characters_changed.emit(old_text_length, text_content.visible_characters)
+			body_label.visible_characters = min(body_label.visible_characters, _get_end_of_chunk_position())
+			if old_text_length != body_label.visible_characters:
+				ParserEvents.visible_characters_changed.emit(old_text_length, body_label.visible_characters)
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
 		_remaining_auto_pause_duration -= delta
@@ -969,7 +971,7 @@ func _process(delta: float) -> void:
 			_remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
 	
-	var new_characters_visible_so_far = text_content.text.substr(0, text_content.visible_characters)
+	var new_characters_visible_so_far = body_label.text.substr(0, body_label.visible_characters)
 	var new_characters : String = new_characters_visible_so_far.trim_prefix(_characters_visible_so_far)
 	if " " in new_characters:
 		var split_new_characters : Array = new_characters.split(" ")
@@ -984,19 +986,19 @@ func _process(delta: float) -> void:
 		_started_word_buffer = split_new_characters.back()
 	else:
 		_started_word_buffer += new_characters
-		if text_content.text.ends_with(_started_word_buffer):
+		if body_label.text.ends_with(_started_word_buffer):
 			if not _started_word_buffer.is_empty():
 				_remove_spaces_and_send_word_read_event(_remove_symbols(_started_word_buffer))
 				_started_word_buffer = ""
 	_characters_visible_so_far = new_characters_visible_so_far
 	
 	if current_text_speed < MAX_TEXT_SPEED:
-		if _last_visible_ratio < 1.0 and text_content.visible_ratio >= 1.0:
-			ParserEvents.text_content_filled.emit()
-		if _last_visible_ratio != text_content.visible_ratio:
-			ParserEvents.text_content_visible_ratio_changed.emit(text_content.visible_ratio)
-		if _last_visible_characters != text_content.visible_characters:
-			ParserEvents.text_content_visible_characters_changed.emit(text_content.visible_characters)
+		if _last_visible_ratio < 1.0 and body_label.visible_ratio >= 1.0:
+			ParserEvents.body_label_filled.emit()
+		if _last_visible_ratio != body_label.visible_ratio:
+			ParserEvents.body_label_visible_ratio_changed.emit(body_label.visible_ratio)
+		if _last_visible_characters != body_label.visible_characters:
+			ParserEvents.body_label_visible_characters_changed.emit(body_label.visible_characters)
 		
 	for pos : int in _call_strings:
 		if _can_handle_text_position(pos, "_called_positions"):
@@ -1005,9 +1007,9 @@ func _process(delta: float) -> void:
 		if _can_handle_text_position(pos, "_handled_comments"):
 			_emit_comment(pos)
 	
-	_last_visible_ratio = text_content.visible_ratio
-	_last_visible_characters = text_content.visible_characters
-	if text_content.get_parsed_text().length() == text_content.visible_characters:
+	_last_visible_ratio = body_label.visible_ratio
+	_last_visible_characters = body_label.visible_characters
+	if body_label.get_parsed_text().length() == body_label.visible_characters:
 		_last_visible_characters = -1
 		_last_visible_ratio = 0
 	
@@ -1023,7 +1025,7 @@ func _process(delta: float) -> void:
 			return
 		if _pause_types[_next_pause_position_index] == _PauseTypes.Auto:
 			return
-		if text_content.visible_characters >= _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index or text_content.visible_characters == -1:
+		if body_label.visible_characters >= _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index or body_label.visible_characters == -1:
 			_auto_continue_duration -= delta
 			if _auto_continue_duration <= 0.0:
 				advance()
@@ -1031,8 +1033,8 @@ func _process(delta: float) -> void:
 func _can_handle_text_position(pos: int, tracker_array:StringName) -> bool:
 	return (
 			((not get(tracker_array).has(pos)) and _last_visible_characters >= pos) or
-			(pos >= _last_visible_characters and pos <= text_content.visible_characters) or
-			text_content.visible_characters == -1
+			(pos >= _last_visible_characters and pos <= body_label.visible_characters) or
+			body_label.visible_characters == -1
 		)
 
 func _remove_spaces_and_send_word_read_event(word: String):
@@ -1057,21 +1059,21 @@ func _update_input_prompt(delta:float):
 	
 	var prompt_visible: bool
 
-	if text_content.visible_ratio >= 1.0:
+	if body_label.visible_ratio >= 1.0:
 		prompt_visible = true
 	elif _next_pause_position_index > _pause_positions.size() and _next_pause_position_index != -1:
 		prompt_visible = true
 	elif _pause_positions.size() > 0 and _next_pause_type == _PauseTypes.Manual:
-		if text_content.visible_characters == _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index:
+		if body_label.visible_characters == _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index:
 			prompt_visible = true
 		else:
 			prompt_visible = false
 	else:
 		prompt_visible = false
 	
-	if text_content.visible_characters < _get_end_of_chunk_position():
+	if body_label.visible_characters < _get_end_of_chunk_position():
 		prompt_visible = false
-		if text_content.visible_characters == -1:
+		if body_label.visible_characters == -1:
 			prompt_visible = true
 	
 	if is_input_locked:
@@ -1087,7 +1089,7 @@ func _update_input_prompt(delta:float):
 	
 	# Order of operations is important. since both prompts may be the same node, we want to ensure something is visible if appropriate.
 	var target_prompt:Control
-	if text_content.visible_ratio >= 1.0:
+	if body_label.visible_ratio >= 1.0:
 		target_prompt = prompt_finished
 		prompt_unfinished.visible = false
 		prompt_finished.visible = true
@@ -1245,9 +1247,9 @@ func _read_next_chunk():
 	_remaining_prompt_delay = input_prompt_delay
 	_chunk_index += 1
 	if text_speed == MAX_TEXT_SPEED:
-		text_content.visible_ratio = 1.0
+		body_label.visible_ratio = 1.0
 	else:
-		text_content.visible_characters = _visible_prepend_offset
+		body_label.visible_characters = _visible_prepend_offset
 	
 	_pause_positions.clear()
 	_pause_types.clear()
@@ -1265,10 +1267,10 @@ func _read_next_chunk():
 	_auto_advance = new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
 	
-	new_text = str(text_content_prefix, new_text, text_content_suffix)
+	new_text = str(body_label_prefix, new_text, body_label_suffix)
 	
-	for word in text_content_word_wrappers.keys():
-		var wrapper : PackedStringArray = text_content_word_wrappers.get(word).split(" ")
+	for word in body_label_word_wrappers.keys():
+		var wrapper : PackedStringArray = body_label_word_wrappers.get(word).split(" ")
 		if wrapper.size() != 2:
 			push_error(str("Word ", word, " has invalid wrapper!"))
 			continue
@@ -1415,9 +1417,9 @@ func _read_next_chunk():
 			_pause_positions[l] = _pause_positions[l] + name_prepend_length
 			l += 1
 	
-	var old_text = text_content.text
-	_set_text_content_text(cleaned_text)
-	ParserEvents.text_content_text_changed.emit(old_text, cleaned_text, _lead_time)
+	var old_text = body_label.text
+	_set_body_label_text(cleaned_text)
+	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
 func trim_trimmables(text:String) -> String:
@@ -1493,7 +1495,7 @@ func _emit_comment(comment_position:int):
 	_handled_comments.append(comment_position)
 	_comments.erase(comment_position)
 
-func _set_text_content_text(text: String):
+func _set_body_label_text(text: String):
 	if keep_past_lines:
 		if max_past_lines > -1:
 			var child_count := past_lines_container.get_child_count()
@@ -1511,12 +1513,12 @@ func _set_text_content_text(text: String):
 
 		if not past_line:
 			past_line = RichTextLabel.new()
-			past_line.custom_minimum_size.x = text_content.custom_minimum_size.x
+			past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
 			past_line.fit_content = true
 			past_line.bbcode_enabled = true
 		
 		var past_text := ""
-		if preserve_name_in_past_lines and not _last_raw_name in blank_names and not text_content.text.is_empty():
+		if preserve_name_in_past_lines and not _last_raw_name in blank_names and not body_label.text.is_empty():
 			if name_colors.has(_last_raw_name):
 				var color : Color = name_colors.get(_last_raw_name)
 				var code = color.to_html(false)
@@ -1524,37 +1526,37 @@ func _set_text_content_text(text: String):
 			else:
 				past_text = str(_get_actor_name(_last_raw_name), _get_prepend_separator_sequence())
 		
-		var text_content_to_save = text_content.text
+		var body_label_to_save = body_label.text
 		if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
-			text_content_to_save = text_content_to_save.erase(0, text_content_to_save.find(_get_prepend_separator_sequence()) + _get_prepend_separator_sequence().length())
-		past_text += text_content_to_save
+			body_label_to_save = body_label_to_save.erase(0, body_label_to_save.find(_get_prepend_separator_sequence()) + _get_prepend_separator_sequence().length())
+		past_text += body_label_to_save
 		past_line.text = past_text
 		past_lines_container.add_child(past_line)
 	
-	text_content.text = text
-	text_content.visible_characters = _visible_prepend_offset
+	body_label.text = text
+	body_label.visible_characters = _visible_prepend_offset
 	_characters_visible_so_far = ""
 	_started_word_buffer = ""
 	
 	_last_raw_name = current_raw_name
 
 
-## Sets [param text_content]. If [param keep_text] is [code]true[/code], the text from the previous [param text_content] will be transferred to the passed argument.
-func set_text_content(new_text_content:RichTextLabel, keep_text := true):
-	var switch_text:bool = text_content != new_text_content
+## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
+func set_body_label(new_body_label:RichTextLabel, keep_text := true):
+	var switch_text:bool = body_label != new_body_label
 	var old_text : String
 	if switch_text and keep_text:
-		old_text = text_content.text
-	text_content = new_text_content
+		old_text = body_label.text
+	body_label = new_body_label
 	if switch_text and keep_text:
-		text_content.text = old_text
+		body_label.text = old_text
 
-## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label]. [param new_label] becomes [param text_content].
+## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label]. [param new_label] becomes [param body_label].
 func enable_past_lines(container: VBoxContainer, new_label:RichTextLabel, name_style := NameStyle.Prepend):
 	keep_past_lines = true
 	self.past_lines_container = container
 	self.name_style = name_style
-	set_text_content(new_label)
+	set_body_label(new_label)
 		
 
 func _find_next_pause():
@@ -1569,7 +1571,7 @@ func set_actor_name(actor_key:String, actor_name:String):
 	name_map[actor_key] = actor_name
 
 func _build_choices(choices, auto_switch:bool):
-	for c in choice_option_container.get_children():
+	for c in choice_list.get_children():
 		c.queue_free()
 	
 	var built_choices : Array = []
@@ -1654,7 +1656,7 @@ func _build_choices(choices, auto_switch:bool):
 		
 		new_option.connect("choice_pressed", _choice_pressed)
 		
-		choice_option_container.add_child(new_option)
+		choice_list.add_child(new_option)
 		built_choices.append({
 			"button": new_option,
 			"disabled": not enable_option,
@@ -1671,14 +1673,14 @@ func _build_choices(choices, auto_switch:bool):
 		if choice_button_keyboard_focus:
 			new_option.focus_mode = Control.FOCUS_ALL
 	
-	if choice_option_container.get_child_count() > 0 and choice_button_keyboard_focus:
-		choice_option_container.get_child(0).call_deferred("grab_focus")
+	if choice_list.get_child_count() > 0 and choice_button_keyboard_focus:
+		choice_list.get_child(0).call_deferred("grab_focus")
 	
 	ParserEvents.choices_presented.emit(built_choices)
 	
 	if virtual_choices:
 		_built_virtual_choices = built_choices
-		for c in choice_option_container.get_children():
+		for c in choice_list.get_children():
 			c.visible = false
 
 func _set_choice_title_or_warn(title: String):
@@ -1693,7 +1695,7 @@ func _set_choice_title_or_warn(title: String):
 func _is_choice_presented() -> bool:
 	if virtual_choices:
 		return not _built_virtual_choices.is_empty()
-	return (not choice_option_container.get_children().is_empty()) and choice_container.visible
+	return (not choice_list.get_children().is_empty()) and choice_container.visible
 
 ## [param index] is the index of the choice emitted in [signal ParserEvents.choices_presented].
 func choice_pressed_virtual(index:int):
@@ -1703,7 +1705,7 @@ func choice_pressed_virtual(index:int):
 
 func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 	_built_virtual_choices.clear()
-	for c in choice_option_container.get_children():
+	for c in choice_list.get_children():
 		c.queue_free()
 	if do_jump_page:
 		emit_signal("jump_to_page", target_page, target_line)
@@ -1878,7 +1880,7 @@ func _get_chunk_address() -> String:
 	return str(Parser.page_index, ".", line_index, ".", _dialog_line_index, ".", _chunk_index)
 
 ## Automation to append stuff to parser history
-func _on_text_content_text_changed(old_text: String,
+func _on_body_label_text_changed(old_text: String,
 	new_text: String,
 	lead_time: float):
 	var chunk_address := _get_chunk_address()

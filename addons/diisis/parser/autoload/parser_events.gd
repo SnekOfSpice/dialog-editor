@@ -96,7 +96,7 @@ signal page_terminated(
 ## Emitted when the text of [LineReader] changes.
 ## Emitts the the entire text, irregardless of [param visible_characters].
 ## [param lead_time] is the time until the text will start showing, in seconds.
-signal text_content_text_changed(
+signal body_label_text_changed(
 	old_text: String,
 	new_text: String,
 	lead_time: float,
@@ -125,7 +125,7 @@ signal word_read(
 	word: String
 )
 
-## Emitted whenever [LineReader] advances text enough for one or more new characters to be visible in [member LineReader.text_content].
+## Emitted whenever [LineReader] advances text enough for one or more new characters to be visible in [member LineReader.body_label].
 signal visible_characters_changed(
 	old_amount:int,
 	new_amount:int,
@@ -179,19 +179,19 @@ signal line_reader_resumed_after_interrupt(
 	line_reader:LineReader
 )
 
-## Emitted when [member LineReader.text_content] reaches a [param visible_ratio] of [code]1.0[/code].
+## Emitted when [member LineReader.body_label] reaches a [param visible_ratio] of [code]1.0[/code].
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_filled()
+signal body_label_filled()
 
-## Emitted when [member LineReader.text_content.visible_characters] is different from its value in the previous frame.
+## Emitted when [member LineReader.body_label.visible_characters] is different from its value in the previous frame.
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_visible_characters_changed(
+signal body_label_visible_characters_changed(
 	visible_characters:int
 )
 
-## Emitted when [member LineReader.text_content.visible_ratio] is different from its value in the previous frame.
+## Emitted when [member LineReader.body_label.visible_ratio] is different from its value in the previous frame.
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_visible_ratio_changed(
+signal body_label_visible_ratio_changed(
 	visible_ratio:float
 )
 
