@@ -49,7 +49,7 @@ var target_static := 0.0
 func _ready():
 	find_child("StartCover").visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
-	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
+	ParserEvents.body_label_text_changed.connect(on_body_label_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	ParserEvents.instruction_completed.connect(on_instruction_completed)
@@ -286,7 +286,7 @@ func on_actor_name_changed(
 		is_name_container_visible = name_container_visible
 		return
 		
-func on_text_content_text_changed(
+func on_body_label_text_changed(
 	_old_text: String,
 	_new_text: String,
 	lead_time: float,
@@ -455,7 +455,7 @@ var ui_id := 1
 func use_ui(id:int):
 	var lr : LineReader = find_child("LineReader")
 	var root_existed : bool
-	var text_content_text = lr.text_content.text
+	var body_label_text = lr.body_label.text
 	var current_raw_name = lr.current_raw_name
 	
 	if ui_root:
@@ -468,7 +468,7 @@ func use_ui(id:int):
 		if c.name.begins_with("TextContainer"):
 			c.visible = c == ui_root
 	
-	lr.text_content = ui_root.find_child("RichTextLabel")
+	lr.body_label = ui_root.find_child("RichTextLabel")
 	lr.text_container = ui_root
 	lr.name_label = ui_root.find_child("Label")
 	lr.name_container = ui_root.find_child("PanelContainer")
@@ -477,7 +477,7 @@ func use_ui(id:int):
 	
 	if root_existed:
 		lr.update_name_label(current_raw_name)
-		lr.text_content.text = text_content_text
+		lr.body_label.text = body_label_text
 
 func set_static(level:float):
 	target_static = level

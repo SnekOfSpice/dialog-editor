@@ -27,7 +27,7 @@ Runtime
 - name style prepend got a few more options and consistency 
 - add ParserEvents: skipped, advanced
 - add LineReader: virtual_choices, choice_pressed_virtual, chatlog_tint_full_line, text_content_word_wrappers
-
+- rename and restructure some variables (most notably text_content is now body_label)
 
 VN Template
 - improve template by using _unhaled_inout instead of _input, fixing a few input bugs
@@ -37,7 +37,7 @@ VN Template
 under the hood
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.
 - give lines an ID. Isn't used directly but should help with tracking things throughout merge conflicts
-
+- some code cleanup in the plugin itself!
 
 -------------------------------------------------
 DIISIS 0.5.1 2025-03-18
