@@ -47,6 +47,7 @@ var target_mix := 0.0
 var target_static := 0.0
 
 func _ready():
+	use_ui(1)
 	find_child("StartCover").visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.body_label_text_changed.connect(on_body_label_text_changed)

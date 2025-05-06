@@ -225,6 +225,7 @@ layout_mode = 2
 
 [node name="RTLFontLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Text Body"
 fit_content = true
 scroll_active = false
