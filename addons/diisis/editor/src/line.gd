@@ -22,6 +22,12 @@ func init() -> void:
 	find_child("ChoiceContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
 	
+	var control_button_height = max(find_child("MoveUp").size.y, find_child("InsertLineAbove").size.y)
+	find_child("MoveUp").custom_minimum_size.y = control_button_height
+	find_child("InsertLineAbove").custom_minimum_size.y = control_button_height
+	find_child("MoveDown").custom_minimum_size.y = control_button_height
+	find_child("InsertLineBelow").custom_minimum_size.y = control_button_height
+	
 	await get_tree().process_frame
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	set_head_editable(Pages.is_header_schema_empty())

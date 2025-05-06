@@ -71,7 +71,8 @@ signal actor_name_changed(
 ## {
 ##    "data_type": int,
 ##    "property_name": String,
-##    "values": Array of size 2}
+##    "values": Array of size 2
+## }
 ##[/codeblock]
 signal new_header(
 	header:Array[Dictionary]

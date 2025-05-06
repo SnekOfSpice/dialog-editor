@@ -24,11 +24,14 @@ enum NameStyle {
 ## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/LineReader-&-Parser
 ## @tutorial(Visual Novel Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template
 
-@export_group("UX")
-@export_subgroup("Text Behavior")
+@export_group("Text")
+@export_subgroup("Cadence")
 ## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.[br]
 ## If [member full_words] is [code]true[/code], will instead pause between words for [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
+## Complete override of other text speed settings, including [member text_speed] and [code]<ts_*>[/code] tags.[br][br]
+## Set to [code]-1[/code] (default) to disable.
+@export_range(-1.0, MAX_TEXT_SPEED, 1.0) var custom_text_speed_override := -1.0
 ## If true, the text will be read one word at a time instead of character by character.
 @export var full_words := false
 ## The delay that <ap> tags imply, in seconds.
@@ -43,15 +46,6 @@ enum NameStyle {
 ## If [member auto_continue] is [code]true[/code], this is the time before the line reader automatically continues, in seconds.
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 0.2
 var _auto_continue_duration:= auto_continue_delay
-## If [code]0[/code], [param text_content] will be filled as far as possible.
-## Breaks will be caused by <lc> tags, 
-## a file with [param Pages.use_dialog_syntax] enabled, and a
-## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
-## If set to more than [code]0[/code], the text will additionally be split to
-## ensure it never runs more than that amount of lines. [br]
-## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
-## throw this alignment off.
-@export var max_text_line_count:=0
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export_subgroup("Show Text During", "show_text_during")
 ## If [code]true[/code], shows [param text_container] when choices are being displayed.
@@ -177,6 +171,15 @@ var instruction_handler: InstructionHandler:
 
 @export_group("Advanced Text Display")
 @export_subgroup("Text Content", "text_content")
+## If [code]0[/code], [param text_content] will be filled as far as possible.
+## Breaks will be caused by <lc> tags, 
+## a file with [param Pages.use_dialog_syntax] enabled, and a
+## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
+## If set to more than [code]0[/code], the text will additionally be split to
+## ensure it never runs more than that amount of lines. [br]
+## [b]Note:[/b] Resizing the [param text_content] after a Line has started to be read will
+## throw this alignment off.
+@export_range(0, 1, 1.0, "or_greater") var text_content_max_lines := 0
 ## A prefix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][center][/code].
 @export var text_content_prefix := ""
 ## A suffix to add to all strings that are displayed in [member text_content]. Respects bbcode such as [code][/center][/code].
@@ -334,7 +337,7 @@ var _last_visible_characters := 0
 ## @experimental
 var visibilities_before_interrupt := {}
 
-var _trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>",]
+var _trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>", "\r"]
 
 var _reverse_next_instruction := false
 var _chunk_addresses_in_history := []
@@ -731,8 +734,7 @@ func _read_new_line(new_line: Dictionary):
 					var actor_name = l.split(":")[0]
 					_dialog_actors.append(actor_name)
 					var line : String = l.trim_prefix(str(actor_name, ":"))
-					while line.begins_with(" "):
-						line = line.trim_prefix(" ")
+					line = trim_trimmables(line)
 					if chatlog_enabled:
 						actor_name = _trim_syntax_and_emit_dialog_line_args(actor_name)
 						
@@ -820,7 +822,7 @@ func _read_new_line(new_line: Dictionary):
 	_reverse_next_instruction = false
 
 func _fit_to_max_line_count(lines: Array):
-	if max_text_line_count <= 0:
+	if text_content_max_lines <= 0:
 		return
 	
 	var new_chunks := []
@@ -859,12 +861,12 @@ func _fit_to_max_line_count(lines: Array):
 		
 		label.text = str(text_content_prefix, name_prefix, line, text_content_suffix)
 		
-		while content_height <= line_height * max_text_line_count:
+		while content_height <= line_height * text_content_max_lines:
 			if label.text.is_empty():
 				break
 			label.visible_characters += 1
 			content_height = label.get_content_height()
-			if content_height > line_height * max_text_line_count:
+			if content_height > line_height * text_content_max_lines:
 				label.text = label.text.trim_prefix(name_prefix)
 				label.visible_characters -= 1
 				label.visible_characters -= name_length
@@ -911,6 +913,17 @@ func _get_end_of_chunk_position() -> int:
 	else:
 		return _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index# - prepend_offset
 
+func _get_current_text_speed() -> float:
+	if custom_text_speed_override > 0:
+		return custom_text_speed_override
+	
+	var current_text_speed := text_speed
+	if text_content.visible_characters < _text_speed_by_character_index.size() and text_content.visible_characters != -1:
+		var value = _text_speed_by_character_index[text_content.visible_characters]
+		current_text_speed = value if value != -1 else text_speed
+	
+	return current_text_speed
+
 func _process(delta: float) -> void:
 	# this is a @tool script so this prevents the console from getting flooded
 	if Engine.is_editor_hint():
@@ -925,10 +938,7 @@ func _process(delta: float) -> void:
 		_lead_time -= delta
 		return
 	
-	var current_text_speed := text_speed
-	if text_content.visible_characters < _text_speed_by_character_index.size() and text_content.visible_characters != -1:
-		var value = _text_speed_by_character_index[text_content.visible_characters]
-		current_text_speed =  value if value != -1 else text_speed
+	var current_text_speed := _get_current_text_speed()
 	
 	if _next_pause_position_index < _pause_positions.size() and _next_pause_position_index != -1:
 		_find_next_pause()
@@ -957,7 +967,6 @@ func _process(delta: float) -> void:
 			_next_pause_position_index += 1
 			_find_next_pause()
 			_remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
-	
 	
 	
 	var new_characters_visible_so_far = text_content.text.substr(0, text_content.visible_characters)
@@ -1249,17 +1258,7 @@ func _read_next_chunk():
 	_text_speed_by_character_index.clear()
 	
 	var new_text : String = _line_chunks[_chunk_index]
-	var begins_trimmable := _begins_with_trimmable(new_text)
-	while begins_trimmable:
-		for t in _trimmable_strings:
-			new_text = new_text.trim_prefix(t)
-		begins_trimmable = _begins_with_trimmable(new_text)
-		
-	var ends_trimmable := _ends_with_trimmable(new_text)
-	while ends_trimmable:
-		for t in _trimmable_strings:
-			new_text = new_text.trim_suffix(t)
-		ends_trimmable = _ends_with_trimmable(new_text)
+	new_text = trim_trimmables(new_text)
 	
 	if new_text.contains("<advance>") and not new_text.ends_with("<advance>"):
 		push_warning(str("Line chunk \"", new_text, "\" contains an <advance> tag that is not at the end of the chunk."))
@@ -1346,6 +1345,7 @@ func _read_next_chunk():
 		
 		
 		_text_speed_by_character_index.append(text_speed_override)
+		_text_speed_by_character_index[scan_index_calls] = text_speed_override
 		if not call_strings_at_index.is_empty():
 			_call_strings[scan_index_calls] = call_strings_at_index.duplicate()
 		if not comments_at_index.is_empty():
@@ -1353,7 +1353,7 @@ func _read_next_chunk():
 		scan_index += 1
 		call_strings_at_index.clear()
 		comments_at_index.clear()
-	
+	_text_speed_by_character_index.resize(target_length)
 	scan_index = 0
 	while scan_index < bbcode_removed_text.length():
 		if bbcode_removed_text[scan_index] == "<":
@@ -1419,6 +1419,20 @@ func _read_next_chunk():
 	_set_text_content_text(cleaned_text)
 	ParserEvents.text_content_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
+
+func trim_trimmables(text:String) -> String:
+	var begins_trimmable := _begins_with_trimmable(text)
+	while begins_trimmable:
+		for t in _trimmable_strings:
+			text = text.trim_prefix(t)
+		begins_trimmable = _begins_with_trimmable(text)
+		
+	var ends_trimmable := _ends_with_trimmable(text)
+	while ends_trimmable:
+		for t in _trimmable_strings:
+			text = text.trim_suffix(t)
+		ends_trimmable = _ends_with_trimmable(text)
+	return text
 
 func _begins_with_trimmable(text:String) -> bool:
 	for t in _trimmable_strings:
@@ -1757,6 +1771,7 @@ func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 
 
 func _handle_header(header: Array):
+	var cleaned_header : Array[Dictionary] = []
 	for prop in header:
 		var data_type = prop.get("data_type")
 		var property_name = prop.get("property_name")
@@ -1766,14 +1781,20 @@ func _handle_header(header: Array):
 		
 		if property_name == property_for_name:
 			update_name_label(values[1])
+		
+		cleaned_header.append({
+			"data_type" : data_type,
+			"property_name" : property_name,
+			"values" : values,
+		})
 	
-	ParserEvents.new_header.emit(header)
+	ParserEvents.new_header.emit(cleaned_header)
 
 
 func _set_dialog_line_index(value: int):
 	_dialog_line_index = value
 	
-	if Parser.use_dialog_syntax and not chatlog_enabled:
+	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]
 		var actor_name: String = _trim_syntax_and_emit_dialog_line_args(raw_name)
 		

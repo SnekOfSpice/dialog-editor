@@ -562,10 +562,12 @@ func _on_page_key_line_edit_focus_exited() -> void:
 
 
 func _on_page_key_line_edit_mouse_entered() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = find_child("PageKeyEditContainer").size.x
 	page_key_line_edit.add_theme_stylebox_override("normal", load("uid://wygkuwnsf32l"))
 	page_key_line_edit.add_theme_stylebox_override("read_only", load("uid://wygkuwnsf32l"))
 
 
 func _on_page_key_line_edit_mouse_exited() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = 0
 	page_key_line_edit.remove_theme_stylebox_override("normal")
 	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())

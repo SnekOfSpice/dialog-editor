@@ -10,8 +10,6 @@ func init() -> void:
 	
 	if not gui_input.is_connected(_on_gui_input):
 		gui_input.connect(_on_gui_input)
-	
-	visible = not Pages.is_header_schema_empty()
 
 func add_property(data: Dictionary):
 	var p = preload("res://addons/diisis/editor/src/head_property_2.tscn").instantiate()
@@ -43,7 +41,7 @@ func deserialize(data: Array):
 	for c in container.get_children():
 		c.queue_free()
 	
-	await get_tree().process_frame
+	visible = not Pages.is_header_schema_empty()
 	
 	for d in data:
 		add_property(d)

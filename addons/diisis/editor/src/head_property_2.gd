@@ -14,6 +14,8 @@ func init() -> void:
 	find_child("DataTypeButton").init()
 	find_child("DropDownButton").init()
 	find_child("DropDownValueButton").init()
+	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 #func updated_header_default():
 #	return {
@@ -55,7 +57,7 @@ func set_is_editing_default(value: bool):
 	find_child("NameEditContainer").visible = is_editing_default
 	find_child("PropertyNameLabel").visible = not is_editing_default
 	find_child("DataTypeButton").visible = is_editing_default
-	find_child("DataTypeLabelContainer").visible = not is_editing_default
+	find_child("DefaultLabel").visible = is_editing_default
 	find_child("DeleteButton").visible = is_editing_default
 
 func set_property_name(new_name: String):
@@ -83,6 +85,7 @@ func set_data_type(new_type: int):
 		else:
 			find_child("BooleanButton").text = "false"
 			find_child("BooleanButton").button_pressed = false
+			values[0] = false
 	elif data_type == Pages.DataTypes._DropDown:
 		if typeof(values[0]) == TYPE_FLOAT: values[0] = int(values[0])
 		if typeof(values[1]) == TYPE_FLOAT: values[1] = int(values[1])
@@ -127,6 +130,7 @@ func deserialize(data: Dictionary):
 			else:
 				new_value = true
 			find_child("BooleanButton").button_pressed = bool(new_value)
+			find_child("BooleanButton").text = str(new_value)
 
 
 
@@ -152,6 +156,7 @@ func stringify_value() -> String:
 			title, "/", Pages.dropdowns.get(title)[values[1]]
 		)
 		return str(values.front(), "-", values.back())
+	
 	return str(values.front())
 
 

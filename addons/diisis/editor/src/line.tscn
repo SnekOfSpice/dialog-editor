@@ -122,7 +122,6 @@ layout_mode = 2
 [node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
 layout_mode = 2
 size_flags_vertical = 3
-address_depth = 1
 status_panels = [NodePath("../../../../PanelContainer"), NodePath("../../../../../../..")]
 
 [node name="HBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
@@ -146,18 +145,21 @@ columns = 2
 
 [node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Move up"
 focus_mode = 0
 icon = ExtResource("4_1c1vd")
 
 [node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Add above"
 focus_mode = 0
 icon = ExtResource("7_gphhn")
 
 [node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
+size_flags_vertical = 8
 tooltip_text = "Move down"
 focus_mode = 0
 icon = ExtResource("5_pyps8")
@@ -180,7 +182,6 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/VBoxContainer2/HBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
