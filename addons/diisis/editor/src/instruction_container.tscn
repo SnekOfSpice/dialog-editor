@@ -127,7 +127,9 @@ size_flags_horizontal = 2
 layout_mode = 2
 tooltip_text = "Delay Before Execution locks the input and progress of LineReader after reading the line but before executing the instruction.
 
-Delay After Execution locks the input and progress of LineReader after executing the instruction but before continuing onto the next line."
+Delay After Execution locks the input and progress of LineReader after executing the instruction but before continuing onto the next line.
+
+Reverse instructions ignore these timings."
 
 [node name="VBoxContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer"]
 layout_mode = 2

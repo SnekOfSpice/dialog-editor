@@ -180,6 +180,7 @@ caret_blink_interval = 0.5
 
 [node name="EditEnabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled"]
 layout_mode = 2
+tooltip_text = "Edit text ID"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("13_av1qi")
 text = "e"
@@ -209,6 +210,7 @@ caret_blink_interval = 0.5
 
 [node name="EditDisabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled"]
 layout_mode = 2
+tooltip_text = "Edit text ID"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("13_av1qi")
 text = "e"
