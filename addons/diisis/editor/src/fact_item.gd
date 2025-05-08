@@ -58,7 +58,6 @@ func deserialize(data: Dictionary) -> void:
 	find_child("FactName").completion_options = Pages.facts.keys()
 
 
-
 func set_fact(new_fact_name: String, default_value):
 	if default_value is bool:
 		find_child("FactBoolValue").button_pressed = default_value
@@ -70,6 +69,7 @@ func set_fact(new_fact_name: String, default_value):
 	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
 	find_child("FactName")._on_text_changed(fact_name)
+	_on_fact_name_text_changed(fact_name)
 
 func set_data_type(value:DataType):
 	data_type = value
@@ -235,3 +235,7 @@ func _on_fact_name_text_submitted(new_text: String) -> void:
 		_on_register_button_pressed()
 		find_child("FactName").text = new_text
 		find_child("FactName").caret_column = new_text.length()
+
+
+func _on_fact_name_text_changed(new_text: String) -> void:
+	find_child("DataTypeButton").disabled = Pages.has_fact(new_text)

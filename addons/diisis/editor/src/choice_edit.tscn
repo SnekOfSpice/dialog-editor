@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://bpuqu3kymqlwb" path="res://addons/diisis/editor/src/conditionals.tscn" id="2_6aqyr"]
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="2_616tk"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_bcn4k"]
-[ext_resource type="Texture2D" uid="uid://dt2ecwwasqxua" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_option.png" id="4_n7uph"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="4_x4tpw"]
 [ext_resource type="Texture2D" uid="uid://co44uwwjikn2w" path="res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png" id="5_jhtck"]
 [ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="5_s3d4i"]
@@ -15,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cyiecfr2eyp2o" path="res://addons/diisis/editor/visuals/false.png" id="8_ykt7a"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="12_0x8br"]
 [ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="13_av1qi"]
+[ext_resource type="Texture2D" uid="uid://cs3n1tliwsul1" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_generic.png" id="15_av1qi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0ndw"]
 bg_color = Color(0, 0, 0, 0.064)
@@ -114,6 +114,7 @@ horizontal_alignment = 1
 [node name="DefaultApparenceSelectionButton" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_vertical = 4
 tooltip_text = "Default Appearance.
 If no conditional modifies this choice item, you can either have it appear in an enabled or disabled state.
 Text is custom for both states."
@@ -340,7 +341,7 @@ size_flags_horizontal = 0
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Delete option"
-icon = ExtResource("4_n7uph")
+icon = ExtResource("15_av1qi")
 
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
