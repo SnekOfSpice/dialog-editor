@@ -36,6 +36,7 @@ text = "property name"
 [node name="PropertyNameEdit" type="LineEdit" parent="HBoxContainer/NameEditContainer/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(121.325, 0)
 layout_mode = 2
+expand_to_text_length = true
 
 [node name="VSeparator" type="VSeparator" parent="HBoxContainer/NameEditContainer"]
 layout_mode = 2
@@ -69,6 +70,7 @@ layout_mode = 2
 
 [node name="StringValueEdit" type="LineEdit" parent="HBoxContainer/ValueContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+expand_to_text_length = true
 
 [node name="DropDownContainer" type="HBoxContainer" parent="HBoxContainer/ValueContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
