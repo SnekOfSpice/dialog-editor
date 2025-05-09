@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bpuqu3kymqlwb"]
+[gd_scene load_steps=8 format=3 uid="uid://bpuqu3kymqlwb"]
 
 [ext_resource type="Script" uid="uid://3yjr5tsxahjl" path="res://addons/diisis/editor/src/conditionals.gd" id="1_jnmdf"]
 [ext_resource type="Texture2D" uid="uid://cnvacrrdfmqte" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond.png" id="2_i1sb1"]
+[ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="3_fi1ir"]
 [ext_resource type="Texture2D" uid="uid://cosv2ahbynvkc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/cond_add.png" id="3_y885n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpir1"]
@@ -10,6 +11,10 @@ border_width_left = 4
 border_width_top = 4
 border_color = Color(0.23, 0.0621, 0.115268, 0.901961)
 border_blend = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jqitn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l8ey5"]
 
 [node name="Conditionals" type="PanelContainer" node_paths=PackedStringArray("visibility_toggle_button", "facts_container")]
 offset_right = 325.0
@@ -40,12 +45,25 @@ size_flags_horizontal = 0
 tooltip_text = "add conditional"
 icon = ExtResource("3_y885n")
 
-[node name="Label" type="Label" parent="VBoxContainer/Controls/BehaviorContainer"]
+[node name="CollapseControlButton" type="Button" parent="VBoxContainer/Controls/BehaviorContainer"]
+layout_mode = 2
+tooltip_text = "collapse controls"
+focus_mode = 0
+theme_override_styles/hover_pressed = ExtResource("3_fi1ir")
+theme_override_styles/hover = ExtResource("3_fi1ir")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_jqitn")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_l8ey5")
+toggle_mode = true
+button_pressed = true
+text = " > "
+
+[node name="BehaviorInfoLabel" type="Label" parent="VBoxContainer/Controls/BehaviorContainer"]
 layout_mode = 2
 text = "behavior on true conditions"
 
 [node name="BehaviorButton" type="OptionButton" parent="VBoxContainer/Controls/BehaviorContainer"]
 layout_mode = 2
+tooltip_text = "Behavior of this line / choice item if the declared conditionals are evaluated to true, using the declared Operand."
 
 [node name="OperandContainer" type="HBoxContainer" parent="VBoxContainer/Controls"]
 layout_mode = 2
@@ -57,7 +75,9 @@ tooltip_text = "Operand: Used to determine if this Conditional evaluates to true
 
 - All: All checks must be true for this conditional to be true.
 - Any: At least 1 check must be true for this conditional to be true.
-- At Least / At Most / Between are inclusive in their bounds."
+- At Least / At Most / Between are inclusive in their bounds.
+
+If Between's first value is greater than the second, they will be switched by LineReader."
 
 [node name="OperandArg1" type="SpinBox" parent="VBoxContainer/Controls/OperandContainer"]
 layout_mode = 2
@@ -73,5 +93,6 @@ size_flags_horizontal = 0
 layout_mode = 2
 
 [connection signal="pressed" from="VBoxContainer/Controls/BehaviorContainer/AddConditionButton" to="." method="request_add_fact"]
+[connection signal="toggled" from="VBoxContainer/Controls/BehaviorContainer/CollapseControlButton" to="." method="set_controls_collapsed"]
 [connection signal="item_selected" from="VBoxContainer/Controls/BehaviorContainer/BehaviorButton" to="." method="_on_behavior_button_item_selected"]
 [connection signal="item_selected" from="VBoxContainer/Controls/OperandContainer/OperandOptionButton" to="." method="_on_operand_option_button_item_selected"]

@@ -1717,7 +1717,7 @@ func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
 	var behavior = conditionals.get("behavior_key")
-	var args = conditionals.get("operand_args")
+	var args : Array = conditionals.get("operand_args")
 	var facts_to_check : Dictionary = conditionals.get("facts", {}).get("fact_data_by_name", {})
 	if facts_to_check.is_empty():
 		var default_key = "Enable" if enabled_as_default else "Disable"
@@ -1767,6 +1767,8 @@ func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 		"nOrLess":
 			conditional_is_true = true_facts.size() <= args[0]
 		"betweenNMincl":
+			if args[0] > args[1]:
+				args.reverse()
 			conditional_is_true = true_facts.size() >= args[0] and true_facts.size() <= args[1]
 	
 	return [conditional_is_true, behavior]
