@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3ub6m0k8tlxw"]
+
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="1_hc3v1"]
+[ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="2_2wli6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6q5ha"]
+
+[node name="EditIDButton" type="Button"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Edit text ID"
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_hc3v1")
+theme_override_styles/hover_pressed = ExtResource("2_2wli6")
+theme_override_styles/hover = ExtResource("2_2wli6")
+theme_override_styles/pressed = ExtResource("2_2wli6")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_6q5ha")
+text = "e"

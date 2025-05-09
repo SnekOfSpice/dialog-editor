@@ -146,6 +146,7 @@ item_3/id = 2
 size = Vector2i(207, 174)
 visible = false
 unfocusable = false
+page = true
 
 [node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File"]
 item_count = 3

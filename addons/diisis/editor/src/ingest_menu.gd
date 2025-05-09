@@ -4,6 +4,8 @@ extends PopupMenu
 const CAPITALIZE_INDEX := 3
 const WHITESPACE_INDEX := 4
 
+@export var page := false
+
 func is_capitalize_checked() -> bool:
 	return is_item_checked(CAPITALIZE_INDEX)
 
@@ -37,37 +39,41 @@ func _on_id_pressed(id: int) -> void:
 			WHITESPACE_INDEX:
 				item.set_whitespace_checked(target_value)
 	if id == 6:
+		var line_content := str(
+			"[color=#fd99f9]",
+			"a: amber",
+			"\nn: narrator\n",
+			"[/color]",
+			"\nCONTENT",
+			"\na: this line will be ingested and inserted into the text box!",
+			"\nn: with different speaking parts",
+			"\nn: uwu")
+		var page_content := str(
+			"[color=#fd99f9]",
+			"a: amber",
+			"\nn: narrator",
+			"[/color]",
+			"\nEND ACTORS\n",
+			"\nCONTENT",
+			"\na: this first line will be ingested",
+			"\nn: with different speaking parts",
+			"\nn: uwu\n",
+			"\nCONTENT",
+			"\nn: This is a second line",
+			"\nh: wow im not defined",
+			"\na: uuuuuuuuu",
+			"\n\nPAGE\n",
+			"\nCONTENT",
+			"\nn: a second page",
+			"\nn: waow",
+		)
 		Pages.editor.popup_confirm_dialogue(str(
-			"For Lines -------------",
-			"
-			a: amber
-			n: narrator
-
-			CONTENT
-			a: this line will be ingested and inserted into the text box!
-			n: uwu
-			n: uwuwuwu",
-			"\n\nFor Pages --------------",
-			"
-			a: amber
-			n: narrator
-			END ACTORS
-
-			CONTENT
-			a: this first line will be ingested
-			n: uwu
-			n: uwuwuwu
-
-			CONTENT
-			n: This is a second line
-			h: wow im not defined
-			a: uuuuuuuuu
-
-			PAGE
-
-			CONTENT
-			n: a second page
-			n: waow"
+			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space.\n\n",
+			"[b]Example For ", "Pages" if page else "Lines", ":[/b]",
+			"\n\n",
+			"[bgcolor=#0e0c10]",
+			page_content if page else line_content,
+			"[/bgcolor]",
 		),
 		"Ingestion Syntax",
 		canvas_transform.get_origin())

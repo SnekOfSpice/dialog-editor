@@ -48,7 +48,7 @@ func init() -> void:
 	text_box.grab_focus()
 	text_box.cancel_code_completion()
 	
-	find_child("Text Actions").add_submenu_node_item("Parse Into Text", find_child("Import"))
+	find_child("Text Actions").add_submenu_node_item("Ingest Line", find_child("Import"))
 
 func serialize() -> Dictionary:
 	if not text_id:

@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://nakfxqdgr4pg" path="res://addons/diisis/editor/visuals/true.png" id="7_qdd2f"]
 [ext_resource type="Texture2D" uid="uid://cyiecfr2eyp2o" path="res://addons/diisis/editor/visuals/false.png" id="8_ykt7a"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="12_0x8br"]
-[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="13_av1qi"]
+[ext_resource type="PackedScene" uid="uid://b3ub6m0k8tlxw" path="res://addons/diisis/editor/src/edit_id_button.tscn" id="12_av1qi"]
 [ext_resource type="Texture2D" uid="uid://cs3n1tliwsul1" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_generic.png" id="15_av1qi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0ndw"]
@@ -182,12 +182,8 @@ placeholder_text = "[EMPTY] Text when enabled"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="EditEnabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled"]
+[node name="EditEnabledIDButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" instance=ExtResource("12_av1qi")]
 layout_mode = 2
-tooltip_text = "Edit text ID"
-focus_mode = 0
-theme_override_fonts/font = ExtResource("13_av1qi")
-text = "e"
 
 [node name="TextLinesDisabled" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines"]
 layout_mode = 2
@@ -212,12 +208,8 @@ placeholder_text = "[EMPTY] Text when disabled"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="EditDisabledIDButton" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled"]
+[node name="EditDisabledIDButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" instance=ExtResource("12_av1qi")]
 layout_mode = 2
-tooltip_text = "Edit text ID"
-focus_mode = 0
-theme_override_fonts/font = ExtResource("13_av1qi")
-text = "e"
 
 [node name="DefaultTextEmptyWarningLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines"]
 custom_minimum_size = Vector2(0, 20)

@@ -31,7 +31,7 @@ script = ExtResource("1_kqefd")
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 364.0
-offset_bottom = 57.0
+offset_bottom = 60.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(350, 0)
@@ -43,8 +43,11 @@ custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+focus_mode = 2
 bbcode_enabled = true
 fit_content = true
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
 
 [node name="ScrollHintTop" type="TextureRect" parent="MarginContainer"]
 visible = false
