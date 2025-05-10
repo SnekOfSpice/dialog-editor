@@ -161,14 +161,14 @@ icon = ExtResource("7_gphhn")
 
 [node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_vertical = 0
 tooltip_text = "Move down"
 focus_mode = 0
 icon = ExtResource("5_pyps8")
 
 [node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 0
 tooltip_text = "Add below"
 focus_mode = 0
 icon = ExtResource("9_f7stu")
