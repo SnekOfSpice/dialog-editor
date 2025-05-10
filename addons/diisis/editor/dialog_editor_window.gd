@@ -39,6 +39,7 @@ func _on_about_to_popup() -> void:
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
+	find_child("UpdateAvailable").check_for_updates()
 
 func _on_close_requested() -> void:
 	if is_instance_valid(editor):

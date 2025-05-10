@@ -155,8 +155,13 @@ func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
+	Engine.set_meta("DIISISPlugin", self)
 	if not ProjectSettings.has_setting("diisis/project/file/path"):
 		ProjectSettings.set_setting("diisis/project/file/path", "")
+		ProjectSettings.save()
+	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
+		ProjectSettings.set_initial_value("diisis/plugin/updates/check_for_updates", true)
+		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
@@ -249,9 +254,20 @@ func _process(delta: float) -> void:
 		dia_editor_window.wrap_controls = true
 
 func _exit_tree():
+	Engine.remove_meta("DIISISPlugin")
 	remove_editor_singletons()
 	remove_parser_singletons()
 	remove_autoload_singleton(AUTOLOAD_SHARED_DIISIS)
 	if dia_editor_window:
 		dia_editor_window.queue_free()
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
+
+func get_version() -> String:
+	var config: ConfigFile = ConfigFile.new()
+	config.load(get_plugin_path() + "/plugin.cfg")
+	return config.get_value("plugin", "version")
+
+
+## Get the current path of the plugin
+func get_plugin_path() -> String:
+	return get_script().resource_path.get_base_dir()
