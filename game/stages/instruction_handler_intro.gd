@@ -99,8 +99,6 @@ func zoom_to(value, duration) -> bool:
 
 func splatter_blood(amount) -> bool:
 	emit_signal("splatter", int(amount))
-	# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed.
-	# (Needs to be called by your code from somewhere.)
 	return false
 
 func set_emotion(actor_name: String, emotion_name: String) -> bool:
@@ -200,7 +198,6 @@ func roll_credits() -> bool:
 func set_character_name(character: String, new_name: String) -> bool:
 	if Parser.line_reader:
 		Parser.line_reader.set_actor_name(character, new_name)
-	
 	return false
 
 

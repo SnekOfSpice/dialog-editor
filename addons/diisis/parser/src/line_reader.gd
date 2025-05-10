@@ -1,6 +1,6 @@
 @icon("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg")
 @tool
-extends Control
+extends Node
 class_name LineReader
 ## The moist endoskeleton-wrapping articulations of runtime-side DIISIS <3
 ##
@@ -79,16 +79,12 @@ var _auto_advance := false
 var _last_raw_name := ""
 
 @export_group("Name Display")
-## The name of the dropdown property used for keying names. Usually something like "character"
-## Name of the DropDown in DIISIS that gets used for dialog syntax. [br]
-## ("character" in the demo)
-@export var property_for_name := ""
 ## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
 @export var blank_names : Array[String] = []
-## A String:String Dictionary. The keys are the actor names set in the options of [member property_for_name].
+## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
 ## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
 @export var name_map : Dictionary[String, String] = {}
-## A String:Color Dictionary. The keys are the actor names set in the options of [member property_for_name].
+## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
 @export var name_colors : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
@@ -124,6 +120,8 @@ var choice_list:Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 ## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
+## [br][br]Also the Node that evaluates [code]<var:>[/code] and [code]<func:>[/code] tags.
+## Any function called by one of these tags has to return a [String] (can be empty) or null.
 @export
 var instruction_handler: InstructionHandler:
 	get:
@@ -164,9 +162,6 @@ var name_container: Control:
 @export_group("Optional References")
 ## [Label] used to display the choice title. Invisible if the choice title is empty. Not setting it will result in the choice title not being shown.
 @export var choice_title_label: Label
-## Node that evaluates [code]<var:>[/code] and [code]<func:>[/code] tags.
-## Any function called by one of these tags has to return a [String] (can be empty).
-@export var inline_evaluator: Node
 
 @export_group("Advanced Text Display")
 @export_subgroup("Text Content", "body_label")
@@ -649,7 +644,6 @@ func set_is_input_locked(value: bool):
 	is_input_locked = value
 
 func _close(_terminating_page):
-	visible = false
 	terminated = true
 
 func _read_new_line(new_line: Dictionary):
@@ -1108,8 +1102,8 @@ func _start_showing_text():
 	_read_next_chunk()
 
 func _replace_tags(lines:Array) -> Array:
-	if not inline_evaluator:
-		push_warning("No InlineEvaluator has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
+	if not instruction_handler:
+		push_warning("No InstructionHandler has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
 		return lines
 	var i := 0
 	var result := []
@@ -1133,7 +1127,7 @@ func _replace_tags(lines:Array) -> Array:
 						local_scan_index += 1
 					var_name = var_name.trim_suffix(">")
 					control_to_replace += ">"
-					new_text = new_text.replace(control_to_replace, str(inline_evaluator.get(var_name)))
+					new_text = new_text.replace(control_to_replace, str(instruction_handler.get(var_name)))
 				elif new_text.find("<func:", scan_index) == scan_index:
 					var local_scan_index := scan_index
 					var control_to_replace := ""
@@ -1159,8 +1153,8 @@ func _replace_tags(lines:Array) -> Array:
 					for a in packed_func_args:
 						if not a.is_empty():
 							func_args.append(a)
-					if inline_evaluator.has_method(func_name):
-						var call_result = inline_evaluator.callv(func_name, func_args)
+					if instruction_handler.has_method(func_name):
+						var call_result = instruction_handler.callv(func_name, func_args)
 						if not call_result is String:
 							if call_result == null:
 								call_result = ""
@@ -1475,7 +1469,7 @@ func _call_from_position(call_position: int):
 			
 			i += 1
 		
-		inline_evaluator.callv(func_name, args)
+		instruction_handler.callv(func_name, args)
 		ParserEvents.function_called.emit(func_name, args, call_position)
 	_call_strings.erase(call_position)
 
@@ -1783,8 +1777,9 @@ func _handle_header(header: Array):
 		if data_type == Parser.DataTypes._DropDown:
 			values = Parser.drop_down_values_to_string_array(values)
 		
-		if property_name == property_for_name:
-			update_name_label(values[1])
+		# rip original stuff
+		#if property_name == property_for_name:
+			#update_name_label(values[1])
 		
 		cleaned_header.append({
 			"data_type" : data_type,

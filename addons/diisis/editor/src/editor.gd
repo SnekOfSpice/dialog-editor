@@ -715,7 +715,22 @@ func step_through_pages():
 			next_page = 0
 		i += 1
 
+func _on_req(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
+	if result != HTTPRequest.RESULT_SUCCESS: return
+	var json = JSON.new()
+	json.parse(body.get_string_from_utf8())
+	var response = json.get_data()
+	print(body.get_string_from_utf8())
+
+
+
 func _on_funny_debug_button_pressed() -> void:
+	return
+	var request := HTTPRequest.new()
+	add_child(request)
+	request.request_completed.connect(_on_req)
+	request.request("https://www.tumblr.com/harsh-noise-scalies")
+	return
 	step_through_pages()
 	return
 	var doms := ["af_ZA",

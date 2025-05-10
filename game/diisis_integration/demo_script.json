@@ -5,6 +5,7 @@
 		"text_size_id": 2
 	},
 	"pages": {
+		"collapse_conditional_controls_by_default": true,
 		"default_address_mode_pages": 0,
 		"default_locale": "en_US",
 		"dropdown_dialog_arguments": [
@@ -336,6 +337,7 @@
 								},
 								"meta.visible": false
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": false,
 							"operand": 0,
 							"operand_args": [],
@@ -381,6 +383,7 @@
 								},
 								"meta.visible": false
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": false,
 							"operand": 0,
 							"operand_args": [],
@@ -426,6 +429,7 @@
 								},
 								"meta.visible": false
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": false,
 							"operand": 0,
 							"operand_args": [],
@@ -464,6 +468,7 @@
 								},
 								"meta.visible": false
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": false,
 							"operand": 0,
 							"operand_args": [],
@@ -485,6 +490,7 @@
 											},
 											"meta.visible": false
 										},
+										"meta.controls_collapsed": true,
 										"meta.visible": false,
 										"operand": 0,
 										"operand_args": [],
@@ -533,6 +539,7 @@
 											},
 											"meta.visible": false
 										},
+										"meta.controls_collapsed": true,
 										"meta.visible": false,
 										"operand": 0,
 										"operand_args": [],
@@ -602,6 +609,7 @@
 								},
 								"meta.visible": true
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": true,
 							"operand": 0,
 							"operand_args": [],
@@ -647,6 +655,7 @@
 								},
 								"meta.visible": true
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": true,
 							"operand": 0,
 							"operand_args": [],
@@ -685,6 +694,7 @@
 								},
 								"meta.visible": false
 							},
+							"meta.controls_collapsed": true,
 							"meta.visible": false,
 							"operand": 0,
 							"operand_args": [],

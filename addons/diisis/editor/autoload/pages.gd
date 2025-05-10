@@ -1066,7 +1066,7 @@ func get_evaluator_methods() -> Array:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
 	
-	var base = Node.new()
+	var base = InstructionHandler.new()
 	var base_methods = base.get_method_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
@@ -1105,7 +1105,7 @@ func get_evaluator_properties() -> Array:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
 	
-	var base = Node.new()
+	var base = InstructionHandler.new()
 	var base_methods = base.get_property_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
