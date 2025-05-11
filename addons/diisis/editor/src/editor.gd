@@ -692,7 +692,7 @@ func request_arg_hint(text_box:Control):
 	text_box.call_deferred("grab_focus")
 
 func _place_arg_hint(at:Vector2):
-	find_child("ArgHint").position = at
+	find_child("ArgHint").position = Vector2i(at)
 
 func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int):
 	find_child("ArgHint").build(instruction_name, full_arg_text, caret_column)
@@ -899,7 +899,6 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 	var l10n := {}
 	var handled_locales := []
 	for text_id in Pages.text_data.keys():
-		printt(str("\"", text_id, "\""), input_data.get(text_id))
 		var previous_default_text : String = input_data.get(text_id, {}).get(Pages.default_locale)
 		var lines_by_locale := {
 			"changed" : previous_default_text != Pages.get_text(text_id),

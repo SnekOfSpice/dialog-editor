@@ -40,7 +40,16 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 			hint += ", "
 		i += 1
 	find_child("TextLabel").text = hint
-	position.x -= size.x * (float(hit_index) / float (i))
+	var back_offset : float
+	if i > 0:
+		back_offset = (float(hit_index) / float (i))
+	else:
+		back_offset = 0.5
+	position.x -= size.x * back_offset
+	
+	await get_tree().process_frame
+	if hint.is_empty():
+		hide()
 
 func _on_close_requested() -> void:
 	hide()

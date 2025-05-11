@@ -589,6 +589,9 @@ func get_instruction_arg_types(instruction_name: String) -> Array:
 func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
 	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})
 
+func get_instruction_arg_count(instruction_name: String) -> int:
+	return get_instruction_arg_names(instruction_name).size()
+
 func get_all_invalid_instructions() -> String:
 	var warning := ""
 	var page_index  := 0

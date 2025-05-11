@@ -285,6 +285,18 @@ func _on_text_box_focus_entered() -> void:
 
 
 func _on_text_box_text_changed() -> void:
+	update_tag_hint()
+	
+	if Pages.auto_complete_context in ["call", "func"]:
+		for instr in Pages.get_all_instruction_names():
+			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)):
+				if Pages.get_instruction_arg_count(instr) > 0:
+					var prev_col := text_box.get_caret_column()
+					text_box.text = text_box.text.insert(prev_col, ",")
+					await get_tree().process_frame
+					text_box.set_caret_column(prev_col)
+					caret_movement_to_do = 1
+
 	var line_index = text_box.get_caret_line()
 	var col_index = text_box.get_caret_column()
 	var last_char : String
@@ -292,8 +304,6 @@ func _on_text_box_text_changed() -> void:
 		last_char = get_text_before_caret(1)
 	else:
 		last_char = ""
-	
-	update_tag_hint()
 
 func move_caret(amount: int):
 	text_box.set_caret_column(text_box.get_caret_column() + amount)
