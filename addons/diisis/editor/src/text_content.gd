@@ -292,7 +292,7 @@ func _on_text_box_text_changed() -> void:
 			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)):
 				if Pages.get_instruction_arg_count(instr) > 0:
 					var prev_col := text_box.get_caret_column()
-					text_box.text = text_box.text.insert(prev_col, ",")
+					text_box.insert_text_at_caret("()")
 					await get_tree().process_frame
 					text_box.set_caret_column(prev_col)
 					caret_movement_to_do = 1
@@ -383,14 +383,18 @@ func update_inline_tag_prompt():
 		Pages.editor.hide_arg_hint()
 		return
 	var tag = data["tag"]
+	if is_text_before_caret(")"):
+		Pages.editor.hide_arg_hint()
+		return
 	if tag.begins_with("<call") or tag.begins_with("<func"):
 		var caret_column := text_box.get_caret_column()
 		Pages.editor.request_arg_hint(text_box)
 		tag = tag.erase(0, 6)
 		tag = tag.trim_suffix(">")
-		var instruction_name : String = tag.split(",")[0]
+		var instruction_name : String = tag.split("(")[0]
 		var args = tag.trim_prefix(instruction_name)
-		args = args.trim_prefix(",")
+		args = args.trim_prefix("(")
+		args = args.trim_suffix(")")
 		if caret_column > data["start"] and caret_column <= data["start"] + 6 + instruction_name.length():
 			# INSTRUCTION NAME SECTION
 			Pages.editor.hide_arg_hint()

@@ -37,12 +37,15 @@ signal instruction_wrapped_completed()
 ## Emit this signal from within the node that inherits from [InstructionHandler] after return from
 ## [method InstructionHandler.execute] with [code]true[/code].
 signal instruction_completed()
-signal execute_instruction(args)
+
+enum CallMode {
+	Call,
+	Func
+}
 
 var delay_before := 0.0
 var delay_after := 0.0
-var execution_name := ""
-var execution_args := []
+var execution_text := ""
 var is_executing := false
 var has_executed := false
 var has_received_execute_callback := false
@@ -57,11 +60,11 @@ func finish_waiting_for_instruction():
 	has_received_execute_callback = true
 	
 	if not emitted_complete and delay_after <= 0:
-		ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
+		ParserEvents.instruction_completed.emit(execution_text, delay_after)
 	
 		emit_signal("set_input_lock", false)
 		emit_signal("instruction_wrapped_completed")
-		ParserEvents.instruction_completed_after_delay.emit(execution_name, execution_args, delay_after)
+		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
 		
 		is_executing = false
 		emitted_complete = true
@@ -79,10 +82,10 @@ func _process(delta: float) -> void:
 		return
 	
 	if not has_executed:
-		ParserEvents.instruction_started_after_delay.emit(execution_name, execution_args, delay_before)
-		emit_signal("execute_instruction", execution_args)
+		ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
+		#emit_signal("execute_instruction", execution_args)
 		has_executed = true
-		has_received_execute_callback = not execute(execution_name, execution_args)
+		has_received_execute_callback = not execute(execution_text)
 	
 	if not has_received_execute_callback:
 		return
@@ -90,37 +93,75 @@ func _process(delta: float) -> void:
 	if delay_after > 0:
 		delay_after -= delta
 		if delay_after <= 0:
-			ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
+			ParserEvents.instruction_completed.emit(execution_text, delay_after)
 			emitted_complete = true
 		return
 	elif not emitted_complete:
-		ParserEvents.instruction_completed.emit(execution_name, execution_args, delay_after)
+		ParserEvents.instruction_completed.emit(execution_text, delay_after)
 	
 	emit_signal("set_input_lock", false)
 	emit_signal("instruction_wrapped_completed")
-	ParserEvents.instruction_completed_after_delay.emit(execution_name, execution_args, delay_after)
+	ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
 	
 	is_executing = false
 
-func _wrapper_execute(instruction_name : String, args : Array, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
+func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	await get_tree().process_frame
 	delay_after = delay_after_seconds
 	delay_before = delay_before_seconds
-	execution_name = instruction_name
-	execution_args = args
+	execution_text = text
 	has_executed = false
 	is_executing = true
 	has_received_execute_callback = true
 	emit_signal("set_input_lock", true)
-	ParserEvents.instruction_started.emit(instruction_name, args, delay_before)
+	ParserEvents.instruction_started.emit(execution_text, delay_before)
 	emitted_complete = false
 
 
-func execute(instruction_name:String, args:Array) -> bool:
+## Calls a function in itself with the signalute of [param text].[br]
+## If [param call_mode] is Call, [signal ParserEvents.function_called] will be emitted. A [param call_position] of -1 means it was called by an instruction line. Positive integers are the text indices for inline calls using the [code]<call:>[/code] tag.[br][br]
+## CallMode Func returns the string representation of the return value. This is used internally for [code]<func:>[/code] tags.
+func call_from_string(text:String, call_mode := CallMode.Call, call_position := -1):
+	var func_name = text.split("(")[0]
+	text = text.trim_prefix(str(func_name, "("))
+	text = text.trim_suffix(")")
+	var parts
+	if text.is_empty():
+		parts = []
+	else:
+		parts = text.split(",")
+	
+	var args := []
+	var i := 0
+	var arg_names : Array = Parser.get_instruction_arg_names(func_name)
+	var arg_types : Array = Parser.get_instruction_arg_types(func_name)
+	for type in arg_types:
+		var arg_string : String = parts[i]
+		while arg_string.begins_with(" "):
+			arg_string = arg_string.trim_prefix(" ")
+		while arg_string.ends_with(" "):
+			arg_string = arg_string.trim_suffix(" ")
+		var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
+		if arg_string == "*" and default != null:
+			arg_string = default
+		args.append(Parser.str_to_typed(arg_string, type))
+		
+		i += 1
+	
+	var result := callv(func_name, args)
+	match call_mode:
+		CallMode.Func:
+			return str(result)
+		CallMode.Call:
+			ParserEvents.function_called.emit(func_name, args, call_position)
+			return result
+
+func execute(instruction_text: String) -> bool:
+	var instruction_name := instruction_text.split("(")[0]
 	if not has_method(instruction_name):
 		push_error(str("Function ", instruction_name, " not found in ", get_script().get_global_name(),"."))
 		return false
-	var result = callv(instruction_name, args)
+	var result = call_from_string(instruction_text)
 	if not result is bool:
 		push_error(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
 		return false

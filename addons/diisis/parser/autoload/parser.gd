@@ -422,12 +422,10 @@ func go_back():
 	for instruction in instruction_stack:
 		if not instruction.get("meta.has_reverse", false):
 			continue
-		var instr_name = instruction.get("reverse_name")
-		var instr_args = get_arg_array_from_instruction_string(instruction.get("meta.reverse_text"), instr_name)
-		if instr_name == null or instr_name == "":
-			instr_name = instruction.get("name")
-			instr_args = get_arg_array_from_instruction_string(instruction.get("meta.text"), instr_name)
-		line_reader.instruction_handler.execute(instr_name, instr_args)
+		var instr_text : String = instruction.get("meta.reverse_text", "")
+		if instr_text.is_empty():
+			instr_text = instruction.get("meta.text")
+		line_reader.instruction_handler.execute(instr_text)
 	
 	await get_tree().process_frame
 	address_trail_index += trail_shift
@@ -625,14 +623,6 @@ func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
 
 func get_argument_order_from_template(instruction_name:String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("args", [])
-
-func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
-	var args := []
-	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args", {})
-	var arg_order := get_argument_order_from_template(instruction_name)
-	for arg_name in arg_order:
-		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
-	return args
 
 ## returns a dict with "name" and "args" as keys
 func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
