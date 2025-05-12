@@ -313,7 +313,6 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	var edited_current_page := false
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		#prints("page", page.get("number"))
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -577,10 +576,65 @@ func get_defaults(property_key:String):
 		"data_type":DataTypes._String
 	}
 
+func get_autoload_script_content(autoload_name:String, filter:String):
+	var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
+	var object
+
 func get_all_instruction_names() -> Array:
+	var result := get_custom_handler_methods()
+	var singleton_method_names := []
+	print(ProjectSettings.get_setting("autoload/Sound"))
+	for autoload_name in ["Sound", "CONST", "DIISIS"]:
+		var method_list := []
+		var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
+		var autoload_script : Script
+		print(load(path))
+		if path.ends_with(".gd"):
+			autoload_script = load(path)
+		elif path.ends_with(".tscn"):
+			var a = load(path)
+			add_child(a)
+			print(a)
+			a.queue_free()
+			#.get_script()
+		#print(temp_autoload)
+		print("--------------")
+		method_list = autoload_script.get_method_list()
+		#print(method_list)
+		var method_names := []
+		for method in method_list:
+			method_names.append(method.get("name"))
+		print(method_names)
+		var object = ClassDB.instantiate(autoload_script.get_class())
+		print(object)
+		var base_methods = object.get_method_list()
+		for method in base_methods:
+			method_names.erase(method.get("name"))
+		#object.queue_free()
+		#temp_autoload.queue_free()
+		print(method_names)
+		for method in method_names:
+			singleton_method_names.append(str(autoload_name, ".", method))
+	result.append_array(singleton_method_names)
+	return result
 	return instruction_templates.keys()
 
+func get_evaluator_function(instruction_name:String):
+	if instruction_name.contains("."):
+		var singleton_name := instruction_name.split(".")[0]
+		var method_name := instruction_name.split(".")[1]
+		for method in Engine.get_singleton(singleton_name).get_method_list():
+			if method.get("name") == instruction_name:
+				return method
+	else:
+		for script in get_list_of_evaluator_scripts():
+			var script_methods = script.get_script_method_list()
+			for method in script_methods:
+				if method.get("name") == instruction_name:
+					return method
+
 func get_instruction_arg_names(instruction_name: String) -> Array:
+	#print(get_evaluator_function(instruction_name))
 	return instruction_templates.get(instruction_name, {}).get("args", [])
 
 func get_instruction_arg_types(instruction_name: String) -> Array:
@@ -602,6 +656,7 @@ func get_all_invalid_instructions() -> String:
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Instruction:
 				continue
+			# TODO
 			var compliance = line.get("content").get("meta.validation_status")
 			#var compliance := get_entered_instruction_compliance(text)
 			if compliance != "OK":
@@ -1040,31 +1095,24 @@ func does_address_exist(address:String) -> bool:
 func delete_fact(fact:String):
 	alter_fact(fact)
 
-func get_evaluator_methods() -> Array:
-	var methods := []
+func get_list_of_evaluator_scripts() -> Array[Script]:
+	var result : Array[Script] = []
 	for evaluator : String in evaluator_paths:
-		var script_methods:Array
-		if evaluator.ends_with(".tscn"):
+		if evaluator.ends_with(".gd"):
 			var n = load(evaluator)
 			if not n:
 				push_warning(str("Couldn't load", evaluator))
 				continue
-			var s = n.get_script()
-			if not s:
-				push_warning(str("Couldn't get script on", evaluator))
-				continue
-			script_methods = s.get_script_method_list()
-			n.queue_free()
-		elif evaluator.ends_with(".gd"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			script_methods = n.get_script_method_list()
+			result.append(n)
 		else:
 			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
 			continue
-		
+	return result
+
+func get_custom_handler_methods() -> Array:
+	var methods := []
+	for script : Script in get_list_of_evaluator_scripts():
+		var script_methods = script.get_script_method_list()
 		for method in script_methods:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
@@ -1075,35 +1123,12 @@ func get_evaluator_methods() -> Array:
 		methods.erase(method.get("name"))
 	base.queue_free()
 	
-	methods.erase("execute")
-	methods.erase("_wrapper_execute")
 	return methods
 
-func get_evaluator_properties() -> Array:
+func get_custom_handler_properties() -> Array:
 	var methods := []
-	for evaluator : String in evaluator_paths:
-		var script_methods:Array
-		if evaluator.ends_with(".tscn"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			var s = n.get_script()
-			if not s:
-				push_warning(str("Couldn't get script on", evaluator))
-				continue
-			script_methods = s.get_script_property_list()
-			n.queue_free()
-		elif evaluator.ends_with(".gd"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			script_methods = n.get_script_property_list()
-		else:
-			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
-			continue
-		
+	for script : Script in get_list_of_evaluator_scripts():
+		var script_methods = script.get_script_property_list()
 		for method in script_methods:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
@@ -1279,7 +1304,7 @@ func get_argument_order_from_template(instruction_name:String) -> Array:
 	return instruction_templates.get(instruction_name, {}).get("args", [])
 
 func does_instruction_name_exist(instruction_name:String):
-	return instruction_templates.keys().has(instruction_name)
+	return get_all_instruction_names().has(instruction_name)
 
 func get_compliance_with_template(instruction:String) -> String:
 	var entered_name = instruction.split("(")[0]

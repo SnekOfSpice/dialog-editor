@@ -208,10 +208,10 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret(":") and is_text_after_caret(">"):
 		if is_text_before_caret("func:") or is_text_before_caret("call:"):
-			for method in Pages.get_evaluator_methods():
+			for method in Pages.get_custom_handler_methods():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, method)
 		elif is_text_before_caret("var:"):
-			for property in Pages.get_evaluator_properties():
+			for property in Pages.get_custom_handler_properties():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, property, property)
 		elif is_text_before_caret("fact:"):
 			for fact in Pages.facts.keys():

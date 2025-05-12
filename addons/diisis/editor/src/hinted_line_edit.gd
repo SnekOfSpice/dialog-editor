@@ -106,4 +106,6 @@ func _on_focus_exited() -> void:
 
 
 func _on_focus_entered() -> void:
+	
+	Pages.get_all_instruction_names()
 	virtual_hint_line = 0
