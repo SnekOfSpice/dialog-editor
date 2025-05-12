@@ -60,7 +60,7 @@ func _on_save_button_pressed() -> void:
 
 func save():
 	var new_text : String = find_child("InstructionEdit").text
-	Pages.add_template_from_string(new_text)
+	#Pages.add_template_from_string(new_text)
 	
 	var instruction_name := new_text.split("(")[0]
 	if not text_before_edit.is_empty():
@@ -94,7 +94,6 @@ func _on_instruction_edit_text_changed(new_text: String) -> void:
 		self_modulate.v = 30.0
 
 func _on_delete_button_pressed() -> void:
-	Pages.try_delete_instruction_template(find_child("InstructionLabel").text.split("(")[0])
 	queue_free()
 
 func get_instruction_name() -> String:

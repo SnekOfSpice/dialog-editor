@@ -9,14 +9,15 @@ func build_str(text:String):
 func build(instruction_name: String, full_text:String, caret_column:int):
 	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
-	var arg_names = Pages.get_instruction_arg_names(instruction_name)
-	var arg_types = Pages.get_instruction_arg_types(instruction_name)
-	var arg_defaults = Pages.get_instruction_arg_defaults(instruction_name)
+	var arg_names = Pages.get_custom_method_arg_names(instruction_name)
+	var arg_types = Pages.get_custom_method_types(instruction_name)
+	print(arg_types)
+	var arg_defaults = Pages.get_custom_method_defaults(instruction_name)
 	var arg_strings := []
 	var i := 0
 	while i < arg_names.size():
 		var arg_name : String = arg_names[i]
-		var arg_type : String = arg_types[i]
+		var arg_type : String = DIISIS.type_to_str(arg_types[i])
 		var arg_default = arg_defaults.get(arg_name)
 		var arg_string := str(arg_name, " : [i][color=b88d86EE]", arg_type, "[/color][/i]")
 		if arg_default:

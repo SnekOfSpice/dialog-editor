@@ -291,7 +291,7 @@ func _shortcut_input(event):
 				KEY_H:
 					open_popup($Popups.get_node("HeaderPopup"))
 				KEY_R:
-					open_popup($Popups.get_node("InstructionPopup"))
+					open_popup($Popups.get_node("HandlerWindow"), true)
 				KEY_Z:
 					if event.is_shift_pressed():
 						undo_redo.redo()
@@ -621,7 +621,7 @@ func _on_setup_index_pressed(index: int) -> void:
 		2: # dd
 			open_popup($Popups.get_node("DropdownPopup"))
 		3: # instr
-			open_popup($Popups.get_node("InstructionPopup"))
+			open_popup($Popups.get_node("HandlerWindow"), true)
 		5: # facts
 			open_popup($Popups.get_node("FactsPopup"), true)
 		6: # pages
@@ -725,6 +725,7 @@ func _on_req(result: int, response_code: int, headers: PackedStringArray, body: 
 
 
 func _on_funny_debug_button_pressed() -> void:
+	DIISIS.get_custom_method_types("set_bgm")
 	return
 	var request := HTTPRequest.new()
 	add_child(request)

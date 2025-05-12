@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4o7jt8031ant"]
+
+[ext_resource type="Script" uid="uid://bh5hvgvfscaqb" path="res://addons/diisis/editor/src/handler_container.gd" id="1_n4i0n"]
+
+[node name="EvaluatorContainer" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 200)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n4i0n")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "- file paths to scripts that are instruction_handler of any LineReader
+- ending in .gd
+- formatted like \"res://handler.gd\""
+
+[node name="EvaluatorSortButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+text = "sort A-Z"
+
+[node name="EvaluatorLabel" type="TextEdit" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "save changes"
+
+[node name="ResetEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "reset changes"
+
+[connection signal="pressed" from="VBoxContainer/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/EvaluatorLabel" to="." method="_on_evaluator_label_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveEvaluatorChangesButton" to="." method="_on_save_evaluator_changes_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetEvaluatorChangesButton" to="." method="_on_reset_evaluator_changes_button_pressed"]

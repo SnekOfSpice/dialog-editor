@@ -30,11 +30,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 auto_width = true
-item_count = 4
+item_count = 3
 item_0/text = "Editor Behavior"
-item_1/text = "Code Completion"
-item_2/text = "Line Behavior"
-item_3/text = "Appearance"
+item_1/text = "Line Behavior"
+item_2/text = "Appearance"
 
 [node name="ContentContainer" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
@@ -59,42 +58,6 @@ layout_mode = 2
 
 [node name="ToggleSettings" type="VBoxContainer" parent="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer"]
 layout_mode = 2
-
-[node name="EvaluatorContainer" type="PanelContainer" parent="HSplitContainer/ContentContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/ContentContainer/EvaluatorContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
-layout_mode = 2
-text = "- file paths to nodes or scripts that are instruction_handler of any LineReader
-- ending in .tscn or .gd
-- formatted like \"res://handler.gd\""
-
-[node name="EvaluatorSortButton" type="Button" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-focus_mode = 0
-text = "sort A-Z"
-
-[node name="EvaluatorLabel" type="TextEdit" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="SaveEvaluatorChangesButton" type="Button" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "save changes"
-
-[node name="ResetEvaluatorChangesButton" type="Button" parent="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer"]
-auto_translate_mode = 1
-layout_mode = 2
-focus_mode = 0
-text = "reset changes"
 
 [node name="LineBehaviorContainer" type="PanelContainer" parent="HSplitContainer/ContentContainer"]
 visible = false
@@ -142,10 +105,6 @@ layout_mode = 2
 
 [connection signal="item_selected" from="HSplitContainer/ScrollContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="mode_set" from="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer/HBoxContainer/AddressModeButtonPage" to="." method="_on_address_mode_button_page_mode_set"]
-[connection signal="pressed" from="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
-[connection signal="text_changed" from="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/EvaluatorLabel" to="." method="_on_evaluator_label_text_changed"]
-[connection signal="pressed" from="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/SaveEvaluatorChangesButton" to="." method="_on_save_evaluator_changes_button_pressed"]
-[connection signal="pressed" from="HSplitContainer/ContentContainer/EvaluatorContainer/VBoxContainer/HBoxContainer/ResetEvaluatorChangesButton" to="." method="_on_reset_evaluator_changes_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/UseDialogSyntaxCheckBox" to="." method="_on_use_dialog_syntax_check_box_pressed"]
 [connection signal="value_changed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer/LeadTimeSpinBoxSameActor" to="." method="_on_lead_time_spin_box_same_actor_value_changed"]
 [connection signal="value_changed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer/LeadTimeSpinBoxOtherActor" to="." method="_on_lead_time_spin_box_other_actor_value_changed"]

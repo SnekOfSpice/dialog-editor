@@ -71,8 +71,9 @@ func _on_fd_import_file_selected(path: String) -> void:
 	file.close()
 	
 	Pages.instruction_templates.clear()
-	for text in data:
-		Pages.add_template_from_string(text)
+	print("TODO ADD IMPORTING BACK IN")
+	#for text in data:
+		#Pages.add_template_from_string(text)
 	fill()
 
 

@@ -14,7 +14,7 @@ var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
-const MULTI_DROPDOWN_TYPE_SEPARATOR := "||"
+const MULTI_DROPDOWN_TYPE_SEPARATOR := "||" # TODO restore this functionality
 const NEGATIVE_INF := -int(INF)
 var id_counter := NEGATIVE_INF
 
@@ -42,7 +42,8 @@ var local_line_insert_offset:int
 			#"arg_defaults":
 				#{"angle":20}
 		#}
-var instruction_templates : Dictionary = {}
+# TODO
+var custom_defaults := {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -143,7 +144,7 @@ func serialize() -> Dictionary:
 		"page_data" : page_data,
 		"text_data" : text_data,
 		"default_locale" : default_locale,
-		"instruction_templates": instruction_templates,
+		"custom_defaults": custom_defaults,
 		"facts": facts,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -174,7 +175,7 @@ func deserialize(data:Dictionary):
 	page_data.clear()
 	page_data = int_data.duplicate()
 	head_defaults = data.get("head_defaults", [])
-	instruction_templates = data.get("instruction_templates", {})
+	custom_defaults = data.get("custom_defaults", {})
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:
@@ -478,16 +479,13 @@ func delete_page_data(at: int):
 	#emit_signal("pages_modified")
 
 func get_instruction_signature(instruction_name:String) -> String:
-	if not instruction_templates.has(instruction_name):
-		editor.notify(str("Instruction ", instruction_name, " is not declared in this project."))
-		return ""
 	var result := "func "
 	result += instruction_name
 	result += "("
 	
 	var i := 0
-	var arg_types : Array = instruction_templates.get(instruction_name).get("arg_types")
-	var arg_names : Array = instruction_templates.get(instruction_name).get("args")
+	var arg_types : Array = get_custom_method_types(instruction_name)
+	var arg_names : Array = get_custom_method_arg_names(instruction_name)
 	while i < arg_types.size():
 		var arg_type_name : String
 		var raw_type : String = arg_types[i].trim_suffix(" ").trim_prefix(" ")
@@ -578,7 +576,7 @@ func get_defaults(property_key:String):
 
 
 func get_all_instruction_names() -> Array:
-	var result := get_custom_handler_methods()
+	var result := get_custom_methods()
 	var singleton_method_names := []
 	# IDK SCRATCH AUTOLOADS FOR NOW??
 	#print(ProjectSettings.get_setting("autoload/Sound"))
@@ -615,9 +613,8 @@ func get_all_instruction_names() -> Array:
 			#singleton_method_names.append(str(autoload_name, ".", method))
 	#result.append_array(singleton_method_names)
 	return result
-	return instruction_templates.keys()
 
-func get_evaluator_function(instruction_name:String):
+func get_custom_method(instruction_name:String) -> Dictionary:
 	if instruction_name.contains("."):
 		var singleton_name := instruction_name.split(".")[0]
 		var method_name := instruction_name.split(".")[1]
@@ -630,26 +627,57 @@ func get_evaluator_function(instruction_name:String):
 			for method in script_methods:
 				if method.get("name") == instruction_name:
 					return method
-
-func get_instruction_arg_names(instruction_name: String) -> Array:
-	var function : Dictionary = get_evaluator_function(instruction_name)
-	var args := []
-	for arg in function.get("args"):
-		args.append(arg.get("name"))
-	return args
+	return {}
 
 func get_instruction_arg_types(instruction_name: String) -> Array:
-	var function : Dictionary = get_evaluator_function(instruction_name)
+	var function : Dictionary = get_custom_method(instruction_name)
 	var args := []
 	for arg in function.get("args"):
 		args.append(arg.get("type"))
 	return args
 
-func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
-	return get_evaluator_function(default_args)
+func get_custom_method_args(instruction_name) -> Array:
+	return get_custom_method(instruction_name).get("args")
+
+func get_custom_method_arg_names(instruction_name) -> Array:
+	var args := get_custom_method(instruction_name).get("args")
+	var result := []
+	for arg in args:
+		result.append(arg.get("name"))
+	return result
+
+func get_custom_method_base_defaults(instruction_name: String) -> Array:
+	return get_custom_method(instruction_name).get("default_args")
+
+func get_custom_method_base_defaultsd(instruction_name: String) -> Dictionary:
+	var defaults := get_custom_method_base_defaults(instruction_name)
+	if defaults.is_empty():
+		return {}
+	var result := {}
+	var args = get_custom_method_args(instruction_name)
+	var i := 0
+	for arg in args:
+		result[arg.get("name")] = defaults[i]
+		if result.size() >= defaults.size():
+			break
+		i += 1
+	return result
+
+func get_custom_method_defaults(instruction_name: String) -> Dictionary:
+	var base_defaults : Array = get_custom_method_base_defaults(instruction_name)
+	var defaults := {}
+	var args : Array = get_custom_method_args(instruction_name)
+	var i := 0
+	for arg in base_defaults:
+		defaults[args[i].get("name")] = base_defaults[i]
+		i += 1
+	var customs : Dictionary = custom_defaults.get(instruction_name, {})
+	for arg in customs.keys():
+		defaults[arg] = customs.get(arg)
+	return defaults
 
 func get_instruction_arg_count(instruction_name: String) -> int:
-	return get_instruction_arg_names(instruction_name).size()
+	return get_custom_method_arg_names(instruction_name).size()
 
 func get_all_invalid_instructions() -> String:
 	var warning := ""
@@ -1114,23 +1142,22 @@ func get_list_of_evaluator_scripts() -> Array[Script]:
 			continue
 	return result
 
-func get_custom_handler_methods() -> Array:
+func get_custom_methods() -> Array:
 	var methods := []
 	for script : Script in get_list_of_evaluator_scripts():
 		var script_methods = script.get_script_method_list()
 		for method in script_methods:
-			if not methods.has(method.get("name")):
-				methods.append(method.get("name"))
+			methods.append(method.get("name"))
 	
 	var base = InstructionHandler.new()
 	var base_methods = base.get_method_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
 	base.queue_free()
-	
+	methods.sort()
 	return methods
 
-func get_custom_handler_properties() -> Array:
+func get_custom_properties() -> Array:
 	var methods := []
 	for script : Script in get_list_of_evaluator_scripts():
 		var script_methods = script.get_script_property_list()
@@ -1235,51 +1262,6 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	#return localizable_addresses
 
 
-func add_template_from_string(instruction:String):
-	var entered_name := instruction.split("(")[0]
-	var arg_string := instruction.trim_prefix(entered_name)
-	arg_string = arg_string.trim_prefix("(")
-	arg_string = arg_string.trim_suffix(")")
-	
-	var arg_names := []
-	var arg_types := []
-	var arg_defaults := {}
-	var entered_args := arg_string.split(",")
-	for arg in entered_args:
-		if arg.is_empty():
-			continue
-		var default
-		if arg.contains("?") and arg.find("?") < arg.length() - 1:
-			default = arg.split("?")[1]
-			arg = arg.trim_suffix(str("?", default))
-		if arg.contains(":"): # typed
-			var arg_name := arg.split(":")[0]
-			var arg_type := arg.split(":")[1]
-			while arg_name.begins_with(" "):
-				arg_name = arg_name.trim_prefix(" ")
-			while arg_name.ends_with(" "):
-				arg_name = arg_name.trim_suffix(" ")
-			while arg_type.begins_with(" "):
-				arg_type = arg_type.trim_prefix(" ")
-			while arg_type.ends_with(" "):
-				arg_type = arg_type.trim_suffix(" ")
-			arg_names.append(arg_name)
-			arg_types.append(arg_type)
-		else: # implicitly convert to string
-			while arg.begins_with(" "):
-				arg = arg.trim_prefix(" ")
-			while arg.ends_with(" "):
-				arg = arg.trim_suffix(" ")
-			arg_names.append(arg)
-			arg_types.append("string")
-		if default != null:
-			arg_defaults[arg_names.back()] = default
-	
-	instruction_templates[entered_name] = {
-		"args" : arg_names,
-		"arg_types": arg_types,
-		"arg_defaults": arg_defaults
-	}
 
 func update_compliances(instruction_name:String):
 	for page in page_data.values():
@@ -1300,13 +1282,14 @@ func update_compliances(instruction_name:String):
 					line["content"]["meta.validation_status"] = status
 					continue
 
-
+func get_custom_method_types(instruction_name:String) -> Array:
+	var result := []
+	for arg in get_custom_method_args(instruction_name):
+		result.append(arg.get("type"))
+	return result
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
-	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)
-
-func get_argument_order_from_template(instruction_name:String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("args", [])
+	return get_custom_method_defaults(instruction_name).get(arg_name)
 
 func does_instruction_name_exist(instruction_name:String):
 	return get_all_instruction_names().has(instruction_name)
@@ -1316,7 +1299,7 @@ func get_compliance_with_template(instruction:String) -> String:
 	if not does_instruction_name_exist(entered_name):
 		return str("Instruction ", entered_name, " does not exist")
 	
-	var template_arg_count : int = instruction_templates.get(entered_name).get("args").size()
+	var template_arg_count : int = get_custom_method_args(entered_name).size()
 	if template_arg_count == 0:
 		if not instruction.ends_with("()"):
 			return "Arg count mismatch"
@@ -1329,8 +1312,8 @@ func get_compliance_with_template(instruction:String) -> String:
 	args_string = args_string.trim_prefix("(")
 	args_string = args_string.trim_suffix(")")
 	var args := args_string.split(",")
-	var template_arg_names : Array = instruction_templates[entered_name].get("args", [])
-	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
+	var template_arg_names : Array = get_custom_method_arg_names(entered_name)
+	var template_types : Array = get_custom_method_types(entered_name)
 	
 	var i := 0
 	while i < template_types.size() and not template_types.is_empty() and i < args.size():
@@ -1371,8 +1354,6 @@ func get_type_compliance(value:String, type_string:String, arg_index:int) -> Str
 			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(split_types), ".")
 	return ""
 
-func try_delete_instruction_template(instruction_name:String):
-	instruction_templates.erase(instruction_name)
 
 func get_entered_instruction_compliance(instruction:String, check_as_template:=false, error_on_duplicate := false) -> String:
 	if instruction.count("(") != 1:

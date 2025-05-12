@@ -133,15 +133,15 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 	
 	var args := []
 	var i := 0
-	var arg_names : Array = Parser.get_instruction_arg_names(func_name)
-	var arg_types : Array = Parser.get_instruction_arg_types(func_name)
+	var arg_names : Array = Pages.get_custom_method_arg_names(func_name)
+	var arg_types : Array = Pages.get_custom_method_types(func_name)
 	for type in arg_types:
 		var arg_string : String = parts[i]
 		while arg_string.begins_with(" "):
 			arg_string = arg_string.trim_prefix(" ")
 		while arg_string.ends_with(" "):
 			arg_string = arg_string.trim_suffix(" ")
-		var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
+		var default = Pages.get_custom_method_defaults(func_name).get(arg_names[i])
 		if arg_string == "*" and default != null:
 			arg_string = default
 		args.append(Parser.str_to_typed(arg_string, type))

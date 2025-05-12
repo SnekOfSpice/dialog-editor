@@ -18,3 +18,13 @@ enum ChoiceBehaviorAfterSelection {
 	Disabled,
 	Hidden
 }
+
+func type_to_str(type:int) -> String:
+	match type:
+		TYPE_FLOAT:
+			return "float"
+		TYPE_INT:
+			return "int"
+		TYPE_BOOL:
+			return "bool"
+	return "String"

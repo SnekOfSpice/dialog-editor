@@ -45,7 +45,7 @@ var lines := []
 
 var facts := {}
 var starting_facts := {}
-var instruction_templates := {}
+var custom_defaults := {}
 
 var max_line_index_on_page := 0
 
@@ -119,7 +119,7 @@ func init(data:Dictionary):
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
-	instruction_templates = data.get("instruction_templates", {})
+	custom_defaults = data.get("custom_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
 	#locale = _default_locale
@@ -611,67 +611,13 @@ func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> 
 	
 	return data.get("Custom", {})
 
-func get_instruction_arg_names(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("args", [])
-
-func get_instruction_arg_types(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
-
-func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
-	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})
-
-
-func get_argument_order_from_template(instruction_name:String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("args", [])
-
-## returns a dict with "name" and "args" as keys
-func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
-	#if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
-		##push_warning(str(instruction_text, " isn't OK"))
-		#return {}
-	
-	var result := {}
-	var entered_name = instruction_text.split("(")[0]
-	result["name"] = entered_name
-	
-	var args := {}
-	var arg_names := template_override.get("args", get_instruction_arg_names(entered_name))
-	var arg_types := template_override.get("arg_types", get_instruction_arg_types(entered_name))
-	instruction_text = instruction_text.trim_prefix(str(entered_name, "("))
-	instruction_text = instruction_text.trim_suffix(")")
-	var entered_args := instruction_text.split(",")
-	var i := 0
-	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
-		var arg = entered_args[i]
-		while arg.begins_with(" "):
-			arg = arg.trim_prefix(" ")
-		while arg.ends_with(" "):
-			arg = arg.trim_suffix(" ")
-		var arg_value
-		var arg_type:String=arg_types[i]
-		var value_string := arg.split(":")[0]
-		
-		
-		var default = get_default_arg_value(entered_name, arg_names[i])
-		if value_string == "*" and default != null:
-			value_string = default
-		
-		arg_value = str_to_typed(value_string, arg_type)
-		
-		args[arg_names[i]] = arg_value
-		i += 1
-	result["args"] = args
-	
-	return result
-
-func str_to_typed(value:String, type_string:String):
-	match type_string:
-		"float":
+func str_to_typed(value:String, type:int):
+	match type:
+		TYPE_FLOAT:
 			return float(value)
-		"bool":
+		TYPE_INT:
+			return int(value)
+		TYPE_BOOL:
 			var cast : bool = true if value == "true" else false
 			return cast
 	return String(value)
-
-func get_default_arg_value(instruction_name:String, arg_name:String):
-	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {}).get(arg_name)

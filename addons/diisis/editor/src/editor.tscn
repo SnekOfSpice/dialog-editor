@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -32,6 +32,7 @@
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
 [ext_resource type="PackedScene" uid="uid://b81qxlexbcshc" path="res://addons/diisis/editor/src/change_text_id_window.tscn" id="29_jb16f"]
 [ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
+[ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -68,7 +69,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core"]
-visible = false
 layout_mode = 2
 text = "any test functionality"
 
@@ -179,7 +179,7 @@ item_1/text = "Header    (H)"
 item_1/id = 1
 item_2/text = "Dropdowns    (D)"
 item_2/id = 2
-item_3/text = "Instructions    (R)"
+item_3/text = "Instruction Handlers    (R)"
 item_3/id = 3
 item_4/text = "View"
 item_4/id = 4
@@ -626,6 +626,9 @@ visible = false
 visible = false
 
 [node name="IncomingReferencesWindow" parent="Popups" instance=ExtResource("30_rtywk")]
+visible = false
+
+[node name="HandlerWindow" parent="Popups" instance=ExtResource("32_24jcx")]
 visible = false
 
 [node name="Camera" type="Camera2D" parent="."]

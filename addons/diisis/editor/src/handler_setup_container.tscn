@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://7os6why715o8"]
+
+[ext_resource type="Script" uid="uid://b608tlt18ss1a" path="res://addons/diisis/editor/src/handler_setup_container.gd" id="1_0vmp6"]
+[ext_resource type="PackedScene" uid="uid://c4o7jt8031ant" path="res://addons/diisis/editor/src/handler_container.tscn" id="2_6avix"]
+[ext_resource type="PackedScene" uid="uid://faulsyhhddoi" path="res://addons/diisis/editor/src/custom_default_container.tscn" id="2_07arm"]
+
+[node name="HandlerSetupContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0vmp6")
+
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EvaluatorContainer" parent="VSplitContainer" instance=ExtResource("2_6avix")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CustomDefaultContainer" parent="VSplitContainer" instance=ExtResource("2_07arm")]
+unique_name_in_owner = true
+layout_mode = 2
