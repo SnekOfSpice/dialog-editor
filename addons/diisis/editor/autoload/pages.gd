@@ -43,7 +43,8 @@ var local_line_insert_offset:int
 				#{"angle":20}
 		#}
 # TODO
-var custom_defaults := {}
+var custom_method_defaults := {}
+var custom_method_dropdown_limiters := {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -144,7 +145,8 @@ func serialize() -> Dictionary:
 		"page_data" : page_data,
 		"text_data" : text_data,
 		"default_locale" : default_locale,
-		"custom_defaults": custom_defaults,
+		"custom_method_defaults": custom_method_defaults,
+		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
 		"facts": facts,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -175,7 +177,8 @@ func deserialize(data:Dictionary):
 	page_data.clear()
 	page_data = int_data.duplicate()
 	head_defaults = data.get("head_defaults", [])
-	custom_defaults = data.get("custom_defaults", {})
+	custom_method_defaults = data.get("custom_method_defaults", {})
+	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:
@@ -671,7 +674,7 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 	for arg in base_defaults:
 		defaults[args[i].get("name")] = base_defaults[i]
 		i += 1
-	var customs : Dictionary = custom_defaults.get(instruction_name, {})
+	var customs : Dictionary = custom_method_defaults.get(instruction_name, {})
 	for arg in customs.keys():
 		defaults[arg] = customs.get(arg)
 	return defaults
@@ -1287,6 +1290,11 @@ func get_custom_method_types(instruction_name:String) -> Array:
 	for arg in get_custom_method_args(instruction_name):
 		result.append(arg.get("type"))
 	return result
+func get_custom_method_typesd(instruction_name:String) -> Dictionary:
+	var result := {}
+	for arg in get_custom_method_args(instruction_name):
+		result[arg.get("name")] = arg.get("type")
+	return result
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
 	return get_custom_method_defaults(instruction_name).get(arg_name)
@@ -1328,7 +1336,7 @@ func get_compliance_with_template(instruction:String) -> String:
 		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
 		
-		var type_compliance := get_type_compliance(arg_value, template_types[i], i)
+		var type_compliance := get_type_compliance(arg_value, DIISIS.type_to_str(template_types[i]), i)
 		if not type_compliance.is_empty() and arg_value != "*":
 			return type_compliance
 		i += 1

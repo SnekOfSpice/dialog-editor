@@ -2,5 +2,5 @@
 extends Control
 
 func init():
-	%EvaluatorContainer.init()
-	%CustomDefaultContainer.init()
+	find_child("Evaluator Paths").init()
+	find_child("Arguments").init()

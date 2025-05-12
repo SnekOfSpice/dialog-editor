@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://cu1kulh4sfm2y"]
+
+[ext_resource type="Script" uid="uid://blfdmykhbt57l" path="res://addons/diisis/editor/src/default_argument_item.gd" id="1_i8fpr"]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_i8fpr")
+
+[node name="UseDefaultCheckBox" type="CheckBox" parent="."]
+layout_mode = 2
+
+[node name="ArgNameLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "arg name"
+
+[node name="Edit" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[connection signal="toggled" from="UseDefaultCheckBox" to="." method="_on_use_default_check_box_toggled"]

@@ -45,7 +45,7 @@ var lines := []
 
 var facts := {}
 var starting_facts := {}
-var custom_defaults := {}
+var custom_method_defaults := {}
 
 var max_line_index_on_page := 0
 
@@ -119,7 +119,7 @@ func init(data:Dictionary):
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
-	custom_defaults = data.get("custom_defaults", {})
+	custom_method_defaults = data.get("custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
 	#locale = _default_locale

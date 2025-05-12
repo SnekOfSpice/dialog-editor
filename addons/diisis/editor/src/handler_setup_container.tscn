@@ -13,18 +13,22 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0vmp6")
 
-[node name="VSplitContainer" type="VSplitContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 0
 
-[node name="EvaluatorContainer" parent="VSplitContainer" instance=ExtResource("2_6avix")]
+[node name="Evaluator Paths" parent="TabContainer" instance=ExtResource("2_6avix")]
 unique_name_in_owner = true
 layout_mode = 2
+metadata/_tab_index = 0
 
-[node name="CustomDefaultContainer" parent="VSplitContainer" instance=ExtResource("2_07arm")]
+[node name="Arguments" parent="TabContainer" instance=ExtResource("2_07arm")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
+metadata/_tab_index = 1

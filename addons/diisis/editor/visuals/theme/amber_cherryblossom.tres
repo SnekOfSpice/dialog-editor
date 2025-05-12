@@ -486,6 +486,7 @@ RichTextLabel/fonts/bold_italics_font = ExtResource("17_bodw7")
 RichTextLabel/fonts/italics_font = ExtResource("18_si63v")
 RichTextLabel/fonts/normal_font = ExtResource("9_qlmfo")
 SpinBox/icons/updown = null
+TabContainer/fonts/font = ExtResource("15_u5drt")
 TextEdit/fonts/font = ExtResource("3_8wpuc")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_f0tga")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_nothl")
