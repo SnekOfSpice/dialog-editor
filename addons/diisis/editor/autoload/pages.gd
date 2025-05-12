@@ -576,46 +576,44 @@ func get_defaults(property_key:String):
 		"data_type":DataTypes._String
 	}
 
-func get_autoload_script_content(autoload_name:String, filter:String):
-	var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
-	var object
 
 func get_all_instruction_names() -> Array:
 	var result := get_custom_handler_methods()
 	var singleton_method_names := []
-	print(ProjectSettings.get_setting("autoload/Sound"))
-	for autoload_name in ["Sound", "CONST", "DIISIS"]:
-		var method_list := []
-		var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
-		var autoload_script : Script
-		print(load(path))
-		if path.ends_with(".gd"):
-			autoload_script = load(path)
-		elif path.ends_with(".tscn"):
-			var a = load(path)
-			add_child(a)
-			print(a)
-			a.queue_free()
-			#.get_script()
-		#print(temp_autoload)
-		print("--------------")
-		method_list = autoload_script.get_method_list()
-		#print(method_list)
-		var method_names := []
-		for method in method_list:
-			method_names.append(method.get("name"))
-		print(method_names)
-		var object = ClassDB.instantiate(autoload_script.get_class())
-		print(object)
-		var base_methods = object.get_method_list()
-		for method in base_methods:
-			method_names.erase(method.get("name"))
-		#object.queue_free()
-		#temp_autoload.queue_free()
-		print(method_names)
-		for method in method_names:
-			singleton_method_names.append(str(autoload_name, ".", method))
-	result.append_array(singleton_method_names)
+	# IDK SCRATCH AUTOLOADS FOR NOW??
+	#print(ProjectSettings.get_setting("autoload/Sound"))
+	#for autoload_name in ["Sound", "CONST", "DIISIS"]:
+		#var method_list := []
+		#var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
+		#var autoload_script : Script
+		#print(load(path))
+		#if path.ends_with(".gd"):
+			#autoload_script = load(path)
+		#elif path.ends_with(".tscn"):
+			#var a = load(path)
+			#add_child(a)
+			#print(a)
+			#a.queue_free()
+			##.get_script()
+		##print(temp_autoload)
+		#print("--------------")
+		#method_list = autoload_script.get_method_list()
+		##print(method_list)
+		#var method_names := []
+		#for method in method_list:
+			#method_names.append(method.get("name"))
+		#print(method_names)
+		#var object = ClassDB.instantiate(autoload_script.get_class())
+		#print(object)
+		#var base_methods = object.get_method_list()
+		#for method in base_methods:
+			#method_names.erase(method.get("name"))
+		##object.queue_free()
+		##temp_autoload.queue_free()
+		#print(method_names)
+		#for method in method_names:
+			#singleton_method_names.append(str(autoload_name, ".", method))
+	#result.append_array(singleton_method_names)
 	return result
 	return instruction_templates.keys()
 
@@ -634,14 +632,21 @@ func get_evaluator_function(instruction_name:String):
 					return method
 
 func get_instruction_arg_names(instruction_name: String) -> Array:
-	#print(get_evaluator_function(instruction_name))
-	return instruction_templates.get(instruction_name, {}).get("args", [])
+	var function : Dictionary = get_evaluator_function(instruction_name)
+	var args := []
+	for arg in function.get("args"):
+		args.append(arg.get("name"))
+	return args
 
 func get_instruction_arg_types(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
+	var function : Dictionary = get_evaluator_function(instruction_name)
+	var args := []
+	for arg in function.get("args"):
+		args.append(arg.get("type"))
+	return args
 
 func get_instruction_arg_defaults(instruction_name: String) -> Dictionary:
-	return instruction_templates.get(instruction_name, {}).get("arg_defaults", {})
+	return get_evaluator_function(default_args)
 
 func get_instruction_arg_count(instruction_name: String) -> int:
 	return get_instruction_arg_names(instruction_name).size()
