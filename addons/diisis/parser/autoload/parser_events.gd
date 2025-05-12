@@ -135,15 +135,13 @@ signal visible_characters_changed(
 ## This will be on the same frame as [signal instruction_started_after_delay] if [param delay]
 ## is [code] 0.0[/code].
 signal instruction_started(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
 ## Emitted when [InstructionHandler] executes an instruction, [param delay] seconds after [signal instruction_started].
 signal instruction_started_after_delay(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
@@ -152,8 +150,7 @@ signal instruction_started_after_delay(
 ## if the instruction in question doesn't return [code]true[/code].[br]
 ##[param delay] is the time in seconds until [signal instruction_completed_after_delay] gets emitted.
 signal instruction_completed(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
@@ -161,8 +158,7 @@ signal instruction_completed(
 ## Emitted when the instruction gets completed, [param delay] seconds after [signal instruction_completed] is emitted.
 ## This will be on the same frame if [param delay] is [code]0.0[/code].
 signal instruction_completed_after_delay(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 

@@ -774,8 +774,7 @@ func _read_new_line(new_line: Dictionary):
 				push_error("InsutrctionHandler doesn't have execute method.")
 				return
 			
-			var instruction_name: String
-			var args: Array
+			var text : String
 			var delay_before: float
 			var delay_after: float
 			
@@ -786,28 +785,22 @@ func _read_new_line(new_line: Dictionary):
 				return
 			
 			if not _reverse_next_instruction:
-				instruction_name = instruction_content.get("name")
+				text = instruction_content.get("meta.text")
 			else:
-				instruction_name = instruction_content.get("reverse_name", "")
+				text = instruction_content.get("meta.reverse_text", "")
 			
-			if (not _reverse_next_instruction) or instruction_name.is_empty():
-				instruction_name = instruction_content.get("name")
-				args = Parser.get_arg_array_from_instruction_string(instruction_content.get("meta.text"), instruction_name)
+			if (not _reverse_next_instruction) or text.is_empty():
 				delay_before = new_line.get("content").get("delay_before")
 				delay_after = new_line.get("content").get("delay_after")
 			else:
-				
-				args = Parser.get_arg_array_from_instruction_string(instruction_content.get("meta.reverse_text"), instruction_name)
 				delay_before = 0.0
 				delay_after = 0.0
 			
 			if _reverse_next_instruction:
-				#instruction_handler.execute(instruction_name, args)
-				#reverse_next_instruction = false
 				_remaining_prompt_delay = input_prompt_delay
 				
 				return
-			instruction_handler._wrapper_execute(instruction_name, args, delay_before, delay_after)
+			instruction_handler._wrapper_execute(text, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not _line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
@@ -1129,41 +1122,12 @@ func _replace_tags(lines:Array) -> Array:
 					control_to_replace += ">"
 					new_text = new_text.replace(control_to_replace, str(instruction_handler.get(var_name)))
 				elif new_text.find("<func:", scan_index) == scan_index:
-					var local_scan_index := scan_index
-					var control_to_replace := ""
-					var func_name := ""
-					var start_reading_func_name := false
+					var local_scan_index := scan_index + 6
+					var func_text := ""
 					while new_text[local_scan_index] != ">":
-						if new_text[local_scan_index] == ",":
-							start_reading_func_name = false
-						control_to_replace += new_text[local_scan_index]
-						if start_reading_func_name:
-							func_name += new_text[local_scan_index]
-						if new_text[local_scan_index] == ":":
-							start_reading_func_name = true
-						
+						func_text += new_text[local_scan_index]
 						local_scan_index += 1
-					#func_name = func_name.trim_suffix(">")
-					control_to_replace += ">"
-					
-					var control_prepared_for_split = control_to_replace.trim_prefix(str("<func:", func_name))
-					control_prepared_for_split = control_prepared_for_split.trim_suffix(">")
-					var packed_func_args := control_prepared_for_split.split(",")
-					var func_args = []
-					for a in packed_func_args:
-						if not a.is_empty():
-							func_args.append(a)
-					if instruction_handler.has_method(func_name):
-						var call_result = instruction_handler.callv(func_name, func_args)
-						if not call_result is String:
-							if call_result == null:
-								call_result = ""
-							else:
-								push_warning(str(func_name, " was called but didn't return String. Hoping this looks good ^^"))
-								call_result = str(call_result)
-						new_text = new_text.replace(control_to_replace, call_result)
-					else:
-						push_warning(str(func_name, " doesn't exist in inline_evaluator."))
+					new_text = new_text.replace(str("<func:", func_text, ">"), instruction_handler.call_from_string(func_text, InstructionHandler.CallMode.Func))
 				elif new_text.find("<name:", scan_index) == scan_index:
 					var local_scan_index := scan_index
 					var control_to_replace := ""
@@ -1442,35 +1406,16 @@ func _ends_with_trimmable(text:String) -> bool:
 			return true
 	return false
 
+
+
+
 func _call_from_position(call_position: int):
 	var strings : Array = _call_strings.get(call_position)
 	_called_positions.append(call_position)
 	for text : String in strings:
 		text = text.trim_prefix("<call:")
 		text = text.trim_suffix(">")
-		var parts := text.split(",")
-		var func_name = parts[0]
-		while func_name.begins_with(" "):
-			func_name = func_name.trim_prefix(" ")
-		while func_name.ends_with(" "):
-			func_name = func_name.trim_suffix(" ")
-		parts.remove_at(0)
-		
-		var args := []
-		var i := 0
-		var arg_names : Array = Parser.get_instruction_arg_names(func_name)
-		var arg_types : Array = Parser.get_instruction_arg_types(func_name)
-		for type in arg_types:
-			var arg_string = parts[i]
-			var default = Parser.get_instruction_arg_defaults(func_name).get(arg_names[i])
-			if arg_string == "*" and default != null:
-				arg_string = default
-			args.append(Parser.str_to_typed(arg_string, type))
-			
-			i += 1
-		
-		instruction_handler.callv(func_name, args)
-		ParserEvents.function_called.emit(func_name, args, call_position)
+		instruction_handler.call_from_string(text, InstructionHandler.CallMode.Call, call_position)
 	_call_strings.erase(call_position)
 
 func _emit_comment(comment_position:int):

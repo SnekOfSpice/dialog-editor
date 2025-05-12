@@ -90,19 +90,17 @@ func on_tree_exit():
 	GameWorld.game_stage = null
 
 func on_instruction_started(
-	instruction_name : String,
-	_args : Array,
+	instruction_text : String,
 	_delay : float,
 ):
-	if instruction_name == "black_fade":
+	if instruction_text.begins_with("black_fade"):
 		find_child("ControlsContainer").visible = false
 
 func on_instruction_completed(
-	instruction_name : String,
-	_args : Array,
+	instruction_text : String,
 	_delay : float,
 ):
-	if instruction_name == "black_fade":
+	if instruction_text.begins_with("black_fade"):
 		find_child("ControlsContainer").visible = true
 
 func go_to_main_menu(_unused):
