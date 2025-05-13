@@ -23,5 +23,4 @@ func save():
 	for button : Button in find_child("Buttons").get_children():
 		if button.button_pressed:
 			result.append(button.text)
-	print(result)
 	Pages.callable_autoloads = result.duplicate(true)
