@@ -76,3 +76,21 @@ func set_text(text:String):
 
 func _on_instruction_text_box_text_submitted(new_text: String) -> void:
 	_on_instruction_text_box_text_entered(new_text)
+
+
+func _on_go_to_script_button_pressed() -> void:
+	var n := get_instruction_name()
+	var editor : CodeEdit = EditorInterface.get_script_editor().get_current_editor().get_base_editor()
+	if n.contains("."):
+		EditorInterface.edit_script(Pages.get_autoload_script(n.split(".")[0]))
+		#print(EditorInterface.get_script_editor().find_child("CodeEdit"))
+		editor.set_search_text(n.split(".")[0])
+	else:
+		if Pages.evaluator_paths.is_empty():
+			return
+		EditorInterface.edit_script(load(Pages.evaluator_paths.front()))
+		await get_tree().process_frame
+		var result : Vector2i = editor.search(n, TextEdit.SEARCH_BACKWARDS, 0, 0)
+		await get_tree().process_frame
+		print(n, result)
+		editor.select(result.y, result.x, result.y + 1, result.x + n.length())

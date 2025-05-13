@@ -57,3 +57,7 @@ func _on_save_button_pressed() -> void:
 	save_to_local_data()
 	Pages.custom_method_defaults = custom_data.get("custom_method_defaults", {}).duplicate(true)
 	Pages.custom_method_dropdown_limiters = custom_data.get("custom_method_dropdown_limiters", {}).duplicate(true)
+
+
+func _on_func_name_label_item_rect_changed() -> void:
+	find_child("FuncNameLabel").visible = not find_child("FuncNameLabel").text.is_empty()

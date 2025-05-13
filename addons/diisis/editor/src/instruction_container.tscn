@@ -46,6 +46,7 @@ submission_append = "()"
 submission_offset = -1
 
 [node name="CopySignatureToClipboardButton" type="Button" parent="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Copy GDScript function signature to clipboard."
@@ -73,6 +74,7 @@ size_flags_horizontal = 3
 placeholder_text = "reverse"
 
 [node name="CopySignatureToClipboardButton2" type="Button" parent="HBoxContainer/HBoxContainer/VBoxContainer/ReverseContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Copy GDScript function signature to clipboard."
