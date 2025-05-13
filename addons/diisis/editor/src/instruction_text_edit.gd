@@ -50,7 +50,7 @@ func _on_instruction_text_box_text_entered(new_text: String) -> void:
 
 func _on_instruction_text_box_focus_entered() -> void:
 	await get_tree().process_frame
-	text_box.completion_options = Pages.get_custom_methods()
+	text_box.completion_options = Pages.get_all_instruction_names()
 
 
 func _on_instruction_text_box_caret_changed() -> void:

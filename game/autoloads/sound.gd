@@ -8,6 +8,9 @@ var main_audio_player : AudioStreamPlayer
 ## Preserves the playback position when calling [method Sound.play_bgm] if the currently playing track and new track share the same prefix. E.g. "action_no_drums" and "action_full_instruments" would fade seamlessly between each other if this array contains "action".
 @export var position_preserving_prefixes : Array[String]
 
+func awa():
+	print("awa")
+
 func serialize() -> Dictionary:
 	var data := {}
 	

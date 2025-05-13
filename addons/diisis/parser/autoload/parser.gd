@@ -46,8 +46,7 @@ var lines := []
 
 var facts := {}
 var starting_facts := {}
-var custom_method_defaults := {}
-var custom_method_dropdown_limiters := {}
+var full_custom_method_defaults := {}
 
 var max_line_index_on_page := 0
 
@@ -123,14 +122,13 @@ func init(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 	file_config = data.get("file_config", {})
 	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
-	custom_method_defaults = data.get("custom_method_defaults", {})
-	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
+	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
 	#locale = _default_locale
 
 func get_custom_method_defaults(method_name:String) -> Dictionary:
-	return custom_method_defaults.get(method_name, {})
+	return full_custom_method_defaults.get(method_name, {})
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):

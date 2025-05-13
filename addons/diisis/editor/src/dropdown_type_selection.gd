@@ -14,7 +14,7 @@ func init(arg_name:String):
 		var button = CheckBox.new()
 		button.text = title
 		button.tooltip_text = "\n".join(Pages.dropdowns.get(title))
-		button.pressed.connect(_on_dropdown_selector_button_pressed)
+		#button.pressed.connect(_on_dropdown_selector_button_pressed)
 		find_child("GridContainer").add_child(button)
 
 func serialize():
@@ -31,5 +31,5 @@ func deserialize(data:Dictionary):
 		button.button_pressed = data.get("selected", []).has(button.text)
 
 
-func _on_dropdown_selector_button_pressed():
-	emit_signal("update_dropdown_limiters")
+#func _on_dropdown_selector_button_pressed():
+	#emit_signal("update_dropdown_limiters")

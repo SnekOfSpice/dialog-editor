@@ -25,7 +25,7 @@ func init(method_name:String, arg_name:String):
 		edit.max_value = int(999999)
 		edit.custom_minimum_size.x = 140
 		edit.value = base_defaults.get(arg_name, 0)
-		edit.value_changed.connect(_request_update_defaultsv)
+		#edit.value_changed.connect(_request_update_defaultsv)
 	elif type in [TYPE_BOOL]:
 		edit = CheckBox.new()
 		edit.button_pressed = base_defaults.get(arg_name, true)
@@ -34,7 +34,7 @@ func init(method_name:String, arg_name:String):
 		edit.expand_to_text_length = true
 		edit.custom_minimum_size.x = 240
 		edit.placeholder_text = str(base_defaults.get(arg_name, ""))
-		edit.text_changed.connect(_request_update_defaultsv)
+		#edit.text_changed.connect(_request_update_defaultsv)
 	find_child("Edit").add_child(edit)
 	
 	is_string = type == TYPE_STRING
@@ -86,9 +86,9 @@ func _on_use_default_check_box_toggled(toggled_on: bool) -> void:
 		value_holder.editable = toggled_on
 	elif value_holder is Button:
 		value_holder.disabled = not toggled_on
-	emit_signal("update_custom_defaults")
+	#emit_signal("update_custom_defaults")
 
-func _request_update_defaultsv(_value):
-	emit_signal("update_custom_defaults")
-func _request_update_defaults():
-	emit_signal("update_custom_defaults")
+#func _request_update_defaultsv(_value):
+	#emit_signal("update_custom_defaults")
+#func _request_update_defaults():
+	#emit_signal("update_custom_defaults")

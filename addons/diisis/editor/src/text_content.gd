@@ -208,7 +208,7 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret(":") and is_text_after_caret(">"):
 		if is_text_before_caret("func:") or is_text_before_caret("call:"):
-			for method in Pages.get_custom_methods():
+			for method in Pages.get_all_instruction_names():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, method)
 		elif is_text_before_caret("var:"):
 			for property in Pages.get_custom_properties():
@@ -290,12 +290,11 @@ func _on_text_box_text_changed() -> void:
 	if Pages.auto_complete_context in ["call", "func"]:
 		for instr in Pages.get_all_instruction_names():
 			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)):
-				if Pages.get_instruction_arg_count(instr) > 0:
-					var prev_col := text_box.get_caret_column()
-					text_box.insert_text_at_caret("()")
-					await get_tree().process_frame
-					text_box.set_caret_column(prev_col)
-					caret_movement_to_do = 1
+				var prev_col := text_box.get_caret_column()
+				text_box.insert_text_at_caret("()")
+				await get_tree().process_frame
+				text_box.set_caret_column(prev_col)
+				caret_movement_to_do = 1
 
 	var line_index = text_box.get_caret_line()
 	var col_index = text_box.get_caret_column()

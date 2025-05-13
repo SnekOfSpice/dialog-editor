@@ -21,7 +21,8 @@ const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
 	"_",
-	"1","2","3","4","5","6","7","8","9","0",]
+	"1","2","3","4","5","6","7","8","9","0",
+	"."]
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -32,18 +33,9 @@ var default_locale := "en_US"
 var facts := {}
 var local_line_insert_offset:int
 
-	#"rotate": {
-			#"args" : [
-				#"angle"
-			#],
-			#"arg_types":
-				#["float"],
-			#"arg_defaults":
-				#{"angle":20}
-		#}
-# TODO
 var custom_method_defaults := {}
 var custom_method_dropdown_limiters := {}
+var callable_autoloads := []
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -144,8 +136,10 @@ func serialize() -> Dictionary:
 		"page_data" : page_data,
 		"text_data" : text_data,
 		"default_locale" : default_locale,
-		"custom_method_defaults": _get_custom_method_full_defaults(),
+		"custom_method_defaults": custom_method_defaults,
+		"full_custom_method_defaults": _get_custom_method_full_defaults(),
 		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"callable_autoloads": callable_autoloads,
 		"facts": facts,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -178,6 +172,7 @@ func deserialize(data:Dictionary):
 	head_defaults = data.get("head_defaults", [])
 	custom_method_defaults = data.get("custom_method_defaults", {})
 	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
+	callable_autoloads = data.get("callable_autoloads", [])
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:
@@ -579,49 +574,50 @@ func get_defaults(property_key:String):
 
 func get_all_instruction_names() -> Array:
 	var result := get_custom_methods()
-	var singleton_method_names := []
+	var autoload_method_names := []
 	# IDK SCRATCH AUTOLOADS FOR NOW??
-	#print(ProjectSettings.get_setting("autoload/Sound"))
-	#for autoload_name in ["Sound", "CONST", "DIISIS"]:
-		#var method_list := []
-		#var path : String = ProjectSettings.get_setting(str("autoload/", autoload_name)).trim_prefix("*")
-		#var autoload_script : Script
-		#print(load(path))
-		#if path.ends_with(".gd"):
-			#autoload_script = load(path)
-		#elif path.ends_with(".tscn"):
-			#var a = load(path)
-			#add_child(a)
-			#print(a)
-			#a.queue_free()
-			##.get_script()
-		##print(temp_autoload)
-		#print("--------------")
-		#method_list = autoload_script.get_method_list()
-		##print(method_list)
-		#var method_names := []
-		#for method in method_list:
-			#method_names.append(method.get("name"))
-		#print(method_names)
-		#var object = ClassDB.instantiate(autoload_script.get_class())
-		#print(object)
-		#var base_methods = object.get_method_list()
-		#for method in base_methods:
-			#method_names.erase(method.get("name"))
-		##object.queue_free()
-		##temp_autoload.queue_free()
-		#print(method_names)
-		#for method in method_names:
-			#singleton_method_names.append(str(autoload_name, ".", method))
-	#result.append_array(singleton_method_names)
+	for autoload_name in callable_autoloads:
+		var methods := []
+		var autoload_script := get_autoload_script(autoload_name)
+		var script_methods = autoload_script.get_script_method_list()
+		for method in script_methods:
+			methods.append(method.get("name"))
+		
+		var base = ClassDB.instantiate(autoload_script.get_class())
+		var base_methods = base.get_method_list()
+		for method in base_methods:
+			methods.erase(method.get("name"))
+		methods.sort()
+		
+		for method in methods:
+			autoload_method_names.append(str(autoload_name, ".", method))
+		
+	
+	result.append_array(autoload_method_names)
 	return result
+
+func get_autoload_script(autoload:String) -> Script:
+	var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+	var autoload_script : Script
+	var autoload_copy
+	if path.ends_with(".gd"):
+		autoload_script = load(path).instantiate()
+		return autoload_script
+	elif path.ends_with(".tscn"):
+		autoload_copy = load(path).instantiate()
+		autoload_script = autoload_copy.get_script()
+		return autoload_script
+	else:
+		push_warning("Encountered fucky autoload")
+		return null
 
 func get_custom_method(instruction_name:String) -> Dictionary:
 	if instruction_name.contains("."):
 		var singleton_name := instruction_name.split(".")[0]
+		#print("singleton ", singleton_name, get_autoload_script(singleton_name).get_script_method_list())
 		var method_name := instruction_name.split(".")[1]
-		for method in Engine.get_singleton(singleton_name).get_method_list():
-			if method.get("name") == instruction_name:
+		for method in get_autoload_script(singleton_name).get_script_method_list():
+			if method.get("name") == method_name:
 				return method
 	else:
 		for script in get_list_of_evaluator_scripts():
@@ -678,7 +674,10 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 		defaults[arg] = base_defaults.get(arg)
 		i += 1
 	var customs : Dictionary = custom_method_defaults.get(instruction_name, {})
+	#prints("CUSTOMS ", instruction_name, customs)
 	for arg in customs.keys():
+		if not customs.get(arg) is Dictionary: # this happens when we just have the base default
+			continue
 		var use_custom : bool = customs.get(arg).get("use_custom_default", false)
 		if use_custom:
 			defaults[arg] = customs.get(arg).get("custom_default")
@@ -1368,18 +1367,12 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
 	var limiters : Dictionary = custom_method_dropdown_limiters.get(method, {}).get(arg, {})
-	#prints(method, method in custom_method_dropdown_limiters.keys(), custom_method_dropdown_limiters.keys())
-	#prints(arg, custom_method_dropdown_limiters.get(method))
-	#print("LIMITERS ", method, " ", limiters)
 	var selected_dropdowns : Array = limiters.get("selected", [])
-	#print(custom_method_dropdown_limiters)
 	if selected_dropdowns.size() > 0:
 		# build list of all options
-		#print("got limiters", limiters)
 		var valid_strings := []
 		for dd_name in selected_dropdowns:
 			valid_strings.append_array(dropdowns.get(dd_name))
-		#prints(valid_strings, value, value in valid_strings)
 		var default_notice := ""
 		if value == "*":
 			value = get_custom_method_defaults(method).get(arg)

@@ -123,6 +123,9 @@ func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_se
 ## CallMode Func returns the string representation of the return value. This is used internally for [code]<func:>[/code] tags.
 func call_from_string(text:String, call_mode := CallMode.Call, call_position := -1):
 	var func_name = text.split("(")[0]
+	var autoload : String
+	if "." in func_name:
+		autoload = func_name.split(".")[0]
 	text = text.trim_prefix(str(func_name, "("))
 	text = text.trim_suffix(")")
 	var parts
@@ -148,7 +151,12 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 		
 		i += 1
 	
-	var result := callv(func_name, args)
+	var result
+	if autoload:
+		func_name = func_name.split(".")[1]
+		get_tree().root.get_node(autoload).callv(func_name, args)
+	else:
+		result = callv(func_name, args)
 	match call_mode:
 		CallMode.Func:
 			return str(result)
@@ -158,11 +166,11 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 
 func execute(instruction_text: String) -> bool:
 	var instruction_name := instruction_text.split("(")[0]
-	if not has_method(instruction_name):
+	if (not has_method(instruction_name)) and (not "." in instruction_name):
 		push_error(str("Function ", instruction_name, " not found in ", get_script().get_global_name(),"."))
 		return false
 	var result = call_from_string(instruction_text)
 	if not result is bool:
-		push_error(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
+		push_warning(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
 		return false
 	return result

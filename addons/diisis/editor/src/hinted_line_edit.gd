@@ -22,7 +22,7 @@ func update_hint(new_text: String):
 	var option_list_string := ""
 	var valid_options := []
 	for option : String in completion_options:
-		if option.contains(new_text):
+		if option.containsn(new_text):
 			valid_options.append(option)
 	
 	if valid_options.is_empty():

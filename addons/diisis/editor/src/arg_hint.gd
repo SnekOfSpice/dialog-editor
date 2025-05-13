@@ -11,7 +11,6 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 	size = Vector2.ONE
 	var arg_names = Pages.get_custom_method_arg_names(instruction_name)
 	var arg_types = Pages.get_custom_method_types(instruction_name)
-	print(arg_types)
 	var arg_defaults = Pages.get_custom_method_defaults(instruction_name)
 	var arg_strings := []
 	var i := 0
