@@ -35,6 +35,7 @@ var locale := "en_US"
 var l10n := {}
 var dropdown_titles := []
 var dropdowns := {}
+var file_config := {}
 
 var line_reader : LineReader = null
 var paused := true
@@ -46,6 +47,7 @@ var lines := []
 var facts := {}
 var starting_facts := {}
 var custom_method_defaults := {}
+var custom_method_dropdown_limiters := {}
 
 var max_line_index_on_page := 0
 
@@ -119,10 +121,16 @@ func init(data:Dictionary):
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
+	file_config = data.get("file_config", {})
+	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
 	custom_method_defaults = data.get("custom_method_defaults", {})
+	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
 	#locale = _default_locale
+
+func get_custom_method_defaults(method_name:String) -> Dictionary:
+	return custom_method_defaults.get(method_name, {})
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):

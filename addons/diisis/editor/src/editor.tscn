@@ -673,3 +673,4 @@ visible = false
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
 [connection signal="validate_saved_instructions" from="Popups/InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
 [connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]
+[connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]

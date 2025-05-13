@@ -141,9 +141,9 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 			arg_string = arg_string.trim_prefix(" ")
 		while arg_string.ends_with(" "):
 			arg_string = arg_string.trim_suffix(" ")
-		var default = Pages.get_custom_method_defaults(func_name).get(arg_names[i])
+		var default = Parser.get_custom_method_defaults(func_name).get(arg_names[i])
 		if arg_string == "*" and default != null:
-			arg_string = default
+			arg_string = str(default)
 		args.append(Parser.str_to_typed(arg_string, type))
 		
 		i += 1

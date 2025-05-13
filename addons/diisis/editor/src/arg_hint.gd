@@ -18,10 +18,20 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 	while i < arg_names.size():
 		var arg_name : String = arg_names[i]
 		var arg_type : String = DIISIS.type_to_str(arg_types[i])
+
+		var dropdowns : Array = Pages.custom_method_dropdown_limiters.get(instruction_name, {}).get(arg_name, {}).get("selected", [])
+		if dropdowns.size() > 0:
+			arg_type = ", ".join(dropdowns)
+		
 		var arg_default = arg_defaults.get(arg_name)
 		var arg_string := str(arg_name, " : [i][color=b88d86EE]", arg_type, "[/color][/i]")
-		if arg_default:
-			arg_string += str("[color=ceb1bcB7] ?[/color] [color=ceb1bc]", arg_default, "[/color]")
+		var default_color : String
+		if arg_default == Pages.get_custom_method_base_defaultsd(instruction_name).get(arg_name, null):
+			default_color = "c9acf2"
+		else:
+			default_color = "ceb1bc"
+		if arg_default != null:
+			arg_string += str("[color=ceb1bcB7] ?[/color] [color=", default_color, "]", arg_default, "[/color]")
 		arg_strings.append(arg_string)
 		i += 1
 	var args_before_caret :int = full_text.count(",", 0, caret_column)

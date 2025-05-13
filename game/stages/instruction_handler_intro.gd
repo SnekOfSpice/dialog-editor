@@ -72,7 +72,7 @@ func show_cg(_name:String, fade_in_time:float, continue_dialog_through_cg:bool):
 	)
 	return true
 
-func hide_cg(fade_out:float):
+func hide_cg(fade_out:=2.0):
 	emit_signal("start_hide_cg", fade_out)
 	return false
 
@@ -84,7 +84,7 @@ func set_background(_name:String, fade_time:float):
 	return false
 
 
-func play_chapter_intro(pov_name: String, bottom_text: String, new_background: String, zoom: float, bgm: String) -> bool:
+func play_chapter_intro(pov_name: String, bottom_text: String, new_background: String, zoom: float, bgm: = "One <3") -> bool:
 	if bgm == "null":
 		bgm = Sound.bgm_key
 	emit_signal("start_chapter_cover", pov_name, bottom_text, new_background, zoom, bgm)

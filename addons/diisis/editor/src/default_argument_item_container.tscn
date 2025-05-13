@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b5jx5fo3ys6cc" path="res://addons/diisis/editor/src/default_argument_item_container.gd" id="1_cpjmi"]
 
-[node name="DefaultArgumentItemContainer" type="VBoxContainer"]
+[node name="DefaultArgumentItemContainer" type="GridContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+columns = 2
 script = ExtResource("1_cpjmi")

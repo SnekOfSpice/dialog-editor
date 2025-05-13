@@ -18,6 +18,7 @@ var content_scale := 1.0
 var active_dir := ""
 var active_file_name := ""
 var time_since_last_save := 0.0
+var error_update_countdown := 0.0
 var last_system_save := {}
 var has_saved := false
 var altered_history := false
@@ -226,7 +227,11 @@ func _process(delta: float) -> void:
 	if auto_save_timer <= 0.0:
 		auto_save_timer = AUTO_SAVE_INTERVAL
 		save_to_file(str(BACKUP_PATH, Time.get_datetime_string_from_system().replace(":", "-"), ".json"), true)
-
+	
+	if error_update_countdown > 0 and error_update_countdown - delta <= 0:
+		update_error_text_box()
+	error_update_countdown -= delta
+	
 var ctrl_down := false
 var focused_control_before_ctrl:Control
 func _shortcut_input(event):
@@ -1090,3 +1095,10 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 	dialog.size *= content_scale
 	
 	return true
+
+
+func _on_handler_window_close_requested() -> void:
+	await get_tree().process_frame
+	Pages.update_all_compliances()
+	await get_tree().process_frame
+	refresh()

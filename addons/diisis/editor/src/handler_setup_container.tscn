@@ -22,13 +22,15 @@ grow_horizontal = 2
 grow_vertical = 2
 current_tab = 0
 
-[node name="Evaluator Paths" parent="TabContainer" instance=ExtResource("2_6avix")]
+[node name="Arguments" parent="TabContainer" instance=ExtResource("2_07arm")]
 unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Arguments" parent="TabContainer" instance=ExtResource("2_07arm")]
+[node name="Evaluator Paths" parent="TabContainer" instance=ExtResource("2_6avix")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]

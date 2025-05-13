@@ -1,8 +1,16 @@
 @tool
 extends HBoxContainer
+class_name DefaultArgumentItem
 
+var method := ""
+var arg := ""
+var is_string := false
+
+signal update_custom_defaults()
 
 func init(method_name:String, arg_name:String):
+	method = method_name
+	arg = arg_name
 	find_child("ArgNameLabel").text = arg_name
 	var base_defaults : Dictionary = Pages.get_custom_method_base_defaultsd(method_name)
 	var full_defaults : Dictionary = Pages.get_custom_method_defaults(method_name)
@@ -13,10 +21,11 @@ func init(method_name:String, arg_name:String):
 	if type in [TYPE_INT, TYPE_FLOAT]:
 		edit = SpinBox.new()
 		edit.step = 1 if type == TYPE_INT else 0.01
-		edit.min_value = int(-INF)
-		edit.max_value = int(INF)
+		edit.min_value = int(-99999)
+		edit.max_value = int(999999)
 		edit.custom_minimum_size.x = 140
 		edit.value = base_defaults.get(arg_name, 0)
+		edit.value_changed.connect(_request_update_defaultsv)
 	elif type in [TYPE_BOOL]:
 		edit = CheckBox.new()
 		edit.button_pressed = base_defaults.get(arg_name, true)
@@ -25,26 +34,61 @@ func init(method_name:String, arg_name:String):
 		edit.expand_to_text_length = true
 		edit.custom_minimum_size.x = 240
 		edit.placeholder_text = str(base_defaults.get(arg_name, ""))
+		edit.text_changed.connect(_request_update_defaultsv)
 	find_child("Edit").add_child(edit)
 	
-	if type == TYPE_STRING:
-		# TODO give ability to limit to dropdowns
-		var selection = preload("res://addons/diisis/editor/src/dropdown_type_selection.tscn").instantiate()
-		selection.init()
-		selection.deserialize(Pages.custom_method_dropdown_limiters.get(method_name, {}))
-		add_child(selection)
+	is_string = type == TYPE_STRING
 	
 	deserialize(Pages.custom_method_defaults.get(method_name, {}))
 
 func deserialize(data:Dictionary):
-	print("AYO TODO HERE")
+	find_child("ArgNameLabel").text = data.get("arg_name", arg)
+	set_custom_default(data.get("custom_default"))
+	find_child("UseDefaultCheckBox").button_pressed = data.get("use_custom_default", false)
+	_on_use_default_check_box_toggled(find_child("UseDefaultCheckBox").button_pressed)
+	
+func set_custom_default(value):
+	if not value:
+		return
+	var value_holder = find_child("Edit").get_child(0)
+	if not value_holder:
+		return
+	if value_holder is LineEdit:
+		value_holder.text = value
+	elif value_holder is SpinBox:
+		value_holder.value = value
+	elif value_holder is Button:
+		value_holder.button_pressed = value
+
+func get_custom_default():
+	var value_holder = find_child("Edit").get_child(0)
+	if value_holder is LineEdit:
+		return value_holder.text
+	elif value_holder is SpinBox:
+		return value_holder.value
+	elif value_holder is Button:
+		return value_holder.button_pressed
+	return null
 
 func serialize() -> Dictionary:
 	return {
-		"arg_name" = find_child("ArgNameLabel").text,
-		"use_custom_default" = find_child("UseDefaultCheckBox").button_pressed,
-		"custom_default" = find_child("Edit").get_child(0).value
+		"arg_name" : find_child("ArgNameLabel").text,
+		"use_custom_default" : find_child("UseDefaultCheckBox").button_pressed,
+		"custom_default" : get_custom_default(),
 	}
 
 func _on_use_default_check_box_toggled(toggled_on: bool) -> void:
 	modulate.a = 1 if toggled_on else 0.6
+	var value_holder = find_child("Edit").get_child(0)
+	if value_holder is LineEdit:
+		value_holder.editable = toggled_on
+	elif value_holder is SpinBox:
+		value_holder.editable = toggled_on
+	elif value_holder is Button:
+		value_holder.disabled = not toggled_on
+	emit_signal("update_custom_defaults")
+
+func _request_update_defaultsv(_value):
+	emit_signal("update_custom_defaults")
+func _request_update_defaults():
+	emit_signal("update_custom_defaults")

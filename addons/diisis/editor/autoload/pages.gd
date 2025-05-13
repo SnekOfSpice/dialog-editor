@@ -14,7 +14,6 @@ var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
-const MULTI_DROPDOWN_TYPE_SEPARATOR := "||" # TODO restore this functionality
 const NEGATIVE_INF := -int(INF)
 var id_counter := NEGATIVE_INF
 
@@ -145,7 +144,7 @@ func serialize() -> Dictionary:
 		"page_data" : page_data,
 		"text_data" : text_data,
 		"default_locale" : default_locale,
-		"custom_method_defaults": custom_method_defaults,
+		"custom_method_defaults": _get_custom_method_full_defaults(),
 		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
 		"facts": facts,
 		"dropdowns": dropdowns,
@@ -658,25 +657,31 @@ func get_custom_method_base_defaultsd(instruction_name: String) -> Dictionary:
 		return {}
 	var result := {}
 	var args = get_custom_method_args(instruction_name)
-	var i := 0
-	for arg in args:
-		result[arg.get("name")] = defaults[i]
-		if result.size() >= defaults.size():
-			break
+	var i := (args.size() - defaults.size())
+	while i < args.size():
+		result[args[i].get("name")] = defaults[i - args.size()]
 		i += 1
 	return result
 
+func _get_custom_method_full_defaults() -> Dictionary:
+	var result := {}
+	for method in get_all_instruction_names():
+		result[method] = get_custom_method_defaults(method)
+	return result
+
 func get_custom_method_defaults(instruction_name: String) -> Dictionary:
-	var base_defaults : Array = get_custom_method_base_defaults(instruction_name)
+	var base_defaults : Dictionary = get_custom_method_base_defaultsd(instruction_name)
 	var defaults := {}
 	var args : Array = get_custom_method_args(instruction_name)
 	var i := 0
-	for arg in base_defaults:
-		defaults[args[i].get("name")] = base_defaults[i]
+	for arg in base_defaults.keys():
+		defaults[arg] = base_defaults.get(arg)
 		i += 1
 	var customs : Dictionary = custom_method_defaults.get(instruction_name, {})
 	for arg in customs.keys():
-		defaults[arg] = customs.get(arg)
+		var use_custom : bool = customs.get(arg).get("use_custom_default", false)
+		if use_custom:
+			defaults[arg] = customs.get(arg).get("custom_default")
 	return defaults
 
 func get_instruction_arg_count(instruction_name: String) -> int:
@@ -688,6 +693,8 @@ func get_all_invalid_instructions() -> String:
 	var malformed_instructions := []
 	for page in page_data.values():
 		var lines : Array = page.get("lines", [])
+		if page.get("number") == editor.get_current_page_number():
+			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Instruction:
@@ -715,6 +722,8 @@ func get_all_invalid_address_pointers() -> String:
 			invalid_addresses.append(str("next ", next, " of page [url=goto-",str(page_index),"]", page_index, "[/url]"))
 	
 		var lines : Array = page.get("lines", [])
+		if page.get("number") == editor.get_current_page_number():
+			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Choice:
@@ -1264,7 +1273,9 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 #
 	#return localizable_addresses
 
-
+func update_all_compliances():
+	for method in get_all_instruction_names():
+		update_compliances(method)
 
 func update_compliances(instruction_name:String):
 	for page in page_data.values():
@@ -1307,12 +1318,12 @@ func get_compliance_with_template(instruction:String) -> String:
 	if not does_instruction_name_exist(entered_name):
 		return str("Instruction ", entered_name, " does not exist")
 	
-	var template_arg_count : int = get_custom_method_args(entered_name).size()
-	if template_arg_count == 0:
+	var arg_count : int = get_custom_method_args(entered_name).size()
+	if arg_count == 0:
 		if not instruction.ends_with("()"):
 			return "Arg count mismatch"
-	if instruction.count(",") + 1 != template_arg_count:
-		if template_arg_count > 0:
+	if instruction.count(",") + 1 != arg_count:
+		if arg_count > 0:
 			return "Arg count mismatch"
 	
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
@@ -1336,30 +1347,45 @@ func get_compliance_with_template(instruction:String) -> String:
 		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
 		
-		var type_compliance := get_type_compliance(arg_value, DIISIS.type_to_str(template_types[i]), i)
-		if not type_compliance.is_empty() and arg_value != "*":
+		var type_compliance := get_type_compliance(entered_name, template_arg_names[i], arg_value, template_types[i], i)
+		if not type_compliance.is_empty():
 			return type_compliance
 		i += 1
 	
 	return "OK"
 
-func get_type_compliance(value:String, type_string:String, arg_index:int) -> String:
-	if type_string == "bool":
+func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
+	if type == TYPE_BOOL:
 		if value != "true" and value != "false":
 			return str("Bool argument ", arg_index + 1, " is neither \"true\" nor \"false\"")
-	if type_string == "float":
+	if type == TYPE_FLOAT:
 		for char in value:
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
 				return str("Float argument ", arg_index + 1, " contains non-float character.\n(Valid characters are 0 - 9 and . and -)")
+	if type == TYPE_INT:
+		for char in value:
+			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
+				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
-	var split_types := type_string.split(MULTI_DROPDOWN_TYPE_SEPARATOR)
-	if are_all_of_these_dropdown_titles(split_types) and not type_string.is_empty():
+	var limiters : Dictionary = custom_method_dropdown_limiters.get(method, {}).get(arg, {})
+	#prints(method, method in custom_method_dropdown_limiters.keys(), custom_method_dropdown_limiters.keys())
+	#prints(arg, custom_method_dropdown_limiters.get(method))
+	#print("LIMITERS ", method, " ", limiters)
+	var selected_dropdowns : Array = limiters.get("selected", [])
+	#print(custom_method_dropdown_limiters)
+	if selected_dropdowns.size() > 0:
 		# build list of all options
-		var options := []
-		for dd_name in split_types:
-			options.append_array(dropdowns.get(dd_name))
-		if not value in options:
-			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(split_types), ".")
+		#print("got limiters", limiters)
+		var valid_strings := []
+		for dd_name in selected_dropdowns:
+			valid_strings.append_array(dropdowns.get(dd_name))
+		#prints(valid_strings, value, value in valid_strings)
+		var default_notice := ""
+		if value == "*":
+			value = get_custom_method_defaults(method).get(arg)
+			default_notice = "\n(Derived from default)"
+		if not value in valid_strings:
+			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_dropdowns), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
 
 
@@ -1408,23 +1434,23 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 					arg = arg.trim_suffix(str("?", default))
 				
 				var arg_name := arg.split(":")[0]
-				if arg.ends_with(MULTI_DROPDOWN_TYPE_SEPARATOR):
-					return "Cannot end with MULTI_DROPDOWN_TYPE_SEPARATOR"
+				#if arg.ends_with(MULTI_DROPDOWN_TYPE_SEPARATOR):
+					#return "Cannot end with MULTI_DROPDOWN_TYPE_SEPARATOR"
 				
 				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
 					var typed_as_dropdown := false
 					if arg.find(":") < arg.length() - 1:
 						var arg_type := arg.split(":")[1]
-						var arg_types = arg_type.split(MULTI_DROPDOWN_TYPE_SEPARATOR, false)
+						var arg_types = []#arg_type.split(MULTI_DROPDOWN_TYPE_SEPARATOR, false)
 						typed_as_dropdown = are_all_of_these_dropdown_titles(arg_types)
 						
 					if not typed_as_dropdown:
 						return str("Argument ", i+1, " doesn't end in \":string\", \":bool\", or \":float\"")
 				
-				if default != null:
-					var type_compliance := get_type_compliance(default, arg.split(":")[1], i)
-					if not type_compliance.is_empty():
-						return type_compliance
+				#if default != null:
+					#var type_compliance := get_type_compliance(entered_name, arg_name, default, arg.split(":")[1], i)
+					#if not type_compliance.is_empty():
+						#return type_compliance
 				
 				while arg_name.begins_with(" "):
 					arg_name = arg_name.trim_prefix(" ")
@@ -1444,7 +1470,7 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 	
 	return "OK"
 
-func are_all_of_these_dropdown_titles(names:PackedStringArray) -> bool:
+func are_all_of_these_dropdown_titles(names:Array) -> bool:
 	var result := true
 	for dd_name in names:
 		if not dd_name in dropdown_titles:
