@@ -149,3 +149,26 @@ func set_up_delete_modulate(node : Control, button : Button, exit_callable:Calla
 		button.mouse_exited.connect(node.set.bind("modulate", "#ffffffff"))
 		if exit_callable:
 			button.mouse_exited.connect(exit_callable)
+
+func search_function(search:String):
+	if search.contains("."):
+		var script = Pages.get_autoload_script(search.split(".")[0])
+		var func_name = str("func ", search.split(".")[1])
+		search_in_script(script, func_name)
+	else:
+		if Pages.evaluator_paths.is_empty():
+			return
+		search_in_script(load(Pages.evaluator_paths.front()), str("func ", search))
+
+
+func search_in_script(script: Script, search:String):
+	EditorInterface.edit_script(script)
+	await get_tree().process_frame
+	call_deferred_thread_group("actual_search", search)
+
+func actual_search(what:String):
+	var editor : CodeEdit = EditorInterface.get_script_editor().get_current_editor().get_base_editor()
+	var result : Vector2i = editor.search(what, TextEdit.SEARCH_MATCH_CASE, 0, 0)
+	editor.select(result.y, result.x, result.y, result.x + what.length())
+	editor.center_viewport_to_caret()
+	get_tree().root.grab_focus()

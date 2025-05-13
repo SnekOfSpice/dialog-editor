@@ -49,7 +49,7 @@ func init() -> void:
 	text_box.cancel_code_completion()
 	
 	find_child("Text Actions").add_submenu_node_item("Ingest Line", find_child("Import"))
-
+	
 func serialize() -> Dictionary:
 	if not text_id:
 		text_id = Pages.get_new_id()
@@ -439,3 +439,15 @@ func _on_import_id_pressed(id: int) -> void:
 				text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
 			if find_child("Import").is_whitespace_checked():
 				text_box.text = Pages.neaten_whitespace(text_box.text)
+
+
+func _on_text_box_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			await get_tree().process_frame
+			var tag : String = get_tag_under_caret().get("tag")
+			if tag.begins_with("<call:") or tag.begins_with("<func:"):
+				tag = tag.trim_prefix("<call:")
+				tag = tag.trim_prefix("<func:")
+				tag = tag.trim_suffix(">")
+				DiisisEditorUtil.search_function(tag.split("(")[0])

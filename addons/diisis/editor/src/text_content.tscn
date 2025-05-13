@@ -113,5 +113,6 @@ texture = SubResource("GradientTexture2D_wtkdm")
 [connection signal="caret_changed" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="code_completion_requested" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_code_completion_requested"]
 [connection signal="focus_entered" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_focus_entered"]
+[connection signal="gui_input" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_gui_input"]
 [connection signal="item_rect_changed" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_item_rect_changed"]
 [connection signal="text_changed" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_text_changed"]

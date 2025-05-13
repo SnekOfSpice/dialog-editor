@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://dtmrdrq7nyrh0"]
+[gd_scene load_steps=10 format=3 uid="uid://dtmrdrq7nyrh0"]
 
 [ext_resource type="Texture2D" uid="uid://b8jl3084itnxs" path="res://addons/diisis/editor/src/instruction_container.tres" id="1_nbbrw"]
 [ext_resource type="Script" uid="uid://drc2jy0i4v4la" path="res://addons/diisis/editor/src/instruction_text_edit.gd" id="2_2ingb"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="3_1si4p"]
+[ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="4_jnd14"]
 [ext_resource type="Texture2D" uid="uid://dgnvhhy7wch34" path="res://addons/diisis/editor/visuals/theme/buttons_ui/clipboard.png" id="4_m4ncw"]
+[ext_resource type="Texture2D" uid="uid://ika1tn4rpe62" path="res://addons/diisis/editor/visuals/Script.svg" id="5_jadka"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ksu2e"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_83uww"]
 content_margin_left = 4.0
@@ -50,8 +54,15 @@ tooltip_text = "Copy GDScript function signature to clipboard."
 icon = ExtResource("4_m4ncw")
 
 [node name="GoToScriptButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+self_modulate = Color(1, 0.63, 0.993833, 0.729412)
 layout_mode = 2
-text = "script"
+tooltip_text = "Go to function
+(Script editor must be open)"
+theme_override_styles/hover_pressed = ExtResource("4_jnd14")
+theme_override_styles/hover = ExtResource("4_jnd14")
+theme_override_styles/pressed = ExtResource("4_jnd14")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ksu2e")
+icon = ExtResource("5_jadka")
 
 [node name="ComplianceContainer" type="Control" parent="."]
 z_index = 2

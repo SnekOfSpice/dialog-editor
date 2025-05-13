@@ -53,6 +53,7 @@ fit_content = true
 scroll_active = false
 
 [node name="FuncNameLabel" type="Label" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 
