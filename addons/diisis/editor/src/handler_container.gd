@@ -2,6 +2,7 @@
 extends PanelContainer
 
 func init():
+	find_child("FoundHandlersLabel").text = ""
 	_on_reset_evaluator_changes_button_pressed()
 
 func _on_save_evaluator_changes_button_pressed() -> void:
@@ -23,3 +24,32 @@ func _on_evaluator_sort_button_pressed() -> void:
 
 func _on_evaluator_label_text_changed() -> void:
 	find_child("SaveEvaluatorChangesButton").text = "save changes" if "\n".join(Pages.evaluator_paths) == find_child("EvaluatorLabel").text else "save changes (*)"
+
+var found_handlers := []
+func _on_find_handlers_button_pressed() -> void:
+	found_handlers.clear()
+	count_dir("res://")
+	find_child("EvaluatorLabel").text = "\n".join(found_handlers)
+	find_child("FoundHandlersLabel").text = str("Found ", found_handlers.size(), " InstructionHandler", "s" if found_handlers.size() != 1 else "", "! :3")
+
+func count_dir(path: String):
+	var directories = DirAccess.get_directories_at(path)
+	for d in directories:
+		if d == "addons":
+			continue
+		if path == "res://":
+			count_dir(path + d)
+		else:
+			count_dir(path + "/" + d)
+		
+	var files = DirAccess.get_files_at(path)
+	
+	for f in files:
+		if not f.get_extension() == "gd":
+			continue
+		#var script : Script = load(path + "/" + f)
+		
+		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
+		var lines = file.get_as_text()
+		if "extends InstructionHandler" in lines:
+			found_handlers.append(path + "/" + f)

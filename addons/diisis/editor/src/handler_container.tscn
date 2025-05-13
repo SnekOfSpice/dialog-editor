@@ -20,11 +20,21 @@ text = "- file paths to scripts that are instruction_handler of any LineReader
 - ending in .gd
 - formatted like \"res://handler.gd\""
 
-[node name="EvaluatorSortButton" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="EvaluatorSortButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 text = "sort A-Z"
+
+[node name="FindHandlersButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Find InstructionHandlers"
+
+[node name="FoundHandlersLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
 
 [node name="EvaluatorLabel" type="TextEdit" parent="VBoxContainer"]
 layout_mode = 2
@@ -44,7 +54,8 @@ layout_mode = 2
 focus_mode = 0
 text = "reset changes"
 
-[connection signal="pressed" from="VBoxContainer/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/EvaluatorSortButton" to="." method="_on_evaluator_sort_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/FindHandlersButton" to="." method="_on_find_handlers_button_pressed"]
 [connection signal="text_changed" from="VBoxContainer/EvaluatorLabel" to="." method="_on_evaluator_label_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveEvaluatorChangesButton" to="." method="_on_save_evaluator_changes_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetEvaluatorChangesButton" to="." method="_on_reset_evaluator_changes_button_pressed"]
