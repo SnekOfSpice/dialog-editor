@@ -117,6 +117,19 @@ func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_se
 	ParserEvents.instruction_started.emit(execution_text, delay_before)
 	emitted_complete = false
 
+func get_property_from_self_or_autoload(property:String):
+	var autoload : String
+	if "." in property:
+		autoload = property.split(".")[0]
+	
+	var result
+	if autoload:
+		property = property.split(".")[1]
+		result = get_tree().root.get_node(autoload).get(property)
+	else:
+		result = get(property)
+	
+	return result
 
 ## Calls a function in itself with the signalute of [param text].[br]
 ## If [param call_mode] is Call, [signal ParserEvents.function_called] will be emitted. A [param call_position] of -1 means it was called by an instruction line. Positive integers are the text indices for inline calls using the [code]<call:>[/code] tag.[br][br]

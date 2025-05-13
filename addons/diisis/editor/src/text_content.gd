@@ -211,7 +211,7 @@ func _on_text_box_caret_changed() -> void:
 			for method in Pages.get_all_instruction_names():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, method)
 		elif is_text_before_caret("var:"):
-			for property in Pages.get_custom_properties():
+			for property in Pages.get_all_custom_properties():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, property, property)
 		elif is_text_before_caret("fact:"):
 			for fact in Pages.facts.keys():
@@ -445,9 +445,13 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame
-			var tag : String = get_tag_under_caret().get("tag")
+			var tag : String = get_tag_under_caret().get("tag", "")
 			if tag.begins_with("<call:") or tag.begins_with("<func:"):
 				tag = tag.trim_prefix("<call:")
 				tag = tag.trim_prefix("<func:")
 				tag = tag.trim_suffix(">")
 				DiisisEditorUtil.search_function(tag.split("(")[0])
+			if tag.begins_with("<var:"):
+				tag = tag.trim_prefix("<var:")
+				tag = tag.trim_suffix(">")
+				DiisisEditorUtil.search_variable(tag)

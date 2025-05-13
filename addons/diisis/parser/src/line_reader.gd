@@ -1120,7 +1120,7 @@ func _replace_tags(lines:Array) -> Array:
 						local_scan_index += 1
 					var_name = var_name.trim_suffix(">")
 					control_to_replace += ">"
-					new_text = new_text.replace(control_to_replace, str(instruction_handler.get(var_name)))
+					new_text = new_text.replace(control_to_replace, str(instruction_handler.get_property_from_self_or_autoload(var_name)))
 				elif new_text.find("<func:", scan_index) == scan_index:
 					var local_scan_index := scan_index + 6
 					var func_text := ""

@@ -48,9 +48,10 @@ func count_dir(path: String):
 	for f in files:
 		if not f.get_extension() == "gd":
 			continue
-		#var script : Script = load(path + "/" + f)
-		
+		var script : Script = load(path + "/" + f)
+		print(script.resource_path)
 		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
 		var lines = file.get_as_text()
 		if "extends InstructionHandler" in lines:
 			found_handlers.append(path + "/" + f)
+			
