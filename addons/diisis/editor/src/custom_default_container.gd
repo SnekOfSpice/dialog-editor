@@ -35,6 +35,7 @@ func _on_item_list_item_selected(index: int) -> void:
 		)
 	await get_tree().process_frame
 	find_child("FuncNameLabel").text = item_list.get_item_text(index)
+	find_child("FuncNameLabel").visible = not find_child("FuncNameLabel").text.is_empty()
 	
 func serialize():
 	return custom_data

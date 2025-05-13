@@ -10,6 +10,7 @@ func init():
 
 
 func _on_tab_container_tab_changed(tab: int) -> void:
+	find_child("TabContainer").get_child(tab).init()
 	match tab:
 		0: # arguments
 			find_child("Arguments").find_child("MethodSearch").grab_focus()

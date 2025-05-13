@@ -52,11 +52,6 @@ Additionally, you can set string-based arguments to only accept dropdown-defined
 fit_content = true
 scroll_active = false
 
-[node name="FuncNameLabel" type="Label" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -68,11 +63,17 @@ text = "Open Script"
 layout_mode = 2
 text = "save"
 
+[node name="FuncNameLabel" type="Label" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 18
+
 [node name="DefaultArgumentItemContainer" parent="HSplitContainer/PanelContainer/VSplitContainer" instance=ExtResource("2_b7mgr")]
 layout_mode = 2
 
 [connection signal="text_changed" from="HSplitContainer/VBoxContainer/MethodSearch" to="." method="_on_method_search_text_changed"]
 [connection signal="item_selected" from="HSplitContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
-[connection signal="item_rect_changed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/FuncNameLabel" to="." method="_on_func_name_label_item_rect_changed"]
 [connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/OpenScriptButton" to="." method="_on_open_script_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="item_rect_changed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/FuncNameLabel" to="." method="_on_func_name_label_item_rect_changed"]
