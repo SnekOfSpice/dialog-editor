@@ -31,6 +31,7 @@ func _on_find_handlers_button_pressed() -> void:
 	count_dir("res://")
 	find_child("EvaluatorLabel").text = "\n".join(found_handlers)
 	find_child("FoundHandlersLabel").text = str("Found ", found_handlers.size(), " InstructionHandler", "s" if found_handlers.size() != 1 else "", "! :3")
+	_on_evaluator_label_text_changed()
 
 func count_dir(path: String):
 	var directories = DirAccess.get_directories_at(path)
