@@ -1,4 +1,4 @@
-@icon("res://addons/diisis/editor/visuals/theme/buttons_ui/icon_instruction.png")
+@icon("res://addons/diisis/parser/style/icon_instruction_handler.svg")
 @tool
 extends Node
 class_name InstructionHandler

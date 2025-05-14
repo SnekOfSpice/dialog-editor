@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgf242nwi7c37"
-path="res://.godot/imported/reader_icon_Zeichenfläche 1.svg-ff95a6537aca5eb1151b8bab3c6b889e.ctex"
+uid="uid://cowtdbgbvq7fp"
+path="res://.godot/imported/icon_instruction_handler.svg-219630aa3d0720070c8520db88c7fa90.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"
-dest_files=["res://.godot/imported/reader_icon_Zeichenfläche 1.svg-ff95a6537aca5eb1151b8bab3c6b889e.ctex"]
+source_file="res://addons/diisis/parser/style/icon_instruction_handler.svg"
+dest_files=["res://.godot/imported/icon_instruction_handler.svg-219630aa3d0720070c8520db88c7fa90.ctex"]
 
 [params]
 

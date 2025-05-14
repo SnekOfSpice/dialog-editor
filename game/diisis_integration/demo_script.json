@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 0,
+		"current_page_number": 1,
 		"page_view": 0,
 		"text_size_id": 2
 	},
@@ -315,7 +315,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773744,
+		"id_counter": -9223372036854773717,
 		"locales_to_export": [
 			"de_DE",
 			"en_US",
@@ -440,6 +440,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987729.490--9223372036854775799"
 						},
 						"facts": {
@@ -620,6 +621,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "amber-is-happy"
 						},
 						"facts": {
@@ -666,6 +668,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987729.749--9223372036854775782"
 						},
 						"facts": {
@@ -705,6 +708,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987729.798--9223372036854775779"
 						},
 						"facts": {
@@ -746,7 +750,7 @@
 					{
 						"address": "1.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -756,11 +760,12 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987741.530--9223372036854775777"
 						},
 						"facts": {
@@ -771,12 +776,12 @@
 						},
 						"header": [],
 						"id": "1744999498.626--9223372036854774735",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
 						},
@@ -785,7 +790,7 @@
 					{
 						"address": "1.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -795,18 +800,18 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
 							"delay_after": 0.0,
 							"delay_before": 0.0,
-							"meta.has_reverse": true,
+							"meta.has_reverse": false,
 							"meta.reverse_text": "shake_camera(20)",
-							"meta.text": "Sound.awa()",
+							"meta.text": "shake_camera(20)",
 							"meta.validation_status": "OK",
-							"name": "Sound.awa",
+							"name": "shake_camera",
 							"reverse_name": "shake_camera"
 						},
 						"facts": {
@@ -817,12 +822,12 @@
 						},
 						"header": [],
 						"id": "1744999498.627--9223372036854774732",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
 						},
@@ -831,7 +836,7 @@
 					{
 						"address": "1.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -841,11 +846,12 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775774"
 						},
 						"facts": {
@@ -856,12 +862,12 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774728",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						},
@@ -870,7 +876,7 @@
 					{
 						"address": "1.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -880,11 +886,58 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
+							"delay_after": 2.0,
+							"delay_before": 0.0,
+							"meta.has_reverse": false,
+							"meta.reverse_text": "",
+							"meta.text": "control_camera(1.5, 0, -0.6, 2)",
+							"meta.validation_status": "OK",
+							"name": "control_camera",
+							"reverse_name": ""
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"id": "1747205915.630--9223372036854773717",
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": true,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "1.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775772"
 						},
 						"facts": {
@@ -895,21 +948,21 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774724",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "1.4",
+						"address": "1.5",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -919,7 +972,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -941,21 +994,21 @@
 						},
 						"header": [],
 						"id": "1744999498.629--9223372036854774721",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4.0,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "1.5",
+						"address": "1.6",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -965,11 +1018,12 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987741.534--9223372036854775769"
 						},
 						"facts": {
@@ -980,21 +1034,21 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774717",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5.0,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "1.6",
+						"address": "1.7",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1004,11 +1058,12 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.validation_status": "OK",
 							"text_id": "1744987741.535--9223372036854775767"
 						},
 						"facts": {
@@ -1019,23 +1074,23 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774713",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6.0,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 2.0,
-				"number": 1.0,
+				"number": 1,
 				"page_key": "about instructions",
 				"terminate": false
 			},
@@ -1233,9 +1288,9 @@
 			"1744987729.626--9223372036854775789": "No actually, robots are scary",
 			"1744987729.749--9223372036854775782": "[]>amber{amber-emotion|sad}:I promise I'm not scary!",
 			"1744987729.798--9223372036854775779": "[]>narrator:And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}:Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator:You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].",
-			"1744987741.530--9223372036854775777": "[]>narrator:Diisis uses so-called \"Instructions\" for more complex behavior. Read up on how to implement them on GitHub. The rough gist is that they work like functions in Godot. You give them names and arguments, and can then call them inside DIISIS.\n[]>narrator:For this, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to an Instruction, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
+			"1744987741.530--9223372036854775777": "[]>narrator:DIISIS can call functions in Godot for more complex behavior. They require a script of type [img]res://addons/diisis/parser/style/icon_instruction_handler.svg[/img]InstructionHandler to be present next to [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]LineReader. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to an Instruction, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
 			"1744987741.532--9223372036854775772": "[]>narrator:This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
-			"1744987741.532--9223372036854775774": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera(40)>so :3",
+			"1744987741.532--9223372036854775774": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator:Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
 			"1744987741.534--9223372036854775769": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too.<mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity.<mp> But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
 			"1744987741.535--9223372036854775767": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",
 			"1744987742.696--9223372036854775765": "[]>narrator:With that, we can start to wrap up.\n[]>amber:Change of scenery please!",

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdmep4e76l0yy"
-path="res://.godot/imported/spinx4.png-49e5c173e3592f1a7be95757205b934c.ctex"
+uid="uid://dgf242nwi7c37"
+path="res://.godot/imported/icon_line_reader.svg-9438a27056a3353c3c0b71170cc7282c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/diisis/editor/visuals/theme/buttons_ui/spinx4.png"
-dest_files=["res://.godot/imported/spinx4.png-49e5c173e3592f1a7be95757205b934c.ctex"]
+source_file="res://addons/diisis/parser/style/icon_line_reader.svg"
+dest_files=["res://.godot/imported/icon_line_reader.svg-9438a27056a3353c3c0b71170cc7282c.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

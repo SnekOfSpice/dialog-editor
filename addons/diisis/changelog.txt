@@ -10,13 +10,13 @@ General
 - clean up documentation, especially LineReader and ParserEvents
 - fixes all around
 - automatically check for updates (can be disabled in Project Settings)
+- Refactor the entire instruction system
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
 - instructions:
 	- add default args
-	- dropdown args
-		- including MULTI_DROPDOWN_TYPE_SEPARATOR
+	- dropdown arg limiters
 - Option for Save on Play (true by default)
 - General layout improvements & slimmification
 - Incoming references window for JP/LB

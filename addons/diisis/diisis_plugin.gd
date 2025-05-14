@@ -166,8 +166,8 @@ func _enter_tree():
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
 	add_parser_singletons()
-	add_custom_type("LineReader", "Control", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"))
-	add_custom_type("InstructionHandler", "Node", preload("res://addons/diisis/parser/src/instruction_handler.gd"), preload("res://addons/diisis/editor/visuals/theme/buttons_ui/icon_instruction.png"))
+	add_custom_type("LineReader", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/icon_line_reader.svg"))
+	add_custom_type("InstructionHandler", "Node", preload("res://addons/diisis/parser/src/instruction_handler.gd"), preload("res://addons/diisis/parser/style/icon_instruction_handler.svg"))
 
 	if not OS.has_feature("editor"):
 		return

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=36 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -18,14 +18,16 @@
 [ext_resource type="Texture2D" uid="uid://c0hn50yuea61r" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_full.png" id="7_32dog"]
 [ext_resource type="Texture2D" uid="uid://cx22s7326cykn" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_line_at_end.png" id="7_67kpi"]
 [ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="7_eshag"]
+[ext_resource type="Texture2D" uid="uid://cradtrqafxhb8" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page.png" id="7_m63dd"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
-[ext_resource type="Texture2D" uid="uid://dqagtlgyo0pqb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_instruction.png" id="8_g28rh"]
+[ext_resource type="Texture2D" uid="uid://ck5acd5airv8u" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page_at_end.png" id="8_ajvyk"]
 [ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
 [ext_resource type="Texture2D" uid="uid://bgycyoomk20tr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_folder.png" id="9_mh3o1"]
 [ext_resource type="Texture2D" uid="uid://7ht8k4ris3wj" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_truncated.png" id="9_o3byv"]
 [ext_resource type="Texture2D" uid="uid://b7m22tnt1f2ft" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_minimal.png" id="10_qli38"]
 [ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
+[ext_resource type="Texture2D" uid="uid://cowtdbgbvq7fp" path="res://addons/diisis/parser/style/icon_instruction_handler.svg" id="14_m63dd"]
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
@@ -319,14 +321,15 @@ size_flags_vertical = 8
 layout_mode = 2
 
 [node name="AddAfter" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
+size_flags_horizontal = 2
 size_flags_vertical = 8
+size_flags_stretch_ratio = 3.91
 tooltip_text = "Add page after
 (Alt+S)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 17
-text = "+>"
+icon = ExtResource("7_m63dd")
 
 [node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
 layout_mode = 2
@@ -335,7 +338,7 @@ tooltip_text = "Add page to end
 (Shift+Alt+S)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 17
-text = "+>>"
+icon = ExtResource("8_ajvyk")
 
 [node name="DeleteCurrent" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
 visible = false
@@ -402,13 +405,15 @@ script = ExtResource("3_2h0gj")
 line_type = 1
 
 [node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
 focus_mode = 0
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
-icon = ExtResource("8_g28rh")
+icon = ExtResource("14_m63dd")
 icon_alignment = 1
+expand_icon = true
 script = ExtResource("3_2h0gj")
 line_type = 2
 

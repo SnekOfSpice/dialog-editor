@@ -1,4 +1,4 @@
-@icon("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg")
+@icon("res://addons/diisis/parser/style/icon_line_reader.svg")
 @tool
 extends Node
 class_name LineReader
@@ -1432,11 +1432,12 @@ func _call_from_position(call_position: int):
 		text = text.trim_suffix(">")
 		var result = instruction_handler.call_from_string(text, InstructionHandler.CallMode.Call, call_position)
 		if result is bool:
-			last_call = text
-			if _get_current_text_speed() == MAX_TEXT_SPEED and call_position != 0:
-				push_warning(
-					str("You are calling ", text, " while text speed is MAX_TEXT_SPEED. The function ", text, " makes the LineReader await execution, so this may lead to unintended visuals.")
-				)
+			if result:
+				last_call = text
+				if _get_current_text_speed() == MAX_TEXT_SPEED and call_position != 0:
+					push_warning(
+						str("You are calling ", text, " while text speed is MAX_TEXT_SPEED. The function ", text, " makes the LineReader await execution, so this may lead to unintended visuals.")
+					)
 	_call_strings.erase(call_position)
 	awaiting_inline_call = last_call
 
