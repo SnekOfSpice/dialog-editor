@@ -67,9 +67,9 @@ size_flags_horizontal = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer"]
 layout_mode = 2
-tooltip_text = "Delay Before Execution locks the input and progress of LineReader after reading the line but before executing the instruction.
+tooltip_text = "Delay Before Call locks the input and progress of LineReader after reading the line but before executing the instruction.
 
-Delay After Execution locks the input and progress of LineReader after executing the instruction but before continuing onto the next line.
+Delay After Call locks the input and progress of LineReader after executing the instruction but before continuing onto the next line. Note that this will start counting down when the line is reached, so e.g. if this calls a function calls a tween of 2 seconds, a Delay After Call of 2 seconds will continue the LineReader when the tween finishes, a delay of 4 seconds will continue the LineReader 2 seconds after the tween finishes, etc.
 
 Reverse instructions ignore these timings."
 
@@ -85,6 +85,7 @@ columns = 3
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
+update_on_text_changed = true
 
 [node name="Label2" type="Label" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 self_modulate = Color(1, 1, 1, 0.47451)
@@ -95,13 +96,14 @@ text = "Delay"
 custom_minimum_size = Vector2(65.64, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Before Execution"
+text = "Before Call"
 text_overrun_behavior = 1
 
 [node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
+update_on_text_changed = true
 
 [node name="Label3" type="Label" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 self_modulate = Color(1, 1, 1, 0.47451)
@@ -111,7 +113,7 @@ text = "Delay"
 [node name="After" type="Label" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 custom_minimum_size = Vector2(50.015, 0)
 layout_mode = 2
-text = "After Execution"
+text = "After Call"
 text_overrun_behavior = 1
 
 [connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_request_search"]

@@ -20,6 +20,7 @@ func init(method_name:String, arg_name:String):
 	var edit = LineEdit.new()
 	if type in [TYPE_INT, TYPE_FLOAT]:
 		edit = SpinBox.new()
+		edit.update_on_text_changed = true
 		edit.step = 1 if type == TYPE_INT else 0.01
 		edit.min_value = int(-99999)
 		edit.max_value = int(999999)

@@ -70,7 +70,10 @@ func _process(delta: float) -> void:
 	sway_intensity_lerp_strength = lerp(sway_intensity_lerp_strength, 0.02, 0.03)
 	
 	if GameWorld.game_stage:
-		GameWorld.game_stage.set_cg_offset(offset)
+		# For shaking CGs like in No Empty Threats, put offset here
+		# but that also requires all CG assets to have extra margins and stuff
+		# and we're not doing that as the base case
+		GameWorld.game_stage.set_cg_offset(Vector2.ZERO)
 
 func apply_shake(strength:float):
 	shake_strength = strength
