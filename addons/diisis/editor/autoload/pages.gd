@@ -23,6 +23,7 @@ const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"_",
 	"1","2","3","4","5","6","7","8","9","0",
 	"."]
+const LETTERS := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
@@ -1373,6 +1374,10 @@ func get_compliance_with_template(instruction:String) -> String:
 	return "OK"
 
 func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
+	var default_notice := ""
+	if value == "*":
+		value = get_custom_method_defaults(method).get(arg)
+		default_notice = "\n(Derived from default)"
 	if type == TYPE_BOOL:
 		if value != "true" and value != "false":
 			return str("Bool argument ", arg_index + 1, " is neither \"true\" nor \"false\"")
@@ -1392,10 +1397,7 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 		var valid_strings := []
 		for dd_name in selected_dropdowns:
 			valid_strings.append_array(dropdowns.get(dd_name))
-		var default_notice := ""
-		if value == "*":
-			value = get_custom_method_defaults(method).get(arg)
-			default_notice = "\n(Derived from default)"
+		
 		if not value in valid_strings:
 			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_dropdowns), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
@@ -1491,7 +1493,7 @@ func are_all_of_these_dropdown_titles(names:Array) -> bool:
 	return result
 
 func capitalize_sentence_beginnings(text:String) -> String:
-	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
+	
 
 	var c12n_prefixes := [
 		".", ":", ";", "?", "!", "~"
@@ -1502,12 +1504,12 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_length := 3
 	while elipse_position != -1:
 		if elipse_position < text.length():
-			if text[elipse_position + elipse_length + 1] in letters:
+			if text[elipse_position + elipse_length + 1] in LETTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
 				continue
 			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
-				if text[elipse_position + 2] in letters:
+				if text[elipse_position + 2] in LETTERS:
 					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
 					elipse_position = text.find("...", elipse_position + elipse_length + 1)
 					continue
@@ -1541,7 +1543,7 @@ func capitalize_sentence_beginnings(text:String) -> String:
 			var tag = text.substr(scan_index, tag_end - scan_index + 1)
 			tags_in_text.append(tag)
 		scan_index += 1
-	for letter : String in letters:
+	for letter : String in LETTERS:
 		text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
 		text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
 		for prefix in c12n_prefixes:
@@ -1565,7 +1567,9 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	return text
 
 func neaten_whitespace(text:String) -> String:
-	text = text.replace(":", ": ")
+	for letter : String in LETTERS:
+		text = text.replace(str(":", letter), str(": ", letter))
+		text = text.replace(str(":", letter.to_upper()), str(": ", letter.to_upper()))
 	text = text.replace("<", " <")
 	text = text.replace("[", " [")
 	text = text.replace(" []>", "[]>")
@@ -1603,6 +1607,11 @@ func neaten_whitespace(text:String) -> String:
 		while sequence_pos != -1:
 			text = text.erase(sequence_pos + full_sequence.length() - 1)
 			sequence_pos = text.find(full_sequence, sequence_pos)
+		
+	text = text.replace("] .", "].")
+	text = text.replace("> .", ">.")
+	text = text.replace(": //", "://")
+	
 	return text
 
 func save_text(id:String, text:String) -> void:

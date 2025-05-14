@@ -619,6 +619,12 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.size *= content_scale
 
 
+func open_window_by_string(window_name:String):
+	open_popup($Popups.get_node(window_name), window_name in [
+		"HandlerWindow",
+		"FactsPopup",
+	])
+
 func _on_setup_index_pressed(index: int) -> void:
 	match index:
 		1: # header

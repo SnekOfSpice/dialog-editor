@@ -309,7 +309,7 @@ func _on_text_box_text_changed() -> void:
 	
 	if Pages.auto_complete_context in ["call", "func"]:
 		for instr in Pages.get_all_instruction_names():
-			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)):
+			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)) and is_text_after_caret(">"):
 				var prev_col := text_box.get_caret_column()
 				text_box.insert_text_at_caret("()")
 				await get_tree().process_frame
@@ -488,7 +488,11 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				tag = tag.trim_prefix("<func:")
 				tag = tag.trim_suffix(">")
 				DiisisEditorUtil.search_function(tag.split("(")[0])
-			if tag.begins_with("<var:"):
+			elif tag.begins_with("<var:"):
 				tag = tag.trim_prefix("<var:")
 				tag = tag.trim_suffix(">")
 				DiisisEditorUtil.search_variable(tag)
+			elif tag.begins_with("<fact:"):
+				Pages.editor.open_window_by_string("FactsPopup")
+			elif not tag.is_empty():
+				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")

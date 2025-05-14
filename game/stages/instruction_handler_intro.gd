@@ -120,9 +120,6 @@ func shake_camera(strength) -> bool:
 	strength = float(strength)
 	if GameWorld.camera:
 		GameWorld.camera.apply_shake(strength)
-	# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed.
-	# (Needs to be called by your code from somewhere.)
-	# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)
 	return false
 
 
@@ -134,8 +131,6 @@ func set_x_position(character_name: String, index, time, wait_for_reposition) ->
 	if GameWorld.game_stage:
 		var character : Character = GameWorld.game_stage.get_character(character_name)
 		character.set_x_position(int(index), time, wait_for_reposition)
-	# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed.
-	# (Needs to be called by your code from somewhere.)
 	return wait_for_reposition
 
 func show_letter() -> bool:
