@@ -145,6 +145,9 @@ func set_content_scale(factor:float):
 	bar.get_node("File").content_scale_factor = factor
 	bar.get_node("Utility").content_scale_factor = factor
 	bar.get_node("Setup").content_scale_factor = factor
+	
+	for window : Window in $Popups.get_children():
+		window.content_scale_factor = content_scale
 
 func update_page_view(view:PageView):
 	for node in get_tree().get_nodes_in_group("diisis_page_view_sensitive"):
