@@ -67,7 +67,7 @@ func _on_id_pressed(id: int) -> void:
 			"\nn: a second page",
 			"\nn: waow",
 		)
-		Pages.editor.popup_confirm_dialogue(str(
+		Pages.editor.popup_accept_dialogue(str(
 			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space.\n\n",
 			"[b]Example For ", "Pages" if page else "Lines", ":[/b]",
 			"\n\n",

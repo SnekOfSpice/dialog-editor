@@ -1,6 +1,6 @@
 -------------------------------------------------
 DIISIS 0.6
-This shit breaks compatibility a bit!
+This shit breaks compatibility on so many levels!
 
 General
 - Introduce text IDs
