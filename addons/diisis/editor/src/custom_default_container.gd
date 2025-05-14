@@ -49,9 +49,7 @@ func _on_method_search_text_changed(new_text: String) -> void:
 
 
 func _on_open_script_button_pressed() -> void:
-	if Pages.evaluator_paths.is_empty():
-		return
-	EditorInterface.edit_script(load(Pages.evaluator_paths.front()))
+	DiisisEditorUtil.search_function(item_list.get_item_text(item_list.get_selected_items()[0]))
 
 
 func _on_save_button_pressed() -> void:

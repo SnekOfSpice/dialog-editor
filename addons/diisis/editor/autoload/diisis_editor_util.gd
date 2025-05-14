@@ -151,7 +151,7 @@ func set_up_delete_modulate(node : Control, button : Button, exit_callable:Calla
 			button.mouse_exited.connect(exit_callable)
 
 ## prefix should be "var" or "func"
-func search_in_global_and_handler(search:String, prefix:String):
+func _search_in_global_and_handler(search:String, prefix:String):
 	if search.contains("."):
 		var script = Pages.get_autoload_script(search.split(".")[0])
 		var func_name = str(prefix, " ", search.split(".")[1])
@@ -162,10 +162,10 @@ func search_in_global_and_handler(search:String, prefix:String):
 		search_in_script(load(Pages.evaluator_paths.front()), str(prefix, " ", search))
 
 func search_function(search:String):
-	search_in_global_and_handler(search, "func")
+	_search_in_global_and_handler(search, "func")
 
 func search_variable(search:String):
-	search_in_global_and_handler(search, "var")
+	_search_in_global_and_handler(search, "var")
 
 func search_in_script(script: Script, search:String):
 	EditorInterface.edit_script(script)
