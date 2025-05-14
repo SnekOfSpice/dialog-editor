@@ -129,7 +129,7 @@ func init(active_file_path:="") -> void:
 		mat.shader = load(Pages.shader)
 		rect.material = mat
 	
-	print("init editor successful")
+	#print("init editor successful")
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -416,9 +416,6 @@ func _on_add_last_pressed() -> void:
 func request_add_last_page():
 		request_add_page(Pages.get_page_count())
 
-func _on_delete_current_pressed() -> void:
-	request_delete_page(get_current_page_number())
-
 func request_delete_current_page():
 	request_delete_page(get_current_page_number())
 
@@ -590,14 +587,6 @@ func _on_undo_button_pressed() -> void:
 func _on_redo_button_pressed() -> void:
 	undo_redo.redo()
 	update_undo_redo_buttons()
-
-
-func _on_toggle_search_button_pressed() -> void:
-	find_child("TextSearchContainer").visible = not find_child("TextSearchContainer").visible
-	if find_child("TextSearchContainer").visible:
-		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND
-	else:
-		find_child("PageContainer").size_flags_vertical = VBoxContainer.SIZE_EXPAND_FILL
 
 
 func open_popup(popup:Window, fit_to_size:=false):

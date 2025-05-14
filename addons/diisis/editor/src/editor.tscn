@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -17,7 +17,6 @@
 [ext_resource type="Script" uid="uid://chvelp1kqeoya" path="res://addons/diisis/editor/src/page_view_button.gd" id="7_7syci"]
 [ext_resource type="Texture2D" uid="uid://c0hn50yuea61r" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_full.png" id="7_32dog"]
 [ext_resource type="Texture2D" uid="uid://cx22s7326cykn" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_line_at_end.png" id="7_67kpi"]
-[ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="7_eshag"]
 [ext_resource type="Texture2D" uid="uid://cradtrqafxhb8" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page.png" id="7_m63dd"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
@@ -250,18 +249,6 @@ size_flags_vertical = 8
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2"]
 layout_mode = 2
 
-[node name="LastVisited" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "backward"
-
-[node name="NextVisited" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "forward"
-
 [node name="First" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -339,19 +326,6 @@ tooltip_text = "Add page to end
 focus_mode = 0
 theme_override_font_sizes/font_size = 17
 icon = ExtResource("8_ajvyk")
-
-[node name="DeleteCurrent" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(46, 0)
-layout_mode = 2
-size_flags_vertical = 8
-tooltip_text = "Delete current page"
-focus_mode = 0
-theme_override_font_sizes/font_size = 17
-text = "-"
-
-[node name="Positional" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-layout_mode = 2
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2"]
 auto_translate_mode = 1
@@ -509,21 +483,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Page" parent="ScrollContainer/Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core"]
-layout_mode = 2
-
-[node name="ToggleSearchButton" type="Button" parent="ScrollContainer/Core/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "search"
-
-[node name="TextSearchContainer" parent="ScrollContainer/Core/VBoxContainer" instance=ExtResource("7_eshag")]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
 [node name="NotificationContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
@@ -656,8 +615,6 @@ visible = false
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
 [connection signal="toggled" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2/ShowErrorsButton" to="." method="_on_show_errors_button_toggled"]
 [connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
 [connection signal="go_to" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/GoTo" to="." method="request_go_to_address"]
@@ -666,10 +623,8 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Last" to="." method="_on_last_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/DeleteCurrent" to="." method="_on_delete_current_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
 [connection signal="item_selected" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
-[connection signal="pressed" from="ScrollContainer/Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]
