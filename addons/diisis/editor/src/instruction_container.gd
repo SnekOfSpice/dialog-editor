@@ -52,3 +52,10 @@ func set_page_view(view:DiisisEditor.PageView):
 
 func _on_has_reverse_check_box_toggled(toggled_on: bool) -> void:
 	instruction_edit_reverse.visible = toggled_on
+
+
+func _on_instruction_request_search(instruction_name: String, reverse: bool) -> void:
+	if reverse and instruction_name.is_empty():
+		DiisisEditorUtil.search_function(instruction_edit.get_instruction_name())
+		return
+	DiisisEditorUtil.search_function(instruction_name)

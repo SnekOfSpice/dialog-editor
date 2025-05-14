@@ -57,7 +57,8 @@ icon = ExtResource("4_m4ncw")
 self_modulate = Color(1, 0.63, 0.993833, 0.729412)
 layout_mode = 2
 tooltip_text = "Go to function
-(Script editor must be open)"
+(Script editor must be open)
+(You can also Ctrl + LClick on the name here or in any Text Line to go there!)"
 theme_override_styles/hover_pressed = ExtResource("4_jnd14")
 theme_override_styles/hover = ExtResource("4_jnd14")
 theme_override_styles/pressed = ExtResource("4_jnd14")
@@ -90,6 +91,7 @@ vertical_alignment = 2
 [connection signal="caret_changed" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_caret_changed"]
 [connection signal="focus_entered" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_focus_entered"]
 [connection signal="focus_exited" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_focus_exited"]
+[connection signal="gui_input" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_gui_input"]
 [connection signal="text_entered" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_text_entered"]
 [connection signal="text_submitted" from="VBoxContainer/HBoxContainer/InstructionTextBox" to="." method="_on_instruction_text_box_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CopySignatureToClipboardButton" to="." method="_on_copy_signature_to_clipboard_button_pressed"]

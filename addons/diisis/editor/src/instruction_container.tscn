@@ -184,4 +184,6 @@ text_overrun_behavior = 1
 [connection signal="focus_exited" from="HBoxContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_focus_exited"]
 [connection signal="text_entered" from="HBoxContainer/HBoxContainer/VBoxContainer/ReverseContainer/ReverseInstructionTextBox" to="." method="_on_reverse_instruction_text_box_text_entered"]
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/VBoxContainer/ReverseContainer/CopySignatureToClipboardButton2" to="." method="_on_copy_signature_to_clipboard_button_2_pressed"]
+[connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_request_search"]
 [connection signal="toggled" from="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/HasReverseCheckBox" to="." method="_on_has_reverse_check_box_toggled"]
+[connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/InstructionTextEditReverse" to="." method="_on_instruction_request_search"]

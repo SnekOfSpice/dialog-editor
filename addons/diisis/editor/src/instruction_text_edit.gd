@@ -6,6 +6,8 @@ class_name InstructionTextEdit
 var text_box : HintedLineEdit
 @export var reverse := false
 
+signal request_search(instruction_name : String, reverse : bool)
+
 func init():
 	text_box = find_child("InstructionTextBox")
 	_on_instruction_text_box_text_entered("")
@@ -80,3 +82,10 @@ func _on_instruction_text_box_text_submitted(new_text: String) -> void:
 
 func _on_go_to_script_button_pressed() -> void:
 	DiisisEditorUtil.search_function(get_instruction_name())
+
+
+func _on_instruction_text_box_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			await get_tree().process_frame
+			emit_signal("request_search", get_instruction_name(), reverse)
