@@ -1063,6 +1063,8 @@ func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTe
 		dialog.title = title
 	if at != Vector2.ZERO:
 		dialog.position = at
+	if Pages.silly:
+		dialog.ok_button_text = Pages.make_puppy()
 	return dialog
 
 # returns true if the prompt got opened
