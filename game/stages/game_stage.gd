@@ -269,7 +269,7 @@ func _clear_cg():
 			c.queue_free()
 		#cg_root.modulate.a = 0.0
 		if emit_insutrction_complete_on_cg_hide:
-			GameWorld.instruction_handler.instruction_completed.emit()
+			Parser.inform_instruction_completed()
 			emit_insutrction_complete_on_cg_hide = false
 	
 	if stylebox_regular:
@@ -440,7 +440,7 @@ func _on_menu_button_pressed() -> void:
 
 
 func _on_chapter_cover_chapter_intro_finished() -> void:
-	GameWorld.instruction_handler.instruction_completed.emit()
+	Parser.inform_instruction_completed()
 	find_child("ChapterCover").visible = false
 
 

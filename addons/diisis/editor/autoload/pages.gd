@@ -1573,6 +1573,13 @@ func neaten_whitespace(text:String) -> String:
 	text = text.replace("[", " [")
 	text = text.replace(" []>", "[]>")
 	
+	for sequence in DIISIS.control_sequences:
+		var full_sequence := str(sequence, ": ")
+		var sequence_pos := text.find(full_sequence)
+		if sequence_pos != -1:
+			text = text.erase(sequence_pos + full_sequence.length() - 1)
+			sequence_pos = text.find(full_sequence, sequence_pos)
+	
 	var contains_dead_whitespace := text.contains("  ")
 	while contains_dead_whitespace:
 		var doublespace_index = text.find("  ")

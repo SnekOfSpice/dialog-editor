@@ -276,6 +276,8 @@ var _remaining_prompt_delay := input_prompt_delay
 @export var warn_advance_on_terminated := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param auto_continue] is true.
 @export var warn_advance_on_auto_continue := true
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param awaiting_inline_call] is true.
+@export var warn_advance_on_awaiting_inline_call := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
 
@@ -349,6 +351,7 @@ func _validate_property(property: Dictionary):
 func serialize() -> Dictionary:
 	var result := {}
 	
+	result["awaiting_inline_call"] = awaiting_inline_call
 	result["built_virtual_choices"] = _built_virtual_choices
 	result["body_label.text"] = body_label.text
 	result["call_strings"] = _call_strings
@@ -389,6 +392,7 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if not data:
 		return
+	awaiting_inline_call = data.get("awaiting_inline_call", "")
 	_built_virtual_choices = data.get("built_virtual_choices", {})
 	_call_strings = data.get("call_strings", {})
 	_called_positions = data.get("called_positions", [])
@@ -557,6 +561,10 @@ func request_advance():
 	if auto_continue:
 		if warn_advance_on_auto_continue:
 			push_warning("Cannot advance because auto_continue is true.")
+		return
+	if awaiting_inline_call:
+		if warn_advance_on_awaiting_inline_call:
+			push_warning("Cannot advance because awaiting_inline_call is true.")
 		return
 	if _is_choice_presented() and block_advance_during_choices:
 		if warn_advance_on_choices_presented:
@@ -923,6 +931,10 @@ func _process(delta: float) -> void:
 	
 	_update_input_prompt(delta)
 	
+	var visible_characters_before_inline_call = body_label.visible_characters
+	if awaiting_inline_call:
+		return
+	
 	if _lead_time > 0:
 		_lead_time -= delta
 		return
@@ -990,6 +1002,8 @@ func _process(delta: float) -> void:
 	for pos : int in _call_strings:
 		if _can_handle_text_position(pos, "_called_positions"):
 			_call_from_position(pos)
+	if awaiting_inline_call:
+		body_label.visible_characters = visible_characters_before_inline_call
 	for pos : int in _comments:
 		if _can_handle_text_position(pos, "_handled_comments"):
 			_emit_comment(pos)
@@ -1407,16 +1421,24 @@ func _ends_with_trimmable(text:String) -> bool:
 	return false
 
 
-
+var awaiting_inline_call := ""
 
 func _call_from_position(call_position: int):
 	var strings : Array = _call_strings.get(call_position)
 	_called_positions.append(call_position)
+	var last_call := ""
 	for text : String in strings:
 		text = text.trim_prefix("<call:")
 		text = text.trim_suffix(">")
-		instruction_handler.call_from_string(text, InstructionHandler.CallMode.Call, call_position)
+		var result = instruction_handler.call_from_string(text, InstructionHandler.CallMode.Call, call_position)
+		if result is bool:
+			last_call = text
+			if _get_current_text_speed() == MAX_TEXT_SPEED and call_position != 0:
+				push_warning(
+					str("You are calling ", text, " while text speed is MAX_TEXT_SPEED. The function ", text, " makes the LineReader await execution, so this may lead to unintended visuals.")
+				)
 	_call_strings.erase(call_position)
+	awaiting_inline_call = last_call
 
 func _emit_comment(comment_position:int):
 	if not _comments.has(comment_position):

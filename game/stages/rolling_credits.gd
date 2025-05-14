@@ -52,4 +52,4 @@ func start():
 	
 	await get_tree().create_timer(2.0).timeout
 	
-	Parser.line_reader.instruction_handler.instruction_completed.emit()
+	Parser.inform_instruction_completed()

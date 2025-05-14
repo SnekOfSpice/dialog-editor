@@ -16,8 +16,6 @@ var text_id : String
 
 var text_box : CodeEdit
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset", "comment"]
-
 func get_text_before_caret(length:int):
 	var line : String = text_box.get_line(text_box.get_caret_line())
 	if text_box.get_caret_column() <= length:

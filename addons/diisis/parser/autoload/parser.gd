@@ -627,3 +627,12 @@ func str_to_typed(value:String, type:int):
 			var cast : bool = true if value == "true" else false
 			return cast
 	return String(value)
+
+
+func inform_instruction_completed():
+	if not line_reader:
+		return
+	if not line_reader.awaiting_inline_call.is_empty():
+		line_reader.awaiting_inline_call = ""
+		return
+	line_reader.instruction_handler.instruction_completed.emit()

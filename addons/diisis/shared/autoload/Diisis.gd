@@ -19,6 +19,9 @@ enum ChoiceBehaviorAfterSelection {
 	Hidden
 }
 
+
+var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset", "comment"]
+
 func type_to_str(type:int) -> String:
 	match type:
 		TYPE_FLOAT:

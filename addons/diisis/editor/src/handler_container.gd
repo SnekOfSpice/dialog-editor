@@ -52,6 +52,15 @@ func count_dir(path: String):
 		print(script.resource_path)
 		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
 		var lines = file.get_as_text()
-		if "extends InstructionHandler" in lines:
+		
+		var has_expression : = false
+		for expression in [
+			"extends InstructionHandler",
+			"extends\nInstructionHandler",
+			"extends \nInstructionHandler",
+			]:
+			if expression in lines:
+				has_expression = true
+		if has_expression:
 			found_handlers.append(path + "/" + f)
 			
