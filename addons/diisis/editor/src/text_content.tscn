@@ -66,6 +66,14 @@ item_4/separator = true
 visible = false
 unfocusable = false
 
+[node name="CompliancesLabel" type="RichTextLabel" parent="DialogSyntaxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = -1

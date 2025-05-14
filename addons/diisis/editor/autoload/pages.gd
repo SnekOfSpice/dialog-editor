@@ -718,13 +718,10 @@ func get_all_invalid_instructions() -> String:
 			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
-			if line.get("line_type") != DIISIS.LineType.Instruction:
-				continue
-			# TODO
-			var compliance = line.get("content").get("meta.validation_status")
-			#var compliance := get_entered_instruction_compliance(text)
-			if compliance != "OK":
-				malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
+			if line.get("line_type") in [DIISIS.LineType.Instruction, DIISIS.LineType.Text]:
+				var compliance = line.get("content").get("meta.validation_status")
+				if compliance != "OK":
+					malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
 			line_index += 1
 		page_index += 1
 	
@@ -1573,13 +1570,6 @@ func neaten_whitespace(text:String) -> String:
 	text = text.replace("[", " [")
 	text = text.replace(" []>", "[]>")
 	
-	for sequence in DIISIS.control_sequences:
-		var full_sequence := str(sequence, ": ")
-		var sequence_pos := text.find(full_sequence)
-		if sequence_pos != -1:
-			text = text.erase(sequence_pos + full_sequence.length() - 1)
-			sequence_pos = text.find(full_sequence, sequence_pos)
-	
 	var contains_dead_whitespace := text.contains("  ")
 	while contains_dead_whitespace:
 		var doublespace_index = text.find("  ")
@@ -1607,6 +1597,12 @@ func neaten_whitespace(text:String) -> String:
 		text = text.erase(closing_bb_lead_space_position)
 		closing_bb_lead_space_position = text.find(" [/")
 	
+	for sequence in DIISIS.control_sequences:
+		var full_sequence := str("<", sequence, ": ")
+		var sequence_pos := text.find(full_sequence)
+		while sequence_pos != -1:
+			text = text.erase(sequence_pos + full_sequence.length() - 1)
+			sequence_pos = text.find(full_sequence, sequence_pos)
 	return text
 
 func save_text(id:String, text:String) -> void:

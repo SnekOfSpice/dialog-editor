@@ -55,6 +55,7 @@ func serialize() -> Dictionary:
 	var result := {}
 	
 	result["text_id"] = text_id
+	result["meta.validation_status"] = get_overall_compliance()
 	Pages.save_text(text_id, text_box.text)
 	
 	return result
@@ -235,9 +236,30 @@ func _on_text_box_caret_changed() -> void:
 func update_tag_hint():
 	index_all_tags()
 	update_inline_tag_prompt()
+	update_compliance_prompt()
 
 func update():
 	fill_active_actors()
+	update_compliance_prompt()
+
+func update_compliance_prompt():
+	var label : RichTextLabel =	find_child("CompliancesLabel")
+	label.text = ""
+	var compliances := get_compliances()
+	var complaints := []
+	for call in compliances.keys():
+		if compliances.get(call) == "OK":
+			continue
+		var color := Color.ORANGE_RED
+		var color_string = color.to_html(false)
+		if not complaints.is_empty():
+			color_string += "83"
+		complaints.append(str("[color=", color_string, "]",
+			"Invalid tag ", call, ": ", compliances.get(call),
+			"[/color]"
+			))
+	label.text = " | ".join(complaints)
+	label.visible = not label.text.is_empty()
 
 func get_used_dialog_args_in_line() -> Array:
 	var line : String = text_box.get_line(text_box.get_caret_line())
@@ -345,6 +367,23 @@ func _on_text_actions_id_pressed(id: int) -> void:
 			if not text_id:
 				text_id = Pages.get_new_id()
 			Pages.editor.prompt_change_text_id(text_id)
+
+func get_overall_compliance() -> String:
+	for compliance : String in get_compliances().values():
+		if compliance != "OK":
+			return compliance
+	return "OK"
+
+func get_compliances() -> Dictionary:
+	var compliances := {}
+	for tag_data : Dictionary in tags.duplicate(true):
+		var tag : String = tag_data.get("tag")
+		if tag.begins_with("<call:") or tag.begins_with("<func:"):
+			
+			var instruction := tag.split(":")[1]
+			instruction = instruction.trim_suffix(">")
+			compliances[instruction] = Pages.get_entered_instruction_compliance(instruction)
+	return compliances
 
 func index_all_tags():
 	tags.clear()
