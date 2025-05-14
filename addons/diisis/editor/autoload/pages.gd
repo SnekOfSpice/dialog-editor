@@ -572,22 +572,29 @@ func get_defaults(property_key:String):
 		"data_type":DataTypes._String
 	}
 
+func get_custom_autoload_methods(autoload:String) -> Array:
+	var methods := []
+	var autoload_script := get_autoload_script(autoload)
+	var script_methods = autoload_script.get_script_method_list()
+	for method in script_methods:
+		var method_name : String = method.get("name")
+		if method_name.ends_with(".gd"):
+			continue
+		methods.append(method_name)
+	
+	var base = ClassDB.instantiate(autoload_script.get_class())
+	var base_methods = base.get_script_property_list()
+	for method in base_methods:
+		methods.erase(method.get("name"))
+	methods.sort()
+	return methods
 func get_all_custom_properties() -> Array:
 	var result := get_custom_properties()
 	var autoload_method_names := []
 	# IDK SCRATCH AUTOLOADS FOR NOW??
 	for autoload_name in callable_autoloads:
-		var methods := []
-		var autoload_script := get_autoload_script(autoload_name)
-		var script_methods = autoload_script.get_script_property_list()
-		for method in script_methods:
-			methods.append(method.get("name"))
+		var methods := get_custom_autoload_methods(autoload_name)
 		
-		var base = ClassDB.instantiate(autoload_script.get_class())
-		var base_methods = base.get_script_property_list()
-		for method in base_methods:
-			methods.erase(method.get("name"))
-		methods.sort()
 		
 		for method in methods:
 			autoload_method_names.append(str(autoload_name, ".", method))
@@ -658,10 +665,10 @@ func get_instruction_arg_types(instruction_name: String) -> Array:
 	return args
 
 func get_custom_method_args(instruction_name) -> Array:
-	return get_custom_method(instruction_name).get("args")
+	return get_custom_method(instruction_name).get("args", [])
 
 func get_custom_method_arg_names(instruction_name) -> Array:
-	var args := get_custom_method(instruction_name).get("args")
+	var args := get_custom_method(instruction_name).get("args", {})
 	var result := []
 	for arg in args:
 		result.append(arg.get("name"))

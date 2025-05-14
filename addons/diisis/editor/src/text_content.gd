@@ -37,7 +37,7 @@ func init() -> void:
 	
 	# these are  the symbols that need to wrap any position where code completion
 	# should be able to be triggered /on both sides/
-	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]"]
+	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]", "."]
 	for actor in active_actors:
 		a.append(actor[actor.length() - 1])
 	text_box.code_completion_prefixes = a
@@ -161,6 +161,10 @@ func get_separator_character_after_word_under_caret() -> String:
 func is_current_line_empty():
 	return text_box.get_line(text_box.get_caret_line()).is_empty()
 
+
+# CRITICAL
+# DON'T FORGET
+# to make this work, also give the correct things to text_box.code_completion_prefixes on startup!
 func _on_text_box_caret_changed() -> void:
 	if text_box.get_caret_column() == 0:
 		var is_line_empty = text_box.get_line(text_box.get_caret_line()).is_empty()
@@ -230,6 +234,18 @@ func _on_text_box_caret_changed() -> void:
 					display_text = "strikethrough"
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", tag, "]"))
 		text_box.update_code_completion_options(true)
+		text_box.code_completion_prefixes
+	elif is_text_before_caret("."):
+		var found_autoload := ""
+		for autoload in Pages.callable_autoloads:
+			if is_text_before_caret(str("<call:", autoload, ".")) or is_text_before_caret(str("<func:", autoload, ".")):
+				found_autoload = autoload
+				break
+		if not found_autoload.is_empty():
+			for method in Pages.get_custom_autoload_methods(found_autoload):
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, str(method, "()"))
+			await get_tree().process_frame
+			text_box.update_code_completion_options(true)
 	
 	update_tag_hint()
 
@@ -315,6 +331,8 @@ func _on_text_box_text_changed() -> void:
 				await get_tree().process_frame
 				text_box.set_caret_column(prev_col)
 				caret_movement_to_do = 1
+			elif is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr, "()")):
+				caret_movement_to_do = -1
 
 	var line_index = text_box.get_caret_line()
 	var col_index = text_box.get_caret_column()
