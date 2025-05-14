@@ -2,9 +2,8 @@
 extends Control
 
 func init():
-	find_child("Evaluator Paths").init()
-	find_child("Arguments").init()
-	find_child("Autoloads").init()
+	for child in $TabContainer.get_children():
+		child.init()
 	$TabContainer.current_tab = 0
 	_on_tab_container_tab_changed(0)
 

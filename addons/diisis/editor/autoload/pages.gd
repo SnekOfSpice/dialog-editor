@@ -1376,7 +1376,7 @@ func get_compliance_with_template(instruction:String) -> String:
 func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
 	var default_notice := ""
 	if value == "*":
-		value = get_custom_method_defaults(method).get(arg)
+		value = str(get_custom_method_defaults(method).get(arg))
 		default_notice = "\n(Derived from default)"
 	if type == TYPE_BOOL:
 		if value != "true" and value != "false":
