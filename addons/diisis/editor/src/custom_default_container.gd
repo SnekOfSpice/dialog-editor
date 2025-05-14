@@ -8,6 +8,7 @@ var custom_container : GridContainer
 var custom_data := {}
 
 func init():
+	find_child("SaveButton").text = str("save")
 	item_list = find_child("ItemList")
 	find_child("MethodSearch").text = ""
 	item_list.clear()
@@ -25,6 +26,8 @@ func save_to_local_data():
 	var method_name = data.get("method")
 	custom_data["custom_method_defaults"][method_name] = data.get("custom_method_defaults", {})
 	custom_data["custom_method_dropdown_limiters"][method_name] = data.get("custom_method_dropdown_limiters", {})
+	var changed := not custom_equals()
+	find_child("SaveButton").text = str("save", " (*)" if changed else "")
 
 func _on_item_list_item_selected(index: int) -> void:
 	save_to_local_data()
@@ -61,3 +64,59 @@ func _on_save_button_pressed() -> void:
 
 func _on_func_name_label_item_rect_changed() -> void:
 	find_child("FuncNameLabel").visible = not find_child("FuncNameLabel").text.is_empty()
+
+# doesnt really work but whatever
+func custom_equals() -> bool:
+	for topic in ["defaults", "dropdown_limiters"]:
+		var defined : Dictionary = Pages.get(str("custom_method_", topic))
+		var custom : Dictionary = custom_data.get(str("custom_method_", topic), {})
+	
+		if defined.size() != custom.size():
+			return false
+	
+		for custom_key in custom.keys():
+			if not custom_key in defined.keys():
+				return false
+		
+		for key in custom.keys():
+			var local_data : Dictionary = custom.get(key)
+			var pages_data : Dictionary = defined.get(key)
+			if local_data.size() != pages_data.size():
+			
+				return false
+			
+			for local_key in local_data.keys():
+				if not local_key in pages_data.keys():
+					return false
+			
+			for local_key in local_data.keys():
+				var local_entry = local_data.get(local_key)
+				var pages_entry = pages_data.get(local_key)
+				if typeof(local_entry) != typeof(pages_entry):
+					return false
+				
+				if local_entry is Array:
+					if local_entry.size() != pages_entry.size():
+						return false
+					for entry in local_entry:
+						if not entry in pages_entry:
+							return false
+				elif local_entry is Dictionary:
+					for entry_key in local_entry.keys():
+						if not pages_entry.has(entry_key):
+							return false
+						if pages_entry.get(entry_key) != local_entry.get(entry_key):
+							return false
+						
+					for entry_key in pages_entry.keys():
+						if not local_entry.has(entry_key):
+							return false
+						if pages_entry.get(entry_key) != local_entry.get(entry_key):
+								return false
+						
+				else:
+					# some simple data type
+					if local_entry != pages_entry:
+						return false
+	
+	return true
