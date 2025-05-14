@@ -226,7 +226,6 @@ layout_mode = 2
 text = "VselectV"
 
 [node name="LoopbackReferenceLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true

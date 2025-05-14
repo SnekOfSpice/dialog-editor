@@ -367,7 +367,6 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("GoTo").set_current_page_count(str(current_page.number))
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
-	find_child("DeleteCurrent").disabled = Pages.get_page_count() == 1
 	
 	Pages.sync_line_references()
 	
@@ -484,6 +483,9 @@ func save_to_file(path:String, is_autosave:=false):
 		notify(str("Saved to ", active_file_name, "!"))
 	
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
+	
+	await get_tree().process_frame
+	refresh()
 
 func serialize() -> Dictionary:
 	return {

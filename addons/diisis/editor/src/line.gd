@@ -38,7 +38,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
 	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
-	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full and not find_child("LoopbackReferenceLabel").text.is_empty()
+	#find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full and not find_child("LoopbackReferenceLabel").text.is_empty()
 	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	if view == DiisisEditor.PageView.Full:

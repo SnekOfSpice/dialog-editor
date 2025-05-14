@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=71 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=72 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://dj2och56hdtg1" path="res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Light.ttf" id="1_4ip30"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
@@ -354,6 +354,8 @@ border_width_bottom = 4
 border_color = Color(0.674103, 0.174143, 0.48545, 1)
 border_blend = true
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qlmfo"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f0tga"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.709804)
 border_width_left = 1
@@ -485,6 +487,7 @@ RichTextLabel/fonts/bold_font = ExtResource("16_qrgx8")
 RichTextLabel/fonts/bold_italics_font = ExtResource("17_bodw7")
 RichTextLabel/fonts/italics_font = ExtResource("18_si63v")
 RichTextLabel/fonts/normal_font = ExtResource("9_qlmfo")
+RichTextLabel/styles/focus = SubResource("StyleBoxEmpty_qlmfo")
 SpinBox/icons/updown = null
 TabContainer/fonts/font = ExtResource("15_u5drt")
 TextEdit/fonts/font = ExtResource("3_8wpuc")

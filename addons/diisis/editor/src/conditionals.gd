@@ -135,5 +135,7 @@ func set_controls_collapsed(value:bool):
 			" > ",
 			find_child("BehaviorButton").text
 		)
+		button.tooltip_text = "Click to expand controls"
 	else:
 		button.text = "<"
+		button.tooltip_text = "Click to collapse controls"

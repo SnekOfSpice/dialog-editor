@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://co4e6yj2ed45f"]
+[gd_scene load_steps=9 format=3 uid="uid://co4e6yj2ed45f"]
 
 [ext_resource type="Script" uid="uid://duqpwgbdr1oq8" path="res://addons/diisis/editor/src/instruction_container.gd" id="1_mqxig"]
 [ext_resource type="PackedScene" uid="uid://dtmrdrq7nyrh0" path="res://addons/diisis/editor/src/instruction_text_edit.tscn" id="4_hkwpw"]
 [ext_resource type="Texture2D" uid="uid://dyfl6ft15am3y" path="res://addons/diisis/editor/visuals/theme/buttons_ui/reverse_checked.png" id="5_iimji"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="5_lenhj"]
+[ext_resource type="Script" uid="uid://b1jpwk3skthlu" path="res://addons/diisis/editor/src/tooltip_maker.gd" id="6_iimji"]
 [ext_resource type="Texture2D" uid="uid://1f6bex5oka8p" path="res://addons/diisis/editor/visuals/theme/buttons_ui/reverse_unchecked.png" id="6_lenhj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lenhj"]
@@ -67,11 +68,12 @@ size_flags_horizontal = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer"]
 layout_mode = 2
-tooltip_text = "Delay Before Call locks the input and progress of LineReader after reading the line but before executing the instruction.
+tooltip_text = "[code]Delay Before Call[/code] locks the input and progress of LineReader after reading the line but before executing the instruction.
 
-Delay After Call locks the input and progress of LineReader after executing the instruction but before continuing onto the next line. Note that this will start counting down when the line is reached, so e.g. if this calls a function calls a tween of 2 seconds, a Delay After Call of 2 seconds will continue the LineReader when the tween finishes, a delay of 4 seconds will continue the LineReader 2 seconds after the tween finishes, etc.
+[code]Delay After Call[/code] locks the input and progress of LineReader after executing the instruction but before continuing onto the next line. Note that this will start counting down [i]when the line is reached[/i], so e.g. if this calls a function calls a tween of 2 seconds, a Delay After Call of 2 seconds will continue the LineReader when the tween finishes, a delay of 4 seconds will continue the LineReader 2 seconds after the tween finishes, etc.
 
 Reverse instructions ignore these timings."
+script = ExtResource("6_iimji")
 
 [node name="VBoxContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer"]
 layout_mode = 2
