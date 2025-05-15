@@ -44,6 +44,11 @@ func _on_item_list_item_selected(index: int) -> void:
 func serialize():
 	return custom_data
 
+func select_function(method:String):
+	for idx in item_list.item_count:
+		if item_list.get_item_text(idx) == method:
+			item_list.select(idx)
+			_on_item_list_item_selected(idx)
 
 func _on_method_search_text_changed(new_text: String) -> void:
 	item_list.clear()

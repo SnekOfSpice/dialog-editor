@@ -621,6 +621,9 @@ func open_window_by_string(window_name:String):
 		"FactsPopup",
 	])
 
+func open_handler_window(method_to_select:=""):
+	open_window_by_string("HandlerWindow")
+	$Popups.get_node("HandlerWindow").select_function(method_to_select)
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():

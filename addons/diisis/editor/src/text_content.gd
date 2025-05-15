@@ -519,7 +519,10 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				tag = tag.trim_prefix("<call:")
 				tag = tag.trim_prefix("<func:")
 				tag = tag.trim_suffix(">")
-				DiisisEditorUtil.search_function(tag.split("(")[0])
+				if event.is_shift_pressed():
+					Pages.editor.open_handler_window(tag.split("(")[0])
+				else:
+					DiisisEditorUtil.search_function(tag.split("(")[0])
 			elif tag.begins_with("<var:"):
 				tag = tag.trim_prefix("<var:")
 				tag = tag.trim_suffix(">")
