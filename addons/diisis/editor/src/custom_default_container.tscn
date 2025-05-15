@@ -46,8 +46,9 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
 layout_mode = 2
+bbcode_enabled = true
 text = "Set default overrides. Any method called by diisis will have 2 steps of defaut applied. First the one set in the function signature in instruction handler scripts. Then the ones you set here.
-use them with a * in function calls
+use them with a [font=res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf]*[/font] in function calls
 Additionally, you can set string-based arguments to only accept dropdown-defined values here."
 fit_content = true
 scroll_active = false
