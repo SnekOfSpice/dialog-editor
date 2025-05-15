@@ -34,11 +34,7 @@ const RICH_TEXT_LABEL_FONT_SIZE_OFFSETS := [
 		"bold_italics_font" : -10,
 		"italics_font" : 1,
 	},
-	{
-		"bold_font" : 0,
-		"bold_italics_font" : 0,
-		"italics_font" : 0,
-	}
+	{},
 ]
 
 func set_label_font(idx:int):
@@ -74,9 +70,9 @@ func set_label_font_size(value:int):
 
 func set_rich_text_label_font_size(font_size:int):
 	theme.set_font_size("normal_font_size", "RichTextLabel", font_size)
-	theme.set_font_size("bold_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("bold_font"))
-	theme.set_font_size("bold_italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("bold_italics_font"))
-	theme.set_font_size("italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("italics_font"))
+	theme.set_font_size("bold_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("bold_font", 0))
+	theme.set_font_size("bold_italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("bold_italics_font", 0))
+	theme.set_font_size("italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("italics_font", 0))
 	_save_font_prefs()
 	
 
