@@ -11,6 +11,7 @@ var file_path := ""
 var last_quit_header := ""
 
 signal open_new_file()
+signal request_reload_editor()
 signal closing_editor()
 
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
@@ -130,6 +131,10 @@ func close_editor_and_open_new_file():
 	emit_signal("open_new_file")
 	close_editor()
 
+func reload_editor():
+	emit_signal("request_reload_editor")
+	close_editor()
+
 func update_content_scale(scale_factor:float):
 	if not editor_window or not editor:
 		return
@@ -205,6 +210,13 @@ func _on_editor_open_new_file() -> void:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
+
+func _on_editor_request_reload() -> void:
+	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
+		reload_editor()
+	last_quit_header = "Reload DIISIS?\n"
+	build_quit_dialog(last_quit_header, reload_editor)
+
 
 
 func _on_quit_dialog_request_save() -> void:

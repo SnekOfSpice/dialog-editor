@@ -70,7 +70,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core"]
-visible = false
 layout_mode = 2
 text = "any test functionality"
 
@@ -159,16 +158,21 @@ item_1/id = 1
 item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
+[node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
+item_count = 2
+item_0/text = "Step through pages"
+item_0/id = 0
+item_1/text = "Reload editor"
+item_1/id = 1
+
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
-item_count = 3
+item_count = 2
 item_0/text = "Word & Character Count"
 item_0/id = 0
 item_1/text = "Search Text    (Ctrl+F)"
 item_1/id = 1
-item_2/text = "Step through pages"
-item_2/id = 2
 
 [node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -610,6 +614,7 @@ size = Vector2i(12, 10)
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/IngestMenu" to="." method="_on_ingest_menu_id_pressed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/L10NMenu" to="." method="_on_l_10n_menu_id_pressed"]
+[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Editor" to="." method="_on_editor_index_pressed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]

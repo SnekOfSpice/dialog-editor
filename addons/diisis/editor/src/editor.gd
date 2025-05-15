@@ -34,6 +34,7 @@ var font_sizes = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
+signal request_reload()
 signal save_path_set(active_dir:String, active_file_name:String)
 signal history_altered(is_altered:bool)
 
@@ -620,27 +621,6 @@ func open_window_by_string(window_name:String):
 		"FactsPopup",
 	])
 
-func _on_setup_index_pressed(index: int) -> void:
-	match index:
-		1: # header
-			open_popup($Popups.get_node("HeaderPopup"))
-		2: # dd
-			open_popup($Popups.get_node("DropdownPopup"))
-		3: # instr
-			open_popup($Popups.get_node("HandlerWindow"), true)
-		5: # facts
-			open_popup($Popups.get_node("FactsPopup"), true)
-		6: # pages
-			open_popup($Popups.get_node("MovePagePopup"))
-
-func _on_utility_index_pressed(index: int) -> void:
-	match index:
-		0: 
-			open_popup($Popups.get_node("WordCountDialog"))
-		1: 
-			open_popup($Popups.get_node("TextSearchPopup"))
-		2:
-			step_through_pages()
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
@@ -654,6 +634,8 @@ func attempt_save_to_dir():
 func save_to_dir_if_active_dir():
 	if not active_dir.is_empty():
 		save_to_file(str(active_dir, active_file_name))
+
+#region MenuBar
 
 func _on_file_id_pressed(id: int) -> void:
 	match id:
@@ -684,6 +666,19 @@ func _on_file_id_pressed(id: int) -> void:
 		9:
 			emit_signal("open_new_file")
 
+func _on_ingest_menu_id_pressed(id: int) -> void:
+	match id:
+		0: # file
+			popup_ingest_file_dialog(
+				["PAGE",
+				find_child("IngestMenu").build_payload()
+				]
+			)
+		1: # clipboard
+			TextToDiisis.ingest_pages(
+				DisplayServer.clipboard_get(), find_child("IngestMenu").build_payload()
+			)
+
 func _on_l_10n_menu_id_pressed(id: int) -> void:
 	match id:
 		0: # locales
@@ -692,6 +687,38 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 			open_popup($Popups.get_node("FDExportLocales"), true)
 		2: #merge
 			open_popup($Popups.get_node("FDMergeL10N"), true)
+
+
+func _on_editor_index_pressed(index: int) -> void:
+	match index:
+		0:
+			step_through_pages()
+		1:
+			emit_signal("request_reload")
+
+func _on_utility_index_pressed(index: int) -> void:
+	match index:
+		0: 
+			open_popup($Popups.get_node("WordCountDialog"))
+		1: 
+			open_popup($Popups.get_node("TextSearchPopup"))
+
+func _on_setup_index_pressed(index: int) -> void:
+	match index:
+		1: # header
+			open_popup($Popups.get_node("HeaderPopup"))
+		2: # dd
+			open_popup($Popups.get_node("DropdownPopup"))
+		3: # instr
+			open_popup($Popups.get_node("HandlerWindow"), true)
+		5: # facts
+			open_popup($Popups.get_node("FactsPopup"), true)
+		6: # pages
+			open_popup($Popups.get_node("MovePagePopup"))
+
+
+#endregion
+
 
 func request_arg_hint(text_box:Control):
 	if not (text_box is LineEdit or text_box is TextEdit):
@@ -748,7 +775,7 @@ func _on_req(result: int, response_code: int, headers: PackedStringArray, body: 
 
 
 func _on_funny_debug_button_pressed() -> void:
-	DIISIS.get_custom_method_types("set_bgm")
+	emit_signal("request_reload")
 	return
 	var request := HTTPRequest.new()
 	add_child(request)
@@ -1010,19 +1037,6 @@ func set_text_size(size_index:int):
 	theme.set_font_size("font_size", "CheckButton",  edit_size)
 	theme.set_font_size("font_size", "CheckBox",  edit_size)
 
-
-func _on_ingest_menu_id_pressed(id: int) -> void:
-	match id:
-		0: # file
-			popup_ingest_file_dialog(
-				["PAGE",
-				find_child("IngestMenu").build_payload()
-				]
-			)
-		1: # clipboard
-			TextToDiisis.ingest_pages(
-				DisplayServer.clipboard_get(), find_child("IngestMenu").build_payload()
-			)
 
 func popup_ingest_file_dialog(context:Array):
 	ingest_context = context

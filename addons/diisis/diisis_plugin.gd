@@ -234,6 +234,7 @@ func open_editor():
 		await get_tree().process_frame
 		dia_editor_window.popup()
 		dia_editor_window.open_new_file.connect(open_new_file)
+		dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
 func open_new_file():
@@ -243,7 +244,12 @@ func open_new_file():
 	dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
+	dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 	dia_editor_window.title = "DIISIS"
+
+func on_window_request_reload_editor():
+	await get_tree().process_frame
+	open_editor()
 
 var was_playing_scene := false
 func _process(delta: float) -> void:

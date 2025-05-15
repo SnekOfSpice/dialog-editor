@@ -105,10 +105,8 @@ layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="UpdateAvailable" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2" instance=ExtResource("5_vlg08")]
-custom_minimum_size = Vector2(250, 20)
 layout_mode = 2
 size_flags_vertical = 4
-fit_content = false
 horizontal_alignment = 2
 
 [node name="HelpButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2"]
@@ -126,6 +124,7 @@ text = "?"
 [connection signal="mouse_exited" from="Window" to="." method="_on_window_mouse_exited"]
 [connection signal="history_altered" from="Window/Editor" to="." method="_on_editor_history_altered"]
 [connection signal="open_new_file" from="Window/Editor" to="." method="_on_editor_open_new_file"]
+[connection signal="request_reload" from="Window/Editor" to="." method="_on_editor_request_reload"]
 [connection signal="save_path_set" from="Window/Editor" to="." method="_on_editor_save_path_set"]
 [connection signal="scale_editor_down" from="Window/Editor" to="." method="_on_editor_scale_editor_down"]
 [connection signal="scale_editor_up" from="Window/Editor" to="." method="_on_editor_scale_editor_up"]
