@@ -18,8 +18,11 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 	if result != HTTPRequest.RESULT_SUCCESS: return
 
 	var current_version: String = Engine.get_meta("DIISISPlugin").get_version()
-	current_version = current_version.replace(".", "")
-	current_version = current_version.rpad(VERSION_COMPARE_LENGTH, "0")
+	while current_version.count(".") < 3:
+		current_version += ".0"
+	var version_value = ""
+	for part in current_version.split("."):
+		version_value += part.rpad(3, "0")
 	# Work out the next version from the releases information on GitHub
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	
@@ -38,9 +41,12 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 			continue
 		tags_actual.append(tag)
 	tags_actual = tags_actual.filter(func(tag):
-		tag = tag.replace(".", "")
-		tag = tag.rpad(VERSION_COMPARE_LENGTH, "0")
-		return int(tag) > int(current_version)
+		while tag.count(".") < 3:
+			tag += ".0"
+		var tag_value = ""
+		for part in tag.split("."):
+			tag_value += part.rpad(3, "0")
+		return int(tag_value) > int(version_value)
 		)
 	if tags_actual.size() > 0:
 		var newest_version : String = tags_actual[0]
