@@ -243,6 +243,7 @@ func open_new_file():
 	dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
+	dia_editor_window.title = "DIISIS"
 
 var was_playing_scene := false
 func _process(delta: float) -> void:

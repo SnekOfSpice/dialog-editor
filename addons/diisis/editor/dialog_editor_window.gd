@@ -205,7 +205,6 @@ func _on_editor_open_new_file() -> void:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
-	title = "DIISIS"
 
 
 func _on_quit_dialog_request_save() -> void:
