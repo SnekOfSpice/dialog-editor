@@ -697,10 +697,18 @@ func request_arg_hint(text_box:Control):
 	if not (text_box is LineEdit or text_box is TextEdit):
 		push_error(str("Tried calling request_arg_hint with object of type ", text_box.get_class()))
 		return
-	var caret_pos = Vector2i(text_box.get_caret_draw_pos())
+	
+	var caret_pos = Vector2i.ZERO
+	#if text_box is TextEdit:
+	caret_pos += Vector2i(text_box.get_caret_draw_pos())
+	if text_box is LineEdit:
+		caret_pos.x -= 50
+		#caret_pos.x += text_box.get_theme_font("font").get_string_size(text_box.text.substr(text_box.get_caret_column())).x
+		#caret_pos.y += text_box.size.y
 	caret_pos += Vector2i(text_box.global_position)
 	caret_pos *= content_scale
 	caret_pos += Vector2(0, 10) * content_scale
+	
 	_place_arg_hint(caret_pos)
 	
 	text_box.set_caret_column(text_box.get_caret_column())
