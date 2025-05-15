@@ -13,6 +13,7 @@ var entered_arguments := 0
 var used_arguments := []
 var tags := []
 var text_id : String
+var last_character_after_caret : String
 
 var text_box : CodeEdit
 
@@ -197,10 +198,9 @@ func _on_text_box_caret_changed() -> void:
 				continue
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
-	elif get_text_before_caret(1) == "<":
-		# duplicated because some tags have a : and some just end with >
-		for a in ["ap>", "lc>", "mp>", "func:>", "var:>", "name:>", "fact:>", "strpos>", "call:>", "advance>", "ts_rel:>", "ts_abs:>", "ts_reset>", "comment:>"]:
-			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
+	elif is_text_before_caret("<"):
+		for a in DIISIS.control_sequences:
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, str(a, ":" if (a in DIISIS.control_sequences_with_colon) else "", ">"))
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
 		for a in Pages.dropdowns.get(Pages.auto_complete_context, []):
@@ -237,17 +237,31 @@ func _on_text_box_caret_changed() -> void:
 		text_box.code_completion_prefixes
 	elif is_text_before_caret("."):
 		var found_autoload := ""
+		var is_var : bool
 		for autoload in Pages.callable_autoloads:
 			if is_text_before_caret(str("<call:", autoload, ".")) or is_text_before_caret(str("<func:", autoload, ".")):
 				found_autoload = autoload
+				is_var = false
+				break
+			elif is_text_before_caret(str("<var:", autoload, ".")):
+				found_autoload = autoload
+				is_var = true
 				break
 		if not found_autoload.is_empty():
-			for method in Pages.get_custom_autoload_methods(found_autoload):
-				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, str(method, "()"))
+			var completions : Array
+			var postfix := ""
+			if is_var:
+				completions = Pages.get_custom_autoload_properties(found_autoload)
+			else:
+				completions = Pages.get_custom_autoload_methods(found_autoload)
+				postfix = "()"
+			for method in completions:
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, str(method, postfix))
 			await get_tree().process_frame
 			text_box.update_code_completion_options(true)
 	
 	update_tag_hint()
+	last_character_after_caret = get_text_after_caret(1)
 
 func update_tag_hint():
 	index_all_tags()
@@ -325,7 +339,7 @@ func _on_text_box_text_changed() -> void:
 	
 	if Pages.auto_complete_context in ["call", "func"]:
 		for instr in Pages.get_all_instruction_names():
-			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)) and is_text_after_caret(">"):
+			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)) and is_text_after_caret(">") and not last_character_after_caret == ")":
 				var prev_col := text_box.get_caret_column()
 				text_box.insert_text_at_caret("()")
 				await get_tree().process_frame

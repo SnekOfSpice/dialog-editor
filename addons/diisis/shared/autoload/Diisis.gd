@@ -21,6 +21,16 @@ enum ChoiceBehaviorAfterSelection {
 
 
 var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset", "comment"]
+var control_sequences_with_colon := [
+	"func",
+	"var",
+	"name",
+	"fact",
+	"call",
+	"ts_rel",
+	"ts_abs",
+	"comment",
+]
 
 func type_to_str(type:int) -> String:
 	match type:
