@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://djiaiay3ntvfy"]
+[gd_scene load_steps=3 format=3 uid="uid://djiaiay3ntvfy"]
 
 [ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/dropdowns_container.gd" id="1_6xnc2"]
+[ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_81ktr"]
 
 [node name="MarginContainer" type="MarginContainer"]
 auto_translate_mode = 1
@@ -60,7 +61,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
-text = "add dd"
+icon = ExtResource("2_81ktr")
 
 [node name="DropdownsContainer" type="VBoxContainer" parent="TabContainer/Dropdowns"]
 auto_translate_mode = 1

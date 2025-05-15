@@ -600,6 +600,7 @@ visible = false
 visible = false
 
 [node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
+size = Vector2i(12, 10)
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]

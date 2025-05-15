@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://7os6why715o8" path="res://addons/diisis/editor/src/handler_setup_container.tscn" id="2_6c5k8"]
 
 [node name="HandlerWindow" type="Window"]
-title = "Instructions & Handlers"
+title = "InstructionHandler Setup"
 theme = ExtResource("1_6c5k8")
 script = ExtResource("1_6ygk2")
 

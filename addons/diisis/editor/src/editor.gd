@@ -37,7 +37,7 @@ signal open_new_file()
 signal save_path_set(active_dir:String, active_file_name:String)
 signal history_altered(is_altered:bool)
 
-const DELETE_MODULATE := "#b8b8d1b3"
+const DELETE_MODULATE := "#cfa2bfb3"
 
 func get_current_page() -> Page:
 	if page_container.get_child_count() > 0:
@@ -112,7 +112,8 @@ func init(active_file_path:="") -> void:
 	file_item.add_submenu_node_item("Ingest Pages", file_item.get_node("IngestMenu"))
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	file_item.add_separator()
-	file_item.add_item("About...", 3)
+	file_item.add_item("Preferences...", 3)
+	file_item.add_item("About...", 4)
 	
 	open_from_path(active_file_path)
 	
@@ -522,7 +523,7 @@ func open_from_path(path:String):
 		button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 2))
+	set_text_size(editor_data.get("text_size_id", 4))
 	update_page_view(editor_data.get("page_view", PageView.Full))
 	
 	await get_tree().process_frame
@@ -667,12 +668,13 @@ func _on_file_id_pressed(id: int) -> void:
 			open_popup($Popups.get_node("FDOpen"), true)
 		3:
 			# config
-			#open_popup($Popups.get_node("FileConfigPopup"), true)
+			open_popup($Popups.get_node("FileConfigPopup"), true)
+		4:
 			popup_accept_dialogue(
 				str(
-					"[center][color=#f51068]DIISIS is a machine of gore and wires[/color]", "\n",
-					"[color=#ffffff]DIISIS is antifascist software[/color]", "\n",
-					"[color=#ff42d6]DIISIS loves you[/color][/center]",
+					"[center][color=#f51068][b]DIISIS is a machine of gore and wires[/b][/color]", "\n\n",
+					"[color=#ffffff][b]DIISIS is antifascist software[/b][/color]", "\n\n",
+					"[color=#ff42d6][b]DIISIS loves you[/b][/color][/center]",
 				),
 				"About DIISIS"
 			)
@@ -987,9 +989,13 @@ func set_text_size(size_index:int):
 	var label_size = font_sizes[size_index]
 	if theme.get_font_size("font_size", "CodeEdit") == label_size:
 		return
-	var edit_size = label_size * (16.0/14.0)
+	var edit_size = label_size# * (14.0/16.0)
 	theme.set_font_size("font_size", "Label", label_size)
 	theme.set_font_size("font_size", "CodeEdit", label_size)
+	theme.set_font_size("bold_font_size", "RichTextLabel", label_size)
+	theme.set_font_size("bold_italics_font_size", "RichTextLabel", label_size)
+	theme.set_font_size("italics_font_size", "RichTextLabel", label_size)
+	theme.set_font_size("mono_font_size", "RichTextLabel", label_size)
 	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
 	theme.set_font_size("font_size", "LineEdit", edit_size)
 	theme.set_font_size("font_size", "Button",  edit_size)

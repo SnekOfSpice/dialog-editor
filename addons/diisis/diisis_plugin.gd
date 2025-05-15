@@ -188,7 +188,7 @@ func _enter_tree():
 	toolbar_button.get_parent().move_child(toolbar_button, -2)
 	
 
-	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Regular.ttf]"
+	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
 	print_rich(welcome_message)
 

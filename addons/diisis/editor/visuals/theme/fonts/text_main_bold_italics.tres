@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://22u482v5fx2o"]
+
+[ext_resource type="FontVariation" uid="uid://rwenx6g7xf7e" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_base.tres" id="1_b54bd"]
+
+[resource]
+base_font = ExtResource("1_b54bd")
+variation_embolden = 0.8
+variation_transform = Transform2D(1, 0.4, 0, 1, 0, 0)
