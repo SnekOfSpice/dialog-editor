@@ -59,3 +59,10 @@ func _on_instruction_request_search(instruction_name: String, reverse: bool) -> 
 		DiisisEditorUtil.search_function(instruction_edit.get_instruction_name())
 		return
 	DiisisEditorUtil.search_function(instruction_name)
+
+
+func _on_instruction_text_edit_request_search_in_setup(instruction_name: String, reverse: bool) -> void:
+	if reverse and instruction_name.is_empty():
+		Pages.editor.open_handler_window(instruction_edit.get_instruction_name())
+		return
+	Pages.editor.open_handler_window(instruction_name)

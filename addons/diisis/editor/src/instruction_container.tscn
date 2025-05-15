@@ -119,5 +119,7 @@ text = "After Call"
 text_overrun_behavior = 1
 
 [connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_request_search"]
+[connection signal="request_search_in_setup" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_text_edit_request_search_in_setup"]
 [connection signal="toggled" from="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/HasReverseCheckBox" to="." method="_on_has_reverse_check_box_toggled"]
 [connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/InstructionTextEditReverse" to="." method="_on_instruction_request_search"]
+[connection signal="request_search_in_setup" from="HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/InstructionTextEditReverse" to="." method="_on_instruction_text_edit_request_search_in_setup"]

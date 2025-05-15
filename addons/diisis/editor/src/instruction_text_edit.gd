@@ -7,6 +7,7 @@ var text_box : HintedLineEdit
 @export var reverse := false
 
 signal request_search(instruction_name : String, reverse : bool)
+signal request_search_in_setup(instruction_name : String, reverse : bool)
 
 func init():
 	text_box = find_child("InstructionTextBox")
@@ -22,11 +23,6 @@ func get_instruction_name() -> String:
 		return text_box.text.split("(")[0]
 	else:
 		return text_box.text
-
-func _on_copy_signature_to_clipboard_button_pressed() -> void:
-	var signature : String = Pages.get_instruction_signature(get_instruction_name())
-	if not signature.is_empty():
-		DisplayServer.clipboard_set(signature)
 
 func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	if new_text.contains("\n"):
@@ -88,4 +84,7 @@ func _on_instruction_text_box_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame
-			emit_signal("request_search", get_instruction_name(), reverse)
+			if event.is_shift_pressed():
+				emit_signal("request_search_in_setup", get_instruction_name(), reverse)
+			else:
+				emit_signal("request_search", get_instruction_name(), reverse)

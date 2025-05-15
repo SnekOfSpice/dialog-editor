@@ -473,41 +473,6 @@ func delete_page_data(at: int):
 	page_data.erase(get_page_count() - 1)
 	
 	change_page_references_dir(at, -1)
-	
-	#emit_signal("pages_modified")
-
-func get_instruction_signature(instruction_name:String) -> String:
-	var result := "func "
-	result += instruction_name
-	result += "("
-	
-	var i := 0
-	var arg_types : Array = get_custom_method_types(instruction_name)
-	var arg_names : Array = get_custom_method_arg_names(instruction_name)
-	while i < arg_types.size():
-		var arg_type_name : String
-		var raw_type : String = arg_types[i].trim_suffix(" ").trim_prefix(" ")
-		if raw_type in dropdown_titles:
-			raw_type = "string"
-		if raw_type.containsn("string"):
-			arg_type_name = "String"
-		else:
-			arg_type_name = raw_type
-		result += str(arg_names[i], " : ", arg_type_name)
-		
-		if i < arg_types.size() - 1:
-			result += ", "
-		
-		i += 1
-	
-	result += ") -> bool:"
-	
-	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
-	result += "\n\t# (Needs to be called by your code from somewhere.)"
-	result += "\n\t# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)"
-	result += "\n\treturn false"
-	
-	return result
 
 func get_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()

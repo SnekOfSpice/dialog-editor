@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="PackedScene" uid="uid://cil14m00rtcv7" path="res://addons/diisis/editor/src/ingest_menu.tscn" id="5_ows1f"]
 [ext_resource type="ButtonGroup" uid="uid://47f4hgcrt6xj" path="res://addons/diisis/editor/src/page_view_button_group.tres" id="6_5vieb"]
-[ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://addons/diisis/editor/src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="7_0rrj6"]
 [ext_resource type="Script" uid="uid://chvelp1kqeoya" path="res://addons/diisis/editor/src/page_view_button.gd" id="7_7syci"]
 [ext_resource type="Texture2D" uid="uid://c0hn50yuea61r" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_full.png" id="7_32dog"]
@@ -566,10 +565,6 @@ visible = false
 exclusive = false
 content_scale_aspect = 1
 
-[node name="InstructionPopup" parent="Popups" instance=ExtResource("6_m88mr")]
-visible = false
-theme = ExtResource("1_nb6ej")
-
 [node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
 visible = false
 
@@ -639,6 +634,5 @@ size = Vector2i(12, 10)
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
-[connection signal="validate_saved_instructions" from="Popups/InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
 [connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]
 [connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]
