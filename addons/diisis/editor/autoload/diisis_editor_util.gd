@@ -175,6 +175,6 @@ func search_in_script(script: Script, search:String):
 func actual_search(what:String):
 	var editor : CodeEdit = EditorInterface.get_script_editor().get_current_editor().get_base_editor()
 	var result : Vector2i = editor.search(what, TextEdit.SEARCH_MATCH_CASE, 0, 0)
-	editor.select(result.y, result.x, result.y, result.x + what.length())
+	editor.select(result.y, result.x, result.y, result.x)
 	editor.center_viewport_to_caret()
 	get_tree().root.grab_focus()

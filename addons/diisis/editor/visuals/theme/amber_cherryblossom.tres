@@ -1,7 +1,8 @@
-[gd_resource type="Theme" load_steps=72 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=78 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontFile" uid="uid://dj2och56hdtg1" path="res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Light.ttf" id="1_4ip30"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
+[ext_resource type="StyleBox" uid="uid://bvcu5kwhsudya" path="res://addons/diisis/editor/visuals/theme/buttons_ui/focus.tres" id="2_pj604"]
 [ext_resource type="Texture2D" uid="uid://j1bmp2r40pma" path="res://addons/diisis/editor/visuals/theme/buttons_ui/unchecked.png" id="3_3c5a6"]
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/theme/fonts/textfont.tres" id="3_8wpuc"]
 [ext_resource type="Texture2D" uid="uid://qqt7d0lnrvcb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked_disabled.png" id="3_o21m6"]
@@ -354,7 +355,54 @@ border_width_bottom = 4
 border_color = Color(0.674103, 0.174143, 0.48545, 1)
 border_blend = true
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qlmfo"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bodw7"]
+bg_color = Color(0.0693, 0.08172, 0.09, 0.866667)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qlmfo"]
+content_margin_left = 6.0
+content_margin_top = 8.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.11, 0.099, 0.101933, 0.772549)
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pj604"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.13, 0.12428, 0.1222, 0.686275)
+border_width_top = 5
+border_color = Color(0.13, 0.1261, 0.1222, 0)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5rc7a"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.08, 0.06592, 0.0608, 1)
+border_width_top = 5
+border_color = Color(0.81, 0.74952, 0.3564, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u5drt"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.109804, 0.0745098, 0.0862745, 1)
+border_width_top = 5
+border_color = Color(0.8, 0.216, 0.8, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrgx8"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.05, 0.0467, 0.0455, 0.741176)
+border_width_top = 5
+border_color = Color(0.45, 0.351, 0.45, 1)
+border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f0tga"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.709804)
@@ -398,6 +446,7 @@ Button/colors/font_outline_color = Color(1, 0.662745, 0.984314, 0.6)
 Button/constants/outline_size = 1
 Button/font_sizes/font_size = 13
 Button/fonts/font = ExtResource("1_4ip30")
+Button/styles/focus = ExtResource("2_pj604")
 Button/styles/hover = SubResource("StyleBoxFlat_5foo6")
 Button/styles/normal = SubResource("StyleBoxFlat_41heh")
 Button/styles/pressed = SubResource("StyleBoxFlat_1m062")
@@ -446,6 +495,7 @@ Label/font_sizes/font_size = 12
 Label/fonts/font = ExtResource("9_4i5p2")
 LineEdit/font_sizes/font_size = 13
 LineEdit/fonts/font = ExtResource("13_qlmfo")
+LineEdit/styles/focus = ExtResource("2_pj604")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_d3qqo")
 MarginContainer/constants/margin_bottom = 3
 MarginContainer/constants/margin_left = 3
@@ -487,9 +537,15 @@ RichTextLabel/fonts/bold_font = ExtResource("16_qrgx8")
 RichTextLabel/fonts/bold_italics_font = ExtResource("17_bodw7")
 RichTextLabel/fonts/italics_font = ExtResource("18_si63v")
 RichTextLabel/fonts/normal_font = ExtResource("9_qlmfo")
-RichTextLabel/styles/focus = SubResource("StyleBoxEmpty_qlmfo")
+RichTextLabel/styles/normal = SubResource("StyleBoxFlat_bodw7")
 SpinBox/icons/updown = null
 TabContainer/fonts/font = ExtResource("15_u5drt")
+TabContainer/styles/panel = SubResource("StyleBoxFlat_qlmfo")
+TabContainer/styles/tab_disabled = SubResource("StyleBoxFlat_pj604")
+TabContainer/styles/tab_focus = ExtResource("2_pj604")
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_5rc7a")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_u5drt")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_qrgx8")
 TextEdit/fonts/font = ExtResource("3_8wpuc")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_f0tga")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_nothl")

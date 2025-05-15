@@ -130,7 +130,9 @@ func set_skip(value:bool):
 		var page : Page = Pages.editor.get_current_page()
 		var range := get_folder_range_v()
 		for index in range(range.x + 1, range.y + 2):
-			page.get_line(index).set_skip_folder_override(value)
+			var line : Line = page.get_line(index)
+			if line:
+				line.set_skip_folder_override(value)
 
 func set_skip_folder_override(value:bool):
 	modulate.a = 0.6 if value or find_child("SkipCheckBox").button_pressed else 1
