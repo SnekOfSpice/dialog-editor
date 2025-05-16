@@ -165,7 +165,8 @@ var name_container: Control:
 @export var choice_title_label: Label
 
 @export_group("Advanced Text Display")
-@export_subgroup("Text Content", "body_label")
+@export_subgroup("Body Label", "body_label")
+## @experimental
 ## If [code]0[/code], [param body_label] will be filled as far as possible.
 ## Breaks will be caused by <lc> tags, 
 ## a file with [param Pages.use_dialog_syntax] enabled, and a
@@ -173,7 +174,8 @@ var name_container: Control:
 ## If set to more than [code]0[/code], the text will additionally be split to
 ## ensure it never runs more than that amount of lines. [br]
 ## [b]Note:[/b] Resizing the [param body_label] after a Line has started to be read will
-## throw this alignment off.
+## throw this alignment off.[br]
+## [b]Incompatible with [member chatlog_enabled]![/b]
 @export_range(0, 1, 1.0, "or_greater") var body_label_max_lines := 0
 ## A prefix to add to all strings that are displayed in [member body_label]. Respects bbcode such as [code][center][/code].
 @export var body_label_prefix := ""
@@ -183,10 +185,15 @@ var name_container: Control:
 ## The dictionary key is the word to wrap. The value is the prefix and suffix for that word, separated by a space.[br]
 ## For example; [code]"DIISIS" : "[b] [/b]"[/code].
 @export var body_label_word_wrappers : Dictionary[String, String]
+## Gets prefixed to text lines, after [member body_label_prefix]. Keys are actor names.
+@export var body_label_prefix_by_actor : Dictionary[String, String]
+## Gets suffixed to text lines, before [member body_label_suffix]. Keys are actor names.
+@export var body_label_suffix_by_actor : Dictionary[String, String]
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
-## [member text_speed] will still act as normal, though you probably want to use [constant LineReader.MAX_TEXT_SPEED]. [br][br]
+## [member text_speed] will still act as normal, though you probably want to use [constant LineReader.MAX_TEXT_SPEED]. [br]
+## [b]Incompatible with [member body_label_max_lines]![/b][br][br]
 ## [s]I've been reading homestuck[/s]
 @export var chatlog_enabled := false
 ## When [member chatlog_enabled] is true, instead these names will be used if set. If not, defaults to [member name_map.]
@@ -195,6 +202,10 @@ var name_container: Control:
 @export var chatlog_name_colors : Dictionary[String, Color] = {}
 ## If set, the entire line is tinted in the appropriate color set in [member chatlog_name_colors]. If false, only the actor name is tinted.
 @export var chatlog_tint_full_line := true
+## If set, the actor's prefix from [member body_label_prefix_by_actor] will also be prefixed to the chatlog.
+@export var chatlog_include_body_label_actor_prefix := false
+## If set, the actor's suffix from [member body_label_suffix_by_actor] will also be suffixed to the chatlog.
+@export var chatlog_include_body_label_actor_suffix := false
 
 @export_group("Advanced UX")
 @export_subgroup("Choices")
@@ -839,7 +850,7 @@ func _read_new_line(new_line: Dictionary):
 	_reverse_next_instruction = false
 
 func _fit_to_max_line_count(lines: Array):
-	if body_label_max_lines <= 0:
+	if body_label_max_lines <= 0 or chatlog_enabled:
 		return
 	
 	var new_chunks := []
@@ -852,7 +863,6 @@ func _fit_to_max_line_count(lines: Array):
 	
 	var i := 0
 	while i < lines.size():
-		
 		var line_height:=0
 		var content_height := 0
 		
@@ -876,7 +886,7 @@ func _fit_to_max_line_count(lines: Array):
 		if line_height == 0:
 			line_height = label.get_content_height()
 		
-		label.text = str(body_label_prefix, name_prefix, line, body_label_suffix)
+		label.text = str(name_prefix,line,)
 		
 		while content_height <= line_height * body_label_max_lines:
 			if label.text.is_empty():
@@ -899,7 +909,19 @@ func _fit_to_max_line_count(lines: Array):
 							scan_index += 1
 							continue
 						var tag_end = label.text.find("]", scan_index)
+						if label.text.length() >= scan_index + 3:
+							if (
+								label.text[scan_index + 1] == "i" and
+								label.text[scan_index + 2] == "m" and
+								label.text[scan_index + 3] == "g"):
+									tag_end = label.text.find("[/img]") + 5
+							elif (
+								label.text[scan_index + 1] == "u" and
+								label.text[scan_index + 2] == "r" and
+								label.text[scan_index + 3] == "l"):
+									tag_end = label.text.find("[/url]") + 5
 						bbcode_padding += tag_end - scan_index + 2
+						scan_index = tag_end
 				
 				
 				var fitting_raw_text := label.text.substr(0, label.visible_characters + bbcode_padding)
@@ -1125,6 +1147,7 @@ func _start_showing_text():
 	var content : String = _dialog_lines[_dialog_line_index]
 	_line_chunks = content.split("<lc>")
 	_chunk_index = -1
+	_insert_strings_in_next_chunk()
 	_fit_to_max_line_count(_line_chunks)
 	_read_next_chunk()
 
@@ -1231,9 +1254,45 @@ func _attempt_read_previous_chunk() -> bool:
 	if chunk_failure and dialog_line_failure:
 		return false
 	
-
-	
 	return true
+
+func _insert_strings_in_next_chunk():
+	var new_text : String = _line_chunks[_chunk_index + 1]
+	new_text = trim_trimmables(new_text)
+	var ends_with_advance := new_text.ends_with("<advance>")
+	new_text = new_text.trim_suffix("<advance>")
+	
+	var body_label_actor_prefix := ""
+	var body_label_actor_suffix := ""
+	if chatlog_enabled:
+		if chatlog_include_body_label_actor_prefix:
+			body_label_actor_prefix = body_label_prefix_by_actor.get(current_raw_name, "")
+		if chatlog_include_body_label_actor_suffix:
+			body_label_actor_suffix = body_label_suffix_by_actor.get(current_raw_name, "")
+	else:
+		body_label_actor_prefix = body_label_prefix_by_actor.get(current_raw_name, "")
+		body_label_actor_suffix = body_label_suffix_by_actor.get(current_raw_name, "")
+	
+	new_text = str(
+		body_label_prefix,
+		body_label_actor_prefix,
+		new_text,
+		body_label_actor_suffix,
+		body_label_suffix,
+		)
+	
+	for word in body_label_word_wrappers.keys():
+		var wrapper : PackedStringArray = body_label_word_wrappers.get(word).split(" ")
+		if wrapper.size() != 2:
+			push_error(str("Word ", word, " has invalid wrapper!"))
+			continue
+		new_text = new_text.replace(word, str(wrapper[0], word, wrapper[1]))
+	
+	
+	if ends_with_advance:
+		new_text = str(new_text, "<advance>")
+	
+	_line_chunks[_chunk_index + 1] = new_text
 
 func _read_next_chunk():
 	_remaining_prompt_delay = input_prompt_delay
@@ -1258,15 +1317,6 @@ func _read_next_chunk():
 		push_warning(str("Line chunk \"", new_text, "\" contains an <advance> tag that is not at the end of the chunk."))
 	_auto_advance = new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
-	
-	new_text = str(body_label_prefix, new_text, body_label_suffix)
-	
-	for word in body_label_word_wrappers.keys():
-		var wrapper : PackedStringArray = body_label_word_wrappers.get(word).split(" ")
-		if wrapper.size() != 2:
-			push_error(str("Word ", word, " has invalid wrapper!"))
-			continue
-		new_text = new_text.replace(word, str(wrapper[0], word, wrapper[1]))
 	
 	var bbcode_removed_text := new_text
 	var tag_start_position = bbcode_removed_text.find("[")
