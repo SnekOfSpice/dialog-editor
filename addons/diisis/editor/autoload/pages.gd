@@ -660,7 +660,7 @@ func get_custom_method_arg_names(instruction_name) -> Array:
 	return result
 
 func get_custom_method_base_defaults(instruction_name: String) -> Array:
-	return get_custom_method(instruction_name).get("default_args")
+	return get_custom_method(instruction_name).get("default_args", [])
 
 func get_custom_method_base_defaultsd(instruction_name: String) -> Dictionary:
 	var defaults := get_custom_method_base_defaults(instruction_name)
@@ -1298,11 +1298,11 @@ func update_compliances(instruction_name:String):
 			if content.get("name", "") == instruction_name:
 				var text : String = content.get("meta.text", "")
 				var text_reverse : String = content.get("meta.reverse_text", "")
-				var status = get_compliance_with_template(text)
+				var status = get_method_validity(text)
 				if status != "OK":
 					line["content"]["meta.validation_status"] = status
 					continue
-				status = get_compliance_with_template(text_reverse)
+				status = get_method_validity(text_reverse)
 				if status != "OK" and content.get("meta.has_reverse"):
 					line["content"]["meta.validation_status"] = status
 					continue
@@ -1324,10 +1324,27 @@ func get_default_arg_value(instruction_name:String, arg_name:String):
 func does_instruction_name_exist(instruction_name:String):
 	return get_all_instruction_names().has(instruction_name)
 
-func get_compliance_with_template(instruction:String) -> String:
+func get_autoload_names() -> Array:
+	var autoload_names := []
+	for property in ProjectSettings.get_property_list():
+		var prop_name :String = property.get("name")
+		if prop_name.begins_with("autoload/"):
+			autoload_names.append(prop_name.trim_prefix("autoload/"))
+	autoload_names.sort()
+	return autoload_names
+
+func get_method_validity(instruction:String) -> String:
 	var entered_name = instruction.split("(")[0]
 	if not does_instruction_name_exist(entered_name):
-		return str("Instruction ", entered_name, " does not exist")
+		var autoload_warning := ""
+		if entered_name.contains("."):
+			var autoload_name := entered_name.split(".")[0]
+			if not Pages.callable_autoloads.has(autoload_name):
+				if autoload_name in get_autoload_names():
+					return str("Autoload ", autoload_name, " is not set for function calls")
+				else:
+					return str("Autoload ", autoload_name, " does not exist")
+		return str("Function ", entered_name, " does not exist", autoload_warning)
 	
 	var arg_count : int = get_custom_method_args(entered_name).size()
 	if arg_count == 0:
@@ -1470,7 +1487,7 @@ func get_entered_instruction_compliance(instruction:String, check_as_template:=f
 					arg_names.append(arg_name)
 				i += 1
 	else: # check as sth that follows the template
-		var template_compliance := get_compliance_with_template(instruction)
+		var template_compliance := get_method_validity(instruction)
 		if template_compliance != "OK":
 			return template_compliance
 	

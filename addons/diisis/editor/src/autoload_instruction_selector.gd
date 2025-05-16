@@ -5,12 +5,8 @@ extends Control
 func init():
 	for child in find_child("Buttons").get_children():
 		child.queue_free()
-	var autoload_names := []
-	for property in ProjectSettings.get_property_list():
-		var prop_name :String = property.get("name")
-		if prop_name.begins_with("autoload/"):
-			autoload_names.append(prop_name.trim_prefix("autoload/"))
-	autoload_names.sort()
+	var autoload_names := Pages.get_autoload_names()
+	
 	for autoload in autoload_names:
 		var button = CheckBox.new()
 		button.text = autoload
