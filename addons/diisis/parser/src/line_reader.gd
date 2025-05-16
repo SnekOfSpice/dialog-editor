@@ -1256,28 +1256,27 @@ func _attempt_read_previous_chunk() -> bool:
 	
 	return true
 
+# wrapper should be prefix or suffix
+func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
+	var result := ""
+	if chatlog_enabled:
+		if get(str("chatlog_include_body_label_actor_", wrapper)):
+			result = get(str("body_label_", wrapper, "_by_actor")).get(current_raw_name, "")
+	else:
+		result = get(str("body_label_", wrapper, "_by_actor")).get(current_raw_name, "")
+	return result
+
 func _insert_strings_in_next_chunk():
 	var new_text : String = _line_chunks[_chunk_index + 1]
 	new_text = trim_trimmables(new_text)
 	var ends_with_advance := new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
 	
-	var body_label_actor_prefix := ""
-	var body_label_actor_suffix := ""
-	if chatlog_enabled:
-		if chatlog_include_body_label_actor_prefix:
-			body_label_actor_prefix = body_label_prefix_by_actor.get(current_raw_name, "")
-		if chatlog_include_body_label_actor_suffix:
-			body_label_actor_suffix = body_label_suffix_by_actor.get(current_raw_name, "")
-	else:
-		body_label_actor_prefix = body_label_prefix_by_actor.get(current_raw_name, "")
-		body_label_actor_suffix = body_label_suffix_by_actor.get(current_raw_name, "")
-	
 	new_text = str(
 		body_label_prefix,
-		body_label_actor_prefix,
+		_get_contextual_actor_body_wrapper("prefix"),
 		new_text,
-		body_label_actor_suffix,
+		_get_contextual_actor_body_wrapper("suffix"),
 		body_label_suffix,
 		)
 	
@@ -1287,7 +1286,6 @@ func _insert_strings_in_next_chunk():
 			push_error(str("Word ", word, " has invalid wrapper!"))
 			continue
 		new_text = new_text.replace(word, str(wrapper[0], word, wrapper[1]))
-	
 	
 	if ends_with_advance:
 		new_text = str(new_text, "<advance>")
