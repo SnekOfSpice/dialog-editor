@@ -1033,7 +1033,7 @@ func set_text_size(size_index:int):
 	var label_size = font_sizes[size_index]
 	if theme.get_font_size("font_size", "CodeEdit") == label_size:
 		return
-	var edit_size = label_size# * (14.0/16.0)
+	var edit_size = label_size + 2# (14.0/16.0)
 	theme.set_font_size("font_size", "Label", label_size)
 	theme.set_font_size("font_size", "CodeEdit", label_size)
 	theme.set_font_size("bold_font_size", "RichTextLabel", label_size)
@@ -1041,10 +1041,8 @@ func set_text_size(size_index:int):
 	theme.set_font_size("italics_font_size", "RichTextLabel", label_size)
 	theme.set_font_size("mono_font_size", "RichTextLabel", label_size)
 	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("font_size", "LineEdit", edit_size)
-	theme.set_font_size("font_size", "Button",  edit_size)
-	theme.set_font_size("font_size", "CheckButton",  edit_size)
-	theme.set_font_size("font_size", "CheckBox",  edit_size)
+	theme.set_font_size("font_size", "LineEdit", label_size)
+	theme.set_font_size("font_size", "Button",  label_size + 2)
 
 
 func popup_ingest_file_dialog(context:Array):
