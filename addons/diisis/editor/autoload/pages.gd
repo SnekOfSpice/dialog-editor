@@ -1345,6 +1345,8 @@ func get_autoload_names() -> Array:
 	return autoload_names
 
 func get_method_validity(instruction:String) -> String:
+	if instruction.is_empty():
+		return ""
 	var entered_name = instruction.split("(")[0]
 	if not does_instruction_name_exist(entered_name):
 		var autoload_warning := ""
@@ -1357,14 +1359,28 @@ func get_method_validity(instruction:String) -> String:
 					return str("Autoload ", autoload_name, " does not exist")
 		return str("Function ", entered_name, " does not exist", autoload_warning)
 	
-	var arg_count : int = get_custom_method_args(entered_name).size()
+	var method_args := get_custom_method_args(entered_name)
+	var arg_count : int = method_args.size()
 	if arg_count == 0:
 		if not instruction.ends_with("()"):
 			return "Function doesn't expect arguments"
-	if instruction.count(",") + 1 != arg_count:
-		if arg_count > 0:
-			return str(entered_name, " expects ", arg_count, " arguments but is called with ", instruction.count(",") + 1)
-	
+	var entered_arg_count := instruction.count(",") + 1
+	if entered_arg_count > arg_count:
+		return str(entered_name, " expects ", arg_count, " arguments but is called with ", entered_arg_count)
+	elif entered_arg_count < arg_count:
+		# check if all omitted args are covered by defaults
+		var entered_arg_names := []
+		for i in entered_arg_count:
+			entered_arg_names.append(method_args[i].get("name"))
+		var all_arg_names := get_custom_method_arg_names(entered_name)
+		for arg_name in entered_arg_names:
+			all_arg_names.erase(arg_name)
+		var defaults = get_custom_method_defaults(entered_name)
+		
+		for arg_name in all_arg_names: #is now only not submitted args
+			if not arg_name in defaults.keys():
+				return str(entered_name, " expects ", arg_count, " arguments but is called with ", entered_arg_count)
+		
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
 	var args_string = instruction.trim_prefix(entered_name)
 	args_string = args_string.trim_prefix("(")

@@ -40,8 +40,6 @@ func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	
 	compliance_container.visible = compliance != "OK"
 	compliance_label.text = compliance
-	
-	Pages.editor.error_update_countdown = 1.0
 
 
 func _on_instruction_text_box_focus_entered() -> void:

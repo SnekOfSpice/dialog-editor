@@ -167,6 +167,8 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 	var arg_names : Array = Pages.get_custom_method_arg_names(func_name)
 	var arg_types : Array = Pages.get_custom_method_types(func_name)
 	for type in arg_types:
+		if i >= parts.size():
+			break
 		var arg_string : String = parts[i]
 		while arg_string.begins_with(" "):
 			arg_string = arg_string.trim_prefix(" ")
