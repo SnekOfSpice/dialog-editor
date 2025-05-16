@@ -244,3 +244,7 @@ func _on_editor_history_altered(is_altered: bool) -> void:
 			title = str("(*) ", title)
 	else:
 		title = title.trim_prefix("(*) ")
+
+
+func _on_focus_entered() -> void:
+	Pages.update_all_compliances()

@@ -719,7 +719,7 @@ func get_all_invalid_instructions() -> String:
 		page_index += 1
 	
 	if not malformed_instructions.is_empty():
-		warning += str("Warning: invalid instructions at: ", ", ".join(malformed_instructions))
+		warning += str("Function error at: ", ", ".join(malformed_instructions))
 	return warning
 
 
@@ -1287,6 +1287,8 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 func update_all_compliances():
 	for method in get_all_instruction_names():
 		update_compliances(method)
+	if is_instance_valid(editor):
+		editor.update_error_text_box()
 
 func update_compliances(instruction_name:String):
 	for page in page_data.values():
@@ -1305,6 +1307,7 @@ func update_compliances(instruction_name:String):
 					if status != "OK" and content.get("meta.has_reverse"):
 						line["content"]["meta.validation_status"] = status
 						continue
+					line["content"]["meta.validation_status"] = "OK"
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var functions : Array = content.get("meta.function_calls", [])
 				var compliance := "OK"
@@ -1357,10 +1360,10 @@ func get_method_validity(instruction:String) -> String:
 	var arg_count : int = get_custom_method_args(entered_name).size()
 	if arg_count == 0:
 		if not instruction.ends_with("()"):
-			return "Arg count mismatch"
+			return "Function doesn't expect arguments"
 	if instruction.count(",") + 1 != arg_count:
 		if arg_count > 0:
-			return "Arg count mismatch"
+			return str(entered_name, " expects ", arg_count, " arguments but is called with ", instruction.count(",") + 1)
 	
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
 	var args_string = instruction.trim_prefix(entered_name)
