@@ -25,10 +25,10 @@ var hovering_meta := false
 @onready var rtl_custom_minimum_size : Vector2 = find_child("RichTextLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-#var blockers : int = 3 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
-var advance_blockers := 0
-
 @onready var text_start_position = find_child("TextContainer1").position
+
+var ui_id := 1
+@onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 
 var callable_upon_blocker_clear:Callable
 
@@ -124,8 +124,6 @@ func cum(_voice:String):
 	get_tree().create_timer(1.5).timeout.connect(orgasm_mat.set_shader_parameter.bind("lod", 1.4))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if advance_blockers > 0:
-		return
 	if not GameWorld.stage_root.screen.is_empty():
 		return
 	if event is InputEventKey:
@@ -344,6 +342,7 @@ func serialize() -> Dictionary:
 	
 	result["camera"] = $Camera2D.serialize()
 	result["ui_id"] = ui_id
+	result["ui_root_visible"] = ui_root.visible
 	
 	return result
 
@@ -397,6 +396,7 @@ func deserialize(data:Dictionary):
 	
 	use_ui(data.get("ui_id", 1))
 	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
+	ui_root.visible = data.get("ui_root_visible", true)
 
 var emit_insutrction_complete_on_cg_hide :bool
 
@@ -427,17 +427,11 @@ func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) ->
 		
 		set_cg_bottom(cg_name, fade_in)
 
-
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
 
-
 func _on_menu_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
-
-
-
-
 
 func _on_chapter_cover_chapter_intro_finished() -> void:
 	Parser.inform_instruction_completed()
@@ -449,8 +443,6 @@ func _on_instruction_handler_splatter(amount: int) -> void:
 		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
 		find_child("VFXLayer").add_child(sprite)
 
-var ui_id := 1
-@onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 func use_ui(id:int):
 	var lr : LineReader = find_child("LineReader")
 	var root_existed : bool
@@ -485,12 +477,6 @@ func set_static(level:float):
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
-
-func increment_advance_blocker():
-	advance_blockers += 1
-func decrement_advance_blocker():
-	advance_blockers -= 1
-
 
 func _on_rich_text_label_meta_hover_ended(_meta: Variant) -> void:
 	hovering_meta = false

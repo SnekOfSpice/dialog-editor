@@ -10,6 +10,7 @@ class_name LineReader
 
 ## Text speed at which text will be shown instantly instead of gradually revealed.
 const MAX_TEXT_SPEED := 201
+const UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label", "prompt_finished", "prompt_unfinished"]
 
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member name_colors].
@@ -280,6 +281,8 @@ var _remaining_prompt_delay := input_prompt_delay
 @export var warn_advance_on_awaiting_inline_call := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
+@export_subgroup("Misc")
+@export var persist_ui_visibilities := true
 
 signal line_finished(line_index: int)
 signal jump_to_page(page_index: int, target_line: int)
@@ -366,6 +369,7 @@ func serialize() -> Dictionary:
 	result["dialog_line_index"] = _dialog_line_index 
 	result["dialog_lines"] = _dialog_lines 
 	result["handled_comments"] = _handled_comments
+	result["instruction_handler"] = instruction_handler.serialize() 
 	result["is_input_locked"] = is_input_locked 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
 	result["_last_raw_name"] = _last_raw_name
@@ -384,6 +388,8 @@ func serialize() -> Dictionary:
 	result["showing_text"] = _showing_text 
 	result["terminated"] = terminated
 	result["text_speed_by_character_index"] = _text_speed_by_character_index
+	if persist_ui_visibilities:
+		result["ui_visibilities"] = get_ui_visibilities()
 	
 	return result
 
@@ -405,6 +411,7 @@ func deserialize(data: Dictionary):
 	_dialog_line_index = int(data.get("dialog_line_index"))
 	_dialog_lines = data.get("dialog_lines")
 	_handled_comments = data.get("handled_comments", [])
+	instruction_handler.deserialize(data.get("instruction_handler", {}))
 	is_input_locked = data.get("is_input_locked")
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	_last_raw_name = data.get("_last_raw_name", "")
@@ -430,6 +437,9 @@ func deserialize(data: Dictionary):
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
 	choice_container.visible = line_type == DIISIS.LineType.Choice
+	
+	if persist_ui_visibilities:
+		apply_ui_visibilities(data.get("ui_visibilities", {}))
 	
 	if line_type == DIISIS.LineType.Choice:
 		var raw_content = _line_data.get("content")
@@ -626,7 +636,7 @@ func interrupt(hide_controls := true):
 	ParserEvents.line_reader_interrupted.emit(self)
 	Parser.set_paused(true)
 	if hide_controls:
-		for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
+		for key in UI_PROPERTIES:
 			visibilities_before_interrupt[key] = get(key).visible
 			get(key).visible = false
 
@@ -634,7 +644,7 @@ func interrupt(hide_controls := true):
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 ## @experimental
 func continue_after_interrupt(read_page := -1, read_line := 0):
-	for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
+	for key in UI_PROPERTIES:
 		if not visibilities_before_interrupt.has(key):
 			push_warning("Visibilities after interrupt have not been set")
 		else:
@@ -644,6 +654,16 @@ func continue_after_interrupt(read_page := -1, read_line := 0):
 		Parser.read_page(read_page, read_line)
 	Parser.set_paused(false)
 	ParserEvents.line_reader_resumed_after_interrupt.emit(self)
+
+func get_ui_visibilities() -> Dictionary:
+	var result := {}
+	for property in UI_PROPERTIES:
+		result[property] = get(property).visible
+	return result
+
+func apply_ui_visibilities(data:Dictionary):
+	for property in data.keys():
+		get(property).set("visible", data.get(property))
 
 func _on_instruction_handler_wrapped_completed():
 	emit_signal("line_finished", line_index)
@@ -700,7 +720,7 @@ func _read_new_line(new_line: Dictionary):
 		content = Parser.get_text(raw_content.get("text_id"))
 	var content_name = _line_data.get("content").get("name")
 	
-	for key in ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label"]:
+	for key in UI_PROPERTIES:
 		get(key).visible = true
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text

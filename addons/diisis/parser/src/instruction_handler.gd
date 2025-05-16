@@ -51,6 +51,21 @@ var has_executed := false
 var has_received_execute_callback := false
 var emitted_complete := false
 
+func serialize() -> Dictionary:
+	return {
+		"delay_before" : delay_before,
+		"delay_after" : delay_after,
+		"execution_text" : execution_text,
+		"is_executing" : is_executing,
+		"has_executed" : has_executed,
+		"has_received_execute_callback" : has_received_execute_callback,
+		"emitted_complete" : emitted_complete,
+	}
+
+func deserialize(data: Dictionary):
+	for key in data:
+		set(key, data.get(key))
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
