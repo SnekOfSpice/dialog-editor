@@ -40,9 +40,17 @@ func init(method_name:String, arg_name:String):
 	
 	is_string = type == TYPE_STRING
 	
-	deserialize(Pages.custom_method_defaults.get(method_name, {}))
+	#prints("---------- initttttttttt", method_name, arg_name)
+	deserialize(Pages.custom_method_defaults.get(method_name, {}).get(arg_name, {}))
 
 func deserialize(data:Dictionary):
+	# for some reason this function gets called a second time from seemingly nowhere
+	# and it passes all the defaults which obv fucks up the setter functions below
+	# so we do this
+	# lmfao
+	# we pray that no one ever writes a function that has these three exact arguments as names
+	if "".join(["arg_name", "use_custom_default", "custom_default"]) != "".join(data.keys()):
+		return
 	find_child("ArgNameLabel").text = data.get("arg_name", arg)
 	set_custom_default(data.get("custom_default"))
 	find_child("UseDefaultCheckBox").button_pressed = data.get("use_custom_default", false)

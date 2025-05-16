@@ -27,13 +27,14 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		var arg_string := str(arg_name, " : [i][color=b88d86EE]", arg_type, "[/color][/i]")
 		var arg_string_no_bbcode := str(arg_name, " : ", arg_type)
 		var default_color : String
-		if arg_default == Pages.get_custom_method_base_defaultsd(instruction_name).get(arg_name, null):
+		var default_in_base : bool = arg_default == Pages.get_custom_method_base_defaultsd(instruction_name).get(arg_name, null)
+		if default_in_base:
 			default_color = "c9acf2"
 		else:
 			default_color = "ceb1bc"
 		if arg_default != null:
-			arg_string += str("[color=ceb1bcB7] ?[/color] [color=", default_color, "]", arg_default, "[/color]")
-			arg_string_no_bbcode += str(" ?", arg_default)
+			arg_string += str("[color=ceb1bcB7] ", ":=" if default_in_base else "::=", "[/color] [color=", default_color, "]", arg_default, "[/color]")
+			arg_string_no_bbcode += str(" ", ":=" if default_in_base else "::=", " ", arg_default)
 		arg_strings.append(arg_string)
 		arg_strings_no_bbcode.append(arg_string_no_bbcode)
 		i += 1

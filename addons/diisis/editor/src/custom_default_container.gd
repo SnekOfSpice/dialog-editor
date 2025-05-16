@@ -8,6 +8,9 @@ var custom_container : GridContainer
 var custom_data := {}
 
 func init():
+	find_child("FuncNameLabel").text = ""
+	find_child("FuncNameLabel").visible = false
+	find_child("DefaultArgumentItemContainer").clear()
 	find_child("SaveButton").text = str("save")
 	item_list = find_child("ItemList")
 	find_child("MethodSearch").text = ""
