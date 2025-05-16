@@ -23,7 +23,7 @@ content_margin_right = 4.0
 content_margin_bottom = 2.0
 bg_color = Color(0.154876, 0.154876, 0.154876, 0.823529)
 
-[node name="InstructionTextEdit" type="MarginContainer"]
+[node name="InstructionTextEdit" type="MarginContainer" groups=["diisis_method_validator"]]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 64.0
@@ -78,6 +78,7 @@ clip_contents = false
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mmgt")
+text = "Function  does not exist"
 fit_content = true
 vertical_alignment = 2
 

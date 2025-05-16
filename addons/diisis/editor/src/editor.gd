@@ -578,6 +578,9 @@ func _on_instruction_definition_timer_timeout() -> void:
 func update_error_text_box():
 	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
 	find_child("ErrorTextBox").text += Pages.get_all_invalid_address_pointers()
+	
+	for node in get_tree().get_nodes_in_group("diisis_method_validator"):
+		node.update_compliance_prompt()
 
 func _on_instruction_popup_validate_saved_instructions() -> void:
 	update_error_text_box()

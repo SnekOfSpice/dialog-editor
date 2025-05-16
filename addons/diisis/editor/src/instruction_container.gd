@@ -27,7 +27,7 @@ func serialize():
 	result["delay_before"] = find_child("DelayBeforeSpinBox").value
 	result["delay_after"] = find_child("DelayAfterSpinBox").value
 	
-	result["meta.validation_status"] = Pages.get_entered_instruction_compliance(instruction_text)
+	result["meta.validation_status"] = Pages.get_method_validity(instruction_text)
 	result["meta.text"] = instruction_text
 	result["meta.reverse_text"] = instruction_text_reverse
 	result["meta.has_reverse"] = find_child("HasReverseCheckBox").button_pressed

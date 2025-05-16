@@ -32,7 +32,7 @@ gradient = SubResource("Gradient_wtkdm")
 height = 20
 fill_to = Vector2(0, 1)
 
-[node name="TextContent" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
+[node name="TextContent" type="VBoxContainer" groups=["diisis_method_validator", "diisis_page_view_sensitive"]]
 offset_right = 174.7
 offset_bottom = 103.0
 size_flags_horizontal = 3

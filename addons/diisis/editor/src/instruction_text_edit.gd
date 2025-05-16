@@ -24,11 +24,14 @@ func get_instruction_name() -> String:
 	else:
 		return text_box.text
 
+func update_compliance_prompt():
+	_on_instruction_text_box_text_entered(find_child("InstructionTextBox").text)
+
 func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	if new_text.contains("\n"):
 		var lines := new_text.split("\n")
 		text_box.text = "".join(lines)
-	var compliance : String = Pages.get_entered_instruction_compliance(new_text)
+	var compliance : String = Pages.get_method_validity(new_text)
 	var compliance_container = find_child("ComplianceContainer")
 	var compliance_label = find_child("ComplianceLabel")
 	
@@ -37,11 +40,6 @@ func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	
 	compliance_container.visible = compliance != "OK"
 	compliance_label.text = compliance
-	
-	#if compliance == "OK":
-		#find_child("ColorRect").self_modulate.a = 0.0
-	#else:
-		#find_child("ColorRect").self_modulate.a = 0.5
 	
 	Pages.editor.error_update_countdown = 1.0
 
@@ -62,6 +60,7 @@ func _on_instruction_text_box_caret_changed() -> void:
 		
 	else:
 		Pages.editor.hide_arg_hint()
+	
 
 func _on_instruction_text_box_focus_exited() -> void:
 	Pages.editor.hide_arg_hint()

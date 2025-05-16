@@ -1292,20 +1292,28 @@ func update_compliances(instruction_name:String):
 	for page in page_data.values():
 		var lines : Array = page.get("lines", [])
 		for line in lines:
-			if line.get("line_type") != DIISIS.LineType.Instruction:
-				continue
 			var content : Dictionary = line.get("content", {})
-			if content.get("name", "") == instruction_name:
-				var text : String = content.get("meta.text", "")
-				var text_reverse : String = content.get("meta.reverse_text", "")
-				var status = get_method_validity(text)
-				if status != "OK":
-					line["content"]["meta.validation_status"] = status
-					continue
-				status = get_method_validity(text_reverse)
-				if status != "OK" and content.get("meta.has_reverse"):
-					line["content"]["meta.validation_status"] = status
-					continue
+			if line.get("line_type") == DIISIS.LineType.Instruction:
+				if content.get("name", "") == instruction_name:
+					var text : String = content.get("meta.text", "")
+					var text_reverse : String = content.get("meta.reverse_text", "")
+					var status = get_method_validity(text)
+					if status != "OK":
+						line["content"]["meta.validation_status"] = status
+						continue
+					status = get_method_validity(text_reverse)
+					if status != "OK" and content.get("meta.has_reverse"):
+						line["content"]["meta.validation_status"] = status
+						continue
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				var functions : Array = content.get("meta.function_calls", [])
+				var compliance := "OK"
+				for function in functions:
+					var validity = get_method_validity(function)
+					if validity != "OK":
+						compliance = validity
+						break
+				line["content"]["meta.validation_status"] = compliance
 
 func get_custom_method_types(instruction_name:String) -> Array:
 	var result := []
@@ -1410,88 +1418,6 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 		if not value in valid_strings:
 			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_dropdowns), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
-
-
-func get_entered_instruction_compliance(instruction:String, check_as_template:=false, error_on_duplicate := false) -> String:
-	if instruction.count("(") != 1:
-		return "Missing or excess ("
-	if instruction.count(")") != 1:
-		return "Missing or excess )"
-	if instruction[instruction.length() - 1] != ")":
-		return "Doesn't end with )"
-	if instruction.find("(") > instruction.find(")"):
-		return "( can't be behind )"
-	if instruction.find("(") == 0:
-		return "Can't start with ("
-	
-	var entered_name = instruction.split("(")[0]
-	for character in entered_name:
-		if not ALLOWED_INSTRUCTION_NAME_CHARACTERS.has(character):
-			return str("Character \"", character, "\" isn't allowed.")
-	if check_as_template:
-		if does_instruction_name_exist(entered_name) and error_on_duplicate:
-			return "Instruction already exists"
-		
-		if entered_name.contains(" "):
-			return "Entered name contains a space"
-		
-		if instruction.find("(") + 1 != instruction.find(")"):
-			# for every arg, it must be ended with :bool, :string, :float (json doesn't support int / float distinction
-			# and I can't be bothered to write support for dictionaries or arrays atm)
-			var arg_string = instruction.trim_prefix(entered_name)
-			arg_string = arg_string.trim_prefix("(")
-			arg_string = arg_string.trim_suffix(")")
-			var args := arg_string.split(",")
-			var arg_names := []
-			var i := 0
-			for arg in args:
-				if arg.count(":") > 1:
-					return str("Argument ", i+1, " contains more than one :")
-				if arg.contains("?") and not arg.contains(":"):
-					return str("Cannot default nontyped argument ", i+1)
-				var default
-				if arg.contains("?"):
-					if arg.find("?") == arg.length() - 1:
-						return "Empty default"
-					default = arg.split("?")[1]
-					arg = arg.trim_suffix(str("?", default))
-				
-				var arg_name := arg.split(":")[0]
-				#if arg.ends_with(MULTI_DROPDOWN_TYPE_SEPARATOR):
-					#return "Cannot end with MULTI_DROPDOWN_TYPE_SEPARATOR"
-				
-				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
-					var typed_as_dropdown := false
-					if arg.find(":") < arg.length() - 1:
-						var arg_type := arg.split(":")[1]
-						var arg_types = []#arg_type.split(MULTI_DROPDOWN_TYPE_SEPARATOR, false)
-						typed_as_dropdown = are_all_of_these_dropdown_titles(arg_types)
-						
-					if not typed_as_dropdown:
-						return str("Argument ", i+1, " doesn't end in \":string\", \":bool\", or \":float\"")
-				
-				#if default != null:
-					#var type_compliance := get_type_compliance(entered_name, arg_name, default, arg.split(":")[1], i)
-					#if not type_compliance.is_empty():
-						#return type_compliance
-				
-				while arg_name.begins_with(" "):
-					arg_name = arg_name.trim_prefix(" ")
-				while arg_name.ends_with(" "):
-					arg_name = arg_name.trim_suffix(" ")
-				if arg_name.is_empty():
-					return "Empty argument name"
-				if arg_names.has(arg_name):
-					return "Duplicate argument names"
-				else:
-					arg_names.append(arg_name)
-				i += 1
-	else: # check as sth that follows the template
-		var template_compliance := get_method_validity(instruction)
-		if template_compliance != "OK":
-			return template_compliance
-	
-	return "OK"
 
 func are_all_of_these_dropdown_titles(names:Array) -> bool:
 	var result := true

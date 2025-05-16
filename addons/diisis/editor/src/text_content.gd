@@ -57,6 +57,8 @@ func serialize() -> Dictionary:
 	
 	result["text_id"] = text_id
 	result["meta.validation_status"] = get_overall_compliance()
+	if not get_function_calls().is_empty():
+		result["meta.function_calls"] = get_function_calls()
 	Pages.save_text(text_id, text_box.text)
 	
 	return result
@@ -406,15 +408,20 @@ func get_overall_compliance() -> String:
 			return compliance
 	return "OK"
 
-func get_compliances() -> Dictionary:
-	var compliances := {}
+func get_function_calls() -> Array:
+	var result := []
 	for tag_data : Dictionary in tags.duplicate(true):
 		var tag : String = tag_data.get("tag")
 		if tag.begins_with("<call:") or tag.begins_with("<func:"):
-			
 			var instruction := tag.split(":")[1]
 			instruction = instruction.trim_suffix(">")
-			compliances[instruction] = Pages.get_entered_instruction_compliance(instruction)
+			result.append(instruction)
+	return result
+
+func get_compliances() -> Dictionary:
+	var compliances := {}
+	for instruction in get_function_calls():
+		compliances[instruction] = Pages.get_method_validity(instruction)
 	return compliances
 
 func index_all_tags():
