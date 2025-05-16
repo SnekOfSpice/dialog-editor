@@ -1,10 +1,16 @@
-[gd_resource type="Theme" load_steps=13 format=3 uid="uid://drk5fhsdjoewf"]
+[gd_resource type="Theme" load_steps=23 format=3 uid="uid://drk5fhsdjoewf"]
 
 [ext_resource type="FontFile" uid="uid://crmw2vdncpny" path="res://game/visuals/theme/fonts/justabit.ttf" id="1_65631"]
 [ext_resource type="FontFile" uid="uid://dhsrlx0q1hgjb" path="res://game/visuals/theme/fonts/HelvetiPixel.ttf" id="2_bxkip"]
 [ext_resource type="FontFile" uid="uid://dc5fw18idtbga" path="res://game/visuals/theme/fonts/VSansSerif8bold.ttf" id="2_owyt2"]
+[ext_resource type="Texture2D" uid="uid://b03ftnlcv35es" path="res://game/visuals/theme/ui/checked.png" id="2_r8rta"]
+[ext_resource type="Texture2D" uid="uid://b5dyygcyia71o" path="res://game/visuals/theme/ui/checked_disabled.png" id="3_3fvlq"]
 [ext_resource type="FontFile" uid="uid://cx4lysibyxp6d" path="res://game/visuals/theme/fonts/MinecraftItalic.ttf" id="3_87r0n"]
 [ext_resource type="FontFile" uid="uid://cd18jd0tstgc2" path="res://game/visuals/theme/fonts/KHMenuItalic.ttf" id="3_qco41"]
+[ext_resource type="Texture2D" uid="uid://dqdot6ug2u1jv" path="res://game/visuals/theme/ui/unchecked.png" id="4_otl4c"]
+[ext_resource type="Texture2D" uid="uid://cxs3ai0mrfjx8" path="res://game/visuals/theme/ui/unchecked_disabled.png" id="5_romdp"]
+[ext_resource type="Texture2D" uid="uid://b3y00o6j7f8mc" path="res://game/visuals/theme/ui/grabber.png" id="6_a473t"]
+[ext_resource type="Texture2D" uid="uid://cegyk7osg12qs" path="res://game/visuals/theme/ui/grabber_highlight.png" id="7_jx71q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmdrw"]
 content_margin_left = 18.0
@@ -29,6 +35,23 @@ content_margin_left = 18.0
 content_margin_top = 2.0
 content_margin_bottom = 1.0
 bg_color = Color(0.9, 0.9, 0.9, 1)
+border_width_left = 4
+border_width_top = 2
+border_width_right = 4
+border_width_bottom = 2
+border_color = Color(0.28485, 0.28485, 0.28485, 1)
+border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 65
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r8rta"]
+content_margin_left = 18.0
+content_margin_top = 2.0
+content_margin_bottom = 1.0
+bg_color = Color(0.22, 0.22, 0.22, 1)
 border_width_left = 4
 border_width_top = 2
 border_width_right = 4
@@ -75,6 +98,42 @@ corner_radius_bottom_left = 65
 expand_margin_top = 1.0
 expand_margin_right = 1.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fvlq"]
+bg_color = Color(0.442911, 0.442911, 0.442911, 1)
+border_width_top = 2
+border_color = Color(0.462745, 0.207843, 0.384314, 1)
+border_blend = true
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 30
+expand_margin_left = 2.0
+expand_margin_top = 3.0
+expand_margin_right = 2.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_otl4c"]
+bg_color = Color(0.742046, 0.459055, 0.765723, 1)
+border_width_top = 2
+border_color = Color(0.89, 0.4005, 0.74315, 1)
+border_blend = true
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 30
+expand_margin_left = 2.0
+expand_margin_top = 3.0
+expand_margin_right = 2.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_romdp"]
+bg_color = Color(0.16, 0.136, 0.1512, 0.796078)
+border_width_top = 2
+border_blend = true
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 30
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76e30"]
 content_margin_top = 4.0
 bg_color = Color(0.0840718, 0.0611886, 0.0503078, 0.968627)
@@ -114,8 +173,18 @@ Button/font_sizes/font_size = 22
 Button/fonts/font = ExtResource("1_65631")
 Button/styles/focus = SubResource("StyleBoxFlat_gmdrw")
 Button/styles/hover = SubResource("StyleBoxFlat_ra2p4")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_r8rta")
 Button/styles/normal = SubResource("StyleBoxFlat_aycf6")
 Button/styles/pressed = SubResource("StyleBoxFlat_fo65i")
+CheckBox/icons/checked = ExtResource("2_r8rta")
+CheckBox/icons/checked_disabled = ExtResource("3_3fvlq")
+CheckBox/icons/unchecked = ExtResource("4_otl4c")
+CheckBox/icons/unchecked_disabled = ExtResource("5_romdp")
+HSlider/icons/grabber = ExtResource("6_a473t")
+HSlider/icons/grabber_highlight = ExtResource("7_jx71q")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_3fvlq")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_otl4c")
+HSlider/styles/slider = SubResource("StyleBoxFlat_romdp")
 Label/font_sizes/font_size = 24
 Label/fonts/font = ExtResource("1_65631")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_76e30")

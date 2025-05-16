@@ -1,5 +1,7 @@
 extends Screen
 
+@onready var rtl : RichTextLabel = find_child("RTLFontLabel")
+
 var pause_state_before_open:bool
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -41,7 +43,7 @@ func _ready() -> void:
 	find_child("RTLFontSizeLabel").text = str(int(find_child("RTLFontSizeSlider").value))
 	
 	set_menu(0)
-	set_menu_available(0, GameWorld.stage_root.stage != CONST.STAGE_MAIN)
+	find_child("SaveContainer").visible = GameWorld.stage_root.stage != CONST.STAGE_MAIN
 
 
 func close():
@@ -51,6 +53,22 @@ func close():
 
 func _input(event: InputEvent) -> void:
 	super(event)
+
+var restart_preview_timer := 0.0
+func _process(delta: float) -> void:
+	if not find_child("TextMenu").visible:
+		return
+	var slider_value : float = find_child("TextSpeedSlider").value
+	if rtl.visible_ratio == 1:
+		if slider_value == LineReader.MAX_TEXT_SPEED:
+			return
+		restart_preview_timer -= delta
+		if restart_preview_timer <= 0:
+			restart_preview_timer = 4
+			rtl.visible_ratio = 0
+	else:
+		# just taken directly from line reader
+		rtl.visible_ratio += (float(slider_value) / rtl.get_parsed_text().length()) * delta
 
 # hide menu 0 if coming from main menu stage
 func set_menu_available(menu:int, available:bool):
@@ -117,8 +135,11 @@ func _on_text_speed_slider_value_changed(value: float) -> void:
 	var label : Label = find_child("TextSpeedValueLabel")
 	if value == LineReader.MAX_TEXT_SPEED:
 		label.text = "Instant"
+		find_child("RTLFontLabel").visible_ratio = 1
 	else:
 		label.text = str(int(value))
+		find_child("RTLFontLabel").visible_ratio = 0
+		restart_preview_timer = 4
 	Options.text_speed = int(value)
 	if is_instance_valid(Parser.line_reader):
 		Parser.line_reader.text_speed = value

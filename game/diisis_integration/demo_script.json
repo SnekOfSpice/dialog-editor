@@ -315,7 +315,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773714,
+		"id_counter": -9223372036854773744,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -733,7 +733,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 401,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
