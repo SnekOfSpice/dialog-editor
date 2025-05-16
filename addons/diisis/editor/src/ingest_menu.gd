@@ -77,3 +77,5 @@ func _on_id_pressed(id: int) -> void:
 		),
 		"Ingestion Syntax",
 		canvas_transform.get_origin())
+	if id == 7:
+		Pages.editor.open_window_by_string("PageIngestionActorSetupWindow")

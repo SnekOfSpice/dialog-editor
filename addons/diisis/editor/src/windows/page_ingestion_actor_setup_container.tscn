@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccmtncv1scrdi"]
+
+[ext_resource type="Script" uid="uid://cejag0i1tvlj4" path="res://addons/diisis/editor/src/windows/page_ingestion_actor_setup_container.gd" id="1_60wls"]
+
+[node name="PageIngestionActorSetupContainer" type="VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+offset_right = 400.0
+offset_bottom = 150.0
+script = ExtResource("1_60wls")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+custom_minimum_size = Vector2(400, 115)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="HelpButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "?"
+
+[node name="SaveButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "save"
+
+[node name="ResetButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "reset"
+
+[node name="HelpLabel" type="RichTextLabel" parent="VBoxContainer2"]
+visible = false
+layout_mode = 2
+text = "Prepends this to the text to be ingested if it doesn't contain \"CONTENT\" for Text Lines or \"END ACTORS\\n\" for Page ingestion.
+
+See Ingestion Help menu for more details. tldr is: space-separated [actor shorthand]/[actual name] pairs. colons and []> control sequences will be taken care of, but you can declare them if you want."
+fit_content = true
+
+[connection signal="text_changed" from="TextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer2/VBoxContainer/HelpButton" to="." method="_on_help_button_pressed"]
+[connection signal="pressed" from="VBoxContainer2/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer2/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

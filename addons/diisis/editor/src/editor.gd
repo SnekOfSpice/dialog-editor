@@ -104,6 +104,8 @@ func init(active_file_path:="") -> void:
 		popup.wrap_controls = true
 		popup.transient = false
 		popup.popup_window = false
+		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+		popup.theme = theme
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
@@ -289,6 +291,8 @@ func _shortcut_input(event):
 					emit_signal("open_new_file")
 				KEY_S:
 					attempt_save_to_dir()
+				KEY_I:
+					open_window_by_string("PageIngestionActorSetupWindow")
 				KEY_F:
 					if event.is_shift_pressed():
 						open_popup($Popups.get_node("FactsPopup"))
@@ -691,23 +695,25 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 		2: #merge
 			open_popup($Popups.get_node("FDMergeL10N"), true)
 
-
-func _on_editor_index_pressed(index: int) -> void:
-	match index:
+func _on_editor_id_pressed(id: int) -> void:
+	match id:
 		0:
 			step_through_pages()
 		1:
 			emit_signal("request_reload")
 
-func _on_utility_index_pressed(index: int) -> void:
-	match index:
+func _on_utility_id_pressed(id: int) -> void:
+	match id:
 		0: 
 			open_popup($Popups.get_node("WordCountDialog"))
 		1: 
 			open_popup($Popups.get_node("TextSearchPopup"))
+		2:
+			open_window_by_string("PageIngestionActorSetupWindow")
 
-func _on_setup_index_pressed(index: int) -> void:
-	match index:
+
+func _on_setup_id_pressed(id: int) -> void:
+	match id:
 		1: # header
 			open_popup($Popups.get_node("HeaderPopup"))
 		2: # dd

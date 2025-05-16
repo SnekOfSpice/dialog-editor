@@ -37,6 +37,7 @@ var local_line_insert_offset:int
 var custom_method_defaults := {}
 var custom_method_dropdown_limiters := {}
 var callable_autoloads := []
+var ingestion_actor_declaration := ""
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -141,6 +142,7 @@ func serialize() -> Dictionary:
 		"full_custom_method_defaults": _get_custom_method_full_defaults(),
 		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
 		"callable_autoloads": callable_autoloads,
+		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"facts": facts,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -174,6 +176,7 @@ func deserialize(data:Dictionary):
 	custom_method_defaults = data.get("custom_method_defaults", {})
 	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
 	callable_autoloads = data.get("callable_autoloads", [])
+	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:

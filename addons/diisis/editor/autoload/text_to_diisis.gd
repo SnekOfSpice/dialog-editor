@@ -12,6 +12,10 @@ func format_text(text:String, head_replacer_overrides := []) -> String:
 	text = text.replace("\r", "\n")
 	var lines := text.split("\n", false)
 	
+	if not lines.has(str("CONTENT")):
+		text = str(Pages.ingestion_actor_declaration, "\nCONTENT\n", text)
+		lines = text.split("\n", false)
+	
 	var has_content_declaration := false
 	var head := []
 	var content := []
@@ -76,6 +80,9 @@ func ingest_pages(text:String, payload:={}) -> void:
 	var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
 	
 	text = text.replace("\r", "\n")
+	
+	if not text.contains("END ACTORS\n"):
+		text = str(Pages.ingestion_actor_declaration, "\nEND ACTORS\n", text)
 	
 	var head_section := text.split("END ACTORS\n", false)[0]
 	text = text.split("END ACTORS\n", false)[1]
