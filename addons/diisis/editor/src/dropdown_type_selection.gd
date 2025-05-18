@@ -2,6 +2,8 @@
 extends MarginContainer
 class_name DropdownTypeSelector
 
+const HEIGHT := 32 # used for spacing and visual stuff
+
 signal updated()
 
 var method := ""
@@ -27,6 +29,5 @@ func serialize() -> Array:
 	return selected
 
 func deserialize(data:Array):
-	#print(data)
 	for button : Button in find_child("GridContainer").get_children():
 		button.button_pressed = data.has(button.text)

@@ -1344,7 +1344,6 @@ func get_custom_method_typesd(instruction_name:String) -> Dictionary:
 	return result
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
-	printt(instruction_name, get_custom_method_defaults(instruction_name))
 	return get_custom_method_defaults(instruction_name).get(arg_name)
 
 func does_instruction_name_exist(instruction_name:String):

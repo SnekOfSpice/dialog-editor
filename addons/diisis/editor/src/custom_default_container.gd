@@ -3,15 +3,17 @@
 extends Control
 
 var item_list : ItemList
-var values_container : VBoxContainer
+var arg_container : VBoxContainer
+var dropdown_container : VBoxContainer
 
 var custom_defaults = {}
 var custom_limiters = {}
 
 func init():
 	find_child("FuncNameLabel").text = ""
-	find_child("FuncNameLabel").visible = false
-	values_container = find_child("ValuesContainer")
+	find_child("FuncNameContainer").visible = false
+	arg_container = find_child("ArgContainer")
+	dropdown_container = find_child("DropdownContainer")
 	clear_values_container()
 	find_child("SaveButton").text = str("save")
 	item_list = find_child("ItemList")
@@ -19,13 +21,8 @@ func init():
 	item_list.clear()
 	for method in Pages.get_all_instruction_names():
 		item_list.add_item(method)
-	print("xxxxxxxxxx")
-	print(Pages.custom_method_defaults)
-	print("xxxxxxxxxx")
-	print(Pages.custom_method_dropdown_limiters)
 	custom_defaults = Pages.custom_method_defaults.duplicate(true)
 	custom_limiters = Pages.custom_method_dropdown_limiters.duplicate(true)
-	print("DEFAULTS ---------\n",custom_defaults, "\nLIMITERS_______\n", custom_limiters)
 	if item_list.item_count > 0:
 		item_list.select(0)
 	find_child("Fuck").text = str("DEFAULTS\n", custom_defaults, "\n\nLIMITERS\n", custom_limiters)
@@ -51,13 +48,10 @@ func save_to_local_data():
 
 func _on_item_list_item_selected(index: int) -> void:
 	save_to_local_data()
-	#await get_tree().process_frame
 	clear_values_container()
-	#await get_tree().process_frame
 	fill_values_container(item_list.get_item_text(index))
-	#await get_tree().process_frame
 	find_child("FuncNameLabel").text = item_list.get_item_text(index)
-	find_child("FuncNameLabel").visible = not find_child("FuncNameLabel").text.is_empty()
+	find_child("FuncNameContainer").visible = not find_child("FuncNameLabel").text.is_empty()
 
 func select_function(method:String):
 	for idx in item_list.item_count:
@@ -72,7 +66,7 @@ func _on_method_search_text_changed(new_text: String) -> void:
 			item_list.add_item(method)
 
 
-func _on_open_script_button_pressed() -> void:
+func _on_go_to_script_button_pressed() -> void:
 	DiisisEditorUtil.search_function(item_list.get_item_text(item_list.get_selected_items()[0]))
 
 
@@ -84,7 +78,7 @@ func _on_save_button_pressed() -> void:
 
 
 func _on_func_name_label_item_rect_changed() -> void:
-	find_child("FuncNameLabel").visible = not find_child("FuncNameLabel").text.is_empty()
+	find_child("FuncNameContainer").visible = not find_child("FuncNameLabel").text.is_empty()
 
 func array_equals(a:Array, b:Array) -> bool:
 	a.sort()
@@ -146,35 +140,37 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 	var created_things := []
 	var has_string := false
 	for arg_name in Pages.get_custom_method_arg_names(method_name):
-		var row_container := HBoxContainer.new()
 		var item : DefaultArgumentItem = preload("res://addons/diisis/editor/src/default_argument_item.tscn").instantiate()
-		row_container.add_child(item)
+		arg_container.add_child(item)
 		created_things.append(item)
 		item.init(method_name, arg_name)
 		item.deserialize(custom_defaults.get(method_name, {}).get(arg_name))
+		item.custom_minimum_size.y = DropdownTypeSelector.HEIGHT
+		item.show_antenna(item.is_string)
 		
 		if item.is_string:
 			var selector : DropdownTypeSelector = preload("res://addons/diisis/editor/src/dropdown_type_selection.tscn").instantiate()
-			row_container.add_child(selector)
+			dropdown_container.add_child(selector)
 			selector.init(method_name, arg_name)
 			selector.deserialize(custom_limiters.get(method_name, {}).get(arg_name, []))
 			created_things.append(selector)
 			has_string = true
+		else:
+			var spacer = dropdown_container.add_spacer(false)
+			spacer.custom_minimum_size.y = DropdownTypeSelector.HEIGHT
 		
-		values_container.add_child(row_container)
+	await get_tree().process_frame
 	
-	#await get_tree().process_frame
-	
-	if get_child_count() == 0:
+	if arg_container.get_child_count() == 0:
 		var label = Label.new()
 		label.text = "Method doesn't accept arguments"
-		values_container.add_child(label)
+		arg_container.add_child(label)
 	else:
 		var label = Label.new()
 		label.text = "Default Overrides"
 		label.add_theme_color_override("font_color", Color.CORAL)
-		values_container.add_child(label)
-		values_container.move_child(label, 0)
+		arg_container.add_child(label)
+		arg_container.move_child(label, 0)
 		var limiter_head:Control
 		if has_string:
 			limiter_head = Label.new()
@@ -182,34 +178,31 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 			limiter_head.add_theme_color_override("font_color", Color.CORAL)
 		else:
 			limiter_head = Control.new()
-		values_container.add_child(limiter_head)
-		values_container.move_child(limiter_head, 1)
+		dropdown_container.add_child(limiter_head)
+		dropdown_container.move_child(limiter_head, 0)
 	
 	for item in created_things:
-		item.updated.connect(_on_values_changed)
+		if is_instance_valid(item):
+			item.updated.connect(_on_values_changed)
 
 func serialize_values_container():
 	var method_defaults := {}
 	var method_limiters := {}
 	var method_name = ""
-	for row in values_container.get_children():
-		if row is HBoxContainer:
-			var arg_name:String
-			var defaults = row.get_child(0)
-			if defaults is DefaultArgumentItem:
-				arg_name = defaults.get_arg_name()
-				method_name = defaults.method
-				if defaults.is_using_custom_default():
-					method_defaults[arg_name] = defaults.get_value()
-				print("found arg name ", arg_name)
-			if row.get_child_count() <= 1:
-				#method_limiters[arg_name] = []
-				continue
-			var limiters = row.get_child(1)
-			if limiters is DropdownTypeSelector:
-				var data : Array = limiters.serialize().duplicate(true)
-				print("saving limiters ", data, " for ", arg_name, " of ", method_name)
-				method_limiters[arg_name] = data
+	for default in arg_container.get_children():
+		var arg_name:String
+		var default_index := 0
+		if default is DefaultArgumentItem:
+			default_index = default.get_index()
+			arg_name = default.get_arg_name()
+			method_name = default.method
+			if default.is_using_custom_default():
+				method_defaults[arg_name] = default.get_value()
+		var limiters = dropdown_container.get_child(default_index)
+		if limiters is DropdownTypeSelector:
+			var data : Array = limiters.serialize().duplicate(true)
+			#print("saving limiters ", data, " for ", arg_name, " of ", method_name)
+			method_limiters[arg_name] = data
 	return {
 		"custom_method_defaults" : method_defaults,
 		"method" : method_name,
@@ -217,7 +210,9 @@ func serialize_values_container():
 	}
 
 func clear_values_container():
-	for child in values_container.get_children():
+	for child in arg_container.get_children():
+		child.queue_free()
+	for child in dropdown_container.get_children():
 		child.queue_free()
 	await get_tree().process_frame
 

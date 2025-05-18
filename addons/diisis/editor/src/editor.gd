@@ -1078,17 +1078,17 @@ func view_incoming_references(page_index:int, line_index:int):
 	open_popup(popup)
 	popup.display_references(page_index, line_index)
 
-func popup_confirm_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextConfirmationDialog:
+func popup_confirm_dialogue(rich_text:="", title:="", confirm_callable:=Callable()) -> RichTextConfirmationDialog:
 	var dialog = preload("res://addons/diisis/editor/src/rich_text_confirmation_dialog.tscn").instantiate()
 	$Popups.add_child(dialog)
 	dialog.close_requested.connect(dialog.hide)
+	if confirm_callable:
+		dialog.confirmed.connect(confirm_callable)
 	dialog.set_rich_text(rich_text)
 	dialog.popup_centered()
 	dialog.content_scale_factor = content_scale
 	if not title.is_empty():
 		dialog.title = title
-	if at != Vector2.ZERO:
-		dialog.position = at
 	return dialog
 func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextAcceptDialog:
 	var dialog = preload("res://addons/diisis/editor/src/rich_text_accept_dialog.tscn").instantiate()

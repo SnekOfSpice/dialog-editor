@@ -97,3 +97,6 @@ func _on_use_default_check_box_toggled(toggled_on: bool) -> void:
 		value_holder.editable = toggled_on
 	elif value_holder is Button:
 		value_holder.disabled = not toggled_on
+
+func show_antenna(value:bool):
+	find_child("HSeparator").visible = value

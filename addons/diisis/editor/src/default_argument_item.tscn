@@ -1,10 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://cu1kulh4sfm2y"]
+[gd_scene load_steps=3 format=3 uid="uid://cu1kulh4sfm2y"]
 
 [ext_resource type="Script" uid="uid://blfdmykhbt57l" path="res://addons/diisis/editor/src/default_argument_item.gd" id="1_i8fpr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ugoh"]
+bg_color = Color(0.8, 0.464, 0.7384, 0.501961)
+border_width_right = 55
+border_color = Color(0.780392, 0.533333, 0.443137, 0.729412)
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_top = 1.0
+expand_margin_right = 12.0
+expand_margin_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
+size_flags_horizontal = 3
 script = ExtResource("1_i8fpr")
 
 [node name="ArgNameLabel" type="Label" parent="."]
@@ -25,6 +39,11 @@ size_flags_horizontal = 0
 [node name="DeleteButton" type="Button" parent="ValueContainer"]
 layout_mode = 2
 text = "-"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxFlat_3ugoh")
 
 [connection signal="pressed" from="AddButton" to="." method="set_use_custom_default" binds= [true]]
 [connection signal="pressed" from="ValueContainer/DeleteButton" to="." method="set_use_custom_default" binds= [false]]
