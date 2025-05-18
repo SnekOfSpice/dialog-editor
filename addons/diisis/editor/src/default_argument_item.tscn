@@ -7,15 +7,24 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_i8fpr")
 
-[node name="UseDefaultCheckBox" type="CheckBox" parent="."]
-layout_mode = 2
-
 [node name="ArgNameLabel" type="Label" parent="."]
-custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 text = "arg name"
 
-[node name="Edit" type="PanelContainer" parent="."]
+[node name="AddButton" type="Button" parent="."]
+layout_mode = 2
+text = "+"
+
+[node name="ValueContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[connection signal="toggled" from="UseDefaultCheckBox" to="." method="_on_use_default_check_box_toggled"]
+[node name="Edit" type="PanelContainer" parent="ValueContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="DeleteButton" type="Button" parent="ValueContainer"]
+layout_mode = 2
+text = "-"
+
+[connection signal="pressed" from="AddButton" to="." method="set_use_custom_default" binds= [true]]
+[connection signal="pressed" from="ValueContainer/DeleteButton" to="." method="set_use_custom_default" binds= [false]]

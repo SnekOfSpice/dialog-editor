@@ -19,7 +19,7 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		var arg_name : String = arg_names[i]
 		var arg_type : String = DIISIS.type_to_str(arg_types[i])
 
-		var dropdowns : Array = Pages.custom_method_dropdown_limiters.get(instruction_name, {}).get(arg_name, {}).get("selected", [])
+		var dropdowns : Array = Pages.custom_method_dropdown_limiters.get(instruction_name, {}).get(arg_name, [])
 		if dropdowns.size() > 0:
 			arg_type = ", ".join(dropdowns)
 		

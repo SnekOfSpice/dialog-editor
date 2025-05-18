@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://faulsyhhddoi"]
+[gd_scene load_steps=2 format=3 uid="uid://faulsyhhddoi"]
 
 [ext_resource type="Script" uid="uid://5yedvhplb2cl" path="res://addons/diisis/editor/src/custom_default_container.gd" id="1_fvb33"]
-[ext_resource type="PackedScene" uid="uid://c5hjraido33h8" path="res://addons/diisis/editor/src/default_argument_item_container.tscn" id="2_b7mgr"]
 
 [node name="CustomDefaultContainer" type="Control"]
 layout_mode = 3
@@ -32,7 +31,6 @@ keep_editing_on_text_submit = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_vertical = 3
-allow_reselect = true
 
 [node name="PanelContainer" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
@@ -53,6 +51,11 @@ Additionally, you can set string-based arguments to only accept dropdown-defined
 fit_content = true
 scroll_active = false
 
+[node name="Fuck" type="RichTextLabel" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+fit_content = true
+
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -70,10 +73,11 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 18
 
-[node name="DefaultArgumentItemContainer" parent="HSplitContainer/PanelContainer/VSplitContainer" instance=ExtResource("2_b7mgr")]
+[node name="ValuesContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer"]
 layout_mode = 2
 
 [connection signal="text_changed" from="HSplitContainer/VBoxContainer/MethodSearch" to="." method="_on_method_search_text_changed"]
+[connection signal="gui_input" from="HSplitContainer/VBoxContainer/ItemList" to="." method="_on_item_list_gui_input"]
 [connection signal="item_selected" from="HSplitContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/OpenScriptButton" to="." method="_on_open_script_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

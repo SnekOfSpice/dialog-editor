@@ -2,11 +2,13 @@
 extends MarginContainer
 class_name DropdownTypeSelector
 
-var arg:String
+signal updated()
 
-signal update_dropdown_limiters()
+var method := ""
+var arg := ""
 
-func init(arg_name:String):
+func init(method_name:String, arg_name:String):
+	method = method_name
 	arg = arg_name
 	for button : Button in find_child("GridContainer").get_children():
 		button.queue_free()
@@ -14,22 +16,17 @@ func init(arg_name:String):
 		var button = CheckBox.new()
 		button.text = title
 		button.tooltip_text = "\n".join(Pages.dropdowns.get(title))
-		#button.pressed.connect(_on_dropdown_selector_button_pressed)
+		button.pressed.connect(emit_signal.bind("updated"))
 		find_child("GridContainer").add_child(button)
 
-func serialize():
-	var data := {}
+func serialize() -> Array:
 	var selected := []
 	for child : Button in find_child("GridContainer").get_children():
-		if child.button_pressed:
+		if child.button_pressed and Pages.get_custom_method_arg_type(method, arg) == TYPE_STRING:
 			selected.append(child.text)
-	data["selected"] = selected
-	return data
+	return selected
 
-func deserialize(data:Dictionary):
+func deserialize(data:Array):
+	#print(data)
 	for button : Button in find_child("GridContainer").get_children():
-		button.button_pressed = data.get("selected", []).has(button.text)
-
-
-#func _on_dropdown_selector_button_pressed():
-	#emit_signal("update_dropdown_limiters")
+		button.button_pressed = data.has(button.text)

@@ -206,6 +206,19 @@ func deserialize(data:Dictionary):
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	
 	apply_file_config(data.get("file_config", {}))
+	
+	# init limiters
+	await get_tree().process_frame
+	for method in get_all_instruction_names():
+		if custom_method_dropdown_limiters.has(method):
+			continue
+		var arg_data := {}
+		for arg in get_custom_method_arg_names(method):
+			var type : int = get_custom_method_arg_type(method, arg)
+			if type == TYPE_STRING:# or type == TYPE_NIL:
+				arg_data.set(arg, [])
+		if not arg_data.is_empty():
+			custom_method_dropdown_limiters.set(method, arg_data)
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -576,11 +589,8 @@ func get_custom_autoload_properties(autoload:String) -> Array:
 func get_all_custom_properties() -> Array:
 	var result := get_custom_properties()
 	var autoload_method_names := []
-	# IDK SCRATCH AUTOLOADS FOR NOW??
 	for autoload_name in callable_autoloads:
 		var methods := get_custom_autoload_methods(autoload_name)
-		
-		
 		for method in methods:
 			autoload_method_names.append(str(autoload_name, ".", method))
 		
@@ -588,7 +598,7 @@ func get_all_custom_properties() -> Array:
 	return result
 
 func get_all_instruction_names() -> Array:
-	var result := get_custom_methods()
+	var result := get_instruction_handler_methods()
 	var autoload_method_names := []
 	# IDK SCRATCH AUTOLOADS FOR NOW??
 	for autoload_name in callable_autoloads:
@@ -629,7 +639,6 @@ func get_autoload_script(autoload:String) -> Script:
 func get_custom_method(instruction_name:String) -> Dictionary:
 	if instruction_name.contains("."):
 		var singleton_name := instruction_name.split(".")[0]
-		#print("singleton ", singleton_name, get_autoload_script(singleton_name).get_script_method_list())
 		var method_name := instruction_name.split(".")[1]
 		for method in get_autoload_script(singleton_name).get_script_method_list():
 			if method.get("name") == method_name:
@@ -642,6 +651,9 @@ func get_custom_method(instruction_name:String) -> Dictionary:
 					return method
 	return {}
 
+func get_custom_method_arg_type(method:String, arg:String) -> int:
+	return get_custom_method_typesd(method).get(arg)
+
 func get_instruction_arg_types(instruction_name: String) -> Array:
 	var function : Dictionary = get_custom_method(instruction_name)
 	var args := []
@@ -649,7 +661,7 @@ func get_instruction_arg_types(instruction_name: String) -> Array:
 		args.append(arg.get("type"))
 	return args
 
-func get_custom_method_args(instruction_name) -> Array:
+func get_custom_method_args(instruction_name:String) -> Array:
 	return get_custom_method(instruction_name).get("args", [])
 
 func get_custom_method_arg_names(instruction_name) -> Array:
@@ -680,6 +692,12 @@ func _get_custom_method_full_defaults() -> Dictionary:
 		result[method] = get_custom_method_defaults(method)
 	return result
 
+func set_custom_method_defaults(defaults:Dictionary):
+	print(defaults)
+	for method in defaults.keys():
+		var args : Dictionary = defaults.get(method)
+		custom_method_defaults.set(method, args.duplicate(true))
+
 func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 	var base_defaults : Dictionary = get_custom_method_base_defaultsd(instruction_name)
 	var defaults := {}
@@ -689,13 +707,8 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 		defaults[arg] = base_defaults.get(arg)
 		i += 1
 	var customs : Dictionary = custom_method_defaults.get(instruction_name, {})
-	#prints("CUSTOMS ", instruction_name, customs)
 	for arg in customs.keys():
-		if not customs.get(arg) is Dictionary: # this happens when we just have the base default
-			continue
-		var use_custom : bool = customs.get(arg).get("use_custom_default", false)
-		if use_custom:
-			defaults[arg] = customs.get(arg).get("custom_default")
+		defaults[arg] = customs.get(arg)
 	return defaults
 
 func get_instruction_arg_count(instruction_name: String) -> int:
@@ -1165,7 +1178,7 @@ func get_list_of_evaluator_scripts() -> Array[Script]:
 			continue
 	return result
 
-func get_custom_methods() -> Array:
+func get_instruction_handler_methods() -> Array:
 	var methods := []
 	for script : Script in get_list_of_evaluator_scripts():
 		var script_methods = script.get_script_method_list()
@@ -1327,9 +1340,11 @@ func get_custom_method_typesd(instruction_name:String) -> Dictionary:
 	var result := {}
 	for arg in get_custom_method_args(instruction_name):
 		result[arg.get("name")] = arg.get("type")
+	
 	return result
 
 func get_default_arg_value(instruction_name:String, arg_name:String):
+	printt(instruction_name, get_custom_method_defaults(instruction_name))
 	return get_custom_method_defaults(instruction_name).get(arg_name)
 
 func does_instruction_name_exist(instruction_name:String):
@@ -1426,16 +1441,15 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
 				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
-	var limiters : Dictionary = custom_method_dropdown_limiters.get(method, {}).get(arg, {})
-	var selected_dropdowns : Array = limiters.get("selected", [])
-	if selected_dropdowns.size() > 0:
+	var selected_limiters : Array = custom_method_dropdown_limiters.get(method, {}).get(arg, [])
+	if selected_limiters.size() > 0:
 		# build list of all options
 		var valid_strings := []
-		for dd_name in selected_dropdowns:
+		for dd_name in selected_limiters:
 			valid_strings.append_array(dropdowns.get(dd_name))
 		
 		if not value in valid_strings:
-			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_dropdowns), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
+			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
 
 func are_all_of_these_dropdown_titles(names:Array) -> bool:

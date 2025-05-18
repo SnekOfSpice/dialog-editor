@@ -122,6 +122,8 @@ func init(data:Dictionary):
 	dropdowns = data.get("dropdowns", {})
 	file_config = data.get("file_config", {})
 	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
+	Pages.custom_method_defaults = file_config.get("custom_method_defaults", {})
+	Pages.custom_method_dropdown_limiters = file_config.get("custom_method_dropdown_limiters", {})
 	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
