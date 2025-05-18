@@ -97,36 +97,25 @@ func array_equals(a:Array, b:Array) -> bool:
 	return true
 
 func dictionary_equals(a:Dictionary, b:Dictionary) -> bool:
-	#print("a-------------", a, "\nb------------", b)
 	if a.size() != b.size():
-		#print("AAAA\n", a.keys(), "\n", b.keys(), "-------------")
 		return false
 	for key in a.keys():
 		if not b.keys().has(key):
-			prints("BBBB", key)
 			return false
 	for key in a.keys():
 		var value_a = a.get(key)
 		var value_b = b.get(key)
 		if (value_a != value_b) or (typeof(value_a) != typeof(value_b)):
 			if typeof(value_a) == TYPE_ARRAY and typeof(value_b) == TYPE_ARRAY:
-				print("CCC", array_equals(value_a, value_b))
 				return array_equals(value_a, value_b)
 			if typeof(value_a) == TYPE_DICTIONARY and typeof(value_b) == TYPE_DICTIONARY:
 				return dictionary_equals(value_a, value_b)
-			prints("DDDD", value_a, "|||", value_b, key)
 			return false
 	return true
 
 func custom_equals() -> bool:
 	var defined_defaults : Dictionary = Pages.custom_method_defaults
 	var defined_limiters : Dictionary = Pages.custom_method_dropdown_limiters
-	#print(
-		#"defined_defaults ", defined_defaults, "\n",
-		#"custom_defaults  ", custom_defaults, "\n",
-		#"defined_limiters ", defined_limiters, "\n",
-		#"custom_limiters  ", custom_limiters, "\n",
-	#)
 	return dictionary_equals(defined_defaults, custom_defaults) and dictionary_equals(defined_limiters, custom_limiters)
 
 
@@ -181,9 +170,60 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 		dropdown_container.add_child(limiter_head)
 		dropdown_container.move_child(limiter_head, 0)
 	
+	# cant remember why but this needs to happen later (here) (not on instantiation)
 	for item in created_things:
 		if is_instance_valid(item):
 			item.updated.connect(_on_values_changed)
+			if item is DefaultArgumentItem:
+				if item.is_string:
+					item.text_updated.connect(validate_dropdown_defaults_from_arg)
+			if item is DropdownTypeSelector:
+				item.updated_selection.connect(validate_dropdown_defaults_from_dd)
+
+func get_argument_items() -> Array:
+	var result := []
+	for item in arg_container.get_children():
+		if item is DefaultArgumentItem and is_instance_valid(item):
+			result.append(item)
+	return result
+func get_dropdown_items() -> Array:
+	var result := []
+	for item in dropdown_container.get_children():
+		if item is DropdownTypeSelector and is_instance_valid(item):
+			result.append(item)
+	return result
+
+func get_argument_item(arg:String) -> DefaultArgumentItem:
+	for item in get_argument_items():
+		if item.arg == arg:
+			return item
+	return null
+func get_dropdown_item(arg:String) -> DropdownTypeSelector:
+	for item in get_dropdown_items():
+		if item.arg == arg:
+			return item
+	return null
+
+func validate_dropdown_defaults_from_arg(arg:DefaultArgumentItem):
+	validate_dropdown_defaults(arg, get_dropdown_item(arg.arg))
+func validate_dropdown_defaults_from_dd(arg:DropdownTypeSelector):
+	validate_dropdown_defaults(get_argument_item(arg.arg), arg)
+
+func validate_dropdown_defaults(arg_item:DefaultArgumentItem, dropdown_item:DropdownTypeSelector):
+	if arg_item.is_string:
+		var has_limiters : bool = not dropdown_item.serialize().is_empty()
+		var has_default : bool = arg_item.is_using_custom_default()
+		var is_option_invalid : bool = not is_option_in_dropdowns(arg_item.get_value(), dropdown_item.serialize())
+		arg_item.set_dropdown_error(
+			has_default and has_limiters and is_option_invalid
+		)
+
+func is_option_in_dropdowns(query:String, dropdown_titles:Array) -> bool:
+	var valid_strings := []
+	for dd_name in dropdown_titles:
+		valid_strings.append_array(Pages.dropdowns.get(dd_name))
+		
+	return query in valid_strings
 
 func serialize_values_container():
 	var method_defaults := {}

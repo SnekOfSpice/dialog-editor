@@ -41,9 +41,21 @@ layout_mode = 2
 text = "-"
 
 [node name="HSeparator" type="HSeparator" parent="."]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxFlat_3ugoh")
+
+[node name="DropdownError" type="Label" parent="HSeparator"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_right = 52.0
+offset_bottom = 12.0
+grow_vertical = 2
+text = "invalid"
 
 [connection signal="pressed" from="AddButton" to="." method="set_use_custom_default" binds= [true]]
 [connection signal="pressed" from="ValueContainer/DeleteButton" to="." method="set_use_custom_default" binds= [false]]

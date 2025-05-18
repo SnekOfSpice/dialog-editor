@@ -5,6 +5,7 @@ class_name DropdownTypeSelector
 const HEIGHT := 32 # used for spacing and visual stuff
 
 signal updated()
+signal updated_selection(item:DropdownTypeSelector)
 
 var method := ""
 var arg := ""
@@ -18,8 +19,12 @@ func init(method_name:String, arg_name:String):
 		var button = CheckBox.new()
 		button.text = title
 		button.tooltip_text = "\n".join(Pages.dropdowns.get(title))
-		button.pressed.connect(emit_signal.bind("updated"))
+		button.pressed.connect(_on_pressed)
 		find_child("GridContainer").add_child(button)
+
+func _on_pressed():
+	emit_signal("updated")
+	emit_signal("updated_selection", self)
 
 func serialize() -> Array:
 	var selected := []

@@ -7,6 +7,7 @@ var arg := ""
 var is_string := false
 
 signal updated()
+signal text_updated()
 
 func init(method_name:String, arg_name:String):
 	method = method_name
@@ -45,13 +46,15 @@ func init(method_name:String, arg_name:String):
 	#prints("---------- initttttttttt", method_name, arg_name)
 	var override = Pages.custom_method_defaults.get(method_name, {}).get(arg_name)
 	set_use_custom_default(override != null)
+	set_dropdown_error(false)
 
 func deserialize(value):
 	#print("got ", value)
 	set_custom_default(value)
 	set_use_custom_default(value != null)
 
-func _emit_updated1(_a):
+func _emit_updated1(_text:String):
+	emit_signal("text_updated", self)
 	emit_signal("updated")
 
 func set_custom_default(value):
@@ -84,6 +87,8 @@ func set_use_custom_default(value:bool):
 	find_child("AddButton").visible = not value
 	find_child("ValueContainer").visible = value
 	emit_signal("updated")
+	if is_string:
+		emit_signal("text_updated", self)
 
 func get_arg_name() -> String:
 	return find_child("ArgNameLabel").text
@@ -100,3 +105,7 @@ func _on_use_default_check_box_toggled(toggled_on: bool) -> void:
 
 func show_antenna(value:bool):
 	find_child("HSeparator").visible = value
+
+func set_dropdown_error(value:bool):
+	find_child("DropdownError").modulate.a = 1 if value else 0
+	find_child("HSeparator").self_modulate.v = .5 if value else 1
