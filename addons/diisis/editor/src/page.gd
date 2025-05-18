@@ -118,7 +118,11 @@ func set_next(next_page: int):
 	
 	find_child("NextLineEdit").max_value = Pages.get_page_count()
 	find_child("NextLineEdit").value = next
-	find_child("NextKey").text = next_key
+	find_child("NextKey").text = str(
+		"[url=goto-%s]" % next_page,
+		next_key,
+		"[/url]"
+		)
 
 
 func enable_page_key_edit(value: bool):
@@ -571,3 +575,7 @@ func _on_page_key_line_edit_mouse_exited() -> void:
 	find_child("PageKeyEditContainer").custom_minimum_size.x = 0
 	page_key_line_edit.remove_theme_stylebox_override("normal")
 	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())
+
+
+func _on_next_key_meta_clicked(meta: Variant) -> void:
+	Pages.editor.goto_with_meta(meta)

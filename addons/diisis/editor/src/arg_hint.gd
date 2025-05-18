@@ -20,7 +20,7 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		var arg_type : String = DIISIS.type_to_str(arg_types[i])
 
 		var dropdowns : Array = Pages.custom_method_dropdown_limiters.get(instruction_name, {}).get(arg_name, [])
-		if dropdowns.size() > 0:
+		if not dropdowns.is_empty():
 			arg_type = ", ".join(dropdowns)
 		
 		var arg_default = arg_defaults.get(arg_name)
@@ -33,7 +33,7 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		else:
 			default_color = "ceb1bc"
 		if arg_default != null:
-			arg_string += str("[color=ceb1bcB7] ", ":=" if default_in_base else "::=", "[/color] [color=", default_color, "]", arg_default, "[/color]")
+			arg_string += str("[color=ceb1bcB7] %s[/color] [color=%s]%s[/color]") % [":=" if default_in_base else "::=", default_color, arg_default]
 			arg_string_no_bbcode += str(" ", ":=" if default_in_base else "::=", " ", arg_default)
 		arg_strings.append(arg_string)
 		arg_strings_no_bbcode.append(arg_string_no_bbcode)
@@ -55,9 +55,9 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		if i == args_before_caret:
 			hint += "[/outline_color][/outline_size][/bgcolor][/u]"
 		if i < arg_strings.size() - 1:
-			hint += ", "
+			hint += " ,  "
 			if hit_index == 0 and args_before_caret > 0:
-				string_before_column += ", "
+				string_before_column += " ,  "
 		i += 1
 	find_child("TextLabel").text = hint
 	
