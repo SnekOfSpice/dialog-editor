@@ -258,6 +258,9 @@ func clear_values_container():
 
 
 func _on_item_list_gui_input(event: InputEvent) -> void:
+	# for spaghetti code reasons, echo events go through the list too fast
+	# which breaks the serialization in places while the GUI gets refreshed
+	# so we just counteract it here
 	if event is InputEventKey:
 		if event.pressed and event.echo:
 			if event.keycode == KEY_UP:

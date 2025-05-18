@@ -48,7 +48,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
-text = "Set default overrides. Any method called by diisis will have 2 steps of defaut applied. First the one set in the function signature in instruction handler scripts. Then the ones you set here.
+text = "Set default overrides. Any method called by diisis will have 2 steps of default applied. First the one set in the function signature in [img]uid://cowtdbgbvq7fp[/img]instruction handler scripts. Then the ones you set here.
 use them with a [font=res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf]*[/font] in function calls
 Additionally, you can set string-based arguments to only accept dropdown-defined values here."
 fit_content = true
