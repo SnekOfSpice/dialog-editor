@@ -179,9 +179,9 @@ var name_container: Control:
 ## Gets suffixed to text lines, before [member body_label_suffix]. Keys are actor names.
 @export var body_label_suffix_by_actor : Dictionary[String, String]
 ## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
-## Each call will replace the original text.
+## Each call will replace the text as it gets passed along the array.
 ## This can be used to mangle the text in arbitrary ways before adding it to [member body_label], such as adding or replacing contents with your own custom text.
-## [br] [b]For example:[/b] [code]h3h3[/code] in [body_label_function_funnel] will call [code]h3h3(text)[/code]. Giving [LineReader] the function with the name [code]h3h3[/code] will transform the text in interesting ways!
+## [br][b]For example:[/b] [code]h3h3[/code] in [member body_label_function_funnel] will call [code]h3h3(text)[/code]. Giving [LineReader] the function with the name [code]h3h3[/code] will transform the text in interesting ways!
 ## [codeblock]
 ## func h3h3(text:String):
 ##     text = text.to_upper()
