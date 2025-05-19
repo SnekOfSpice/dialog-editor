@@ -17,7 +17,7 @@ func _ready():
 
 func set_screen(screen_path:String, payload := {}):
 	#if is_instance_valid(Parser.line_reader):
-		#if Parser.line_reader.is_input_locked:
+		#if Parser.line_reader.is_executing:
 			#return
 	
 	if stage == CONST.STAGE_GAME:

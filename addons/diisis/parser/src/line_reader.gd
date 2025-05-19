@@ -283,8 +283,8 @@ var _remaining_prompt_delay := input_prompt_delay
 @export_subgroup("Warn about nonadvance on", "warn_advance_on_")
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because the Parser is paused.
 @export var warn_advance_on_parser_paused := true
-## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param is_input_locked] is true. Probably because of waiting for an instruction to be finished.
-@export var warn_advance_on_input_locked := true
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param is_executing] is true. Probably because of waiting for an instruction to be finished.
+@export var warn_advance_on_executing := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because the Parser is terminated.
 @export var warn_advance_on_terminated := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param auto_continue] is true.
@@ -306,9 +306,6 @@ var line_type := 0
 var line_index := 0
 var _remaining_auto_pause_duration := 0.0
 
-## Tracks the state of the [LineReader] being input-locked.
-## Usually because of instructions being executed.
-var is_input_locked := false : set = set_is_input_locked
 var _showing_text := false
 
 var _lead_time := 0.0
@@ -382,7 +379,6 @@ func serialize() -> Dictionary:
 	result["dialog_lines"] = _dialog_lines 
 	result["handled_comments"] = _handled_comments
 	result["instruction_handler"] = serialize_instruction_handler_data() 
-	result["is_input_locked"] = is_input_locked 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
 	result["_last_raw_name"] = _last_raw_name
 	result["line_chunks"] = _line_chunks 
@@ -424,7 +420,6 @@ func deserialize(data: Dictionary):
 	_dialog_lines = data.get("dialog_lines")
 	_handled_comments = data.get("handled_comments", [])
 	deserialize_instruction_handler_data(data.get("instruction_handler", {}))
-	is_input_locked = data.get("is_input_locked")
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	_last_raw_name = data.get("_last_raw_name", "")
 	_line_chunks = data.get("line_chunks")
@@ -564,9 +559,9 @@ func request_advance():
 		if warn_advance_on_parser_paused:
 			push_warning("Cannot advance because Parser.paused is true.")
 		return
-	if is_input_locked:
-		if warn_advance_on_input_locked:
-			push_warning("Cannot advance because is_input_locked is true.")
+	if is_executing:
+		if warn_advance_on_executing:
+			push_warning("Cannot advance because is_executing is true.")
 		return
 	if terminated:
 		if warn_advance_on_terminated:
@@ -625,8 +620,8 @@ func request_go_back() -> void:
 	if Parser.paused:
 		push_warning("Cannot go back because Parser.paused is true.")
 		return
-	if is_input_locked:
-		push_warning("Cannot go back because is_input_locked is true.")
+	if is_executing:
+		push_warning("Cannot go back because is_executing is true.")
 		return
 	if terminated:
 		push_warning("Cannot go back because terminated is true.")
@@ -671,9 +666,6 @@ func apply_ui_visibilities(data:Dictionary):
 
 func _on_instruction_wrapped_completed():
 	emit_signal("line_finished", line_index)
-
-func set_is_input_locked(value: bool):
-	is_input_locked = value
 
 func _close(_terminating_page):
 	terminated = true
@@ -979,7 +971,6 @@ func _process(delta: float) -> void:
 		elif not emitted_complete:
 			ParserEvents.instruction_completed.emit(execution_text, delay_after)
 		
-		set_is_input_locked(false)
 		_on_instruction_wrapped_completed()
 		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
 		
@@ -1132,7 +1123,7 @@ func _update_input_prompt(delta:float):
 		if body_label.visible_characters == -1:
 			prompt_visible = true
 	
-	if is_input_locked:
+	if is_executing:
 		prompt_visible = false
 	if not prompt_visible:
 		prompt_unfinished.modulate.a = 0
@@ -1978,10 +1969,8 @@ func finish_waiting_for_instruction():
 	
 	if not emitted_complete and delay_after <= 0:
 		ParserEvents.instruction_completed.emit(execution_text, delay_after)
-		set_is_input_locked(false)
 		_on_instruction_wrapped_completed()
 		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
-		
 		is_executing = false
 		emitted_complete = true
 
@@ -1995,7 +1984,6 @@ func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_se
 	has_executed = false
 	is_executing = true
 	has_received_execute_callback = true
-	set_is_input_locked(true)
 	ParserEvents.instruction_started.emit(execution_text, delay_before)
 	emitted_complete = false
 
