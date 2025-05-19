@@ -31,7 +31,7 @@ Editor
 Runtime
 - name style prepend got a few more options and consistency 
 - add ParserEvents: skipped, advanced
-- add LineReader: virtual_choices, choice_pressed_virtual, chatlog_tint_full_line, text_content_word_wrappers
+- add LineReader: virtual_choices, choice_pressed_virtual, chatlog_tint_full_line, text_content_word_wrappers, body_label_function_funnel
 - rename and restructure some variables (most notably text_content is now body_label)
 - Parser.reset_and_start got line index argument (ioydoy cameo)
 - remove LineReader: property_for_name (was depricated) and inline_evaluator (merged with instruction_handler)
