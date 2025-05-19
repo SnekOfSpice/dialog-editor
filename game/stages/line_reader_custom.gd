@@ -1,3 +1,4 @@
+@warning_ignore("missing_tool")
 extends LineReader
 
 signal start_black_fade(
@@ -115,8 +116,7 @@ func show_character(character_name: String, clear_others: bool) -> bool:
 	return false
 
 
-func shake_camera(strength) -> bool:
-	strength = float(strength)
+func shake_camera(strength:float) -> bool:
 	if GameWorld.camera:
 		GameWorld.camera.apply_shake(strength)
 	return false

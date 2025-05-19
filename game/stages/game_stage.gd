@@ -24,7 +24,7 @@ var is_name_container_visible := false
 var hovering_meta := false
 
 @onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
-@onready var rtl_custom_minimum_size : Vector2 = find_child("RichTextLabel").custom_minimum_size
+@onready var rtl_custom_minimum_size : Vector2 = find_child("BodyLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
 @onready var text_start_position = find_child("TextContainer1").position
@@ -244,10 +244,10 @@ func set_text_style(style:TextStyle):
 	if text_style == TextStyle.ToBottom:
 		find_child("TextContainer1").custom_minimum_size = text_container_custom_minimum_size
 		find_child("TextContainer1").position = text_start_position
-		find_child("RichTextLabel").custom_minimum_size = rtl_custom_minimum_size
+		find_child("BodyLabel").custom_minimum_size = rtl_custom_minimum_size
 	elif text_style == TextStyle.ToCharacter:
 		find_child("TextContainer1").custom_minimum_size.x = 230
-		find_child("RichTextLabel").custom_minimum_size.x = 230
+		find_child("BodyLabel").custom_minimum_size.x = 230
 
 func hide_cg(fade_out := 0.0):
 	cg = ""
@@ -452,15 +452,15 @@ func use_ui(id:int):
 	else:
 		root_existed = false
 	ui_id = id
-	ui_root = find_child(str("TextContainer", ui_id))
+	ui_root = find_child("TextContainer%s" % ui_id)
 	for c in find_child("VNUI").get_children():
 		if c.name.begins_with("TextContainer"):
 			c.visible = c == ui_root
 	
-	lr.body_label = ui_root.find_child("RichTextLabel")
+	lr.body_label = ui_root.find_child("BodyLabel")
 	lr.text_container = ui_root
-	lr.name_label = ui_root.find_child("Label")
-	lr.name_container = ui_root.find_child("PanelContainer")
+	lr.name_label = ui_root.find_child("NameLabel")
+	lr.name_container = ui_root.find_child("NameContainer")
 	lr.prompt_finished = ui_root.find_child("PageFinished")
 	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
 	

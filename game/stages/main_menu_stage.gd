@@ -3,8 +3,11 @@ extends Control
 ## Music key (same as instructions in DIISIS) to be played on [method _ready] Doesn't play anything if empty.
 @export var menu_music := ""
 
+@warning_ignore("unused_signal")
 signal start_game()
+@warning_ignore("unused_signal")
 signal load_game()
+@warning_ignore("unused_signal")
 signal start_epilogue()
 
 func _ready() -> void:

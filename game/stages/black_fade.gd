@@ -6,6 +6,7 @@ var release_on_full_black_reached := 1.0
 var sustain_on_full_black_reached := 1.0
 var new_bgm_on_full_black_reached := ""
 
+@warning_ignore("unused_signal")
 signal request_background_change(background_name: String)
 
 func _ready() -> void:

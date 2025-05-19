@@ -65,6 +65,7 @@ func _ready():
 func set_x_position(idx:int, time := 0, advance_instruction_after_reposition:=false):
 	var position0 = 195
 	var position6 = 822
+	@warning_ignore("integer_division")
 	var fraction = (position6 - position0) / 7
 	target_x = position0 + idx * fraction
 	

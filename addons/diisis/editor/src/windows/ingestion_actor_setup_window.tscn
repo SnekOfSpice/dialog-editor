@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4vp1rjlk3jn7"]
+
+[ext_resource type="Script" uid="uid://bl5bg6x5lqsot" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.gd" id="1_s62sc"]
+[ext_resource type="PackedScene" uid="uid://ccmtncv1scrdi" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_container.tscn" id="2_jukvo"]
+
+[node name="IngestionActorSetupWindow" type="Window"]
+title = "Ingestion Actors"
+size = Vector2i(400, 254)
+wrap_controls = true
+script = ExtResource("1_s62sc")
+
+[node name="IngestionActorSetupContainer" parent="." instance=ExtResource("2_jukvo")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="resized" from="IngestionActorSetupContainer" to="." method="_on_page_ingestion_actor_setup_container_resized"]

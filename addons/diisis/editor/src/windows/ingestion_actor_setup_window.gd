@@ -3,7 +3,7 @@ extends Window
 
 
 func _on_about_to_popup() -> void:
-	$PageIngestionActorSetupContainer.init()
+	$IngestionActorSetupContainer.init()
 	await get_tree().process_frame
 	size = Vector2i.ZERO
 

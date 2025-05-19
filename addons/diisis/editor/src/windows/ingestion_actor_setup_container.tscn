@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ccmtncv1scrdi"]
 
-[ext_resource type="Script" uid="uid://cejag0i1tvlj4" path="res://addons/diisis/editor/src/windows/page_ingestion_actor_setup_container.gd" id="1_60wls"]
+[ext_resource type="Script" uid="uid://cejag0i1tvlj4" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_container.gd" id="1_60wls"]
 
 [node name="PageIngestionActorSetupContainer" type="VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)

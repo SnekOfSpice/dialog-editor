@@ -299,7 +299,7 @@ func _shortcut_input(event):
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_I:
-					open_window_by_string("PageIngestionActorSetupWindow")
+					open_window_by_string("IngestionActorSetupWindow")
 				KEY_F:
 					if event.is_shift_pressed():
 						open_popup($Popups.get_node("FactsPopup"))
@@ -721,8 +721,8 @@ func _on_editor_id_pressed(id: int) -> void:
 func _on_utility_id_pressed(id: int) -> void:
 	match id:
 		0: 
-			var total := Pages.get_count_total()
-			var on_page := Pages.get_count_on_page(get_current_page_number())
+			var total : Vector2i = Pages.get_count_total()
+			var on_page : Vector2i = Pages.get_count_on_page(get_current_page_number())
 			var dialog_text := str(
 				"Total Word Count: [b]%s[/b]\n" % total.x,
 				"Total Character Count: [b]%s[/b]" % total.y,
@@ -738,7 +738,7 @@ func _on_utility_id_pressed(id: int) -> void:
 		1: 
 			open_popup($Popups.get_node("TextSearchPopup"))
 		2:
-			open_window_by_string("PageIngestionActorSetupWindow")
+			open_window_by_string("IngestionActorSetupWindow")
 
 
 func _on_setup_id_pressed(id: int) -> void:

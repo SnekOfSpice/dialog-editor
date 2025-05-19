@@ -600,7 +600,6 @@ func get_all_custom_properties() -> Array:
 func get_all_instruction_names() -> Array:
 	var result := get_instruction_handler_methods()
 	var autoload_method_names := []
-	# IDK SCRATCH AUTOLOADS FOR NOW??
 	for autoload_name in callable_autoloads:
 		var methods := []
 		var autoload_script := get_autoload_script(autoload_name)
@@ -630,6 +629,7 @@ func get_autoload_script(autoload:String) -> Script:
 	elif path.ends_with(".tscn"):
 		var autoload_copy : Node = load(path).instantiate()
 		autoload_script = autoload_copy.get_script()
+		autoload_copy.queue_free()
 		return autoload_script
 	else:
 		push_warning("Encountered fucky autoload")
@@ -926,7 +926,7 @@ func get_count_on_page(page_number:int) -> Vector2i:
 				word_count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
 				word_count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
 		elif line_type == DIISIS.LineType.Text:
-			var text := Pages.get_text(content.get("text_id", ""))
+			var text : String = Pages.get_text(content.get("text_id", ""))
 			var actor_tag_index := text.find("[]>")
 			while actor_tag_index != -1:
 				var tag_end = text.find(":", actor_tag_index)

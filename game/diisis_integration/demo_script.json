@@ -204,7 +204,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773718,
+		"id_counter": -9223372036854773428,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -983,7 +983,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 293,
+				"meta.scroll_vertical": 191,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1,
@@ -1193,7 +1193,7 @@
 			"1744987741.530--9223372036854775777": "[]>narrator:DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
 			"1744987741.532--9223372036854775772": "[]>narrator:This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
 			"1744987741.532--9223372036854775774": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator:Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
-			"1744987741.534--9223372036854775769": "[]>narrator:Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n<mp>And the music rocks too.<mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity.<mp> But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs)\n[]>narrator:CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
+			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b] \n<mp>And the music rocks too. <mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity. <mp>But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs)\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
 			"1744987741.535--9223372036854775767": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",
 			"1744987742.696--9223372036854775765": "[]>narrator: With that, we can start to wrap up.\n[]>amber: Change of scenery please!",
 			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS)\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow] ",

@@ -33,7 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://b81qxlexbcshc" path="res://addons/diisis/editor/src/change_text_id_window.tscn" id="29_jb16f"]
 [ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
-[ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/page_ingestion_actor_setup_window.tscn" id="33_378lj"]
+[ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -599,7 +599,7 @@ visible = false
 [node name="HandlerWindow" parent="Popups" instance=ExtResource("32_24jcx")]
 visible = false
 
-[node name="PageIngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
+[node name="IngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
 visible = false
 
 [node name="Camera" type="Camera2D" parent="."]
