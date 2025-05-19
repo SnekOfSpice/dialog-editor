@@ -13,98 +13,90 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yn2ca")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-
-[node name="ItemList" type="ItemList" parent="HSplitContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-auto_width = true
-item_count = 3
-item_0/text = "Editor Behavior"
-item_1/text = "Line Behavior"
-item_2/text = "Appearance"
-
-[node name="ContentContainer" type="PanelContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="EditorContainer" type="PanelContainer" parent="HSplitContainer/ContentContainer"]
+[node name="Editor" type="PanelContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/ContentContainer/EditorContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Editor"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Editor/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Editor/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Default Page Address Mode"
 
-[node name="AddressModeButtonPage" parent="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_t4wj7")]
+[node name="AddressModeButtonPage" parent="TabContainer/Editor/VBoxContainer/HBoxContainer" instance=ExtResource("2_t4wj7")]
 layout_mode = 2
 
-[node name="ToggleSettings" type="VBoxContainer" parent="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer"]
+[node name="ToggleSettings" type="VBoxContainer" parent="TabContainer/Editor/VBoxContainer"]
 layout_mode = 2
 
-[node name="LineBehaviorContainer" type="PanelContainer" parent="HSplitContainer/ContentContainer"]
-visible = false
+[node name="Dialog" type="PanelContainer" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Dialog"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/ContentContainer/LineBehaviorContainer"]
+[node name="UseDialogSyntaxCheckBox" type="CheckBox" parent="TabContainer/Dialog/VBoxContainer"]
 layout_mode = 2
-
-[node name="UseDialogSyntaxCheckBox" type="CheckBox" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer"]
-layout_mode = 2
+size_flags_horizontal = 0
 text = "Use Dialog Syntax"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Dialog/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Text Line Lead Time"
 
-[node name="Label2" type="Label" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
-text = "|Same Actor"
+text = "| Same Actor"
 
-[node name="LeadTimeSpinBoxSameActor" type="SpinBox" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer"]
+[node name="LeadTimeSpinBoxSameActor" type="SpinBox" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 step = 0.01
 
-[node name="Label3" type="Label" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
-text = "|Other Actor"
+text = "| Other Actor"
 
-[node name="LeadTimeSpinBoxOtherActor" type="SpinBox" parent="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer"]
+[node name="LeadTimeSpinBoxOtherActor" type="SpinBox" parent="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
 step = 0.01
 
-[node name="AppearanceContainer" type="PanelContainer" parent="HSplitContainer/ContentContainer"]
+[node name="Appearance" type="PanelContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 2
 
-[node name="StringSettings" type="VBoxContainer" parent="HSplitContainer/ContentContainer/AppearanceContainer"]
+[node name="StringSettings" type="VBoxContainer" parent="TabContainer/Appearance"]
 layout_mode = 2
 
-[connection signal="item_selected" from="HSplitContainer/ScrollContainer/ItemList" to="." method="_on_item_list_item_selected"]
-[connection signal="mode_set" from="HSplitContainer/ContentContainer/EditorContainer/VBoxContainer/HBoxContainer/AddressModeButtonPage" to="." method="_on_address_mode_button_page_mode_set"]
-[connection signal="pressed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/UseDialogSyntaxCheckBox" to="." method="_on_use_dialog_syntax_check_box_pressed"]
-[connection signal="value_changed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer/LeadTimeSpinBoxSameActor" to="." method="_on_lead_time_spin_box_same_actor_value_changed"]
-[connection signal="value_changed" from="HSplitContainer/ContentContainer/LineBehaviorContainer/VBoxContainer/HBoxContainer/LeadTimeSpinBoxOtherActor" to="." method="_on_lead_time_spin_box_other_actor_value_changed"]
+[connection signal="mode_set" from="TabContainer/Editor/VBoxContainer/HBoxContainer/AddressModeButtonPage" to="." method="_on_address_mode_button_page_mode_set"]
+[connection signal="pressed" from="TabContainer/Dialog/VBoxContainer/UseDialogSyntaxCheckBox" to="." method="_on_use_dialog_syntax_check_box_pressed"]
+[connection signal="value_changed" from="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer/LeadTimeSpinBoxSameActor" to="." method="_on_lead_time_spin_box_same_actor_value_changed"]
+[connection signal="value_changed" from="TabContainer/Dialog/VBoxContainer/HBoxContainer/HBoxContainer2/LeadTimeSpinBoxOtherActor" to="." method="_on_lead_time_spin_box_other_actor_value_changed"]

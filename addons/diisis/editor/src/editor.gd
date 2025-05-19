@@ -278,9 +278,16 @@ func _shortcut_input(event):
 		if not event.pressed:
 			return
 		
-		if event.key_label == KEY_F1:
-			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
-		
+		match event.key_label:
+			KEY_F1:
+				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+			KEY_F5:
+				EditorInterface.play_main_scene()
+			KEY_F6:
+				EditorInterface.play_current_scene()
+			KEY_F8:
+				EditorInterface.stop_playing_scene()
+			
 		if event.is_command_or_control_pressed():
 			match event.key_label:
 				KEY_E:
@@ -708,7 +715,20 @@ func _on_editor_id_pressed(id: int) -> void:
 func _on_utility_id_pressed(id: int) -> void:
 	match id:
 		0: 
-			open_popup($Popups.get_node("WordCountDialog"))
+			var total := Pages.get_count_total()
+			var on_page := Pages.get_count_on_page(get_current_page_number())
+			var dialog_text := str(
+				"Total Word Count: [b]%s[/b]\n" % total.x,
+				"Total Character Count: [b]%s[/b]" % total.y,
+				"\n\n",
+				"Word Count on page: [b]%s[/b]\n" % on_page.x,
+				"Character Count on page: [b]%s[/b]\n" % on_page.y,
+				"\n",
+				"[wave amp=10.0 freq=-4 connected=1][color=f2e260]Note:[/color][/wave]\n",
+				"Values are approximated:\n- Words are counted by spaces.\n- Characters are counted in total.\n(tags may affect this)"
+			)
+			popup_accept_dialogue(dialog_text, "Word & Character Count")
+			#open_popup($Popups.get_node("WordCountDialog"))
 		1: 
 			open_popup($Popups.get_node("TextSearchPopup"))
 		2:

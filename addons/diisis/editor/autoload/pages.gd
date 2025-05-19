@@ -912,47 +912,39 @@ func lines_referencing_fact(fact_name: String):
 	
 	return all_refs
 
-
-func get_character_count_on_page_approx(page_number: int) -> int:
-	var count := 0
+## Returns word count in x and character count in y
+func get_count_on_page(page_number:int) -> Vector2i:
+	var character_count := 0
+	var word_count := 0
 	for line in page_data.get(page_number, {}).get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		if line_type == DIISIS.LineType.Choice:
 			for choice in content.get("choices"):
-				count +=  Pages.get_text(choice.get("text_id_enabled", "")).length()
-				count +=  Pages.get_text(choice.get("text_id_disabled", "")).length()
+				character_count +=  Pages.get_text(choice.get("text_id_enabled", "")).length()
+				character_count +=  Pages.get_text(choice.get("text_id_disabled", "")).length()
+				word_count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
+				word_count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
 		elif line_type == DIISIS.LineType.Text:
-			var text = Pages.get_text(content.get("text_id", ""))
-			count += text.length()
-	return count
+			var text := Pages.get_text(content.get("text_id", ""))
+			var actor_tag_index := text.find("[]>")
+			while actor_tag_index != -1:
+				var tag_end = text.find(":", actor_tag_index)
+				if tag_end == -1:
+					break
+				text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+				actor_tag_index = text.find("[]>")
+			character_count += text.length()
+			word_count += text.count(" ") + 1
+	return Vector2(word_count, character_count)
 
-func get_word_count_on_page_approx(page_number: int) -> int:
-	var count := 0
-	for line in page_data.get(page_number, {}).get("lines", []):
-		var line_type = line.get("line_type", null)
-		var content = line.get("content")
-		if line_type == DIISIS.LineType.Choice:
-			for choice in content.get("choices"):
-				count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
-				count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
-		elif line_type == DIISIS.LineType.Text:
-			var text = Pages.get_text(content.get("text_id", ""))
-			count += text.count(" ") + 1
-			count -= text.count("[]>")
-				
-	return count
-
-func get_character_count_total_approx() -> int:
-	var sum := 0
+## Returns word count in x and character count in y
+func get_count_total() -> Vector2i:
+	var sum := Vector2.ZERO
 	for i in page_data.keys():
-		sum += get_character_count_on_page_approx(i)
-	
-	return sum
-func get_word_count_total_approx() -> int:
-	var sum := 0
-	for i in page_data.keys():
-		sum += get_word_count_on_page_approx(i)
+		var result = get_count_on_page(i)
+		sum.x += result.x
+		sum.y += result.y
 	
 	return sum
 

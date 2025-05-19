@@ -163,7 +163,7 @@ item_2/id = 2
 item_count = 2
 item_0/text = "Step through pages"
 item_0/id = 0
-item_1/text = "Reload editor"
+item_1/text = "Reload DIISIS editor"
 item_1/id = 1
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]

@@ -45,13 +45,7 @@ func init():
 		container.add_child(button)
 		find_child("StringSettings").add_child(container)
 	
-	find_child("ItemList").select(0)
-	_on_item_list_item_selected(0)
-
-
-func _on_item_list_item_selected(index: int) -> void:
-	for c in find_child("ContentContainer").get_children():
-		c.visible = c.get_index() == index
+	$TabContainer.current_tab = 0
 
 func _on_use_dialog_syntax_check_box_pressed():
 	Pages.use_dialog_syntax = find_child("UseDialogSyntaxCheckBox").button_pressed
@@ -67,12 +61,3 @@ func _on_lead_time_spin_box_other_actor_value_changed(value):
 
 func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void:
 	Pages.default_address_mode_pages = mode
-
-
-
-#func _on_save_on_play_check_box_toggled(toggled_on: bool) -> void:
-	#Pages.save_on_play = toggled_on
-#
-#
-#func _on_warn_on_fact_deletion_check_box_toggled(toggled_on: bool) -> void:
-	#Pages.warn_on_fact_deletion = toggled_on

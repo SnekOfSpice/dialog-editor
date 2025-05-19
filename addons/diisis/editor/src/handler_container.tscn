@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4o7jt8031ant"]
+[gd_scene load_steps=3 format=3 uid="uid://c4o7jt8031ant"]
 
 [ext_resource type="Script" uid="uid://bh5hvgvfscaqb" path="res://addons/diisis/editor/src/handler_container.gd" id="1_n4i0n"]
+[ext_resource type="Texture2D" uid="uid://dgf242nwi7c37" path="res://addons/diisis/parser/style/icon_line_reader.svg" id="2_cg5g2"]
 
 [node name="EvaluatorContainer" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 200)
@@ -16,9 +17,8 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "- file paths to scripts that are instruction_handler of any LineReader
-- ending in .gd
-- formatted like \"res://handler.gd\""
+text = "- file paths to scripts that inherit from LineReader
+- ending in .gd & formatted like \"res://line_reader.gd\""
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -31,7 +31,8 @@ text = "sort A-Z"
 
 [node name="FindHandlersButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-text = "Find InstructionHandlers"
+text = "Auto Search"
+icon = ExtResource("2_cg5g2")
 
 [node name="FoundHandlersLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
