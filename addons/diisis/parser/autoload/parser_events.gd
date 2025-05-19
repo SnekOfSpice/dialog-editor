@@ -1,4 +1,3 @@
-@tool
 extends Node
 class_name DiisisParserEvents
 ## A helper autoload that provides hooks into DIISIS.

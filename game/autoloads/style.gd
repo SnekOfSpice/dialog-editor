@@ -37,6 +37,34 @@ const RICH_TEXT_LABEL_FONT_SIZE_OFFSETS := [
 	{},
 ]
 
+func adjust_font_size_tags(text:String) -> String:
+	var tag_positions := []
+	var index := text.find("[font_size=")
+	while index != -1:
+		tag_positions.append(index)
+		if index >= text.length() - 1:
+			break
+		index = text.find("[font_size=", index + 1)
+	
+	var tag_offset := 0
+	for tag_start : int in tag_positions:
+		var tag_end := text.find("]", tag_start + tag_offset)
+		if tag_end == -1:
+			break
+		var tag_length := tag_end - tag_start
+		var tag := text.substr(tag_start + tag_offset, tag_length - tag_offset)
+		var font_size := float(tag.split("=")[1])
+		var ratio := get_rich_text_label_normal_font_size() / float(DEFAULT_RTL_FONT_SIZE)
+		printt(tag, font_size, ratio)
+		var new_tag := "[font_size=%s" % int(ratio * font_size)
+		
+		text = text.erase(tag_start + tag_offset, tag_length - tag_offset)
+		text = text.insert(tag_start + tag_offset, new_tag)
+		
+		tag_offset += new_tag.length() - tag_length
+	print(text)
+	return text
+
 func set_label_font(idx:int):
 	label_font_index = idx
 	var font = load(LABEL_FONTS[idx])
@@ -74,7 +102,9 @@ func set_rich_text_label_font_size(font_size:int):
 	theme.set_font_size("bold_italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("bold_italics_font", 0))
 	theme.set_font_size("italics_font_size", "RichTextLabel", font_size + RICH_TEXT_LABEL_FONT_SIZE_OFFSETS.get(rich_text_label_font_index).get("italics_font", 0))
 	_save_font_prefs()
-	
+
+func get_rich_text_label_normal_font_size() -> float:
+	return theme.get_font_size("normal_font_size", "RichTextLabel")
 
 func _save_font_prefs():
 	var prefs := {}

@@ -189,6 +189,19 @@ var name_container: Control:
 @export var body_label_prefix_by_actor : Dictionary[String, String]
 ## Gets suffixed to text lines, before [member body_label_suffix]. Keys are actor names.
 @export var body_label_suffix_by_actor : Dictionary[String, String]
+## List of functions that get called with [method Instruction_handler.callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
+## Each call will replace the original text.
+## This can be used to mangle the text in arbitrary ways before adding it to [member body_label], such as adding or replacing contents with your own custom text.
+## [br] [b]For example:[/b] [code]h3h3[/code] in [body_label_function_funnel] will call [code]instruction_handler.h3h3(text)[/code]. Giving [member instruction_handler] the function with the name [code]h3h3[/code] will transform the text in interesting ways!
+## [codeblock]
+## func h3h3(text:String):
+##     text = text.to_upper()
+##     text = text.replace("E", "3")
+##     text = text.replace("I", "1")
+##     text = text.replace("A", "4")
+##     return text
+## [/codeblock]
+@export var body_label_function_funnel : Array[String]
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
@@ -750,13 +763,9 @@ func _read_new_line(new_line: Dictionary):
 	
 	match line_type:
 		DIISIS.LineType.Text:
-			#var localized : String = Parser.replace_from_locale(_line_data.get("address"), Parser.locale)
-			#if not localized.is_empty():
-				#content = localized
 			if str(content).is_empty():
 				emit_signal("line_finished", line_index)
 				return
-			
 			
 			if Parser.use_dialog_syntax or chatlog_enabled:
 				var lines = content.split("[]>")
@@ -1155,6 +1164,14 @@ func _replace_tags(lines:Array) -> Array:
 	if not instruction_handler:
 		push_warning("No InstructionHandler has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
 		return lines
+	
+	for call in body_label_function_funnel:
+		var i := 0
+		while i < lines.size():
+			var text : String = lines[i]
+			lines[i] = str(instruction_handler.callv_custom(call, [text]))
+			i += 1
+	
 	var i := 0
 	var result := []
 	while i < lines.size():
@@ -1562,6 +1579,7 @@ func _set_body_label_text(text: String):
 		past_text += body_label_to_save
 		past_line.text = past_text
 		past_lines_container.add_child(past_line)
+
 	
 	body_label.text = text
 	body_label.visible_characters = _visible_prepend_offset

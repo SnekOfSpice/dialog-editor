@@ -107,6 +107,7 @@ text_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContain
 name_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer")
 choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_title_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/Label")
+body_label_function_funnel = Array[String](["Style.adjust_font_size_tags"])
 choice_button_keyboard_focus = false
 show_input_prompt = true
 input_prompt_delay = 1.29

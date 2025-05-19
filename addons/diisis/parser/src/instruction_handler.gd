@@ -184,7 +184,7 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 	var result
 	if autoload:
 		func_name = func_name.split(".")[1]
-		get_tree().root.get_node(autoload).callv(func_name, args)
+		result = get_tree().root.get_node(autoload).callv(func_name, args)
 	else:
 		result = callv(func_name, args)
 	match call_mode:
@@ -193,6 +193,18 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 		CallMode.Call:
 			ParserEvents.function_called.emit(func_name, args, call_position)
 			return result
+
+func callv_custom(method_name:String, argv):
+	var autoload : String
+	if "." in method_name:
+		autoload = method_name.split(".")[0]
+	var result
+	if autoload:
+		method_name = method_name.split(".")[1]
+		result = get_tree().root.get_node(autoload).callv(method_name, argv)
+	else:
+		result = callv(method_name, argv)
+	return result
 
 func execute(instruction_text: String) -> bool:
 	var instruction_name := instruction_text.split("(")[0]
