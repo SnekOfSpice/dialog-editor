@@ -1,6 +1,6 @@
 -------------------------------------------------
 DIISIS 0.6
-This shit breaks compatibility on so many levels!
+This shit breaks compatibility on so many levels! Might as well be a new plugin!
 
 General
 - Introduce text IDs
@@ -11,6 +11,7 @@ General
 - fixes all around
 - automatically check for updates (can be disabled in Project Settings)
 - Refactor the entire instruction system
+- InstructionHandler is gone
 
 Editor
 - Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
@@ -19,7 +20,7 @@ Editor
 	- dropdown arg limiters
 - Option for Save on Play (true by default)
 - General layout improvements & slimmification
-- Incoming references window for JP/LB
+- Incoming references window for Jump Page/Loopback
 - fact deletion warning (if a page, line, or choice item contains a fact, this warns you of it. can be disabled in preferences)
 - add editor menu
 	- step through pages
@@ -35,10 +36,11 @@ Runtime
 - rename and restructure some variables (most notably text_content is now body_label)
 - Parser.reset_and_start got line index argument (ioydoy cameo)
 - remove LineReader: property_for_name (was depricated) and inline_evaluator (merged with instruction_handler)
-- InstructionHandler can (de)serialize now. So even when executing a function, you can quit the game and just persist all the things
+- (de)serializes the function execution state now. So even when executing a function, you can quit the game and just persist all the things
+- Empty pages will now cause the Parser to go to their next page, and not return without change.
 
 VN Template
-- improve template by using _unhaled_inout instead of _input, fixing a few input bugs
+- improve template by using _unhaled_input instead of _input, fixing a few input bugs
 - add screen fade in / out
 - tscn CG support (they have to be Control nodes)
 - demo script contains more info now
