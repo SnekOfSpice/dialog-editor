@@ -56,7 +56,7 @@ func on_full_black_reached():
 	
 
 func on_clear_reached():
-	Parser.inform_instruction_completed()
+	Parser.function_acceded()
 
 
 func _on_handler_start_black_fade(fade_in_duration, hold_time, fade_out_duration, hide_characters, new_background, new_bgm):

@@ -268,7 +268,7 @@ func _clear_cg():
 			c.queue_free()
 		#cg_root.modulate.a = 0.0
 		if emit_insutrction_complete_on_cg_hide:
-			Parser.inform_instruction_completed()
+			Parser.function_acceded()
 			emit_insutrction_complete_on_cg_hide = false
 	
 	if stylebox_regular:
@@ -422,7 +422,7 @@ func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) ->
 		set_cg_top(cg_name, fade_in)
 	else:
 		var t = get_tree().create_timer(fade_in)
-		t.timeout.connect(Parser.inform_instruction_completed)
+		t.timeout.connect(Parser.function_acceded)
 		set_cg_bottom(cg_name, fade_in)
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
@@ -432,7 +432,7 @@ func _on_menu_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
 func _on_chapter_cover_chapter_intro_finished() -> void:
-	Parser.inform_instruction_completed()
+	Parser.function_acceded()
 	find_child("ChapterCover").visible = false
 
 

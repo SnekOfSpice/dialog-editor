@@ -519,7 +519,7 @@ func _ready() -> void:
 	Parser.open_connection(self)
 	tree_exiting.connect(Parser.close_connection)
 	
-	_remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
+	_remaining_auto_pause_duration = auto_pause_duration
 	
 	body_label.visible_ratio = 0
 	body_label.bbcode_enabled = true
@@ -608,7 +608,6 @@ func advance():
 					if _next_pause_position_index < _pause_positions.size() - 1:
 						_next_pause_position_index += 1
 					_find_next_pause()
-					#remaining_auto_pause_duration = remaining_auto_pause_duration * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 				_remaining_prompt_delay = input_prompt_delay
 	else:
 		emit_signal("line_finished", line_index)
@@ -1013,7 +1012,7 @@ func _process(delta: float) -> void:
 		if last_dur > 0 and _remaining_auto_pause_duration <= 0:
 			_next_pause_position_index += 1
 			_find_next_pause()
-			_remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
+			_remaining_auto_pause_duration = auto_pause_duration
 	
 	
 	var new_characters_visible_so_far = body_label.text.substr(0, body_label.visible_characters)
@@ -1382,10 +1381,10 @@ func _read_next_chunk():
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				if bbcode_removed_text.find("<ts_rel:", scan_index) == scan_index:
 					var value := float(tag_string.trim_suffix(">").split(":")[1])
-					text_speed_override = clamp(float(value) * text_speed, 1, MAX_TEXT_SPEED-1)
+					text_speed_override = clamp(float(value) * text_speed, 1, MAX_TEXT_SPEED - 1)
 				elif bbcode_removed_text.find("<ts_abs:", scan_index) == scan_index:
 					var value := float(tag_string.trim_suffix(">").split(":")[1])
-					text_speed_override = clamp(float(value), 1, MAX_TEXT_SPEED-1)
+					text_speed_override = clamp(float(value), 1, MAX_TEXT_SPEED - 1)
 				elif bbcode_removed_text.find("<ts_reset", scan_index) == scan_index:
 					text_speed_override = -1
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
@@ -1512,7 +1511,7 @@ func _call_from_position(call_position: int):
 				last_call = text
 				if _get_current_text_speed() == MAX_TEXT_SPEED and call_position != 0:
 					push_warning(
-						str("You are calling ", text, " while text speed is MAX_TEXT_SPEED. The function ", text, " makes the LineReader await execution, so this may lead to unintended visuals.")
+						str("You are calling ", text, " while text speed is MAX_TEXT_SPEED. The function ", text, " makes the LineReader await execution, so this may lead to unintended behavior.")
 					)
 	_call_strings.erase(call_position)
 	awaiting_inline_call = last_call
@@ -1820,11 +1819,7 @@ func _handle_header(header: Array):
 		var property_name = prop.get("property_name")
 		var values = prop.get("values")
 		if data_type == Parser.DataTypes._DropDown:
-			values = Parser.drop_down_values_to_string_array(values)
-		
-		# rip original stuff
-		#if property_name == property_for_name:
-			#update_name_label(values[1])
+			values = Parser.get_dropdown_strings_from_header_values(values)
 		
 		cleaned_header.append({
 			"data_type" : data_type,
@@ -1974,8 +1969,6 @@ func finish_waiting_for_instruction():
 		is_executing = false
 		emitted_complete = true
 
-
-
 func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	await get_tree().process_frame
 	delay_after = delay_after_seconds
@@ -2071,7 +2064,5 @@ func execute(instruction_text: String) -> bool:
 		push_warning(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
 		return false
 	return result
-
-
 
 #endregion

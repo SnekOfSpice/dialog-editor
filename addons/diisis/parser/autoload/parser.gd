@@ -234,10 +234,9 @@ func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 	
 	return result
 
-func drop_down_values_to_string_array(values:=[0,0]) -> Array:
+func get_dropdown_strings_from_header_values(values:=[0,0]) -> Array:
 	var result = ["", ""]
 	var title = dropdown_titles[values[0]]
-	#var title_index = dropdown_titles.find(title)
 	var value = dropdowns.get(title)[values[1]]
 	result[0] = title
 	result[1] = value
@@ -643,8 +642,10 @@ func str_to_typed(value:String, type:int):
 			return cast
 	return String(value)
 
-
-func inform_instruction_completed():
+## After you call a function from LineReader that returns [code]true[/code], [Parser] and [LineReader] will be in a suspended state, waiting to continue until this function is called.
+## Call this from anywhere to continue reading the script when such a function is done.
+## [br][i]Parser acceded control to the function, now it continues on its merry way![/i]
+func function_acceded():
 	if not line_reader:
 		return
 	if not line_reader.awaiting_inline_call.is_empty():

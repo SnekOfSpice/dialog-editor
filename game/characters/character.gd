@@ -73,7 +73,7 @@ func set_x_position(idx:int, time := 0, advance_instruction_after_reposition:=fa
 	t.tween_property(self, "position:x", target_x, time)
 	
 	if advance_instruction_after_reposition and Parser.line_reader:
-		t.finished.connect(Parser.inform_instruction_completed)
+		t.finished.connect(Parser.function_acceded)
 
 func serialize() -> Dictionary:
 	var result := {}

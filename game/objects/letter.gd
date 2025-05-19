@@ -20,5 +20,5 @@ func _on_read_button_pressed() -> void:
 		#return
 	if GameWorld.game_stage:
 		GameWorld.game_stage.show_ui()
-	Parser.inform_instruction_completed()
+	Parser.function_acceded()
 	queue_free()
