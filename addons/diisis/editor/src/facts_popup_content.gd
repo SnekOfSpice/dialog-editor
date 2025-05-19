@@ -79,6 +79,12 @@ func drop_other_focused(selected_index:=0, clicked_item_list:ItemList=null):
 	if clicked_item_list != null:
 		find_child("GoToAddressLabel").text = clicked_item_list.get_item_text(selected_index)
 
+func select_fact(fact:String):
+	for idx in facts.item_count:
+		if facts.get_item_text(idx) == fact:
+			facts.select(idx)
+			_on_facts_item_clicked(idx)
+
 func go_to_selected(selected_index:=0, activateded_item_list:ItemList=null):
 	drop_other_focused(selected_index, activateded_item_list)
 	if activateded_item_list != null:

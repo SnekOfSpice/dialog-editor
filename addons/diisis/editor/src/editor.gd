@@ -629,15 +629,21 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.size *= content_scale
 
 
-func open_window_by_string(window_name:String):
-	open_popup($Popups.get_node(window_name), window_name in [
+func open_window_by_string(window_name:String) -> Window:
+	var window : Window = $Popups.get_node(window_name)
+	open_popup(window, window_name in [
 		"HandlerWindow",
 		"FactsPopup",
 	])
+	return window
 
 func open_handler_window(method_to_select:=""):
-	open_window_by_string("HandlerWindow")
-	$Popups.get_node("HandlerWindow").select_function(method_to_select)
+	var window := open_window_by_string("HandlerWindow")
+	window.select_function(method_to_select)
+
+func open_facts_window(fact_to_select:=""):
+	var window := open_window_by_string("FactsPopup")
+	window.select_fact(fact_to_select)
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
