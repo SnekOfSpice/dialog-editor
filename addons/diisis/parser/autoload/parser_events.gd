@@ -190,8 +190,8 @@ signal body_label_visible_ratio_changed(
 	visible_ratio:float
 )
 
-## Emitted when [method LineReader.request_go_back] fails. This can be because the trail of visited line indices is empty or because the line type of the would-be previous line is non-Text.
-signal go_back_declined()
+## Emitted when [method LineReader.request_go_back] fails. Emits [enum Parser.RollbackDeclineReason]
+signal go_back_declined(reason:Parser.RollbackDeclineReason)
 
 ## Emitted when a new line is read because of a successful [method LineReader.request_go_back] call. [param page] and [param line] are the indices of the new line.[br]
 ## Note: Is not emitted when going back through chunks, such as when going back through individual lines inside of a single Text Line with dialog syntax.[br]

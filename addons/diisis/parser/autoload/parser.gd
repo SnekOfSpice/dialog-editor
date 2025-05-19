@@ -391,17 +391,23 @@ func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
+enum RollbackDeclineReason {
+	HIT_CHOICE = 1,
+	HIT_FOLDER = 3,
+	BEGINNING = 0,
+}
+
 func go_back():
 	var trail_shift = -1
 	var previous_line_type = get_previous_address_line_type()
 	if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		ParserEvents.go_back_declined.emit()
+		ParserEvents.go_back_declined.emit(previous_line_type)
 		push_warning("You cannot go further back.")
 		#return
 		trail_shift = 0
 	
 	if address_trail_index < 0 or address_trail.is_empty():
-		ParserEvents.go_back_declined.emit()
+		ParserEvents.go_back_declined.emit(RollbackDeclineReason.BEGINNING)
 		push_warning("You're at the beginning.")
 		#return
 		trail_shift = 0

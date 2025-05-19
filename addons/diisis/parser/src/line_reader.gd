@@ -206,8 +206,7 @@ var name_container: Control:
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_name_colors].[br]
 ## [member text_speed] will still act as normal, though you probably want to use [constant LineReader.MAX_TEXT_SPEED]. [br]
-## [b]Incompatible with [member body_label_max_lines]![/b][br][br]
-## [s]I've been reading homestuck[/s]
+## [b]Incompatible with [member body_label_max_lines]![/b]
 @export var chatlog_enabled := false
 ## When [member chatlog_enabled] is true, instead these names will be used if set. If not, defaults to [member name_map.]
 @export var chatlog_name_map : Dictionary[String, String] = {}
@@ -1162,7 +1161,7 @@ func _start_showing_text():
 
 func _replace_tags(lines:Array) -> Array:
 	if not instruction_handler:
-		push_warning("No InstructionHandler has been set. Calls to <var:>, <func:>, <name:>, <call:>, and <fact:> won't be parsed.")
+		push_warning("No InstructionHandler has been set. Calls to <var:>, <func:>, <name:>, <call:>, <fact:> tags and body_label_function_funnel won't be parsed.")
 		return lines
 	
 	for call in body_label_function_funnel:

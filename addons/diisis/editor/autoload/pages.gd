@@ -624,12 +624,11 @@ func get_all_instruction_names() -> Array:
 func get_autoload_script(autoload:String) -> Script:
 	var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
 	var autoload_script : Script
-	var autoload_copy
 	if path.ends_with(".gd"):
 		autoload_script = load(path).instantiate()
 		return autoload_script
 	elif path.ends_with(".tscn"):
-		autoload_copy = load(path).instantiate()
+		var autoload_copy : Node = load(path).instantiate()
 		autoload_script = autoload_copy.get_script()
 		return autoload_script
 	else:
@@ -1273,30 +1272,6 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	}
 	return result
 
-#func get_localizable_addresses() -> Array:
-	#return get_localizable_addresses_with_content().keys()
-#
-#func get_localizable_addresses_with_content() -> Dictionary:
-	#var localizable_addresses := {}
-	#var page_index := 0
-	#for page in page_data.values():
-		#var line_index := 0
-		#for line in page.get("lines"):
-			#if line.get("line_type") == DIISIS.LineType.Text:
-				#localizable_addresses[(str(page_index, ".", line_index))] = line.get("content", {}).get("content", "")
-			#elif line.get("line_type") == DIISIS.LineType.Choice:
-				#var choice_index := 0
-				#for choice in line.get("content", {}).get("choices", []):
-					#if not choice.get("choice_text.enabled").is_empty():
-						#localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "enabled"))] = choice.get("choice_text.enabled")
-					#if not choice.get("choice_text.disabled").is_empty():
-						#localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "disabled"))] = choice.get("choice_text.disabled")
-					#choice_index += 1
-			#line_index += 1
-		#page_index += 1
-#
-	#return localizable_addresses
-
 func update_all_compliances():
 	for method in get_all_instruction_names():
 		update_compliances(method)
@@ -1360,7 +1335,7 @@ func get_autoload_names() -> Array:
 
 func get_method_validity(instruction:String) -> String:
 	if instruction.is_empty():
-		return ""
+		return "Function is empty."
 	var entered_name = instruction.split("(")[0]
 	if not does_instruction_name_exist(entered_name):
 		var autoload_warning := ""
@@ -1379,6 +1354,8 @@ func get_method_validity(instruction:String) -> String:
 		if not instruction.ends_with("()"):
 			return "Function doesn't expect arguments"
 	var entered_arg_count := instruction.count(",") + 1
+	if instruction.ends_with("()"):
+		entered_arg_count = 0
 	if entered_arg_count > arg_count:
 		return str(entered_name, " expects ", arg_count, " arguments but is called with ", entered_arg_count)
 	elif entered_arg_count < arg_count:
