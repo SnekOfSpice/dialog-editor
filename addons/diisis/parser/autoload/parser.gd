@@ -466,6 +466,7 @@ func go_back():
 func read_line(index: int):
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
+		read_page(get_next(page_index))
 		return
 	
 	if index >= lines.size():
@@ -495,8 +496,7 @@ func read_next_line(finished_line_index: int):
 		
 		
 	if finished_line_index >= max_line_index_on_page:
-		var do_terminate = bool(page_data.get(page_index).get("terminate"))
-		if do_terminate:
+		if is_terminating(page_index):
 			ParserEvents.page_finished.emit(page_index)
 			ParserEvents.page_terminated.emit(page_index)
 			emit_signal("page_terminated", page_index)
@@ -515,7 +515,14 @@ func read_next_line(finished_line_index: int):
 	
 	read_line(finished_line_index + 1)
 
+func is_terminating(page_index:int) -> bool:
+	return bool(page_data.get(page_index).get("terminate"))
 
+func get_next(page_index:int) -> int:
+	if is_terminating(page_index):
+		push_warning("%s terminates!" % page_index)
+		return -1
+	return int(page_data.get(page_index).get("next"))
 
 func open_connection(new_lr: LineReader):
 	line_reader = new_lr

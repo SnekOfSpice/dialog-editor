@@ -111,10 +111,7 @@ func set_next(next_page: int):
 	var next_exists = Pages.page_data.keys().has(next)
 	find_child("NextKey").modulate.a = 1.0 if next_exists else 0.0
 	
-	if not next_exists:
-		return
-	
-	var next_key = Pages.page_data.get(next).get("page_key")
+	var next_key = Pages.page_data.get(next, {}).get("page_key", "")
 	
 	find_child("NextLineEdit").max_value = Pages.get_page_count()
 	find_child("NextLineEdit").value = next

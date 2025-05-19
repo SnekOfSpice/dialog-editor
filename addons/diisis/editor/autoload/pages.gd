@@ -740,7 +740,7 @@ func get_all_invalid_address_pointers() -> String:
 	var page_index  := 0
 	var invalid_addresses := []
 	for page in page_data.values():
-		var next : String = str(page.get("next", -1))
+		var next : String = str(int(page.get("next", -1)))
 		if (not does_address_exist(next)) and (not page.get("terminate")):
 			invalid_addresses.append(str("next ", next, " of page [url=goto-",str(page_index),"]", page_index, "[/url]"))
 	

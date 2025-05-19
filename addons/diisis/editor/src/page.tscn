@@ -86,6 +86,7 @@ text = "|"
 
 [node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/Info/PageKeyEditContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 tooltip_text = "Edit page key (click or Ctrl+E)
 [Escape] to cancel
 [Enter] to save"
