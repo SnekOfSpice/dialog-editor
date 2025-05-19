@@ -1184,7 +1184,7 @@ func get_instruction_handler_methods() -> Array:
 		for method in script_methods:
 			methods.append(method.get("name"))
 	
-	var base = InstructionHandler.new()
+	var base = LineReader.new()
 	var base_methods = base.get_method_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
@@ -1200,7 +1200,7 @@ func get_custom_properties() -> Array:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
 	
-	var base = InstructionHandler.new()
+	var base = LineReader.new()
 	var base_methods = base.get_property_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))

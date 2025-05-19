@@ -12,6 +12,8 @@ enum TextStyle {
 @export var stylebox_regular : StyleBox
 @export var stylebox_cg : StyleBox
 
+@onready var line_reader : LineReader = find_child("LineReader")
+
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
 var actor_name := ""
@@ -56,12 +58,11 @@ func _ready():
 	ParserEvents.instruction_completed.connect(on_instruction_completed)
 	ParserEvents.read_new_line.connect(on_read_new_line)
 	
-	GameWorld.instruction_handler = find_child("InstructionHandler")
 	GameWorld.game_stage = self
 	
-	find_child("LineReader").auto_continue = Options.auto_continue
-	find_child("LineReader").text_speed = Options.text_speed
-	find_child("LineReader").auto_continue_delay = Options.auto_continue_delay
+	line_reader.auto_continue = Options.auto_continue
+	line_reader.text_speed = Options.text_speed
+	line_reader.auto_continue_delay = Options.auto_continue_delay
 	
 	set_text_style(text_style)
 	
@@ -141,8 +142,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				find_child("VNUIRoot").add_child(notification_popup)
 				notification_popup.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
 			if InputMap.action_has_event("toggle_auto_continue", event):
-				find_child("LineReader").auto_continue = not find_child("LineReader").auto_continue
-				Options.auto_continue = find_child("LineReader").auto_continue
+				line_reader.auto_continue = not line_reader.auto_continue
+				Options.auto_continue = line_reader.auto_continue
 			if InputMap.action_has_event("toggle_ui", event):
 				if find_child("VNUI").visible:
 					hide_ui()
@@ -164,9 +165,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		if hovering_meta:
 			return
-		find_child("LineReader").request_advance()
+		line_reader.request_advance()
 	elif event.is_action_pressed("go_back"):
-		find_child("LineReader").request_go_back()
+		line_reader.request_go_back()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):
@@ -302,11 +303,11 @@ func on_body_label_text_changed(
 		var offset : int = sign(center.direction_to(actor_position).x) * 60
 		actor_position.x -= offset
 		if sign(offset) == 1:
-			actor_position.x -= find_child("LineReader").text_container.size.x
+			actor_position.x -= line_reader.text_container.size.x
 		actor_position.y -= 100
 	else: # name container isn't visible
-		actor_position.x = center.x - find_child("LineReader").text_container.size.x * 0.5
-		actor_position.y = size.y - find_child("LineReader").text_container.size.y - 60
+		actor_position.x = center.x - line_reader.text_container.size.x * 0.5
+		actor_position.y = size.y - line_reader.text_container.size.y - 60
 	
 	if dialog_box_tween:
 		dialog_box_tween.kill()
@@ -418,13 +419,10 @@ func show_letter():
 func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 	if on_top:
 		emit_insutrction_complete_on_cg_hide = true
-		
 		set_cg_top(cg_name, fade_in)
 	else:
-		var handler : InstructionHandler = GameWorld.instruction_handler
 		var t = get_tree().create_timer(fade_in)
-		t.timeout.connect(handler.instruction_completed.emit)
-		
+		t.timeout.connect(Parser.inform_instruction_completed)
 		set_cg_bottom(cg_name, fade_in)
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
@@ -438,13 +436,13 @@ func _on_chapter_cover_chapter_intro_finished() -> void:
 	find_child("ChapterCover").visible = false
 
 
-func _on_instruction_handler_splatter(amount: int) -> void:
+func splatter(amount: int) -> void:
 	for i in amount:
 		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
 		find_child("VFXLayer").add_child(sprite)
 
 func use_ui(id:int):
-	var lr : LineReader = find_child("LineReader")
+	var lr : LineReader = line_reader
 	var root_existed : bool
 	var body_label_text = lr.body_label.text
 	var current_raw_name = lr.current_raw_name

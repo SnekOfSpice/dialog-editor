@@ -55,14 +55,12 @@ func adjust_font_size_tags(text:String) -> String:
 		var tag := text.substr(tag_start + tag_offset, tag_length - tag_offset)
 		var font_size := float(tag.split("=")[1])
 		var ratio := get_rich_text_label_normal_font_size() / float(DEFAULT_RTL_FONT_SIZE)
-		printt(tag, font_size, ratio)
 		var new_tag := "[font_size=%s" % int(ratio * font_size)
 		
 		text = text.erase(tag_start + tag_offset, tag_length - tag_offset)
 		text = text.insert(tag_start + tag_offset, new_tag)
 		
 		tag_offset += new_tag.length() - tag_length
-	print(text)
 	return text
 
 func set_label_font(idx:int):

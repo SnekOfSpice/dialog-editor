@@ -15,11 +15,11 @@ func _ready() -> void:
 
 func start():
 	await get_tree().create_timer(1.0).timeout
-	Parser.line_reader.instruction_handler.set_sun("steps", 3.7)
+	Parser.line_reader.set_sun("steps", 3.7)
 	await get_tree().create_timer(1.5).timeout
-	Parser.line_reader.instruction_handler.set_sun("fill_amount", 6.5)
+	Parser.line_reader.set_sun("fill_amount", 6.5)
 	await get_tree().create_timer(1.5).timeout
-	Parser.line_reader.instruction_handler.set_sun("steps", 1.8)
+	Parser.line_reader.set_sun("steps", 1.8)
 	await get_tree().create_timer(0.5).timeout
 	
 	

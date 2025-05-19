@@ -167,8 +167,7 @@ func _enter_tree():
 	add_editor_singletons()
 	add_parser_singletons()
 	add_custom_type("LineReader", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/icon_line_reader.svg"))
-	add_custom_type("InstructionHandler", "Node", preload("res://addons/diisis/parser/src/instruction_handler.gd"), preload("res://addons/diisis/parser/style/icon_instruction_handler.svg"))
-
+	
 	if not OS.has_feature("editor"):
 		return
 	

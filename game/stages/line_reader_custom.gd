@@ -1,5 +1,4 @@
-extends InstructionHandler
-
+extends LineReader
 
 signal start_black_fade(
 	fade_in:float,
@@ -17,7 +16,7 @@ signal start_show_cg(
 signal start_hide_cg(fade_out:float)
 signal start_rolling_credits()
 signal splatter(amount:int)
-signal start_chapter_cover(pov_name:String)
+signal start_chapter_cover(pov_name:String, bottom_text, new_background, zoom, bgm)
 signal request_object_visible(object_name:String, visibility:bool)
 
 func play_sfx(_name:String):

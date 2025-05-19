@@ -16,9 +16,9 @@ func _ready():
 	GameWorld.stage_root = self
 
 func set_screen(screen_path:String, payload := {}):
-	if is_instance_valid(Parser.line_reader):
-		if Parser.line_reader.is_input_locked:
-			return
+	#if is_instance_valid(Parser.line_reader):
+		#if Parser.line_reader.is_input_locked:
+			#return
 	
 	if stage == CONST.STAGE_GAME:
 		screenshot_to_save = get_viewport().get_texture().get_image()

@@ -439,7 +439,7 @@ func go_back():
 		var instr_text : String = instruction.get("meta.reverse_text", "")
 		if instr_text.is_empty():
 			instr_text = instruction.get("meta.text")
-		line_reader.instruction_handler.execute(instr_text)
+		line_reader.execute(instr_text)
 	
 	await get_tree().process_frame
 	address_trail_index += trail_shift
@@ -643,4 +643,4 @@ func inform_instruction_completed():
 	if not line_reader.awaiting_inline_call.is_empty():
 		line_reader.awaiting_inline_call = ""
 		return
-	line_reader.instruction_handler.instruction_completed.emit()
+	line_reader.finish_waiting_for_instruction()

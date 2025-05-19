@@ -1,11 +1,10 @@
-[gd_scene load_steps=43 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=42 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" uid="uid://j84s4qlkmfxw" path="res://game/stages/game_stage.gd" id="1_a36me"]
-[ext_resource type="Script" uid="uid://rq52trv32gab" path="res://addons/diisis/parser/src/line_reader.gd" id="1_h4afo"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
+[ext_resource type="Script" uid="uid://bqw08o3b22fdc" path="res://game/stages/line_reader_custom.gd" id="3_pms35"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="3_tdgll"]
 [ext_resource type="Script" uid="uid://brouc1vl1o5us" path="res://game/stages/objects.gd" id="3_x2eff"]
-[ext_resource type="Script" uid="uid://odc5pcwes4bj" path="res://game/stages/instruction_handler_intro.gd" id="4_u8vmc"]
 [ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
 [ext_resource type="Texture2D" uid="uid://bh7mo1v26xtqq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 3.png" id="6_mh4vb"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
@@ -87,13 +86,8 @@ focus_mode = 2
 mouse_filter = 2
 script = ExtResource("1_a36me")
 
-[node name="LineReader" type="Control" parent="." node_paths=PackedStringArray("name_label", "body_label", "choice_list", "instruction_handler", "text_container", "name_container", "choice_container", "choice_title_label", "prompt_unfinished", "prompt_finished")]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-mouse_filter = 2
-script = ExtResource("1_h4afo")
+[node name="LineReader" type="Node" parent="." node_paths=PackedStringArray("name_label", "body_label", "choice_list", "text_container", "name_container", "choice_container", "choice_title_label", "prompt_unfinished", "prompt_finished")]
+script = ExtResource("3_pms35")
 auto_pause_duration = 0.4
 blank_names = Array[String](["narrator"])
 name_map = Dictionary[String, String]({
@@ -102,7 +96,6 @@ name_map = Dictionary[String, String]({
 name_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/Label")
 body_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel")
 choice_list = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
-instruction_handler = NodePath("../InstructionHandler")
 text_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1")
 name_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/PanelContainer")
 choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
@@ -114,9 +107,6 @@ input_prompt_delay = 1.29
 input_prompt_lerp_weight = 0.233
 prompt_unfinished = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer/PageUnfinished")
 prompt_finished = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/HBoxContainer/PageFinished")
-
-[node name="InstructionHandler" type="Node" parent="."]
-script = ExtResource("4_u8vmc")
 
 [node name="Objects" type="Node2D" parent="."]
 script = ExtResource("3_x2eff")
@@ -620,12 +610,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[connection signal="request_object_visible" from="InstructionHandler" to="Objects" method="set_object_visible"]
-[connection signal="splatter" from="InstructionHandler" to="." method="_on_instruction_handler_splatter"]
-[connection signal="start_black_fade" from="InstructionHandler" to="Camera2D/VNUICanvasLayer/VNUIRoot/BlackFade" method="_on_handler_start_black_fade"]
-[connection signal="start_hide_cg" from="InstructionHandler" to="." method="hide_cg"]
-[connection signal="start_rolling_credits" from="InstructionHandler" to="Camera2D/VNUICanvasLayer/VNUIRoot/RollingCredits" method="start"]
-[connection signal="start_show_cg" from="InstructionHandler" to="." method="_on_handler_start_show_cg"]
+[connection signal="request_object_visible" from="LineReader" to="Objects" method="set_object_visible"]
+[connection signal="splatter" from="LineReader" to="." method="splatter"]
+[connection signal="start_black_fade" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/BlackFade" method="_on_handler_start_black_fade"]
+[connection signal="start_chapter_cover" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/ChapterCover" method="set_chapter_cover"]
+[connection signal="start_hide_cg" from="LineReader" to="." method="hide_cg"]
+[connection signal="start_rolling_credits" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/RollingCredits" method="start"]
+[connection signal="start_show_cg" from="LineReader" to="." method="_on_handler_start_show_cg"]
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_hover_started"]

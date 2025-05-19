@@ -120,17 +120,6 @@ var choice_list:Control:
 		choice_list = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-## Your custom handling of instructions defined in the dialog editor. Must extend [InstructionHandler].
-## [br][br]Also the Node that evaluates [code]<var:>[/code] and [code]<func:>[/code] tags.
-## Any function called by one of these tags has to return a [String] (can be empty) or null.
-@export
-var instruction_handler: InstructionHandler:
-	get:
-		return instruction_handler
-	set(value):
-		instruction_handler = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
 @export_subgroup("Containers")
 ## Any [Control] that is a parent of both nodes used for; [member name_label] and [member body_label].
 @export var text_container: Control:
@@ -189,10 +178,10 @@ var name_container: Control:
 @export var body_label_prefix_by_actor : Dictionary[String, String]
 ## Gets suffixed to text lines, before [member body_label_suffix]. Keys are actor names.
 @export var body_label_suffix_by_actor : Dictionary[String, String]
-## List of functions that get called with [method Instruction_handler.callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
+## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
 ## Each call will replace the original text.
 ## This can be used to mangle the text in arbitrary ways before adding it to [member body_label], such as adding or replacing contents with your own custom text.
-## [br] [b]For example:[/b] [code]h3h3[/code] in [body_label_function_funnel] will call [code]instruction_handler.h3h3(text)[/code]. Giving [member instruction_handler] the function with the name [code]h3h3[/code] will transform the text in interesting ways!
+## [br] [b]For example:[/b] [code]h3h3[/code] in [body_label_function_funnel] will call [code]h3h3(text)[/code]. Giving [LineReader] the function with the name [code]h3h3[/code] will transform the text in interesting ways!
 ## [codeblock]
 ## func h3h3(text:String):
 ##     text = text.to_upper()
@@ -368,9 +357,9 @@ func _validate_property(property: Dictionary):
 	if not show_input_prompt:
 		if property.name in ["input_prompt_delay", "input_prompt_lerp_weight", "prompt_finished", "prompt_unfinished"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
-	if not keep_past_lines:
-		if property.name in ["past_lines_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
-			property.usage = PROPERTY_USAGE_NO_EDITOR
+	#if not keep_past_lines:
+		#if property.name in ["past_lines_container", "max_past_lines", "preserve_name_in_past_lines", "past_line_label"]:
+			#property.usage = PROPERTY_USAGE_NO_EDITOR
 
 ## Generates a [Dictionary] contained the full state of [LineReader].[br]
 ## Used by [Parser] to call [method deserialize].
@@ -392,7 +381,7 @@ func serialize() -> Dictionary:
 	result["dialog_line_index"] = _dialog_line_index 
 	result["dialog_lines"] = _dialog_lines 
 	result["handled_comments"] = _handled_comments
-	result["instruction_handler"] = instruction_handler.serialize() 
+	result["instruction_handler"] = serialize_instruction_handler_data() 
 	result["is_input_locked"] = is_input_locked 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
 	result["_last_raw_name"] = _last_raw_name
@@ -434,7 +423,7 @@ func deserialize(data: Dictionary):
 	_dialog_line_index = int(data.get("dialog_line_index"))
 	_dialog_lines = data.get("dialog_lines")
 	_handled_comments = data.get("handled_comments", [])
-	instruction_handler.deserialize(data.get("instruction_handler", {}))
+	deserialize_instruction_handler_data(data.get("instruction_handler", {}))
 	is_input_locked = data.get("is_input_locked")
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	_last_raw_name = data.get("_last_raw_name", "")
@@ -496,8 +485,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 			choice_list is GridContainer 
 			):
 			warnings.append("Choice Option Container is not HBoxContainer, VBoxContainer, or GridContainer")
-	if not instruction_handler:
-		warnings.append("Instruction Handler is null")
 	if not body_label:
 		warnings.append("Text Content is null")
 	if not text_container:
@@ -539,12 +526,6 @@ func _ready() -> void:
 	
 	_remaining_auto_pause_duration = auto_pause_duration# * (1.0 + (1-(text_speed / (MAX_TEXT_SPEED - 1))))
 	
-	if not instruction_handler:
-		push_error("No InsutrctionHandler as child of LineReader.")
-		return
-	
-	instruction_handler.connect("set_input_lock", set_is_input_locked)
-	instruction_handler.connect("instruction_wrapped_completed", _on_instruction_handler_wrapped_completed)
 	body_label.visible_ratio = 0
 	body_label.bbcode_enabled = true
 	body_label.text = ""
@@ -688,7 +669,7 @@ func apply_ui_visibilities(data:Dictionary):
 	for property in data.keys():
 		get(property).set("visible", data.get(property))
 
-func _on_instruction_handler_wrapped_completed():
+func _on_instruction_wrapped_completed():
 	emit_signal("line_finished", line_index)
 
 func set_is_input_locked(value: bool):
@@ -814,12 +795,6 @@ func _read_new_line(new_line: Dictionary):
 			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id")))
 			_build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
-			if not instruction_handler:
-				push_error("No InsutrctionHandler as child of LineReader.")
-				return
-			if not instruction_handler.has_method("execute"):
-				push_error("InsutrctionHandler doesn't have execute method.")
-				return
 			
 			var text : String
 			var delay_before: float
@@ -847,7 +822,7 @@ func _read_new_line(new_line: Dictionary):
 				_remaining_prompt_delay = input_prompt_delay
 				
 				return
-			instruction_handler._wrapper_execute(text, delay_before, delay_after)
+			_wrapper_execute(text, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not _line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
@@ -980,6 +955,36 @@ func _process(delta: float) -> void:
 		return
 	
 	_update_input_prompt(delta)
+	
+	if is_executing:
+		if delay_before > 0:
+			delay_before -= delta
+			return
+		
+		if not has_executed:
+			ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
+			#emit_signal("execute_instruction", execution_args)
+			has_executed = true
+			has_received_execute_callback = not execute(execution_text)
+		
+		if not has_received_execute_callback:
+			return
+		
+		if delay_after > 0:
+			delay_after -= delta
+			if delay_after <= 0:
+				ParserEvents.instruction_completed.emit(execution_text, delay_after)
+				emitted_complete = true
+			return
+		elif not emitted_complete:
+			ParserEvents.instruction_completed.emit(execution_text, delay_after)
+		
+		set_is_input_locked(false)
+		_on_instruction_wrapped_completed()
+		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		
+		is_executing = false
+		return
 	
 	var visible_characters_before_inline_call = body_label.visible_characters
 	if awaiting_inline_call:
@@ -1160,15 +1165,11 @@ func _start_showing_text():
 	_read_next_chunk()
 
 func _replace_tags(lines:Array) -> Array:
-	if not instruction_handler:
-		push_warning("No InstructionHandler has been set. Calls to <var:>, <func:>, <name:>, <call:>, <fact:> tags and body_label_function_funnel won't be parsed.")
-		return lines
-	
 	for call in body_label_function_funnel:
 		var i := 0
 		while i < lines.size():
 			var text : String = lines[i]
-			lines[i] = str(instruction_handler.callv_custom(call, [text]))
+			lines[i] = str(callv_custom(call, [text]))
 			i += 1
 	
 	var i := 0
@@ -1193,14 +1194,14 @@ func _replace_tags(lines:Array) -> Array:
 						local_scan_index += 1
 					var_name = var_name.trim_suffix(">")
 					control_to_replace += ">"
-					new_text = new_text.replace(control_to_replace, str(instruction_handler.get_property_from_self_or_autoload(var_name)))
+					new_text = new_text.replace(control_to_replace, str(get_property_from_self_or_autoload(var_name)))
 				elif new_text.find("<func:", scan_index) == scan_index:
 					var local_scan_index := scan_index + 6
 					var func_text := ""
 					while new_text[local_scan_index] != ">":
 						func_text += new_text[local_scan_index]
 						local_scan_index += 1
-					new_text = new_text.replace(str("<func:", func_text, ">"), instruction_handler.call_from_string(func_text, InstructionHandler.CallMode.Func))
+					new_text = new_text.replace(str("<func:", func_text, ">"), call_from_string(func_text, CallMode.Func))
 				elif new_text.find("<name:", scan_index) == scan_index:
 					var local_scan_index := scan_index
 					var control_to_replace := ""
@@ -1514,7 +1515,7 @@ func _call_from_position(call_position: int):
 	for text : String in strings:
 		text = text.trim_prefix("<call:")
 		text = text.trim_suffix(">")
-		var result = instruction_handler.call_from_string(text, InstructionHandler.CallMode.Call, call_position)
+		var result = call_from_string(text, CallMode.Call, call_position)
 		if result is bool:
 			if result:
 				last_call = text
@@ -1941,3 +1942,148 @@ func _on_body_label_text_changed(old_text: String,
 
 func _on_comment(comment: String, pos : int):
 	prints(str(Parser.get_address(), ":", pos), comment)
+
+
+#region InstructionHandler
+enum CallMode {
+	Call,
+	Func
+}
+
+var delay_before := 0.0
+var delay_after := 0.0
+var execution_text := ""
+var is_executing := false
+var has_executed := false
+var has_received_execute_callback := false
+var emitted_complete := false
+
+func serialize_instruction_handler_data() -> Dictionary:
+	return {
+		"delay_before" : delay_before,
+		"delay_after" : delay_after,
+		"execution_text" : execution_text,
+		"is_executing" : is_executing,
+		"has_executed" : has_executed,
+		"has_received_execute_callback" : has_received_execute_callback,
+		"emitted_complete" : emitted_complete,
+	}
+
+func deserialize_instruction_handler_data(data: Dictionary):
+	for key in data:
+		set(key, data.get(key))
+
+func finish_waiting_for_instruction():
+	has_received_execute_callback = true
+	
+	if not emitted_complete and delay_after <= 0:
+		ParserEvents.instruction_completed.emit(execution_text, delay_after)
+		set_is_input_locked(false)
+		_on_instruction_wrapped_completed()
+		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		
+		is_executing = false
+		emitted_complete = true
+
+
+
+func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
+	await get_tree().process_frame
+	delay_after = delay_after_seconds
+	delay_before = delay_before_seconds
+	execution_text = text
+	has_executed = false
+	is_executing = true
+	has_received_execute_callback = true
+	set_is_input_locked(true)
+	ParserEvents.instruction_started.emit(execution_text, delay_before)
+	emitted_complete = false
+
+func get_property_from_self_or_autoload(property:String):
+	var autoload : String
+	if "." in property:
+		autoload = property.split(".")[0]
+	
+	var result
+	if autoload:
+		property = property.split(".")[1]
+		result = get_tree().root.get_node(autoload).get(property)
+	else:
+		result = get(property)
+	
+	return result
+
+## Calls a function in itself with the signalute of [param text].[br]
+## If [param call_mode] is Call, [signal ParserEvents.function_called] will be emitted. A [param call_position] of -1 means it was called by an instruction line. Positive integers are the text indices for inline calls using the [code]<call:>[/code] tag.[br][br]
+## CallMode Func returns the string representation of the return value. This is used internally for [code]<func:>[/code] tags.
+func call_from_string(text:String, call_mode := CallMode.Call, call_position := -1):
+	var func_name = text.split("(")[0]
+	var autoload : String
+	if "." in func_name:
+		autoload = func_name.split(".")[0]
+	text = text.trim_prefix(str(func_name, "("))
+	text = text.trim_suffix(")")
+	var parts
+	if text.is_empty():
+		parts = []
+	else:
+		parts = text.split(",")
+	
+	var args := []
+	var i := 0
+	var arg_names : Array = Pages.get_custom_method_arg_names(func_name)
+	var arg_types : Array = Pages.get_custom_method_types(func_name)
+	for type in arg_types:
+		if i >= parts.size():
+			break
+		var arg_string : String = parts[i]
+		while arg_string.begins_with(" "):
+			arg_string = arg_string.trim_prefix(" ")
+		while arg_string.ends_with(" "):
+			arg_string = arg_string.trim_suffix(" ")
+		var default = Parser.get_custom_method_defaults(func_name).get(arg_names[i])
+		if arg_string == "*" and default != null:
+			arg_string = str(default)
+		args.append(Parser.str_to_typed(arg_string, type))
+		
+		i += 1
+	
+	var result
+	if autoload:
+		func_name = func_name.split(".")[1]
+		result = get_tree().root.get_node(autoload).callv(func_name, args)
+	else:
+		result = callv(func_name, args)
+	match call_mode:
+		CallMode.Func:
+			return str(result)
+		CallMode.Call:
+			ParserEvents.function_called.emit(func_name, args, call_position)
+			return result
+
+func callv_custom(method_name:String, argv):
+	var autoload : String
+	if "." in method_name:
+		autoload = method_name.split(".")[0]
+	var result
+	if autoload:
+		method_name = method_name.split(".")[1]
+		result = get_tree().root.get_node(autoload).callv(method_name, argv)
+	else:
+		result = callv(method_name, argv)
+	return result
+
+func execute(instruction_text: String) -> bool:
+	var instruction_name := instruction_text.split("(")[0]
+	if (not has_method(instruction_name)) and (not "." in instruction_name):
+		push_error(str("Function ", instruction_name, " not found in ", get_script().get_global_name(),"."))
+		return false
+	var result = call_from_string(instruction_text)
+	if not result is bool:
+		push_warning(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
+		return false
+	return result
+
+
+
+#endregion

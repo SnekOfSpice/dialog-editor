@@ -130,7 +130,7 @@ signal visible_characters_changed(
 	new_amount:int,
 )
 
-## Emitted when [InstructionHandler] receives an instruction.
+## Emitted when [LineReader] receives an instruction.
 ## This will be on the same frame as [signal instruction_started_after_delay] if [param delay]
 ## is [code] 0.0[/code].
 signal instruction_started(
@@ -138,7 +138,7 @@ signal instruction_started(
 	delay : float,
 )
 
-## Emitted when [InstructionHandler] executes an instruction, [param delay] seconds after [signal instruction_started].
+## Emitted when [LineReader] executes an instruction, [param delay] seconds after [signal instruction_started].
 signal instruction_started_after_delay(
 	execution_text:String,
 	delay : float,

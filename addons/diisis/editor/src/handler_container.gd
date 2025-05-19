@@ -30,7 +30,7 @@ func _on_find_handlers_button_pressed() -> void:
 	found_handlers.clear()
 	count_dir("res://")
 	find_child("EvaluatorLabel").text = "\n".join(found_handlers)
-	find_child("FoundHandlersLabel").text = str("Found ", found_handlers.size(), " InstructionHandler", "s" if found_handlers.size() != 1 else "", "! :3")
+	find_child("FoundHandlersLabel").text = str("Found ", found_handlers.size(), " LineReader", "s" if found_handlers.size() != 1 else "", "! :3")
 	_on_evaluator_label_text_changed()
 
 func count_dir(path: String):
@@ -55,9 +55,9 @@ func count_dir(path: String):
 		
 		var has_expression : = false
 		for expression in [
-			"extends InstructionHandler",
-			"extends\nInstructionHandler",
-			"extends \nInstructionHandler",
+			"extends LineReader",
+			"extends\nLineReader",
+			"extends \nLineReader",
 			]:
 			if expression in lines:
 				has_expression = true
