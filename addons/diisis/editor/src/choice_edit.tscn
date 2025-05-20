@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=24 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" uid="uid://cb8xoqufpekv5" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_vdkak"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://b1jpwk3skthlu" path="res://addons/diisis/editor/src/tooltip_maker.gd" id="9_wwxx7"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="12_0x8br"]
 [ext_resource type="PackedScene" uid="uid://b3ub6m0k8tlxw" path="res://addons/diisis/editor/src/edit_id_button.tscn" id="12_av1qi"]
+[ext_resource type="FontVariation" uid="uid://bcys5sythdtnk" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_bold.tres" id="14_mqye1"]
 [ext_resource type="Texture2D" uid="uid://cs3n1tliwsul1" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_generic.png" id="15_av1qi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0ndw"]
@@ -25,6 +26,8 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.10891, 0.00364763, 0.0790583, 1)
 border_blend = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wwxx7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0x8br"]
 content_margin_left = 2.0
@@ -43,8 +46,6 @@ fill_to = Vector2(0, 1)
 texture = SubResource("GradientTexture2D_av1qi")
 texture_margin_left = 10.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wwxx7"]
-
 [node name="ChoiceEdit" type="PanelContainer" groups=["diisis_fragile", "diisis_page_view_sensitive"]]
 offset_right = 898.0
 offset_bottom = 167.0
@@ -52,6 +53,12 @@ focus_mode = 2
 theme = ExtResource("1_vdkak")
 theme_override_styles/panel = SubResource("StyleBoxFlat_g0ndw")
 script = ExtResource("1_2jptq")
+
+[node name="ChoiceLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_wwxx7")
+bbcode_enabled = true
+fit_content = true
 
 [node name="ChoiceEdit" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -219,6 +226,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("14_mqye1")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wwxx7")
 text = "Default text is empty!"
 
@@ -338,12 +346,6 @@ layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Delete option"
 icon = ExtResource("15_av1qi")
-
-[node name="ChoiceLabel" type="RichTextLabel" parent="."]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wwxx7")
-bbcode_enabled = true
-fit_content = true
 
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
