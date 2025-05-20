@@ -1475,7 +1475,7 @@ func trim_trimmables(text:String) -> String:
 		for t in _trimmable_strings:
 			text = text.trim_prefix(t)
 		begins_trimmable = _begins_with_trimmable(text)
-		
+	
 	var ends_trimmable := _ends_with_trimmable(text)
 	while ends_trimmable:
 		for t in _trimmable_strings:

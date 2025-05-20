@@ -82,6 +82,16 @@ item_6/text = "Other Choices"
 item_6/icon = ExtResource("6_iqpwk")
 item_6/id = 6
 
+[node name="View" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar"]
+auto_translate_mode = 1
+item_count = 3
+item_0/text = "Editable"
+item_0/id = 0
+item_1/text = "Shortform"
+item_1/id = 1
+item_2/text = "Hide"
+item_2/id = 2
+
 [node name="AutoSwitchButton" type="CheckBox" parent="HBoxContainer/Controls"]
 layout_mode = 2
 size_flags_vertical = 4
@@ -96,4 +106,5 @@ layout_mode = 2
 [connection signal="pressed" from="HBoxContainer/PanelContainer/TitleContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Controls/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="index_pressed" from="HBoxContainer/Controls/MenuBar/Select" to="." method="_on_select_index_pressed"]
+[connection signal="index_pressed" from="HBoxContainer/Controls/MenuBar/View" to="." method="set_editing_view"]
 [connection signal="pressed" from="HBoxContainer/Controls/AutoSwitchButton" to="." method="_on_auto_switch_button_pressed"]

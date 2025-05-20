@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dktj30rkefkhh"]
+[gd_scene load_steps=23 format=3 uid="uid://dktj30rkefkhh"]
 
 [ext_resource type="Script" uid="uid://cb8xoqufpekv5" path="res://addons/diisis/editor/src/choice_edit.gd" id="1_2jptq"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_vdkak"]
@@ -42,6 +42,8 @@ fill_to = Vector2(0, 1)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wwxx7"]
 texture = SubResource("GradientTexture2D_av1qi")
 texture_margin_left = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wwxx7"]
 
 [node name="ChoiceEdit" type="PanelContainer" groups=["diisis_fragile", "diisis_page_view_sensitive"]]
 offset_right = 898.0
@@ -336,6 +338,12 @@ layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Delete option"
 icon = ExtResource("15_av1qi")
+
+[node name="ChoiceLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_wwxx7")
+bbcode_enabled = true
+fit_content = true
 
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
 [connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]

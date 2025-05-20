@@ -28,6 +28,8 @@ Editor
 - silly.
 - new fonts
 - Conditionals collapsing
+- choice item views
+- incoming page refs
 
 Runtime
 - name style prepend got a few more options and consistency 

@@ -504,7 +504,9 @@ func serialize() -> Dictionary:
 	return {
 		"current_page_number" = get_current_page_number(),
 		"page_view" = get_selected_page_view(),
-		"text_size_id" = find_child("TextSizeButton").get_selected_id()
+		"text_size_id" = find_child("TextSizeButton").get_selected_id(),
+		"ingest_capitalize" = find_child("IngestMenu").is_capitalize_checked(),
+		"ingest_whitespace" = find_child("IngestMenu").is_whitespace_checked(),
 	}
 
 func _on_fd_save_file_selected(path: String) -> void:
@@ -537,6 +539,10 @@ func open_from_path(path:String):
 	await get_tree().process_frame
 	set_text_size(editor_data.get("text_size_id", 4))
 	update_page_view(editor_data.get("page_view", PageView.Full))
+	
+	var ingest_menu : PopupMenu = find_child("IngestMenu")
+	ingest_menu.set_capitalize_checked(editor_data.get("ingest_capitalize", ingest_menu.is_capitalize_checked()))
+	ingest_menu.set_whitespace_checked(editor_data.get("ingest_whitespace", ingest_menu.is_whitespace_checked()))
 	
 	await get_tree().process_frame
 	opening = false
@@ -714,8 +720,6 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
-			step_through_pages()
-		1:
 			emit_signal("request_reload")
 
 func _on_utility_id_pressed(id: int) -> void:
@@ -734,11 +738,12 @@ func _on_utility_id_pressed(id: int) -> void:
 				"Values are approximated:\n- Words are counted by spaces.\n- Characters are counted in total.\n(tags may affect this)"
 			)
 			popup_accept_dialogue(dialog_text, "Word & Character Count")
-			#open_popup($Popups.get_node("WordCountDialog"))
 		1: 
 			open_popup($Popups.get_node("TextSearchPopup"))
 		2:
 			open_window_by_string("IngestionActorSetupWindow")
+		3:
+			step_through_pages()
 
 
 func _on_setup_id_pressed(id: int) -> void:
@@ -1099,7 +1104,7 @@ func prompt_change_text_id(id:String):
 	open_popup(popup)
 	popup.set_id(id)
 
-func view_incoming_references(page_index:int, line_index:int):
+func view_incoming_references(page_index:int, line_index:=-1):
 	var popup : Window = $Popups.get_node("IncomingReferencesWindow")
 	open_popup(popup)
 	popup.display_references(page_index, line_index)

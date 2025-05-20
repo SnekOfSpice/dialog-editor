@@ -713,14 +713,17 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 func get_instruction_arg_count(instruction_name: String) -> int:
 	return get_custom_method_arg_names(instruction_name).size()
 
+func get_page_data(index:int) -> Dictionary:
+	if editor.get_current_page_number() == index:
+		return editor.get_current_page().serialize()
+	return page_data.get(index)
+
 func get_all_invalid_instructions() -> String:
 	var warning := ""
 	var page_index  := 0
 	var malformed_instructions := []
 	for page in page_data.values():
-		var lines : Array = page.get("lines", [])
-		if page.get("number") == editor.get_current_page_number():
-			lines = editor.get_current_page().serialize().get("lines", [])
+		var lines : Array = get_page_data(page.get("number")).get("lines", [])
 		var line_index := 0
 		for line in lines:
 			if line.get("line_type") in [DIISIS.LineType.Instruction, DIISIS.LineType.Text]:
@@ -1620,6 +1623,24 @@ func change_text_id(old_id:String, new_id:String) -> void:
 func get_new_id() -> String:
 	id_counter += 1
 	return str(str("%0.3f" % Time.get_unix_time_from_system()), "-", id_counter)
+
+## Returns a dict with keys "loopback", "jump" and "next"
+func get_references_to_page(page_index:int) -> Dictionary:
+	var line_count = get_page_data(page_index).get("lines", []).size()
+	var loopback_references := []
+	var jump_references := []
+	for i in line_count:
+		loopback_references.append_array(get_loopback_references_to(page_index, i))
+		jump_references.append_array(get_jump_references_to(page_index, i))
+	var next_references := []
+	for page in page_data.values():
+		if page.get("next", -1) == page_index and not page.get("terminate", false):
+			next_references.append(str(page.get("number")))
+	return {
+		"loopback" : loopback_references,
+		"jump" : jump_references,
+		"next" : next_references,
+	}
 
 func get_loopback_references_to(page_index:int, line_index:int) -> Array:
 	return loopback_references_by_page.get(page_index, {}).get(line_index, [])

@@ -58,8 +58,6 @@ func _ready():
 	add_to_group("character")
 	target_x = position.x
 	
-	
-	
 	visibility_changed.connect(on_visibility_changed)
 
 func set_x_position(idx:int, time := 0, advance_instruction_after_reposition:=false):

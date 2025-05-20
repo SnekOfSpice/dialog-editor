@@ -12,6 +12,12 @@ var text_id_disabled : String
 
 signal move_choice_edit(choice_edit, direction)
 
+enum EditingView{
+	Editable,
+	TextLabel,
+	Invisible
+}
+
 func init() -> void:
 	find_child("Conditionals").init()
 	find_child("Facts").init()
@@ -116,7 +122,7 @@ func serialize() -> Dictionary:
 		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : get_address(),
-		"behavior_after_first_selection": find_child("BehaviorAfterFirstSelectionButton").get_selected_id(),
+		"behavior_after_first_selection": int(find_child("BehaviorAfterFirstSelectionButton").get_selected_id()),
 		"jump_address_mode": int(find_child("JumpPageContainer").find_child("AddressModeButton").get_mode()),
 		"loop_address_mode": int(find_child("LoopbackContainer").find_child("AddressModeButton").get_mode()),
 	}
@@ -395,3 +401,30 @@ func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
 		text_lines.move_child(text_lines.find_child("TextLinesEnabled"), 0)
 	else:
 		text_lines.move_child(text_lines.find_child("TextLinesDisabled"), 0)
+
+# called by choice container
+func set_editing_view(value:int):
+	match value:
+		EditingView.Editable:
+			find_child("ChoiceEdit").visible = true
+			find_child("ChoiceLabel").visible = false
+		EditingView.TextLabel:
+			find_child("ChoiceEdit").visible = false
+			var label : RichTextLabel = find_child("ChoiceLabel")
+			label.visible = true
+			var text_enabled : String = find_child("LineEditEnabled").text
+			var text_disabled : String = find_child("LineEditDisabled").text
+			var enabled_first : bool = find_child("DefaultApparenceSelectionButton").button_pressed
+			if enabled_first:
+				label.text = DiisisEditorUtil.BBCODE_TRUE
+				label.text += text_enabled if not text_enabled.is_empty() else "EMPTY DEFAULT"
+				if not text_disabled.is_empty():
+					label.text += str("\n[color=#ffffffbb]", DiisisEditorUtil.BBCODE_FALSE, text_disabled, "[/color]")
+			else:
+				label.text = DiisisEditorUtil.BBCODE_FALSE
+				label.text += text_disabled if not text_disabled.is_empty() else "EMPTY DEFAULT"
+				if not text_enabled.is_empty():
+					label.text += str("\n[color=#ffffffbb]", DiisisEditorUtil.BBCODE_TRUE, text_enabled, "[/color]")
+		EditingView.Invisible:
+			find_child("ChoiceEdit").visible = false
+			find_child("ChoiceLabel").visible = false

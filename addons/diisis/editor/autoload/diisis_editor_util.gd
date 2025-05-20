@@ -5,6 +5,10 @@ enum AddressDepth {
 	Page, Line, ChoiceItem
 }
 
+const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
+const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
+const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
+
 func get_address(object:Node, address_depth:AddressDepth) -> String:
 	var address := ""
 	

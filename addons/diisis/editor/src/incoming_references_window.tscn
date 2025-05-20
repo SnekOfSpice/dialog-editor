@@ -60,6 +60,23 @@ self_modulate = Color(1, 1, 1, 0.647059)
 layout_mode = 2
 text = "No references!"
 
+[node name="NextSection" type="VBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/ScrollContainer/VBoxContainer/NextSection"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Control/ScrollContainer/VBoxContainer/NextSection/HBoxContainer"]
+layout_mode = 2
+text = "Pages"
+
+[node name="HSeparator" type="HSeparator" parent="Control/ScrollContainer/VBoxContainer/NextSection/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NextContainer" type="GridContainer" parent="Control/ScrollContainer/VBoxContainer/NextSection"]
+layout_mode = 2
+
 [node name="LoopbackSection" type="VBoxContainer" parent="Control/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 

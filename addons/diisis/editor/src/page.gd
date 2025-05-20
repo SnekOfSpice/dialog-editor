@@ -81,6 +81,20 @@ func deserialize(data: Dictionary):
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
 	
+	var refs := get_references_to_this_page()
+	var ref_count := refs.size()
+	var ref_label : RichTextLabel = find_child("IncomingReferences")
+	ref_label.visible = ref_count != 0
+	if ref_count == 1:
+		ref_label.text = "[url=goto-%s]%s[/url] " % [refs[0], refs[0]]
+		ref_label.tooltip_text = "%s points here. Click to go there." % refs[0]
+	else:
+		var bars := ""
+		for i in min(ref_count, 8):
+			bars += "|"
+		ref_label.text = "[url=references]%s[/url] " % bars
+		ref_label.tooltip_text = "View %s incoming references." % ref_count
+	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
 	update()
@@ -576,3 +590,23 @@ func _on_page_key_line_edit_mouse_exited() -> void:
 
 func _on_next_key_meta_clicked(meta: Variant) -> void:
 	Pages.editor.goto_with_meta(meta)
+
+
+func get_references_to_this_page() -> Array:
+	var results : Dictionary = Pages.get_references_to_page(number)
+	var loopback_references : Array = results.get("loopback")
+	var jump_references : Array = results.get("jump")
+	var next_references : Array = results.get("next")
+	
+	var full := []
+	full.append_array(loopback_references)
+	full.append_array(jump_references)
+	full.append_array(next_references)
+	return full
+
+
+func _on_incoming_references_meta_clicked(meta: Variant) -> void:
+	if str(meta) == "references":
+		Pages.editor.view_incoming_references(number)
+	else:
+		Pages.editor.goto_with_meta(meta)
