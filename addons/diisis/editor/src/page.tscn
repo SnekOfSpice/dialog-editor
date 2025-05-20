@@ -61,18 +61,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 focus_mode = 0
 
-[node name="IncomingReferences" type="RichTextLabel" parent="PanelContainer/Info"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_fonts/normal_font = ExtResource("4_v77o4")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_v77o4")
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-meta_underlined = false
-
 [node name="PageKeyEditContainer" type="HBoxContainer" parent="PanelContainer/Info"]
 layout_mode = 2
 
@@ -91,6 +79,18 @@ tooltip_text = "Page index (address[0])"
 mouse_filter = 1
 theme_override_font_sizes/font_size = 16
 text = "0"
+
+[node name="IncomingReferences" type="RichTextLabel" parent="PanelContainer/Info/PageKeyEditContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_fonts/normal_font = ExtResource("4_v77o4")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_v77o4")
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+meta_underlined = false
 
 [node name="Seperator" type="Label" parent="PanelContainer/Info/PageKeyEditContainer"]
 visible = false
@@ -208,8 +208,8 @@ layout_mode = 2
 mouse_filter = 2
 
 [connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
-[connection signal="meta_clicked" from="PanelContainer/Info/IncomingReferences" to="." method="_on_incoming_references_meta_clicked"]
 [connection signal="toggled" from="PanelContainer/Info/PageKeyEditContainer/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
+[connection signal="meta_clicked" from="PanelContainer/Info/PageKeyEditContainer/IncomingReferences" to="." method="_on_incoming_references_meta_clicked"]
 [connection signal="focus_exited" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_focus_exited"]
 [connection signal="gui_input" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_gui_input"]
 [connection signal="mouse_entered" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_mouse_entered"]

@@ -236,6 +236,8 @@ func update():
 		find_child("LoopbackLineSelect").value = deserialized_loopback_page
 	if deserialized_loopback_page > find_child("LoopbackPageSelect").value:
 		find_child("LoopbackPageSelect").value = deserialized_loopback_page
+	
+	Pages.editor.get_current_page().update_incoming_references()
 
 func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)
@@ -337,10 +339,12 @@ func _on_loopback_line_select_value_changed(value: float) -> void:
 
 func _on_loopback_toggle_toggled(toggled_on: bool) -> void:
 	set_loopback(toggled_on)
+	Pages.editor.get_current_page().update_incoming_references()
 
 
 func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
 	set_do_jump_page(toggled_on)
+	Pages.editor.get_current_page().update_incoming_references()
 
 
 func update_default_text_warning():

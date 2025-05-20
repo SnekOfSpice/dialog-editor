@@ -85,22 +85,21 @@ func change_folder_range(by:int):
 		return
 	find_child("FolderContainer").change_folder_range(by)
 
-#func set_line_move_controls_visible(value:bool):
-	#if value:
-		##find_child("MoveToIndexControls").modulate.a = 1.0
-		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
-		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
-	#else:
-		##find_child("MoveToIndexControls").modulate.a = 0.0
-		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
-		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
-
 func set_line_type(value: int):
 	line_type = value
-	#set_line_move_controls_visible(line_type != DIISIS.LineType.Folder)
 	
-	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
-	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
+	var tc : Node = find_child("TextContent")
+	var cc : Node = find_child("ChoiceContainer")
+	var ic : Node = find_child("InstructionContainer")
+	var fc : Node = find_child("FolderContainer")
+	tc.visible = line_type == DIISIS.LineType.Text
+	tc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Text else Node.PROCESS_MODE_DISABLED
+	cc.visible = line_type == DIISIS.LineType.Choice
+	cc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Choice else Node.PROCESS_MODE_DISABLED
+	ic.visible = line_type == DIISIS.LineType.Instruction
+	ic.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Instruction else Node.PROCESS_MODE_DISABLED
+	fc.visible = line_type == DIISIS.LineType.Folder
+	fc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Folder else Node.PROCESS_MODE_DISABLED
 	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
 	find_child("FolderContainer").visible = line_type == DIISIS.LineType.Folder
 	find_child("SelectAllInRangeButton").visible = line_type == DIISIS.LineType.Folder
@@ -117,9 +116,6 @@ func move_choice_item_by_index(at_index:int, direction:int):
 func set_head_editable(value: bool):
 	is_head_editable = value
 	find_child("Header").set_editable(is_head_editable)
-	#find_child("HeaderShort").visible = not is_head_editable
-	#find_child("HeaderShort").text = find_child("Header").short_form()
-	
 	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
 
 func set_skip(value:bool):
@@ -245,12 +241,14 @@ func update():
 		indent += ">"
 	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
-	#find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
 	
+	update_incoming_reference_label()
+
+func update_incoming_reference_label():
 	var cpn : int = Pages.editor.get_current_page_number()
 	var index := get_index()
 	var loopback_reference_count : int = Pages.get_loopback_references_to(cpn, index).size()
@@ -266,6 +264,7 @@ func update():
 			"[/url][/hint]"
 		)
 	find_child("LoopbackReferenceLabel").text = reference_text
+	find_child("LoopbackReferenceLabel").visible = not reference_text.is_empty()
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:

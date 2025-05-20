@@ -275,6 +275,8 @@ func update():
 	update_compliance_prompt()
 
 func update_compliance_prompt():
+	if not can_process():
+		return
 	var label : RichTextLabel =	find_child("CompliancesLabel")
 	label.text = ""
 	var compliances := get_compliances()

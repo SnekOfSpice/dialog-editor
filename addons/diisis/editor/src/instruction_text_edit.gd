@@ -25,9 +25,13 @@ func get_instruction_name() -> String:
 		return text_box.text
 
 func update_compliance_prompt():
+	if not visible:
+		return
 	_on_instruction_text_box_text_entered(find_child("InstructionTextBox").text)
 
 func _on_instruction_text_box_text_entered(new_text: String) -> void:
+	if not can_process():
+		return
 	if new_text.contains("\n"):
 		var lines := new_text.split("\n")
 		text_box.text = "".join(lines)

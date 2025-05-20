@@ -70,13 +70,15 @@ const TOGGLE_SETTINGS := {
 	"warn_on_fact_deletion" : "Prompts you to confirm the deletion of a page, line, or choice item if that object or any of its children contains facts. (not conditionals)",
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
-	"silly" : "Adds a bit of visual fluff to the editor :3"
+	"silly" : "Adds a bit of visual fluff to the editor :3",
+	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off."
 }
 var save_on_play := true
 var warn_on_fact_deletion := true
 var silly := true
 var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
+var first_index_as_page_reference_only := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -92,8 +94,8 @@ signal pages_modified
 func sync_line_references():
 	loopback_references_by_page.clear()
 	jump_page_references_by_page.clear()
-	for page in page_data.values():
-		var page_index := int(page.get("number"))
+	for page_index in page_data.keys():
+		var page := get_page_data(page_index)
 		var line_index := 0
 		for line in page.get("lines", []):
 			if line.get("line_type") != DIISISGlobal.LineType.Choice:
@@ -1629,9 +1631,13 @@ func get_references_to_page(page_index:int) -> Dictionary:
 	var line_count = get_page_data(page_index).get("lines", []).size()
 	var loopback_references := []
 	var jump_references := []
-	for i in line_count:
-		loopback_references.append_array(get_loopback_references_to(page_index, i))
-		jump_references.append_array(get_jump_references_to(page_index, i))
+	if first_index_as_page_reference_only:
+		loopback_references.append_array(get_loopback_references_to(page_index, 0))
+		jump_references.append_array(get_jump_references_to(page_index, 0))
+	else:
+		for i in line_count:
+			loopback_references.append_array(get_loopback_references_to(page_index, i))
+			jump_references.append_array(get_jump_references_to(page_index, i))
 	var next_references := []
 	for page in page_data.values():
 		if page.get("next", -1) == page_index and not page.get("terminate", false):

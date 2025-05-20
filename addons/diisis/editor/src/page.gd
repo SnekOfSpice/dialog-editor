@@ -81,19 +81,7 @@ func deserialize(data: Dictionary):
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
 	
-	var refs := get_references_to_this_page()
-	var ref_count := refs.size()
-	var ref_label : RichTextLabel = find_child("IncomingReferences")
-	ref_label.visible = ref_count != 0
-	if ref_count == 1:
-		ref_label.text = "[url=goto-%s]%s[/url] " % [refs[0], refs[0]]
-		ref_label.tooltip_text = "%s points here. Click to go there." % refs[0]
-	else:
-		var bars := ""
-		for i in min(ref_count, 8):
-			bars += "|"
-		ref_label.text = "[url=references]%s[/url] " % bars
-		ref_label.tooltip_text = "View %s incoming references." % ref_count
+	update_incoming_references_to_page()
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -482,6 +470,27 @@ func get_max_reach_after_indented_index(index: int):
 		reach += 1
 	
 	return reach
+
+func update_incoming_references_to_page():
+	var refs := get_references_to_this_page()
+	var ref_count := refs.size()
+	var ref_label : RichTextLabel = find_child("IncomingReferences")
+	ref_label.visible = ref_count != 0
+	if ref_count == 1:
+		ref_label.text = "[url=goto-%s]%s[/url] " % [refs[0], refs[0]]
+		ref_label.tooltip_text = "%s points here. Click to go there." % refs[0]
+	else:
+		var bars := ""
+		for i in min(ref_count, 8):
+			bars += "|"
+		ref_label.text = "[url=references]%s[/url] " % bars
+		ref_label.tooltip_text = "View %s incoming references." % ref_count
+
+func update_incoming_references():
+	Pages.sync_line_references()
+	update_incoming_references_to_page()
+	for line : Line in lines.get_children():
+		line.update_incoming_reference_label()
 
 func update():
 	lines = find_child("Lines")

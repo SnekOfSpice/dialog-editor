@@ -65,7 +65,7 @@ clip_contents = false
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mmgt")
-text = "Method is empty."
+text = "Function is empty."
 fit_content = true
 vertical_alignment = 2
 

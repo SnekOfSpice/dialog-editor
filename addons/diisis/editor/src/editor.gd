@@ -1194,3 +1194,7 @@ func _on_handler_window_close_requested() -> void:
 	Pages.update_all_compliances()
 	await get_tree().process_frame
 	refresh()
+
+
+func _on_file_config_popup_close_requested() -> void:
+	get_current_page().update_incoming_references()
