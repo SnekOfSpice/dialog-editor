@@ -56,6 +56,7 @@ func add_choice(at_index:=-1, choice_data:={}):
 	if at_index != -1:
 		$ChoiceList.move_child(choice, at_index)
 	choice.deserialize(choice_data)
+	choice.set_editing_view(editing_view)
 	choice.connect("move_choice_edit", request_move_choice_edit)
 	choice.grab_focus()
 	update()
