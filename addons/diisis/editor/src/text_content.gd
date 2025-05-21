@@ -5,7 +5,8 @@ class_name TextContent
 signal drop_focus()
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
-#var use_dialog_syntax := true
+const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "rainbow", "pulse", "wave", "tornado", "shake", "fade"]
+
 var active_actors := [] # list of character names
 var active_actors_title := ""
 
@@ -223,8 +224,9 @@ func _on_text_box_caret_changed() -> void:
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("["):
-		for tag in ["b", "i", "u", "s"]:
+		for tag in BBCODE_TAGS:
 			var display_text:String
+			var closing_tag = tag
 			match tag:
 				"b":
 					display_text = "bold"
@@ -234,7 +236,29 @@ func _on_text_box_caret_changed() -> void:
 					display_text = "underline"
 				"s":
 					display_text = "strikethrough"
-			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", tag, "]"))
+				"img":
+					display_text = "image"
+				"url":
+					display_text = "url"
+					tag += "="
+				"font_size":
+					display_text = "font size"
+					tag += "="
+				"rainbow":
+					tag += " freq=1.0 sat=0.8 val=0.8 speed=1.0"
+				"pulse":
+					tag += " freq=1.0 color=#ffffff40 ease=-2.0"
+				"wave":
+					tag += " amp=50.0 freq=5.0 connected=1"
+				"tornado":
+					tag += " radius=10.0 freq=1.0 connected=1"
+				"shake":
+					tag += " rate=20.0 level=5 connected=1"
+				"fade":
+					tag += " start=4 length=14"
+			if not display_text:
+				display_text = closing_tag
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", closing_tag, "]"))
 		text_box.update_code_completion_options(true)
 		text_box.code_completion_prefixes
 	elif is_text_before_caret("."):
@@ -385,8 +409,11 @@ func _on_text_box_code_completion_requested() -> void:
 			Pages.auto_complete_context = control
 			break
 	
-	for tag in ["b", "i", "u", "s"]:
-		if is_text_before_caret(str("[/", tag, "]")):
+	for tag in BBCODE_TAGS:
+		if is_text_before_caret(str("=][/", tag, "]")):
+			caret_movement_to_do = -str("][/", tag, "]").length()
+			break
+		elif is_text_before_caret(str("[/", tag, "]")):
 			caret_movement_to_do = -str("[/", tag, "]").length()
 			break
 	
