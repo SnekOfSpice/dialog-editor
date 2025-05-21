@@ -50,19 +50,8 @@ layout_mode = 2
 
 [node name="Text Actions" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar"]
 size = Vector2i(167, 100)
-item_count = 5
-item_0/text = "Capitalize"
-item_0/id = 0
-item_1/text = "Neaten Whitespace"
-item_1/id = 1
-item_2/id = 2
-item_2/separator = true
-item_3/text = "Set Text ID..."
-item_3/id = 3
-item_4/id = 4
-item_4/separator = true
 
-[node name="Import" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" instance=ExtResource("3_wtkdm")]
+[node name="Ingest" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" instance=ExtResource("3_wtkdm")]
 visible = false
 unfocusable = false
 
@@ -118,7 +107,8 @@ size_flags_vertical = 8
 texture = SubResource("GradientTexture2D_wtkdm")
 
 [connection signal="id_pressed" from="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" to="." method="_on_text_actions_id_pressed"]
-[connection signal="id_pressed" from="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions/Import" to="." method="_on_import_id_pressed"]
+[connection signal="ingest_from_clipboard" from="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions/Ingest" to="." method="_on_import_ingest_from_clipboard"]
+[connection signal="ingest_from_file" from="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions/Ingest" to="." method="_on_import_ingest_from_file"]
 [connection signal="caret_changed" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_caret_changed"]
 [connection signal="code_completion_requested" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_code_completion_requested"]
 [connection signal="focus_entered" from="MarginContainer/ScrollContainer/TextBox" to="." method="_on_text_box_focus_entered"]

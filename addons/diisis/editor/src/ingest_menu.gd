@@ -6,6 +6,13 @@ const WHITESPACE_INDEX := 4
 
 @export var page := false
 
+signal ingest_from_clipboard()
+signal ingest_from_file()
+
+func init():
+	set_item_tooltip(CAPITALIZE_INDEX, Pages.TOOLTIP_CAPITALIZE)
+	set_item_tooltip(WHITESPACE_INDEX, Pages.TOOLTIP_NEATEN_WHITESPACE)
+
 func is_capitalize_checked() -> bool:
 	return is_item_checked(CAPITALIZE_INDEX)
 
@@ -26,6 +33,14 @@ func build_payload() -> Dictionary:
 	}
 
 func _on_id_pressed(id: int) -> void:
+	if id in [0, 1]:
+		if not Pages.use_dialog_syntax:
+			Pages.editor.notify("Text ingestion only makes sense with dialog syntax enabled.\nEnable it in File>Preferences>Dialog and try again.")
+			return
+		if id == 0:
+			emit_signal("ingest_from_file")
+		elif id == 1:
+			emit_signal("ingest_from_clipboard")
 	var target_value:bool
 	match id:
 		CAPITALIZE_INDEX:
@@ -52,8 +67,7 @@ func _on_id_pressed(id: int) -> void:
 			"[color=#fd99f9]",
 			"a: amber",
 			"\nn: narrator",
-			"[/color]",
-			"\nEND ACTORS\n",
+			"\nEND ACTORS[/color]\n",
 			"\nCONTENT",
 			"\na: this first line will be ingested",
 			"\nn: with different speaking parts",
@@ -68,12 +82,12 @@ func _on_id_pressed(id: int) -> void:
 			"\nn: waow",
 		)
 		Pages.editor.popup_accept_dialogue(str(
-			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space.\n\n",
+			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space. (If you omit the actors, Utility > Ingestion Actors will be used.)\n\n",
 			"[b]Example For ", "Pages" if page else "Lines", ":[/b]",
 			"\n\n",
-			"[bgcolor=#0e0c10]",
+			"[code][font_size=12]",
 			page_content if page else line_content,
-			"[/bgcolor]",
+			"[/font_size=12]][/code]",
 		),
 		"Ingestion Help",
 		canvas_transform.get_origin())

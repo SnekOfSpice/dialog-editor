@@ -48,7 +48,19 @@ func init() -> void:
 	text_box.grab_focus()
 	text_box.cancel_code_completion()
 	
-	find_child("Text Actions").add_submenu_node_item("Ingest Line", find_child("Import"))
+	var ingest : PopupMenu = find_child("Ingest")
+	var text_actions : PopupMenu = find_child("Text Actions")
+	text_actions.add_submenu_node_item("Ingest Line", ingest)
+	ingest.init()
+	text_actions.add_separator("Prettify")
+	text_actions.add_item("Capitalize", 0)
+	text_actions.add_item("Neaten Whitespace", 1)
+	text_actions.add_separator()
+	text_actions.add_item("Set Text ID...", 4)
+	
+	
+	text_actions.set_item_tooltip(1, Pages.TOOLTIP_CAPITALIZE)
+	text_actions.set_item_tooltip(2, Pages.TOOLTIP_NEATEN_WHITESPACE)
 	
 func serialize() -> Dictionary:
 	if not text_id:
@@ -525,24 +537,6 @@ func _on_text_box_item_rect_changed() -> void:
 func set_text(text:String):
 	text_box.text = text
 
-func _on_import_id_pressed(id: int) -> void:
-	match id:
-		0: # file
-			var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
-			Pages.editor.popup_ingest_file_dialog([
-				address,
-				find_child("Import").build_payload()]
-				)
-		1: # clipboard
-			var text : String = TextToDiisis.format_text(DisplayServer.clipboard_get())
-			if text.is_empty():
-				return
-			text_box.text = text
-			if find_child("Import").is_capitalize_checked():
-				text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
-			if find_child("Import").is_whitespace_checked():
-				text_box.text = Pages.neaten_whitespace(text_box.text)
-
 
 func _on_text_box_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -565,3 +559,21 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				Pages.editor.open_window_by_string("FactsPopup")
 			elif not tag.is_empty():
 				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
+
+
+func _on_import_ingest_from_clipboard() -> void:
+	var text : String = TextToDiisis.format_text(DisplayServer.clipboard_get())
+	if text.is_empty():
+		return
+	text_box.text = text
+	if find_child("Ingest").is_capitalize_checked():
+		text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
+	if find_child("Ingest").is_whitespace_checked():
+		text_box.text = Pages.neaten_whitespace(text_box.text)
+
+
+func _on_import_ingest_from_file() -> void:
+	var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	Pages.editor.popup_ingest_file_dialog([
+		address,
+		find_child("Ingest").build_payload()])

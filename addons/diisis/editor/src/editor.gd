@@ -111,7 +111,10 @@ func init(active_file_path:="") -> void:
 	var file_item : PopupMenu = find_child("File")
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
-	file_item.add_submenu_node_item("Ingest Pages", file_item.get_node("IngestMenu"))
+	var ingest : PopupMenu = file_item.get_node("IngestMenu")
+	file_item.add_submenu_node_item("Ingest Pages", ingest)
+	ingest.init()
+	
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	file_item.add_separator()
 	file_item.add_item("Preferences...", 3)
@@ -699,19 +702,6 @@ func _on_file_id_pressed(id: int) -> void:
 		9:
 			emit_signal("open_new_file")
 
-func _on_ingest_menu_id_pressed(id: int) -> void:
-	match id:
-		0: # file
-			popup_ingest_file_dialog(
-				["PAGE",
-				find_child("IngestMenu").build_payload()
-				]
-			)
-		1: # clipboard
-			TextToDiisis.ingest_pages(
-				DisplayServer.clipboard_get(), find_child("IngestMenu").build_payload()
-			)
-
 func _on_l_10n_menu_id_pressed(id: int) -> void:
 	match id:
 		0: # locales
@@ -1227,3 +1217,16 @@ func _on_library_of_babel_index_pressed(index: int) -> void:
 	
 	var t = get_tree().create_timer(2)
 	t.timeout.connect(OS.shell_open.bind("https://libraryofbabel.info/search.html"))
+
+
+func _on_ingest_menu_ingest_from_clipboard() -> void:
+	TextToDiisis.ingest_pages(
+		DisplayServer.clipboard_get(),
+		find_child("IngestMenu").build_payload())
+
+
+func _on_ingest_menu_ingest_from_file() -> void:
+	popup_ingest_file_dialog(
+		["PAGE",
+		find_child("IngestMenu").build_payload()
+		])

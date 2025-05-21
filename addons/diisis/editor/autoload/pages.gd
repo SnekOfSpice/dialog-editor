@@ -64,6 +64,8 @@ var text_data := {}
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
+const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
+const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
 
 #region toggle settings
 const TOGGLE_SETTINGS := {
@@ -941,13 +943,14 @@ func get_text_on_page(page_number:int) -> String:
 				result +=  Pages.get_text(choice.get("text_id_disabled", ""))
 		elif line_type == DIISIS.LineType.Text:
 			var text : String = Pages.get_text(content.get("text_id", ""))
-			var actor_tag_index := text.find("[]>")
-			while actor_tag_index != -1:
-				var tag_end = text.find(":", actor_tag_index)
-				if tag_end == -1:
-					break
-				text = text.erase(actor_tag_index, tag_end - actor_tag_index)
-				actor_tag_index = text.find("[]>")
+			if use_dialog_syntax:
+				var actor_tag_index := text.find("[]>")
+				while actor_tag_index != -1:
+					var tag_end = text.find(":", actor_tag_index)
+					if tag_end == -1:
+						break
+					text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+					actor_tag_index = text.find("[]>")
 			result += text
 	return result
 
@@ -967,13 +970,14 @@ func get_count_on_page(page_number:int) -> Vector2i:
 				word_count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
 		elif line_type == DIISIS.LineType.Text:
 			var text : String = Pages.get_text(content.get("text_id", ""))
-			var actor_tag_index := text.find("[]>")
-			while actor_tag_index != -1:
-				var tag_end = text.find(":", actor_tag_index)
-				if tag_end == -1:
-					break
-				text = text.erase(actor_tag_index, tag_end - actor_tag_index)
-				actor_tag_index = text.find("[]>")
+			if use_dialog_syntax:
+				var actor_tag_index := text.find("[]>")
+				while actor_tag_index != -1:
+					var tag_end = text.find(":", actor_tag_index)
+					if tag_end == -1:
+						break
+					text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+					actor_tag_index = text.find("[]>")
 			text = remove_tags(text)
 			character_count += text.length()
 			word_count += text.count(" ") + 1
