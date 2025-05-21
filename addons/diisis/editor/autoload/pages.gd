@@ -182,6 +182,8 @@ func deserialize(data:Dictionary):
 	callable_autoloads = data.get("callable_autoloads", [])
 	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
 	evaluator_modified_times = data.get("evaluator_modified_times", {})
+	for key in evaluator_modified_times.keys():
+		evaluator_modified_times[key] = int(evaluator_modified_times.get(key))
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:

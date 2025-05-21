@@ -284,7 +284,7 @@ var _remaining_prompt_delay := input_prompt_delay
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because the Parser is paused.
 @export var warn_advance_on_parser_paused := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param is_executing] is true. Probably because of waiting for an instruction to be finished.
-@export var warn_advance_on_executing := true
+@export var warn_advance_on_executing := false
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because the Parser is terminated.
 @export var warn_advance_on_terminated := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param auto_continue] is true.
@@ -294,6 +294,7 @@ var _remaining_prompt_delay := input_prompt_delay
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
 @export_subgroup("Misc")
+## Serializes and deserializes the [member visibility] property of all UI nodes [LineReader] references.
 @export var persist_ui_visibilities := true
 
 signal line_finished(line_index: int)
