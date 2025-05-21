@@ -31,8 +31,13 @@ func get_include_tags() -> bool:
 func display_results(search:String):
 	var item_list:ItemList = find_child("ItemList")
 	
-	var selection_index_before := item_list.get_selected_items()[0]
-	var selection_text_before := item_list.get_item_text(selection_index_before)
+	
+	
+	var selection_index_before := 0
+	var selection_text_before := ""
+	if not item_list.get_selected_items().is_empty():
+		selection_index_before = item_list.get_selected_items()[0]
+		selection_text_before = item_list.get_item_text(selection_index_before)
 	
 	find_child("ResultLabel").text = ""
 	fact_start_index = -1
@@ -144,7 +149,7 @@ func update_query(query:String) -> void:
 
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
-	var details : String = details_by_address.get(address)
+	var details : String = details_by_address.get(address, "")
 	var raw_details := details
 	
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed

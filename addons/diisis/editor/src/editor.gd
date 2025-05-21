@@ -68,7 +68,6 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
-	#print("init editor")
 	opening = true
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
@@ -118,6 +117,12 @@ func init(active_file_path:="") -> void:
 	file_item.add_item("Preferences...", 3)
 	file_item.add_item("About...", 4)
 	
+	if Pages.silly:
+		var utility_item : PopupMenu = find_child("Utility")
+		utility_item.add_separator()
+		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
+	
+	
 	open_from_path(active_file_path)
 	
 	undo_redo.version_changed.connect(set_altered_history.bind(true))
@@ -132,8 +137,6 @@ func init(active_file_path:="") -> void:
 		var mat = ShaderMaterial.new()
 		mat.shader = load(Pages.shader)
 		rect.material = mat
-	
-	#print("init editor successful")
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -808,22 +811,9 @@ func step_through_pages():
 			next_page = 0
 		i += 1
 
-func _on_req(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
-	if result != HTTPRequest.RESULT_SUCCESS: return
-	var json = JSON.new()
-	json.parse(body.get_string_from_utf8())
-	var response = json.get_data()
-	print(body.get_string_from_utf8())
-
-
 
 func _on_funny_debug_button_pressed() -> void:
 	emit_signal("request_reload")
-	return
-	var request := HTTPRequest.new()
-	add_child(request)
-	request.request_completed.connect(_on_req)
-	request.request("https://www.tumblr.com/harsh-noise-scalies")
 	return
 	step_through_pages()
 	return
@@ -1198,3 +1188,38 @@ func _on_handler_window_close_requested() -> void:
 
 func _on_file_config_popup_close_requested() -> void:
 	get_current_page().update_incoming_references()
+
+
+func _on_library_of_babel_index_pressed(index: int) -> void:
+	var text : String
+	match index:
+		0: # script
+			text = Pages.get_text_on_all_pages()
+		1: # page
+			text = Pages.get_text_on_page(get_current_page_number())
+	
+	text = Pages.remove_tags(text)
+	
+	text = text.to_lower()
+	var allowed_characters = Pages.LETTERS.duplicate()
+	allowed_characters.append(".")
+	allowed_characters.append(",")
+	allowed_characters.append(" ")
+	for idx in text.length():
+		if not text[idx] in allowed_characters:
+			text.erase(idx)
+			text.insert(idx, ".")
+	
+	var length_warning := ""
+	if text.length() > 3200:
+		length_warning = "The resulting text is larger than 3200 (%s) and will be trimmed down." % text.length()
+		text = text.left(3200)
+	
+	var message := "Contents have been copied to the clipboard. Have fun!"
+	if not length_warning.is_empty():
+		message += "\n" + length_warning
+	notify(message, 60)
+	DisplayServer.clipboard_set(text)
+	
+	var t = get_tree().create_timer(2)
+	t.timeout.connect(OS.shell_open.bind("https://libraryofbabel.info/search.html"))

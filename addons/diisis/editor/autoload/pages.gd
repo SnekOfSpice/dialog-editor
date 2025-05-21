@@ -38,6 +38,7 @@ var custom_method_defaults := {}
 var custom_method_dropdown_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
+var evaluator_modified_times := {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -157,6 +158,7 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"default_address_mode_pages": default_address_mode_pages,
+		"evaluator_modified_times": evaluator_modified_times,
 	}
 	for setting in TOGGLE_SETTINGS.keys():
 		data[setting] = get(setting)
@@ -179,6 +181,7 @@ func deserialize(data:Dictionary):
 	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
 	callable_autoloads = data.get("callable_autoloads", [])
 	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
+	evaluator_modified_times = data.get("evaluator_modified_times", {})
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:
@@ -694,7 +697,6 @@ func _get_custom_method_full_defaults() -> Dictionary:
 	return result
 
 func set_custom_method_defaults(defaults:Dictionary):
-	print(defaults)
 	for method in defaults.keys():
 		var args : Dictionary = defaults.get(method)
 		custom_method_defaults.set(method, args.duplicate(true))
@@ -917,11 +919,40 @@ func lines_referencing_fact(fact_name: String):
 	
 	return all_refs
 
+func get_text_on_all_pages() -> String:
+	var result := ""
+	for i in page_data.keys():
+		result += get_text_on_page(i)
+	return result
+
+func get_text_on_page(page_number:int) -> String:
+	var result := ""
+	var data := get_page_data(page_number)
+	for line in data.get("lines", []):
+		var line_type = line.get("line_type")
+		var content = line.get("content")
+		if line_type == DIISIS.LineType.Choice:
+			for choice in content.get("choices"):
+				result +=  Pages.get_text(choice.get("text_id_enabled", ""))
+				result +=  Pages.get_text(choice.get("text_id_disabled", ""))
+		elif line_type == DIISIS.LineType.Text:
+			var text : String = Pages.get_text(content.get("text_id", ""))
+			var actor_tag_index := text.find("[]>")
+			while actor_tag_index != -1:
+				var tag_end = text.find(":", actor_tag_index)
+				if tag_end == -1:
+					break
+				text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+				actor_tag_index = text.find("[]>")
+			result += text
+	return result
+
 ## Returns word count in x and character count in y
 func get_count_on_page(page_number:int) -> Vector2i:
 	var character_count := 0
 	var word_count := 0
-	for line in page_data.get(page_number, {}).get("lines", []):
+	var data := get_page_data(page_number)
+	for line in data.get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		if line_type == DIISIS.LineType.Choice:
@@ -1213,7 +1244,6 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	for fact : String in facts:
 		if (case_insensitive and fact.findn(substr) != -1) or (not case_insensitive and fact.find(substr) != -1):
 			found_facts[fact] = fact
-	
 	var found_choices := {}
 	var found_text := {}
 	var found_instructions := {}
@@ -1234,20 +1264,7 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var text : String = Pages.get_text(line.get("content", {}).get("text_id", ""))
 				if not include_tags:
-					var scan_index := 0
-					var pairs = ["<>", "[]"]
-					for pair in pairs:
-						while scan_index < text.length():
-							if text[scan_index] == pair[0]:
-								var local_scan_index := scan_index
-								var control_to_replace := ""
-								while text[local_scan_index] != pair[1]:
-									control_to_replace += text[local_scan_index]
-									local_scan_index += 1
-								control_to_replace += pair[1]
-								text = text.replace(control_to_replace, "")
-								scan_index -= control_to_replace.length()
-							scan_index += 1
+					text = remove_tags(text)
 				
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
@@ -1269,7 +1286,72 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	}
 	return result
 
+func remove_tags(t:String) -> String:
+	var text := t
+	var pairs = ["<>", "[]"]
+	for pair in pairs:
+		var scan_index := 0
+		while scan_index < text.length():
+			if text[scan_index] == pair[0]:
+				printt("a", scan_index, text[scan_index])
+				var local_scan_index := scan_index
+				var control_to_replace := ""
+				while text[local_scan_index] != pair[1]:
+					control_to_replace += text[local_scan_index]
+					local_scan_index += 1
+				control_to_replace += pair[1]
+				
+				if text.length() >= scan_index + 3:
+					var tag_end := scan_index
+					if (
+						text[scan_index + 1] == "i" and
+						text[scan_index + 2] == "m" and
+						text[scan_index + 3] == "g"):
+							tag_end = text.find("[/img]") + 5
+							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
+					elif (
+						text[scan_index + 1] == "u" and
+						text[scan_index + 2] == "r" and
+						text[scan_index + 3] == "l"):
+							tag_end = text.find("[/url]") + 5
+							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
+				print("control_to_replace ", control_to_replace)
+				text = text.replace(control_to_replace, "")
+				scan_index -= control_to_replace.length()
+			scan_index += 1
+	return text
+
 func update_all_compliances():
+	# check modified because updating all compliances makes diisis stutter a bit
+	var modified := false
+	for path in evaluator_paths:
+		var modified_time = FileAccess.get_modified_time(path)
+		if not evaluator_modified_times.has(path):
+			evaluator_modified_times[path] = modified_time
+			modified = true
+			break
+		else:
+			if evaluator_modified_times.get(path) != modified_time:
+				evaluator_modified_times[path] = modified_time
+				modified = true
+				break
+	if not modified:
+		for autoload in callable_autoloads:
+			var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+			var modified_time = FileAccess.get_modified_time(path)
+			if not evaluator_modified_times.has(path):
+				evaluator_modified_times[path] = modified_time
+				modified = true
+				break
+			else:
+				if evaluator_modified_times.get(path) != modified_time:
+					evaluator_modified_times[path] = modified_time
+					modified = true
+					break
+	
+	if not modified:
+		return
+	
 	for method in get_all_instruction_names():
 		update_compliances(method)
 	if is_instance_valid(editor):
