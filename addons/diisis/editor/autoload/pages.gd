@@ -1311,12 +1311,12 @@ func remove_tags(t:String) -> String:
 						text[scan_index + 3] == "g"):
 							tag_end = text.find("[/img]") + 5
 							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
-					elif (
-						text[scan_index + 1] == "u" and
-						text[scan_index + 2] == "r" and
-						text[scan_index + 3] == "l"):
-							tag_end = text.find("[/url]") + 5
-							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
+					#elif (
+						#text[scan_index + 1] == "u" and
+						#text[scan_index + 2] == "r" and
+						#text[scan_index + 3] == "l"):
+							#tag_end = text.find("[/url]") + 5
+							#control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
 				print("control_to_replace ", control_to_replace)
 				text = text.replace(control_to_replace, "")
 				scan_index -= control_to_replace.length()

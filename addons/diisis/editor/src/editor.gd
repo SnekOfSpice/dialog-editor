@@ -1192,11 +1192,14 @@ func _on_file_config_popup_close_requested() -> void:
 
 func _on_library_of_babel_index_pressed(index: int) -> void:
 	var text : String
+	var object_of_desire : String
 	match index:
 		0: # script
 			text = Pages.get_text_on_all_pages()
+			object_of_desire = "Script"
 		1: # page
 			text = Pages.get_text_on_page(get_current_page_number())
+			object_of_desire = "Page %s" % get_current_page_number()
 	
 	text = Pages.remove_tags(text)
 	
@@ -1215,7 +1218,7 @@ func _on_library_of_babel_index_pressed(index: int) -> void:
 		length_warning = "The resulting text is larger than 3200 (%s) and will be trimmed down." % text.length()
 		text = text.left(3200)
 	
-	var message := "Contents have been copied to the clipboard. Have fun!"
+	var message := "%s contents have been copied to the clipboard. Have fun!" % object_of_desire
 	if not length_warning.is_empty():
 		message += "\n" + length_warning
 	notify(message, 60)
