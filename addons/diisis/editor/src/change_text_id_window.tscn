@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ctyeuvwh0s02v" path="res://addons/diisis/editor/src/change_text_id_container.tscn" id="2_r8uxr"]
 
 [node name="ChangeTextIDWindow" type="Window"]
-title = "Change Text ID"
+title = "Set Text ID"
 initial_position = 4
 size = Vector2i(500, 300)
 wrap_controls = true

@@ -515,6 +515,7 @@ autostart = true
 [node name="FDSave" type="FileDialog" parent="Popups"]
 transparent_bg = true
 gui_embed_subwindows = true
+title = "Save as..."
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
@@ -525,6 +526,7 @@ filters = PackedStringArray("*.json")
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
+title = "Export L10n File"
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
@@ -535,7 +537,7 @@ filters = PackedStringArray("*.json")
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
-title = "Merge"
+title = "Update existing L10n file"
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
@@ -569,7 +571,6 @@ access = 2
 filters = PackedStringArray("*.txt")
 
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
-title = "Edit Header Defaults"
 visible = false
 exclusive = false
 content_scale_aspect = 1

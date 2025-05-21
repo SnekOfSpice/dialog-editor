@@ -75,7 +75,7 @@ func _on_id_pressed(id: int) -> void:
 			page_content if page else line_content,
 			"[/bgcolor]",
 		),
-		"Ingestion Syntax",
+		"Ingestion Help",
 		canvas_transform.get_origin())
 	if id == 7:
 		Pages.editor.open_window_by_string("IngestionActorSetupWindow")

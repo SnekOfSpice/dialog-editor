@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="2_ywacf"]
 
 [node name="TextSearchPopup" type="Window"]
-title = "Text Search"
+title = "Search Text"
 initial_position = 4
 size = Vector2i(730, 400)
 wrap_controls = true

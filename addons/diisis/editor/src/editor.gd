@@ -558,7 +558,7 @@ func request_go_to_address(address:String, action_message:=""):
 	if action_message.is_empty():
 		action_message = str("Go to ", address)
 	else:
-		action_message = str(action_message, "(Go to ", address,  ")")
+		action_message = str(action_message, " (Go to ", address,  ")")
 	undo_redo.create_action(action_message)
 	undo_redo.add_do_method(DiisisEditorActions.go_to.bind(address))
 	undo_redo.add_undo_method(DiisisEditorActions.go_to.bind(str(get_current_page_number())))
@@ -738,8 +738,8 @@ func _on_utility_id_pressed(id: int) -> void:
 				"Word Count on page: [b]%s[/b]\n" % on_page.x,
 				"Character Count on page: [b]%s[/b]\n" % on_page.y,
 				"\n",
-				"[wave amp=10.0 freq=-4 connected=1][color=f2e260]Note:[/color][/wave]\n",
-				"Values are approximated:\n- Words are counted by spaces.\n- Characters are counted in total.\n(tags may affect this)"
+				"[wave amp=10.0 freq=-4 connected=1][color=f2e260]Note:[/color][/wave]",
+				" Words are counted by spaces."
 			)
 			popup_accept_dialogue(dialog_text, "Word & Character Count")
 		1: 

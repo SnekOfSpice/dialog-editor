@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cwuijeaobk8nx" path="res://addons/diisis/editor/src/header_popup.gd" id="1_bfvn8"]
 
 [node name="HeaderPopup" type="Window"]
-title = "fgchv"
+title = "Header"
 initial_position = 2
 size = Vector2i(400, 335)
 wrap_controls = true

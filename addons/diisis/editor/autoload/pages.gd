@@ -974,6 +974,7 @@ func get_count_on_page(page_number:int) -> Vector2i:
 					break
 				text = text.erase(actor_tag_index, tag_end - actor_tag_index)
 				actor_tag_index = text.find("[]>")
+			text = remove_tags(text)
 			character_count += text.length()
 			word_count += text.count(" ") + 1
 	return Vector2(word_count, character_count)
@@ -1297,10 +1298,12 @@ func remove_tags(t:String) -> String:
 		var scan_index := 0
 		while scan_index < text.length():
 			if text[scan_index] == pair[0]:
-				printt("a", scan_index, text[scan_index])
 				var local_scan_index := scan_index
 				var control_to_replace := ""
+				#if text.find(pair[1], scan_index) != -1:
 				while text[local_scan_index] != pair[1]:
+					if text[local_scan_index] == "\n":
+						break
 					control_to_replace += text[local_scan_index]
 					local_scan_index += 1
 				control_to_replace += pair[1]
@@ -1319,9 +1322,8 @@ func remove_tags(t:String) -> String:
 						#text[scan_index + 3] == "l"):
 							#tag_end = text.find("[/url]") + 5
 							#control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
-				print("control_to_replace ", control_to_replace)
-				text = text.replace(control_to_replace, "")
-				scan_index -= control_to_replace.length()
+				
+				text = text.erase(scan_index, control_to_replace.length())
 			scan_index += 1
 	return text
 
