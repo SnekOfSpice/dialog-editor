@@ -1300,7 +1300,6 @@ func remove_tags(t:String) -> String:
 			if text[scan_index] == pair[0]:
 				var local_scan_index := scan_index
 				var control_to_replace := ""
-				#if text.find(pair[1], scan_index) != -1:
 				while text[local_scan_index] != pair[1]:
 					if text[local_scan_index] == "\n":
 						break
@@ -1316,13 +1315,6 @@ func remove_tags(t:String) -> String:
 						text[scan_index + 3] == "g"):
 							tag_end = text.find("[/img]") + 5
 							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
-					#elif (
-						#text[scan_index + 1] == "u" and
-						#text[scan_index + 2] == "r" and
-						#text[scan_index + 3] == "l"):
-							#tag_end = text.find("[/url]") + 5
-							#control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
-				
 				text = text.erase(scan_index, control_to_replace.length())
 			scan_index += 1
 	return text
