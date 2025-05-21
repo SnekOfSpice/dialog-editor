@@ -25,6 +25,7 @@ func get_instruction_name() -> String:
 		return text_box.text
 
 func update_compliance_prompt():
+	print(text_box.text)
 	if not visible:
 		return
 	_on_instruction_text_box_text_entered(find_child("InstructionTextBox").text)

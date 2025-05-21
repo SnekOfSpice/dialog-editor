@@ -211,7 +211,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773747,
+		"id_counter": -9223372036854773718,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -991,7 +991,7 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
+				"meta.scroll_vertical": 266,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1,
@@ -1212,6 +1212,7 @@
 		"text_lead_time_other_actor": 0.0,
 		"text_lead_time_same_actor": 0.0,
 		"use_dialog_syntax": true,
+		"validate_function_calls_on_focus": false,
 		"warn_on_fact_deletion": true
 	}
 }

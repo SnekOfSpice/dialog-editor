@@ -72,7 +72,8 @@ const TOGGLE_SETTINGS := {
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
 	"silly" : "Adds a bit of visual fluff to the editor :3",
-	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off."
+	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off.",
+	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
 }
 var save_on_play := true
 var warn_on_fact_deletion := true
@@ -80,6 +81,7 @@ var silly := true
 var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
 var first_index_as_page_reference_only := true
+var validate_function_calls_on_focus := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -1417,6 +1419,8 @@ func get_autoload_names() -> Array:
 func get_method_validity(instruction:String) -> String:
 	if instruction.is_empty():
 		return "Function is empty."
+	if not instruction.ends_with(")"):
+		return "Function should end with \")\""
 	var entered_name = instruction.split("(")[0]
 	if not does_instruction_name_exist(entered_name):
 		var autoload_warning := ""
@@ -1725,7 +1729,7 @@ func get_references_to_page(page_index:int) -> Dictionary:
 	var next_references := []
 	for page in page_data.values():
 		if page.get("next", -1) == page_index and not page.get("terminate", false):
-			next_references.append(str(page.get("number")))
+			next_references.append(str(int(page.get("number"))))
 	return {
 		"loopback" : loopback_references,
 		"jump" : jump_references,

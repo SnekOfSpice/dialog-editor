@@ -247,4 +247,5 @@ func _on_editor_history_altered(is_altered: bool) -> void:
 
 
 func _on_focus_entered() -> void:
-	Pages.update_all_compliances()
+	if Pages.validate_function_calls_on_focus:
+		Pages.update_all_compliances()
