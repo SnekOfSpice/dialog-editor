@@ -30,6 +30,7 @@ Editor
 - Conditionals collapsing
 - choice item views
 - incoming page refs
+- more bbcode in hinting
 
 Runtime
 - name style prepend got a few more options and consistency 

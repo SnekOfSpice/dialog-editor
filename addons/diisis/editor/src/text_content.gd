@@ -5,7 +5,7 @@ class_name TextContent
 signal drop_focus()
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
-const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "rainbow", "pulse", "wave", "tornado", "shake", "fade"]
+const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "font", "rainbow", "pulse", "wave", "tornado", "shake", "fade", "code", "char", "center", "left", "right", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
 
 var active_actors := [] # list of character names
 var active_actors_title := ""
@@ -238,12 +238,8 @@ func _on_text_box_caret_changed() -> void:
 					display_text = "strikethrough"
 				"img":
 					display_text = "image"
-				"url":
-					display_text = "url"
-					tag += "="
 				"font_size":
 					display_text = "font size"
-					tag += "="
 				"rainbow":
 					tag += " freq=1.0 sat=0.8 val=0.8 speed=1.0"
 				"pulse":
@@ -256,6 +252,8 @@ func _on_text_box_caret_changed() -> void:
 					tag += " rate=20.0 level=5 connected=1"
 				"fade":
 					tag += " start=4 length=14"
+			if tag in ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]:
+				tag += "="
 			if not display_text:
 				display_text = closing_tag
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", closing_tag, "]"))
