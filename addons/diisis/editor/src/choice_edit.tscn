@@ -130,6 +130,7 @@ If no conditional modifies this choice item, you can either have it appear in an
 Text is custom for both states."
 theme_override_icons/checked = ExtResource("7_qdd2f")
 theme_override_icons/unchecked = ExtResource("8_ykt7a")
+button_pressed = true
 text = "enabled"
 
 [node name="BehaviorAfterFirstLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer"]

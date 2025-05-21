@@ -76,7 +76,7 @@ func deserialize(data:Dictionary):
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	find_child("DefaultApparenceSelectionButton").button_pressed = data.get("choice_text.enabled_as_default", true)
-	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
+	update_default_appearance()
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
@@ -89,6 +89,9 @@ func deserialize(data:Dictionary):
 	set_loopback(data.get("loopback", false))
 	
 	update()
+
+func update_default_appearance():
+	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
 
 func serialize() -> Dictionary:
 	if not text_id_enabled:
@@ -164,11 +167,8 @@ func get_address() -> String:
 
 # TODO: Add enabled / disabled icons
 func set_page_view(view:DiisisEditor.PageView):
-	var default_enabled_texture : Button = find_child("DefaultEnabledTexture")
-	var line_edit_enabled : LineEdit = find_child("LineEditEnabled")
-	var default_disabled_texture : Button = find_child("DefaultDisabledTexture")
+	var default_container : Control = get_default_line_container()
 	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")
-	var line_edit_disabled : LineEdit = find_child("LineEditDisabled")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
 	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.Minimal
@@ -178,25 +178,18 @@ func set_page_view(view:DiisisEditor.PageView):
 	
 	if view == DiisisEditor.PageView.Full:
 		default_dropdown.visible = true
-		line_edit_enabled.visible = true
-		line_edit_disabled.visible = true
-		default_enabled_texture.visible = true
-		default_disabled_texture.visible = true
 		buttons.columns = 1
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		find_child("Movement").reparent(find_child("OptionContainer"))
 	else:
-		default_enabled_texture.visible = default_dropdown.button_pressed
-		line_edit_enabled.visible = default_dropdown.button_pressed
-		default_disabled_texture.visible = not default_dropdown.button_pressed
-		line_edit_disabled.visible = not default_dropdown.button_pressed
+		default_container.visible = false
 		buttons.columns = 3
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		find_child("Movement").reparent(find_child("BehaviorContainer"))
 	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.Minimal
-	
+	update_default_appearance()
 	
 
 func _on_page_select_value_changed(value: float) -> void:
@@ -405,6 +398,12 @@ func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
 		text_lines.move_child(text_lines.find_child("TextLinesEnabled"), 0)
 	else:
 		text_lines.move_child(text_lines.find_child("TextLinesDisabled"), 0)
+
+func get_default_line_container() -> VBoxContainer:
+	if find_child("DefaultApparenceSelectionButton").button_pressed:
+		return find_child("TextLinesEnabled")
+	else:
+		return find_child("TextLinesDisabled")
 
 # called by choice container
 func set_editing_view(value:int):
