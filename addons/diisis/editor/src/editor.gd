@@ -119,7 +119,7 @@ func init(active_file_path:="") -> void:
 	
 	if Pages.silly:
 		var utility_item : PopupMenu = find_child("Utility")
-		utility_item.add_separator()
+		utility_item.add_separator("Silly")
 		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
 	
 	
@@ -570,6 +570,7 @@ func request_load_page(number:int, action_message:=""):
 func notify(message:String, duration:=5.0):
 	var notification = load("res://addons/diisis/editor/src/editor_notification.tscn").instantiate()
 	$NotificationContainer.add_child(notification)
+	$NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
 
 func _on_add_line_button_pressed() -> void:

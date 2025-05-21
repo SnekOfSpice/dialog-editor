@@ -211,7 +211,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773718,
+		"id_counter": -9223372036854773660,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",

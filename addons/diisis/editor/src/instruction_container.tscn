@@ -68,9 +68,9 @@ size_flags_horizontal = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer"]
 layout_mode = 2
-tooltip_text = "[code]Delay Before Call[/code] locks the input and progress of LineReader after reading the line but before executing the instruction.
+tooltip_text = "[code]Delay Before Call[/code] locks the input and progress of LineReader after reading the line but before executing the function.
 
-[code]Delay After Call[/code] locks the input and progress of LineReader after executing the instruction but before continuing onto the next line. Note that this will start counting down [i]when the line is reached[/i], so e.g. if this calls a function calls a tween of 2 seconds, a Delay After Call of 2 seconds will continue the LineReader when the tween finishes, a delay of 4 seconds will continue the LineReader 2 seconds after the tween finishes, etc.
+[code]Delay After Call[/code] locks the input and progress of LineReader after executing the function but before continuing onto the next line. Note that this will start counting down [i]when the line is reached[/i], so e.g. if this calls a function calls a tween of 2 seconds, a Delay After Call of 2 seconds will continue the LineReader when the tween finishes, a delay of 4 seconds will continue the LineReader 2 seconds after the tween finishes, etc.
 
 Reverse instructions ignore these timings."
 script = ExtResource("6_iimji")
