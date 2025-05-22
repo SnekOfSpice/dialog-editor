@@ -1,16 +1,16 @@
 [gd_resource type="Theme" load_steps=23 format=3 uid="uid://drk5fhsdjoewf"]
 
-[ext_resource type="FontFile" uid="uid://crmw2vdncpny" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/justabit.ttf" id="1_vfuom"]
-[ext_resource type="Texture2D" uid="uid://b03ftnlcv35es" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/checked.png" id="2_tdla5"]
-[ext_resource type="Texture2D" uid="uid://b5dyygcyia71o" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/checked_disabled.png" id="3_8h6nr"]
-[ext_resource type="Texture2D" uid="uid://dqdot6ug2u1jv" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/unchecked.png" id="4_b0yl5"]
-[ext_resource type="Texture2D" uid="uid://cxs3ai0mrfjx8" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/unchecked_disabled.png" id="5_16ayv"]
-[ext_resource type="Texture2D" uid="uid://b3y00o6j7f8mc" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/grabber.png" id="6_urxou"]
-[ext_resource type="Texture2D" uid="uid://cegyk7osg12qs" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/grabber_highlight.png" id="7_a6l0i"]
-[ext_resource type="FontFile" uid="uid://dc5fw18idtbga" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/VSansSerif8bold.ttf" id="8_8wyxa"]
-[ext_resource type="FontFile" uid="uid://cd18jd0tstgc2" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/KHMenuItalic.ttf" id="9_htfj0"]
-[ext_resource type="FontFile" uid="uid://cx4lysibyxp6d" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/MinecraftItalic.ttf" id="10_uf4xk"]
-[ext_resource type="FontFile" uid="uid://dhsrlx0q1hgjb" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/HelvetiPixel.ttf" id="11_yvo2v"]
+[ext_resource type="FontFile" uid="uid://crmw2vdncpny" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/justabit.ttf" id="1_r8rta"]
+[ext_resource type="Texture2D" uid="uid://b03ftnlcv35es" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/checked.png" id="2_3fvlq"]
+[ext_resource type="Texture2D" uid="uid://b5dyygcyia71o" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/checked_disabled.png" id="3_otl4c"]
+[ext_resource type="Texture2D" uid="uid://dqdot6ug2u1jv" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/unchecked.png" id="4_romdp"]
+[ext_resource type="Texture2D" uid="uid://cxs3ai0mrfjx8" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/unchecked_disabled.png" id="5_a473t"]
+[ext_resource type="Texture2D" uid="uid://b3y00o6j7f8mc" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/grabber.png" id="6_jx71q"]
+[ext_resource type="Texture2D" uid="uid://cegyk7osg12qs" path="res://addons/diisis/templates/visual_novel/visuals/theme/ui/grabber_highlight.png" id="7_r2378"]
+[ext_resource type="FontFile" uid="uid://dc5fw18idtbga" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/VSansSerif8bold.ttf" id="8_56p6j"]
+[ext_resource type="FontFile" uid="uid://cd18jd0tstgc2" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/KHMenuItalic.ttf" id="9_2x88o"]
+[ext_resource type="FontFile" uid="uid://cx4lysibyxp6d" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/MinecraftItalic.ttf" id="10_0muyt"]
+[ext_resource type="FontFile" uid="uid://dhsrlx0q1hgjb" path="res://addons/diisis/templates/visual_novel/visuals/theme/fonts/HelvetiPixel.ttf" id="11_ablvl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmdrw"]
 content_margin_left = 18.0
@@ -170,23 +170,23 @@ corner_radius_bottom_left = 2
 Button/colors/font_color = Color(0.976146, 0.96172, 0.954421, 1)
 Button/colors/font_hover_color = Color(0.0431373, 0.0431373, 0.0431373, 1)
 Button/font_sizes/font_size = 22
-Button/fonts/font = ExtResource("1_vfuom")
+Button/fonts/font = ExtResource("1_r8rta")
 Button/styles/focus = SubResource("StyleBoxFlat_gmdrw")
 Button/styles/hover = SubResource("StyleBoxFlat_ra2p4")
 Button/styles/hover_pressed = SubResource("StyleBoxFlat_r8rta")
 Button/styles/normal = SubResource("StyleBoxFlat_aycf6")
 Button/styles/pressed = SubResource("StyleBoxFlat_fo65i")
-CheckBox/icons/checked = ExtResource("2_tdla5")
-CheckBox/icons/checked_disabled = ExtResource("3_8h6nr")
-CheckBox/icons/unchecked = ExtResource("4_b0yl5")
-CheckBox/icons/unchecked_disabled = ExtResource("5_16ayv")
-HSlider/icons/grabber = ExtResource("6_urxou")
-HSlider/icons/grabber_highlight = ExtResource("7_a6l0i")
+CheckBox/icons/checked = ExtResource("2_3fvlq")
+CheckBox/icons/checked_disabled = ExtResource("3_otl4c")
+CheckBox/icons/unchecked = ExtResource("4_romdp")
+CheckBox/icons/unchecked_disabled = ExtResource("5_a473t")
+HSlider/icons/grabber = ExtResource("6_jx71q")
+HSlider/icons/grabber_highlight = ExtResource("7_r2378")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_3fvlq")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_otl4c")
 HSlider/styles/slider = SubResource("StyleBoxFlat_romdp")
 Label/font_sizes/font_size = 24
-Label/fonts/font = ExtResource("1_vfuom")
+Label/fonts/font = ExtResource("1_r8rta")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_76e30")
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_fix0h")
 PopupMenu/styles/panel = SubResource("StyleBoxFlat_jvadt")
@@ -194,7 +194,7 @@ RichTextLabel/font_sizes/bold_font_size = 24
 RichTextLabel/font_sizes/bold_italics_font_size = 16
 RichTextLabel/font_sizes/italics_font_size = 27
 RichTextLabel/font_sizes/normal_font_size = 26
-RichTextLabel/fonts/bold_font = ExtResource("8_8wyxa")
-RichTextLabel/fonts/bold_italics_font = ExtResource("9_htfj0")
-RichTextLabel/fonts/italics_font = ExtResource("10_uf4xk")
-RichTextLabel/fonts/normal_font = ExtResource("11_yvo2v")
+RichTextLabel/fonts/bold_font = ExtResource("8_56p6j")
+RichTextLabel/fonts/bold_italics_font = ExtResource("9_2x88o")
+RichTextLabel/fonts/italics_font = ExtResource("10_0muyt")
+RichTextLabel/fonts/normal_font = ExtResource("11_ablvl")

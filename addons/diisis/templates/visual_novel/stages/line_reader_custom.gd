@@ -123,6 +123,7 @@ func shake_camera(strength:float) -> bool:
 func set_x_position(character_name: String, index:int, time:float, wait_for_reposition:bool) -> bool:
 	if GameWorld.game_stage:
 		var character : Character = GameWorld.game_stage.get_character(character_name)
+		@warning_ignore("narrowing_conversion")
 		character.set_x_position(int(index), time, wait_for_reposition)
 	return wait_for_reposition
 
