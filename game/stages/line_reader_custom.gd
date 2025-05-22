@@ -91,9 +91,7 @@ func play_chapter_intro(pov_name: String, bottom_text: String, new_background: S
 	return true
 
 
-func zoom_to(value, duration) -> bool:
-	value = float(value)
-	duration = float(duration)
+func zoom_to(value : float, duration : float) -> bool:
 	GameWorld.camera.zoom_to(value, duration)
 	return false
 
@@ -122,11 +120,7 @@ func shake_camera(strength:float) -> bool:
 	return false
 
 
-func set_x_position(character_name: String, index, time, wait_for_reposition) -> bool:
-	index = int(index)
-	time = float(time)
-	if wait_for_reposition is String:
-		wait_for_reposition = true if wait_for_reposition == "true" else false
+func set_x_position(character_name: String, index:int, time:float, wait_for_reposition:bool) -> bool:
 	if GameWorld.game_stage:
 		var character : Character = GameWorld.game_stage.get_character(character_name)
 		character.set_x_position(int(index), time, wait_for_reposition)
@@ -139,8 +133,7 @@ func show_letter() -> bool:
 	return false
 
 
-func sway_camera(intensity) -> bool:
-	intensity = float(intensity)
+func sway_camera(intensity : float) -> bool:
 	if GameWorld.camera:
 		GameWorld.camera.set_sway_intensity(intensity)
 	return false
@@ -156,15 +149,12 @@ func set_eye_progress(value: float) -> bool:
 		one.set_eye_progress(int(value))
 	return false
 
-func set_static(level) -> bool:
-	level = float(level)
+func set_static(level : float) -> bool:
 	if GameWorld.game_stage:
 		GameWorld.game_stage.set_static(level)
 	return false
 
-func set_fade_out(lod, mix) -> bool:
-	lod = float(lod)
-	mix = float(mix)
+func set_fade_out(lod : float, mix : float) -> bool:
 	if GameWorld.game_stage:
 		GameWorld.game_stage.set_fade_out(lod, mix)
 	return false
@@ -176,11 +166,7 @@ func wound_fx(shake_intensity: float, splatter_count: float) -> bool:
 	play_sfx("squelch")
 	return false
 
-func control_camera(zoom, x, y, duration) -> bool:
-	zoom = float(zoom)
-	x = float(x)
-	y = float(y)
-	duration = float(duration)
+func control_camera(zoom : float, x : float, y : float, duration : float) -> bool:
 	zoom_to(zoom, duration)
 	move_camera_to(x, y, duration)
 	return false

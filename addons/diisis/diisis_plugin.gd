@@ -156,11 +156,14 @@ func remove_parser_singletons():
 
 func _enter_tree():
 	Engine.set_meta("DIISISPlugin", self)
+	# property info doesnt work
+	# but in case you get it to work, here's the descriptions
 	if not ProjectSettings.has_setting("diisis/project/file/path"):
+		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 		ProjectSettings.save()
 	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
-		ProjectSettings.set_initial_value("diisis/plugin/updates/check_for_updates", true)
+		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
@@ -170,10 +173,6 @@ func _enter_tree():
 	
 	if not OS.has_feature("editor"):
 		return
-	
-	var root := DirAccess.open("res://")
-	if not root.dir_exists("addons/diisis/files"):
-		root.make_dir("addons/diisis/files")
 	
 	toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)

@@ -661,9 +661,6 @@ func open_facts_window(fact_to_select:=""):
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
-		#active_dir = "res://addons/diisis/files/"
-		#active_file_name = str("script", Time.get_datetime_string_from_system().replace(":", "-"), ".json")
-		open_save_popup()
 		return
 	save_to_file(str(active_dir, active_file_name))
 
