@@ -6,6 +6,9 @@ class_name InstructionTextEdit
 var text_box : HintedLineEdit
 @export var reverse := false
 
+signal request_search(instruction_name : String, reverse : bool)
+signal request_search_in_setup(instruction_name : String, reverse : bool)
+
 func init():
 	text_box = find_child("InstructionTextBox")
 	_on_instruction_text_box_text_entered("")
@@ -21,16 +24,18 @@ func get_instruction_name() -> String:
 	else:
 		return text_box.text
 
-func _on_copy_signature_to_clipboard_button_pressed() -> void:
-	var signature : String = Pages.get_instruction_signature(get_instruction_name())
-	if not signature.is_empty():
-		DisplayServer.clipboard_set(signature)
+func update_compliance_prompt():
+	if not visible:
+		return
+	_on_instruction_text_box_text_entered(find_child("InstructionTextBox").text)
 
 func _on_instruction_text_box_text_entered(new_text: String) -> void:
+	if not can_process():
+		return
 	if new_text.contains("\n"):
 		var lines := new_text.split("\n")
 		text_box.text = "".join(lines)
-	var compliance : String = Pages.get_entered_instruction_compliance(new_text)
+	var compliance : String = Pages.get_method_validity(new_text)
 	var compliance_container = find_child("ComplianceContainer")
 	var compliance_label = find_child("ComplianceLabel")
 	
@@ -39,16 +44,11 @@ func _on_instruction_text_box_text_entered(new_text: String) -> void:
 	
 	compliance_container.visible = compliance != "OK"
 	compliance_label.text = compliance
-	
-	if compliance == "OK":
-		find_child("ColorRect").self_modulate.a = 0.0
-	else:
-		find_child("ColorRect").self_modulate.a = 0.5
 
 
 func _on_instruction_text_box_focus_entered() -> void:
 	await get_tree().process_frame
-	text_box.completion_options = Pages.instruction_templates.keys()
+	text_box.completion_options = Pages.get_all_instruction_names()
 
 
 func _on_instruction_text_box_caret_changed() -> void:
@@ -62,6 +62,7 @@ func _on_instruction_text_box_caret_changed() -> void:
 		
 	else:
 		Pages.editor.hide_arg_hint()
+	
 
 func _on_instruction_text_box_focus_exited() -> void:
 	Pages.editor.hide_arg_hint()
@@ -74,3 +75,17 @@ func set_text(text:String):
 
 func _on_instruction_text_box_text_submitted(new_text: String) -> void:
 	_on_instruction_text_box_text_entered(new_text)
+
+
+func _on_go_to_script_button_pressed() -> void:
+	DiisisEditorUtil.search_function(get_instruction_name())
+
+
+func _on_instruction_text_box_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			await get_tree().process_frame
+			if event.is_shift_pressed():
+				emit_signal("request_search_in_setup", get_instruction_name(), reverse)
+			else:
+				emit_signal("request_search", get_instruction_name(), reverse)

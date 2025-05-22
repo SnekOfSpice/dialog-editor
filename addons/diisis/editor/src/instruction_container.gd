@@ -24,12 +24,10 @@ func serialize():
 	result["name"] = instruction_name
 	result["reverse_name"] = instruction_name_reverse
 	
-	result["line_reader.args"] = Pages.get_arg_array_from_instruction_string(instruction_text, instruction_name)
-	result["line_reader.reverse_args"] = Pages.get_arg_array_from_instruction_string(instruction_edit_reverse.get_text(), instruction_name_reverse)
 	result["delay_before"] = find_child("DelayBeforeSpinBox").value
 	result["delay_after"] = find_child("DelayAfterSpinBox").value
 	
-	result["meta.validation_status"] = Pages.get_entered_instruction_compliance(instruction_text)
+	result["meta.validation_status"] = Pages.get_method_validity(instruction_text)
 	result["meta.text"] = instruction_text
 	result["meta.reverse_text"] = instruction_text_reverse
 	result["meta.has_reverse"] = find_child("HasReverseCheckBox").button_pressed
@@ -49,7 +47,22 @@ func deserialize(data: Dictionary):
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("InputLockContainer").visible = view != DiisisEditor.PageView.Minimal
-	find_child("DelayContainer").columns = 2 if view == DiisisEditor.PageView.Full else 4
+	find_child("HasReverseCheckBox").visible = view != DiisisEditor.PageView.Minimal
+	#find_child("DelayContainer").columns = 2 if view == DiisisEditor.PageView.Full else 4
 
 func _on_has_reverse_check_box_toggled(toggled_on: bool) -> void:
 	instruction_edit_reverse.visible = toggled_on
+
+
+func _on_instruction_request_search(instruction_name: String, reverse: bool) -> void:
+	if reverse and instruction_name.is_empty():
+		DiisisEditorUtil.search_function(instruction_edit.get_instruction_name())
+		return
+	DiisisEditorUtil.search_function(instruction_name)
+
+
+func _on_instruction_text_edit_request_search_in_setup(instruction_name: String, reverse: bool) -> void:
+	if reverse and instruction_name.is_empty():
+		Pages.editor.open_handler_window(instruction_edit.get_instruction_name())
+		return
+	Pages.editor.open_handler_window(instruction_name)

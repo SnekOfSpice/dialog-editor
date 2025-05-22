@@ -14,7 +14,7 @@ config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/icon="res://addons/diisis/final1alt.png"
+config/icon="uid://cakx4eotyolmx"
 
 [autoload]
 
@@ -26,18 +26,22 @@ GameWorld="*res://addons/diisis/templates/visual_novel/autoloads/game_world.tscn
 GoBackHandler="*res://addons/diisis/templates/visual_novel/autoloads/go_back_handler.tscn"
 Options="*res://addons/diisis/templates/visual_novel/autoloads/options.tscn"
 Sound="*res://addons/diisis/templates/visual_novel/autoloads/sound.tscn"
+Style="*res://addons/diisis/templates/visual_novel/autoloads/style.tscn"
 Pages="*res://addons/diisis/editor/autoload/pages.tscn"
 DiisisEditorUtil="*res://addons/diisis/editor/autoload/diisis_editor_util.tscn"
 DiisisEditorActions="*res://addons/diisis/editor/autoload/diisis_editor_actions.tscn"
+TextToDiisis="*res://addons/diisis/editor/autoload/text_to_diisis.tscn"
 
 [diisis]
 
 project/file/path="res://game/diisis_integration/demo_script.json"
+plugin/updates/check_for_updates=true
 
 [display]
 
 window/subwindows/embed_subwindows=false
 window/stretch/mode="canvas_items"
+window/per_pixel_transparency/allowed=true
 
 [editor_plugins]
 
@@ -49,6 +53,9 @@ diisis_choice_container=""
 diisis_fragile=""
 diisis_page_view_sensitive=""
 diisis_scalable_popup=""
+diisis_ingest_menu=""
+diisis_header=""
+diisis_method_validator=""
 
 [input]
 

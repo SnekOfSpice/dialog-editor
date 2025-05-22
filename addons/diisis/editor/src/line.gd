@@ -5,6 +5,7 @@ class_name Line
 var line_type := DIISIS.LineType.Text
 var is_head_editable := false
 var indent_level := 0
+var id : String
 
 signal move_line (child, dir)
 signal insert_line (at)
@@ -20,26 +21,33 @@ func init() -> void:
 	find_child("InstructionContainer").init()
 	find_child("ChoiceContainer").init()
 	set_line_type(Pages.editor.get_selected_line_type())
+	
+	var control_button_height = max(find_child("MoveUp").size.y, find_child("InsertLineAbove").size.y)
+	find_child("MoveUp").custom_minimum_size.y = control_button_height
+	find_child("InsertLineAbove").custom_minimum_size.y = control_button_height
+	find_child("MoveDown").custom_minimum_size.y = control_button_height
+	find_child("InsertLineBelow").custom_minimum_size.y = control_button_height
+	
 	await get_tree().process_frame
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	set_head_editable(Pages.is_header_schema_empty())
-	set_non_meta_parts_visible(true)
 	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"), _on_delete_button_mouse_exited)
 
 func set_page_view(view:DiisisEditor.PageView):
 	var move_controls : Control = find_child("MoveControlsContainer")
 	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
-	find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full
+	#find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full and not find_child("LoopbackReferenceLabel").text.is_empty()
 	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
 	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	if view == DiisisEditor.PageView.Full:
 		move_controls_buttons.columns = 2
-		move_controls.find_child("Spacer").visible = true
+		#move_controls.find_child("Spacer").visible = true
 		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 1)
 	else:
 		move_controls_buttons.columns = 5
-		move_controls.find_child("Spacer").visible = false
+		#move_controls.find_child("Spacer").visible = false
 		move_controls_buttons.move_child(move_controls_buttons.find_child("InsertLineAbove"), 0)
 
 func set_indent_level(to:int):
@@ -77,22 +85,21 @@ func change_folder_range(by:int):
 		return
 	find_child("FolderContainer").change_folder_range(by)
 
-#func set_line_move_controls_visible(value:bool):
-	#if value:
-		##find_child("MoveToIndexControls").modulate.a = 1.0
-		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_STOP
-		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_STOP
-	#else:
-		##find_child("MoveToIndexControls").modulate.a = 0.0
-		#find_child("MoveToIndexButton").mouse_filter = MOUSE_FILTER_IGNORE
-		#find_child("MoveToIndexSpinBox").mouse_filter = MOUSE_FILTER_IGNORE
-
 func set_line_type(value: int):
 	line_type = value
-	#set_line_move_controls_visible(line_type != DIISIS.LineType.Folder)
 	
-	find_child("TextContent").visible = line_type == DIISIS.LineType.Text
-	find_child("ChoiceContainer").visible = line_type == DIISIS.LineType.Choice
+	var tc : Node = find_child("TextContent")
+	var cc : Node = find_child("ChoiceContainer")
+	var ic : Node = find_child("InstructionContainer")
+	var fc : Node = find_child("FolderContainer")
+	tc.visible = line_type == DIISIS.LineType.Text
+	tc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Text else Node.PROCESS_MODE_DISABLED
+	cc.visible = line_type == DIISIS.LineType.Choice
+	cc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Choice else Node.PROCESS_MODE_DISABLED
+	ic.visible = line_type == DIISIS.LineType.Instruction
+	ic.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Instruction else Node.PROCESS_MODE_DISABLED
+	fc.visible = line_type == DIISIS.LineType.Folder
+	fc.process_mode = Node.PROCESS_MODE_INHERIT if line_type == DIISIS.LineType.Folder else Node.PROCESS_MODE_DISABLED
 	find_child("InstructionContainer").visible = line_type == DIISIS.LineType.Instruction
 	find_child("FolderContainer").visible = line_type == DIISIS.LineType.Folder
 	find_child("SelectAllInRangeButton").visible = line_type == DIISIS.LineType.Folder
@@ -108,14 +115,28 @@ func move_choice_item_by_index(at_index:int, direction:int):
 
 func set_head_editable(value: bool):
 	is_head_editable = value
-	find_child("Header").visible = is_head_editable
-	find_child("HeaderShort").visible = not is_head_editable
-	find_child("HeaderShort").text = find_child("Header").short_form()
-	
+	find_child("Header").set_editable(is_head_editable)
 	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
 
+func set_skip(value:bool):
+	modulate.a = 0.6 if value else 1
+	find_child("SkipCheckBox").button_pressed = value
+	
+	if line_type == DIISIS.LineType.Folder:
+		var page : Page = Pages.editor.get_current_page()
+		var range := get_folder_range_v()
+		for index in range(range.x + 1, range.y + 2):
+			var line : Line = page.get_line(index)
+			if line:
+				line.set_skip_folder_override(value)
+
+func set_skip_folder_override(value:bool):
+	modulate.a = 0.6 if value or find_child("SkipCheckBox").button_pressed else 1
 
 func serialize() -> Dictionary:
+	if not id:
+		id = Pages.get_new_id()
+	
 	var data = {}
 	
 	data["line_type"] = line_type
@@ -130,6 +151,8 @@ func serialize() -> Dictionary:
 	data["meta.indent_level"] = indent_level
 	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
 	data["address"] = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	data["id"] = id
+	data["skip"] = find_child("SkipCheckBox").button_pressed
 	
 	# content match
 	match line_type:
@@ -172,6 +195,8 @@ func deserialize(data: Dictionary):
 	
 	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
 	set_head_editable(data.get("meta.is_head_editable", false))
+	id = data.get("id", Pages.get_new_id())
+	set_skip(data.get("skip", false))
 
 func get_choice_item_count() -> int:
 	if line_type != DIISIS.LineType.Choice:
@@ -188,7 +213,16 @@ func set_selected(value:bool):
 func _on_delete_pressed() -> void:
 	request_delete()
 
+
+func get_address() -> String:
+	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+
 func request_delete():
+	if Pages.editor.try_prompt_fact_deletion_confirmation(
+		get_address(),
+		delete_line.emit.bind(get_index())
+	):
+		return
 	emit_signal("delete_line", get_index())
 
 func move(dir: int):
@@ -207,17 +241,30 @@ func update():
 		indent += ">"
 	find_child("IndexLabel").text = str(get_index(), indent)
 	set_head_editable(is_head_editable)
-	#find_child("MoveToIndexSpinBox").max_value = get_parent().get_child_count() - 1
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:
 		find_child("TextContent").update()
 	
-	find_child("LoopbackReferenceLabel").text = str(
-		"LB->", Pages.loopback_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size(),
-		"\n",
-		"JP->", Pages.jump_page_references_by_page.get(Pages.editor.get_current_page_number(), {}).get(get_index(), []).size()
+	update_incoming_reference_label()
+
+func update_incoming_reference_label():
+	var cpn : int = Pages.editor.get_current_page_number()
+	var index := get_index()
+	var loopback_reference_count : int = Pages.get_loopback_references_to(cpn, index).size()
+	var jump_reference_count : int = Pages.get_jump_references_to(cpn, index).size()
+	var reference_text := str(
+		str("LB->", loopback_reference_count, "\n") if loopback_reference_count > 0 else "",
+		str("JP->", jump_reference_count) if jump_reference_count > 0 else "",
 		)
+	if not reference_text.is_empty():
+		reference_text = str(
+			"[hint=Click to view incoming references :3][url=kissyoursister]",
+			reference_text,
+			"[/url][/hint]"
+		)
+	find_child("LoopbackReferenceLabel").text = reference_text
+	find_child("LoopbackReferenceLabel").visible = not reference_text.is_empty()
 
 func update_folder(max_folder_range):
 	if line_type == DIISIS.LineType.Folder:
@@ -263,29 +310,6 @@ func _on_facts_visibility_toggle_toggled(button_pressed: bool) -> void:
 func _on_conditionals_visibility_toggle_toggled(button_pressed: bool) -> void:
 	find_child("Conditionals").visible = button_pressed
 
-func getNonMetaParts() -> Array:
-	var parts := []
-	for control in find_child("Controls").get_children():
-		if control.name != "MetaControls" and control.name != "DeleteContainer":
-			parts.append(control)
-	
-	parts.append(find_child("Content"))
-	
-	return parts
-
-
-func set_non_meta_parts_visible(value: bool):
-	find_child("VisibleToggle").button_pressed = value
-	for p in getNonMetaParts():
-		p.visible = value
-
-func _on_lock_toggle_toggled(button_pressed: bool) -> void:
-	pass # Replace with function body.
-
-
-func _on_visible_toggle_toggled(button_pressed: bool) -> void:
-	set_non_meta_parts_visible(button_pressed)
-
 
 func _on_insert_line_above_pressed() -> void:
 	var insert_index := get_index()
@@ -295,10 +319,6 @@ func _on_insert_line_above_pressed() -> void:
 func _on_insert_line_below_pressed() -> void:
 	var insert_index := get_index() + 1
 	emit_signal("insert_line", insert_index)
-
-#
-#func _on_move_to_index_button_pressed() -> void:
-	#emit_signal("move_to", self, find_child("MoveToIndexSpinBox").value)
 
 
 func _on_select_all_in_range_button_pressed():
@@ -312,3 +332,14 @@ func _on_select_all_in_range_button_pressed():
 func _on_text_content_drop_focus() -> void:
 	#grab_click_focus()
 	$PanelContainer.grab_focus()
+
+
+func _on_loopback_reference_label_meta_clicked(meta: Variant) -> void:
+	Pages.editor.view_incoming_references(Pages.editor.get_current_page_number(), get_index())
+
+
+func _on_delete_button_mouse_exited() -> void:
+	# can happen when we actually delete the thing
+	if not is_instance_valid(find_child("SkipCheckBox")):
+		return
+	set_skip(find_child("SkipCheckBox").button_pressed)

@@ -10,9 +10,9 @@ func update(line_index:int, max_reach):
 		find_child("FolderRangeSpinContainer").set_value_no_signal( deserialized_range)
 	
 	find_child("Label").text = str(
-		"spans: (", line_index, " - ", line_index + find_child("FolderRangeSpinContainer").value,")", "\n",
-		"max span: ", max_reach + line_index, "\n",
-		"deserialized: ", deserialized_range
+		"spans: (", line_index, " - ", int(line_index + find_child("FolderRangeSpinContainer").value),")", "\n",
+		"max span: ", max_reach + line_index,# "\n",
+		#"deserialized: ", deserialized_range
 		)
 
 func set_page_view(view:DiisisEditor.PageView):

@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+func clear():
+	deserialize({})
 
 var head_defaults := []
 var auto_complete_context := ""
@@ -12,40 +14,31 @@ var dropdown_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
+const NEGATIVE_INF := -int(INF)
+var id_counter := NEGATIVE_INF
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
 	"_",
-	"1","2","3","4","5","6","7","8","9","0",]
+	"1","2","3","4","5","6","7","8","9","0",
+	"."]
+const LETTERS := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
 
 var empty_strings_for_l10n := false
 var locales_to_export := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const DOMINANT_LOCALES := ["af_ZA", "sq_AL", "ar_SA", "hy_AM", "az_AZ", "eu_ES", "be_BY", "bn_IN", "bs_BA", "bg_BG", "ca_ES", "zh_CN", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_NL", "en_US", "et_EE", "fo_FO", "fi_FI", "fr_FR", "gl_ES", "ka_GE", "de_DE", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "ja_JP", "kn_IN", "kk_KZ", "kok_IN", "ko_KR", "lv_LV", "lt_LT", "mk_MK", "ms_MY", "ml_IN", "mt_MT", "mr_IN", "mn_MN", "se_NO", "nb_NO", "nn_NO", "fa_IR", "pl_PL", "pt_BR", "pa_IN", "ro_RO", "ru_RU", "sr_BA", "sk_SK", "es_ES", "sw_KE", "sv_SE", "syr_SY", "ta_IN", "te_IN", "th_TH", "tn_ZA", "tr_TR", "uk_UA", "uz_UZ", "vi_VN", "cy_GB", "xh_ZA", "zu_ZA"]
 const LOCALES := ["af_ZA","sq_AL","ar_DZ","ar_BH","ar_EG","ar_IQ","ar_JO","ar_KW","ar_LB","ar_LY","ar_MA","ar_OM","ar_QA","ar_SA","ar_SY","ar_TN","ar_AE","ar_YE","hy_AM","az_AZ","eu_ES","be_BY","bn_IN","bs_BA","bg_BG","ca_ES","zh_CN","zh_HK","zh_MO","zh_SG","zh_TW","hr_HR","cs_CZ","da_DK","nl_BE","nl_NL","en_AU","en_BZ","en_CA","en_IE","en_JM","en_NZ","en_PH","en_ZA","en_TT","en_VI","en_GB","en_US","en_ZW","et_EE","fo_FO","fi_FI","fr_BE","fr_CA","fr_FR","fr_LU","fr_MC","fr_CH","gl_ES","ka_GE","de_AT","de_DE","de_LI","de_LU","de_CH","el_GR","gu_IN","he_IL","hi_IN","hu_HU","is_IS","id_ID","it_IT","it_CH","ja_JP","kn_IN","kk_KZ","kok_IN","ko_KR","lv_LV","lt_LT","mk_MK","ms_BN","ms_MY","ml_IN","mt_MT","mr_IN","mn_MN","se_NO","nb_NO","nn_NO","fa_IR","pl_PL","pt_BR","pt_PT","pa_IN","ro_RO","ru_RU","sr_BA","sr_CS","sk_SK","sl_SI","es_AR","es_BO","es_CL","es_CO","es_CR","es_DO","es_EC","es_SV","es_GT","es_HN","es_MX","es_NI","es_PA","es_PY","es_PE","es_PR","es_ES","es_UY","es_VE","sw_KE","sv_FI","sv_SE","syr_SY","ta_IN","te_IN","th_TH","tn_ZA","tr_TR","uk_UA","uz_UZ","vi_VN","cy_GB","xh_ZA","zu_ZA",]
+var default_locale := "en_US"
 
 var facts := {}
 var local_line_insert_offset:int
 
-var instruction_templates := {
-		"show-character": {
-			"args" : [
-				"character_name",
-				"clear_others"
-			],
-			"arg_types" : [
-				"string",
-				"bool"
-			]
-		},
-		"rotate": {
-			"args" : [
-				"angle"
-			],
-			"arg_types":
-				["float"]
-		}
-	}
+var custom_method_defaults := {}
+var custom_method_dropdown_limiters := {}
+var callable_autoloads := []
+var ingestion_actor_declaration := ""
+var evaluator_modified_times := {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -66,23 +59,97 @@ var head_data_types := {
 var editor:DiisisEditor
 
 var page_data := {}
+var text_data := {}
 
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
+const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
+const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
+
+#region toggle settings
+const TOGGLE_SETTINGS := {
+	"save_on_play" : "Saves the DIISIS script when you start playing in Godot (with F5 or otherwise)",
+	"warn_on_fact_deletion" : "Prompts you to confirm the deletion of a page, line, or choice item if that object or any of its children contains facts. (not conditionals)",
+	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
+	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
+	"silly" : "Adds a bit of visual fluff to the editor :3",
+	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off.",
+	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
+}
+var save_on_play := true
+var warn_on_fact_deletion := true
+var silly := true
+var show_facts_buttons := true
+var collapse_conditional_controls_by_default := true
+var first_index_as_page_reference_only := true
+var validate_function_calls_on_focus := true
+
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
+#endregion
+
+const STRING_SETTINGS := {
+	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
+}
+var shader := ""
 
 signal pages_modified
+
+func sync_line_references():
+	loopback_references_by_page.clear()
+	jump_page_references_by_page.clear()
+	for page_index in page_data.keys():
+		var page := get_page_data(page_index)
+		var line_index := 0
+		for line in page.get("lines", []):
+			if line.get("line_type") != DIISISGlobal.LineType.Choice:
+				line_index += 1
+				continue
+			
+			for choice in line.get("content").get("choices"):
+				var loopback_page : int = choice.get("loopback_target_page")
+				var loopback_line : int = choice.get("loopback_target_line")
+				var jump_page : int = choice.get("target_page")
+				var jump_line : int = choice.get("target_line")
+				
+				var address : String = choice.get("address")
+				
+				if choice.get("loopback"):
+					if loopback_references_by_page.has(loopback_page):
+						if loopback_references_by_page.get(loopback_page).has(loopback_line):
+							loopback_references_by_page.get(loopback_page).get(loopback_line).append(address)
+						else:
+							loopback_references_by_page[loopback_page][loopback_line] = [address]
+					else:
+						loopback_references_by_page[loopback_page] = {loopback_line : [address]}
+
+				if choice.get("do_jump_page"):
+					if jump_page_references_by_page.has(jump_page):
+						if jump_page_references_by_page.get(jump_page).has(jump_line):
+							jump_page_references_by_page.get(jump_page).get(jump_line).append(address)
+						else:
+							jump_page_references_by_page[jump_page][jump_line] = [address]
+					else:
+						jump_page_references_by_page[jump_page] = {jump_line : [address]}
+		
+			line_index += 1
 
 func is_header_schema_empty():
 	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
-	return {
+	var data := {
 		"head_defaults" : head_defaults,
+		"id_counter" : id_counter,
 		"page_data" : page_data,
-		"instruction_templates": instruction_templates,
+		"text_data" : text_data,
+		"default_locale" : default_locale,
+		"custom_method_defaults": custom_method_defaults,
+		"full_custom_method_defaults": _get_custom_method_full_defaults(),
+		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"callable_autoloads": callable_autoloads,
+		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"facts": facts,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -95,12 +162,18 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"default_address_mode_pages": default_address_mode_pages,
+		"evaluator_modified_times": evaluator_modified_times,
 	}
+	for setting in TOGGLE_SETTINGS.keys():
+		data[setting] = get(setting)
+	for setting in STRING_SETTINGS.keys():
+		data[setting] = get(setting)
+	return data
 
 func deserialize(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data = {}
-	var local_page_data = data.get("page_data")
+	var local_page_data = data.get("page_data", {})
 	for i in local_page_data.size():
 		var where = int(local_page_data.get(str(i)).get("number"))
 		int_data[where] = local_page_data.get(str(i)).duplicate()
@@ -108,7 +181,13 @@ func deserialize(data:Dictionary):
 	page_data.clear()
 	page_data = int_data.duplicate()
 	head_defaults = data.get("head_defaults", [])
-	instruction_templates = data.get("instruction_templates", {})
+	custom_method_defaults = data.get("custom_method_defaults", {})
+	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
+	callable_autoloads = data.get("callable_autoloads", [])
+	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
+	evaluator_modified_times = data.get("evaluator_modified_times", {})
+	for key in evaluator_modified_times.keys():
+		evaluator_modified_times[key] = int(evaluator_modified_times.get(key))
 	var fact_fix := {}
 	var fact_data : Dictionary = data.get("facts", {})
 	for fact_name in fact_data:
@@ -122,13 +201,35 @@ func deserialize(data:Dictionary):
 	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
 	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
+	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
+	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
+	for setting in TOGGLE_SETTINGS.keys():
+		set(setting, data.get(setting, get(setting)))
+	for setting in STRING_SETTINGS.keys():
+		set(setting, data.get(setting, get(setting)))
+		
+	id_counter = data.get("id_counter", NEGATIVE_INF)
+	
 	apply_file_config(data.get("file_config", {}))
+	
+	# init limiters
+	await get_tree().process_frame
+	for method in get_all_instruction_names():
+		if custom_method_dropdown_limiters.has(method):
+			continue
+		var arg_data := {}
+		for arg in get_custom_method_arg_names(method):
+			var type : int = get_custom_method_arg_type(method, arg)
+			if type == TYPE_STRING:# or type == TYPE_NIL:
+				arg_data.set(arg, [])
+		if not arg_data.is_empty():
+			custom_method_dropdown_limiters.set(method, arg_data)
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -174,7 +275,6 @@ func swap_line_references(on_page:int, from:int, to:int):
 	
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		print("TODO")
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -200,14 +300,6 @@ func swap_line_references(on_page:int, from:int, to:int):
 							choice["loopback_target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
-					
-	#if loopback_references_by_page.has(on_page):
-		#var references_from : Dictionary = loopback_references_by_page.get(on_page).get(from, {})
-		#var references_to : Dictionary = loopback_references_by_page.get(on_page).get(to, {})
-		#loopback_references_by_page[on_page][from] = references_to.duplicate(true)
-		#loopback_references_by_page[on_page][to] = references_from.duplicate(true)
-		#if on_page == current_page_number and not references_from.is_empty() and not references_to.is_empty():
-			#edited_current_page = true
 	
 	if edited_current_page:
 		await get_tree().process_frame
@@ -247,7 +339,6 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	var edited_current_page := false
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
-		#prints("page", page.get("number"))
 		for line in page.get("lines"):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var content = line.get("content")
@@ -338,17 +429,23 @@ func get_line_type_str(page_index:int, line_index:int) -> String:
 			return "Folder"
 	return "undefined"
 
-func get_choice_text_shortened(page_index:int, line_index:int, choice_index:int):
+func get_choice_text_adr(address:String, length:=-1):
+	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
+	return get_choice_text(parts[0], parts[1], parts[2], length)
+
+func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1):
 	var page = page_data.get(page_index, {})
 	var lines = page.get("lines")
 	var line = lines[line_index]
 	var choice = line.get("content").get("choices")[choice_index]
 	var choice_text:String
 	if choice.get("choice_text.enabled_as_default", true):
-		choice_text = choice.get("choice_text.enabled")
+		choice_text = Pages.get_text(choice.get("text_id_enabled", ""))
 	else:
-		choice_text = choice.get("choice_text.disabled")
-	return choice_text.left(25)
+		choice_text = Pages.get_text(choice.get("text_id_disabled", ""))
+	if length == -1:
+		return choice_text
+	return choice_text.left(length)
 
 func get_page_references(page_index:int) -> Array:
 	if not page_data.has(page_index):
@@ -394,7 +491,7 @@ func delete_page_data(at: int):
 	
 	# reindex all after at, this automatically overwrites the page at at
 	for i in range(at + 1, get_page_count()):
-		var data = page_data.get(i)
+		var data = page_data.get(i).duplicate(true)
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
 		page_data[new_number] = data
@@ -403,42 +500,6 @@ func delete_page_data(at: int):
 	page_data.erase(get_page_count() - 1)
 	
 	change_page_references_dir(at, -1)
-	
-	#emit_signal("pages_modified")
-
-func get_instruction_signature(instruction_name:String) -> String:
-	if not instruction_templates.has(instruction_name):
-		editor.notify(str("Instruction ", instruction_name, " is not declared in this project."))
-		return ""
-	var result := "func "
-	result += instruction_name
-	result += "("
-	
-	var i := 0
-	var arg_types : Array = instruction_templates.get(instruction_name).get("arg_types")
-	var arg_names : Array = instruction_templates.get(instruction_name).get("args")
-	while i < arg_types.size():
-		var arg_type_name : String
-		var raw_type : String = arg_types[i].trim_suffix(" ").trim_prefix(" ")
-		if raw_type.containsn("string"):
-			arg_type_name = "String"
-		else:
-			arg_type_name = raw_type
-		result += str(arg_names[i], " : ", arg_type_name)
-		
-		if i < arg_types.size() - 1:
-			result += ", "
-		
-		i += 1
-	
-	result += ") -> bool:"
-	
-	result += "\n\t# Return true if you want the LineReader to wait until its InstructionHandler has emitted instruction_completed."
-	result += "\n\t# (Needs to be called by your code from somewhere.)"
-	result += "\n\t# (The most direct approach is Parser.line_reader.instruction_handler.instruction_completed.emit().)"
-	result += "\n\treturn false"
-	
-	return result
 
 func get_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()
@@ -503,34 +564,187 @@ func get_defaults(property_key:String):
 		"data_type":DataTypes._String
 	}
 
-func get_all_instruction_names() -> Array:
-	return instruction_templates.keys()
+func get_custom_autoload_methods(autoload:String) -> Array:
+	var methods := []
+	var autoload_script := get_autoload_script(autoload)
+	var script_methods = autoload_script.get_script_method_list()
+	for method in script_methods:
+		var method_name : String = method.get("name")
+		if method_name.ends_with(".gd"):
+			continue
+		methods.append(method_name)
+	
+	var base = ClassDB.instantiate(autoload_script.get_class())
+	var base_methods = base.get_script_method_list()
+	for method in base_methods:
+		methods.erase(method.get("name"))
+	methods.sort()
+	return methods
+func get_custom_autoload_properties(autoload:String) -> Array:
+	var methods := []
+	var autoload_script := get_autoload_script(autoload)
+	var script_methods = autoload_script.get_script_property_list()
+	for method in script_methods:
+		var method_name : String = method.get("name")
+		if method_name.ends_with(".gd"):
+			continue
+		methods.append(method_name)
+	
+	var base = ClassDB.instantiate(autoload_script.get_class())
+	var base_methods = base.get_script_property_list()
+	for method in base_methods:
+		methods.erase(method.get("name"))
+	methods.sort()
+	return methods
 
-func get_instruction_arg_names(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("args", [])
+func get_all_custom_properties() -> Array:
+	var result := get_custom_properties()
+	var autoload_method_names := []
+	for autoload_name in callable_autoloads:
+		var methods := get_custom_autoload_methods(autoload_name)
+		for method in methods:
+			autoload_method_names.append(str(autoload_name, ".", method))
+		
+	result.append_array(autoload_method_names)
+	return result
+
+func get_all_instruction_names() -> Array:
+	var result := get_instruction_handler_methods()
+	var autoload_method_names := []
+	for autoload_name in callable_autoloads:
+		var methods := []
+		var autoload_script := get_autoload_script(autoload_name)
+		var script_methods = autoload_script.get_script_method_list()
+		for method in script_methods:
+			methods.append(method.get("name"))
+		
+		var base = ClassDB.instantiate(autoload_script.get_class())
+		var base_methods = base.get_method_list()
+		for method in base_methods:
+			methods.erase(method.get("name"))
+		methods.sort()
+		
+		for method in methods:
+			autoload_method_names.append(str(autoload_name, ".", method))
+		
+	
+	result.append_array(autoload_method_names)
+	return result
+
+func get_autoload_script(autoload:String) -> Script:
+	var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+	var autoload_script : Script
+	if path.ends_with(".gd"):
+		autoload_script = load(path).instantiate()
+		return autoload_script
+	elif path.ends_with(".tscn"):
+		var autoload_copy : Node = load(path).instantiate()
+		autoload_script = autoload_copy.get_script()
+		autoload_copy.queue_free()
+		return autoload_script
+	else:
+		push_warning("Encountered fucky autoload")
+		return null
+
+func get_custom_method(instruction_name:String) -> Dictionary:
+	if instruction_name.contains("."):
+		var singleton_name := instruction_name.split(".")[0]
+		var method_name := instruction_name.split(".")[1]
+		for method in get_autoload_script(singleton_name).get_script_method_list():
+			if method.get("name") == method_name:
+				return method
+	else:
+		for script in get_list_of_evaluator_scripts():
+			var script_methods = script.get_script_method_list()
+			for method in script_methods:
+				if method.get("name") == instruction_name:
+					return method
+	return {}
+
+func get_custom_method_arg_type(method:String, arg:String) -> int:
+	return get_custom_method_typesd(method).get(arg)
 
 func get_instruction_arg_types(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
+	var function : Dictionary = get_custom_method(instruction_name)
+	var args := []
+	for arg in function.get("args"):
+		args.append(arg.get("type"))
+	return args
+
+func get_custom_method_args(instruction_name:String) -> Array:
+	return get_custom_method(instruction_name).get("args", [])
+
+func get_custom_method_arg_names(instruction_name) -> Array:
+	var args := get_custom_method(instruction_name).get("args", {})
+	var result := []
+	for arg in args:
+		result.append(arg.get("name"))
+	return result
+
+func get_custom_method_base_defaults(instruction_name: String) -> Array:
+	return get_custom_method(instruction_name).get("default_args", [])
+
+func get_custom_method_base_defaultsd(instruction_name: String) -> Dictionary:
+	var defaults := get_custom_method_base_defaults(instruction_name)
+	if defaults.is_empty():
+		return {}
+	var result := {}
+	var args = get_custom_method_args(instruction_name)
+	var i := (args.size() - defaults.size())
+	while i < args.size():
+		result[args[i].get("name")] = defaults[i - args.size()]
+		i += 1
+	return result
+
+func _get_custom_method_full_defaults() -> Dictionary:
+	var result := {}
+	for method in get_all_instruction_names():
+		result[method] = get_custom_method_defaults(method)
+	return result
+
+func set_custom_method_defaults(defaults:Dictionary):
+	for method in defaults.keys():
+		var args : Dictionary = defaults.get(method)
+		custom_method_defaults.set(method, args.duplicate(true))
+
+func get_custom_method_defaults(instruction_name: String) -> Dictionary:
+	var base_defaults : Dictionary = get_custom_method_base_defaultsd(instruction_name)
+	var defaults := {}
+	var args : Array = get_custom_method_args(instruction_name)
+	var i := 0
+	for arg in base_defaults.keys():
+		defaults[arg] = base_defaults.get(arg)
+		i += 1
+	var customs : Dictionary = custom_method_defaults.get(instruction_name, {})
+	for arg in customs.keys():
+		defaults[arg] = customs.get(arg)
+	return defaults
+
+func get_instruction_arg_count(instruction_name: String) -> int:
+	return get_custom_method_arg_names(instruction_name).size()
+
+func get_page_data(index:int) -> Dictionary:
+	if editor.get_current_page_number() == index:
+		return editor.get_current_page().serialize()
+	return page_data.get(index)
 
 func get_all_invalid_instructions() -> String:
 	var warning := ""
 	var page_index  := 0
 	var malformed_instructions := []
 	for page in page_data.values():
-		var lines : Array = page.get("lines", [])
+		var lines : Array = get_page_data(page.get("number")).get("lines", [])
 		var line_index := 0
 		for line in lines:
-			if line.get("line_type") != DIISIS.LineType.Instruction:
-				continue
-			var text = line.get("content").get("meta.text")
-			var compliance := get_entered_instruction_compliance(text)
-			if compliance != "OK":
-				malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
+			if line.get("line_type") in [DIISIS.LineType.Instruction, DIISIS.LineType.Text]:
+				var compliance = line.get("content").get("meta.validation_status")
+				if compliance != "OK":
+					malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
 			line_index += 1
 		page_index += 1
 	
 	if not malformed_instructions.is_empty():
-		warning += str("Warning: invalid instructions at: ", ", ".join(malformed_instructions))
+		warning += str("Function error at: ", ", ".join(malformed_instructions))
 	return warning
 
 
@@ -539,11 +753,13 @@ func get_all_invalid_address_pointers() -> String:
 	var page_index  := 0
 	var invalid_addresses := []
 	for page in page_data.values():
-		var next : String = str(page.get("next", -1))
+		var next : String = str(int(page.get("next", -1)))
 		if (not does_address_exist(next)) and (not page.get("terminate")):
 			invalid_addresses.append(str("next ", next, " of page [url=goto-",str(page_index),"]", page_index, "[/url]"))
 	
 		var lines : Array = page.get("lines", [])
+		if page.get("number") == editor.get_current_page_number():
+			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
 			if line.get("line_type") != DIISIS.LineType.Choice:
@@ -555,12 +771,12 @@ func get_all_invalid_address_pointers() -> String:
 			for choice : Dictionary in choices:
 				var choice_address := str(int(page_index), ".", int(line_index), ".", choice_index)
 				if choice.get("do_jump_page", false):
-					var address := str(choice.get("target_page"), ".", choice.get("target_line"))
+					var address := str(int(choice.get("target_page")), ".", int(choice.get("target_line")))
 					if not does_address_exist(address):
 						invalid_addresses.append(str("jump ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
 				
 				if choice.get("loopback", false):
-					var address := str(choice.get("loopback_target_page"), ".", choice.get("loopback_target_line"))
+					var address := str(int(choice.get("loopback_target_page")), ".", int(choice.get("loopback_target_line")))
 					if not does_address_exist(address):
 						invalid_addresses.append(str("loop ", address, " of choice [url=goto-",str(choice_address),"]", choice_address, "[/url]"))
 				choice_index += 1
@@ -709,45 +925,71 @@ func lines_referencing_fact(fact_name: String):
 	
 	return all_refs
 
+func get_text_on_all_pages() -> String:
+	var result := ""
+	for i in page_data.keys():
+		result += get_text_on_page(i)
+	return result
 
-func get_character_count_on_page_approx(page_number: int) -> int:
-	var count := 0
-	for line in page_data.get(page_number, {}).get("lines", []):
+func get_text_on_page(page_number:int) -> String:
+	var result := ""
+	var data := get_page_data(page_number)
+	for line in data.get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
-		if line_type ==	DIISIS.LineType.Choice:
+		if line_type == DIISIS.LineType.Choice:
 			for choice in content.get("choices"):
-				count += str(choice.get("choice_text.enabled")).length()
-				count += str(choice.get("choice_text.disabled")).length()
-		elif line_type ==	DIISIS.LineType.Text:
-			count += str(content.get("content")).length()
-	return count
-
-func get_word_count_on_page_approx(page_number: int) -> int:
-	var count := 0
-	for line in page_data.get(page_number, {}).get("lines", []):
-		var line_type = line.get("line_type", null)
-		var content = line.get("content")
-		if line_type ==	DIISIS.LineType.Choice:
-			for choice in content.get("choices"):
-				count += str(choice.get("choice_text.enabled")).count(" ") + 1
-				count += str(choice.get("choice_text.disabled")).count(" ") + 1
+				result +=  Pages.get_text(choice.get("text_id_enabled", ""))
+				result +=  Pages.get_text(choice.get("text_id_disabled", ""))
 		elif line_type == DIISIS.LineType.Text:
-			count += str(content.get("content")).count(" ") + 1
-			count -= str(content.get("content")).count("[]>")
-				
-	return count
+			var text : String = Pages.get_text(content.get("text_id", ""))
+			if use_dialog_syntax:
+				var actor_tag_index := text.find("[]>")
+				while actor_tag_index != -1:
+					var tag_end = text.find(":", actor_tag_index)
+					if tag_end == -1:
+						break
+					text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+					actor_tag_index = text.find("[]>")
+			result += text
+	return result
 
-func get_character_count_total_approx() -> int:
-	var sum := 0
+## Returns word count in x and character count in y
+func get_count_on_page(page_number:int) -> Vector2i:
+	var character_count := 0
+	var word_count := 0
+	var data := get_page_data(page_number)
+	for line in data.get("lines", []):
+		var line_type = line.get("line_type")
+		var content = line.get("content")
+		if line_type == DIISIS.LineType.Choice:
+			for choice in content.get("choices"):
+				character_count +=  Pages.get_text(choice.get("text_id_enabled", "")).length()
+				character_count +=  Pages.get_text(choice.get("text_id_disabled", "")).length()
+				word_count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
+				word_count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
+		elif line_type == DIISIS.LineType.Text:
+			var text : String = Pages.get_text(content.get("text_id", ""))
+			if use_dialog_syntax:
+				var actor_tag_index := text.find("[]>")
+				while actor_tag_index != -1:
+					var tag_end = text.find(":", actor_tag_index)
+					if tag_end == -1:
+						break
+					text = text.erase(actor_tag_index, tag_end - actor_tag_index)
+					actor_tag_index = text.find("[]>")
+			text = remove_tags(text)
+			character_count += text.length()
+			word_count += text.count(" ") + 1
+	return Vector2(word_count, character_count)
+
+## Returns word count in x and character count in y
+func get_count_total() -> Vector2i:
+	var sum := Vector2.ZERO
 	for i in page_data.keys():
-		sum += get_character_count_on_page_approx(i)
-	
-	return sum
-func get_word_count_total_approx() -> int:
-	var sum := 0
-	for i in page_data.keys():
-		sum += get_word_count_on_page_approx(i)
+		var result = get_count_on_page(i)
+		sum.x += result.x
+		sum.y += result.y
 	
 	return sum
 
@@ -776,8 +1018,11 @@ func rename_dropdown_title(from:String, to:String):
 				continue
 			if line["content"]["active_actors_title"] == from:
 				line["content"]["active_actors_title"] = to
-			line["content"]["content"] = line["content"]["content"].replace(str("{", from, "|"), str("{", to, "|"))
-			line["content"]["content"] = line["content"]["content"].replace(str("[]>", from), str("[]>", to))
+			var text_id : String = line.get("content", {}).get("text_id")
+			var content : String = Pages.get_text(text_id)
+			content = content.replace(str("{", from, "|"), str("{", to, "|"))
+			content = content.replace(str("[]>", from), str("[]>", to))
+			Pages.save_text(text_id, content)
 
 func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
@@ -790,7 +1035,6 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
 				
-				
 				var i := 0
 				while i < min(old_options.size(), options.size()):
 					var old_option:String=old_options[i]
@@ -800,16 +1044,53 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 						continue
 					var old_arg := str(dropdown_title, "|", old_option)
 					var new_arg := str(dropdown_title, "|", new_option)
-					line["content"]["content"] = line["content"]["content"].replace(old_arg, new_arg)
+					
+					var text_id : String = line.get("content", {}).get("text_id")
+					var content : String = Pages.get_text(text_id)
+					content = content.replace(old_arg, new_arg)
 					
 					if is_speaker and replace_speaker:
 						var old_speaker := str("[]>", old_option)
 						var new_speaker := str("[]>", new_option)
-						line["content"]["content"] = line["content"]["content"].replace(old_speaker, new_speaker)
+						content = content.replace(old_speaker, new_speaker)
+					
+					Pages.save_text(text_id, content)
 					
 					i += 1
 	
 	dropdowns[dropdown_title] = options
+
+func is_new_dropdown_title_invalid(title:String, previous_title := "") -> bool:
+	return (title in dropdown_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
+
+func delete_dropdown(title:String, erase_from_text:=true):
+	if erase_from_text and dropdown_dialog_arguments.has(title):
+		var options : Array = dropdowns.get(title, [])
+		for page in page_data.values():
+			var lines : Array = page.get("lines")
+			for line : Dictionary in lines:
+				if line.get("line_type") != DIISIS.LineType.Text:
+					continue
+				
+				var text_id : String = line.get("content", {}).get("text_id")
+				var content : String = Pages.get_text(text_id)
+				var i := 0
+				while i < options.size():
+					var option:String=options[i]
+					var option_str = str(title, "|", option)
+					content = content.replace(option_str + ",", "")
+					content = content.replace(option_str, "")
+					i += 1
+				content = content.replace("{}", "")
+				Pages.save_text(text_id, content)
+	
+	dropdown_titles.erase(title)
+	dropdown_dialog_arguments.erase(title)
+	dropdowns.erase(title)
+	
+	await get_tree().process_frame
+	
+	Pages.editor.refresh(false)
 
 func register_fact(fact_name : String, value):
 	if has_fact(fact_name):
@@ -819,13 +1100,14 @@ func register_fact(fact_name : String, value):
 
 func alter_fact(from:String, to=null):
 	for page in page_data.values():
-		
 		var page_facts:Dictionary
 		page_facts = page.get("facts", {}).get("fact_data_by_name", {})
 		for fact in page_facts.keys():
 			if fact == from:
 				if to is String:
-					page_facts[to] = page_facts[from]
+					var fact_data = page_facts.get(fact)
+					fact_data["fact_name"] = to
+					page_facts[to] = fact_data
 				page_facts.erase(from)
 		
 		for i in page.get("lines", []).size():
@@ -835,7 +1117,9 @@ func alter_fact(from:String, to=null):
 			for fact in line_facts.keys():
 				if fact == from:
 					if to is String:
-						line_facts[to] = line_facts[from]
+						var fact_data = line_facts.get(fact)
+						fact_data["fact_name"] = to
+						line_facts[to] = fact_data
 					line_facts.erase(from)
 			
 			var line_conditionals:Dictionary
@@ -843,9 +1127,18 @@ func alter_fact(from:String, to=null):
 			for fact in line_conditionals:
 				if fact == from:
 					if to is String:
-						line_conditionals[to] = line_conditionals[from]
+						var fact_data = line_conditionals.get(fact)
+						fact_data["fact_name"] = to
+						line_conditionals[to] = fact_data
 					line_conditionals.erase(from)
-			
+			if line.get("line_type") == DIISIS.LineType.Text:
+				var text_id =  line.get("content").get("text_id")
+				var text := get_text(text_id)
+				text = text.replace(
+					str("<fact:", from, ">"),
+					str("<fact:", to, ">")
+				)
+				save_text(text_id, text)
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
 				var choice_index := 0
@@ -855,7 +1148,9 @@ func alter_fact(from:String, to=null):
 					for fact in option_conditionals:
 						if fact == from:
 							if to is String:
-								option_conditionals[to] = option_conditionals[from]
+								var fact_data = option_conditionals.get(fact)
+								fact_data["fact_name"] = to
+								option_conditionals[to] = fact_data
 							option_conditionals.erase(from)
 					
 					var option_facts:Dictionary
@@ -863,7 +1158,9 @@ func alter_fact(from:String, to=null):
 					for fact in option_facts:
 						if fact == from:
 							if to is String:
-								option_facts[to] = option_facts[from]
+								var fact_data = option_facts.get(fact)
+								fact_data["fact_name"] = to
+								option_facts[to] = fact_data
 							option_facts.erase(from)
 					choice_index += 1
 	
@@ -882,7 +1179,7 @@ func has_fact(fact_name:String) -> bool:
 func does_address_exist(address:String) -> bool:
 	if address.ends_with(".") or address.is_empty():
 		return false
-	var parts :Array[int]= DiisisEditorUtil.get_split_address(address)
+	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
 	if parts.size() <= 0 or parts.size() > 3:
 		return false
 	
@@ -903,75 +1200,44 @@ func does_address_exist(address:String) -> bool:
 func delete_fact(fact:String):
 	alter_fact(fact)
 
-func get_evaluator_methods() -> Array:
-	var methods := []
+func get_list_of_evaluator_scripts() -> Array[Script]:
+	var result : Array[Script] = []
 	for evaluator : String in evaluator_paths:
-		var script_methods:Array
-		if evaluator.ends_with(".tscn"):
+		if evaluator.ends_with(".gd"):
 			var n = load(evaluator)
 			if not n:
 				push_warning(str("Couldn't load", evaluator))
 				continue
-			var s = n.get_script()
-			if not s:
-				push_warning(str("Couldn't get script on", evaluator))
-				continue
-			script_methods = s.get_script_method_list()
-			n.queue_free()
-		elif evaluator.ends_with(".gd"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			script_methods = n.get_script_method_list()
+			result.append(n)
 		else:
 			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
 			continue
-		
+	return result
+
+func get_instruction_handler_methods() -> Array:
+	var methods := []
+	for script : Script in get_list_of_evaluator_scripts():
+		var script_methods = script.get_script_method_list()
 		for method in script_methods:
-			if not methods.has(method.get("name")):
-				methods.append(method.get("name"))
+			methods.append(method.get("name"))
 	
-	var base = Node.new()
+	var base = LineReader.new()
 	var base_methods = base.get_method_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
 	base.queue_free()
-	
-	methods.erase("execute")
-	methods.erase("_wrapper_execute")
+	methods.sort()
 	return methods
 
-func get_evaluator_properties() -> Array:
+func get_custom_properties() -> Array:
 	var methods := []
-	for evaluator : String in evaluator_paths:
-		var script_methods:Array
-		if evaluator.ends_with(".tscn"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			var s = n.get_script()
-			if not s:
-				push_warning(str("Couldn't get script on", evaluator))
-				continue
-			script_methods = s.get_script_property_list()
-			n.queue_free()
-		elif evaluator.ends_with(".gd"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load", evaluator))
-				continue
-			script_methods = n.get_script_property_list()
-		else:
-			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
-			continue
-		
+	for script : Script in get_list_of_evaluator_scripts():
+		var script_methods = script.get_script_property_list()
 		for method in script_methods:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
 	
-	var base = Node.new()
+	var base = LineReader.new()
 	var base_methods = base.get_property_list()
 	for method in base_methods:
 		methods.erase(method.get("name"))
@@ -982,12 +1248,11 @@ func get_evaluator_properties() -> Array:
 	
 	return methods
 
-func search_string(substr:String, case_insensitive:=false, include_tags:=false):
+func search_string(substr:String, case_insensitive:=false, include_tags:=false) -> Dictionary:
 	var found_facts := {}
 	for fact : String in facts:
 		if (case_insensitive and fact.findn(substr) != -1) or (not case_insensitive and fact.find(substr) != -1):
 			found_facts[fact] = fact
-	
 	var found_choices := {}
 	var found_text := {}
 	var found_instructions := {}
@@ -998,28 +1263,17 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var choice_index := 0
 				for choice in line.get("content", {}).get("choices", []):
-					if (case_insensitive and choice.get("choice_text.enabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.enabled").find(substr) != -1):
-						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = choice.get("choice_text.enabled")
-					if (case_insensitive and choice.get("choice_text.disabled").findn(substr) != -1) or (not case_insensitive and choice.get("choice_text.disabled").find(substr) != -1):
-						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = choice.get("choice_text.disabled")
+					var text_enabled : String = Pages.get_text(choice.get("text_id_enabled"))
+					var text_disabled : String = Pages.get_text(choice.get("text_id_disabled"))
+					if (case_insensitive and text_enabled.findn(substr) != -1) or (not case_insensitive and text_enabled.find(substr) != -1):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - enabled")] = text_enabled
+					if (case_insensitive and text_disabled.findn(substr) != -1) or (not case_insensitive and text_disabled.find(substr) != -1):
+						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = text_disabled
 					choice_index += 1
 			elif line.get("line_type") == DIISIS.LineType.Text:
-				var text : String = line.get("content", {}).get("content", "")
+				var text : String = Pages.get_text(line.get("content", {}).get("text_id", ""))
 				if not include_tags:
-					var scan_index := 0
-					var pairs = ["<>", "[]"]
-					for pair in pairs:
-						while scan_index < text.length():
-							if text[scan_index] == pair[0]:
-								var local_scan_index := scan_index
-								var control_to_replace := ""
-								while text[local_scan_index] != pair[1]:
-									control_to_replace += text[local_scan_index]
-									local_scan_index += 1
-								control_to_replace += pair[1]
-								text = text.replace(control_to_replace, "")
-								scan_index -= control_to_replace.length()
-							scan_index += 1
+					text = remove_tags(text)
 				
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
@@ -1041,192 +1295,173 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false):
 	}
 	return result
 
-func get_localizable_addresses() -> Array:
-	return get_localizable_addresses_with_content().keys()
+func remove_tags(t:String) -> String:
+	var text := t
+	var pairs = ["<>", "[]"]
+	for pair in pairs:
+		var scan_index := 0
+		while scan_index < text.length():
+			if text[scan_index] == pair[0]:
+				var local_scan_index := scan_index
+				var control_to_replace := ""
+				while text[local_scan_index] != pair[1]:
+					if text[local_scan_index] == "\n":
+						break
+					control_to_replace += text[local_scan_index]
+					local_scan_index += 1
+				control_to_replace += pair[1]
+				
+				if text.length() >= scan_index + 3:
+					var tag_end := scan_index
+					if (
+						text[scan_index + 1] == "i" and
+						text[scan_index + 2] == "m" and
+						text[scan_index + 3] == "g"):
+							tag_end = text.find("[/img]") + 5
+							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
+				text = text.erase(scan_index, control_to_replace.length())
+			scan_index += 1
+	return text
 
-func get_localizable_addresses_with_content() -> Dictionary:
-	var localizable_addresses := {}
-	var page_index := 0
-	for page in page_data.values():
-		var line_index := 0
-		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Text:
-				localizable_addresses[(str(page_index, ".", line_index))] = line.get("content", {}).get("content", "")
-			elif line.get("line_type") == DIISIS.LineType.Choice:
-				var choice_index := 0
-				for choice in line.get("content", {}).get("choices", []):
-					if not choice.get("choice_text.enabled").is_empty():
-						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "enabled"))] = choice.get("choice_text.enabled")
-					if not choice.get("choice_text.disabled").is_empty():
-						localizable_addresses[(str(page_index, ".", line_index, ".", choice_index, "disabled"))] = choice.get("choice_text.disabled")
-					choice_index += 1
-			line_index += 1
-		page_index += 1
-
-	return localizable_addresses
-
-
-func add_template_from_string(instruction:String):
-	var entered_name := instruction.split("(")[0]
-	var arg_string := instruction.trim_prefix(entered_name)
-	arg_string = arg_string.trim_prefix("(")
-	arg_string = arg_string.trim_suffix(")")
+func update_all_compliances():
+	# check modified because updating all compliances makes diisis stutter a bit
+	var modified := false
+	for path in evaluator_paths:
+		var modified_time = FileAccess.get_modified_time(path)
+		if not evaluator_modified_times.has(path):
+			evaluator_modified_times[path] = modified_time
+			modified = true
+			break
+		else:
+			if evaluator_modified_times.get(path) != modified_time:
+				evaluator_modified_times[path] = modified_time
+				modified = true
+				break
+	if not modified:
+		for autoload in callable_autoloads:
+			var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+			var modified_time = FileAccess.get_modified_time(path)
+			if not evaluator_modified_times.has(path):
+				evaluator_modified_times[path] = modified_time
+				modified = true
+				break
+			else:
+				if evaluator_modified_times.get(path) != modified_time:
+					evaluator_modified_times[path] = modified_time
+					modified = true
+					break
 	
-	var arg_names := []
-	var arg_types := []
-	var entered_args := arg_string.split(",")
-	for arg in entered_args:
-		if arg.is_empty():
-			continue
-		if arg.contains(":"): # typed
-			var arg_name := arg.split(":")[0]
-			var arg_type := arg.split(":")[1]
-			while arg_name.begins_with(" "):
-				arg_name = arg_name.trim_prefix(" ")
-			while arg_name.ends_with(" "):
-				arg_name = arg_name.trim_suffix(" ")
-			while arg_type.begins_with(" "):
-				arg_type = arg_type.trim_prefix(" ")
-			while arg_type.ends_with(" "):
-				arg_type = arg_type.trim_suffix(" ")
-			arg_names.append(arg_name)
-			arg_types.append(arg_type)
-		else: # implicitly convert to string
-			while arg.begins_with(" "):
-				arg = arg.trim_prefix(" ")
-			while arg.ends_with(" "):
-				arg = arg.trim_suffix(" ")
-			arg_names.append(arg)
-			arg_types.append("string")
+	if not modified:
+		return
 	
-	instruction_templates[entered_name] = {
-		"args" : arg_names,
-		"arg_types": arg_types
-	}
+	for method in get_all_instruction_names():
+		update_compliances(method)
+	if is_instance_valid(editor):
+		editor.update_error_text_box()
 
-func update_instruction_from_template(old_name:String, new_full_instruction:String):
-	var old_template : Dictionary = instruction_templates.get(old_name)
-	instruction_templates.erase(old_name)
-	add_template_from_string(new_full_instruction)
-	var new_entered_name := new_full_instruction.split("(")[0]
-	var new_template : Dictionary = instruction_templates.get(new_entered_name)
-	
+func update_compliances(instruction_name:String):
 	for page in page_data.values():
 		var lines : Array = page.get("lines", [])
 		for line in lines:
-			if line.get("line_type") != DIISIS.LineType.Instruction:
-				continue
-			if line.get("content", {}).get("name", "") != old_name:
-				continue
-			line["content"]["name"] = new_entered_name
-			
-			var old_text : String = line["content"]["meta.text"]
-			
-			var old_template_data = parse_instruction_to_handleable_dictionary(old_text, old_template)
-			
-			var old_arg_count : int = old_template.get("args").size()
-			var old_arg_names : Array = old_template.get("args")
-			var old_arg_types : Array = old_template.get("arg_types")
-			var new_arg_count : int = new_template.get("args").size()
-			var new_arg_names : Array = new_template.get("args")
-			var new_arg_types : Array = new_template.get("arg_types")
-			
-			var transformed_string := new_entered_name
-			transformed_string += "("
-			
-			var i := 0
-			var goal_arg_count := min(old_arg_count, new_arg_count)
-			while i < goal_arg_count:
-				transformed_string += str(old_template_data.get("args").get(old_arg_names[i]))
-				if i < goal_arg_count - 1:
-					transformed_string += ", "
-				i += 1
-			
-			
-			transformed_string += ")"
-			
-			# instruction container handles it when it inits and finds an empty meta.text but existing args
-			line["content"]["meta.text"] = transformed_string
-			line["content"]["line_reader.args"] = get_arg_array_from_instruction_string(transformed_string, new_entered_name)
-			
-	
+			var content : Dictionary = line.get("content", {})
+			if line.get("line_type") == DIISIS.LineType.Instruction:
+				if content.get("name", "") == instruction_name:
+					var text : String = content.get("meta.text", "")
+					var text_reverse : String = content.get("meta.reverse_text", "")
+					var status = get_method_validity(text)
+					if status != "OK":
+						line["content"]["meta.validation_status"] = status
+						continue
+					status = get_method_validity(text_reverse)
+					if status != "OK" and content.get("meta.has_reverse"):
+						line["content"]["meta.validation_status"] = status
+						continue
+					line["content"]["meta.validation_status"] = "OK"
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				var functions : Array = content.get("meta.function_calls", [])
+				var compliance := "OK"
+				for function in functions:
+					var validity = get_method_validity(function)
+					if validity != "OK":
+						compliance = validity
+						break
+				line["content"]["meta.validation_status"] = compliance
 
-func get_arg_array_from_instruction_string(text:String, instruction_name:String) -> Array:
-	var args := []
-	var arg_dict := parse_instruction_to_handleable_dictionary(text).get("args", {})
-	var arg_order := get_argument_order_from_template(instruction_name)
-	for arg_name in arg_order:
-		args.append(arg_dict.get(arg_name, str("INVALID ARGUMENT FOR ", arg_name)))
-	return args
-
-func parse_instruction_to_handleable_dictionary(instruction_text:String, template_override:={}) -> Dictionary:
-	if get_entered_instruction_compliance(instruction_text) != "OK" and template_override.is_empty():
-		#push_warning(str(instruction_text, " isn't OK"))
-		return {}
-	
+func get_custom_method_types(instruction_name:String) -> Array:
+	var result := []
+	for arg in get_custom_method_args(instruction_name):
+		result.append(arg.get("type"))
+	return result
+func get_custom_method_typesd(instruction_name:String) -> Dictionary:
 	var result := {}
-	var entered_name = instruction_text.split("(")[0]
-	result["name"] = entered_name
-	
-	var args := {}
-	var arg_names := template_override.get("args", Pages.get_instruction_arg_names(entered_name))
-	var arg_types := template_override.get("arg_types", Pages.get_instruction_arg_types(entered_name))
-	instruction_text = instruction_text.trim_prefix(str(entered_name, "("))
-	instruction_text = instruction_text.trim_suffix(")")
-	var entered_args := instruction_text.split(",")
-	var i := 0
-	while i < entered_args.size() and not entered_args.is_empty() and not arg_types.is_empty():
-		var arg = entered_args[i]
-		while arg.begins_with(" "):
-			arg = arg.trim_prefix(" ")
-		while arg.ends_with(" "):
-			arg = arg.trim_suffix(" ")
-		var arg_value
-		var arg_type:String=arg_types[i]
-		var value_string := arg.split(":")[0]
-		if arg_type == "string":
-			arg_value = value_string
-		elif arg_type == "bool":
-			if value_string == "true":
-				arg_value = true
-			if value_string == "false":
-				arg_value = false
-		elif arg_type == "float":
-			if value_string.is_empty():
-				arg_value = str("no value")
-			else:
-				arg_value = float(value_string)
-		args[arg_names[i]] = arg_value
-		i += 1
-	result["args"] = args
+	for arg in get_custom_method_args(instruction_name):
+		result[arg.get("name")] = arg.get("type")
 	
 	return result
 
-func get_argument_order_from_template(instruction_name:String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("args", [])
+func get_default_arg_value(instruction_name:String, arg_name:String):
+	return get_custom_method_defaults(instruction_name).get(arg_name)
 
 func does_instruction_name_exist(instruction_name:String):
-	return instruction_templates.keys().has(instruction_name)
+	return get_all_instruction_names().has(instruction_name)
 
-func get_compliance_with_template(instruction:String) -> String:
+func get_autoload_names() -> Array:
+	var autoload_names := []
+	for property in ProjectSettings.get_property_list():
+		var prop_name :String = property.get("name")
+		if prop_name.begins_with("autoload/"):
+			autoload_names.append(prop_name.trim_prefix("autoload/"))
+	autoload_names.sort()
+	return autoload_names
+
+func get_method_validity(instruction:String) -> String:
+	if instruction.is_empty():
+		return "Function is empty."
+	if not instruction.ends_with(")"):
+		return "Function should end with \")\""
 	var entered_name = instruction.split("(")[0]
 	if not does_instruction_name_exist(entered_name):
-		return str("Instruction ", entered_name, " does not exist")
+		var autoload_warning := ""
+		if entered_name.contains("."):
+			var autoload_name := entered_name.split(".")[0]
+			if not Pages.callable_autoloads.has(autoload_name):
+				if autoload_name in get_autoload_names():
+					return str("Autoload ", autoload_name, " is not set for function calls")
+				else:
+					return str("Autoload ", autoload_name, " does not exist")
+		return str("Function ", entered_name, " does not exist", autoload_warning)
 	
-	var template_arg_count : int = instruction_templates.get(entered_name).get("args").size()
-	if template_arg_count == 0:
+	var method_args := get_custom_method_args(entered_name)
+	var arg_count : int = method_args.size()
+	if arg_count == 0:
 		if not instruction.ends_with("()"):
-			return "Arg count mismatch"
-	if instruction.count(",") + 1 != template_arg_count:
-		if template_arg_count > 0:
-			return "Arg count mismatch"
-	
+			return "Function doesn't expect arguments"
+	var entered_arg_count := instruction.count(",") + 1
+	if instruction.ends_with("()"):
+		entered_arg_count = 0
+	if entered_arg_count > arg_count:
+		return str(entered_name, " expects ", arg_count, " arguments but is called with ", entered_arg_count)
+	elif entered_arg_count < arg_count:
+		# check if all omitted args are covered by defaults
+		var entered_arg_names := []
+		for i in entered_arg_count:
+			entered_arg_names.append(method_args[i].get("name"))
+		var all_arg_names := get_custom_method_arg_names(entered_name)
+		for arg_name in entered_arg_names:
+			all_arg_names.erase(arg_name)
+		var defaults = get_custom_method_defaults(entered_name)
+		
+		for arg_name in all_arg_names: #is now only not submitted args
+			if not arg_name in defaults.keys():
+				return str(entered_name, " expects ", arg_count, " arguments but is called with ", entered_arg_count)
+		
 	# for every arg, if it's float, it can't have non float chars, if bool, it has to be "true" or "false"
 	var args_string = instruction.trim_prefix(entered_name)
 	args_string = args_string.trim_prefix("(")
 	args_string = args_string.trim_suffix(")")
 	var args := args_string.split(",")
-	var template_types : Array = instruction_templates[entered_name].get("arg_types", [])
+	var template_arg_names : Array = get_custom_method_arg_names(entered_name)
+	var template_types : Array = get_custom_method_types(entered_name)
 	
 	var i := 0
 	while i < template_types.size() and not template_types.is_empty() and i < args.size():
@@ -1238,77 +1473,54 @@ func get_compliance_with_template(instruction:String) -> String:
 		var arg_value : String = arg_string.split(":")[0]
 		if arg_value.is_empty():
 			return str("Argument ", i+1, " is empty")
-		if template_types[i] == "bool":
-			if arg_value != "true" and arg_value != "false":
-				return str("Bool argument ", i + 1, " is neither \"true\" nor \"false\"")
-		if template_types[i] == "float":
-			for char in arg_value:
-				if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
-					return str("Float argument ", i + 1, " contains non-float character. (0 - 9 and . and -)")
+		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
+			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
+		
+		var type_compliance := get_type_compliance(entered_name, template_arg_names[i], arg_value, template_types[i], i)
+		if not type_compliance.is_empty():
+			return type_compliance
 		i += 1
 	
 	return "OK"
 
-func try_delete_instruction_template(instruction_name:String):
-	instruction_templates.erase(instruction_name)
-
-func get_entered_instruction_compliance(instruction:String, check_as_template:=false, error_on_duplicate := false) -> String:
-	if instruction.count("(") != 1:
-		return "Missing or excess ("
-	if instruction.count(")") != 1:
-		return "Missing or excess )"
-	if instruction[instruction.length() - 1] != ")":
-		return "Doesn't end with )"
-	if instruction.find("(") > instruction.find(")"):
-		return "( can't be behind )"
-	if instruction.find("(") == 0:
-		return "Can't start with ("
+func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
+	var default_notice := ""
+	if value == "*":
+		value = str(get_custom_method_defaults(method).get(arg))
+		default_notice = "\n(Derived from default)"
+	if type == TYPE_BOOL:
+		if value != "true" and value != "false":
+			return str("Bool argument ", arg_index + 1, " is neither \"true\" nor \"false\"")
+	if type == TYPE_FLOAT:
+		for char in value:
+			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "-"]:
+				return str("Float argument ", arg_index + 1, " contains non-float character.\n(Valid characters are 0 - 9 and . and -)")
+	if type == TYPE_INT:
+		for char in value:
+			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
+				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
-	var entered_name = instruction.split("(")[0]
-	for character in entered_name:
-		if not ALLOWED_INSTRUCTION_NAME_CHARACTERS.has(character):
-			return str("Character \"", character, "\" isn't allowed.")
-	if check_as_template:
-		if does_instruction_name_exist(entered_name) and error_on_duplicate:
-			return "Instruction already exists"
+	var selected_limiters : Array = custom_method_dropdown_limiters.get(method, {}).get(arg, [])
+	if selected_limiters.size() > 0:
+		# build list of all options
+		var valid_strings := []
+		for dd_name in selected_limiters:
+			valid_strings.append_array(dropdowns.get(dd_name))
 		
-		if entered_name.contains(" "):
-			return "Entered name contains a space"
-		
-		if instruction.find("(") + 1 != instruction.find(")"):
-			# for every arg, it must be ended with :bool, :string, :float (json doesn't support int / float distinction
-			# and I can't be bothered to write support for dictionaries or arrays atm)
-			var arg_string = instruction.trim_prefix(entered_name)
-			arg_string = arg_string.trim_prefix("(")
-			arg_string = arg_string.trim_suffix(")")
-			var args := arg_string.split(",")
-			var arg_names := []
-			for arg in args:
-				if arg.count(":") > 1:
-					return "One or more args contain more than one :"
-				if arg.contains(":") and not (arg.ends_with(":string") or arg.ends_with(":bool") or arg.ends_with(":float")):
-					return "One or more typed arguments don't end in \":string\", \":bool\", or \":float\""
-				var arg_name := arg.split(":")[0]
-				while arg_name.begins_with(" "):
-					arg_name = arg_name.trim_prefix(" ")
-				while arg_name.ends_with(" "):
-					arg_name = arg_name.trim_suffix(" ")
-				if arg_name.is_empty():
-					return "Empty argument name"
-				if arg_names.has(arg_name):
-					return "Duplicate argument names"
-				else:
-					arg_names.append(arg_name)
-	else: # check as sth that follows the template
-		var template_compliance := get_compliance_with_template(instruction)
-		if template_compliance != "OK":
-			return template_compliance
-	
-	return "OK"
+		if not value in valid_strings:
+			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
+	return ""
 
+func are_all_of_these_dropdown_titles(names:Array) -> bool:
+	var result := true
+	for dd_name in names:
+		if not dd_name in dropdown_titles:
+			result = false
+			break
+	return result
 
 func capitalize_sentence_beginnings(text:String) -> String:
-	var letters := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
+	
 
 	var c12n_prefixes := [
 		".", ":", ";", "?", "!", "~"
@@ -1319,12 +1531,12 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_length := 3
 	while elipse_position != -1:
 		if elipse_position < text.length():
-			if text[elipse_position + elipse_length + 1] in letters:
+			if text[elipse_position + elipse_length + 1] in LETTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
 				continue
 			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
-				if text[elipse_position + 2] in letters:
+				if text[elipse_position + 2] in LETTERS:
 					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
 					elipse_position = text.find("...", elipse_position + elipse_length + 1)
 					continue
@@ -1358,7 +1570,7 @@ func capitalize_sentence_beginnings(text:String) -> String:
 			var tag = text.substr(scan_index, tag_end - scan_index + 1)
 			tags_in_text.append(tag)
 		scan_index += 1
-	for letter : String in letters:
+	for letter : String in LETTERS:
 		text = text.replace(str("<lc>", letter), str("<lc>", letter.capitalize()))
 		text = text.replace(str("<lc> ", letter), str("<lc> ", letter.capitalize()))
 		for prefix in c12n_prefixes:
@@ -1375,7 +1587,6 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	
-	print(letter_indices_after_elipses)
 	for index in letter_indices_after_elipses.keys():
 		var letter : String = letter_indices_after_elipses.get(index)
 		text[index] = letter
@@ -1383,7 +1594,9 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	return text
 
 func neaten_whitespace(text:String) -> String:
-	text = text.replace(":", ": ")
+	for letter : String in LETTERS:
+		text = text.replace(str(":", letter), str(": ", letter))
+		text = text.replace(str(":", letter.to_upper()), str(": ", letter.to_upper()))
 	text = text.replace("<", " <")
 	text = text.replace("[", " [")
 	text = text.replace(" []>", "[]>")
@@ -1415,4 +1628,236 @@ func neaten_whitespace(text:String) -> String:
 		text = text.erase(closing_bb_lead_space_position)
 		closing_bb_lead_space_position = text.find(" [/")
 	
+	for sequence in DIISIS.control_sequences:
+		var full_sequence := str("<", sequence, ": ")
+		var sequence_pos := text.find(full_sequence)
+		while sequence_pos != -1:
+			text = text.erase(sequence_pos + full_sequence.length() - 1)
+			sequence_pos = text.find(full_sequence, sequence_pos)
+		
+	text = text.replace("] .", "].")
+	text = text.replace("> .", ">.")
+	text = text.replace(": //", "://")
+	
 	return text
+
+func save_text(id:String, text:String) -> void:
+	text_data[id] = text
+
+func get_text(id:String, default:="") -> String:
+	return text_data.get(id, default)
+
+func does_text_id_exist(id:String) -> bool:
+	return id in text_data.keys()
+
+func get_text_id_address_and_type(id:String) -> Array:
+	for page in page_data.values():
+		var page_index = page.get("number")
+		var line_index := 0
+		for line in page.get("lines"):
+			var content = line.get("content")
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				if content.get("title_id") == id:
+					var address := str(page_index, ".", line_index)
+					return [address, "Choice Title"]
+				var choice_index := 0
+				for choice in content.get("choices"):
+					var address := str(page_index, ".", line_index, ".", choice_index)
+					if choice.get("text_id_enabled") == id:
+						return [address, "Choice Enabled"]
+					elif choice.get("text_id_disabled") == id:
+						return [address, "Choice Disabled"]
+					choice_index += 1
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				if content.get("text_id") == id:
+					var address := str(page_index, ".", line_index)
+					return [address, "Text Line"]
+			line_index += 1
+	return ["0.0", "Not Found"]
+
+func change_text_id(old_id:String, new_id:String) -> void:
+	for page in page_data.values():
+		var page_index = page.get("number")
+		var broken:=false
+		for line in page.get("lines"):
+			var content = line.get("content")
+			if line.get("line_type") == DIISIS.LineType.Choice:
+				if content.get("title_id") == old_id:
+					content["title_id"] = new_id
+					broken = true
+					break
+				for choice in content.get("choices"):
+					if choice.get("text_id_enabled") == old_id:
+						choice["text_id_enabled"] = new_id
+						broken = true
+						break
+					if choice.get("text_id_disabled") == old_id:
+						choice["text_id_disabled"] = new_id
+						broken = true
+						break
+			elif line.get("line_type") == DIISIS.LineType.Text:
+				if content.get("text_id") == old_id:
+					content["text_id"] = new_id
+					broken = true
+					break
+		if broken:
+			break
+	
+	if text_data.has(old_id):
+		var old_value : String = text_data.get(old_id)
+		text_data[new_id] = old_value
+		text_data.erase(old_id)
+	
+func get_new_id() -> String:
+	id_counter += 1
+	return str(str("%0.3f" % Time.get_unix_time_from_system()), "-", id_counter)
+
+## Returns a dict with keys "loopback", "jump" and "next"
+func get_references_to_page(page_index:int) -> Dictionary:
+	var line_count = get_page_data(page_index).get("lines", []).size()
+	var loopback_references := []
+	var jump_references := []
+	if first_index_as_page_reference_only:
+		loopback_references.append_array(get_loopback_references_to(page_index, 0))
+		jump_references.append_array(get_jump_references_to(page_index, 0))
+	else:
+		for i in line_count:
+			loopback_references.append_array(get_loopback_references_to(page_index, i))
+			jump_references.append_array(get_jump_references_to(page_index, i))
+	var next_references := []
+	for page in page_data.values():
+		if page.get("next", -1) == page_index and not page.get("terminate", false):
+			next_references.append(str(int(page.get("number"))))
+	return {
+		"loopback" : loopback_references,
+		"jump" : jump_references,
+		"next" : next_references,
+	}
+
+func get_loopback_references_to(page_index:int, line_index:int) -> Array:
+	return loopback_references_by_page.get(page_index, {}).get(line_index, [])
+	
+func get_jump_references_to(page_index:int, line_index:int) -> Array:
+	return jump_page_references_by_page.get(page_index, {}).get(line_index, [])
+
+func get_facts_data(address:String) -> Dictionary:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var cpn : int = editor.get_current_page_number()
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Page:
+			var data : Dictionary = editor.get_current_page().serialize()
+			return data.get("facts", {}).get("fact_data_by_name", {})
+		DiisisEditorUtil.AddressDepth.Line:
+			var data := get_line_data(parts[0], parts[1])
+			return data.get("facts", {}).get("fact_data_by_name", {})
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			var data : Dictionary = get_line_data(parts[0], parts[1]).get("content").get("choices")[parts[2]]
+			return data.get("facts", {}).get("fact_data_by_name", {})
+	
+	return {}
+
+func get_line_data_adr(address:String) -> Dictionary:
+	var data := {}
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var cpn : int = editor.get_current_page_number()
+	if cpn == parts[0]:
+		data = editor.get_current_page().get_line_data(parts[1])
+	else:
+		data = page_data.get(cpn).get("lines")[parts[1]]
+	return data
+
+func get_line_data(page_index:int, line_index:int) -> Dictionary:
+	return get_line_data_adr(str(page_index, ".", line_index))
+
+func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
+	var facts_by_address := {}
+	var parts = DiisisEditorUtil.get_split_address(address)
+	match DiisisEditorUtil.get_address_depth(address):
+		DiisisEditorUtil.AddressDepth.Page:
+			var facts_data : Dictionary = get_facts_data(address)
+			if not facts_data.is_empty():
+				facts_by_address[address] = facts_data
+			for i in editor.get_current_page().get_line_count():
+				var line_address := str(address, ".", i)
+				var line_payload = get_fact_data_payload_before_deletion(line_address)
+				if not line_payload.is_empty():
+					for key : String in line_payload.keys():
+						facts_by_address[key] = line_payload.get(key)#.get(line_address)
+		DiisisEditorUtil.AddressDepth.Line:
+			var line_type := get_line_type(parts[0], parts[1])
+			var line_data = get_line_data(parts[0], parts[1])
+			var line_facts_data = get_facts_data(address)
+			if not line_facts_data.is_empty():
+				facts_by_address[address] = line_facts_data
+			if line_type == DIISIS.LineType.Choice:
+				var choices : Array = line_data.get("content", {}).get("choices", [])
+				for i in choices.size():
+					var choice_address := str(address, ".", i)
+					var choice_payload = get_fact_data_payload_before_deletion(choice_address)
+					if not choice_payload.is_empty():
+						facts_by_address[choice_address] = choice_payload.get(choice_address)
+		DiisisEditorUtil.AddressDepth.ChoiceItem:
+			var facts_data = get_facts_data(address)
+			if not facts_data.is_empty():
+				facts_by_address[address] = facts_data
+	
+	return facts_by_address
+
+func set_setting(value, setting:StringName):
+	set(setting, value)
+
+func make_puppy() -> String:
+	var eyes := [
+		[">", "<"],
+		[",,>", "<,,"],
+		["o", "o"],
+		["O", "O"],
+		["U", "U"],
+		["u", "u"],
+		["-", "-"],
+		["^", "^"],
+		["*^", "^*"],
+		[".", "."],
+		[";", ";"],
+		["q", "q"],
+		["e", "e"],
+		["x", "x"],
+		[",;,", ",;,"],
+		]
+
+	var whiskers := [
+		[">", "<"],
+		["-", "-"],
+		["=", "="],
+		["☆⌒", "⌒☆"],
+	]
+
+	var mouths := [
+		"w",
+		"w",
+		"//w//",
+		"w",
+		"v",
+		"m",
+		"ω",
+		"//ω//",
+		"_",
+		"∀",
+		"▽",
+		"﹏",
+	]
+	randomize()
+	
+	var has_whiskers = randf() < 0.7
+	
+	var emoticon = ""
+	var w = whiskers.pick_random()
+	if has_whiskers:
+		emoticon += w[0]
+	var e = eyes.pick_random()
+	emoticon += e[0]
+	emoticon += mouths.pick_random()
+	emoticon += e[1]
+	if has_whiskers:
+		emoticon += w[1]
+	return emoticon

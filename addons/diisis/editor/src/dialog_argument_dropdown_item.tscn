@@ -13,6 +13,7 @@ script = ExtResource("1_j0sk0")
 
 [node name="SelectAsArgumentCheckbox" type="CheckBox" parent="."]
 layout_mode = 2
+focus_mode = 0
 text = "Argument"
 
 [node name="VSeparator" type="VSeparator" parent="."]
@@ -25,6 +26,7 @@ size_flags_horizontal = 3
 [node name="SelectAsSyntaxCheckbox" type="CheckBox" parent="."]
 layout_mode = 2
 size_flags_horizontal = 10
+focus_mode = 0
 text = "Speaker"
 
 [connection signal="toggled" from="SelectAsArgumentCheckbox" to="." method="_on_select_as_argument_checkbox_toggled"]

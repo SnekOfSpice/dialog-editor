@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://dsytvj51tyel4"]
+
+[ext_resource type="Script" uid="uid://c4eb1ai22pojt" path="res://addons/diisis/editor/src/update_available.gd" id="1_uogl0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uogl0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_npady"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lq3rd"]
+
+[node name="UpdateAvailable" type="RichTextLabel"]
+custom_minimum_size = Vector2(250, 20)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_styles/fill = SubResource("StyleBoxEmpty_uogl0")
+theme_override_styles/background = SubResource("StyleBoxEmpty_npady")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lq3rd")
+bbcode_enabled = true
+text = "update"
+scroll_active = false
+shortcut_keys_enabled = false
+script = ExtResource("1_uogl0")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[connection signal="meta_clicked" from="." to="." method="_on_meta_clicked"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]

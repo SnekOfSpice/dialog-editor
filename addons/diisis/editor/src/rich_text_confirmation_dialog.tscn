@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://odbj7ownql7u"]
+
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_2a3dx"]
+[ext_resource type="Script" uid="uid://b73j47aajei7u" path="res://addons/diisis/editor/src/rich_text_confirmation_dialog.gd" id="1_kqefd"]
+
+[sub_resource type="Gradient" id="Gradient_osost"]
+offsets = PackedFloat32Array(0.442786, 1)
+colors = PackedColorArray(0.764706, 0, 0.494118, 0, 0.765423, 5.77569e-06, 0.494295, 0.545098)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2a3dx"]
+gradient = SubResource("Gradient_osost")
+height = 20
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_01m3r"]
+gradient = SubResource("Gradient_osost")
+height = 20
+fill_to = Vector2(0, 1)
+
+[node name="RichTextConfirmationDialog" type="ConfirmationDialog"]
+position = Vector2i(0, 36)
+size = Vector2i(372, 100)
+visible = true
+exclusive = false
+always_on_top = true
+theme = ExtResource("1_2a3dx")
+script = ExtResource("1_kqefd")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 364.0
+offset_bottom = 60.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/ScrollContainer"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+fit_content = true
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+
+[node name="ScrollHintTop" type="TextureRect" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+texture = SubResource("GradientTexture2D_2a3dx")
+
+[node name="ScrollHintBottom" type="TextureRect" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("GradientTexture2D_01m3r")
+
+[connection signal="item_rect_changed" from="MarginContainer/ScrollContainer/RichTextLabel" to="." method="_on_rich_text_label_item_rect_changed"]

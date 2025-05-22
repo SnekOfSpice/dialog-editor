@@ -14,6 +14,8 @@ func init() -> void:
 	find_child("DataTypeButton").init()
 	find_child("DropDownButton").init()
 	find_child("DropDownValueButton").init()
+	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 #func updated_header_default():
 #	return {
@@ -39,6 +41,9 @@ func update_drop_downs(select_dd:= 0, select_dd_value:= 0):
 	if Pages.dropdowns.get(Pages.dropdowns.keys()[0]).size() == 0:
 		find_child("UndefinedDropDownsLabel").visible = true
 		return
+	
+	select_dd = min(select_dd, Pages.dropdown_titles.size() - 1)
+	select_dd_value = min(select_dd_value, Pages.dropdowns.get(Pages.dropdowns.keys()[select_dd]).size() - 1)
 	find_child("UndefinedDropDownsLabel").visible = false
 	find_child("DropDownButton").select(select_dd)
 	
@@ -52,7 +57,7 @@ func set_is_editing_default(value: bool):
 	find_child("NameEditContainer").visible = is_editing_default
 	find_child("PropertyNameLabel").visible = not is_editing_default
 	find_child("DataTypeButton").visible = is_editing_default
-	find_child("DataTypeLabelContainer").visible = not is_editing_default
+	find_child("DefaultLabel").visible = is_editing_default
 	find_child("DeleteButton").visible = is_editing_default
 
 func set_property_name(new_name: String):
@@ -80,6 +85,7 @@ func set_data_type(new_type: int):
 		else:
 			find_child("BooleanButton").text = "false"
 			find_child("BooleanButton").button_pressed = false
+			values[0] = false
 	elif data_type == Pages.DataTypes._DropDown:
 		if typeof(values[0]) == TYPE_FLOAT: values[0] = int(values[0])
 		if typeof(values[1]) == TYPE_FLOAT: values[1] = int(values[1])
@@ -124,6 +130,7 @@ func deserialize(data: Dictionary):
 			else:
 				new_value = true
 			find_child("BooleanButton").button_pressed = bool(new_value)
+			find_child("BooleanButton").text = str(new_value)
 
 
 
@@ -142,11 +149,14 @@ func _on_data_type_button_item_selected(index: int) -> void:
 
 func stringify_value() -> String:
 	if data_type == Pages.DataTypes._DropDown:
+		values[0] = min(values[0], Pages.dropdown_titles.size() - 1)
+		values[1] = min(values[1], Pages.dropdowns.get(Pages.dropdowns.keys()[values[1]]).size() - 1)
 		var title = Pages.dropdown_titles[values[0]]
 		return str(
 			title, "/", Pages.dropdowns.get(title)[values[1]]
 		)
 		return str(values.front(), "-", values.back())
+	
 	return str(values.front())
 
 

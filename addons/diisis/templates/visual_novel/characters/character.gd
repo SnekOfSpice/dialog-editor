@@ -58,13 +58,12 @@ func _ready():
 	add_to_group("character")
 	target_x = position.x
 	
-	
-	
 	visibility_changed.connect(on_visibility_changed)
 
 func set_x_position(idx:int, time := 0, advance_instruction_after_reposition:=false):
 	var position0 = 195
 	var position6 = 822
+	@warning_ignore("integer_division")
 	var fraction = (position6 - position0) / 7
 	target_x = position0 + idx * fraction
 	
@@ -72,7 +71,7 @@ func set_x_position(idx:int, time := 0, advance_instruction_after_reposition:=fa
 	t.tween_property(self, "position:x", target_x, time)
 	
 	if advance_instruction_after_reposition and Parser.line_reader:
-		t.finished.connect(Parser.line_reader.instruction_handler.instruction_completed.emit.bind())
+		t.finished.connect(Parser.function_acceded)
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -144,11 +143,11 @@ func set_emotion(emotion_name:String):
 	if not special_extra and $Extras.get_node("default"):
 		$Extras.get_node("default").visible = true
 
-func set_extra_visible(extra_name : String, is_visible : bool, hide_others:=false):
+func set_extra_visible(extra_name : String, visibility : bool, hide_others:=false):
 	for group : Node2D in $Extras.get_children():
 		for item : Sprite2D in group.get_children():
 			if item.name == extra_name:
-				item.visible = is_visible
+				item.visible = visibility
 			elif hide_others:
 				item.visible = false
 

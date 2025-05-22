@@ -70,7 +70,8 @@ signal actor_name_changed(
 ## {
 ##    "data_type": int,
 ##    "property_name": String,
-##    "values": Array of size 2}
+##    "values": Array of size 2
+## }
 ##[/codeblock]
 signal new_header(
 	header:Array[Dictionary]
@@ -94,7 +95,7 @@ signal page_terminated(
 ## Emitted when the text of [LineReader] changes.
 ## Emitts the the entire text, irregardless of [param visible_characters].
 ## [param lead_time] is the time until the text will start showing, in seconds.
-signal text_content_text_changed(
+signal body_label_text_changed(
 	old_text: String,
 	new_text: String,
 	lead_time: float,
@@ -123,25 +124,23 @@ signal word_read(
 	word: String
 )
 
-## Emitted whenever [LineReader] advances text enough for one or more new characters to be visible in [member LineReader.text_content].
+## Emitted whenever [LineReader] advances text enough for one or more new characters to be visible in [member LineReader.body_label].
 signal visible_characters_changed(
 	old_amount:int,
 	new_amount:int,
 )
 
-## Emitted when [InstructionHandler] receives an instruction.
+## Emitted when [LineReader] receives an instruction.
 ## This will be on the same frame as [signal instruction_started_after_delay] if [param delay]
 ## is [code] 0.0[/code].
 signal instruction_started(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
-## Emitted when [InstructionHandler] executes an instruction, [param delay] seconds after [signal instruction_started].
+## Emitted when [LineReader] executes an instruction, [param delay] seconds after [signal instruction_started].
 signal instruction_started_after_delay(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
@@ -150,8 +149,7 @@ signal instruction_started_after_delay(
 ## if the instruction in question doesn't return [code]true[/code].[br]
 ##[param delay] is the time in seconds until [signal instruction_completed_after_delay] gets emitted.
 signal instruction_completed(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
@@ -159,8 +157,7 @@ signal instruction_completed(
 ## Emitted when the instruction gets completed, [param delay] seconds after [signal instruction_completed] is emitted.
 ## This will be on the same frame if [param delay] is [code]0.0[/code].
 signal instruction_completed_after_delay(
-	instruction_name : String,
-	args : Array,
+	execution_text:String,
 	delay : float,
 )
 
@@ -177,26 +174,49 @@ signal line_reader_resumed_after_interrupt(
 	line_reader:LineReader
 )
 
-## Emitted when [member LineReader.text_content] reaches a [param visible_ratio] of [code]1.0[/code].
+## Emitted when [member LineReader.body_label] reaches a [param visible_ratio] of [code]1.0[/code].
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_filled()
+signal body_label_filled()
 
-## Emitted when [member LineReader.text_content.visible_characters] is different from its value in the previous frame.
+## Emitted when [member LineReader.body_label.visible_characters] is different from its value in the previous frame.
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_visible_characters_changed(
+signal body_label_visible_characters_changed(
 	visible_characters:int
 )
 
-## Emitted when [member LineReader.text_content.visible_ratio] is different from its value in the previous frame.
+## Emitted when [member LineReader.body_label.visible_ratio] is different from its value in the previous frame.
 ## Not emitted if [member LineReader.text_speed] is equal to [constant LineReader.MAX_TEXT_SPEED].
-signal text_content_visible_ratio_changed(
+signal body_label_visible_ratio_changed(
 	visible_ratio:float
 )
 
-## Emitted when [method Parser.go_back] fails. This can be because the trail of visited line indices is empty or because the line type of the would-be previous line is non-Text.
-signal go_back_declined()
+## Emitted when [method LineReader.request_go_back] fails. Emits [enum Parser.RollbackDeclineReason]
+signal go_back_declined(reason:Parser.RollbackDeclineReason)
 
-## Emitted when [method Parser.go_back] successfully goes back to the last visited index.
+## Emitted when a new line is read because of a successful [method LineReader.request_go_back] call. [param page] and [param line] are the indices of the new line.[br]
+## Note: Is not emitted when going back through chunks, such as when going back through individual lines inside of a single Text Line with dialog syntax.[br]
+## 
+## Going from displaying "More text!" to "Text!", this will emit:
+## [codeblock]
+## ---- Line ----
+## []>narrator: Text!
+## ---- Line ----
+## []>narrator: More text!
+## [/codeblock]
+## 
+## 
+## Going from displaying "More text!" to "Text!", this will [b]not[/b] emit:
+## [codeblock]
+## ---- Line ----
+## []>narrator: Text!
+## []>narrator: More text!
+## [/codeblock]
 signal go_back_accepted(page:int, line:int)
 
 signal read_new_line(line_index:int)
+
+## Emitted when [LineReader] skips a line. A line is skipped when it's toggled off with the eye icon in the top left corner in DIISIS.
+signal line_skipped()
+
+## Emitted when [method LineReader.request_advance] successfully advances the [LineReader].
+signal advanced()

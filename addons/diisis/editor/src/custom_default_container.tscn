@@ -1,0 +1,107 @@
+[gd_scene load_steps=4 format=3 uid="uid://faulsyhhddoi"]
+
+[ext_resource type="Script" uid="uid://5yedvhplb2cl" path="res://addons/diisis/editor/src/custom_default_container.gd" id="1_fvb33"]
+[ext_resource type="PackedScene" uid="uid://3l284fv7a4s1" path="res://addons/diisis/editor/visuals/go_to_script_button.tscn" id="2_b7mgr"]
+[ext_resource type="StyleBox" uid="uid://cjwtx12fg17sj" path="res://addons/diisis/editor/visuals/theme/region_panel_dark.tres" id="3_yjhlw"]
+
+[node name="CustomDefaultContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fvb33")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="MethodSearch" type="LineEdit" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Search"
+keep_editing_on_text_submit = true
+
+[node name="ItemList" type="ItemList" parent="HSplitContainer/VBoxContainer"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "Set default overrides. Any method called by diisis will have 2 steps of default applied. First the one set in the function signature in [img]uid://dgf242nwi7c37[/img]LineReader scripts. Then the ones you set here.
+use them with a [font=res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf]*[/font] in function calls
+Additionally, you can set string-based arguments to only accept dropdown-defined values here."
+fit_content = true
+scroll_active = false
+
+[node name="Fuck" type="RichTextLabel" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FuncNameContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="FuncNameLabel" type="Label" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/FuncNameContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 18
+
+[node name="GoToScriptButton" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/FuncNameContainer" instance=ExtResource("2_b7mgr")]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+text = "save"
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/PanelContainer/VSplitContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_yjhlw")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/PanelContainer"]
+layout_mode = 2
+split_offset = -600
+
+[node name="ArgContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="DropdownContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[connection signal="text_changed" from="HSplitContainer/VBoxContainer/MethodSearch" to="." method="_on_method_search_text_changed"]
+[connection signal="gui_input" from="HSplitContainer/VBoxContainer/ItemList" to="." method="_on_item_list_gui_input"]
+[connection signal="item_selected" from="HSplitContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="item_rect_changed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/FuncNameContainer/FuncNameLabel" to="." method="_on_func_name_label_item_rect_changed"]
+[connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/FuncNameContainer/GoToScriptButton" to="." method="_on_go_to_script_button_pressed"]
+[connection signal="pressed" from="HSplitContainer/PanelContainer/VSplitContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

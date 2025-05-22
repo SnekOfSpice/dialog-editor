@@ -10,6 +10,7 @@ var accept_dialogue:AcceptDialog
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
+const AUTOLOAD_EDITOR_TEXT_TO_DIISIS = "TextToDiisis"
 const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
@@ -19,6 +20,7 @@ const TEMPLATE_VN_AUTOLOAD_GAME_WORLD = "GameWorld"
 const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
 const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
+const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
 
 func setup_vn_template():
 	var e1 = InputEventMouseButton.new()
@@ -89,21 +91,10 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name in ["const", "game_world", "go_back_handler", "options", "sound"]:
+	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
-		var autoload_name:String
-		match file_name:
-			"const":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_CONST
-			"game_world":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_GAME_WORLD
-			"go_back_handler":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER
-			"options":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_OPTIONS
-			"sound":
-				autoload_name = TEMPLATE_VN_AUTOLOAD_SOUND
+		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
 		if FileAccess.file_exists(path_game):
 			add_autoload_singleton(autoload_name, path_game)
 		elif FileAccess.file_exists(path_plugin):
@@ -139,10 +130,15 @@ func setup_vn_template():
 	ProjectSettings.save()
 	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
+func clear_editor_singletons():
+	Pages.clear()
+	DiisisEditorActions.clear()
+
 func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS, "res://addons/diisis/editor/autoload/text_to_diisis.tscn")
 
 func add_parser_singletons():
 	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
@@ -152,27 +148,31 @@ func remove_editor_singletons():
 	remove_autoload_singleton(AUTOLOAD_PAGES)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS)
 
 func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER)
 	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
+	Engine.set_meta("DIISISPlugin", self)
+	# property info doesnt work
+	# but in case you get it to work, here's the descriptions
 	if not ProjectSettings.has_setting("diisis/project/file/path"):
+		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
+		ProjectSettings.save()
+	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
+		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
+		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
 	add_parser_singletons()
-	add_custom_type("LineReader", "Control", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"))
-	add_custom_type("InstructionHandler", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/reader_icon_Zeichenfläche 1.svg"))
-
+	add_custom_type("LineReader", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/icon_line_reader.svg"))
+	
 	if not OS.has_feature("editor"):
 		return
-	
-	var root := DirAccess.open("res://")
-	if not root.dir_exists("addons/diisis/files"):
-		root.make_dir("addons/diisis/files")
 	
 	toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
@@ -186,7 +186,7 @@ func _enter_tree():
 	toolbar_button.get_parent().move_child(toolbar_button, -2)
 	
 
-	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/Comfortaa-Regular.ttf]"
+	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
 	print_rich(welcome_message)
 
@@ -221,8 +221,7 @@ func open_editor():
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.grab_focus()
 	else:
-		remove_editor_singletons()
-		add_editor_singletons()
+		clear_editor_singletons()
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		
@@ -233,25 +232,47 @@ func open_editor():
 		await get_tree().process_frame
 		dia_editor_window.popup()
 		dia_editor_window.open_new_file.connect(open_new_file)
+		dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
 func open_new_file():
-	remove_editor_singletons()
-	add_editor_singletons()
+	clear_editor_singletons()
 	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 	dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
+	dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
+	dia_editor_window.title = "DIISIS"
 
+func on_window_request_reload_editor():
+	await get_tree().process_frame
+	open_editor()
+
+var was_playing_scene := false
 func _process(delta: float) -> void:
+	if not was_playing_scene and EditorInterface.is_playing_scene():
+		if is_instance_valid(Pages.editor) and Pages.save_on_play:
+			Pages.editor.save_to_dir_if_active_dir()
+	was_playing_scene = EditorInterface.is_playing_scene()
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.wrap_controls = true
 
 func _exit_tree():
+	Engine.remove_meta("DIISISPlugin")
 	remove_editor_singletons()
 	remove_parser_singletons()
 	remove_autoload_singleton(AUTOLOAD_SHARED_DIISIS)
 	if dia_editor_window:
 		dia_editor_window.queue_free()
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
+
+func get_version() -> String:
+	var config: ConfigFile = ConfigFile.new()
+	config.load(get_plugin_path() + "/plugin.cfg")
+	return config.get_value("plugin", "version")
+
+
+## Get the current path of the plugin
+func get_plugin_path() -> String:
+	return get_script().resource_path.get_base_dir()

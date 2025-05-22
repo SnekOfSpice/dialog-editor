@@ -24,6 +24,8 @@ func init(title:String):
 	find_child("ReplaceSpeakersCheckBox").button_pressed = true
 	find_child("Parameters").visible = false
 	find_child("DuplicateOptionsLabel").visible = false
+	find_child("DeleteParameters").visible = false
+	find_child("DeleteParametersButton").visible = Pages.dropdown_dialog_arguments.has(title)
 	dropdown_options = Pages.dropdowns.get(title)
 
 func _on_edit_button_pressed() -> void:
@@ -52,10 +54,9 @@ func _on_discard_title_button_pressed() -> void:
 
 func _on_line_edit_text_changed(new_text: String) -> void:
 	find_child("SaveOptionsButton").disabled = find_child("TitleLabel").text != find_child("LineEdit").text
-	if Pages.dropdown_titles.has(new_text):
-		if new_text != find_child("TitleLabel").text:
-			find_child("SaveTitleButton").disabled = true
-			return
+	if Pages.is_new_dropdown_title_invalid(new_text, find_child("TitleLabel").text):
+		find_child("SaveTitleButton").disabled = true
+		return
 	find_child("SaveTitleButton").disabled = false
 
 
@@ -117,8 +118,6 @@ func _on_save_options_button_pressed() -> void:
 	find_child("ExpandButton").disabled = false
 
 
-
-
 func _on_edit_container_visibility_changed() -> void:
 	find_child("SaveOptionsButton").disabled = find_child("EditContainer").visible
 
@@ -154,3 +153,16 @@ func _on_replace_in_text_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_save_parameters_button_pressed() -> void:
 	find_child("Parameters").visible = not find_child("Parameters").visible
+
+
+func _on_delete_button_pressed() -> void:
+	if Pages.dropdown_title_for_dialog_syntax == find_child("TitleLabel").text:
+		Pages.editor.notify("Cannot delete speaker arg dropdown.")
+		return
+	var title = find_child("TitleLabel").text
+	Pages.delete_dropdown(title, find_child("EraseFromTextCheckBox").button_pressed)
+	queue_free()
+
+
+func _on_delete_parameters_button_pressed() -> void:
+	find_child("DeleteParameters").visible = not find_child("DeleteParameters").visible

@@ -5,6 +5,14 @@ class_name Conditionals
 enum ConditionalOperand {
 	AND, OR, nOrMore, nOrLess, betweenNMincl
 }
+
+const OPERAND_NAMES := {
+	ConditionalOperand.AND : "All",
+	ConditionalOperand.OR : "Any",
+	ConditionalOperand.nOrMore : "At Least",
+	ConditionalOperand.nOrLess : "At Most",
+	ConditionalOperand.betweenNMincl : "Between",
+}
 enum Behavior {
 	Show,
 	Hide,
@@ -21,13 +29,17 @@ func init() -> void:
 	find_child("OperandOptionButton").clear()
 	find_child("BehaviorButton").clear()
 	
-	for a in ConditionalOperand:
-		find_child("OperandOptionButton").add_item(a)
+	for a in ConditionalOperand.size():
+		find_child("OperandOptionButton").add_item(OPERAND_NAMES.get(a))
 	
 	for a in Behavior:
+		# depth 2 is choice item. only choice item has a meaningful difference between hide/show and enable/disable
+		if (a == "Enable" or a == "Disable") and address_depth != 2:
+			continue
 		find_child("BehaviorButton").add_item(a)
 	
 	set_operand(ConditionalOperand.AND)
+	set_controls_collapsed(Pages.collapse_conditional_controls_by_default)
 
 func set_visibility(value:bool):
 	super.set_visibility(value)
@@ -49,6 +61,7 @@ func serialize() -> Dictionary:
 	result["operand_key"] = ConditionalOperand.keys()[operand]
 	result["behavior_key"] = Behavior.keys()[selected_behavior]
 	result["behavior"] = selected_behavior
+	result["meta.controls_collapsed"] = get_controls_collapsed()
 	if visibility_toggle_button != find_child("VisibilityToggleButton"):
 		result["meta.visible"] = visible
 	else:
@@ -74,6 +87,7 @@ func deserialize(data: Dictionary):
 			find_child("OperandArg2").value = args[1]
 	
 	set_visibility(data.get("meta.visible", false))
+	set_controls_collapsed(data.get("meta.controls_collapsed", Pages.collapse_conditional_controls_by_default))
 	
 	visibility_toggle_button.button_pressed = data.get("meta.visible", false)
 	
@@ -97,3 +111,31 @@ func _on_operand_option_button_item_selected(index: int) -> void:
 
 func _on_behavior_button_item_selected(index: int) -> void:
 	selected_behavior = index
+
+func get_controls_collapsed() -> bool:
+	return find_child("CollapseControlButton").button_pressed
+
+func _get_operand_string() -> String:
+	var result : String = find_child("OperandOptionButton").text
+	if operand in [ConditionalOperand.nOrMore, ConditionalOperand.nOrLess, ConditionalOperand.betweenNMincl]:
+		result += str(" ", int(find_child("OperandArg1").value))
+	if operand in [ConditionalOperand.betweenNMincl]:
+		result += str(" - ", int(find_child("OperandArg2").value))
+	
+	return result
+
+func set_controls_collapsed(value:bool):
+	var button : Button = find_child("CollapseControlButton")
+	find_child("BehaviorInfoLabel").visible = not value
+	find_child("BehaviorButton").visible = not value
+	find_child("OperandContainer").visible = not value
+	if value:
+		button.text = str(
+			_get_operand_string(),
+			" > ",
+			find_child("BehaviorButton").text
+		)
+		button.tooltip_text = "Click to expand controls"
+	else:
+		button.text = "<"
+		button.tooltip_text = "Click to collapse controls"

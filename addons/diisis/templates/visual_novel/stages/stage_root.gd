@@ -4,6 +4,10 @@ class_name StageRoot
 var stage := ""
 var screen := ""
 
+@export_group("Screen Fade", "screen_fade_")
+@export_exp_easing("positive_only") var screen_fade_in := 1.0
+@export_exp_easing("positive_only") var screen_fade_out := 0.5
+
 var screenshot_to_save:Image
 
 func _ready():
@@ -12,9 +16,9 @@ func _ready():
 	GameWorld.stage_root = self
 
 func set_screen(screen_path:String, payload := {}):
-	if is_instance_valid(Parser.line_reader):
-		if Parser.line_reader.is_input_locked:
-			return
+	#if is_instance_valid(Parser.line_reader):
+		#if Parser.line_reader.is_executing:
+			#return
 	
 	if stage == CONST.STAGE_GAME:
 		screenshot_to_save = get_viewport().get_texture().get_image()
@@ -25,30 +29,44 @@ func set_screen(screen_path:String, payload := {}):
 	if (null if not is_instance_valid(GameWorld.camera) else GameWorld.camera) is GameCamera:
 		screen_container = GameWorld.camera.get_screen_container()
 	else:
-		screen_container = $CanvasLayer/ScreenContainer
+		screen_container = find_child("ScreenContainer")
 	
 	if screen_path.is_empty():
-		for c in screen_container.get_children():
-			c.queue_free()
-		screen_container.visible = false
-		if $StageContainer.get_child_count() > 0:
-			$StageContainer.get_child(0).grab_focus()
+		if screen_fade_out == 0 or screen_container.get_child_count() == 0:
+			for c in screen_container.get_children():
+				c.queue_free()
+			screen_container.visible = false
+		else:
+			var tween
+			for c in screen_container.get_children():
+				var t = create_tween()
+				t.tween_property(c, "modulate:a", 0, screen_fade_out)
+				t.set_ease(Tween.EASE_OUT_IN)
+				t.finished.connect(c.queue_free)
+				tween = t
+			tween.finished.connect(screen_container.set_visible.bind(false))
 		screen = screen_path
 		return
-	var new_stage = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
+	var new_screen = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
 	
 	match screen_path:
 		CONST.SCREEN_NOTICE:
-			new_stage.handle_payload(payload)
+			new_screen.handle_payload(payload)
 	
-	screen_container.add_child(new_stage)
+	if screen_fade_in > 0:
+		new_screen.modulate.a = 0
+	screen_container.add_child(new_screen)
+	if screen_fade_in > 0:
+		var t = create_tween()
+		t.tween_property(new_screen, "modulate:a", 1, screen_fade_in)
+		t.set_ease(Tween.EASE_OUT_IN)
 	screen_container.visible = true
 	screen = screen_path
 
 func set_background(background:String, fade_time:=0.0):
 	if background == "none" or background == "null" or background.is_empty():
 		background = GameWorld.background
-	var path = str(CONST.BACKGROUND_ROOT, CONST.get(str("BACKGROUND_", background.to_upper())))
+	var path = CONST.fetch("BACKGROUND", background)
 	if not path:
 		push_warning(str("COULDN'T FIND BACKGROUND ", background, "!"))
 		return

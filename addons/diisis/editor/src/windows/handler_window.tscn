@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8vph2ifmury7"]
+
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_6c5k8"]
+[ext_resource type="Script" uid="uid://cor5epa2ohus1" path="res://addons/diisis/editor/src/windows/handler_window.gd" id="1_6ygk2"]
+[ext_resource type="PackedScene" uid="uid://7os6why715o8" path="res://addons/diisis/editor/src/handler_setup_container.tscn" id="2_6c5k8"]
+
+[node name="HandlerWindow" type="Window"]
+title = "Functions & Variables"
+theme = ExtResource("1_6c5k8")
+script = ExtResource("1_6ygk2")
+
+[node name="HandlerSetupContainer" parent="." instance=ExtResource("2_6c5k8")]
+
+[node name="CloseDialog" type="ConfirmationDialog" parent="."]
+always_on_top = true
+ok_button_text = "Discard Changes"
+dialog_text = "You have unsaved changes, are you sure you want to close the window and discard them?"
+cancel_button_text = "Stay"
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="canceled" from="CloseDialog" to="." method="_on_close_dialog_canceled"]
+[connection signal="confirmed" from="CloseDialog" to="." method="_on_close_dialog_confirmed"]

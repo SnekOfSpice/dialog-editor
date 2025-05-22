@@ -58,7 +58,7 @@ func set_dialog_syntax_dropdown(dropdown_title:String):
 	Pages.dropdown_title_for_dialog_syntax = dropdown_title
 
 func _on_create_dd_name_text_edit_text_changed(new_text: String) -> void:
-	find_child("AddButton").disabled = new_text.is_empty()
+	find_child("AddButton").disabled = Pages.is_new_dropdown_title_invalid(new_text)
 
 
 func _on_clear_search_button_pressed() -> void:

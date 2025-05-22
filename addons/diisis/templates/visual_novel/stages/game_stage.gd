@@ -12,6 +12,8 @@ enum TextStyle {
 @export var stylebox_regular : StyleBox
 @export var stylebox_cg : StyleBox
 
+@onready var line_reader : LineReader = find_child("LineReader")
+
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
 var actor_name := ""
@@ -22,19 +24,18 @@ var is_name_container_visible := false
 var hovering_meta := false
 
 @onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
-@onready var rtl_custom_minimum_size : Vector2 = find_child("RichTextLabel").custom_minimum_size
+@onready var rtl_custom_minimum_size : Vector2 = find_child("BodyLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-#var blockers : int = 3 # character count + 1 (self) get_tree().get_node_count_in_group("diisis_character")
-var advance_blockers := 0
-
 @onready var text_start_position = find_child("TextContainer1").position
+
+var ui_id := 1
+@onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 
 var callable_upon_blocker_clear:Callable
 
 @onready var camera = $Camera2D
 @onready var overlay_static = find_child("Static").get_node("ColorRect")
-@onready var overlay_sun = find_child("Sun").get_node("ColorRect")
 @onready var overlay_fade_out = find_child("FadeOut").get_node("ColorRect")
 @onready var overlay_orgasm = find_child("Orgasm").get_node("ColorRect")
 
@@ -45,25 +46,23 @@ var callable_upon_blocker_clear:Callable
 
 var target_lod := 0.0
 var target_mix := 0.0
-var target_sun_steps := 1.8
-var target_sun_fill_amount := -1.0
 var target_static := 0.0
 
 func _ready():
+	use_ui(1)
 	find_child("StartCover").visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
-	ParserEvents.text_content_text_changed.connect(on_text_content_text_changed)
+	ParserEvents.body_label_text_changed.connect(on_body_label_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	ParserEvents.instruction_completed.connect(on_instruction_completed)
 	ParserEvents.read_new_line.connect(on_read_new_line)
 	
-	GameWorld.instruction_handler = find_child("InstructionHandler")
 	GameWorld.game_stage = self
 	
-	find_child("LineReader").auto_continue = Options.auto_continue
-	find_child("LineReader").text_speed = Options.text_speed
-	find_child("LineReader").auto_continue_delay = Options.auto_continue_delay
+	line_reader.auto_continue = Options.auto_continue
+	line_reader.text_speed = Options.text_speed
+	line_reader.auto_continue_delay = Options.auto_continue_delay
 	
 	set_text_style(text_style)
 	
@@ -74,7 +73,6 @@ func _ready():
 	
 	tree_exiting.connect(on_tree_exit)
 	
-	overlay_sun.get_material().set_shader_parameter("fill_amount", -1.0)
 	hide_cg()
 	
 	await get_tree().process_frame
@@ -93,19 +91,17 @@ func on_tree_exit():
 	GameWorld.game_stage = null
 
 func on_instruction_started(
-	instruction_name : String,
-	_args : Array,
+	instruction_text : String,
 	_delay : float,
 ):
-	if instruction_name == "black_fade":
+	if instruction_text.begins_with("black_fade"):
 		find_child("ControlsContainer").visible = false
 
 func on_instruction_completed(
-	instruction_name : String,
-	_args : Array,
+	instruction_text : String,
 	_delay : float,
 ):
-	if instruction_name == "black_fade":
+	if instruction_text.begins_with("black_fade"):
 		find_child("ControlsContainer").visible = true
 
 func go_to_main_menu(_unused):
@@ -113,11 +109,6 @@ func go_to_main_menu(_unused):
 
 
 func _process(_delta: float) -> void:
-	#sun_mat.set_shader_parameter("steps", lerp(sun_mat.get_shader_parameter("steps"), target_sun_steps, 0.02))
-	#sun_mat.set_shader_parameter("fill_amount", lerp(sun_mat.get_shader_parameter("fill_amount"), target_sun_fill_amount, 0.02))
-	#if sun_mat.get_shader_parameter("fill_amount") > -1:
-	#sun_mat.set_shader_parameter("texture_channel0", get_viewport().get_texture())
-	
 	fade_mat.set_shader_parameter("lod", lerp(fade_mat.get_shader_parameter("lod"), target_lod, 0.02))
 	fade_mat.set_shader_parameter("mix_percentage", lerp(fade_mat.get_shader_parameter("mix_percentage"), target_mix, 0.02))
 	
@@ -125,7 +116,6 @@ func _process(_delta: float) -> void:
 	static_mat.set_shader_parameter("border_size", lerp(static_mat.get_shader_parameter("border_size"), 1 - target_static, 0.02))
 	
 	orgasm_mat.set_shader_parameter("lod", lerp(orgasm_mat.get_shader_parameter("lod"), 0.0, 0.000175))
-
 	
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
 
@@ -134,10 +124,7 @@ func cum(_voice:String):
 	
 	get_tree().create_timer(1.5).timeout.connect(orgasm_mat.set_shader_parameter.bind("lod", 1.4))
 
-
-func _input(event: InputEvent) -> void:
-	if advance_blockers > 0:
-		return
+func _unhandled_input(event: InputEvent) -> void:
 	if not GameWorld.stage_root.screen.is_empty():
 		return
 	if event is InputEventKey:
@@ -155,8 +142,8 @@ func _input(event: InputEvent) -> void:
 				find_child("VNUIRoot").add_child(notification_popup)
 				notification_popup.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
 			if InputMap.action_has_event("toggle_auto_continue", event):
-				find_child("LineReader").auto_continue = not find_child("LineReader").auto_continue
-				Options.auto_continue = find_child("LineReader").auto_continue
+				line_reader.auto_continue = not line_reader.auto_continue
+				Options.auto_continue = line_reader.auto_continue
 			if InputMap.action_has_event("toggle_ui", event):
 				if find_child("VNUI").visible:
 					hide_ui()
@@ -178,12 +165,13 @@ func _input(event: InputEvent) -> void:
 			return
 		if hovering_meta:
 			return
-		find_child("LineReader").request_advance()
+		line_reader.request_advance()
 	elif event.is_action_pressed("go_back"):
-		find_child("LineReader").go_back()
+		line_reader.request_go_back()
 
 func show_ui():
-	find_child("VNUI").visible = true
+	if is_instance_valid(find_child("VNUI")):
+		find_child("VNUI").visible = true
 
 func hide_ui():
 	find_child("VNUI").visible = false
@@ -196,15 +184,21 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	cg_root.visible = true
 	
-	var cg_node = TextureRect.new()
-	cg_root.add_child(cg_node)
-	cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var cg_path := str("res://game/cg/", cg_name, ".png")
-	if not ResourceLoader.exists(cg_path):
-		cg_name = cg
-		str("res://game/cg/", cg_name, ".png")
+	var cg_path := CONST.fetch("CG", cg_name)
+	var cg_node : Control
+	
+	if cg_path.is_empty():
 		push_warning(str("Couldn't find CG \"", cg_name, "\"."))
-	cg_node.texture = load(cg_path)
+		return
+	if cg_path.ends_with(".tscn"):
+		cg_node = load(cg_path).instantiate()
+	else:
+		cg_node = TextureRect.new()
+		cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cg_node.texture = load(cg_path)
+	
+	cg_root.add_child(cg_node)
+	
 	var t = create_tween()
 	
 	if cg_root.modulate.a == 1.0:
@@ -214,7 +208,11 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
 	
 	
-	var background_size : Vector2 = cg_node.texture.get_size()
+	var background_size : Vector2
+	if cg_node is TextureRect:
+		background_size = cg_node.texture.get_size()
+	else:
+		background_size = cg_node.size
 	var overshoot = background_size - Vector2(
 		ProjectSettings.get_setting("display/window/size/viewport_width"),
 		ProjectSettings.get_setting("display/window/size/viewport_height")
@@ -246,10 +244,10 @@ func set_text_style(style:TextStyle):
 	if text_style == TextStyle.ToBottom:
 		find_child("TextContainer1").custom_minimum_size = text_container_custom_minimum_size
 		find_child("TextContainer1").position = text_start_position
-		find_child("RichTextLabel").custom_minimum_size = rtl_custom_minimum_size
+		find_child("BodyLabel").custom_minimum_size = rtl_custom_minimum_size
 	elif text_style == TextStyle.ToCharacter:
 		find_child("TextContainer1").custom_minimum_size.x = 230
-		find_child("RichTextLabel").custom_minimum_size.x = 230
+		find_child("BodyLabel").custom_minimum_size.x = 230
 
 func hide_cg(fade_out := 0.0):
 	cg = ""
@@ -270,7 +268,7 @@ func _clear_cg():
 			c.queue_free()
 		#cg_root.modulate.a = 0.0
 		if emit_insutrction_complete_on_cg_hide:
-			GameWorld.instruction_handler.instruction_completed.emit()
+			Parser.function_acceded()
 			emit_insutrction_complete_on_cg_hide = false
 	
 	if stylebox_regular:
@@ -286,7 +284,7 @@ func on_actor_name_changed(
 		is_name_container_visible = name_container_visible
 		return
 		
-func on_text_content_text_changed(
+func on_body_label_text_changed(
 	_old_text: String,
 	_new_text: String,
 	lead_time: float,
@@ -305,11 +303,11 @@ func on_text_content_text_changed(
 		var offset : int = sign(center.direction_to(actor_position).x) * 60
 		actor_position.x -= offset
 		if sign(offset) == 1:
-			actor_position.x -= find_child("LineReader").text_container.size.x
+			actor_position.x -= line_reader.text_container.size.x
 		actor_position.y -= 100
 	else: # name container isn't visible
-		actor_position.x = center.x - find_child("LineReader").text_container.size.x * 0.5
-		actor_position.y = size.y - find_child("LineReader").text_container.size.y - 60
+		actor_position.x = center.x - line_reader.text_container.size.x * 0.5
+		actor_position.y = size.y - line_reader.text_container.size.y - 60
 	
 	if dialog_box_tween:
 		dialog_box_tween.kill()
@@ -340,13 +338,12 @@ func serialize() -> Dictionary:
 	
 	result["start_cover_visible"] = find_child("StartCover").visible
 	result["static"] = overlay_static.get_material().get_shader_parameter("intensity")
-	result["sun_steps"] = overlay_sun.get_material().get_shader_parameter("steps")
-	result["sun_fill_amount"] = overlay_sun.get_material().get_shader_parameter("fill_amount")
 	result["fade_out_lod"] = overlay_fade_out.get_material().get_shader_parameter("lod")
 	result["fade_out_mix_percentage"] = overlay_fade_out.get_material().get_shader_parameter("mix_percentage")
 	
 	result["camera"] = $Camera2D.serialize()
 	result["ui_id"] = ui_id
+	result["ui_root_visible"] = ui_root.visible
 	
 	return result
 
@@ -388,10 +385,6 @@ func deserialize(data:Dictionary):
 			push_warning("Deserialized game_stage with something wild.")
 			return
 		find_child("TextContainer1").position = fixed_position
-	target_sun_fill_amount = data.get("sun_fill_amount", -1.0)
-	target_sun_steps = data.get("sun_steps", 10.0)
-	overlay_sun.get_material().set_shader_parameter("fill_amount", target_sun_fill_amount)
-	overlay_sun.get_material().set_shader_parameter("steps", target_sun_steps)
 	
 	target_lod = data.get("fade_out_lod", 0.0)
 	target_mix = data.get("fade_out_mix_percentage", 0.0)
@@ -404,6 +397,7 @@ func deserialize(data:Dictionary):
 	
 	use_ui(data.get("ui_id", 1))
 	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
+	ui_root.visible = data.get("ui_root_visible", true)
 
 var emit_insutrction_complete_on_cg_hide :bool
 
@@ -425,43 +419,32 @@ func show_letter():
 func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 	if on_top:
 		emit_insutrction_complete_on_cg_hide = true
-		
 		set_cg_top(cg_name, fade_in)
 	else:
-		var handler : InstructionHandler = GameWorld.instruction_handler
 		var t = get_tree().create_timer(fade_in)
-		t.timeout.connect(handler.instruction_completed.emit)
-		
+		t.timeout.connect(Parser.function_acceded)
 		set_cg_bottom(cg_name, fade_in)
-
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
 
-
 func _on_menu_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
-
-
-
-
 func _on_chapter_cover_chapter_intro_finished() -> void:
-	GameWorld.instruction_handler.instruction_completed.emit()
+	Parser.function_acceded()
 	find_child("ChapterCover").visible = false
 
 
-func _on_instruction_handler_splatter(amount: int) -> void:
+func splatter(amount: int) -> void:
 	for i in amount:
 		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
 		find_child("VFXLayer").add_child(sprite)
 
-var ui_id := 1
-@onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 func use_ui(id:int):
-	var lr : LineReader = find_child("LineReader")
+	var lr : LineReader = line_reader
 	var root_existed : bool
-	var text_content_text = lr.text_content.text
+	var body_label_text = lr.body_label.text
 	var current_raw_name = lr.current_raw_name
 	
 	if ui_root:
@@ -469,21 +452,21 @@ func use_ui(id:int):
 	else:
 		root_existed = false
 	ui_id = id
-	ui_root = find_child(str("TextContainer", ui_id))
+	ui_root = find_child("TextContainer%s" % ui_id)
 	for c in find_child("VNUI").get_children():
 		if c.name.begins_with("TextContainer"):
 			c.visible = c == ui_root
 	
-	lr.text_content = ui_root.find_child("RichTextLabel")
+	lr.body_label = ui_root.find_child("BodyLabel")
 	lr.text_container = ui_root
-	lr.name_label = ui_root.find_child("Label")
-	lr.name_container = ui_root.find_child("PanelContainer")
+	lr.name_label = ui_root.find_child("NameLabel")
+	lr.name_container = ui_root.find_child("NameContainer")
 	lr.prompt_finished = ui_root.find_child("PageFinished")
 	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
 	
 	if root_existed:
 		lr.update_name_label(current_raw_name)
-		lr.text_content.text = text_content_text
+		lr.body_label.text = body_label_text
 
 func set_static(level:float):
 	target_static = level
@@ -492,16 +475,6 @@ func set_static(level:float):
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
-
-func _on_instruction_handler_sun(property: String, value: float) -> void:
-	set(str("target_sun_", property), value)
-	#overlay_sun.get_material().set_shader_parameter(property, value)
-
-func increment_advance_blocker():
-	advance_blockers += 1
-func decrement_advance_blocker():
-	advance_blockers -= 1
-
 
 func _on_rich_text_label_meta_hover_ended(_meta: Variant) -> void:
 	hovering_meta = false

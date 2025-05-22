@@ -6,7 +6,7 @@
 
 [node name="MovePagePopup" type="Window"]
 gui_embed_subwindows = true
-title = "Move Pages"
+title = "Pages"
 initial_position = 2
 size = Vector2i(659, 326)
 wrap_controls = true
@@ -45,6 +45,8 @@ focus_mode = 0
 text = "Reset Address Mode..."
 
 [node name="ResetAddressModePopup" parent="." instance=ExtResource("3_p8ppp")]
+initial_position = 2
+size = Vector2i(372, 1864)
 visible = false
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]

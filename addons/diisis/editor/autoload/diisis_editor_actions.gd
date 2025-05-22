@@ -13,6 +13,16 @@ var clipboard := {}
 var current_selection_address_depth := -1 # should be DiisisEditorUtil.AddressDepth
 var delete_from_selected_addresses_on_insert := false
 
+func clear():
+	blank_override_line_addresses.clear()
+	blank_override_choice_item_addresses.clear()
+	cached_pages.clear()
+	cached_lines.clear()
+	cached_choice_items.clear()
+	clipboard.clear()
+	current_selection_address_depth = -1
+	delete_from_selected_addresses_on_insert = false
+
 func add_line(at_index:int, data:={}, force_new_line_object:=true, change_line_references:=false):
 	add_lines([at_index], {at_index:data}, force_new_line_object, change_line_references)
 
@@ -41,7 +51,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=true, ch
 
 
 func delete_lines(indices:Array):
-	var page_number := Pages.editor.get_current_page_number()
+	var page_number : int = Pages.editor.get_current_page_number()
 	for i in indices:
 		var address := str(page_number, ".", i)
 		while blank_override_line_addresses.has(address):
@@ -266,6 +276,10 @@ func get_selected_addresses(depth:int) -> Array:
 	selected_on_page = DiisisEditorUtil.sort_addresses(selected_on_page)
 	return selected_on_page
 
+func get_clipboard_for_start_address(address:String) -> Dictionary:
+	var insert_depth = DiisisEditorUtil.get_address_depth(address)
+	return clipboard.get(insert_depth, {})
+
 func insert_from_clipboard(start_address:String):
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
 	var data_at_depth = clipboard.get(insert_depth, {})
@@ -289,7 +303,7 @@ func insert_from_clipboard(start_address:String):
 		
 		# deselect
 		var addresses := []
-		var page_number := Pages.editor.get_current_page_number()
+		var page_number : int = Pages.editor.get_current_page_number()
 		for j in indices:
 			addresses.append(str(page_number, ".", j))
 		for address in addresses:
@@ -342,12 +356,13 @@ func replace_line_content_texts(line_addresses:Array, what:String, with:String, 
 				continue
 			var line = lines[i]
 			if line.get("line_type") == DIISIS.LineType.Text:
-				var content : String = line.get("content").get("content")
+				var text_id : String = line.get("content").get("text_id")
+				var content : String = Pages.get_text(text_id)
 				if case_insensitive:
 					content = content.replacen(what, with)
 				else:
 					content = content.replace(what, with)
-				line["content"]["content"] = content
+				Pages.save_text(text_id, content)
 			i += 1
 	
 	await get_tree().process_frame
@@ -379,22 +394,34 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 				var choices : Array = line.get("content").get("choices", [])
 				var choice_indices_to_operate_on : Array = pages_to_operate_on.get(n).get(line_index)
 				for index in choice_indices_to_operate_on:
-					var choice = choices[index]
+					var choice : Dictionary = choices[index]
 					var choice_address := str(n, ".", line_index, ".", index)
+					var text_id_enabled : String = choice.get("text_id_enabled", "")
+					var text_id_disabled : String = choice.get("text_id_disabled", "")
 					if enabled_addresses.has(choice_address):
 						if case_insensitive:
-							choice["choice_text.enabled"] = choice["choice_text.enabled"].replacen(what, with)
+							if text_id_enabled.is_empty:
+								choice["choice_text.enabled"] = choice["choice_text.enabled"].replacen(what, with)
+							else:
+								Pages.save_text(text_id_enabled, Pages.get_text(text_id_enabled).replacen(what, with))
 						else:
-							choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
+							if text_id_enabled.is_empty:
+								choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
+							else:
+								Pages.save_text(text_id_enabled, Pages.get_text(text_id_enabled).replace(what, with))
 					if disabled_addresses.has(choice_address):
 						if case_insensitive:
-							choice["choice_text.disabled"] = choice["choice_text.disabled"].replacen(what, with)
+							if text_id_disabled.is_empty:
+								choice["choice_text.disabled"] = choice["choice_text.disabled"].replacen(what, with)
+							else:
+								Pages.save_text(text_id_disabled, Pages.get_text(text_id_disabled).replacen(what, with))
 						else:
-							choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
+							if text_id_disabled.is_empty:
+								choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
+							else:
+								Pages.save_text(text_id_disabled, Pages.get_text(text_id_disabled).replace(what, with))
 				
 				line["content"]["choices"] = choices
-			else:
-				print("no choice")
 	
 	await get_tree().process_frame
 	
@@ -405,3 +432,13 @@ func replace_line_content_text(line_address:String, what:String, with:String, ca
 
 func replace_choice_content_text(item_address:String, what:String, with:String, case_insensitive:=false):
 	replace_choice_content_texts([item_address], what, with, case_insensitive)
+
+func change_text_id(old_id:String, new_id:String) -> void:
+	var undo_redo = Pages.editor.undo_redo
+	undo_redo.create_action("Change Text ID")
+	undo_redo.add_do_method(Pages.change_text_id.bind(old_id, new_id))
+	undo_redo.add_undo_method(Pages.change_text_id.bind(new_id, old_id))
+	undo_redo.commit_action()
+	
+	await get_tree().process_frame
+	Pages.editor.refresh(false)

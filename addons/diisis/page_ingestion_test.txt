@@ -1,0 +1,19 @@
+a: amber
+n: narrator
+END ACTORS
+
+CONTENT
+a: this first line will be ingested
+n: uwu
+n: uwuwuwu
+
+CONTENT
+n: This is a second line
+h: wow im not defined
+a: uuuuuuuuu
+
+PAGE
+
+CONTENT
+n: a second page
+n: waow

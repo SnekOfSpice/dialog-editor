@@ -1,33 +1,39 @@
-[gd_scene load_steps=29 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://addons/diisis/editor/src/page.tscn" id="2_kbraj"]
-[ext_resource type="Script" uid="uid://c84rlymfbgn1g" path="res://addons/diisis/editor/src/LineTypeButton.gd" id="3_2h0gj"]
+[ext_resource type="Script" uid="uid://c84rlymfbgn1g" path="res://addons/diisis/editor/src/line_type_button.gd" id="3_2h0gj"]
 [ext_resource type="Texture2D" uid="uid://bbfry7sb88x3c" path="res://addons/diisis/editor/visuals/theme/buttons_ui/undo.png" id="3_mqy67"]
 [ext_resource type="ButtonGroup" uid="uid://wl636ja43dky" path="res://addons/diisis/editor/src/line_type_button_group.tres" id="4_dg3k4"]
 [ext_resource type="Texture2D" uid="uid://byog66ete7xr3" path="res://addons/diisis/editor/visuals/theme/buttons_ui/redo.png" id="4_eueb5"]
 [ext_resource type="PackedScene" uid="uid://bxsq5rsj1i12f" path="res://addons/diisis/editor/src/go_to.tscn" id="4_m6c15"]
 [ext_resource type="Texture2D" uid="uid://cneqtkwtfwwmw" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png" id="5_cfai3"]
 [ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
+[ext_resource type="PackedScene" uid="uid://cil14m00rtcv7" path="res://addons/diisis/editor/src/ingest_menu.tscn" id="5_ows1f"]
 [ext_resource type="ButtonGroup" uid="uid://47f4hgcrt6xj" path="res://addons/diisis/editor/src/page_view_button_group.tres" id="6_5vieb"]
-[ext_resource type="PackedScene" uid="uid://csyhxfuwxrtah" path="res://addons/diisis/editor/src/instruction_popup.tscn" id="6_m88mr"]
 [ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="7_0rrj6"]
 [ext_resource type="Script" uid="uid://chvelp1kqeoya" path="res://addons/diisis/editor/src/page_view_button.gd" id="7_7syci"]
 [ext_resource type="Texture2D" uid="uid://c0hn50yuea61r" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_full.png" id="7_32dog"]
-[ext_resource type="PackedScene" uid="uid://stb4ad3iost2" path="res://addons/diisis/editor/src/text_search_container.tscn" id="7_eshag"]
+[ext_resource type="Texture2D" uid="uid://cx22s7326cykn" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_line_at_end.png" id="7_67kpi"]
+[ext_resource type="Texture2D" uid="uid://cradtrqafxhb8" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page.png" id="7_m63dd"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
 [ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
-[ext_resource type="Texture2D" uid="uid://dqagtlgyo0pqb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_instruction.png" id="8_g28rh"]
+[ext_resource type="Texture2D" uid="uid://ck5acd5airv8u" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page_at_end.png" id="8_ajvyk"]
 [ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
 [ext_resource type="Texture2D" uid="uid://bgycyoomk20tr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_folder.png" id="9_mh3o1"]
 [ext_resource type="Texture2D" uid="uid://7ht8k4ris3wj" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_truncated.png" id="9_o3byv"]
 [ext_resource type="Texture2D" uid="uid://b7m22tnt1f2ft" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_minimal.png" id="10_qli38"]
 [ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
+[ext_resource type="Texture2D" uid="uid://cowtdbgbvq7fp" path="res://addons/diisis/parser/style/icon_instruction_handler.svg" id="14_m63dd"]
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
+[ext_resource type="PackedScene" uid="uid://b81qxlexbcshc" path="res://addons/diisis/editor/src/change_text_id_window.tscn" id="29_jb16f"]
+[ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
+[ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
+[ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -128,37 +134,53 @@ theme = ExtResource("1_nb6ej")
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
 content_scale_aspect = 4
-item_count = 10
+item_count = 4
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
-item_1/id = 1
+item_1/id = 0
 item_2/text = "Save As..."
 item_2/id = 1
 item_3/text = "Open    (Ctrl+O)"
 item_3/id = 2
-item_4/id = 4
-item_4/separator = true
-item_5/text = "Config"
-item_5/id = 3
-item_6/text = "Localization"
-item_6/id = 5
-item_6/separator = true
-item_7/text = "Locales"
-item_7/id = 6
-item_8/text = "Export New L10ns"
-item_8/id = 7
-item_9/text = "Blank Strings"
-item_9/checkable = 1
-item_9/id = 8
+
+[node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
+visible = false
+unfocusable = false
+page = true
+
+[node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File"]
+item_count = 3
+item_0/text = "Select Locales..."
+item_0/id = 0
+item_1/text = "Export L10N File..."
+item_1/id = 1
+item_2/text = "Update existing l10n file..."
+item_2/id = 2
+
+[node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
+item_count = 1
+item_0/text = "Reload DIISIS editor"
+item_0/id = 0
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
-item_count = 2
+item_count = 4
 item_0/text = "Word & Character Count"
 item_0/id = 0
 item_1/text = "Search Text    (Ctrl+F)"
+item_1/id = 1
+item_2/text = "Ingestion Actors    (Ctrl+I)"
+item_2/id = 2
+item_3/text = "Step through pages"
+item_3/id = 3
+
+[node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility"]
+item_count = 2
+item_0/text = "Entire Script"
+item_0/id = 0
+item_1/text = "Current Page"
 item_1/id = 1
 
 [node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
@@ -172,7 +194,7 @@ item_1/text = "Header    (H)"
 item_1/id = 1
 item_2/text = "Dropdowns    (D)"
 item_2/id = 2
-item_3/text = "Instructions    (R)"
+item_3/text = "Functions & Variables    (R)"
 item_3/id = 3
 item_4/text = "View"
 item_4/id = 4
@@ -240,18 +262,6 @@ size_flags_vertical = 8
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2"]
 layout_mode = 2
 
-[node name="LastVisited" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "backward"
-
-[node name="NextVisited" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "forward"
-
 [node name="First" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -311,36 +321,24 @@ size_flags_vertical = 8
 layout_mode = 2
 
 [node name="AddAfter" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
+size_flags_horizontal = 2
 size_flags_vertical = 8
+size_flags_stretch_ratio = 3.91
 tooltip_text = "Add page after
-(Alt+A)"
+(Alt+S)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 17
-text = "+>"
+icon = ExtResource("7_m63dd")
 
 [node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Add page to end
-(Shift+Alt+A)"
+(Shift+Alt+S)"
 focus_mode = 0
 theme_override_font_sizes/font_size = 17
-text = "+>>"
-
-[node name="DeleteCurrent" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(46, 0)
-layout_mode = 2
-size_flags_vertical = 8
-tooltip_text = "Delete current page"
-focus_mode = 0
-theme_override_font_sizes/font_size = 17
-text = "-"
-
-[node name="Positional" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
-layout_mode = 2
+icon = ExtResource("8_ajvyk")
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2"]
 auto_translate_mode = 1
@@ -362,11 +360,10 @@ theme_override_constants/separation = 10
 
 [node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
-tooltip_text = "Ctrl+A
+tooltip_text = "Add Line (Ctrl+A)
 Adds a line to the end of the current page."
 focus_mode = 0
-text = "add line"
+icon = ExtResource("7_67kpi")
 icon_alignment = 1
 
 [node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
@@ -395,13 +392,15 @@ script = ExtResource("3_2h0gj")
 line_type = 1
 
 [node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
 focus_mode = 0
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
-icon = ExtResource("8_g28rh")
+icon = ExtResource("14_m63dd")
 icon_alignment = 1
+expand_icon = true
 script = ExtResource("3_2h0gj")
 line_type = 2
 
@@ -497,21 +496,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Page" parent="ScrollContainer/Core/PageContainer" instance=ExtResource("2_kbraj")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core"]
-layout_mode = 2
-
-[node name="ToggleSearchButton" type="Button" parent="ScrollContainer/Core/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "search"
-
-[node name="TextSearchContainer" parent="ScrollContainer/Core/VBoxContainer" instance=ExtResource("7_eshag")]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
 [node name="NotificationContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
@@ -531,6 +515,7 @@ autostart = true
 [node name="FDSave" type="FileDialog" parent="Popups"]
 transparent_bg = true
 gui_embed_subwindows = true
+title = "Save as..."
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
@@ -541,14 +526,22 @@ filters = PackedStringArray("*.json")
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
-title = "Open a Directory"
+title = "Export L10n File"
 initial_position = 4
 size = Vector2i(827, 377)
 transparent = true
 theme = ExtResource("1_nb6ej")
-ok_button_text = "Select Current Folder"
-file_mode = 2
-access = 2
+filters = PackedStringArray("*.json")
+
+[node name="FDMergeL10N" type="FileDialog" parent="Popups"]
+auto_translate_mode = 1
+transparent_bg = true
+gui_embed_subwindows = true
+title = "Update existing L10n file"
+initial_position = 4
+size = Vector2i(827, 377)
+transparent = true
+theme = ExtResource("1_nb6ej")
 filters = PackedStringArray("*.json")
 
 [node name="FDOpen" type="FileDialog" parent="Popups"]
@@ -563,15 +556,24 @@ ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json")
 
+[node name="FDIngest" type="FileDialog" parent="Popups"]
+auto_translate_mode = 1
+transparent_bg = true
+gui_embed_subwindows = true
+title = "Open a File"
+initial_position = 4
+size = Vector2i(312, 175)
+transparent = true
+theme = ExtResource("1_nb6ej")
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.txt")
+
 [node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
-title = "Edit Header Defaults"
 visible = false
 exclusive = false
 content_scale_aspect = 1
-
-[node name="InstructionPopup" parent="Popups" instance=ExtResource("6_m88mr")]
-visible = false
-theme = ExtResource("1_nb6ej")
 
 [node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
 visible = false
@@ -595,9 +597,23 @@ visible = false
 [node name="LocaleSelectionWindow" parent="Popups" instance=ExtResource("20_nu372")]
 visible = false
 
+[node name="ChangeTextIDWindow" parent="Popups" instance=ExtResource("29_jb16f")]
+visible = false
+
+[node name="IncomingReferencesWindow" parent="Popups" instance=ExtResource("30_rtywk")]
+visible = false
+
+[node name="HandlerWindow" parent="Popups" instance=ExtResource("32_24jcx")]
+visible = false
+
+[node name="IngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
+visible = false
+
 [node name="Camera" type="Camera2D" parent="."]
+visible = false
 
 [node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
+size = Vector2i(12, 10)
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
@@ -605,14 +621,17 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
-[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_index_pressed"]
+[connection signal="ingest_from_clipboard" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/IngestMenu" to="." method="_on_ingest_menu_ingest_from_clipboard"]
+[connection signal="ingest_from_file" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/IngestMenu" to="." method="_on_ingest_menu_ingest_from_file"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File/L10NMenu" to="." method="_on_l_10n_menu_id_pressed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Editor" to="." method="_on_editor_id_pressed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
-[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_index_pressed"]
+[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility/LibraryOfBabel" to="." method="_on_library_of_babel_index_pressed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
 [connection signal="toggled" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2/ShowErrorsButton" to="." method="_on_show_errors_button_toggled"]
 [connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/LastVisited" to="." method="_on_last_visited_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/NextVisited" to="." method="_on_next_visited_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
 [connection signal="go_to" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/GoTo" to="." method="request_go_to_address"]
@@ -621,17 +640,15 @@ visible = false
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Last" to="." method="_on_last_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/DeleteCurrent" to="." method="_on_delete_current_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewFullButton" to="." method="update_page_view" binds= [0]]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewTruncatedButton" to="." method="update_page_view" binds= [1]]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer/ViewMinimalButton" to="." method="update_page_view" binds= [2]]
 [connection signal="item_selected" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
-[connection signal="pressed" from="ScrollContainer/Core/VBoxContainer/ToggleSearchButton" to="." method="_on_toggle_search_button_pressed"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
-[connection signal="dir_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_dir_selected"]
+[connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]
+[connection signal="file_selected" from="Popups/FDMergeL10N" to="." method="_on_fd_merge_l_10n_file_selected"]
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
+[connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
-[connection signal="validate_saved_instructions" from="Popups/InstructionPopup" to="." method="_on_instruction_popup_validate_saved_instructions"]
 [connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]
+[connection signal="close_requested" from="Popups/FileConfigPopup" to="." method="_on_file_config_popup_close_requested"]
+[connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]

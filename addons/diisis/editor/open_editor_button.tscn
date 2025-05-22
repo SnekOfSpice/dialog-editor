@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dug0luew7u6ds"]
+[gd_scene load_steps=4 format=3 uid="uid://dug0luew7u6ds"]
 
 [ext_resource type="Script" uid="uid://dtrkaopxetmjn" path="res://addons/diisis/editor/open_editor_button.gd" id="1_4si81"]
+[ext_resource type="Texture2D" uid="uid://yfkxqfkru4ke" path="res://addons/diisis/logos/icon_buttonbw smooth.png" id="2_uo8im"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="3_72chw"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 40.0
@@ -9,17 +11,20 @@ script = ExtResource("1_4si81")
 
 [node name="OpenEditorButton" type="Button" parent="."]
 layout_mode = 2
-size_flags_vertical = 0
 tooltip_text = "Open DIISIS (Ctrl+Alt+D)"
 focus_mode = 0
-text = "DIISIS"
+icon = ExtResource("2_uo8im")
 
 [node name="MenuBar" type="MenuBar" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("3_72chw")
 
 [node name="v" type="PopupMenu" parent="MenuBar"]
 item_count = 1
 item_0/text = "Set up VN template..."
+item_0/id = 0
 
 [connection signal="pressed" from="OpenEditorButton" to="." method="_on_open_editor_button_pressed"]
 [connection signal="id_pressed" from="MenuBar/v" to="." method="_on_v_id_pressed"]

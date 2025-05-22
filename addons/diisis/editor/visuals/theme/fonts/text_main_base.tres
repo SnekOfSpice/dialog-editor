@@ -1,0 +1,10 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://rwenx6g7xf7e"]
+
+[ext_resource type="FontFile" uid="uid://68il7gja1pht" path="res://addons/diisis/editor/visuals/theme/fonts/Nauman-Regular.ttf" id="1_junww"]
+
+[resource]
+base_font = ExtResource("1_junww")
+variation_embolden = -0.1
+spacing_space = 1
+spacing_top = -3
+spacing_bottom = -1

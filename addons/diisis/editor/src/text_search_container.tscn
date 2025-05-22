@@ -79,9 +79,9 @@ layout_mode = 2
 disabled = true
 text = "Go To"
 
-[node name="NoResultsLabel" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="ResultCountLabel" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
-text = "No Results"
+text = "0 results"
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
@@ -91,10 +91,6 @@ size_flags_vertical = 3
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="FactEditHintLabel" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer2"]
-layout_mode = 2
-text = "[Use the Facts window (Setup -> Facts) to edit fact names]"
 
 [node name="ResultLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2/VBoxContainer2"]
 layout_mode = 2
@@ -111,3 +107,4 @@ bbcode_enabled = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
 [connection signal="item_activated" from="VBoxContainer/HBoxContainer2/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="meta_clicked" from="VBoxContainer/HBoxContainer2/VBoxContainer2/ResultLabel" to="." method="_on_result_label_meta_clicked"]

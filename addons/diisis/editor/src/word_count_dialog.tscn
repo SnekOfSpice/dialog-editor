@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh7lwmyvues6e"]
 
-[ext_resource type="Script" uid="uid://c0c1xw36qwbey" path="res://addons/diisis/editor/src/WordCountDialog.gd" id="1_7c46x"]
+[ext_resource type="Script" uid="uid://c0c1xw36qwbey" path="res://addons/diisis/editor/src/word_count_dialog.gd" id="1_7c46x"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_e2h08"]
 
 [node name="WordCountDialog" type="AcceptDialog"]

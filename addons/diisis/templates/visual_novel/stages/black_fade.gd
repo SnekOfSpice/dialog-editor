@@ -6,6 +6,7 @@ var release_on_full_black_reached := 1.0
 var sustain_on_full_black_reached := 1.0
 var new_bgm_on_full_black_reached := ""
 
+@warning_ignore("unused_signal")
 signal request_background_change(background_name: String)
 
 func _ready() -> void:
@@ -55,7 +56,7 @@ func on_full_black_reached():
 	
 
 func on_clear_reached():
-	GameWorld.instruction_handler.instruction_completed.emit()
+	Parser.function_acceded()
 
 
 func _on_handler_start_black_fade(fade_in_duration, hold_time, fade_out_duration, hide_characters, new_background, new_bgm):

@@ -15,9 +15,12 @@ func init(n:=number):
 	number = n
 	lines = find_child("Lines")
 	find_child("Number").text = str(n)
+	find_child("DeleteButton").disabled = n == 0
+	find_child("DeleteButton").tooltip_text = "Page 0 cannot be deleted." if n == 0 else "Delete page."
 	set_next(n+1)
 	find_child("Facts").init()
 	deserialize(data)
+	page_key_line_edit.placeholder_text = "Page " + str(n)
 
 func get_next():
 	if find_child("TerminateCheck").button_pressed:
@@ -25,10 +28,10 @@ func get_next():
 	return next
 
 func get_page_key() -> String:
-	return str(find_child("PageKey").text)
+	return str(find_child("PageKeyLineEdit").text)
 
 func set_page_key(value:String):
-	find_child("PageKey").text = value
+	find_child("PageKeyLineEdit").text = value
 
 func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
@@ -38,7 +41,9 @@ func delete_fact(fact_name:String):
 	var facts = find_child("Facts")
 	facts.delete_fact(fact_name)
 
+var block_next_duplicate_key_warning := false
 func save():
+	block_next_duplicate_key_warning = true
 	Pages.page_data[number] = serialize()
 
 func serialize() -> Dictionary:
@@ -65,6 +70,7 @@ func serialize() -> Dictionary:
 	return data
 
 func deserialize(data: Dictionary):
+	block_next_duplicate_key_warning = false
 	if not lines:
 		init(int(data.get("next", number+1)))
 	set_page_key(data.get("page_key", "")) 
@@ -74,6 +80,8 @@ func deserialize(data: Dictionary):
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
+	
+	update_incoming_references_to_page()
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -105,44 +113,50 @@ func set_next(next_page: int):
 	var next_exists = Pages.page_data.keys().has(next)
 	find_child("NextKey").modulate.a = 1.0 if next_exists else 0.0
 	
-	if not next_exists:
-		return
-	
-	var next_key = Pages.page_data.get(next).get("page_key")
+	var next_key = Pages.page_data.get(next, {}).get("page_key", "")
 	
 	find_child("NextLineEdit").max_value = Pages.get_page_count()
 	find_child("NextLineEdit").value = next
-	find_child("NextKey").text = next_key
+	find_child("NextKey").text = str(
+		"[url=goto-%s]" % next_page,
+		next_key,
+		"[/url]"
+		)
 
 
 func enable_page_key_edit(value: bool):
-	find_child("PageKey").visible = not value
-	page_key_line_edit.visible = value
-	page_key_line_edit.text = get_page_key()
+	find_child("PageKeyLineEdit").editable = value
 	
 	find_child("Seperator").visible = get_page_key() != ""
+	find_child("Number").visible = get_page_key() != ""
 	
 	if value:
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
+	else:
+		find_child("PageKeyEditButton").grab_focus()
 
 func save_page_key_from_line_edit():
-	set_page_key(page_key_line_edit.text)
 	save()
 	enable_page_key_edit(false)
 	find_child("PageKeyEditButton").button_pressed = false
 
 
 func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
-	if not button_pressed:
-		# add check for duplicates later
+	set_editing_page_key(button_pressed)
+
+var page_key_before_edit := ""
+func set_editing_page_key(value:bool):
+	if value:
+		if not page_key_line_edit.editable:
+			page_key_before_edit = get_page_key()
+	else:
 		save_page_key_from_line_edit()
-	
-	enable_page_key_edit(button_pressed)
+	enable_page_key_edit(value)
 
 
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
-	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text)
+	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
 
 func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = lines.get_child(at_index)
@@ -457,6 +471,27 @@ func get_max_reach_after_indented_index(index: int):
 	
 	return reach
 
+func update_incoming_references_to_page():
+	var refs := get_references_to_this_page()
+	var ref_count := refs.size()
+	var ref_label : RichTextLabel = find_child("IncomingReferences")
+	ref_label.visible = ref_count != 0
+	if ref_count == 1:
+		ref_label.text = "[url=goto-%s]%s[/url] " % [refs[0], refs[0]]
+		ref_label.tooltip_text = "%s points here. Click to go there." % refs[0]
+	else:
+		var bars := ""
+		for i in min(ref_count, 8):
+			bars += "|"
+		ref_label.text = "[url=references]%s[/url] " % bars
+		ref_label.tooltip_text = "View %s incoming references." % ref_count
+
+func update_incoming_references():
+	Pages.sync_line_references()
+	update_incoming_references_to_page()
+	for line : Line in lines.get_children():
+		line.update_incoming_reference_label()
+
 func update():
 	lines = find_child("Lines")
 	for l in lines.get_children():
@@ -505,6 +540,11 @@ func _on_line_selector_toggled(toggled_on: bool) -> void:
 
 
 func _on_delete_button_pressed() -> void:
+	if Pages.editor.try_prompt_fact_deletion_confirmation(
+		str(number),
+		request_delete.emit
+	):
+		return
 	if find_child("DeletePromptContainer").visible:
 		find_child("DeletePromptContainer").visible = false
 		emit_signal("request_delete")
@@ -516,7 +556,66 @@ func _on_cancel_deletion_button_pressed() -> void:
 
 
 func _on_page_key_line_edit_text_submitted(new_text: String) -> void:
-	if Pages.key_exists(new_text):
-		Pages.editor.notify(str("Page ", new_text, " already exists at ", Pages.get_page_number_by_key(new_text)))
+	try_save_page_key(new_text)
+
+func try_save_page_key(new_key):
+	if Pages.key_exists(new_key) and page_key_before_edit != new_key:
+		page_key_line_edit.grab_focus()
+		page_key_line_edit.caret_column = page_key_line_edit.text.length()
+		if block_next_duplicate_key_warning:
+			block_next_duplicate_key_warning = false
+			return
+		Pages.editor.notify(str("Page ", new_key, " already exists at ", Pages.get_page_number_by_key(new_key)))
 		return
 	save_page_key_from_line_edit()
+
+
+func _on_page_key_line_edit_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if not page_key_line_edit.editable:
+				set_editing_page_key(true)
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			page_key_line_edit.text = page_key_before_edit
+			set_editing_page_key(false)
+
+
+func _on_page_key_line_edit_focus_exited() -> void:
+	try_save_page_key(page_key_line_edit.text)
+
+
+func _on_page_key_line_edit_mouse_entered() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = find_child("PageKeyEditContainer").size.x
+	page_key_line_edit.add_theme_stylebox_override("normal", load("uid://wygkuwnsf32l"))
+	page_key_line_edit.add_theme_stylebox_override("read_only", load("uid://wygkuwnsf32l"))
+
+
+func _on_page_key_line_edit_mouse_exited() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = 0
+	page_key_line_edit.remove_theme_stylebox_override("normal")
+	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())
+
+
+func _on_next_key_meta_clicked(meta: Variant) -> void:
+	Pages.editor.goto_with_meta(meta)
+
+
+func get_references_to_this_page() -> Array:
+	var results : Dictionary = Pages.get_references_to_page(number)
+	var loopback_references : Array = results.get("loopback")
+	var jump_references : Array = results.get("jump")
+	var next_references : Array = results.get("next")
+	
+	var full := []
+	full.append_array(loopback_references)
+	full.append_array(jump_references)
+	full.append_array(next_references)
+	return full
+
+
+func _on_incoming_references_meta_clicked(meta: Variant) -> void:
+	if str(meta) == "references":
+		Pages.editor.view_incoming_references(number)
+	else:
+		Pages.editor.goto_with_meta(meta)

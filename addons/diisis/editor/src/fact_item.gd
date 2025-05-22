@@ -33,6 +33,8 @@ var virtual_hint_line := 0
 func init() -> void:
 	find_child("RegisterContainer").visible = false
 	find_child("RegisterButton").visible = false
+	
+	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -56,7 +58,6 @@ func deserialize(data: Dictionary) -> void:
 	find_child("FactName").completion_options = Pages.facts.keys()
 
 
-
 func set_fact(new_fact_name: String, default_value):
 	if default_value is bool:
 		find_child("FactBoolValue").button_pressed = default_value
@@ -68,6 +69,7 @@ func set_fact(new_fact_name: String, default_value):
 	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
 	find_child("FactName")._on_text_changed(fact_name)
+	_on_fact_name_text_changed(fact_name)
 
 func set_data_type(value:DataType):
 	data_type = value
@@ -117,7 +119,6 @@ func get_fact_name():
 
 func update_unregsitered_prompt():
 	var new_text = entered_text
-	find_child("RegisterContainer").visible = true
 	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(entered_text)
 	if not Pages.has_fact(new_text) and not new_text.is_empty():
 		find_child("RegisterLabel").text = str(
@@ -128,7 +129,8 @@ func update_unregsitered_prompt():
 		if new_text.is_empty():
 			find_child("RegisterLabel").text = str("Can't be empty!")
 		else:
-			find_child("RegisterLabel").text = str(
+			find_child("RegisterLabel").text = ""
+			find_child("FactName").tooltip_text = str(
 				"Registered as ",
 				Pages.facts.get(new_text)
 			)
@@ -136,6 +138,8 @@ func update_unregsitered_prompt():
 				set_data_type(DataType.Bool)
 			else:
 				set_data_type(DataType.Int)
+		
+	find_child("RegisterContainer").visible = not find_child("RegisterLabel").text.is_empty()
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
@@ -193,6 +197,10 @@ func _on_register_button_pressed() -> void:
 		value = 0
 	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false
+	find_child("FactName").tooltip_text = str(
+				"Registered as ",
+				Pages.facts.get(entered_text)
+			)
 	
 	$Hint.hide()
 
@@ -225,5 +233,10 @@ func _on_fact_name_text_entered(new_text: String) -> void:
 func _on_fact_name_text_submitted(new_text: String) -> void:
 	if find_child("RegisterContainer").visible:
 		_on_register_button_pressed()
+		_on_fact_name_text_changed(new_text)
 		find_child("FactName").text = new_text
 		find_child("FactName").caret_column = new_text.length()
+
+
+func _on_fact_name_text_changed(new_text: String) -> void:
+	find_child("DataTypeButton").disabled = Pages.has_fact(new_text)

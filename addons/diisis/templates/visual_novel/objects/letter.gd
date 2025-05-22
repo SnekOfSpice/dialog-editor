@@ -20,6 +20,5 @@ func _on_read_button_pressed() -> void:
 		#return
 	if GameWorld.game_stage:
 		GameWorld.game_stage.show_ui()
-	if Parser.line_reader:
-		Parser.line_reader.instruction_handler.instruction_completed.emit()
+	Parser.function_acceded()
 	queue_free()

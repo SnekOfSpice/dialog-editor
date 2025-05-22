@@ -1,4 +1,7 @@
 extends Node
+## The beating heart of runtime-side DIISIS <3
+##
+## uwu
 
 ## Set this to manually set any DIISIS-generated file to be used as source, irregardless of project.
 @export_file("*.json") var source_file_override: String
@@ -8,7 +11,7 @@ extends Node
 @export var max_history_length := -1
 ## Folder containing all l10n files (starting with "diisis_l10n_").
 ## [br]Leave empty to forego l10n.
-@export_dir var localization_folder
+@export_file("*.json") var localization_file
 
 @export_group("Choices")
 ## If [code]true[/code], will append the text of choice buttons to the history.
@@ -17,15 +20,22 @@ extends Node
 ## If this is an empty string, no space will be inserted.
 @export var choice_appendation_string := "Choice made:"
 
+@export_group("Progress")
+## When calling [method _get_game_progress], the Parser will assume that any terminating page means full progress (1.0).
+## Mostly useful for visual novels and other linear stories that have few end points.
+@export var full_progress_on_last_page := true
+
 var page_data := {}
+var text_data := {}
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
-var locales := {}
-var default_locale := "en_US"
+var _default_locale := "en_US"
 var locale := "en_US"
+var l10n := {}
 var dropdown_titles := []
 var dropdowns := {}
+var file_config := {}
 
 var line_reader : LineReader = null
 var paused := true
@@ -36,7 +46,7 @@ var lines := []
 
 var facts := {}
 var starting_facts := {}
-var instruction_templates := {}
+var full_custom_method_defaults := {}
 
 var max_line_index_on_page := 0
 
@@ -86,6 +96,11 @@ func _ready() -> void:
 	
 	init(data)
 	
+	if localization_file:
+		var file := FileAccess.open(localization_file, FileAccess.READ)
+		l10n = JSON.parse_string(file.get_as_text())
+		file.close()
+	
 	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
 func init(data:Dictionary):
@@ -105,7 +120,17 @@ func init(data:Dictionary):
 	starting_facts = facts.duplicate(true)
 	dropdown_titles = data.get("dropdown_titles", [])
 	dropdowns = data.get("dropdowns", {})
-	instruction_templates = data.get("instruction_templates", {})
+	file_config = data.get("file_config", {})
+	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
+	Pages.custom_method_defaults = file_config.get("custom_method_defaults", {})
+	Pages.custom_method_dropdown_limiters = file_config.get("custom_method_dropdown_limiters", {})
+	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
+	text_data = data.get("text_data", {})
+	_default_locale = data.get("default_locale", "en_US")
+	#locale = _default_locale
+
+func get_custom_method_defaults(method_name:String) -> Dictionary:
+	return full_custom_method_defaults.get(method_name, {})
 
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
@@ -120,11 +145,11 @@ func _process(delta: float) -> void:
 	last_modified_time = FileAccess.get_modified_time(source_path)
 
 ## Call this one for a blank, new game.
-func reset_and_start(start_page_index:=0):
+func reset_and_start(start_page_index := 0, start_line_index := 0):
 	line_reader.terminated = false
 	set_paused(false)
 	reset_facts()
-	read_page(start_page_index)
+	read_page(start_page_index, start_line_index)
 	history = []
 	selected_choices = []
 
@@ -135,20 +160,6 @@ func set_paused(value:bool, suppress_event:=false):
 	if not suppress_event:
 		ParserEvents.parser_paused_changed.emit(paused)
 
-func replace_from_locale(address:String, locale:String) -> String:
-	if not locales.has(locale):
-		try_load_locale(locale)
-	if not locales.has(locale):
-		return ""
-	return locales[locale][address]
-
-func try_load_locale(locale:String):
-	if not localization_folder:
-		return
-	
-	var file := FileAccess.open(str(localization_folder, "/diisis_l10n_", locale, ".json"), FileAccess.READ)
-	locales[locale] = JSON.parse_string(file.get_as_text())
-	file.close()
 
 func get_fact(fact_name: String):
 	if not facts.has(fact_name):
@@ -163,11 +174,8 @@ func get_facts_of_value(b: bool) -> Array:
 			result.append(fact)
 	return result
 
-func get_line_position_string() -> String:
-	return str(page_index, ".", line_index)
-
 func get_address() -> String:
-	return get_line_position_string()
+	return str(page_index, ".", line_index)
 
 func get_page_key(page_index:int):
 	return page_data.get(page_index, {}).get("page_key", "")
@@ -226,10 +234,9 @@ func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 	
 	return result
 
-func drop_down_values_to_string_array(values:=[0,0]) -> Array:
+func get_dropdown_strings_from_header_values(values:=[0,0]) -> Array:
 	var result = ["", ""]
 	var title = dropdown_titles[values[0]]
-	#var title_index = dropdown_titles.find(title)
 	var value = dropdowns.get(title)[values[1]]
 	result[0] = title
 	result[1] = value
@@ -241,12 +248,12 @@ func get_page_number(key:String) -> int:
 			return data.get("number")
 	return -1
 
-func read_page_by_key(key:String):
+func read_page_by_key(key:String, starting_line_index := 0):
 	var number = get_page_number(key)
 	if number == -1:
 		push_error(str("Couldn't find page with key \"", key, "\"."))
 		return
-	read_page(number)
+	read_page(number, starting_line_index)
 
 func read_page(number: int, starting_line_index := 0):
 	if not page_data.keys().has(number):
@@ -290,29 +297,57 @@ func get_game_progress_from_file(savepath:String) -> float:
 	data = data.get("Parser", {})
 	return data.get("Parser.game_progress", 0.0)
 
-func _get_game_progress(full_if_on_last_page:= true) -> float:
-	var max_line_index_used_for_calc := 0
+func _get_game_progress() -> float:
+	var index_trails := []
+	var handled_page_indices := []
+	var page_count : int = max(page_data.size(), 1)
+	var current_trail := []
+	var current_handled_page := 0
+	while handled_page_indices.size() < page_count:
+		current_trail.append(current_handled_page)
+		handled_page_indices.append(current_handled_page)
+		var terminate : bool = page_data.get(current_handled_page).get("terminate", false)
+		if terminate:
+			index_trails.append(current_trail.duplicate(true))
+			current_trail.clear()
+			if handled_page_indices.size() >= page_count:
+				break
+			for i in page_count:
+				if not i in handled_page_indices:
+					current_handled_page = i
+					break
+		else:
+			current_handled_page = page_data.get(current_handled_page).get("next")
+	
+	var trail : Array
+	for t : Array in index_trails:
+		if page_index in t:
+			trail = t
+			break
+	
+	if not trail:
+		return 0.0
+	
 	var calc_lines = page_data.get(page_index).get("lines")
-	max_line_index_used_for_calc = calc_lines.size() - 1
-	var max_page_index :int= max(page_data.keys().size(), 1)
-	var page_index_used_for_calc := page_index
-	var line_index_used_for_calc := line_index
-	
+	var line_count_on_page : int = calc_lines.size() - 1
+	var page_index_in_trail := trail.find(page_index)
+	var trail_size := trail.size()
 
-	if max_line_index_used_for_calc <= 0:
+	if line_count_on_page <= 0:
 		return 0.0
 	
+	var page_progress = (int(page_index_in_trail) / float(trail_size))
+	var line_progress = float(line_index) / float(line_count_on_page)
 	
-	if max_page_index <= 0:
-		return 0.0
-	
-	var page_progress = (int(page_index_used_for_calc) / float(max_page_index))
-	var line_progress = float(line_index_used_for_calc) / float(max_line_index_used_for_calc)
-	
-	if full_if_on_last_page and page_index_used_for_calc == max_page_index:
+	if full_progress_on_last_page and page_index_in_trail + 1 == trail_size:
 		return 1.0
 	
-	return page_progress + (line_progress / float(max_page_index))
+	var chunk_progress := 0.0
+	if line_reader:
+		if line_reader.line_type == DIISIS.LineType.Text and line_reader._dialog_lines.size() > 0:
+			chunk_progress = float(line_reader._dialog_line_index) / float(line_reader._dialog_lines.size())
+	
+	return page_progress + (line_progress / float(trail_size)) + ((chunk_progress / float(line_count_on_page)) / float(trail_size))
 
 func get_line_type(address:String) -> DIISIS.LineType:
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -327,6 +362,15 @@ func get_line_content(address:String) -> Dictionary:
 	var prev_line = parts[1]
 	
 	return page_data.get(prev_page).get("lines")[prev_line].get("content")
+
+func get_text(id:String) -> String:
+	if locale == _default_locale:
+		return text_data.get(id, "")
+	if l10n.has(id):
+		var text : String = l10n.get(id, {}).get(locale, "")
+		if not text.is_empty():
+			return text
+	return text_data.get(id, "")
 
 func get_previous_address_line_type() -> DIISIS.LineType:
 	if address_trail_index <= 0 or address_trail.is_empty():
@@ -346,17 +390,23 @@ func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
+enum RollbackDeclineReason {
+	HIT_CHOICE = 1,
+	HIT_FOLDER = 3,
+	BEGINNING = 0,
+}
+
 func go_back():
 	var trail_shift = -1
 	var previous_line_type = get_previous_address_line_type()
 	if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		ParserEvents.go_back_declined.emit()
+		ParserEvents.go_back_declined.emit(previous_line_type)
 		push_warning("You cannot go further back.")
 		#return
 		trail_shift = 0
 	
 	if address_trail_index < 0 or address_trail.is_empty():
-		ParserEvents.go_back_declined.emit()
+		ParserEvents.go_back_declined.emit(RollbackDeclineReason.BEGINNING)
 		push_warning("You're at the beginning.")
 		#return
 		trail_shift = 0
@@ -375,6 +425,7 @@ func go_back():
 		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
 		trail_shift -= 1
 		if address_trail_index + trail_shift <= 0:
+			a = false
 			trail_shift = 0
 			break
 	if a:
@@ -384,12 +435,10 @@ func go_back():
 	for instruction in instruction_stack:
 		if not instruction.get("meta.has_reverse", false):
 			continue
-		var instr_name = instruction.get("reverse_name")
-		var instr_args = instruction.get("line_reader.reverse_args")
-		if instr_name == null or instr_name == "":
-			instr_name = instruction.get("name")
-			instr_args = instruction.get("line_reader.args")
-		line_reader.instruction_handler.execute(instr_name, instr_args)
+		var instr_text : String = instruction.get("meta.reverse_text", "")
+		if instr_text.is_empty():
+			instr_text = instruction.get("meta.text")
+		line_reader.execute(instr_text)
 	
 	await get_tree().process_frame
 	address_trail_index += trail_shift
@@ -416,6 +465,7 @@ func go_back():
 func read_line(index: int):
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
+		read_page(get_next(page_index))
 		return
 	
 	if index >= lines.size():
@@ -445,8 +495,7 @@ func read_next_line(finished_line_index: int):
 		
 		
 	if finished_line_index >= max_line_index_on_page:
-		var do_terminate = bool(page_data.get(page_index).get("terminate"))
-		if do_terminate:
+		if is_terminating(page_index):
 			ParserEvents.page_finished.emit(page_index)
 			ParserEvents.page_terminated.emit(page_index)
 			emit_signal("page_terminated", page_index)
@@ -465,7 +514,14 @@ func read_next_line(finished_line_index: int):
 	
 	read_line(finished_line_index + 1)
 
+func is_terminating(page_index:int) -> bool:
+	return bool(page_data.get(page_index).get("terminate"))
 
+func get_next(page_index:int) -> int:
+	if is_terminating(page_index):
+		push_warning("%s terminates!" % page_index)
+		return -1
+	return int(page_data.get(page_index).get("next"))
 
 func open_connection(new_lr: LineReader):
 	line_reader = new_lr
@@ -575,5 +631,24 @@ func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> 
 	
 	return data.get("Custom", {})
 
-func get_instruction_arg_types(instruction_name: String) -> Array:
-	return instruction_templates.get(instruction_name, {}).get("arg_types", [])
+func str_to_typed(value:String, type:int):
+	match type:
+		TYPE_FLOAT:
+			return float(value)
+		TYPE_INT:
+			return int(value)
+		TYPE_BOOL:
+			var cast : bool = true if value == "true" else false
+			return cast
+	return String(value)
+
+## After you call a function from LineReader that returns [code]true[/code], [Parser] and [LineReader] will be in a suspended state, waiting to continue until this function is called.
+## Call this from anywhere to continue reading the script when such a function is done.
+## [br][i]Parser acceded control to the function, now it continues on its merry way![/i]
+func function_acceded():
+	if not line_reader:
+		return
+	if not line_reader.awaiting_inline_call.is_empty():
+		line_reader.awaiting_inline_call = ""
+		return
+	line_reader.finish_waiting_for_instruction()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://unnyq1pkgbh"]
 
-[ext_resource type="Script" uid="uid://c8x0g5j6sofbd" path="res://addons/diisis/editor/src/arg_hint.gd" id="1_3il64"]
+[ext_resource type="Script" uid="uid://c8x0g5j6sofbe" path="res://addons/diisis/editor/src/arg_hint.gd" id="1_3il64"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qyxl3"]
 content_margin_left = 6.0

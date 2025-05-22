@@ -10,8 +10,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_twmxo")
 script = ExtResource("1_uh8ly")
+screen_fade_in = 0.148651
+screen_fade_out = 0.0883884
 
 [node name="Background" type="Node2D" parent="."]
 

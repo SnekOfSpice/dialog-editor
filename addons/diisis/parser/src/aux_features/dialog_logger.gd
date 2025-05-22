@@ -62,7 +62,7 @@ func on_choices_presented(choices:Array):
 	save_log_history()
 
 func append_to_history(log:String):
-	log_history.append(str(log, " | ", Parser.get_line_position_string()))
+	log_history.append(str(log, " | ", Parser.get_address()))
 
 func load_log_history(start_date_string):
 	var file = FileAccess.open(str(LOG_DIR, "log-", start_date_string, ".txt"), FileAccess.READ)

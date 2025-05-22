@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://b81qxlexbcshc"]
+
+[ext_resource type="Script" uid="uid://cch0hmfg1672s" path="res://addons/diisis/editor/src/change_text_id_window.gd" id="1_2k67q"]
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_c37x5"]
+[ext_resource type="PackedScene" uid="uid://ctyeuvwh0s02v" path="res://addons/diisis/editor/src/change_text_id_container.tscn" id="2_r8uxr"]
+
+[node name="ChangeTextIDWindow" type="Window"]
+title = "Set Text ID"
+initial_position = 4
+size = Vector2i(500, 300)
+wrap_controls = true
+transient = true
+exclusive = true
+popup_window = true
+theme = ExtResource("1_c37x5")
+script = ExtResource("1_2k67q")
+
+[node name="ChangeTextIDContainer" parent="." instance=ExtResource("2_r8uxr")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="close" from="ChangeTextIDContainer" to="." method="_on_change_text_id_container_close"]

@@ -1,0 +1,7 @@
+a: amber
+n: narrator
+
+CONTENT
+a: this line will be ingested and inserted into the text box!
+n: uwu
+n: uwuwuwu

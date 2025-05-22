@@ -11,6 +11,7 @@ var file_path := ""
 var last_quit_header := ""
 
 signal open_new_file()
+signal request_reload_editor()
 signal closing_editor()
 
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
@@ -35,9 +36,11 @@ func _on_about_to_popup() -> void:
 		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
+		mode = config.get_value("editor", "mode", mode)
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
+	find_child("UpdateAvailable").check_for_updates()
 
 func _on_close_requested() -> void:
 	if is_instance_valid(editor):
@@ -110,6 +113,7 @@ func save_preferences():
 		config.set_value("editor", "content_scale", editor_window.content_scale_factor)
 	config.set_value("editor", "size", size)
 	config.set_value("editor", "position", position)
+	config.set_value("editor", "mode", mode)
 	
 	config.save(PREFERENCE_PATH)
 
@@ -125,6 +129,10 @@ func close_editor():
 
 func close_editor_and_open_new_file():
 	emit_signal("open_new_file")
+	close_editor()
+
+func reload_editor():
+	emit_signal("request_reload_editor")
 	close_editor()
 
 func update_content_scale(scale_factor:float):
@@ -157,6 +165,7 @@ func _on_size_changed() -> void:
 
 func _on_window_factor_scale_value_changed(value):
 	editor_content_scale = value
+	update_content_scale(editor_content_scale)
 	for window : Window in get_tree().get_nodes_in_group("diisis_scalable_popup"):
 		window.content_scale_factor = value
 
@@ -201,7 +210,13 @@ func _on_editor_open_new_file() -> void:
 		close_editor_and_open_new_file()
 	last_quit_header = "Open a new, blank file?\n"
 	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
-	title = "DIISIS"
+
+func _on_editor_request_reload() -> void:
+	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
+		reload_editor()
+	last_quit_header = "Reload DIISIS?\n"
+	build_quit_dialog(last_quit_header, reload_editor)
+
 
 
 func _on_quit_dialog_request_save() -> void:
@@ -229,3 +244,8 @@ func _on_editor_history_altered(is_altered: bool) -> void:
 			title = str("(*) ", title)
 	else:
 		title = title.trim_prefix("(*) ")
+
+
+func _on_focus_entered() -> void:
+	if Pages.validate_function_calls_on_focus:
+		Pages.update_all_compliances()

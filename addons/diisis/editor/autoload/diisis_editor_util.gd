@@ -5,6 +5,10 @@ enum AddressDepth {
 	Page, Line, ChoiceItem
 }
 
+const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
+const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
+const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
+
 func get_address(object:Node, address_depth:AddressDepth) -> String:
 	var address := ""
 	
@@ -102,7 +106,7 @@ func humanize_address(address:String) -> String:
 	if parts.size() > 1:
 		address_string += str(" / ", Pages.get_line_type_str(parts[0], parts[1]))
 	if parts.size() > 2:
-		address_string += str(" / ", Pages.get_choice_text_shortened(parts[0], parts[1], parts[2]))
+		address_string += str(" / ", Pages.get_choice_text(parts[0], parts[1], parts[2], 25))
 	return address_string
 
 func get_project_source_file_path() -> String:
@@ -111,3 +115,70 @@ func get_project_source_file_path() -> String:
 func set_project_file_path(active_dir:String, active_file_name:String):
 	ProjectSettings.set_setting("diisis/project/file/path", str(active_dir, active_file_name))
 	ProjectSettings.save()
+
+## max height is a multiple of the editor size
+func limit_scroll_container_height(
+	scroll_container : ScrollContainer,
+	max_height : float,
+	scroll_hint_top : TextureRect=null,
+	scroll_hint_bottom : TextureRect=null,
+):
+	if scroll_container.get_child_count() != 1:
+		push_warning("Scroll container has not exactly 1 child")
+		return
+	var child_control = scroll_container.get_child(0)
+	if not is_instance_valid(Pages.editor):
+		return
+	max_height *= Pages.editor.size.y
+	var child_height : float = child_control.size.y
+	if child_height <= max_height:
+		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll_container.custom_minimum_size = child_control.custom_minimum_size
+		if scroll_hint_top:
+			scroll_hint_top.visible = false
+		if scroll_hint_bottom:
+			scroll_hint_bottom.visible = false
+	else:
+		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		scroll_container.custom_minimum_size.y = max_height
+		if scroll_hint_top:
+			scroll_hint_top.visible = scroll_container.scroll_vertical > 0
+		if scroll_hint_bottom:
+			scroll_hint_bottom.visible = scroll_container.scroll_vertical < scroll_container.get_v_scroll_bar().max_value - (scroll_container.size.y + 1)
+
+func set_up_delete_modulate(node : Control, button : Button, exit_callable:Callable=Callable()):
+	if not button.mouse_entered.is_connected(node.set):
+		button.mouse_entered.connect(node.set.bind("modulate", DiisisEditor.DELETE_MODULATE))
+	if not button.mouse_exited.is_connected(node.set):
+		button.mouse_exited.connect(node.set.bind("modulate", "#ffffffff"))
+		if exit_callable:
+			button.mouse_exited.connect(exit_callable)
+
+## prefix should be "var" or "func"
+func _search_in_global_and_handler(search:String, prefix:String):
+	if search.contains("."):
+		var script = Pages.get_autoload_script(search.split(".")[0])
+		var func_name = str(prefix, " ", search.split(".")[1])
+		search_in_script(script, func_name)
+	else:
+		if Pages.evaluator_paths.is_empty():
+			return
+		search_in_script(load(Pages.evaluator_paths.front()), str(prefix, " ", search))
+
+func search_function(search:String):
+	_search_in_global_and_handler(search, "func")
+
+func search_variable(search:String):
+	_search_in_global_and_handler(search, "var")
+
+func search_in_script(script: Script, search:String):
+	EditorInterface.edit_script(script)
+	await get_tree().process_frame
+	call_deferred_thread_group("actual_search", search)
+
+func actual_search(what:String):
+	var editor : CodeEdit = EditorInterface.get_script_editor().get_current_editor().get_base_editor()
+	var result : Vector2i = editor.search(what, TextEdit.SEARCH_MATCH_CASE, 0, 0)
+	editor.select(result.y, result.x, result.y, result.x)
+	editor.center_viewport_to_caret()
+	get_tree().root.grab_focus()

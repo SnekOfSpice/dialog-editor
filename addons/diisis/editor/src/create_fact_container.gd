@@ -39,7 +39,7 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 
 
 func _on_cancel_button_pressed() -> void:
-	emit_signal("cancel")
+	emit_signal("close")
 
 
 func _on_create_button_pressed() -> void:

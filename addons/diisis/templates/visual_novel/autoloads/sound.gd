@@ -8,6 +8,9 @@ var main_audio_player : AudioStreamPlayer
 ## Preserves the playback position when calling [method Sound.play_bgm] if the currently playing track and new track share the same prefix. E.g. "action_no_drums" and "action_full_instruments" would fade seamlessly between each other if this array contains "action".
 @export var position_preserving_prefixes : Array[String]
 
+func awa():
+	print("awa")
+
 func serialize() -> Dictionary:
 	var data := {}
 	
@@ -34,7 +37,7 @@ func set_audio_player_volume(volume:float):
 
 func play_sfx(sfx:String):
 	var player := AudioStreamPlayer.new()
-	player.stream = load(str(CONST.SFX_ROOT, CONST.get(str("SFX_", sfx.to_upper()))))
+	player.stream = load(CONST.fetch("SFX", sfx))
 	player.set_bus("SFX")
 	add_child(player)
 	player.play()
@@ -58,7 +61,7 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	music_player.connect("tree_exiting", audio_players.erase.bind(music_player))
 	main_audio_player = music_player
 	
-	var music_path := str(CONST.MUSIC_ROOT, CONST.get(str("MUSIC_", bgm_key.to_upper())))
+	var music_path := CONST.fetch("MUSIC", bgm_key)
 	if not ResourceLoader.exists(music_path):
 		push_error(str(music_path, " doesn't exist with key \"", bgm_key, "\""))
 		return

@@ -12,6 +12,8 @@ const SCREEN_NOTICE := "notice.tscn"
 const SCREEN_OPTIONS := "options_screen.tscn"
 const SCREEN_SAVE := "save_screen.tscn"
 
+const CG_ROOT := "res://game/cg/"
+
 const BACKGROUND_ROOT := "res://game/backgrounds/"
 const BACKGROUND_DEFAULT := "void.png"
 const BACKGROUND_SKYLINE := "skyline.png"
@@ -23,3 +25,23 @@ const MUSIC_MAIN_MENU := "Modela - It's Not Pretty Here.ogg"
 const SFX_ROOT := "res://game/sounds/sfx/"
 const SFX_CLICK := "637345__kyles__camera-toy-single-shot-nice-stereo.ogg"
 const SFX_SHUTTER := "579878__yfjesse__marvel-s-16-camera-shutter.ogg"
+
+func fetch(type:String, key:String) -> String:
+	type = type.to_upper()
+	var root = get(str(type, "_ROOT"))
+	var property := str(type, "_", key.to_upper())
+	if get(property):
+		return str(root, get(property))
+	var extensions : Array
+	if type == "MUSIC" or type == "SFX":
+		extensions = ["mp3", "wav", "ogg"]
+	elif type == "BACKGROUND" or type == "CG":
+		extensions = ["tscn", "png", "jpg"]
+	elif type == "SCREEN" or type == "STAGE":
+		extensions = ["tscn"]
+	for extension in extensions:
+		var path := str(root, key, ".", extension)
+		if ResourceLoader.exists(path):
+			return path
+	push_error(str("Couldn't fetch ", key, " in ", type))
+	return ""
