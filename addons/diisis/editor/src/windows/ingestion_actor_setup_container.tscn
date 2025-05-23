@@ -31,6 +31,10 @@ text = "save"
 layout_mode = 2
 text = "reset"
 
+[node name="AutoIngestButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
 [node name="HelpLabel" type="RichTextLabel" parent="VBoxContainer2"]
 visible = false
 layout_mode = 2
@@ -43,3 +47,4 @@ fit_content = true
 [connection signal="pressed" from="VBoxContainer2/VBoxContainer/HelpButton" to="." method="_on_help_button_pressed"]
 [connection signal="pressed" from="VBoxContainer2/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="VBoxContainer2/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="VBoxContainer2/VBoxContainer/AutoIngestButton" to="." method="_on_auto_ingest_button_pressed"]

@@ -1693,6 +1693,9 @@ func get_text_id_address_and_type(id:String) -> Array:
 			line_index += 1
 	return ["0.0", "Not Found"]
 
+func get_speakers() -> Array:
+	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
+
 func change_text_id(old_id:String, new_id:String) -> void:
 	for page in page_data.values():
 		var page_index = page.get("number")

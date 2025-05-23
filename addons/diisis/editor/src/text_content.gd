@@ -365,7 +365,7 @@ func prepare_line_for_text_insertion():
 func fill_active_actors():
 	var title = Pages.dropdown_title_for_dialog_syntax
 	active_actors.clear()
-	for v in Pages.dropdowns.get(title, []):
+	for v in Pages.get_speakers():
 		active_actors.append(v)
 	active_actors_title = title
 
