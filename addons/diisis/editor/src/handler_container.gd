@@ -49,7 +49,6 @@ func count_dir(path: String):
 		if not f.get_extension() == "gd":
 			continue
 		var script : Script = load(path + "/" + f)
-		print(script.resource_path)
 		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
 		var lines = file.get_as_text()
 		

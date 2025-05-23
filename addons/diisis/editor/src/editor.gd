@@ -661,6 +661,7 @@ func open_facts_window(fact_to_select:=""):
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
+		open_save_popup()
 		return
 	save_to_file(str(active_dir, active_file_name))
 
