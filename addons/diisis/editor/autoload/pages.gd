@@ -553,17 +553,6 @@ func delete_data_from_address(address:String):
 		choices.remove_at(parts[2])
 		page_data[address_page]["lines"]["content"]["choices"] = choices
 
-func get_defaults(property_key:String):
-	for p in head_defaults:
-		if p.get("property_name") == property_key:
-			return p
-	
-	return {
-		"name": "empty-instruction",
-		"value":"defaultvalue",
-		"data_type":DataTypes._String
-	}
-
 func get_custom_autoload_methods(autoload:String) -> Array:
 	var methods := []
 	var autoload_script := get_autoload_script(autoload)
@@ -1221,11 +1210,7 @@ func get_instruction_handler_methods() -> Array:
 		for method in script_methods:
 			methods.append(method.get("name"))
 	
-	var base = LineReader.new()
-	var base_methods = base.get_method_list()
-	for method in base_methods:
-		methods.erase(method.get("name"))
-	base.queue_free()
+	methods = add_usable_line_reader_parts(false, methods)
 	methods.sort()
 	return methods
 
@@ -1237,16 +1222,49 @@ func get_custom_properties() -> Array:
 			if not methods.has(method.get("name")):
 				methods.append(method.get("name"))
 	
-	var base = LineReader.new()
-	var base_methods = base.get_property_list()
-	for method in base_methods:
-		methods.erase(method.get("name"))
-	base.queue_free()
+	methods = add_usable_line_reader_parts(true, methods)
 	for method : String in methods:
 		if method.ends_with(".gd") or method.ends_with(".tscn"):
 			methods.erase(method)
 	
 	return methods
+
+## calls get_property_list if [member properties] else get_method_list
+func add_usable_line_reader_parts(properties:bool, custom_array:Array) -> Array:
+	var base := LineReader.new()
+	var lr_things := base.get_property_list() if properties else base.get_method_list()
+	var lr_methods := []
+	for thing in lr_things:
+		lr_methods.append(thing.get("name"))
+	var base_node = Node.new()
+	var node_methods := []
+	var node_things := base_node.get_property_list() if properties else base_node.get_method_list()
+	for thing in node_things:
+		node_methods.append(thing.get("name"))
+	
+	var result := []
+	var size := custom_array.size()
+	var i := 0
+	while i < size:
+		var method = custom_array[i]
+		if (
+			method.begins_with("_") or
+			method.begins_with("@") or
+			method.contains(" ") or
+			method != method.to_lower() or
+			method.ends_with(".gd") or
+			method.ends_with(".tscn") or
+			method in node_methods
+			):
+			custom_array.remove_at(i)
+			size -= 1
+			continue
+		result.append(method)
+		i += 1
+	
+	base.queue_free()
+	base_node.queue_free()
+	return custom_array
 
 func search_string(substr:String, case_insensitive:=false, include_tags:=false) -> Dictionary:
 	var found_facts := {}
