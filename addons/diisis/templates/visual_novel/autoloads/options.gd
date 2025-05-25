@@ -28,13 +28,13 @@ func _ready() -> void:
 		print("No options file found.")
 		return
 
-	music_volume = config.get_value("preferences", "music_volume", 1.0)
-	master_volume = config.get_value("preferences", "master_volume", 1.0)
-	sfx_volume = config.get_value("preferences", "sfx_volume", 1.0)
-	text_speed = config.get_value("preferences", "text_speed", 60)
-	auto_continue_delay = config.get_value("preferences", "auto_continue_delay", 1.0)
-	auto_continue = config.get_value("preferences", "auto_continue", false)
-	set_fullscreen(config.get_value("preferences", "fullscreen", false))
+	music_volume = config.get_value("preferences", "music_volume", music_volume)
+	master_volume = config.get_value("preferences", "master_volume", master_volume)
+	sfx_volume = config.get_value("preferences", "sfx_volume", sfx_volume)
+	text_speed = config.get_value("preferences", "text_speed", text_speed)
+	auto_continue_delay = config.get_value("preferences", "auto_continue_delay", auto_continue_delay)
+	auto_continue = config.get_value("preferences", "auto_continue", auto_continue)
+	set_fullscreen(config.get_value("preferences", "fullscreen", fullscreen))
 	save_slot = config.get_value("preferences", "save_slot", 0)
 	apply_font_prefs(config.get_value("preferences", "font_prefs", {}))
 	
@@ -59,7 +59,16 @@ func set_fullscreen(value:bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+func toggle_fullscreen():
+	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		fullscreen = false
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		fullscreen = true
 
 var font_prefs : Dictionary
 func store_font_prefs(prefs:Dictionary):

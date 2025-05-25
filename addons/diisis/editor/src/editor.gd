@@ -22,6 +22,7 @@ var error_update_countdown := 0.0
 var last_system_save := {}
 var has_saved := false
 var altered_history := false
+var was_playing_scene := false
 
 enum PageView {
 	Full,
@@ -68,6 +69,8 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	Pages.clear()
+	DiisisEditorActions.clear()
 	opening = true
 	core = find_child("Core")
 	page_container = core.find_child("PageContainer")
@@ -231,6 +234,12 @@ func set_save_path(value:String):
 func _process(delta: float) -> void:
 	if not is_open:
 		return
+	
+	if not was_playing_scene and EditorInterface.is_playing_scene():
+		if Pages.save_on_play:
+			save_to_dir_if_active_dir()
+	was_playing_scene = EditorInterface.is_playing_scene()
+	
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
 	
@@ -540,10 +549,11 @@ func open_from_path(path:String):
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
 	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
-		button.pressed.connect(update_page_view.bind(button.page_view))
+		if not button.pressed.is_connected(update_page_view):
+			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 4))
+	set_text_size(editor_data.get("text_size_id", 3))
 	update_page_view(editor_data.get("page_view", PageView.Full))
 	
 	var ingest_menu : PopupMenu = find_child("IngestMenu")
@@ -661,6 +671,7 @@ func open_facts_window(fact_to_select:=""):
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
+		open_save_popup()
 		return
 	save_to_file(str(active_dir, active_file_name))
 

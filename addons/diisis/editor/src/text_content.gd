@@ -234,6 +234,9 @@ func _on_text_box_caret_changed() -> void:
 		elif is_text_before_caret("fact:"):
 			for fact in Pages.facts.keys():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
+		elif is_text_before_caret("name:") or is_text_before_caret("clname:"):
+			for fact in active_actors:
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("["):
 		for tag in BBCODE_TAGS:
@@ -362,7 +365,7 @@ func prepare_line_for_text_insertion():
 func fill_active_actors():
 	var title = Pages.dropdown_title_for_dialog_syntax
 	active_actors.clear()
-	for v in Pages.dropdowns.get(title, []):
+	for v in Pages.get_speakers():
 		active_actors.append(v)
 	active_actors_title = title
 
@@ -413,7 +416,7 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			caret_movement_to_do = 1
 
-	for control in ["func", "name", "var", "fact", "call", "ts_rel", "ts_abs", "comment"]:
+	for control in ["func", "name", "clname", "var", "fact", "call", "ts_rel", "ts_abs", "comment"]:
 		if is_text_before_caret(str("<", control, ":>")):
 			caret_movement_to_do = -1
 			Pages.auto_complete_context = control

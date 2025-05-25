@@ -4,6 +4,8 @@ extends Control
 @export var toggle_button : Button
 var container : VBoxContainer
 
+var is_editable := false
+
 func init() -> void:
 	container = $PropertyContainer
 	load_defaults()
@@ -65,6 +67,7 @@ func _on_gui_input(event: InputEvent) -> void:
 						#header.set_editable(editable)
 
 func set_editable(value:bool):
+	is_editable = value
 	find_child("PropertyContainer").visible = value
 	find_child("HeaderShort").visible = not value
 	find_child("HeaderShort").text = get_short_form()

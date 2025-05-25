@@ -13,25 +13,36 @@ custom_minimum_size = Vector2(400, 115)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="NoTitleWarning" type="RichTextLabel" parent="."]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=fb40a9]No speaker dropdown has been set. Please set one up in [url=speakers]Setup > Dropdowns > Dialog[/url].[/color][/center]"
+fit_content = true
+scroll_active = false
+
+[node name="Buttons" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="VBoxContainer" type="HBoxContainer" parent="Buttons"]
 layout_mode = 2
 
-[node name="HelpButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+[node name="HelpButton" type="Button" parent="Buttons/VBoxContainer"]
 layout_mode = 2
 text = "?"
 
-[node name="SaveButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+[node name="SaveButton" type="Button" parent="Buttons/VBoxContainer"]
 layout_mode = 2
 text = "save"
 
-[node name="ResetButton" type="Button" parent="VBoxContainer2/VBoxContainer"]
+[node name="ResetButton" type="Button" parent="Buttons/VBoxContainer"]
 layout_mode = 2
 text = "reset"
 
-[node name="HelpLabel" type="RichTextLabel" parent="VBoxContainer2"]
+[node name="AutoIngestButton" type="Button" parent="Buttons/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HelpLabel" type="RichTextLabel" parent="Buttons"]
 visible = false
 layout_mode = 2
 text = "Prepends this to the text to be ingested if it doesn't contain \"CONTENT\" for Text Lines or \"END ACTORS\\n\" for Page ingestion.
@@ -40,6 +51,8 @@ See Ingestion Help menu for more details. tldr is: space-separated [actor shorth
 fit_content = true
 
 [connection signal="text_changed" from="TextEdit" to="." method="_on_text_edit_text_changed"]
-[connection signal="pressed" from="VBoxContainer2/VBoxContainer/HelpButton" to="." method="_on_help_button_pressed"]
-[connection signal="pressed" from="VBoxContainer2/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="VBoxContainer2/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="meta_clicked" from="NoTitleWarning" to="." method="_on_no_title_warning_meta_clicked"]
+[connection signal="pressed" from="Buttons/VBoxContainer/HelpButton" to="." method="_on_help_button_pressed"]
+[connection signal="pressed" from="Buttons/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Buttons/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Buttons/VBoxContainer/AutoIngestButton" to="." method="_on_auto_ingest_button_pressed"]

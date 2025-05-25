@@ -7,4 +7,3 @@ layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
 script = ExtResource("1_f2s5m")
-warn_advance_on_executing = null

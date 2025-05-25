@@ -111,7 +111,8 @@ signal notify_string_positions(
 signal function_called(
 	method_name: String,
 	arguments: Array,
-	at_index: int
+	at_index: int,
+	result
 )
 
 signal comment(
@@ -220,3 +221,6 @@ signal line_skipped()
 
 ## Emitted when [method LineReader.request_advance] successfully advances the [LineReader].
 signal advanced()
+
+## Emitted when [method Parser.function_acceded] is called.
+signal acceded()
