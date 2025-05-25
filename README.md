@@ -13,9 +13,9 @@ The plugin comes with a template to [create visual novels](https://github.com/Sn
 
 DIISIS comes with its own editor that behaves like a hybrid between plugin and standalone software. It runs in a separate window inside Godot and is packed with esoteric features!
 
-![screenshot1](https://github.com/user-attachments/assets/cb8158dc-e29e-4c97-83aa-2214e5b3c5ad)
+![image](https://github.com/user-attachments/assets/5d36d61c-c9ba-4bd7-992b-f0d153a24a9b)
+
 
 # Reach out
-- [Discord](https://discord.gg/w9bWyUjAJT)
-- Contact me on hellsite [Twitter](https://x.com/SnekOfSpice)
+- Say hi on [bsky](https://bsky.app/profile/snekofspice.bsky.social)
 - Use the [GitHub Issues](https://github.com/SnekOfSpice/dialog-editor/issues) for bugs, feedback, and other issues you have with DIISIS
