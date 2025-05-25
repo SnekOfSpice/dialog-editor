@@ -648,6 +648,7 @@ func str_to_typed(value:String, type:int):
 func function_acceded():
 	if not line_reader:
 		return
+	ParserEvents.acceded.emit()
 	if not line_reader.awaiting_inline_call.is_empty():
 		line_reader.awaiting_inline_call = ""
 		return

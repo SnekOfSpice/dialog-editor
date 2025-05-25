@@ -71,12 +71,13 @@ theme_override_constants/margin_top = -1
 theme_override_constants/margin_right = -1
 theme_override_constants/margin_bottom = -1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" node_paths=PackedStringArray("code_edit")]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 follow_focus = true
 vertical_scroll_mode = 0
 script = ExtResource("3_osost")
+code_edit = NodePath("TextBox")
 
 [node name="TextBox" type="CodeEdit" parent="MarginContainer/ScrollContainer"]
 custom_minimum_size = Vector2(0, 100)

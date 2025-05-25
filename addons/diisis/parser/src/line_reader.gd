@@ -19,6 +19,7 @@ enum NameStyle {
 	NameLabel,
 	## The name will be inserted in front of the text with a sequence of optional spaces and characters (See [param prepend_separator] [param prefix_space] [param prefix_suffix]). [member name_label] will be hidden.
 	Prepend,
+	None,
 }
 
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
@@ -193,6 +194,7 @@ var name_container: Control:
 ##     return text
 ## [/codeblock]
 @export var body_label_function_funnel : Array[String]
+@export var body_label_tint_lines := false
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -318,6 +320,7 @@ var line_index := 0
 var _remaining_auto_pause_duration := 0.0
 
 var _showing_text := false
+var _text_delay := 0.0
 
 var _lead_time := 0.0
 var _next_pause_position_index := -1
@@ -409,6 +412,7 @@ func serialize() -> Dictionary:
 	result["remaining_auto_pause_duration"] = _remaining_auto_pause_duration 
 	result["showing_text"] = _showing_text 
 	result["terminated"] = terminated
+	result["_text_delay"] = _text_delay
 	result["text_speed_by_character_index"] = _text_speed_by_character_index
 	if persist_ui_visibilities:
 		result["ui_visibilities"] = get_ui_visibilities()
@@ -448,10 +452,11 @@ func deserialize(data: Dictionary):
 	_next_pause_type = int(data.get("next_pause_type"))
 	_pause_positions = data.get("pause_positions")
 	_pause_types = data.get("pause_types")
-	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", true)
+	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", preserve_name_in_past_lines)
 	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
 	_showing_text = data.get("showing_text")
 	terminated = data.get("terminated")
+	_text_delay = data.get("_text_delay", _text_delay)
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
@@ -566,9 +571,9 @@ func get_preferences() -> Dictionary:
 
 ## Applies the preferences that are usually set by the user. Includes keys:\n[code]text_speed[/code] (float)\n[code]auto_continue[/code] (bool)\n[code]auto_continue_delay[/code] (float)
 func apply_preferences(prefs:Dictionary):
-	text_speed = prefs.get("text_speed", 60.0)
-	auto_continue = prefs.get("auto_continue", false)
-	auto_continue_delay = prefs.get("auto_continue_delay", 2.0)
+	text_speed = prefs.get("text_speed", text_speed)
+	auto_continue = prefs.get("auto_continue", auto_continue)
+	auto_continue_delay = prefs.get("auto_continue_delay", auto_continue_delay)
 
 ## Advances the interpreting of lines from the input file if possible. Will push an appropriate warning if not possible.
 func request_advance():
@@ -603,6 +608,7 @@ func request_advance():
 func advance():
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
+	_text_delay = 0
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if _showing_text:
@@ -732,8 +738,8 @@ func _read_new_line(new_line: Dictionary):
 		content = Parser.get_text(raw_content.get("text_id"))
 	var content_name = _line_data.get("content").get("name")
 	
-	for key in UI_PROPERTIES:
-		get(key).visible = true
+	#for key in UI_PROPERTIES:
+		#get(key).visible = get
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
 	choice_container.visible = line_type == DIISIS.LineType.Choice
@@ -773,11 +779,17 @@ func _read_new_line(new_line: Dictionary):
 						var actor_prefix := ""
 						if not actor_name in blank_names:
 							actor_prefix = _get_chatlog_name(actor_name) + ": "
+						
+						var body_prefix : String = body_label_prefix_by_actor.get(actor_name, "")
+						var body_suffix : String = body_label_suffix_by_actor.get(actor_name, "")
+						
 						line = str(
 							"[color=", _get_chatlog_color(actor_name).to_html(), "]",
 							actor_prefix,
 							"[/color]" if not chatlog_tint_full_line else "",
+							body_prefix,
 							line,
+							body_suffix,
 							"[/color]" if chatlog_tint_full_line else "",
 							)
 					_dialog_lines.append(line)
@@ -982,7 +994,6 @@ func _process(delta: float) -> void:
 		
 		if not has_executed:
 			ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
-			#emit_signal("execute_instruction", execution_args)
 			has_executed = true
 			has_received_execute_callback = not execute(execution_text)
 		
@@ -1003,6 +1014,11 @@ func _process(delta: float) -> void:
 		
 		is_executing = false
 		return
+	
+	if _showing_text:
+		if _text_delay > 0:
+			_text_delay -= delta
+			return
 	
 	var visible_characters_before_inline_call = body_label.visible_characters
 	if awaiting_inline_call:
@@ -1338,6 +1354,7 @@ func _read_next_chunk():
 	if text_speed == MAX_TEXT_SPEED:
 		body_label.visible_ratio = 1.0
 	else:
+		body_label.visible_ratio = 0
 		body_label.visible_characters = _visible_prepend_offset
 	
 	_pause_positions.clear()
@@ -1476,7 +1493,9 @@ func _read_next_chunk():
 		_lead_time = Parser.text_lead_time_same_actor
 	
 	_visible_prepend_offset = 0
-	if name_style == NameStyle.Prepend:
+	if name_style == NameStyle.None:
+		name_container.modulate.a = 0.0
+	elif name_style == NameStyle.Prepend:
 		name_container.modulate.a = 0.0
 		var display_name: String = name_map.get(current_raw_name, current_raw_name)
 		var name_color :Color = _get_actor_color(current_raw_name)
@@ -1496,6 +1515,9 @@ func _read_next_chunk():
 		while l < _pause_positions.size():
 			_pause_positions[l] = _pause_positions[l] + name_prepend_length
 			l += 1
+	
+	if body_label_tint_lines and not chatlog_enabled:
+		cleaned_text = str("[color=", _get_actor_color(current_raw_name).to_html(), "]", cleaned_text, "[/color]")
 	
 	var old_text = body_label.text
 	_set_body_label_text(cleaned_text)
@@ -1586,11 +1608,13 @@ func _set_body_label_text(text: String):
 			past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
 			past_line.fit_content = true
 			past_line.bbcode_enabled = true
+			past_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		
 		var past_text := ""
-		if preserve_name_in_past_lines and not _last_raw_name in blank_names and not body_label.text.is_empty():
+		if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.Prepend or (name_style == NameStyle.NameLabel and preserve_name_in_past_lines)):
 			var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
 			past_text = str(actor_prefix, _get_prepend_separator_sequence())
+			
 		
 		var body_label_to_save = body_label.text
 		if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
@@ -1601,11 +1625,16 @@ func _set_body_label_text(text: String):
 
 	
 	body_label.text = text
+	body_label.visible_ratio = 0
 	body_label.visible_characters = _visible_prepend_offset
 	_characters_visible_so_far = ""
 	_started_word_buffer = ""
 	
 	_last_raw_name = current_raw_name
+
+## If showing text. Resets on successful [method request_advance] call.
+func add_text_display_delay(duration:float):
+	_text_delay += duration
 
 func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	var color : Color = _get_actor_color(_last_raw_name)
@@ -1617,6 +1646,8 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
 func set_body_label(new_body_label:RichTextLabel, keep_text := true):
+	if new_body_label == body_label:
+		return
 	var switch_text:bool = body_label != new_body_label
 	var old_text : String
 	if switch_text and keep_text:
@@ -1626,12 +1657,11 @@ func set_body_label(new_body_label:RichTextLabel, keep_text := true):
 		body_label.text = old_text
 
 ## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label]. [param new_label] becomes [param body_label].
-func enable_past_lines(container: VBoxContainer, new_label:RichTextLabel, name_style := NameStyle.Prepend):
+func enable_keep_past_lines(container: VBoxContainer, keep_text := false, new_label:=body_label, new_name_style := name_style):
 	keep_past_lines = true
 	self.past_lines_container = container
-	self.name_style = name_style
-	set_body_label(new_label)
-		
+	name_style = new_name_style
+	set_body_label(new_label, keep_text)
 
 func _find_next_pause():
 	if _pause_types.size() > 0 and _next_pause_position_index < _pause_types.size():
@@ -1917,12 +1947,16 @@ func update_name_label(actor_name: String):
 			name_container.modulate.a = 0.0
 		else:
 			name_container.modulate.a = 1.0
+	#if name_style == 
+		#name_container.modulate.a = 0.0
 	
 	var name_visible:bool
 	if name_style == NameStyle.NameLabel:
 		name_visible = name_container.modulate.a > 0.0
 	elif name_style == NameStyle.Prepend:
 		name_visible = current_raw_name in blank_names
+	elif name_style == NameStyle.None:
+		name_visible = false
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
 	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
 
@@ -2079,7 +2113,7 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 		CallMode.Func:
 			return str(result)
 		CallMode.Call:
-			ParserEvents.function_called.emit(func_name, args, call_position)
+			ParserEvents.function_called.emit(func_name, args, call_position, result)
 			return result
 
 func callv_custom(method_name:String, argv):

@@ -1494,7 +1494,7 @@ func get_method_validity(instruction:String) -> String:
 		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
 		
-		var type_compliance := get_type_compliance(entered_name, template_arg_names[i], arg_value, template_types[i], i)
+		var type_compliance : String = get_type_compliance(entered_name, template_arg_names[i], arg_value, template_types[i], i)
 		if not type_compliance.is_empty():
 			return type_compliance
 		i += 1

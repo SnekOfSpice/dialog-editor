@@ -21,7 +21,6 @@ var cg := ""
 var cg_position := ""
 var base_cg_offset : Vector2
 var is_name_container_visible := false
-var hovering_meta := false
 
 @onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
 @onready var rtl_custom_minimum_size : Vector2 = find_child("BodyLabel").custom_minimum_size
@@ -162,8 +161,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				hide_cg()
 				return
 		if not find_child("VNUI").visible:
-			return
-		if hovering_meta:
 			return
 		line_reader.request_advance()
 	elif event.is_action_pressed("go_back"):
@@ -475,9 +472,3 @@ func set_static(level:float):
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
-
-func _on_rich_text_label_meta_hover_ended(_meta: Variant) -> void:
-	hovering_meta = false
-
-func _on_rich_text_label_meta_hover_started(_meta: Variant) -> void:
-	hovering_meta = true

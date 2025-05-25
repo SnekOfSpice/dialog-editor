@@ -144,6 +144,30 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="Controls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+tooltip_text = "Toggle header"
+focus_mode = 0
+button_pressed = true
+icon = ExtResource("11_mgljy")
+
+[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+icon = ExtResource("4_4weov")
+
+[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+icon = ExtResource("5_hfdyk")
+
 [node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 columns = 2
@@ -175,31 +199,6 @@ size_flags_vertical = 0
 tooltip_text = "Add below"
 focus_mode = 0
 icon = ExtResource("9_f7stu")
-
-[node name="Controls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-tooltip_text = "Toggle header"
-focus_mode = 0
-button_pressed = true
-icon = ExtResource("11_mgljy")
-
-[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-icon = ExtResource("4_4weov")
-
-[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-icon = ExtResource("5_hfdyk")
 
 [node name="LoopbackReferenceLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -291,11 +290,11 @@ icon = ExtResource("13_f7stu")
 layout_mode = 2
 
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer/SkipCheckBox" to="." method="set_skip"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveUp" to="." method="_on_move_up_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineAbove" to="." method="_on_insert_line_above_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/MoveDown" to="." method="_on_move_down_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer/InsertLineBelow" to="." method="_on_insert_line_below_pressed"]
-[connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/HeadVisibilityToggle" to="." method="_on_head_visibility_toggle_toggled"]
 [connection signal="meta_clicked" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/LoopbackReferenceLabel" to="." method="_on_loopback_reference_label_meta_clicked"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/SelectAllInRangeButton" to="." method="_on_select_all_in_range_button_pressed"]
 [connection signal="drop_focus" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content/TextContent" to="." method="_on_text_content_drop_focus"]

@@ -91,7 +91,7 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound"]:
+	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound", "style"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
 		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
@@ -131,8 +131,10 @@ func setup_vn_template():
 	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
 func clear_editor_singletons():
-	Pages.clear()
-	DiisisEditorActions.clear()
+	if Engine.has_singleton("Pages"):
+		Engine.get_singleton("Pages").clear()
+	if Engine.has_singleton("DiisisEditorActions"):
+		Engine.get_singleton("DiisisEditorActions").clear()
 
 func add_editor_singletons():
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
@@ -249,12 +251,7 @@ func on_window_request_reload_editor():
 	await get_tree().process_frame
 	open_editor()
 
-var was_playing_scene := false
 func _process(delta: float) -> void:
-	if not was_playing_scene and EditorInterface.is_playing_scene():
-		if is_instance_valid(Pages.editor) and Pages.save_on_play:
-			Pages.editor.save_to_dir_if_active_dir()
-	was_playing_scene = EditorInterface.is_playing_scene()
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.wrap_controls = true
 

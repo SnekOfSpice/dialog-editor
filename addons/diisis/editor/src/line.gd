@@ -3,7 +3,6 @@ extends Control
 class_name Line
 
 var line_type := DIISIS.LineType.Text
-var is_head_editable := false
 var indent_level := 0
 var id : String
 
@@ -114,9 +113,8 @@ func move_choice_item_by_index(at_index:int, direction:int):
 	find_child("ChoiceContainer").move_choice_item_by_index(at_index, direction)
 
 func set_head_editable(value: bool):
-	is_head_editable = value
-	find_child("Header").set_editable(is_head_editable)
-	find_child("HeadVisibilityToggle").button_pressed = is_head_editable
+	find_child("Header").set_editable(value)
+	find_child("HeadVisibilityToggle").button_pressed = value
 
 func set_skip(value:bool):
 	modulate.a = 0.6 if value else 1
@@ -133,6 +131,9 @@ func set_skip(value:bool):
 func set_skip_folder_override(value:bool):
 	modulate.a = 0.6 if value or find_child("SkipCheckBox").button_pressed else 1
 
+func get_is_head_editable():
+	return find_child("Header").is_editable
+
 func serialize() -> Dictionary:
 	if not id:
 		id = Pages.get_new_id()
@@ -144,7 +145,7 @@ func serialize() -> Dictionary:
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
 	#data["meta.visible"] = find_child("VisibleToggle").button_pressed
-	data["meta.is_head_editable"] = is_head_editable
+	data["meta.is_head_editable"] = get_is_head_editable()
 	data["meta.line_index"] = get_index()
 	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
@@ -193,7 +194,9 @@ func deserialize(data: Dictionary):
 			find_child("FolderContainer").deserialize(data.get("content", {}))
 			set_indent_level(data.get("meta.indent_level", 0))
 	
-	#set_non_meta_parts_visible(data.get("meta.visible", data.get("visible", true)))
+	#var a = data.get("meta.is_head_editable")
+	#if not a:
+		#a = false
 	set_head_editable(data.get("meta.is_head_editable", false))
 	id = data.get("id", Pages.get_new_id())
 	set_skip(data.get("skip", false))
@@ -240,7 +243,7 @@ func update():
 	for i in range(1, indent_level + 1):
 		indent += ">"
 	find_child("IndexLabel").text = str(get_index(), indent)
-	set_head_editable(is_head_editable)
+	set_head_editable(get_is_head_editable())
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:

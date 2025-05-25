@@ -22,6 +22,7 @@ var error_update_countdown := 0.0
 var last_system_save := {}
 var has_saved := false
 var altered_history := false
+var was_playing_scene := false
 
 enum PageView {
 	Full,
@@ -231,6 +232,12 @@ func set_save_path(value:String):
 func _process(delta: float) -> void:
 	if not is_open:
 		return
+	
+	if not was_playing_scene and EditorInterface.is_playing_scene():
+		if Pages.save_on_play:
+			save_to_dir_if_active_dir()
+	was_playing_scene = EditorInterface.is_playing_scene()
+	
 	if not active_dir.is_empty() and has_saved:
 		time_since_last_save += delta
 	
@@ -540,10 +547,11 @@ func open_from_path(path:String):
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
 	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
-		button.pressed.connect(update_page_view.bind(button.page_view))
+		if not button.pressed.is_connected(update_page_view):
+			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 4))
+	set_text_size(editor_data.get("text_size_id", 3))
 	update_page_view(editor_data.get("page_view", PageView.Full))
 	
 	var ingest_menu : PopupMenu = find_child("IngestMenu")
