@@ -1614,7 +1614,6 @@ func _set_body_label_text(text: String):
 		if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.Prepend or (name_style == NameStyle.NameLabel and preserve_name_in_past_lines)):
 			var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
 			past_text = str(actor_prefix, _get_prepend_separator_sequence())
-			
 		
 		var body_label_to_save = body_label.text
 		if name_style == NameStyle.Prepend and not current_raw_name in blank_names:

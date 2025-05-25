@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=77 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=82 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontVariation" uid="uid://rwenx6g7xf7e" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_base.tres" id="1_da0q8"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
@@ -7,9 +7,13 @@
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/theme/fonts/textfont.tres" id="3_8wpuc"]
 [ext_resource type="Texture2D" uid="uid://qqt7d0lnrvcb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked_disabled.png" id="3_o21m6"]
 [ext_resource type="Texture2D" uid="uid://nos2emfmvumf" path="res://addons/diisis/editor/visuals/theme/buttons_ui/toggled.png" id="4_leuoi"]
+[ext_resource type="Texture2D" uid="uid://6w475lg2k27l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/radio_pressed.png" id="5_bodw7"]
 [ext_resource type="Texture2D" uid="uid://25ko4taht03a" path="res://addons/diisis/editor/visuals/theme/buttons_ui/unchecked_disabled.png" id="5_kmvxr"]
 [ext_resource type="Texture2D" uid="uid://d3mybdc13ox0t" path="res://addons/diisis/editor/visuals/theme/buttons_ui/untoggled.png" id="5_wd1oj"]
+[ext_resource type="Texture2D" uid="uid://dptgvtqlsdu5b" path="res://addons/diisis/editor/visuals/theme/buttons_ui/radio_pressed_disabled.png" id="6_si63v"]
+[ext_resource type="Texture2D" uid="uid://quyvlj6w3syd" path="res://addons/diisis/editor/visuals/theme/buttons_ui/radio_unpressed.png" id="7_5t3f0"]
 [ext_resource type="StyleBox" uid="uid://br7n6y7nn3rxd" path="res://addons/diisis/editor/visuals/theme/buttons_ui/check_button_intense.tres" id="8_behik"]
+[ext_resource type="Texture2D" uid="uid://c6p6321ushbjr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/radio_unpressed_disabled.png" id="8_jcrxo"]
 [ext_resource type="FontFile" uid="uid://clp0ef7vbq100" path="res://addons/diisis/editor/visuals/theme/fonts/Fragmentcore.otf" id="9_iln6p"]
 [ext_resource type="FontFile" uid="uid://dxdcq17w685ra" path="res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf" id="9_qlmfo"]
 [ext_resource type="StyleBox" uid="uid://df5lobqsgdfp" path="res://addons/diisis/editor/visuals/theme/region_panel.tres" id="13_qlmfo"]
@@ -24,6 +28,22 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5foo6"]
 bg_color = Color(0.0794575, 0.0327925, 0.0782667, 1)
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bodw7"]
+bg_color = Color(0.03, 0.0123, 0.02941, 0.635294)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.53, 0.21995, 0.1855, 1)
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41heh"]
 bg_color = Color(0.129558, 0.129558, 0.129558, 1)
@@ -46,6 +66,10 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.549997, 0.278107, 0.108411, 1)
 border_blend = true
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_khss8"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
@@ -449,11 +473,16 @@ Button/font_sizes/font_size = 14
 Button/fonts/font = ExtResource("1_da0q8")
 Button/styles/focus = ExtResource("2_pj604")
 Button/styles/hover = SubResource("StyleBoxFlat_5foo6")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_bodw7")
 Button/styles/normal = SubResource("StyleBoxFlat_41heh")
 Button/styles/pressed = SubResource("StyleBoxFlat_1m062")
 CheckBox/font_sizes/font_size = 12
 CheckBox/icons/checked = ExtResource("2_lximw")
 CheckBox/icons/checked_disabled = ExtResource("3_o21m6")
+CheckBox/icons/radio_checked = ExtResource("5_bodw7")
+CheckBox/icons/radio_checked_disabled = ExtResource("6_si63v")
+CheckBox/icons/radio_unchecked = ExtResource("7_5t3f0")
+CheckBox/icons/radio_unchecked_disabled = ExtResource("8_jcrxo")
 CheckBox/icons/unchecked = ExtResource("3_3c5a6")
 CheckBox/icons/unchecked_disabled = ExtResource("5_kmvxr")
 CheckButton/colors/font_outline_color = Color(0.717777, 0.140726, 0.467304, 1)

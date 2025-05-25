@@ -31,13 +31,13 @@ func fill_code_edit(tab_title: String):
 
 
 func fill_dialog_argument_checkboxes():
-	for c in find_child("DialogSyntax").get_children():
+	for c in find_child("Dialog").get_children():
 		c.queue_free()
 	
 	var items := []
 	for dd_title : String in Pages.dropdown_titles:
 		var cb = preload("res://addons/diisis/editor/src/dialog_argument_dropdown_item.tscn").instantiate()
-		find_child("DialogSyntax").add_child(cb)
+		find_child("Dialog").add_child(cb)
 		cb.init(dd_title)
 		cb.argument_pressed.connect(toggle_dropdown_dialog_argument)
 		cb.syntax_pressed.connect(set_dialog_syntax_dropdown)

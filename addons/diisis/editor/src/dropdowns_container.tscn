@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/dropdowns_container.gd" id="1_6xnc2"]
 [ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_81ktr"]
 
-[node name="MarginContainer" type="MarginContainer"]
+[node name="Container" type="MarginContainer"]
 auto_translate_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,66 +17,66 @@ auto_translate_mode = 1
 layout_mode = 2
 current_tab = 0
 
-[node name="Dropdowns" type="VBoxContainer" parent="TabContainer"]
+[node name="Definitions" type="VBoxContainer" parent="TabContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Controls" type="VBoxContainer" parent="TabContainer/Dropdowns"]
+[node name="Controls" type="VBoxContainer" parent="TabContainer/Definitions"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="SearchContainer" type="HBoxContainer" parent="TabContainer/Dropdowns/Controls"]
+[node name="SearchContainer" type="HBoxContainer" parent="TabContainer/Definitions/Controls"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Dropdowns/Controls/SearchContainer"]
+[node name="Label" type="Label" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Search:"
 
-[node name="SearchLineEdit" type="LineEdit" parent="TabContainer/Dropdowns/Controls/SearchContainer"]
+[node name="SearchLineEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "t: for titles, o: for options. other queries search both"
 
-[node name="ClearSearchButton" type="Button" parent="TabContainer/Dropdowns/Controls/SearchContainer"]
+[node name="ClearSearchButton" type="Button" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Clear Search"
 
-[node name="CreateDDContainer" type="HBoxContainer" parent="TabContainer/Dropdowns/Controls"]
+[node name="CreateDDContainer" type="HBoxContainer" parent="TabContainer/Definitions/Controls"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="CreateDDNameTextEdit" type="LineEdit" parent="TabContainer/Dropdowns/Controls/CreateDDContainer"]
+[node name="CreateDDNameTextEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AddButton" type="Button" parent="TabContainer/Dropdowns/Controls/CreateDDContainer"]
+[node name="AddButton" type="Button" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
 icon = ExtResource("2_81ktr")
 
-[node name="DropdownsContainer" type="VBoxContainer" parent="TabContainer/Dropdowns"]
+[node name="DropdownsContainer" type="VBoxContainer" parent="TabContainer/Definitions"]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="DialogSyntax" type="VBoxContainer" parent="TabContainer"]
+[node name="Dialog" type="VBoxContainer" parent="TabContainer"]
 auto_translate_mode = 1
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[connection signal="text_changed" from="TabContainer/Dropdowns/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
-[connection signal="pressed" from="TabContainer/Dropdowns/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
-[connection signal="text_changed" from="TabContainer/Dropdowns/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_changed"]
-[connection signal="text_submitted" from="TabContainer/Dropdowns/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_submitted"]
-[connection signal="pressed" from="TabContainer/Dropdowns/Controls/CreateDDContainer/AddButton" to="." method="create_new_dropdown"]
-[connection signal="resized" from="TabContainer/Dropdowns/DropdownsContainer" to="." method="_on_dropdowns_container_resized"]
-[connection signal="visibility_changed" from="TabContainer/DialogSyntax" to="." method="_on_dialog_syntax_visibility_changed"]
+[connection signal="text_changed" from="TabContainer/Definitions/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
+[connection signal="pressed" from="TabContainer/Definitions/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
+[connection signal="text_changed" from="TabContainer/Definitions/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_changed"]
+[connection signal="text_submitted" from="TabContainer/Definitions/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_submitted"]
+[connection signal="pressed" from="TabContainer/Definitions/Controls/CreateDDContainer/AddButton" to="." method="create_new_dropdown"]
+[connection signal="resized" from="TabContainer/Definitions/DropdownsContainer" to="." method="_on_dropdowns_container_resized"]
+[connection signal="visibility_changed" from="TabContainer/Dialog" to="." method="_on_dialog_syntax_visibility_changed"]
