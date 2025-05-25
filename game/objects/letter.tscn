@@ -1,0 +1,136 @@
+[gd_scene load_steps=7 format=3 uid="uid://1yh6ntfadlr4"]
+
+[ext_resource type="Script" uid="uid://d2cngi0f3xshf" path="res://game/objects/letter.gd" id="1_e4jsb"]
+[ext_resource type="Texture2D" uid="uid://b5iuxubpkxbso" path="res://game/visuals/paper.png" id="1_sx7rl"]
+[ext_resource type="FontFile" uid="uid://cms6howfjvtij" path="res://game/visuals/fonts/OnesHandwriting.ttf" id="2_3ya01"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_34qo2"]
+bg_color = Color(0.248391, 0.0089774, 0.194022, 0.831373)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 5
+border_width_bottom = 3
+border_color = Color(0.806776, 0.548799, 0.195305, 1)
+border_blend = true
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qpeyo"]
+bg_color = Color(0.00218267, 3.02992e-05, 0.00135883, 0.831373)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 5
+border_width_bottom = 3
+border_color = Color(0.54, 0.35775, 0.1026, 0.87451)
+border_blend = true
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc6mw"]
+bg_color = Color(0.12, 0.0024, 0.08864, 0.831373)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 5
+border_width_bottom = 3
+border_color = Color(0.614586, 0.409953, 0.123426, 1)
+border_blend = true
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[node name="Letter" type="Node2D"]
+script = ExtResource("1_e4jsb")
+
+[node name="FontButton" type="Button" parent="."]
+offset_left = 616.0
+offset_top = 430.0
+offset_right = 704.0
+offset_bottom = 461.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+theme_override_styles/hover = SubResource("StyleBoxFlat_34qo2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qpeyo")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vc6mw")
+text = "Font"
+
+[node name="ReadButton" type="Button" parent="."]
+offset_left = 618.0
+offset_top = 470.0
+offset_right = 674.0
+offset_bottom = 501.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_34qo2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qpeyo")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vc6mw")
+text = ">>"
+
+[node name="Paper" type="Sprite2D" parent="."]
+position = Vector2(455, 275)
+texture = ExtResource("1_sx7rl")
+
+[node name="Handwriting" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(280, 0)
+offset_left = 316.0
+offset_top = 75.0
+offset_right = 596.0
+offset_bottom = 427.0
+theme_override_colors/default_color = Color(0.00909251, 0.125081, 0.292677, 1)
+theme_override_fonts/normal_font = ExtResource("2_3ya01")
+theme_override_font_sizes/normal_font_size = 13
+text = "My dearest Anhedonia, 
+
+I love you.
+
+If you are reading this, I am sorry to have left you. I wish I could carry this grief with you, but alas, I also arrogate to be its source.
+
+As I sit here, dying, I will have left you with some minor work. Atop my workbench you will find writeups and manuals to aid you in this final stretch, should you need them. You extracted so much of my blood from its vessel. Please treasure this last offering.
+
+I only urge you to make haste, as to not waste this body in its final hours. My trust in your ability to do this is absolute and unfaltering.
+
+You are the most wonderful girlfriend I could have ever wished for.
+
+I am grateful for all you have done for me, and all that you have allowed me to experience alongside you. Please keep me in your heart - for it is there where I found my home.
+
+Yours, always,
+One"
+fit_content = true
+
+[node name="Clean" type="RichTextLabel" parent="."]
+visible = false
+custom_minimum_size = Vector2(280, 0)
+offset_left = 316.0
+offset_top = 72.0
+offset_right = 596.0
+offset_bottom = 548.0
+theme_override_colors/default_color = Color(0.0418059, 0.0212942, 0.166608, 1)
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_outline_size = 0
+theme_override_constants/line_separation = 0
+theme_override_font_sizes/normal_font_size = 11
+text = "My dearest Anhedonia, 
+
+I love you.
+
+If you are reading this, I am sorry to have left you. I wish I could carry this grief with you, but alas, I also arrogate to be its source.
+
+As I sit here, dying, I will have left you with some minor work. Atop my workbench you will find writeups and manuals to aid you in this final strech, should you need them. You extracted so much of my blood from its vessel. Please treasure this last offering.
+
+I only urge you to make haste, as to not waste this body in its final hours. My trust in your ability to do this is absolute and unfaltering.
+
+You are the most wonderful girlfriend I could have ever wished for.
+
+I am grateful for all you have done for me, and all that you have allowed me to experience alongside you. Please keep me in your heart - for it is there where I found my home.
+
+Yours, always,
+One"
+fit_content = true
+
+[connection signal="pressed" from="FontButton" to="." method="_on_font_button_pressed"]
+[connection signal="pressed" from="ReadButton" to="." method="_on_read_button_pressed"]
