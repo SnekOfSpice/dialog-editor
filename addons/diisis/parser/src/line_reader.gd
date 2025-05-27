@@ -91,7 +91,7 @@ var _last_raw_name := ""
 @export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
 @export var name_style : NameStyle = NameStyle.NameLabel
-## Use [const Color.TRANSPARENT] to use the style color instead
+## Use [const Color.TRANSPARENT] to use the theme color of [member name_label] instead if [member color_map] doesn't have an actor name set.
 @export var actor_default_color := Color.TRANSPARENT
 var _visible_prepend_offset := 0
 
@@ -782,6 +782,10 @@ func _read_new_line(new_line: Dictionary):
 						
 						var body_prefix : String = body_label_prefix_by_actor.get(actor_name, "")
 						var body_suffix : String = body_label_suffix_by_actor.get(actor_name, "")
+						if chatlog_enabled and not chatlog_include_body_label_actor_prefix:
+							body_prefix = ""
+						if chatlog_enabled and not chatlog_include_body_label_actor_suffix:
+							body_suffix = ""
 						
 						line = str(
 							"[color=", _get_chatlog_color(actor_name).to_html(), "]",
@@ -1615,6 +1619,9 @@ func _set_body_label_text(text: String):
 			var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
 			past_text = str(actor_prefix, _get_prepend_separator_sequence())
 		
+		if not preserve_name_in_past_lines and name_style == NameStyle.Prepend:
+			push_warning("preserve_name_in_past_lines is false but name_style is set to Prepend. There will be a name in past lines.")
+		
 		var body_label_to_save = body_label.text
 		if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
 			body_label_to_save = body_label_to_save.erase(0, body_label_to_save.find(_get_prepend_separator_sequence()) + _get_prepend_separator_sequence().length())
@@ -1670,6 +1677,8 @@ func _get_actor_name(actor_key:String) -> String:
 	return name_map.get(actor_key, actor_key)
 
 func _get_actor_color(actor_key:String) -> Color:
+	if actor_default_color == Color.TRANSPARENT and not color_map.has(actor_key):
+		return name_label.get_theme_color("font_color", "Label")
 	return color_map.get(actor_key, actor_default_color)
 
 ## Sets the value of key [param actor_key] in [member name_map] to [param actor_name].
