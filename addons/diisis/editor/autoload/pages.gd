@@ -308,7 +308,7 @@ func swap_line_references(on_page:int, from:int, to:int):
 
 
 func get_lines(page_number: int):
-	return page_data.get(page_number).get("lines")
+	return get_page_data(page_number).get("lines")
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
@@ -404,10 +404,18 @@ func get_page_number_by_key(key:String) -> int:
 			return page.get("number")
 	return -1
 
-func get_line_type(page_index:int, line_index:int) -> int:
+## when deserializing, UI elements such as choices may try to reference things that are further down the page
+## then this ensures it'll fall back onto the saved data
+func get_lines_safe(page_index:int, min_line_index:int) -> Array:
 	var page = get_page_data(page_index)
-	var lines = page.get("lines")
-	printt(page_index, ".", line_index, " ", page.size(), lines.size())
+	var lines : Array = page.get("lines")
+	if lines.size() > min_line_index:
+		return lines
+	else:
+		return page_data.get(page_index).get("lines")
+	
+func get_line_type(page_index:int, line_index:int) -> int:
+	var lines = get_lines_safe(page_index, line_index)
 	return int(lines[line_index].get("line_type"))
 
 func apply_file_config(data:Dictionary):
@@ -1896,12 +1904,7 @@ func get_facts_data(address:String) -> Dictionary:
 func get_line_data_adr(address:String) -> Dictionary:
 	var data := {}
 	var parts = DiisisEditorUtil.get_split_address(address)
-	var cpn : int = editor.get_current_page_number()
-	if cpn == parts[0]:
-		data = editor.get_current_page().get_line_data(parts[1])
-	else:
-		data = page_data.get(cpn).get("lines")[parts[1]]
-	return data
+	return get_lines_safe(parts[0], parts[1])[parts[1]]
 
 func get_line_data(page_index:int, line_index:int) -> Dictionary:
 	return get_line_data_adr(str(page_index, ".", line_index))
