@@ -280,23 +280,12 @@ func read_page(starting_page_index: int, starting_line_index := 0):
 	
 	read_line(line_index)
 
-func get_saved_game_progress(file_path: String) -> float:
-	var file : FileAccess
-	file = FileAccess.open(file_path, FileAccess.READ)
-	var data : Dictionary = JSON.parse_string(file.get_as_text())
-	file.close()
-	
-	if not file:
-		push_warning("No file to get game progress from")
-		return 0.0
-	
-	# all keys are now strings instead of ints
-	return float(data.get("Parser", {}).get("Parser.game_progress", 0.0))
  
-func get_game_progress_from_file(savepath:String) -> float:
-	var file = FileAccess.open(savepath, FileAccess.READ)
+func get_game_progress(dir:String) -> float:
+	var file_path = str("user://", dir, "/parser.json")
+	var file = FileAccess.open(file_path, FileAccess.READ)
 	if not file:
-		push_warning(str("No file at ", savepath))
+		push_warning(str("No file at ", file_path))
 		return 0.0
 	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
@@ -618,7 +607,12 @@ func deserialize(data: Dictionary):
 		line_reader.deserialize(line_reader_data)
 
 
-func save_parser_state_to_file(file_path: String, additional_data:={}):
+func save_parser_state(save_dir_name: String, additional_data:={}):
+	var access = DirAccess.open("user://")
+	var save_dir_path := str("user://", save_dir_name)
+	if not access.dir_exists(save_dir_path):
+		access.make_dir(save_dir_path)
+	var file_path := str(save_dir_path, "/parser.json")
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if not file:
 		push_error("File saving failed")
@@ -627,11 +621,16 @@ func save_parser_state_to_file(file_path: String, additional_data:={}):
 	var data_to_save := {}
 	data_to_save["Parser"] = serialize()
 	data_to_save["Custom"] = additional_data
+	
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
+	
+	save_actor_config(save_dir_path)
 
 ## returns any additional custom arguments that were passed during saving.
-func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> Dictionary:
+func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictionary:
+	var save_dir_path := str("user://", save_dir_name)
+	var file_path := str(save_dir_path, "/parser.json")
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if not file:
 		push_warning(str("No file at ", file_path))
@@ -643,6 +642,8 @@ func load_parser_state_from_file(file_path: String, pause_after_load:=false) -> 
 	file.close()
 	
 	deserialize(data.get("Parser", {}))
+	
+	load_actor_config(save_dir_path)
 	
 	paused = pause_after_load
 	
@@ -714,3 +715,23 @@ func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Di
 		page_data_to_visit_next = page_data.get(next_page_index)
 	
 	return _get_next_line_data_custom(0, page_data_to_visit_next)
+
+func ensure_actor_dir_exists(parent_dir : String):
+	var access = DirAccess.open(parent_dir)
+	var actor_dir := str(parent_dir, "/actors")
+	if not access.dir_exists(actor_dir):
+		access.make_dir(actor_dir)
+	
+
+func save_actor_config(dir : String):
+	ensure_actor_dir_exists(dir)
+	for actor in line_reader.actor_config.keys():
+		var res_path := str(dir, "/actors/", actor, ".tres")
+		ResourceSaver.save(line_reader.actor_config.get(actor), res_path)
+
+func load_actor_config(dir:String):
+	ensure_actor_dir_exists(dir)
+	for actor in line_reader.actor_config.keys():
+		var res_path := str(dir, "/actors/", actor, ".tres")
+		var res = ResourceLoader.load(res_path)
+		line_reader.actor_config[actor] = res

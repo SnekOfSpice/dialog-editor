@@ -83,6 +83,7 @@ var _auto_advance := false
 var _last_raw_name := ""
 
 @export_group("Name Display")
+@export var actor_config : Dictionary[String, LineReaderActorConfig]
 ## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
 @export var blank_names : Array[String] = []
 ## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
@@ -395,6 +396,7 @@ func _validate_property(property: Dictionary):
 func serialize() -> Dictionary:
 	var result := {}
 	
+	result["actors"] = actor_config.keys()
 	result["awaiting_inline_call"] = awaiting_inline_call
 	result["built_virtual_choices"] = _built_virtual_choices
 	if body_label:
@@ -444,6 +446,8 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if not data:
 		return
+	for actor : String in data.get("actors", []):
+		actor_config[actor] = null
 	awaiting_inline_call = data.get("awaiting_inline_call", "")
 	_built_virtual_choices = data.get("built_virtual_choices", {})
 	_call_strings = data.get("call_strings", {})

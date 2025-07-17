@@ -1,8 +1,9 @@
-[gd_scene load_steps=42 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=44 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" uid="uid://j84s4qlkmfxw" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="FontFile" uid="uid://dy8rsqmwhxjp6" path="res://addons/diisis/editor/visuals/theme/fonts/TT Chocolates Trial Bold.otf" id="2_6jeks"]
 [ext_resource type="Script" uid="uid://bqw08o3b22fdc" path="res://game/stages/line_reader_custom.gd" id="3_pms35"]
+[ext_resource type="Script" uid="uid://dycysb8joq17f" path="res://addons/diisis/parser/src/resources/line_reader_actor_config.gd" id="3_qvfwk"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="3_tdgll"]
 [ext_resource type="Script" uid="uid://brouc1vl1o5us" path="res://game/stages/objects.gd" id="3_x2eff"]
 [ext_resource type="Texture2D" uid="uid://delwppkladi0u" path="res://addons/diisis/editor/visuals/more.svg" id="5_7sulw"]
@@ -16,6 +17,21 @@
 [ext_resource type="Shader" uid="uid://bhcpxuibbsole" path="res://game/stages/one_fadeout.gdshader" id="15_heqc4"]
 [ext_resource type="Shader" uid="uid://oj2v8kbp13pd" path="res://game/stages/static.gdshader" id="17_dc0ef"]
 [ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://game/stages/rolling_credits.tscn" id="17_gnute"]
+
+[sub_resource type="Resource" id="Resource_pms35"]
+script = ExtResource("3_qvfwk")
+name_display = "sdfsdf"
+name_prefix = ""
+name_suffix = ""
+color = Color(1, 1, 1, 0)
+outline = Color(1, 1, 1, 1)
+outline_size = 0
+chatlog_color = Color(1, 1, 1, 1)
+chatlog_outline = Color(1, 1, 1, 1)
+chatlog_default_to_base = false
+body_label_prefix = ""
+body_label_suffix = ""
+metadata/_custom_type_script = "uid://dycysb8joq17f"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3ca2q"]
 resource_local_to_scene = true
@@ -86,20 +102,23 @@ focus_mode = 2
 mouse_filter = 2
 script = ExtResource("1_a36me")
 
-[node name="LineReader" type="Node" parent="." node_paths=PackedStringArray("name_label", "body_label", "choice_list", "text_container", "name_container", "choice_container", "choice_title_label", "prompt_unfinished", "prompt_finished")]
+[node name="LineReader" type="Node" parent="." node_paths=PackedStringArray("name_label", "body_label", "text_container", "name_container", "choice_title_label", "choice_container", "choice_list", "prompt_unfinished", "prompt_finished")]
 script = ExtResource("3_pms35")
 auto_pause_duration = 0.4
+actor_config = Dictionary[String, ExtResource("3_qvfwk")]({
+"amber": SubResource("Resource_pms35")
+})
 blank_names = Array[String](["narrator"])
 name_map = Dictionary[String, String]({
 "amber": "Amber"
 })
 name_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/NameContainer/MarginContainer/NameLabel")
 body_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel")
-choice_list = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
 text_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1")
 name_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/NameContainer")
-choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_title_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/Label")
+choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
+choice_list = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
 body_label_function_funnel = Array[String](["Style.adjust_font_size_tags"])
 choice_button_keyboard_focus = false
 show_input_prompt = true
