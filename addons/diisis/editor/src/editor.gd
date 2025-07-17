@@ -69,6 +69,8 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	$OpeningCover.visible = true
+	was_playing_scene = EditorInterface.is_playing_scene()
 	Pages.clear()
 	DiisisEditorActions.clear()
 	opening = true
@@ -187,6 +189,7 @@ func load_page(number: int, discard_without_saving:=false):
 	page_instance.init(number)
 	update_controls()
 	await get_tree().process_frame
+	$OpeningCover.visible = false
 
 func get_line_data(index:int):
 	return 
@@ -323,7 +326,7 @@ func _shortcut_input(event):
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
-					open_popup($Popups.get_node("DropdownPopup"))
+					open_popup($Popups.get_node("DropdownWindow"))
 				KEY_H:
 					open_popup($Popups.get_node("HeaderPopup"))
 				KEY_R:
@@ -531,6 +534,7 @@ func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	
 	if not file:
+		$OpeningCover.visible = false
 		return
 	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
@@ -578,6 +582,7 @@ func request_go_to_address(address:String, action_message:=""):
 	undo_redo.commit_action()
 
 func request_load_page(number:int, action_message:=""):
+	DiisisEditorUtil.block_next_flash_highlight = true
 	request_go_to_address(str(number), action_message)
 
 func notify(message:String, duration:=5.0):
@@ -657,6 +662,7 @@ func open_window_by_string(window_name:String) -> Window:
 	open_popup(window, window_name in [
 		"HandlerWindow",
 		"FactsPopup",
+		"TextExportWindow",
 	])
 	return window
 
@@ -704,6 +710,8 @@ func _on_file_id_pressed(id: int) -> void:
 				),
 				"About DIISIS"
 			)
+		5:
+			open_window_by_string("TextExportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
@@ -728,13 +736,29 @@ func _on_utility_id_pressed(id: int) -> void:
 	match id:
 		0: 
 			var total : Vector2i = Pages.get_count_total()
+			var total_with_skip : Vector2i = Pages.get_count_total(true)
 			var on_page : Vector2i = Pages.get_count_on_page(get_current_page_number())
+			var on_page_with_skip : Vector2i = Pages.get_count_on_page(get_current_page_number(), true)
+			
+			var total_word_skip_diff := ""
+			var total_char_skip_diff := ""
+			var page_word_skip_diff := ""
+			var page_char_skip_diff := ""
+			
+			if total.x != total_with_skip.x:
+				total_word_skip_diff = " (%s including skipped)" % total_with_skip.x
+			if total.y != total_with_skip.y:
+				total_char_skip_diff = " (%s including skipped)" % total_with_skip.y
+			if on_page.x != on_page_with_skip.x:
+				page_word_skip_diff = " (%s including skipped)" % on_page_with_skip.x
+			if on_page.y != on_page_with_skip.y:
+				page_char_skip_diff = " (%s including skipped)" % on_page_with_skip.y
 			var dialog_text := str(
-				"Total Word Count: [b]%s[/b]\n" % total.x,
-				"Total Character Count: [b]%s[/b]" % total.y,
+				"Total Word Count: [b]%s[/b] %s\n" % [total.x, total_word_skip_diff],
+				"Total Character Count: [b]%s[/b] %s" % [total.y, total_char_skip_diff],
 				"\n\n",
-				"Word Count on page: [b]%s[/b]\n" % on_page.x,
-				"Character Count on page: [b]%s[/b]\n" % on_page.y,
+				"Word Count on page: [b]%s[/b] %s\n" % [on_page.x, page_word_skip_diff],
+				"Character Count on page: [b]%s[/b] %s\n" % [on_page.y, page_char_skip_diff],
 				"\n",
 				"[wave amp=10.0 freq=-4 connected=1][color=f2e260]Note:[/color][/wave]",
 				" Words are counted by spaces."
@@ -746,6 +770,8 @@ func _on_utility_id_pressed(id: int) -> void:
 			open_window_by_string("IngestionActorSetupWindow")
 		3:
 			step_through_pages()
+		4:
+			open_window_by_string("ActorSearchWindow")
 
 
 func _on_setup_id_pressed(id: int) -> void:
@@ -753,14 +779,13 @@ func _on_setup_id_pressed(id: int) -> void:
 		1: # header
 			open_popup($Popups.get_node("HeaderPopup"))
 		2: # dd
-			open_popup($Popups.get_node("DropdownPopup"))
+			open_popup($Popups.get_node("DropdownWindow"))
 		3: # instr
 			open_popup($Popups.get_node("HandlerWindow"), true)
 		5: # facts
 			open_popup($Popups.get_node("FactsPopup"), true)
 		6: # pages
 			open_popup($Popups.get_node("MovePagePopup"))
-
 
 #endregion
 
@@ -812,6 +837,22 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
+	for id in Pages.text_data.keys():
+		var id_count := 0
+		#print(id)
+		for number in Pages.page_data.keys():
+			var page_data = Pages.page_data.get(number)
+			for line in page_data.get("lines"):
+				#if line.get("id") == id:
+					#id_count += 1
+				if line.get("line_type") == DIISIS.LineType.Text:
+					var tid = line.get("content").get("text_id")
+					#print(tid)
+					if tid == id:
+						id_count += 1
+		if id_count > 1:
+			printt(id_count, id)
+	return
 	emit_signal("request_reload")
 	return
 	step_through_pages()
@@ -1011,6 +1052,13 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 
 func _on_refresh_button_pressed() -> void:
 	refresh()
+
+func handle_meta(meta:Variant):
+	if str(meta).begins_with("goto-"):
+		goto_with_meta(meta)
+	if str(meta).begins_with("open-"):
+		var target_window := str(meta).trim_prefix("open-")
+		open_window_by_string(target_window)
 
 func goto_with_meta(meta:Variant):
 	if str(meta).begins_with("goto-"):

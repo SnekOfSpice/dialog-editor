@@ -1,0 +1,97 @@
+[gd_scene load_steps=3 format=3 uid="uid://cydqb83ch6oxk"]
+
+[ext_resource type="Script" uid="uid://c17vjvxhcqtwk" path="res://addons/diisis/editor/src/windows/text_export_container.gd" id="1_quqrk"]
+[ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_6ol86"]
+
+[node name="TextExportContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_quqrk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Mode" parent="VBoxContainer/HBoxContainer" instance=ExtResource("2_6ol86")]
+unique_name_in_owner = true
+layout_mode = 2
+options = Array[String](["Full", "Range", "Page Cascade", "Select"])
+
+[node name="ModeInput" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Range" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+layout_mode = 2
+
+[node name="StartSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EndSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cascade" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+layout_mode = 2
+
+[node name="CascadeStartSpinbox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Cascade"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SelectionContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="IncludeInstructionsCheckBox" type="CheckBox" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Include Instructions"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 10
+
+[node name="ClipboardButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 10
+text = "Copy to Clipboard"
+
+[node name="FileButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Export as file..."
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Export as Text"
+always_on_top = true
+access = 2
+filters = PackedStringArray("*.txt")
+
+[connection signal="option_pressed" from="VBoxContainer/HBoxContainer/Mode" to="." method="_on_option_button_embed_option_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

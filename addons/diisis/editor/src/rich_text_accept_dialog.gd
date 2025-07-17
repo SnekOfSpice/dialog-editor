@@ -15,3 +15,7 @@ func _on_rich_text_label_item_rect_changed() -> void:
 		find_child("ScrollHintTop"),
 		find_child("ScrollHintBottom"),
 	)
+
+
+func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	Pages.editor.handle_meta(meta)

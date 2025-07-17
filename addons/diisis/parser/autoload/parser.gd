@@ -80,7 +80,6 @@ func _get_live_source_path(suppress_error:=false) -> String:
 	return source_path.trim_suffix("\n")
 
 func _get_data() -> Dictionary:
-	#var file := FileAccess.open(_get_live_source_path(), FileAccess.READ)
 	var file := FileAccess.open(ProjectSettings.get_setting("diisis/project/file/path"), FileAccess.READ)
 	if not file:
 		return {}
@@ -255,14 +254,21 @@ func read_page_by_key(key:String, starting_line_index := 0):
 		return
 	read_page(number, starting_line_index)
 
-func read_page(number: int, starting_line_index := 0):
-	if not page_data.keys().has(number):
-		push_warning(str("number ", number, " not in page data"))
+func read_page(starting_page_index: int, starting_line_index := 0):
+	if not page_data.keys().has(starting_page_index):
+		push_warning(str("number ", starting_page_index, " not in page data"))
+		return
+	
+	if page_data.get(starting_page_index).get("skip", false):
+		if is_terminating(starting_page_index):
+			emit_signal("page_terminated", starting_page_index)
+			return
+		read_page(get_next(starting_page_index), starting_line_index)
 		return
 	
 	set_paused(false)
-	ParserEvents.read_new_page.emit(number)
-	page_index = number
+	ParserEvents.read_new_page.emit(starting_page_index)
+	page_index = starting_page_index
 	lines = page_data.get(page_index).get("lines")
 	max_line_index_on_page = lines.size() - 1
 	
@@ -281,6 +287,7 @@ func get_saved_game_progress(file_path: String) -> float:
 	file.close()
 	
 	if not file:
+		push_warning("No file to get game progress from")
 		return 0.0
 	
 	# all keys are now strings instead of ints
@@ -342,12 +349,12 @@ func _get_game_progress() -> float:
 	if full_progress_on_last_page and page_index_in_trail + 1 == trail_size:
 		return 1.0
 	
-	var chunk_progress := 0.0
+	var dialine_progress := 0.0
 	if line_reader:
 		if line_reader.line_type == DIISIS.LineType.Text and line_reader._dialog_lines.size() > 0:
-			chunk_progress = float(line_reader._dialog_line_index) / float(line_reader._dialog_lines.size())
+			dialine_progress = float(line_reader._dialog_line_index) / float(line_reader._dialog_lines.size())
 	
-	return page_progress + (line_progress / float(trail_size)) + ((chunk_progress / float(line_count_on_page)) / float(trail_size))
+	return page_progress + (line_progress / float(trail_size)) + ((dialine_progress / float(line_count_on_page)) / float(trail_size))
 
 func get_line_type(address:String) -> DIISIS.LineType:
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -412,7 +419,9 @@ func go_back():
 		trail_shift = 0
 	
 	
-	if line_reader._attempt_read_previous_chunk() and line_reader.line_type == DIISIS.LineType.Text:
+	if line_reader._attempt_read_previous_dialine() and line_reader.line_type == DIISIS.LineType.Text:
+		var subaddr = line_reader.get_subaddress_arr()
+		ParserEvents.go_back_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
 		return
 	
 	var instruction_stack := []
@@ -424,11 +433,11 @@ func go_back():
 		instruction_stack.append(address_content)
 		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
 		trail_shift -= 1
-		if address_trail_index + trail_shift <= 0:
+		if address_trail_index + trail_shift < 0:
 			a = false
 			trail_shift = 0
 			break
-	if a:
+	if a: # cant remember what this fixed
 		trail_shift += 1
 	instruction_stack.pop_back()
 	
@@ -449,7 +458,17 @@ func go_back():
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	if not get_line_type_by_address(previous_address) in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		ParserEvents.go_back_accepted.emit(prev_page, prev_line)
+		# we need to preempt which dialine the linereader will be reading
+		var dialine_about_to_read : int
+		if trail_shift == 0:
+			dialine_about_to_read = 0
+		elif trail_shift != 0:
+			var line_data : Array = page_data.get(page_index).get("lines")
+			var raw_content : Dictionary = line_data[prev_line].get("content")
+			var content := get_text(raw_content.get("text_id"))
+			dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
+			
+		ParserEvents.go_back_accepted.emit(prev_page, prev_line, dialine_about_to_read)
 		if not address_trail.is_empty():
 			address_trail.resize(address_trail_index)
 		if prev_page == page_index:
@@ -535,8 +554,6 @@ func close_connection():
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.[br]
-
-
 func change_fact(fact_item_data:Dictionary, suppress_event:=false):
 	var fact_name : String = fact_item_data.get("fact_name", "")
 	var old_value = facts.get(fact_name, false)
@@ -653,3 +670,47 @@ func function_acceded():
 		line_reader.awaiting_inline_call = ""
 		return
 	line_reader.finish_waiting_for_instruction()
+
+
+func get_next_line_data() -> Dictionary:
+	return _get_next_line_data_custom(line_index, page_data.get(page_index, {}))
+
+func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Dictionary:
+	var page_lines : Array = local_page_data.get("lines", [])
+	if local_page_data.is_empty():
+		return {}
+	if from_line >= page_lines.size() - 1 and local_page_data.get("terminate"):
+		return {}
+	
+	if from_line < page_lines.size() - 1:
+		var next_line_index := from_line + 1
+		var skip_line : bool = page_lines[next_line_index].get("skip")
+		if not skip_line:
+			return page_lines[next_line_index].duplicate(true)
+		while skip_line:
+			next_line_index += 1
+			if next_line_index >= page_lines.size():
+				break
+			skip_line = page_lines[next_line_index].get("skip")
+			if not skip_line:
+				return page_lines[next_line_index].duplicate(true)
+	var next_page_index : int = local_page_data.get("next", page_index + 1)
+	var skip_page : bool = local_page_data.get("skip")
+	var visited_pages := []
+	var page_data_to_visit_next : Dictionary
+	if not skip_page:
+		page_data_to_visit_next = page_data.get(next_page_index)
+	while skip_page:
+		next_page_index = local_page_data.get("next", next_page_index + 1)
+		if visited_pages.has(next_page_index):
+			break
+		visited_pages.append(next_page_index)
+		if next_page_index >= page_data.size():
+			break
+		skip_page = page_data.get(next_page_index).get("skip")
+		if not skip_page:
+			break
+	if page_lines.is_empty():
+		page_data_to_visit_next = page_data.get(next_page_index)
+	
+	return _get_next_line_data_custom(0, page_data_to_visit_next)

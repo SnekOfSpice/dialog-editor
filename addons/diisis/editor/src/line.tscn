@@ -1,9 +1,10 @@
-[gd_scene load_steps=33 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene load_steps=30 format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" uid="uid://bpc55ta1uccyf" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_viyfr"]
 [ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://addons/diisis/editor/src/header.tscn" id="2_qs17t"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="3_01wq6"]
+[ext_resource type="PackedScene" uid="uid://bixawifxp2bsf" path="res://addons/diisis/editor/src/go_to_highlight.tscn" id="3_f4r4p"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://addons/diisis/editor/src/choice_container.tscn" id="3_jjtdq"]
 [ext_resource type="PackedScene" uid="uid://c5eu4io5wokaq" path="res://addons/diisis/editor/src/address_select_action_container.tscn" id="3_k7b5x"]
 [ext_resource type="Texture2D" uid="uid://bvfeiavga4a2q" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_enabled.png" id="3_ly3u8"]
@@ -37,14 +38,6 @@ colors = PackedColorArray(0.7663, 0.776485, 0.97, 1, 0.0844793, 0.0806588, 0.175
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_rtjbl"]
 gradient = SubResource("Gradient_0yd78")
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ly3u8"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hl0su"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gphhn"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f7stu"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ynk1p"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3j1g"]
@@ -72,6 +65,10 @@ script = ExtResource("1_6i1bg")
 layout_mode = 2
 focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k5f2i")
+
+[node name="GoToHighlight" parent="PanelContainer" instance=ExtResource("3_f4r4p")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
@@ -110,12 +107,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 tooltip_text = "Skip line in Parser"
 focus_mode = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_ly3u8")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_hl0su")
-theme_override_styles/hover_pressed = ExtResource("3_o6quh")
-theme_override_styles/hover = ExtResource("3_o6quh")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_gphhn")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_f7stu")
+theme_type_variation = &"Special"
 theme_override_icons/checked = ExtResource("3_ly3u8")
 theme_override_icons/unchecked = ExtResource("4_hl0su")
 
@@ -148,6 +140,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0

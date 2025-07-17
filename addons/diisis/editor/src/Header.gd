@@ -7,6 +7,7 @@ var container : VBoxContainer
 var is_editable := false
 
 func init() -> void:
+	visible = not Pages.is_header_schema_empty()
 	container = $PropertyContainer
 	load_defaults()
 	

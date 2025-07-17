@@ -5,6 +5,8 @@ enum AddressDepth {
 	Page, Line, ChoiceItem
 }
 
+var block_next_flash_highlight := true
+
 const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
 const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
@@ -182,3 +184,9 @@ func actual_search(what:String):
 	editor.select(result.y, result.x, result.y, result.x)
 	editor.center_viewport_to_caret()
 	get_tree().root.grab_focus()
+
+
+func flash_highlight(highlight:ColorRect):
+	highlight.self_modulate.a = 0.4
+	var t = create_tween()
+	t.tween_property(highlight, "self_modulate:a", 0, 4).set_ease(Tween.EASE_IN_OUT)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://d4nhcwdgxbrlm"]
+[gd_scene load_steps=5 format=3 uid="uid://d4nhcwdgxbrlm"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_hk1ia"]
 [ext_resource type="Script" uid="uid://c0ijy0qy0dj6d" path="res://addons/diisis/editor/src/move_page_popup.gd" id="1_nrsai"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="3_axq7y"]
 [ext_resource type="PackedScene" uid="uid://dt3k1eclvuiqs" path="res://addons/diisis/editor/src/reset_address_mode_popup.tscn" id="3_p8ppp"]
 
 [node name="MovePagePopup" type="Window"]
@@ -24,8 +25,21 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 
-[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_axq7y")
+
+[node name="v" type="PopupMenu" parent="VBoxContainer/HBoxContainer/MenuBar"]
+item_count = 1
+item_0/text = "Linearize"
+item_0/id = 0
+
+[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "search page keys"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
@@ -51,6 +65,7 @@ visible = false
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
-[connection signal="text_changed" from="VBoxContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
+[connection signal="id_pressed" from="VBoxContainer/HBoxContainer/MenuBar/v" to="." method="_on_v_id_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/ResetAddressMode" to="." method="_on_reset_address_mode_pressed"]
 [connection signal="change_to_mode" from="ResetAddressModePopup" to="." method="_on_reset_address_mode_popup_change_to_mode"]

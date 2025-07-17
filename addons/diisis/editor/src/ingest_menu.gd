@@ -82,12 +82,12 @@ func _on_id_pressed(id: int) -> void:
 			"\nn: waow",
 		)
 		Pages.editor.popup_accept_dialogue(str(
-			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space. (If you omit the actors, Utility > Ingestion Actors will be used.)\n\n",
+			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space. (If you omit the actors, [url=open-IngestionActorSetupWindow]Utility > Ingestion Actors[/url] will be used.)\n\n",
 			"[b]Example For ", "Pages" if page else "Lines", ":[/b]",
 			"\n\n",
 			"[code][font_size=12]",
 			page_content if page else line_content,
-			"[/font_size=12]][/code]",
+			"[/font_size][/code]",
 		),
 		"Ingestion Help",
 		canvas_transform.get_origin())

@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_pioq4"]
 [ext_resource type="PackedScene" uid="uid://djiaiay3ntvfy" path="res://addons/diisis/editor/src/dropdowns_container.tscn" id="2_yuhcr"]
 
-[node name="DropdownsPopup" type="Window"]
+[node name="DropdownWindow" type="Window"]
 title = "Dropdowns"
 initial_position = 2
 size = Vector2i(587, 530)

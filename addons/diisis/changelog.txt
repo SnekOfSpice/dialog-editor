@@ -2,6 +2,20 @@
 DIISIS 0.6
 This shit breaks compatibility on so many levels! Might as well be a new plugin!
 
+shit from ldspcn
+- remove chunks as a concept in line reader
+- numerous bug fixes
+- goto highlight flash
+- fix punctuation text option
+- speaker search utility in editor
+- linearize_pages
+- introduce generic subwindow to editor
+- text export
+- better scroll in editor
+- better performance
+- add ability to skip entire pages
+- map diff button (will be cut for name resources. they're also already halfway there)
+
 General
 - Introduce text IDs
 - Change to Godot 4.4.1

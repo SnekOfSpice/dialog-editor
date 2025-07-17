@@ -66,6 +66,7 @@ var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode
 
 const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
 const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
+const TOOLTIP_FIX_PUNCTUATION := "Add periods. (maybe do other stuff in the future)"
 
 #region toggle settings
 const TOGGLE_SETTINGS := {
@@ -397,15 +398,16 @@ func key_exists(key: String) -> bool:
 func get_page_key(page_index:int) -> String:
 	return str(page_data.get(page_index, {}).get("page_key", ""))
 
-func get_page_number_by_key(key:String):
+func get_page_number_by_key(key:String) -> int:
 	for page in page_data.values():
 		if page.get("page_key") == key:
 			return page.get("number")
 	return -1
 
 func get_line_type(page_index:int, line_index:int) -> int:
-	var page = page_data.get(page_index, {})
+	var page = get_page_data(page_index)
 	var lines = page.get("lines")
+	printt(page_index, ".", line_index, " ", page.size(), lines.size())
 	return int(lines[line_index].get("line_type"))
 
 func apply_file_config(data:Dictionary):
@@ -501,7 +503,7 @@ func delete_page_data(at: int):
 	
 	change_page_references_dir(at, -1)
 
-func get_data_from_address(address:String):
+func get_data_from_address(address:String) -> Dictionary:
 	var cpn = editor.get_current_page_number()
 	var address_page = DiisisEditorUtil.get_split_address(address)[0]
 	# if current page is address
@@ -521,6 +523,8 @@ func get_data_from_address(address:String):
 		var lines : Array = page_data.get(address_page).get("lines")
 		var line : Dictionary = lines[parts[1]]
 		return line.get("content", {}).get("choices", [])[parts[2]]
+	push_warning("This shouldn't happen.")
+	return {}
 
 func delete_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()
@@ -944,11 +948,15 @@ func get_text_on_page(page_number:int) -> String:
 	return result
 
 ## Returns word count in x and character count in y
-func get_count_on_page(page_number:int) -> Vector2i:
+func get_count_on_page(page_number:int, include_skipped:=false) -> Vector2i:
 	var character_count := 0
 	var word_count := 0
 	var data := get_page_data(page_number)
+	if data.get("skip", false) and not include_skipped:
+		return Vector2i.ZERO
 	for line in data.get("lines", []):
+		if line.get("skip", false) and not include_skipped:
+			continue
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		if line_type == DIISIS.LineType.Choice:
@@ -973,10 +981,10 @@ func get_count_on_page(page_number:int) -> Vector2i:
 	return Vector2(word_count, character_count)
 
 ## Returns word count in x and character count in y
-func get_count_total() -> Vector2i:
+func get_count_total(include_skipped:=false) -> Vector2i:
 	var sum := Vector2.ZERO
 	for i in page_data.keys():
-		var result = get_count_on_page(i)
+		var result = get_count_on_page(i, include_skipped)
 		sum.x += result.x
 		sum.y += result.y
 	
@@ -1005,8 +1013,6 @@ func rename_dropdown_title(from:String, to:String):
 		for line : Dictionary in lines:
 			if line.get("line_type") != DIISIS.LineType.Text:
 				continue
-			if line["content"]["active_actors_title"] == from:
-				line["content"]["active_actors_title"] = to
 			var text_id : String = line.get("content", {}).get("text_id")
 			var content : String = Pages.get_text(text_id)
 			content = content.replace(str("{", from, "|"), str("{", to, "|"))
@@ -1313,6 +1319,45 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	}
 	return result
 
+
+func get_cascading_trail(start_page:int) -> Array:
+	var trail := [start_page]
+	
+	var terminate : bool = get_page_data(start_page).get("terminate", false)
+	var next : int = get_page_data(start_page).get("next")
+	while not terminate:
+		if trail.has(next):
+			push_warning("Cyclic pages %s starting from %s" % [next, start_page])
+			break
+		trail.append(next)
+		next = get_page_data(next).get("next")
+		terminate = get_page_data(next).get("terminate", false)
+	
+	return trail
+
+func stringify_page(index:int, modifiers := {}) -> String:
+	var result := "PAGE %s" % index
+	var data := get_page_data(index)
+	var i := 0
+	for line : Dictionary in data.get("lines", []):
+		#print(line)
+		result += "\nLINE %s\n" % i
+		var line_type := get_line_type(index, i)
+		match line_type:
+			DIISIS.LineType.Text:
+				result += get_text(line.get("content").get("text_id"))
+				print(get_text(line.get("content").get("text_id")))
+			DIISIS.LineType.Instruction:
+				if not modifiers.get("include_instructions", false):
+					i += 1
+					continue
+				result += line.get("content").get("meta.text")
+			DIISIS.LineType.Choice:
+				push_warning("Choice stringification not supported atm")
+		i += 1
+	result += "\n"
+	return result
+
 func remove_tags(t:String) -> String:
 	var text := t
 	var pairs = ["<>", "[]"]
@@ -1320,6 +1365,9 @@ func remove_tags(t:String) -> String:
 		var scan_index := 0
 		while scan_index < text.length():
 			if text[scan_index] == pair[0]:
+				if text.find(pair[1]) < scan_index:
+					scan_index += 1
+					continue
 				var local_scan_index := scan_index
 				var control_to_replace := ""
 				while text[local_scan_index] != pair[1]:
@@ -1397,7 +1445,7 @@ func update_compliances(instruction_name:String):
 					line["content"]["meta.validation_status"] = "OK"
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var functions : Array = content.get("meta.function_calls", [])
-				var compliance := "OK"
+				var compliance : String = "OK"
 				for function in functions:
 					var validity = get_method_validity(function)
 					if validity != "OK":
@@ -1416,7 +1464,8 @@ func get_custom_method_typesd(instruction_name:String) -> Dictionary:
 		result[arg.get("name")] = arg.get("type")
 	
 	return result
-
+func get_custom_method_base_default(instruction_name:String, arg_name:String):
+	return get_custom_method_base_defaultsd(instruction_name).get(arg_name)
 func get_default_arg_value(instruction_name:String, arg_name:String):
 	return get_custom_method_defaults(instruction_name).get(arg_name)
 
@@ -1489,7 +1538,7 @@ func get_method_validity(instruction:String) -> String:
 		while arg_string.ends_with(" "):
 			arg_string = arg_string.trim_suffix(" ")
 		var arg_value : String = arg_string.split(":")[0]
-		if arg_value.is_empty():
+		if arg_value.is_empty() and get_custom_method_base_default(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is empty")
 		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
@@ -1502,6 +1551,8 @@ func get_method_validity(instruction:String) -> String:
 	return "OK"
 
 func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
+	if value.is_empty() and get_custom_method_base_defaultsd(method).get(arg) != null:
+		return ""
 	var default_notice := ""
 	if value == "*":
 		value = str(get_custom_method_defaults(method).get(arg))
@@ -1548,7 +1599,7 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_position := text.find("...")
 	var elipse_length := 3
 	while elipse_position != -1:
-		if elipse_position < text.length():
+		if elipse_position < text.length() - elipse_length:
 			if text[elipse_position + elipse_length + 1] in LETTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
@@ -1609,6 +1660,8 @@ func capitalize_sentence_beginnings(text:String) -> String:
 		var letter : String = letter_indices_after_elipses.get(index)
 		text[index] = letter
 	
+	text = text.replace(" i ", " I ")
+	
 	return text
 
 func neaten_whitespace(text:String) -> String:
@@ -1656,8 +1709,43 @@ func neaten_whitespace(text:String) -> String:
 	text = text.replace("] .", "].")
 	text = text.replace("> .", ">.")
 	text = text.replace(": //", "://")
+	text = text.replace(":...", ": ...")
 	
 	return text
+
+func fix_punctuation(text:String) -> String:
+	var lines = text.split("\n")
+	var result := []
+	for line : String in lines:
+		var ends_with_space := line.ends_with(" ")
+		while ends_with_space:
+			line = line.erase(line.length() - 1)
+			ends_with_space = line.ends_with(" ")
+		var has_punctuation := false
+		var punctuation_marks := [
+			".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
+		]
+		for i in 10:
+			punctuation_marks.append(str(i))
+		
+		if line.ends_with("]"):
+			var opening_index = line.rfind("[")
+			if opening_index > 0:
+				if not line[opening_index - 1] in punctuation_marks:
+					line = line.insert(opening_index, ".")
+		
+		for mark in punctuation_marks:
+			if line.ends_with(mark):
+				has_punctuation = true
+		
+		if has_punctuation:
+			result.append(line)
+		else:
+			result.append(line + ".")
+		
+		
+	
+	return "\n".join(result)
 
 func save_text(id:String, text:String) -> void:
 	text_data[id] = text
@@ -1695,6 +1783,34 @@ func get_text_id_address_and_type(id:String) -> Array:
 
 func get_speakers() -> Array:
 	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
+
+## exact means only the passed speakers can be entered
+func get_text_line_adrs_with_speakers(speakers:Array, exact:=false) -> Array:
+	if speakers.is_empty():
+		push_warning("Speakers is empty. Returning empty results.")
+		return []
+	var results := []
+	for i in page_data.size():
+		var pdata = get_page_data(i)
+		for line : Dictionary in pdata.get("lines", []):
+			if line.get("line_type") != DIISIS.LineType.Text:
+				continue
+			var text = get_text(line.get("content").get("text_id"))
+			var contains_all := true
+			for speaker : String in speakers:
+				if not text.contains("[]>%s" % speaker):
+					contains_all = false
+					break
+			if exact:
+				for global_speaker in get_speakers():
+					if global_speaker in speakers:
+						continue
+					if text.contains("[]>%s" % global_speaker):
+						contains_all = false
+						break
+			if contains_all:
+				results.append(line.get("address"))
+	return results
 
 func change_text_id(old_id:String, new_id:String) -> void:
 	for page in page_data.values():
@@ -1882,3 +1998,13 @@ func make_puppy() -> String:
 	if has_whiskers:
 		emoticon += w[1]
 	return emoticon
+
+
+func linearize_pages():
+	for i in get_page_count():
+		var data := get_page_data(i)
+		data["next"] = i + 1
+		data["terminate"] = i == get_page_count() - 1
+		page_data[i] = data
+	await get_tree().process_frame
+	editor.refresh(false)

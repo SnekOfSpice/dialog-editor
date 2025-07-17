@@ -19,6 +19,7 @@ enum EditingView{
 }
 
 func init() -> void:
+	%GoToHighlight.self_modulate.a = 0
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("Conditionals").init()
@@ -431,3 +432,8 @@ func set_editing_view(value:int):
 		EditingView.Invisible:
 			find_child("ChoiceEdit").visible = false
 			find_child("ChoiceLabel").visible = false
+
+
+func flash_highlight():
+	DiisisEditorUtil.flash_highlight(%GoToHighlight)
+	

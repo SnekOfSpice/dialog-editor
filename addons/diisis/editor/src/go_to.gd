@@ -38,6 +38,7 @@ func _on_address_bar_text_submitted(new_text: String) -> void:
 		return
 	emit_signal("go_to", new_text)
 	find_child("AddressBar").visible = false
+	find_child("CancelGoTo").visible = false
 
 # used by editor shortcut
 func toggle_active():
@@ -85,3 +86,9 @@ func _on_address_bar_focus_entered() -> void:
 
 func _on_error_label_window_about_to_popup() -> void:
 	find_child("ErrorLabelWindow").position = global_position + error_window_offset
+
+
+func _on_address_bar_gui_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.keycode == KEY_ESCAPE:
+			_on_cancel_go_to_pressed()

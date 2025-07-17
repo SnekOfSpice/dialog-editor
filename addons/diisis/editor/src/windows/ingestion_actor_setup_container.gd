@@ -63,5 +63,5 @@ func _on_auto_ingest_button_pressed() -> void:
 
 
 func _on_no_title_warning_meta_clicked(meta: Variant) -> void:
-	Pages.editor.open_window_by_string("DropdownPopup")
+	Pages.editor.open_window_by_string("DropdownWindow")
 	hide()

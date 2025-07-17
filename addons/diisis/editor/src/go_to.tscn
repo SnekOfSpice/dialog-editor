@@ -21,7 +21,7 @@ layout_mode = 2
 [node name="GoToButton" type="Button" parent="HBoxContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
-text = "Go>"
+text = "Go"
 
 [node name="CancelGoTo" type="Button" parent="HBoxContainer/HBoxContainer"]
 visible = false
@@ -69,6 +69,7 @@ text = "sdgfg"
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
 [connection signal="focus_entered" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_focus_entered"]
 [connection signal="focus_exited" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_focus_exited"]
+[connection signal="gui_input" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_gui_input"]
 [connection signal="text_changed" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
 [connection signal="text_submitted" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]
 [connection signal="about_to_popup" from="ErrorLabelWindow" to="." method="_on_error_label_window_about_to_popup"]

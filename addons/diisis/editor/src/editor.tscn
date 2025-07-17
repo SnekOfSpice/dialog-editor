@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=37 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -24,7 +24,6 @@
 [ext_resource type="Texture2D" uid="uid://bgycyoomk20tr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_folder.png" id="9_mh3o1"]
 [ext_resource type="Texture2D" uid="uid://7ht8k4ris3wj" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_truncated.png" id="9_o3byv"]
 [ext_resource type="Texture2D" uid="uid://b7m22tnt1f2ft" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_minimal.png" id="10_qli38"]
-[ext_resource type="PackedScene" uid="uid://dh7lwmyvues6e" path="res://addons/diisis/editor/src/word_count_dialog.tscn" id="12_icedl"]
 [ext_resource type="Texture2D" uid="uid://cowtdbgbvq7fp" path="res://addons/diisis/parser/style/icon_instruction_handler.svg" id="14_m63dd"]
 [ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
@@ -34,6 +33,10 @@
 [ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
 [ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
+[ext_resource type="PackedScene" uid="uid://dy0ea1htdu04v" path="res://addons/diisis/editor/src/windows/generic_subwindow.tscn" id="34_ajvyk"]
+[ext_resource type="PackedScene" uid="uid://b81gsltqnausa" path="res://addons/diisis/editor/src/windows/text_export_window.tscn" id="34_m63dd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3
@@ -134,7 +137,7 @@ theme = ExtResource("1_nb6ej")
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
 content_scale_aspect = 4
-item_count = 4
+item_count = 5
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
@@ -143,10 +146,13 @@ item_2/text = "Save As..."
 item_2/id = 1
 item_3/text = "Open    (Ctrl+O)"
 item_3/id = 2
+item_4/text = "Export as text..."
+item_4/id = 5
 
 [node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
 visible = false
 unfocusable = false
+item_4/id = 5
 page = true
 
 [node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File"]
@@ -166,15 +172,23 @@ item_0/id = 0
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
-item_count = 4
-item_0/text = "Word & Character Count"
-item_0/id = 0
-item_1/text = "Search Text    (Ctrl+F)"
+item_count = 7
+item_0/text = "Search"
+item_0/id = 6
+item_0/separator = true
+item_1/text = "Text Search    (Ctrl+F)"
 item_1/id = 1
-item_2/text = "Ingestion Actors    (Ctrl+I)"
-item_2/id = 2
-item_3/text = "Step through pages"
-item_3/id = 3
+item_2/text = "Actor Search"
+item_2/id = 4
+item_3/text = "General"
+item_3/id = 5
+item_3/separator = true
+item_4/text = "Word & Character Count"
+item_4/id = 0
+item_5/text = "Ingestion Actors    (Ctrl+I)"
+item_5/id = 2
+item_6/text = "Step through pages"
+item_6/id = 3
 
 [node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/Utility"]
 item_count = 2
@@ -581,12 +595,9 @@ visible = false
 [node name="FactsPopup" parent="Popups" instance=ExtResource("8_3kqv2")]
 visible = false
 
-[node name="DropdownPopup" parent="Popups" instance=ExtResource("9_i203b")]
+[node name="DropdownWindow" parent="Popups" instance=ExtResource("9_i203b")]
 visible = false
 transient = true
-
-[node name="WordCountDialog" parent="Popups" instance=ExtResource("12_icedl")]
-visible = false
 
 [node name="TextSearchPopup" parent="Popups" instance=ExtResource("14_uw1uu")]
 visible = false
@@ -607,13 +618,55 @@ visible = false
 visible = false
 
 [node name="IngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
+size = Vector2i(400, 2040)
 visible = false
+
+[node name="TextExportWindow" parent="Popups" instance=ExtResource("34_m63dd")]
+visible = false
+
+[node name="ActorSearchWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+title = "Actor Search"
+visible = false
+container_path = "uid://pq57xgpvu0ih"
 
 [node name="Camera" type="Camera2D" parent="."]
 visible = false
 
 [node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
 size = Vector2i(12, 10)
+
+[node name="OpeningCover" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0.121569, 0.145098, 1)
+
+[node name="Label" type="RichTextLabel" parent="OpeningCover"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -138.0
+offset_right = 200.0
+offset_bottom = 138.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_m63dd")
+bbcode_enabled = true
+text = "[img=200]uid://cakx4eotyolmx[/img]
+[font_size=28][b]Opening DIISIS
+please wait :3"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]

@@ -212,7 +212,7 @@ signal go_back_declined(reason:Parser.RollbackDeclineReason)
 ## []>narrator: Text!
 ## []>narrator: More text!
 ## [/codeblock]
-signal go_back_accepted(page:int, line:int)
+signal go_back_accepted(page:int, line:int, dialine_about_to_read:int)
 
 signal read_new_line(line_index:int)
 
@@ -224,3 +224,8 @@ signal advanced()
 
 ## Emitted when [method Parser.function_acceded] is called.
 signal acceded()
+
+signal actor_name_about_to_change(actor_name:String)
+
+## When LineReader reads a new dialog line ([]> and <lc>)
+signal start_new_dialine(dialine:int)
