@@ -88,15 +88,13 @@ var _last_raw_name := ""
 @export var blank_names : Array[String] = []
 ## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
 ## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
-@export var name_map : Dictionary[String, String] = {}
+#@export var name_map : Dictionary[String, String] = {}
 ## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
-@export var color_map : Dictionary[String, Color] = {}
+#@export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
 @export var name_style : NameStyle = NameStyle.NameLabel
-## Use [const Color.TRANSPARENT] to use the theme color of [member name_label] instead if [member color_map] doesn't have an actor name set.
-@export var actor_default_color := Color.TRANSPARENT
-var _visible_prepend_offset := 0
+var _prepend_length := 0
 
 @export_group("Text References")
 ## A [Label] or [RichTextLabel] that displays a currently speaking character's name.
@@ -325,7 +323,7 @@ var _remaining_prompt_delay := input_prompt_delay
 @export var persist_ui_visibilities := true
 @export_group("Assist")
 @export var warn_on_non_bool_function_return := true
-@export_tool_button("Get Map Diffs", "Popup") var get_map_diffs_action = get_map_diffs
+#@export_tool_button("Get Map Diffs", "Popup") var get_map_diffs_action = get_map_diffs
 
 signal line_finished(line_index: int)
 signal jump_to_page(page_index: int, target_line: int)
@@ -422,7 +420,7 @@ func serialize() -> Dictionary:
 	result["line_index"] = line_index 
 	result["line_type"] = line_type 
 	result["max_past_lines"] = max_past_lines
-	result["name_map"] = name_map
+	#result["name_map"] = name_map
 	result["name_prefix"] = name_prefix
 	result["name_suffix"] = name_suffix
 	result["next_pause_position_index"] = _next_pause_position_index 
@@ -485,7 +483,7 @@ func deserialize(data: Dictionary):
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
-	_set_dict_to_str_str_dict("name_map", data.get("name_map", name_map))
+	#_set_dict_to_str_str_dict("name_map", data.get("name_map", name_map))
 	_set_dict_to_str_str_dict("chatlog_name_map", data.get("chatlog_name_map", chatlog_name_map))
 	
 	text_container.visible = _can_text_container_be_visible()
@@ -816,7 +814,7 @@ func _read_new_line(new_line: Dictionary):
 						
 						var actor_prefix := ""
 						if not actor_name in blank_names:
-							actor_prefix = _get_chatlog_name(actor_name) + ": "
+							actor_prefix = _get_actor_name(actor_name) + ": "
 						
 						var body_prefix : String = body_label_prefix_by_actor.get(actor_name, "")
 						var body_suffix : String = body_label_suffix_by_actor.get(actor_name, "")
@@ -825,14 +823,15 @@ func _read_new_line(new_line: Dictionary):
 						if chatlog_enabled and not chatlog_include_body_label_actor_suffix:
 							body_suffix = ""
 						
+						var pair = _get_actor_color_prepend_tag_pair(actor_name)
 						line = str(
-							"[color=", _get_chatlog_color(actor_name).to_html(), "]",
+							pair[0],
 							actor_prefix,
-							"[/color]" if not chatlog_tint_full_line else "",
+							pair[1] if not chatlog_tint_full_line else "",
 							body_prefix,
 							line,
 							body_suffix,
-							"[/color]" if chatlog_tint_full_line else "",
+							pair[1] if chatlog_tint_full_line else "",
 							)
 						
 						line = str(
@@ -919,108 +918,19 @@ func replace_lc_tags(full_line_text:String) -> String:
 	return full_line_text
 	
 
-func _get_chatlog_name(actor_name:String) -> String:
-	if chatlog_fallback_name_map:
-		return chatlog_name_map.get(actor_name, _get_actor_name(actor_name))
-	return chatlog_name_map.get(actor_name, actor_name)
+#func _get_chatlog_name(actor_name:String) -> String:
+	#if chatlog_fallback_name_map:
+		#return chatlog_name_map.get(actor_name, _get_actor_name(actor_name))
+	#return chatlog_name_map.get(actor_name, actor_name)
+#
+#func _get_chatlog_color(actor_name:String) -> Color:
+	#if chatlog_fallback_color_map and not chatlog_color_map.has(actor_name):
+		#var color : Color = _get_actor_color(actor_name)
+		#if color == Color.TRANSPARENT:
+			#push_warning("Chatlog is falling back on transparent default color")
+		#return chatlog_color_map.get(actor_name, color)
+	#return chatlog_color_map.get(actor_name, chatlog_default_color)
 
-func _get_chatlog_color(actor_name:String) -> Color:
-	if chatlog_fallback_color_map and not chatlog_color_map.has(actor_name):
-		var color : Color = _get_actor_color(actor_name)
-		if color == Color.TRANSPARENT:
-			push_warning("Chatlog is falling back on transparent default color")
-		return chatlog_color_map.get(actor_name, color)
-	return chatlog_color_map.get(actor_name, chatlog_default_color)
-
-#func _fit_to_max_line_count(lines: Array):
-	#if body_label_max_lines <= 0 or chatlog_enabled:
-		#return
-	#
-	#var new_chunks := []
-	#var label : RichTextLabel = RichTextLabel.new()
-	#add_child(label)
-	#label.visible = false
-	#label.bbcode_enabled = true
-	#label.theme = body_label.get_theme()
-	#label.size = body_label.size
-	#
-	#var i := 0
-	#while i < lines.size():
-		#var line_height:=0
-		#var content_height := 0
-		#
-		#var name_prefix:String
-		#var name_length:int
-		#if name_style == NameStyle.Prepend:
-			#var actor_name = _dialog_actors[_dialog_line_index]
-			#var display_name: String = name_map.get(_dialog_actors[_dialog_line_index], _dialog_actors[_dialog_line_index])
-			#display_name = display_name.substr(0, display_name.find("{"))
-			#name_prefix = str(_wrap_in_color_tags_if_present(actor_name), _get_prepend_separator_sequence())
-			#name_length = display_name.length() + _get_prepend_separator_sequence().length()
-		#elif name_style == NameStyle.NameLabel:
-			#name_prefix = ""
-			#name_length = 0
-		#
-		#var line:String = lines[i]
-		#label.text = line
-		#label.visible_characters = 1
-		#if line_height == 0:
-			#line_height = label.get_content_height()
-		#
-		#label.text = str(name_prefix,line,)
-		#
-		#while content_height <= line_height * body_label_max_lines:
-			#if label.text.is_empty():
-				#break
-			#label.visible_characters += 1
-			#content_height = label.get_content_height()
-			#if content_height > line_height * body_label_max_lines:
-				#label.text = label.text.trim_prefix(name_prefix)
-				#label.visible_characters -= 1
-				#label.visible_characters -= name_length
-				#while label.text[label.visible_characters] != " ":
-					#label.visible_characters -= 1
-				#label.bbcode_enabled = false
-				#var bbcode_padding := 0
-				#var scan_index := 0
-				#while scan_index < label.visible_characters:
-					#scan_index += 1
-					#if label.text[scan_index] == "[":
-						#if label.text[scan_index-1] == "\\[":
-							#scan_index += 1
-							#continue
-						#var tag_end = label.text.find("]", scan_index)
-						#if label.text.length() >= scan_index + 3:
-							#if (
-								#label.text[scan_index + 1] == "i" and
-								#label.text[scan_index + 2] == "m" and
-								#label.text[scan_index + 3] == "g"):
-									#tag_end = label.text.find("[/img]") + 5
-							#elif (
-								#label.text[scan_index + 1] == "u" and
-								#label.text[scan_index + 2] == "r" and
-								#label.text[scan_index + 3] == "l"):
-									#tag_end = label.text.find("[/url]") + 5
-						#bbcode_padding += tag_end - scan_index + 2
-						#scan_index = tag_end
-				#
-				#
-				#var fitting_raw_text := label.text.substr(0, label.visible_characters + bbcode_padding)
-				#line = line.trim_prefix(fitting_raw_text)
-				#label.text = line
-				#new_chunks.append(fitting_raw_text)
-				#label.bbcode_enabled = true
-				#content_height = 0
-				#label.visible_characters = 0
-				#continue
-			#
-			#if label.visible_ratio == 1.0:
-				#new_chunks.append(line)
-				#break
-			#
-		#i += 1
-	##_line_chunks = new_chunks
-	#label.queue_free()
 
 func _get_prepend_separator_sequence() -> String:
 	return str(" " if inline_name_space_prefix else "", inline_name_separator, " " if inline_name_space_suffix else "")
@@ -1330,7 +1240,7 @@ func _replace_tags(lines:Array) -> Array:
 					if name_tag:
 						new_text = new_text.replace(control_to_replace, _get_actor_name(name_key))
 					elif clname_tag:
-						new_text = new_text.replace(control_to_replace, _get_chatlog_name(name_key))
+						new_text = new_text.replace(control_to_replace, _get_actor_name(name_key))
 				elif new_text.find("<fact:", scan_index) == scan_index:
 					var local_scan_index := scan_index
 					var control_to_replace := ""
@@ -1394,6 +1304,28 @@ func _insert_strings_in_current_dialine():
 	var ends_with_advance := new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
 	
+	# prepend name
+	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names):
+		var display_name: String = _get_actor_name(current_raw_name)
+		#var name_color :Color = _get_actor_color(current_raw_name)
+			## TODO tighten the screws here and use _get_full_prepend_name_prefix instead
+		var wrappers := _get_actor_color_prepend_tag_pair(current_raw_name)
+		var full_prefix := str(
+			name_prefix,
+			wrappers[0],
+			display_name,
+			wrappers[1],
+			name_suffix,
+			_get_prepend_separator_sequence(),
+		)
+		new_text = str(
+			full_prefix,
+			new_text
+			)
+		
+		_prepend_length = full_prefix.length()
+	
+	
 	new_text = str(
 		body_label_prefix,
 		_get_contextual_actor_body_wrapper("prefix"),
@@ -1420,7 +1352,7 @@ func _handle_tags_and_start_reading():
 		body_label.visible_ratio = 1.0
 	else:
 		body_label.visible_ratio = 0
-		body_label.visible_characters = _visible_prepend_offset
+		body_label.visible_characters = _prepend_length
 	
 	_pause_positions.clear()
 	_pause_types.clear()
@@ -1557,34 +1489,12 @@ func _handle_tags_and_start_reading():
 	else:
 		_lead_time = Parser.text_lead_time_same_actor
 	
-	_visible_prepend_offset = 0
+	_prepend_length = 0
 	if name_style == NameStyle.None:
 		name_container.modulate.a = 0.0
 	elif name_style == NameStyle.Prepend:
 		name_container.modulate.a = 0.0
-		var display_name: String = _get_actor_name(current_raw_name)
-		var name_color :Color = _get_actor_color(current_raw_name)
-		if not current_raw_name in blank_names:
-			## TODO tighten the screws here and use _get_full_prepend_name_prefix instead
-			cleaned_text = str(
-				name_prefix,
-				"[color=", name_color.to_html(), "]",
-				display_name,
-				"[/color]",
-				name_suffix,
-				_get_prepend_separator_sequence(),
-				cleaned_text
-				)
 		
-		var name_prepend_length := _get_prepend_separator_sequence().length() + display_name.length()
-		if current_raw_name in blank_names:
-			name_prepend_length = 0
-		_visible_prepend_offset = name_prepend_length
-		var first_tag_position = cleaned_text.find("[", _pause_positions[0])
-		var l := 0
-		while l < _pause_positions.size():
-			_pause_positions[l] = _pause_positions[l] + name_prepend_length
-			l += 1
 	
 	if body_label_tint_lines and not chatlog_enabled:
 		cleaned_text = str("[color=", _get_actor_color(current_raw_name).to_html(), "]", cleaned_text, "[/color]")
@@ -1693,8 +1603,7 @@ func _set_body_label_text(text: String):
 			push_warning("preserve_name_in_past_lines is false but name_style is set to Prepend. There will be a name in past lines.")
 		
 		var body_label_to_save = body_label.text
-		#if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
-			#body_label_to_save = body_label_to_save.erase(0, body_label_to_save.find(_get_prepend_separator_sequence()) + _get_prepend_separator_sequence().length())
+		
 		past_text += body_label_to_save
 		past_line.text = past_text
 		past_lines_container.add_child(past_line)
@@ -1702,7 +1611,7 @@ func _set_body_label_text(text: String):
 	if body_label:
 		body_label.text = text
 		body_label.visible_ratio = 0
-		body_label.visible_characters = _visible_prepend_offset
+		body_label.visible_characters = _prepend_length
 	_characters_visible_so_far = ""
 	_started_word_buffer = ""
 	
@@ -1757,18 +1666,65 @@ func _get_full_prepend_name_prefix(actor:String) -> String:
 	return name_prefix_by_actor.get(actor, "") + _get_actor_name(actor) + _get_prepend_separator_sequence() + name_suffix_by_actor.get(actor, "")
 
 func _get_actor_name(actor_key:String) -> String:
-	return name_map.get(actor_key, actor_key)
+	if not actor_config.has(actor_key):
+		return actor_key
+	return actor_config.get(actor_key).get(str("chatlog_" if chatlog_enabled else "", "name_display"))
 
-func _get_actor_color(actor_key:String) -> Color:
-	if actor_default_color == Color.TRANSPARENT and not color_map.has(actor_key):
-		return name_label.get_theme_color("font_color", "Label")
-	return color_map.get(actor_key, actor_default_color)
+func _get_actor_color(actor:String) -> Color:
+	return _get_actor_color_config("color", actor)
+func _get_actor_outline_color(actor:String) -> Color:
+	return _get_actor_color_config("outline_color", actor)
+func _get_actor_outline_size(actor:String) -> int:
+	return get_actor_config_property("outline_size", actor, 0)
 
-## Sets the value of key [param actor_key] in [member name_map] to [param actor_name].
+## Sensitive to chatlog_enabled. If blank, returns label or richtextlabel default color depending on name style
+## base_property is either color or outline_color
+func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
+	if actor_config.has(actor_key):
+		return (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
+	else:
+		if name_style == NameStyle.Prepend: # prepend goes in body_label
+			return body_label.get_theme_color("default_color", "RichTextLabel")
+		else:
+			return name_label.get_theme_color("font_color", "Label")
+	
+
+## returns array of size 2: prefix and suffix
+func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
+	var color : Color = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "color"), actor)
+	var outline_color : Color = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_color"), actor)
+	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor)
+	
+	var prefix := str(
+		"[color=", color.to_html(), "]",
+		"[outline_color=", outline_color.to_html(), "]",
+		"[outline_size=", outline_size, "]",
+	)
+	var suffix := "[/outline_size][/outline_color][/color]"
+	
+	return [prefix, suffix]
+
+## Helper function derived from [method set_actor_config_property].
 func set_actor_name(actor_key:String, actor_name:String):
-	name_map[actor_key] = actor_name
+	set_actor_config_property("name_display", actor_key, actor_name)
+## Helper function derived from [method set_actor_config_property].
 func set_actor_color(actor_key:String, color:Color):
-	color_map[actor_key] = color
+	set_actor_config_property("color", actor_key, color)
+
+func set_actor_config_property(config_property:String, actor_key:String, value):
+	if actor_config.has(actor_key):
+		(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
+	else:
+		var new_config = LineReaderActorConfig.new()
+		new_config.set(config_property, value)
+		actor_config[actor_key] = new_config
+	
+	print("UPDATE THE DISPLAY STRING")
+
+func get_actor_config_property(config_property:String, actor_key:String, default : Variant = null) -> Variant:
+	if not actor_config.has(actor_key):
+		return default
+	return (actor_config.get(actor_key) as LineReaderActorConfig).get(config_property)
 
 func _build_choices(choices, auto_switch:bool):
 	if not choice_container:
@@ -2043,11 +1999,14 @@ func update_name_label(actor_name: String):
 	
 	var display_name : String = _get_actor_name(actor_name)
 	var name_color : Color = _get_actor_color(actor_name)
+	var name_outline_color : Color = _get_actor_outline_color(actor_name)
+	var name_outline_size : int = _get_actor_outline_size(actor_name)
 	
 	if name_style == NameStyle.NameLabel:
 		name_label.text = display_name
-		if name_color != Color.TRANSPARENT:
-			name_label.add_theme_color_override("font_color", name_color)
+		name_label.add_theme_color_override("font_color", name_color)
+		name_label.add_theme_color_override("font_outline_color", name_color)
+		name_label.add_theme_color_override("outline_size", name_color)
 		
 		if actor_name in blank_names or chatlog_enabled:
 			name_container.modulate.a = 0.0
@@ -2274,23 +2233,23 @@ func get_actor_names_in_line(empty_if_not_text:=true) -> Array:
 			result.append(actor)
 	return result
 	
-func get_map_diffs():
-	var maps := [
-		"name_map",
-		"color_map",
-		"chatlog_name_map",
-		"chatlog_color_map",
-	]
-	for m1 in maps:
-		for m2 in maps:
-			if m1 == m2:
-				continue
-			var diff := []
-			for actor in get(m1).keys():
-				if not actor in get(m2).keys():
-					diff.append(actor)
-			if not diff.is_empty():
-				prints("Keys present in %s but not %s :" % [m1, m2], ", ".join(diff))
+#func get_map_diffs():
+	#var maps := [
+		#"name_map",
+		#"color_map",
+		#"chatlog_name_map",
+		#"chatlog_color_map",
+	#]
+	#for m1 in maps:
+		#for m2 in maps:
+			#if m1 == m2:
+				#continue
+			#var diff := []
+			#for actor in get(m1).keys():
+				#if not actor in get(m2).keys():
+					#diff.append(actor)
+			#if not diff.is_empty():
+				#prints("Keys present in %s but not %s :" % [m1, m2], ", ".join(diff))
 
 func clear_body_label_actor_wrappers(actor:String):
 	set_body_label_prefix(actor, "")

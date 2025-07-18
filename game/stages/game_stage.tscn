@@ -18,16 +18,18 @@
 [ext_resource type="Shader" uid="uid://oj2v8kbp13pd" path="res://game/stages/static.gdshader" id="17_dc0ef"]
 [ext_resource type="PackedScene" uid="uid://ipa310726xyt" path="res://game/stages/rolling_credits.tscn" id="17_gnute"]
 
-[sub_resource type="Resource" id="Resource_pms35"]
+[sub_resource type="Resource" id="Resource_qvfwk"]
 script = ExtResource("3_qvfwk")
-name_display = "sdfsdf"
+name_display = "Amber"
 name_prefix = ""
 name_suffix = ""
-color = Color(1, 1, 1, 0)
-outline = Color(1, 1, 1, 1)
+color = Color(0.54, 0, 0.486, 1)
+outline_color = Color(1, 1, 1, 1)
 outline_size = 0
+chatlog_name_display = ""
 chatlog_color = Color(1, 1, 1, 1)
-chatlog_outline = Color(1, 1, 1, 1)
+chatlog_outline_color = Color(1, 1, 1, 1)
+chatlog_outline_size = 0
 chatlog_default_to_base = false
 body_label_prefix = ""
 body_label_suffix = ""
@@ -106,12 +108,10 @@ script = ExtResource("1_a36me")
 script = ExtResource("3_pms35")
 auto_pause_duration = 0.4
 actor_config = Dictionary[String, ExtResource("3_qvfwk")]({
-"amber": SubResource("Resource_pms35")
+"amber": SubResource("Resource_qvfwk")
 })
 blank_names = Array[String](["narrator"])
-name_map = Dictionary[String, String]({
-"amber": "Amber"
-})
+name_style = 1
 name_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/NameContainer/MarginContainer/NameLabel")
 body_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel")
 text_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1")
