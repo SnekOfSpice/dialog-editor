@@ -2,6 +2,8 @@
 DIISIS 0.6
 This shit breaks compatibility on so many levels! Might as well be a new plugin!
 
+- LineReaderActorConfig as a new resource!
+
 shit from ldspcn
 - remove chunks as a concept in line reader
 - numerous bug fixes
@@ -14,7 +16,6 @@ shit from ldspcn
 - better scroll in editor
 - better performance
 - add ability to skip entire pages
-- map diff button (will be cut for name resources. they're also already halfway there)
 
 General
 - Introduce text IDs

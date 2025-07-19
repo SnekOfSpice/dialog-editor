@@ -31,11 +31,18 @@
 			"callv_custom": {
 				"method_name": []
 			},
+			"clear_body_label_actor_wrappers": {
+				"actor": []
+			},
 			"cum": {
 				"voice": []
 			},
 			"execute": {
 				"instruction_text": []
+			},
+			"get_actor_config_property": {
+				"actor_key": [],
+				"config_property": []
 			},
 			"get_property_from_self_or_autoload": {
 				"property": []
@@ -49,6 +56,16 @@
 			"play_sfx": {
 				"_name": []
 			},
+			"replace_lc_tags": {
+				"full_line_text": []
+			},
+			"set_actor_color": {
+				"actor_key": []
+			},
+			"set_actor_config_property": {
+				"actor_key": [],
+				"config_property": []
+			},
 			"set_actor_name": {
 				"actor_key": [],
 				"actor_name": []
@@ -58,6 +75,19 @@
 			},
 			"set_bgm": {
 				"_name": []
+			},
+			"set_body_label_actor_wrappers": {
+				"actor": [],
+				"prefix": [],
+				"suffix": []
+			},
+			"set_body_label_prefix": {
+				"actor": [],
+				"prefix": []
+			},
+			"set_body_label_suffix": {
+				"actor": [],
+				"suffix": []
 			},
 			"set_character_name": {
 				"character": [],
@@ -147,6 +177,9 @@
 			"Sound.set_audio_player_volume": {
 
 			},
+			"add_text_display_delay": {
+
+			},
 			"advance": {
 
 			},
@@ -185,8 +218,10 @@
 			"deserialize_instruction_handler_data": {
 
 			},
-			"enable_past_lines": {
-				"name_style": 1
+			"enable_keep_past_lines": {
+				"keep_text": false,
+				"new_label": null,
+				"new_name_style": null
 			},
 			"evaluate_conditionals": {
 				"enabled_as_default": true
@@ -197,11 +232,23 @@
 			"finish_waiting_for_instruction": {
 
 			},
+			"get_actor_config_property": {
+				"default": null
+			},
+			"get_actor_names_in_line": {
+				"empty_if_not_text": true
+			},
 			"get_preferences": {
 
 			},
 			"get_property_from_self_or_autoload": {
 
+			},
+			"get_subaddress": {
+
+			},
+			"get_subaddress_arr": {
+				"fill_with_zero": true
 			},
 			"get_ui_visibilities": {
 
@@ -215,6 +262,10 @@
 			"interrupt": {
 				"hide_controls": true
 			},
+			"is_advance_blocked": {
+				"include_auto_continue": true,
+				"include_warnings": false
+			},
 			"move_camera_to": {
 
 			},
@@ -222,6 +273,9 @@
 				"bgm": "One <3"
 			},
 			"play_sfx": {
+
+			},
+			"replace_lc_tags": {
 
 			},
 			"request_advance": {
@@ -239,6 +293,15 @@
 			"serialize_instruction_handler_data": {
 
 			},
+			"set_actor_color": {
+
+			},
+			"set_actor_config_property": {
+
+			},
+			"set_actor_config_property_color": {
+
+			},
 			"set_actor_name": {
 
 			},
@@ -254,6 +317,12 @@
 			"set_character_name": {
 
 			},
+			"set_chatlog_enabled": {
+
+			},
+			"set_custom_text_speed_override": {
+
+			},
 			"set_emotion": {
 
 			},
@@ -262,6 +331,16 @@
 			},
 			"set_fade_out": {
 
+			},
+			"set_name_controls": {
+				"container": null,
+				"keep_text": true
+			},
+			"set_name_prefix": {
+				"update": true
+			},
+			"set_name_suffix": {
+				"update": true
 			},
 			"set_object_visible": {
 
@@ -296,6 +375,9 @@
 			"trim_trimmables": {
 
 			},
+			"update_body_label": {
+
+			},
 			"update_name_label": {
 
 			},
@@ -310,7 +392,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773593,
+		"id_counter": -9223372036854772721,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -436,8 +518,13 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.function_calls": [
+								"set_actor_config_property(name_display, amber, Swaglord 2000)",
+								"set_actor_config_property_color(color, amber, 1,0,0)"
+							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1744987729.490--9223372036854775799"
+							"text_id": "1752911161.782--9223372036854773741"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -446,7 +533,7 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1744999497.621--9223372036854774767",
+						"id": "1752911161.782--9223372036854773742",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -476,10 +563,51 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1744987729.490--9223372036854775799"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"id": "1744999497.621--9223372036854774767",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": true,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
 							"auto_switch": false,
 							"choices": [
 								{
-									"address": "0.3.0",
+									"address": "0.4.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -528,7 +656,7 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.3.1",
+									"address": "0.4.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -587,14 +715,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.4",
+						"address": "0.5",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -618,6 +746,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "amber-is-happy"
 						},
@@ -634,14 +763,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.5",
+						"address": "0.6",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -665,6 +794,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987729.749--9223372036854775782"
 						},
@@ -681,14 +811,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.6",
+						"address": "0.7",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -705,6 +835,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987729.798--9223372036854775779"
 						},
@@ -721,7 +852,7 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
@@ -734,6 +865,7 @@
 				"next": 1.0,
 				"number": 0,
 				"page_key": "beginning",
+				"skip": false,
 				"terminate": false
 			},
 			"1": {
@@ -1306,6 +1438,7 @@
 			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS)\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow] ",
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
+			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk and change my name<call:set_actor_config_property(name_display, amber, Swaglord 2000)> and my color <call:set_actor_config_property_color(color, amber, 1,0,0)>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,

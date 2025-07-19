@@ -15,10 +15,11 @@ const UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_c
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member color_map].
 enum NameStyle {
-	## The name will be displayed in [member name_label].
+	## The actor's name will be displayed in [member name_label].
 	NameLabel,
-	## The name will be inserted in front of the text with a sequence of optional spaces and characters (See [param prepend_separator] [param prefix_space] [param prefix_suffix]). [member name_label] will be hidden.
+	## The actor's name will be inserted in front of the text with a sequence of optional spaces and characters (See [param prepend_separator] [param prefix_space] [param prefix_suffix]). [member name_label] will be hidden.
 	Prepend,
+	## Actor name will not be shown. [member name_label] will be hidden.
 	None,
 }
 
@@ -177,16 +178,9 @@ var choice_list:Control:
 ## The dictionary key is the word to wrap. The value is the prefix and suffix for that word, separated by a space.[br]
 ## For example; [code]"DIISIS" : "[b] [/b]"[/code].
 @export var body_label_word_wrappers : Dictionary[String, String]
-## Gets prefixed to text lines, after [member body_label_prefix]. Keys are actor names.
-@export var body_label_prefix_by_actor : Dictionary[String, String]
-## Gets suffixed to text lines, before [member body_label_suffix]. Keys are actor names.
-@export var body_label_suffix_by_actor : Dictionary[String, String]
-## this is broken as shit but whatever. fix this after the jam.
-## apperently dictionary access is 1 frame behind direct string access?
+## Prefix before the name.
 @export var name_prefix : String
 @export var name_suffix : String
-@export var name_prefix_by_actor : Dictionary[String, String]
-@export var name_suffix_by_actor : Dictionary[String, String]
 ## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
 ## Each call will replace the text as it gets passed along the array.
 ## This can be used to mangle the text in arbitrary ways before adding it to [member body_label], such as adding or replacing contents with your own custom text.
@@ -209,16 +203,6 @@ var choice_list:Control:
 @export var chatlog_enabled := false
 ## Ignores [code][]>[/code] syntax and fuses all dialog lines of a single Text Line to one big chunk of text.
 @export var chatlog_fuse_lines := true
-## When [member chatlog_enabled] is true, instead these names will be used if set. If not, defaults to [member name_map.]
-@export var chatlog_name_map : Dictionary[String, String] = {}
-## If true, will use the name set in [member name_map] before falling back to the raw name.
-@export var chatlog_fallback_name_map := true
-## Chatlog override for colors. Tints the names displayed when [member chatlog_enabled] is true. If not set, no tint is used.[br]
-## As opposed to when chatlog is disabled, a transparent color will just make the text invisible.
-@export var chatlog_color_map : Dictionary[String, Color] = {}
-@export var chatlog_default_color := Color.WHITE
-## If true, will use the name set in [member name_map] before falling back to [member chatlog_default_color].
-@export var chatlog_fallback_color_map := false
 ## If set, the entire line is tinted in the appropriate color set in [member chatlog_color_map]. If false, only the actor name is tinted.
 @export var chatlog_tint_full_line := true
 ## If set, the actor's prefix from [member body_label_prefix_by_actor] will also be prefixed to the chatlog.
@@ -352,6 +336,8 @@ var _handled_comments := []
 var _next_pause_type := 0
 enum _PauseTypes {Manual, Auto, EoL}
 var _dialog_lines := []
+#var _dialog_base_lines := [] # unchanged thing needed to rebuild on setting new config
+var _full_prefix := ""
 var _dialog_actors := []
 var _dialog_line_index := 0
 var _is_last_actor_name_different := true
@@ -361,7 +347,7 @@ var _text_speed_by_character_index := []
 var current_raw_name := ""
 ## Currently displayed choice title.
 var current_choice_title := ""
-
+#
 ## State of the [LineReader]. If terminated, it's currently not active.
 var terminated := false
 
@@ -402,9 +388,6 @@ func serialize() -> Dictionary:
 	result["call_strings"] = _call_strings
 	result["called_positions"] = _called_positions
 	result["chatlog_enabled"] = chatlog_enabled
-	result["chatlog_name_map"] = chatlog_name_map
-	result["chatlog_fallback_color_map"] = chatlog_fallback_color_map
-	result["chatlog_fallback_name_map"] = chatlog_fallback_name_map
 	result["chatlog_fuse_lines"] = chatlog_fuse_lines
 	result["current_choice_title"] = current_choice_title
 	result["current_raw_name"] = current_raw_name
@@ -412,6 +395,7 @@ func serialize() -> Dictionary:
 	result["dialog_actors"] = _dialog_actors 
 	result["dialog_line_index"] = _dialog_line_index 
 	result["dialog_lines"] = _dialog_lines 
+	result["_full_prefix"] = _full_prefix 
 	result["handled_comments"] = _handled_comments
 	result["instruction_handler"] = serialize_instruction_handler_data() 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
@@ -420,7 +404,6 @@ func serialize() -> Dictionary:
 	result["line_index"] = line_index 
 	result["line_type"] = line_type 
 	result["max_past_lines"] = max_past_lines
-	#result["name_map"] = name_map
 	result["name_prefix"] = name_prefix
 	result["name_suffix"] = name_suffix
 	result["next_pause_position_index"] = _next_pause_position_index 
@@ -451,8 +434,6 @@ func deserialize(data: Dictionary):
 	_call_strings = data.get("call_strings", {})
 	_called_positions = data.get("called_positions", [])
 	chatlog_enabled = data.get("chatlog_enabled", chatlog_enabled)
-	chatlog_fallback_color_map = data.get("chatlog_fallback_color_map", chatlog_fallback_color_map)
-	chatlog_fallback_name_map = data.get("chatlog_fallback_name_map", chatlog_fallback_name_map)
 	chatlog_fuse_lines = data.get("chatlog_fuse_lines", chatlog_fuse_lines)
 	current_choice_title = data.get("current_choice_title", "")
 	current_raw_name = data.get("current_raw_name", "")
@@ -460,6 +441,7 @@ func deserialize(data: Dictionary):
 	_dialog_actors = data.get("dialog_actors")
 	_dialog_line_index = int(data.get("dialog_line_index"))
 	_dialog_lines = data.get("dialog_lines")
+	_full_prefix = data.get("_full_prefix", _full_prefix)
 	_handled_comments = data.get("handled_comments", [])
 	deserialize_instruction_handler_data(data.get("instruction_handler", {}))
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
@@ -483,8 +465,6 @@ func deserialize(data: Dictionary):
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
-	#_set_dict_to_str_str_dict("name_map", data.get("name_map", name_map))
-	_set_dict_to_str_str_dict("chatlog_name_map", data.get("chatlog_name_map", chatlog_name_map))
 	
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
@@ -635,6 +615,7 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
+	_full_prefix = ""
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
@@ -816,8 +797,8 @@ func _read_new_line(new_line: Dictionary):
 						if not actor_name in blank_names:
 							actor_prefix = _get_actor_name(actor_name) + ": "
 						
-						var body_prefix : String = body_label_prefix_by_actor.get(actor_name, "")
-						var body_suffix : String = body_label_suffix_by_actor.get(actor_name, "")
+						var body_prefix : String = get_actor_config_property("body_label_prefix", actor_name, "")
+						var body_suffix : String = get_actor_config_property("body_label_suffix", actor_name, "")
 						if chatlog_enabled and not chatlog_include_body_label_actor_prefix:
 							body_prefix = ""
 						if chatlog_enabled and not chatlog_include_body_label_actor_suffix:
@@ -855,7 +836,7 @@ func _read_new_line(new_line: Dictionary):
 			
 			_dialog_lines = _replace_tags(_dialog_lines)
 			_dialog_lines = _replace_control_sequences(_dialog_lines)
-			
+			_dialog_lines = _dialog_lines.duplicate(true)
 			_set_dialog_line_index(0)
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
@@ -916,20 +897,6 @@ func replace_lc_tags(full_line_text:String) -> String:
 		full_line_text = full_line_text.insert(lc_position, "\n[]>%s:" % actor)
 		lc_position = full_line_text.find("<lc>")
 	return full_line_text
-	
-
-#func _get_chatlog_name(actor_name:String) -> String:
-	#if chatlog_fallback_name_map:
-		#return chatlog_name_map.get(actor_name, _get_actor_name(actor_name))
-	#return chatlog_name_map.get(actor_name, actor_name)
-#
-#func _get_chatlog_color(actor_name:String) -> Color:
-	#if chatlog_fallback_color_map and not chatlog_color_map.has(actor_name):
-		#var color : Color = _get_actor_color(actor_name)
-		#if color == Color.TRANSPARENT:
-			#push_warning("Chatlog is falling back on transparent default color")
-		#return chatlog_color_map.get(actor_name, color)
-	#return chatlog_color_map.get(actor_name, chatlog_default_color)
 
 
 func _get_prepend_separator_sequence() -> String:
@@ -1290,13 +1257,12 @@ func _attempt_read_previous_dialine() -> bool:
 
 # wrapper should be prefix or suffix
 func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
-	var result := ""
 	if chatlog_enabled:
 		if get(str("chatlog_include_body_label_actor_", wrapper)):
-			result = get(str("body_label_", wrapper, "_by_actor")).get(current_raw_name, "")
+			return get_actor_config_property(str("body_label_", wrapper), current_raw_name, "")
 	else:
-		result = get(str("body_label_", wrapper, "_by_actor")).get(current_raw_name, "")
-	return result
+		return get_actor_config_property(str("body_label_", wrapper), current_raw_name, "")
+	return ""
 
 func _insert_strings_in_current_dialine():
 	var new_text : String = _dialog_lines[_dialog_line_index]
@@ -1305,25 +1271,28 @@ func _insert_strings_in_current_dialine():
 	new_text = new_text.trim_suffix("<advance>")
 	
 	# prepend name
-	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names):
+	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
+		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
+		
 		var display_name: String = _get_actor_name(current_raw_name)
-		#var name_color :Color = _get_actor_color(current_raw_name)
-			## TODO tighten the screws here and use _get_full_prepend_name_prefix instead
+		
 		var wrappers := _get_actor_color_prepend_tag_pair(current_raw_name)
-		var full_prefix := str(
+		_full_prefix = str(
 			name_prefix,
+			get_actor_config_property("name_prefix", current_raw_name, ""),
 			wrappers[0],
 			display_name,
 			wrappers[1],
+			get_actor_config_property("name_suffix", current_raw_name, ""),
 			name_suffix,
 			_get_prepend_separator_sequence(),
 		)
 		new_text = str(
-			full_prefix,
+			_full_prefix,
 			new_text
 			)
 		
-		_prepend_length = full_prefix.length()
+		_prepend_length = _full_prefix.length()
 	
 	
 	new_text = str(
@@ -1663,12 +1632,15 @@ func _find_next_pause():
 func _get_full_prepend_name_prefix(actor:String) -> String:
 	if name_style != NameStyle.Prepend:
 		return ""
-	return name_prefix_by_actor.get(actor, "") + _get_actor_name(actor) + _get_prepend_separator_sequence() + name_suffix_by_actor.get(actor, "")
+	return get_actor_config_property("name_prefix", actor) + _get_actor_name(actor) + _get_prepend_separator_sequence() + get_actor_config_property("name_suffix", actor)
 
 func _get_actor_name(actor_key:String) -> String:
 	if not actor_config.has(actor_key):
 		return actor_key
-	return actor_config.get(actor_key).get(str("chatlog_" if chatlog_enabled else "", "name_display"))
+	var display_name : String = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "name_display"), actor_key)
+	if display_name.is_empty():
+		display_name = get_actor_config_property("name_display", actor_key, actor_key)
+	return display_name
 
 func _get_actor_color(actor:String) -> Color:
 	return _get_actor_color_config("color", actor)
@@ -1681,26 +1653,34 @@ func _get_actor_outline_size(actor:String) -> int:
 ## base_property is either color or outline_color
 func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 	if actor_config.has(actor_key):
-		return (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
+		var color : Color = (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
+		if color == Color.TRANSPARENT:
+			color = (actor_config.get(actor_key) as LineReaderActorConfig).get(base_property)
+		if color != Color.TRANSPARENT:
+			return color
+		
+	if name_style == NameStyle.Prepend or chatlog_enabled: # prepend goes in body_label
+		return body_label.get_theme_color("default_color", "RichTextLabel")
 	else:
-		if name_style == NameStyle.Prepend: # prepend goes in body_label
-			return body_label.get_theme_color("default_color", "RichTextLabel")
-		else:
-			return name_label.get_theme_color("font_color", "Label")
+		return name_label.get_theme_color("font_color", "Label")
 	
 
 ## returns array of size 2: prefix and suffix
 func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
-	var color : Color = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "color"), actor)
-	var outline_color : Color = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_color"), actor)
-	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor)
+	var color : Color = _get_actor_color_config("color", actor)
+	var outline_color : Color = _get_actor_color_config("outline_color", actor)
+	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor, 0)
 	
 	var prefix := str(
 		"[color=", color.to_html(), "]",
 		"[outline_color=", outline_color.to_html(), "]",
-		"[outline_size=", outline_size, "]",
 	)
-	var suffix := "[/outline_size][/outline_color][/color]"
+	var suffix := "[/outline_color][/color]"
+	
+	# there's a bug where outline size 0 will throw an error that doesn't do anything
+	if outline_size > 0:
+		prefix += str("[outline_size=", outline_size, "]")
+		suffix = str("[/outline_size]", suffix)
 	
 	return [prefix, suffix]
 
@@ -1711,15 +1691,43 @@ func set_actor_name(actor_key:String, actor_name:String):
 func set_actor_color(actor_key:String, color:Color):
 	set_actor_config_property("color", actor_key, color)
 
+## Helper function to set a color-based actor config with float values for RGB. See [method set_actor_config_property].
+func set_actor_config_property_color(config_property:String, actor_key:String, r:float, g:float, b:float):
+	var color = Color(r,g,b)
+	set_actor_config_property(config_property, actor_key, color)
+
+## Sets the passed property and updates the dialog line accordingly. See [LineReaderActorConfig].[br][br]
+## [b]Note:[/b] Updating this mid-dialog line will have no effect if [member chatlog_enabled] is true.
 func set_actor_config_property(config_property:String, actor_key:String, value):
+	var previous_value
 	if actor_config.has(actor_key):
+		previous_value = get_actor_config_property(config_property, actor_key)
 		(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
 	else:
 		var new_config = LineReaderActorConfig.new()
 		new_config.set(config_property, value)
 		actor_config[actor_key] = new_config
 	
-	print("UPDATE THE DISPLAY STRING")
+	# update display string
+	if previous_value != value:
+		update_body_label()
+
+func set_name_prefix(prefix : String, update := true):
+	var old_prefix = name_prefix
+	name_prefix = prefix
+	if name_prefix != old_prefix and update:
+		update_body_label()
+
+func set_name_suffix(suffix : String, update := true):
+	var old_suffix = name_suffix
+	name_suffix = suffix
+	if name_suffix != old_suffix and update:
+		update_body_label()
+
+func update_body_label():
+	var visible_characters = body_label.visible_characters
+	_set_dialog_line_index(_dialog_line_index)
+	body_label.visible_characters = visible_characters
 
 func get_actor_config_property(config_property:String, actor_key:String, default : Variant = null) -> Variant:
 	if not actor_config.has(actor_key):
@@ -1963,9 +1971,7 @@ func _set_dialog_line_index(value: int):
 	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]
 		var actor_name: String = _trim_syntax_and_emit_dialog_line_args(raw_name)
-		
 		update_name_label(actor_name)
-	
 	
 	_insert_strings_in_current_dialine()
 	_handle_tags_and_start_reading()
@@ -2003,7 +2009,11 @@ func update_name_label(actor_name: String):
 	var name_outline_size : int = _get_actor_outline_size(actor_name)
 	
 	if name_style == NameStyle.NameLabel:
-		name_label.text = display_name
+		name_label.text = str(
+			name_prefix,
+			display_name,
+			name_suffix
+		)
 		name_label.add_theme_color_override("font_color", name_color)
 		name_label.add_theme_color_override("font_outline_color", name_color)
 		name_label.add_theme_color_override("outline_size", name_color)
@@ -2012,8 +2022,6 @@ func update_name_label(actor_name: String):
 			name_container.modulate.a = 0.0
 		else:
 			name_container.modulate.a = 1.0
-	#if name_style == 
-		#name_container.modulate.a = 0.0
 	
 	var name_visible:bool
 	if name_style == NameStyle.NameLabel:
@@ -2022,6 +2030,7 @@ func update_name_label(actor_name: String):
 		name_visible = current_raw_name in blank_names
 	elif name_style == NameStyle.None:
 		name_visible = false
+	
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
 	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
 
@@ -2223,6 +2232,7 @@ func execute(instruction_text: String) -> bool:
 
 #endregion
 
+## Returns an array of all actors that speak in this line. If [param empty_if_not_text] is true (default), the array will be empty if the current line isn't of type [enum DIISIS.LineType.Text].
 func get_actor_names_in_line(empty_if_not_text:=true) -> Array:
 	if empty_if_not_text:
 		if line_type != DIISIS.LineType.Text:
@@ -2232,37 +2242,6 @@ func get_actor_names_in_line(empty_if_not_text:=true) -> Array:
 		if not actor in result:
 			result.append(actor)
 	return result
-	
-#func get_map_diffs():
-	#var maps := [
-		#"name_map",
-		#"color_map",
-		#"chatlog_name_map",
-		#"chatlog_color_map",
-	#]
-	#for m1 in maps:
-		#for m2 in maps:
-			#if m1 == m2:
-				#continue
-			#var diff := []
-			#for actor in get(m1).keys():
-				#if not actor in get(m2).keys():
-					#diff.append(actor)
-			#if not diff.is_empty():
-				#prints("Keys present in %s but not %s :" % [m1, m2], ", ".join(diff))
-
-func clear_body_label_actor_wrappers(actor:String):
-	set_body_label_prefix(actor, "")
-	set_body_label_suffix(actor, "")
-
-func set_body_label_actor_wrappers(actor:String, prefix:String, suffix:String):
-	set_body_label_prefix(actor, prefix)
-	set_body_label_suffix(actor, suffix)
-
-func set_body_label_prefix(actor:String, prefix:String):
-	body_label_prefix_by_actor[actor] = prefix
-func set_body_label_suffix(actor:String, suffix:String):
-	body_label_prefix_by_actor[actor] = suffix
 
 func set_chatlog_enabled(value:bool):
 	chatlog_enabled = value
