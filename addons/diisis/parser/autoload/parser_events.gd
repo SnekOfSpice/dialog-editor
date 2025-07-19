@@ -65,16 +65,9 @@ signal actor_name_changed(
 )
 
 
-## [param header] is an [Array] where every item is
-## [codeblock]
-## {
-##    "data_type": int,
-##    "property_name": String,
-##    "values": Array of size 2
-## }
-##[/codeblock]
+## [param header] has keys that are the property name of a header property. For values: Strings and booleans are passed as values. Dropdowns are passed as arrays of size 2 with the dropdown title in first position and the value in the second (both are strings).
 signal new_header(
-	header:Array[Dictionary]
+	header:Dictionary
 )
 
 ## Emitted when a page is finished. Is emitted before [signal page_terminated].

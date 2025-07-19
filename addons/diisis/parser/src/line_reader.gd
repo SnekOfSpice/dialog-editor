@@ -1948,21 +1948,24 @@ func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 
 
 func _handle_header(header: Array):
-	var cleaned_header : Array[Dictionary] = []
+	var header_data := {}
 	for prop in header:
 		var data_type = prop.get("data_type")
 		var property_name = prop.get("property_name")
-		var values = prop.get("values")
-		if data_type == Parser.DataTypes._DropDown:
-			values = Parser.get_dropdown_strings_from_header_values(values)
+		var values : Array = prop.get("values")
 		
-		cleaned_header.append({
-			"data_type" : data_type,
-			"property_name" : property_name,
-			"values" : values,
-		})
+		var actual_value
+		match int(data_type):
+			Pages.DataTypes._String:
+				actual_value = str(values[0])
+			Pages.DataTypes._DropDown:
+				actual_value = Parser.get_dropdown_strings_from_header_values(values)
+			Pages.DataTypes._Boolean:
+				actual_value = bool(values[0])
+		
+		header_data[property_name] = actual_value
 	
-	ParserEvents.new_header.emit(cleaned_header)
+	ParserEvents.new_header.emit(header_data)
 
 
 func _set_dialog_line_index(value: int):
