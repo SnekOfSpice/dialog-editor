@@ -365,6 +365,9 @@ var _trimmable_strings := [" ", "\n", "<lc>", "<ap>", "<mp>", "\r"]
 var _reverse_next_instruction := false
 var _subaddresses_in_history := []
 
+var _body_duplicate : RichTextLabel
+var _body_duplicate_last_line : TextEdit
+
 signal line_reader_ready
 
 func _validate_property(property: Dictionary):
@@ -542,11 +545,25 @@ func _ready() -> void:
 	tree_exiting.connect(Parser.close_connection)
 	
 	_remaining_auto_pause_duration = auto_pause_duration
+	_body_duplicate = RichTextLabel.new()
+	_body_duplicate.focus_mode = Control.FOCUS_NONE
+	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	#_body_duplicate_last_line = TextEdit.new()
+	#_body_duplicate_last_line.focus_mode = Control.FOCUS_NONE
+	#_body_duplicate_last_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	#_body_duplicate_last_line.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	
+	#_body_duplicate.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	add_child(_body_duplicate)
+	_body_duplicate.bbcode_enabled = true
+	#add_child(_body_duplicate_last_line)
 	
 	if body_label:
 		body_label.visible_ratio = 0
 		body_label.bbcode_enabled = true
 		body_label.text = ""
+		set_body_label(body_label)
 	if name_label:
 		name_label.text = ""
 	
@@ -1581,10 +1598,96 @@ func _set_body_label_text(text: String):
 		body_label.text = text
 		body_label.visible_ratio = 0
 		body_label.visible_characters = _prepend_length
+		_body_duplicate.text = body_label.text
+		#_body_duplicate_last_line.text = body_label.get_parsed_text()
 	_characters_visible_so_far = ""
 	_started_word_buffer = ""
 	
 	_last_raw_name = current_raw_name
+
+func get_body_label_text_draw_pos(index:int) -> Vector2:
+	_body_duplicate.add_theme_font_override("normal_font", body_label.get_theme_font("normal_font", "RichTextLabel"))
+	_body_duplicate.add_theme_font_size_override("normal_font_size", body_label.get_theme_font_size("normal_font_size", "RichTextLabel"))
+	_body_duplicate.add_theme_stylebox_override("normal", body_label.get_theme_stylebox("normal", "RichTextLabel"))
+	_body_duplicate.text = body_label.text
+	_body_duplicate.custom_minimum_size = body_label.custom_minimum_size
+	_body_duplicate.size = body_label.size
+	
+	if index == 0:
+		_body_duplicate.visible_characters = -1
+		return Vector2(0, _body_duplicate.get_content_height())
+	if index >= body_label.get_parsed_text().length():
+		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
+		return Vector2.ZERO
+	#prints("got index ", index, "got lenfth ", _body_duplicate.text.length())
+	
+	#_body_duplicate_last_line.text = body_label.get_parsed_text()
+	
+	var current_line := 0
+	var line_sum := 0
+	
+	# take substr and the length of that
+	# take left(index) substr for content height
+	_body_duplicate.visible_characters = index
+	
+	var height : int = _body_duplicate.get_content_height() 
+	
+	# get target line
+	_body_duplicate.visible_characters = -1
+	var target_line : int = body_label.get_character_line(index)
+	var target_line_range : Vector2i
+	for i in _body_duplicate.get_line_count():
+		var range = body_label.get_line_range(i)
+		if index >= range.x and index <= range.y:
+			target_line = i
+			target_line_range = range
+			break
+	
+	#print("line of ", index, " is ", target_line, target_line_range)
+	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x)
+	#print(trailing_line)
+	_body_duplicate.text = trailing_line
+	var width : int = _body_duplicate.get_content_width()
+	#print(line_start_index)
+	# search to left / desc indices until the character line changes
+	# ^^^^ TRY THIS I THINK I COOKED
+	
+	
+	return Vector2(width, height)
+	var label_height := _body_duplicate.get_content_height()
+	_body_duplicate.text = _body_duplicate.text.left(index)
+	# get last line for width
+	_body_duplicate_last_line.text = _body_duplicate_last_line.text.left(index)
+	var i := target_line
+	while i > 0:
+		_body_duplicate_last_line.remove_line_at(0)
+		i -= 1
+	print(_body_duplicate_last_line.text)
+	body_label.get_theme_stylebox("normal", "RichTextLabel")
+	# get the one line
+	# create another label with just that line
+	#_body_duplicate.text = target_line
+	#var width = _body_duplicate.get_content_width()
+	
+	
+	#return Vector2(width, _body_duplicate_line_height * target_line)
+	# give it shrink left align
+	# get its size
+	#while current_line < target_line:
+		#line_sum += body_label.get_colum
+	##while line_sum < index:
+		##body_label.get_character_line()
+		##var line_sum_to_be = line_sum + _body_duplicate.get_line(current_line).length()
+		##if index >= line_sum and index <= line_sum_to_be:
+			##break
+		##line_sum = line_sum_to_be
+		##current_line += 1
+	#_body_duplicate.get_character_line()
+	#var column := index - line_sum
+	#printt(current_line, column)
+	#var dup_rect := _body_duplicate.get_rect_at_line_column(current_line, column)
+	#dup_rect.position += Vector2i(body_label.position)
+	#return dup_rect
 
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
@@ -1598,8 +1701,14 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	else:
 		return _get_actor_name(actor_name)
 
+#var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
 func set_body_label(new_body_label:RichTextLabel, keep_text := true):
+	_body_duplicate.theme = new_body_label.get_theme()
+	#_body_duplicate.visible_characters = 1
+	#if _body_duplicate_line_height == 0:
+		#_body_duplicate_line_height = _body_duplicate.get_content_height()
+	_body_duplicate.size = new_body_label.size
 	if new_body_label == body_label:
 		return
 	var switch_text:bool = body_label != new_body_label
@@ -2251,3 +2360,93 @@ func set_chatlog_enabled(value:bool):
 
 func set_custom_text_speed_override(value:int):
 	custom_text_speed_override = value
+
+#func _fit_to_max_line_count(lines: Array):
+	#if body_label_max_lines <= 0 or chatlog_enabled:
+		#return
+	#
+	#var new_chunks := []
+	#var label : RichTextLabel = RichTextLabel.new()
+	#add_child(label)
+	#label.visible = false
+	#label.bbcode_enabled = true
+	#label.theme = body_label.get_theme()
+	#label.size = body_label.size
+	#
+	#var i := 0
+	#while i < lines.size():
+		#var line_height:=0
+		#var content_height := 0
+		#
+		#var name_prefix:String
+		#var name_length:int
+		#if name_style == NameStyle.Prepend:
+			#var actor_name = _dialog_actors[_dialog_line_index]
+			#var display_name: String = name_map.get(_dialog_actors[_dialog_line_index], _dialog_actors[_dialog_line_index])
+			#display_name = display_name.substr(0, display_name.find("{"))
+			#name_prefix = str(_wrap_in_color_tags_if_present(actor_name), _get_prepend_separator_sequence())
+			#name_length = display_name.length() + _get_prepend_separator_sequence().length()
+		#elif name_style == NameStyle.NameLabel:
+			#name_prefix = ""
+			#name_length = 0
+		#
+		#var line:String = lines[i]
+		#label.text = line
+		#label.visible_characters = 1
+		#if line_height == 0:
+			#line_height = label.get_content_height()
+		#
+		#label.text = str(name_prefix,line,)
+		#
+		#while content_height <= line_height * body_label_max_lines:
+			#if label.text.is_empty():
+				#break
+			#label.visible_characters += 1
+			#content_height = label.get_content_height()
+			#if content_height > line_height * body_label_max_lines:
+				#label.text = label.text.trim_prefix(name_prefix)
+				#label.visible_characters -= 1
+				#label.visible_characters -= name_length
+				#while label.text[label.visible_characters] != " ":
+					#label.visible_characters -= 1
+				#label.bbcode_enabled = false
+				#var bbcode_padding := 0
+				#var scan_index := 0
+				#while scan_index < label.visible_characters:
+					#scan_index += 1
+					#if label.text[scan_index] == "[":
+						#if label.text[scan_index-1] == "\\[":
+							#scan_index += 1
+							#continue
+						#var tag_end = label.text.find("]", scan_index)
+						#if label.text.length() >= scan_index + 3:
+							#if (
+								#label.text[scan_index + 1] == "i" and
+								#label.text[scan_index + 2] == "m" and
+								#label.text[scan_index + 3] == "g"):
+									#tag_end = label.text.find("[/img]") + 5
+							#elif (
+								#label.text[scan_index + 1] == "u" and
+								#label.text[scan_index + 2] == "r" and
+								#label.text[scan_index + 3] == "l"):
+									#tag_end = label.text.find("[/url]") + 5
+						#bbcode_padding += tag_end - scan_index + 2
+						#scan_index = tag_end
+				#
+				#
+				#var fitting_raw_text := label.text.substr(0, label.visible_characters + bbcode_padding)
+				#line = line.trim_prefix(fitting_raw_text)
+				#label.text = line
+				#new_chunks.append(fitting_raw_text)
+				#label.bbcode_enabled = true
+				#content_height = 0
+				#label.visible_characters = 0
+				#continue
+			#
+			#if label.visible_ratio == 1.0:
+				#new_chunks.append(line)
+				#break
+			#
+		#i += 1
+	##_line_chunks = new_chunks
+	#label.queue_free()

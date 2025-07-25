@@ -244,7 +244,13 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("<"):
 		for a in DIISIS.control_sequences:
-			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, str(a, ":" if (a in DIISIS.control_sequences_with_colon) else "", ">"))
+			var full_tag : String = a
+			if a in DIISIS.control_sequences_with_colon:
+				full_tag += ":"
+			full_tag += ">"
+			if a in DIISIS.control_sequences_with_closing_tag:
+				full_tag += "</%s>" % a
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
 		for a in Pages.dropdowns.get(Pages.auto_complete_context, []):
@@ -444,9 +450,15 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			set_caret_movement_to_do(1)
 
-	for control in ["func", "name", "clname", "var", "fact", "call", "ts_rel", "ts_abs", "comment"]:
+	for control in DIISIS.control_sequences_with_colon:
 		if is_text_before_caret(str("<", control, ":>")):
 			set_caret_movement_to_do(-1)
+			Pages.auto_complete_context = control
+			break
+	
+	for control : String in DIISIS.control_sequences_with_closing_tag:
+		if is_text_before_caret(str("</", control, ">")):
+			set_caret_movement_to_do(-(control.length() + 3))
 			Pages.auto_complete_context = control
 			break
 	

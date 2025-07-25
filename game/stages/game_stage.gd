@@ -117,6 +117,9 @@ func _process(_delta: float) -> void:
 	orgasm_mat.set_shader_parameter("lod", lerp(orgasm_mat.get_shader_parameter("lod"), 0.0, 0.000175))
 	
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
+	
+	$ColorRect.position = $LineReader.get_body_label_text_draw_pos($LineReader.body_label.visible_characters) + $LineReader.body_label.global_position
+	$ColorRect/Label.text = str($LineReader.body_label.visible_characters)
 
 func cum(_voice:String):
 	orgasm_mat.set_shader_parameter("lod", 1.8)
