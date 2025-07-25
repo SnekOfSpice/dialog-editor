@@ -1332,6 +1332,9 @@ func _insert_strings_in_current_dialine():
 	
 	_dialog_lines[_dialog_line_index] = new_text
 
+var _ruby_strings := []
+var _ruby_indices := []
+var _ruby_labels := []
 func _handle_tags_and_start_reading():
 	_remaining_prompt_delay = input_prompt_delay
 	if text_speed == MAX_TEXT_SPEED:
@@ -1345,6 +1348,8 @@ func _handle_tags_and_start_reading():
 	_call_strings.clear()
 	_called_positions.clear()
 	_handled_comments.clear()
+	_ruby_strings.clear()
+	_ruby_indices.clear()
 	var text_speed_override := -1.0
 	_text_speed_by_character_index.clear()
 	
@@ -1382,6 +1387,7 @@ func _handle_tags_and_start_reading():
 		var call_strings_at_index : Array = _call_strings.get(scan_index, [])
 		var scan_index_calls := scan_index
 		var comments_at_index : Array = _comments.get(scan_index, [])
+		var previous_tag_buffer := tag_buffer
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
@@ -1424,7 +1430,31 @@ func _handle_tags_and_start_reading():
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
 				text_speed_tags.append(tag_string)
-		
+			elif bbcode_removed_text.find("<ruby:", scan_index) == scan_index:
+				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
+				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
+				var tag_end := bbcode_removed_text.find("</ruby>", scan_index)
+				var end_length := "</ruby>".length()
+				if scan_index + tag_length == tag_end:
+					push_warning("Ruby %s has no base text" % tag_string)
+				elif tag_string.contains("<ruby:>"):
+					push_warning("Empty ruby!")
+				else:
+					_ruby_strings.append(tag_string.trim_prefix("<ruby:").trim_suffix(">"))
+					_ruby_indices.append(Vector2i(scan_index, tag_end)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
+				bbcode_removed_text = bbcode_removed_text.erase(tag_end, end_length)
+				target_length -= tag_string.length() + end_length
+				tag_buffer += tag_string.length() + end_length
+			
+			var tag_buffer_gained := tag_buffer - previous_tag_buffer
+			# shift all ruby tags above the scan index down
+			var k := 0
+			while k < _ruby_indices.size():
+				var indices : Vector2i = _ruby_indices[k]
+				if indices.y > scan_index and tag_buffer_gained > 0:
+					_ruby_indices[k] = Vector2i(indices.x, indices.y - tag_buffer_gained)
+				k += 1
 		
 		_text_speed_by_character_index.append(text_speed_override)
 		_text_speed_by_character_index[scan_index_calls] = text_speed_override
@@ -1460,6 +1490,9 @@ func _handle_tags_and_start_reading():
 	cleaned_text = cleaned_text.replace("<mp>", "")
 	cleaned_text = cleaned_text.replace("<ap>", "")
 	cleaned_text = cleaned_text.replace("<strpos>", "")
+	cleaned_text = cleaned_text.replace("</ruby>", "")
+	for ruby in _ruby_strings:
+		cleaned_text = cleaned_text.replace("<ruby:%s>" % ruby, "")
 	cleaned_text = cleaned_text.replace("\\[", "[")
 	for call_array : Array in _call_strings.values():
 		for call in call_array:
@@ -1487,8 +1520,95 @@ func _handle_tags_and_start_reading():
 	
 	var old_text = body_label.text
 	_set_body_label_text(cleaned_text)
+	_build_rubies()
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
+
+func _build_rubies() -> void:
+	print("=============")
+	for label : RichTextLabel in _ruby_labels:
+		label.queue_free()
+	_ruby_labels.clear()
+	
+	_body_duplicate.visible_characters = 1
+	_body_duplicate_line_height = _body_duplicate.get_content_height()
+	
+	var ruby_index := 0
+	for ruby_range : Vector2i in _ruby_indices:
+		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x)
+		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y)
+		
+		var ruby_segment_indices := [] # extra step needed for multiline
+		var word_segments := []
+		var ruby_string : String = _ruby_strings[ruby_index]
+		prints("HANDING ruby indices ", ruby_range)
+		if start_draw_pos.y == end_draw_pos.y:
+			ruby_segment_indices.append(ruby_range)
+			word_segments.append(ruby_string)
+		else:
+			# split over lines
+			
+			#var y_diff = end_draw_pos.y - start_draw_pos.y
+			#var segment_count : int = y_diff / _body_duplicate_line_height
+			#printt(y_diff, _body_duplicate_line_height, segment_count)
+			var current_segment_y : int = start_draw_pos.y
+			var segment_start_index := ruby_range.x
+			for i in range(segment_start_index, ruby_range.y + 1):
+				var index_y = get_body_label_text_draw_pos(i).y
+				if index_y != current_segment_y: # finished segment
+					ruby_segment_indices.append(Vector2i(segment_start_index, i - 1))
+					segment_start_index = i
+					current_segment_y = index_y
+			if segment_start_index < ruby_range.y:
+				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y))
+			# weigh the ruby across the segments
+			var ruby_incices_span_length : int = ruby_range.y - ruby_range.x
+			var segment_shares := []
+			for segment : Vector2i in ruby_segment_indices:
+				var segment_length := segment.y - segment.x
+				segment_shares.append(float(segment_length) / float(ruby_incices_span_length))
+			print(segment_shares)
+			var ruby_words := ruby_string.split(" ")
+			ruby_words.resize(max(ruby_words.size(), segment_shares.size()))
+			var word_segment : String =  ""
+			var segment_share := 0.0#float(word_segment.length()) / float(ruby_string.length())
+			
+			
+			
+			var segment_index := 0
+			var current_share = segment_shares[0]
+			while not ruby_words.is_empty():
+				var next_word : String = ruby_words[0]
+				#word_segment += ruby_words[0]
+				
+				if float((next_word + word_segment).length()) / float(ruby_string.length()) >= current_share:
+					word_segments.append(word_segment)
+					word_segment = next_word
+					#ruby_words.remove_at(0)
+					segment_index += 1
+					if segment_index >= segment_shares.size():
+						break
+					current_share = segment_shares[segment_index]
+				else:
+					word_segment += ("" if word_segment.is_empty() else " ") + next_word
+				ruby_words.remove_at(0)
+				segment_share = float(word_segment.length()) / float(ruby_string.length())
+			if not word_segment.is_empty():
+				if word_segments.size() >= segment_shares.size():
+					var last_segment : String = word_segments.back()
+					last_segment += word_segment
+					word_segments[word_segments.size() - 1] = last_segment
+				else:
+					word_segments.append(word_segment)
+		print(word_segments)
+		print(ruby_segment_indices)
+		# actually draw
+		ruby_index += 1
+		
+		
+		
+		
+	
 
 func trim_trimmables(text:String) -> String:
 	var begins_trimmable := _begins_with_trimmable(text)
@@ -1701,14 +1821,9 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	else:
 		return _get_actor_name(actor_name)
 
-#var _body_duplicate_line_height : int
+var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
 func set_body_label(new_body_label:RichTextLabel, keep_text := true):
-	_body_duplicate.theme = new_body_label.get_theme()
-	#_body_duplicate.visible_characters = 1
-	#if _body_duplicate_line_height == 0:
-		#_body_duplicate_line_height = _body_duplicate.get_content_height()
-	_body_duplicate.size = new_body_label.size
 	if new_body_label == body_label:
 		return
 	var switch_text:bool = body_label != new_body_label

@@ -248,7 +248,7 @@
 			"get_actor_names_in_line": {
 				"empty_if_not_text": true
 			},
-			"get_body_label_text_draw_rect": {
+			"get_body_label_text_draw_pos": {
 
 			},
 			"get_preferences": {
@@ -414,7 +414,7 @@
 				]
 			}
 		],
-		"id_counter": -9223372036854772241,
+		"id_counter": -9223372036854771561,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -1640,7 +1640,7 @@
 			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS)\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow] ",
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
-			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk and change my name<call:set_actor_config_property(name_display, amber, Swaglord 2000)> and my color <call:set_actor_config_property_color(color, amber, 1,0,0)>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<frgn:>sdf</frgn>",
+			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg>some text and change my name<call:set_actor_config_property(name_display, amber, Swaglord 2000)> and my color <call:set_actor_config_property_color(color, amber, 1,0,0)>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</ruby>, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<frgn:>sdf</frgn>",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,
