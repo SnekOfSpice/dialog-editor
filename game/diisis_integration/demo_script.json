@@ -414,7 +414,7 @@
 				]
 			}
 		],
-		"id_counter": -9223372036854771561,
+		"id_counter": -9223372036854770931,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -558,6 +558,56 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1753474289.815--9223372036854771691"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [
+							{
+								"data_type": 0,
+								"property_name": "property0",
+								"values": [
+									"value1",
+									null
+								]
+							}
+						],
+						"id": "1753474289.815--9223372036854771692",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.3",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
 							"meta.function_calls": [
 								"set_actor_config_property(name_display, amber, Swaglord 2000)",
 								"set_actor_config_property_color(color, amber, 1,0,0)"
@@ -588,14 +638,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 2,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.3",
+						"address": "0.4",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -638,14 +688,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 3,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.4",
+						"address": "0.5",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -665,7 +715,7 @@
 							"auto_switch": false,
 							"choices": [
 								{
-									"address": "0.4.0",
+									"address": "0.5.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -714,7 +764,7 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.4.1",
+									"address": "0.5.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -782,14 +832,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 4,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.5",
+						"address": "0.6",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -839,14 +889,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 5,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.6",
+						"address": "0.7",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -896,14 +946,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 6,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.7",
+						"address": "0.8",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -946,7 +996,7 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 7,
+						"meta.line_index": 8,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1641,6 +1691,7 @@
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
 			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg>some text and change my name<call:set_actor_config_property(name_display, amber, Swaglord 2000)> and my color <call:set_actor_config_property_color(color, amber, 1,0,0)>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</ruby>, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<frgn:>sdf</frgn>",
+			"1753474289.815--9223372036854771691": "[]>narrator: small <ruby:the ruby>with ruby</ruby>",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,

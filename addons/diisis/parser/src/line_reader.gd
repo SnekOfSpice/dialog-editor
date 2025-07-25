@@ -1524,9 +1524,17 @@ func _handle_tags_and_start_reading():
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
+
+var ruby_container : Control
 func _build_rubies() -> void:
+	body_label.clip_contents = false
+	if not ruby_container:
+		ruby_container = Control.new()
+		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ruby_container.focus_mode = Control.FOCUS_NONE
+		body_label.add_child(ruby_container)
 	print("=============")
-	for label : RichTextLabel in _ruby_labels:
+	for label : RubyLabel in _ruby_labels:
 		label.queue_free()
 	_ruby_labels.clear()
 	
@@ -1603,6 +1611,30 @@ func _build_rubies() -> void:
 		print(word_segments)
 		print(ruby_segment_indices)
 		# actually draw
+		
+		var segment_index := 0
+		while segment_index < ruby_segment_indices.size():
+			var indices : Vector2i = ruby_segment_indices[segment_index]
+			var ruby_label = RubyLabel.make(indices.x, indices.y, word_segments[segment_index])
+			ruby_label.name += "RUbyLabel"
+			ruby_container.add_child(ruby_label)
+			_ruby_labels.append(ruby_label)
+			ruby_container.global_position = body_label.global_position
+			print(get_body_label_text_draw_pos(indices.x))
+			# this is still broken
+			#ruby_label.position = () / 2
+			ruby_label.position = get_body_label_text_draw_pos(indices.x)
+			
+			var base_width : float = (get_body_label_text_draw_pos(indices.y) - get_body_label_text_draw_pos(indices.x)).x
+			var ruby_label_width : float = ruby_label.size.x
+			#ruby_label.position.x += (base_width - ruby_label_width) * 0.5
+			ruby_label.position.y -= _body_duplicate_line_height* (1 + 0.4) # TODO should become an exposed var thats a factor of font size or line height
+			
+			segment_index += 1
+		
+		
+		
+		
 		ruby_index += 1
 		
 		
@@ -1753,17 +1785,16 @@ func get_body_label_text_draw_pos(index:int) -> Vector2:
 	var height : int = _body_duplicate.get_content_height() 
 	
 	# get target line
-	_body_duplicate.visible_characters = -1
-	var target_line : int = body_label.get_character_line(index)
+	_body_duplicate.visible_characters = index
+	var target_line : int = _body_duplicate.get_character_line(index)
 	var target_line_range : Vector2i
-	for i in _body_duplicate.get_line_count():
-		var range = body_label.get_line_range(i)
+	for i in _body_duplicate.get_line_count() + 1:
+		var range = _body_duplicate.get_line_range(i)
 		if index >= range.x and index <= range.y:
 			target_line = i
 			target_line_range = range
 			break
 	
-	#print("line of ", index, " is ", target_line, target_line_range)
 	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x)
 	#print(trailing_line)
 	_body_duplicate.text = trailing_line
