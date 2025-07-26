@@ -119,7 +119,6 @@ choice_title_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceC
 choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_list = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
 body_label_function_funnel = Array[String](["Style.adjust_font_size_tags"])
-ruby_enabled = false
 ruby_stretch_across_base = true
 choice_button_keyboard_focus = false
 show_input_prompt = true
@@ -276,6 +275,8 @@ dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]
 [b][i]omg both[/i][/b]"
 fit_content = true
 scroll_active = false
+visible_characters = 67
+visible_ratio = 1.42553
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
 custom_minimum_size = Vector2(0, 16)
@@ -376,6 +377,8 @@ text = "Text Body Here
 dghfgh"
 fit_content = true
 scroll_active = false
+visible_characters = 67
+visible_ratio = 3.19048
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)
@@ -624,6 +627,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "dfhjbgfd"
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 42.0
+offset_right = 88.5625
+offset_bottom = 73.0
+
 [connection signal="request_object_visible" from="LineReader" to="Objects" method="set_object_visible"]
 [connection signal="splatter" from="LineReader" to="." method="splatter"]
 [connection signal="start_black_fade" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/BlackFade" method="_on_handler_start_black_fade"]
@@ -636,3 +652,4 @@ mouse_filter = 2
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer3/MarginContainer/VBoxContainer/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -6,7 +6,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ipyg5"]
 
-[node name="MarginContainer" type="PanelContainer"]
+[node name="RubyLabelRoot" type="PanelContainer"]
 clip_children = 1
 clip_contents = true
 theme_override_styles/panel = SubResource("StyleBoxEmpty_yg2co")

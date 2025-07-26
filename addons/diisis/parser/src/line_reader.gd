@@ -578,7 +578,7 @@ func _ready() -> void:
 	
 	_remaining_auto_pause_duration = auto_pause_duration
 	_body_duplicate = RichTextLabel.new()
-	_body_duplicate.visible = false
+	#_body_duplicate.visible = false
 	_body_duplicate.focus_mode = Control.FOCUS_NONE
 	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
@@ -665,7 +665,7 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
-	_full_prefix = ""
+	#_full_prefix = ""
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
@@ -954,9 +954,9 @@ func _get_prepend_separator_sequence() -> String:
 
 func _get_end_of_chunk_position() -> int:
 	if _pause_positions.size() == 0:
-		return body_label.text.length()
+		return body_label.get_parsed_text().length()
 	elif _pause_types[_next_pause_position_index] == _PauseTypes.EoL:
-		return body_label.text.length()
+		return body_label.get_parsed_text().length()
 	else:
 		return _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index# - prepend_offset
 
@@ -1570,6 +1570,10 @@ func ensure_ruby_container():
 		ruby_container.focus_mode = Control.FOCUS_NONE
 		body_label.add_child(ruby_container)
 
+func set_ruby_enabled(value:bool):
+	ruby_enabled = value
+	update_body_label()
+
 func _build_rubies() -> void:
 	body_label.clip_contents = false
 	ensure_ruby_container()
@@ -1584,7 +1588,7 @@ func _build_rubies() -> void:
 	var ruby_index := 0
 	for ruby_range : Vector2i in _ruby_indices:
 		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x)
-		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y - 1)
+		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y)
 		
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
@@ -1596,24 +1600,60 @@ func _build_rubies() -> void:
 		else:
 			# split over lines
 			
-			#var y_diff = end_draw_pos.y - start_draw_pos.y
-			#var segment_count : int = y_diff / _body_duplicate_line_height
-			#printt(y_diff, _body_duplicate_line_height, segment_count)
-			var current_segment_y : int = start_draw_pos.y
+			#var current_segment_y : int = start_draw_pos.y
 			var segment_start_index := ruby_range.x
-			for i in range(segment_start_index, ruby_range.y + 1):
-				var index_y = get_body_label_text_draw_pos(i).y
-				if index_y != current_segment_y: # finished segment
-					ruby_segment_indices.append(Vector2i(segment_start_index, i - 1))
-					segment_start_index = i
-					current_segment_y = index_y
+			#var space_pos := segment_start_index
+			#for i in range(segment_start_index, ruby_range.y + 1):
+				#space_pos = body_label.get_parsed_text().find(" ", space_pos)
+				#var index_y = get_body_label_text_draw_pos(space_pos).y
+				#if index_y > current_segment_y: # finished segment
+					#ruby_segment_indices.append(Vector2i(segment_start_index, space_pos - 1))
+					#segment_start_index = i
+					#current_segment_y = index_y
+					#print("finished segment at ", segment_start_index)
+				#space_pos = body_label.get_parsed_text().find(" ", space_pos + 1)
+			#if segment_start_index < ruby_range.y:
+				#ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y + 1))
+			_body_duplicate.text = body_label.text
+			var space_pos := segment_start_index
+			_body_duplicate.visible_characters = segment_start_index
+			var current_segment_draw_height : int = _body_duplicate.get_content_height()
+			var previeous_space_pos := segment_start_index
+			while space_pos != -1 and space_pos < ruby_range.y:
+				_body_duplicate.visible_characters = space_pos
+				var new_height := _body_duplicate.get_content_height()
+				if new_height > current_segment_draw_height:
+					ruby_segment_indices.append(Vector2i(segment_start_index, previeous_space_pos))
+					segment_start_index = space_pos
+					# end segment at current_segment_draw_height
+				current_segment_draw_height = new_height
+				previeous_space_pos = space_pos
+				space_pos = _body_duplicate.get_parsed_text().find(" ", space_pos + 1)
+			
+			#if segment_start_index != space_pos:
+				#var a: int
+				#if space_pos == -1:
+					#a = _body_duplicate.get_parsed_text().length()
+				#else:
+					#a = space_pos
+				#ruby_segment_indices.append(Vector2i(segment_start_index, a))
+			
+			#while false:# (space_pos != -1 and space_pos < ruby_range.y): # think this needs a second condition
+				#var index_draw_height = get_body_label_text_draw_pos(space_pos + 1).y
+				#if index_draw_height > current_segment_draw_height:
+					#ruby_segment_indices.append(Vector2i(segment_start_index, space_pos - 1))
+					#segment_start_index = space_pos + 1
+				#space_pos = _body_duplicate.get_parsed_text().find(" ", space_pos + 1)
 			if segment_start_index < ruby_range.y:
 				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y + 1))
+			prints("SEGMNTS", ruby_segment_indices)
 			# weigh the ruby across the segments
 			var ruby_incices_span_length : int = (ruby_range.y - ruby_range.x)
+			
+			
 			var segment_shares := []
 			for segment : Vector2i in ruby_segment_indices:
-				var segment_length := (segment.y - segment.x) + 1
+				var segment_length := (segment.y - segment.x)
 				segment_shares.append(float(segment_length) / float(ruby_incices_span_length))
 			print(segment_shares)
 			var ruby_words := ruby_string.split(" ")
@@ -1630,8 +1670,12 @@ func _build_rubies() -> void:
 				#word_segment += ruby_words[0]
 				
 				if float((next_word + word_segment).length()) / float(ruby_string.length()) >= current_share:
-					word_segments.append(word_segment)
-					word_segment = next_word
+					if word_segment.is_empty():
+						word_segments.append(next_word)
+						word_segment = ""
+					else:
+						word_segments.append(word_segment)
+						word_segment = next_word
 					#ruby_words.remove_at(0)
 					segment_index += 1
 					if segment_index >= segment_shares.size():
@@ -1648,16 +1692,18 @@ func _build_rubies() -> void:
 					word_segments[word_segments.size() - 1] = last_segment
 				else:
 					word_segments.append(word_segment)
-		print(word_segments)
-		print(ruby_segment_indices)
 		# actually draw
 		
 		var segment_index := 0
 		ruby_container.global_position = body_label.global_position
+		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			_build_ruby(indices, word_segments[segment_index])
+			if indices.x == last_index_end + 1:
+				print(word_segments[segment_index])
+			var ruby = _build_ruby(indices, word_segments[segment_index])
 			segment_index += 1
+			last_index_end = indices.y
 		
 		ruby_index += 1
 		
@@ -1677,6 +1723,7 @@ func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	ruby_label.set_height(_body_duplicate_line_height)
 	ruby_label.set_stretch(ruby_stretch_across_base)
 	if ruby_stretch_across_base:
+		print("drawing at ", draw_pos_x)
 		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
 	else:
 		var base_width : float = (draw_pos_y - draw_pos_x).x
@@ -1810,9 +1857,10 @@ func get_body_label_text_draw_pos(index:int) -> Vector2:
 	_body_duplicate.text = body_label.text
 	_body_duplicate.custom_minimum_size = body_label.custom_minimum_size
 	_body_duplicate.size = body_label.size
+	#_body_duplicate.threaded = true
 	
 	if index == 0:
-		_body_duplicate.visible_characters = -1
+		_body_duplicate.visible_characters = 1
 		return Vector2(0, _body_duplicate.get_content_height())
 	if index > body_label.get_parsed_text().length():
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
@@ -1836,13 +1884,15 @@ func get_body_label_text_draw_pos(index:int) -> Vector2:
 	var target_line_range : Vector2i
 	for i in _body_duplicate.get_line_count() + 1:
 		var range = _body_duplicate.get_line_range(i)
+		#prints("RANGE ", range, "for index", i)
 		if index >= range.x and index <= range.y:
 			target_line = i
 			target_line_range = range
 			break
-	
+	#prints("indices so far ", _ruby_indices) # maybe mangle this with some min expression idk
+	#prints("dfhjgbjfd", _body_duplicate.get_character_line(index- 2), _body_duplicate.get_character_line(index -1))
 	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x)
-	#print(trailing_line)
+	#prints("TRAIL for index ", index, trailing_line, "with range", target_line_range)
 	_body_duplicate.text = trailing_line
 	var width : int = _body_duplicate.get_content_width()
 	#print(line_start_index)

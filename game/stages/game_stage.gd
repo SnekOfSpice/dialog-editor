@@ -472,3 +472,11 @@ func set_static(level:float):
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
+
+
+func _on_button_pressed() -> void:
+	print($LineReader.get_body_label_text_draw_pos($SpinBox.value))
+	
+	for i in $LineReader.body_label.get_parsed_text().length():
+		$LineReader.body_label.visible_characters = i
+		printt(i, $LineReader.body_label.get_content_height())
