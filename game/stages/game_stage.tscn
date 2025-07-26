@@ -622,17 +622,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.483086, 0.0314963, 0.294632, 1)
-
-[node name="Label" type="Label" parent="ColorRect"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-
 [connection signal="request_object_visible" from="LineReader" to="Objects" method="set_object_visible"]
 [connection signal="splatter" from="LineReader" to="." method="splatter"]
 [connection signal="start_black_fade" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/BlackFade" method="_on_handler_start_black_fade"]

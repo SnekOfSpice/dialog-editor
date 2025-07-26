@@ -195,6 +195,17 @@ var choice_list:Control:
 ## [/codeblock]
 @export var body_label_function_funnel : Array[String]
 @export var body_label_tint_lines := false
+@export_subgroup("Rubies", "ruby_")
+var ruby_container : Control
+## Font size factor for rubies, relative to the normal font size of [member body_label].
+@export_range(0.1, 1, 0.01) var ruby_scale := 0.8
+## If enalbed (default), generates rubies from [code]<ruby:>[/code] tags.
+## Since rubies are commonly used by learners of a language and/or for uncommon words, disabling this setting
+## can be used for a more challenging reading experience without removing the tags
+## from the DIISIS script.
+@export var ruby_enabled := true
+## [Font] override for rubies. If empty, uses the normal font of [member body_label].
+@export var ruby_font_override : Font
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -366,7 +377,6 @@ var _reverse_next_instruction := false
 var _subaddresses_in_history := []
 
 var _body_duplicate : RichTextLabel
-var _body_duplicate_last_line : TextEdit
 
 signal line_reader_ready
 
@@ -415,6 +425,12 @@ func serialize() -> Dictionary:
 	result["pause_types"] = _pause_types
 	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
 	result["remaining_auto_pause_duration"] = _remaining_auto_pause_duration 
+	#var rubies := []
+	#for label : RubyLabel in _ruby_labels:
+		#rubies.append(label.serialize())
+	#result["rubies"] = rubies
+	result["_ruby_strings"] = _ruby_strings
+	result["_ruby_indices"] = _ruby_indices
 	result["showing_text"] = _showing_text 
 	result["_subaddresses_in_history"] = _subaddresses_in_history 
 	result["terminated"] = terminated
@@ -461,6 +477,8 @@ func deserialize(data: Dictionary):
 	_pause_types = data.get("pause_types")
 	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", preserve_name_in_past_lines)
 	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
+	_ruby_strings = data.get("_ruby_strings")
+	_ruby_indices = strarr_to_vec2iarr(data.get("_ruby_indices"))
 	_showing_text = data.get("showing_text")
 	_subaddresses_in_history = data.get("_subaddresses_in_history")
 	terminated = data.get("terminated")
@@ -488,6 +506,14 @@ func deserialize(data: Dictionary):
 	
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
 	_set_body_label_text(data.get("body_label.text", ""))
+	
+	if ruby_enabled:
+		_build_rubies()
+	#_ruby_labels.clear()
+	#for ruby : Dictionary in data.get("rubies", []):
+		#var label = _build_ruby(Vector2i(ruby.get("start_index"), ruby.get("end_index")))
+		#label.deserialize(ruby)
+		#_ruby_labels.append(label)
 
 ## typed dictionaries don't survive saving to json so we need this
 func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
@@ -495,6 +521,16 @@ func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
 	target.clear()
 	for key in map.keys():
 		target[key] = map.get(key)
+
+func strarr_to_vec2iarr(strings:Array) -> Array:
+	var result := []
+	
+	for vec : String in strings:
+		vec = vec.trim_prefix("(").trim_suffix(")")
+		var parts := vec.split(",")
+		result.append(Vector2i(int(parts[0]), int(parts[1])))
+	
+	return result
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -546,6 +582,7 @@ func _ready() -> void:
 	
 	_remaining_auto_pause_duration = auto_pause_duration
 	_body_duplicate = RichTextLabel.new()
+	_body_duplicate.visible = false
 	_body_duplicate.focus_mode = Control.FOCUS_NONE
 	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
@@ -1027,6 +1064,8 @@ func _process(delta: float) -> void:
 			_find_next_pause()
 			_remaining_auto_pause_duration = auto_pause_duration
 	
+	for label : RubyLabel in _ruby_labels:
+		label.handle_parent_visible_characters(body_label.visible_characters)
 	
 	var new_characters_visible_so_far = body_label.text.substr(0, body_label.visible_characters)
 	var new_characters : String = new_characters_visible_so_far.trim_prefix(_characters_visible_so_far)
@@ -1388,6 +1427,7 @@ func _handle_tags_and_start_reading():
 		var scan_index_calls := scan_index
 		var comments_at_index : Array = _comments.get(scan_index, [])
 		var previous_tag_buffer := tag_buffer
+		var tag_buffer_gained := 0
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
@@ -1435,6 +1475,7 @@ func _handle_tags_and_start_reading():
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
 				var tag_end := bbcode_removed_text.find("</ruby>", scan_index)
 				var end_length := "</ruby>".length()
+				tag_buffer_gained -= end_length
 				if scan_index + tag_length == tag_end:
 					push_warning("Ruby %s has no base text" % tag_string)
 				elif tag_string.contains("<ruby:>"):
@@ -1443,11 +1484,12 @@ func _handle_tags_and_start_reading():
 					_ruby_strings.append(tag_string.trim_prefix("<ruby:").trim_suffix(">"))
 					_ruby_indices.append(Vector2i(scan_index, tag_end)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
-				bbcode_removed_text = bbcode_removed_text.erase(tag_end, end_length)
+				# for some reason this erasure doesn't register here already so we have to leftshift the end tag erasure manually by the tag length
+				bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
 				target_length -= tag_string.length() + end_length
 				tag_buffer += tag_string.length() + end_length
 			
-			var tag_buffer_gained := tag_buffer - previous_tag_buffer
+			tag_buffer_gained += tag_buffer - previous_tag_buffer
 			# shift all ruby tags above the scan index down
 			var k := 0
 			while k < _ruby_indices.size():
@@ -1520,19 +1562,21 @@ func _handle_tags_and_start_reading():
 	
 	var old_text = body_label.text
 	_set_body_label_text(cleaned_text)
-	_build_rubies()
+	if ruby_enabled:
+		_build_rubies()
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
-
-var ruby_container : Control
-func _build_rubies() -> void:
-	body_label.clip_contents = false
+func ensure_ruby_container():
 	if not ruby_container:
 		ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_container.focus_mode = Control.FOCUS_NONE
 		body_label.add_child(ruby_container)
+
+func _build_rubies() -> void:
+	body_label.clip_contents = false
+	ensure_ruby_container()
 	print("=============")
 	for label : RubyLabel in _ruby_labels:
 		label.queue_free()
@@ -1544,7 +1588,7 @@ func _build_rubies() -> void:
 	var ruby_index := 0
 	for ruby_range : Vector2i in _ruby_indices:
 		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x)
-		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y)
+		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y - 1)
 		
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
@@ -1568,12 +1612,12 @@ func _build_rubies() -> void:
 					segment_start_index = i
 					current_segment_y = index_y
 			if segment_start_index < ruby_range.y:
-				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y))
+				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y + 1))
 			# weigh the ruby across the segments
-			var ruby_incices_span_length : int = ruby_range.y - ruby_range.x
+			var ruby_incices_span_length : int = (ruby_range.y - ruby_range.x)
 			var segment_shares := []
 			for segment : Vector2i in ruby_segment_indices:
-				var segment_length := segment.y - segment.x
+				var segment_length := (segment.y - segment.x) + 1
 				segment_shares.append(float(segment_length) / float(ruby_incices_span_length))
 			print(segment_shares)
 			var ruby_words := ruby_string.split(" ")
@@ -1613,34 +1657,35 @@ func _build_rubies() -> void:
 		# actually draw
 		
 		var segment_index := 0
+		ruby_container.global_position = body_label.global_position
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			var ruby_label = RubyLabel.make(indices.x, indices.y, word_segments[segment_index])
-			ruby_label.name += "RUbyLabel"
-			ruby_container.add_child(ruby_label)
-			_ruby_labels.append(ruby_label)
-			ruby_container.global_position = body_label.global_position
-			print(get_body_label_text_draw_pos(indices.x))
-			# this is still broken
-			#ruby_label.position = () / 2
-			ruby_label.position = get_body_label_text_draw_pos(indices.x)
-			
-			var base_width : float = (get_body_label_text_draw_pos(indices.y) - get_body_label_text_draw_pos(indices.x)).x
-			var ruby_label_width : float = ruby_label.size.x
-			#ruby_label.position.x += (base_width - ruby_label_width) * 0.5
-			ruby_label.position.y -= _body_duplicate_line_height* (1 + 0.4) # TODO should become an exposed var thats a factor of font size or line height
-			
+			_build_ruby(indices, word_segments[segment_index])
 			segment_index += 1
-		
-		
-		
 		
 		ruby_index += 1
 		
-		
-		
-		
+
+func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
+	ensure_ruby_container()
+	var ruby_label = RubyLabel.make(indices.x, indices.y, text)
+	if ruby_font_override:
+		ruby_label.add_theme_font_override("normal_font", ruby_font_override)
+	ruby_label.add_theme_font_size_override("normal_font_size", float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
+	ruby_container.add_child(ruby_label)
+	_ruby_labels.append(ruby_label)
 	
+	#print(get_body_label_text_draw_pos(indices.x))
+	# this is still broken
+	#ruby_label.position = (get_body_label_text_draw_pos(indices.x) + get_body_label_text_draw_pos(indices.y)) * 0.5
+	ruby_label.position = get_body_label_text_draw_pos(indices.x)
+	
+	var base_width : float = (get_body_label_text_draw_pos(indices.y) - get_body_label_text_draw_pos(indices.x)).x
+	var ruby_label_width : float = ruby_label.size.x
+	ruby_label.position.x += (base_width - ruby_label_width) * 0.5
+	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale)) # TODO should become an exposed var thats a factor of font size or line height
+	
+	return ruby_label
 
 func trim_trimmables(text:String) -> String:
 	var begins_trimmable := _begins_with_trimmable(text)
@@ -1768,7 +1813,7 @@ func get_body_label_text_draw_pos(index:int) -> Vector2:
 	if index == 0:
 		_body_duplicate.visible_characters = -1
 		return Vector2(0, _body_duplicate.get_content_height())
-	if index >= body_label.get_parsed_text().length():
+	if index > body_label.get_parsed_text().length():
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
 		return Vector2.ZERO
 	#prints("got index ", index, "got lenfth ", _body_duplicate.text.length())
@@ -1805,38 +1850,38 @@ func get_body_label_text_draw_pos(index:int) -> Vector2:
 	
 	
 	return Vector2(width, height)
-	var label_height := _body_duplicate.get_content_height()
-	_body_duplicate.text = _body_duplicate.text.left(index)
-	# get last line for width
-	_body_duplicate_last_line.text = _body_duplicate_last_line.text.left(index)
-	var i := target_line
-	while i > 0:
-		_body_duplicate_last_line.remove_line_at(0)
-		i -= 1
-	print(_body_duplicate_last_line.text)
-	body_label.get_theme_stylebox("normal", "RichTextLabel")
-	# get the one line
-	# create another label with just that line
-	#_body_duplicate.text = target_line
-	#var width = _body_duplicate.get_content_width()
-	
-	
-	#return Vector2(width, _body_duplicate_line_height * target_line)
-	# give it shrink left align
-	# get its size
-	#while current_line < target_line:
-		#line_sum += body_label.get_colum
-	##while line_sum < index:
-		##body_label.get_character_line()
-		##var line_sum_to_be = line_sum + _body_duplicate.get_line(current_line).length()
-		##if index >= line_sum and index <= line_sum_to_be:
-			##break
-		##line_sum = line_sum_to_be
-		##current_line += 1
-	#_body_duplicate.get_character_line()
-	#var column := index - line_sum
-	#printt(current_line, column)
-	#var dup_rect := _body_duplicate.get_rect_at_line_column(current_line, column)
+	#var label_height := _body_duplicate.get_content_height()
+	#_body_duplicate.text = _body_duplicate.text.left(index)
+	## get last line for width
+	#_body_duplicate_last_line.text = _body_duplicate_last_line.text.left(index)
+	#var i := target_line
+	#while i > 0:
+		#_body_duplicate_last_line.remove_line_at(0)
+		#i -= 1
+	#print(_body_duplicate_last_line.text)
+	#body_label.get_theme_stylebox("normal", "RichTextLabel")
+	## get the one line
+	## create another label with just that line
+	##_body_duplicate.text = target_line
+	##var width = _body_duplicate.get_content_width()
+	#
+	#
+	##return Vector2(width, _body_duplicate_line_height * target_line)
+	## give it shrink left align
+	## get its size
+	##while current_line < target_line:
+		##line_sum += body_label.get_colum
+	###while line_sum < index:
+		###body_label.get_character_line()
+		###var line_sum_to_be = line_sum + _body_duplicate.get_line(current_line).length()
+		###if index >= line_sum and index <= line_sum_to_be:
+			###break
+		###line_sum = line_sum_to_be
+		###current_line += 1
+	##_body_duplicate.get_character_line()
+	##var column := index - line_sum
+	##printt(current_line, column)
+	##var dup_rect := _body_duplicate.get_rect_at_line_column(current_line, column)
 	#dup_rect.position += Vector2i(body_label.position)
 	#return dup_rect
 
