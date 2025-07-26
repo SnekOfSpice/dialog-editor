@@ -206,6 +206,7 @@ var ruby_container : Control
 @export var ruby_enabled := true
 ## [Font] override for rubies. If empty, uses the normal font of [member body_label].
 @export var ruby_font_override : Font
+@export var ruby_stretch_across_base := false
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -509,11 +510,6 @@ func deserialize(data: Dictionary):
 	
 	if ruby_enabled:
 		_build_rubies()
-	#_ruby_labels.clear()
-	#for ruby : Dictionary in data.get("rubies", []):
-		#var label = _build_ruby(Vector2i(ruby.get("start_index"), ruby.get("end_index")))
-		#label.deserialize(ruby)
-		#_ruby_labels.append(label)
 
 ## typed dictionaries don't survive saving to json so we need this
 func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
@@ -1670,19 +1666,24 @@ func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	ensure_ruby_container()
 	var ruby_label = RubyLabel.make(indices.x, indices.y, text)
 	if ruby_font_override:
-		ruby_label.add_theme_font_override("normal_font", ruby_font_override)
-	ruby_label.add_theme_font_size_override("normal_font_size", float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
+		ruby_label.set_font(ruby_font_override)
+	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
 	ruby_container.add_child(ruby_label)
 	_ruby_labels.append(ruby_label)
 	
-	#print(get_body_label_text_draw_pos(indices.x))
-	# this is still broken
-	#ruby_label.position = (get_body_label_text_draw_pos(indices.x) + get_body_label_text_draw_pos(indices.y)) * 0.5
-	ruby_label.position = get_body_label_text_draw_pos(indices.x)
+	var draw_pos_x := get_body_label_text_draw_pos(indices.x)
+	var draw_pos_y := get_body_label_text_draw_pos(indices.y)
+	ruby_label.position = draw_pos_x
+	ruby_label.set_height(_body_duplicate_line_height)
+	ruby_label.set_stretch(ruby_stretch_across_base)
+	if ruby_stretch_across_base:
+		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
+	else:
+		var base_width : float = (draw_pos_y - draw_pos_x).x
+		var ruby_label_width : float = ruby_label.size.x
+		ruby_label.position.x += (base_width - ruby_label_width) * 0.5
 	
-	var base_width : float = (get_body_label_text_draw_pos(indices.y) - get_body_label_text_draw_pos(indices.x)).x
-	var ruby_label_width : float = ruby_label.size.x
-	ruby_label.position.x += (base_width - ruby_label_width) * 0.5
+	
 	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale)) # TODO should become an exposed var thats a factor of font size or line height
 	
 	return ruby_label

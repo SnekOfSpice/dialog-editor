@@ -41,7 +41,7 @@ func update_load_button():
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		if GameWorld.stage_root.get_node("ScreenContainer").get_child_count() == 0:
+		if GameWorld.stage_root.find_child("ScreenContainer").get_child_count() == 0:
 			GameWorld.stage_root.set_screen("")
 		else:
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
