@@ -508,8 +508,7 @@ func deserialize(data: Dictionary):
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
 	_set_body_label_text(data.get("body_label.text", ""))
 	
-	if ruby_enabled:
-		_build_rubies()
+	_build_rubies()
 
 ## typed dictionaries don't survive saving to json so we need this
 func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
@@ -1558,8 +1557,7 @@ func _handle_tags_and_start_reading():
 	
 	var old_text = body_label.text
 	_set_body_label_text(cleaned_text)
-	if ruby_enabled:
-		_build_rubies()
+	_build_rubies()
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
@@ -1575,6 +1573,8 @@ func set_ruby_enabled(value:bool):
 	update_body_label()
 
 func _build_rubies() -> void:
+	if not ruby_enabled:
+		return
 	body_label.clip_contents = false
 	ensure_ruby_container()
 	print("=============")
@@ -1650,9 +1650,16 @@ func _build_rubies() -> void:
 			# weigh the ruby across the segments
 			var ruby_incices_span_length : int = (ruby_range.y - ruby_range.x)
 			
+			# things are so broken atp but who cares
+			
+			#for i in range(1, ruby_segment_indices.size()):
+				#ruby_segment_indices[i] = Vector2i(ruby_segment_indices[i - 1].y + 1, ruby_segment_indices[i].y)
 			
 			var segment_shares := []
-			for segment : Vector2i in ruby_segment_indices:
+			for i in ruby_segment_indices.size():
+				var segment : Vector2i = ruby_segment_indices[i]
+				if i > 0:
+					segment.x = ruby_segment_indices[i - 1].y + 1
 				var segment_length := (segment.y - segment.x)
 				segment_shares.append(float(segment_length) / float(ruby_incices_span_length))
 			print(segment_shares)
@@ -1688,7 +1695,7 @@ func _build_rubies() -> void:
 			if not word_segment.is_empty():
 				if word_segments.size() >= segment_shares.size():
 					var last_segment : String = word_segments.back()
-					last_segment += word_segment
+					last_segment += " " + word_segment
 					word_segments[word_segments.size() - 1] = last_segment
 				else:
 					word_segments.append(word_segment)
@@ -1702,8 +1709,16 @@ func _build_rubies() -> void:
 			if indices.x == last_index_end + 1:
 				print(word_segments[segment_index])
 			var ruby = _build_ruby(indices, word_segments[segment_index])
+			ruby.segment_index = segment_index
 			segment_index += 1
 			last_index_end = indices.y
+		
+		if ruby_stretch_across_base:
+			for label : RubyLabel in _ruby_labels:
+				if label.segment_index != 0:
+					var offset = label.position.x
+					label.position.x = 0
+					label.set_minimum_width(label.get_minimum_width() + offset)
 		
 		ruby_index += 1
 		
@@ -1723,15 +1738,15 @@ func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	ruby_label.set_height(_body_duplicate_line_height)
 	ruby_label.set_stretch(ruby_stretch_across_base)
 	if ruby_stretch_across_base:
-		print("drawing at ", draw_pos_x)
+		#print("drawing at ", draw_pos_x)
 		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
 	else:
 		var base_width : float = (draw_pos_y - draw_pos_x).x
-		var ruby_label_width : float = ruby_label.size.x
+		var ruby_label_width : float = ruby_label.get_size().x
 		ruby_label.position.x += (base_width - ruby_label_width) * 0.5
 	
 	
-	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale)) # TODO should become an exposed var thats a factor of font size or line height
+	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale))
 	
 	return ruby_label
 

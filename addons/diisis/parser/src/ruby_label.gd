@@ -3,6 +3,9 @@ class_name RubyLabel
 
 var start_index : int
 var end_index : int
+var segment_index := 0
+
+
 
 func _ready() -> void:
 	%RubyLabel.visible_characters = 0
@@ -49,14 +52,20 @@ func deserialize(data:Dictionary):
 var stretch := false
 func set_stretch(value:bool):
 	stretch = value
+	clip_contents = stretch
 	if stretch:
 		%RubyLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_FILL
 		%RubyLabel.visible_ratio = 1
 	else:
 		%RubyLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 
+func get_size() -> Vector2:
+	return %RubyLabel.size
+
 func set_minimum_width(width:int):
 	%RubyLabel.custom_minimum_size.x = width
+func get_minimum_width() -> int:
+	return %RubyLabel.custom_minimum_size.x
 
 func set_height(height:int):
 	custom_minimum_size.y = height

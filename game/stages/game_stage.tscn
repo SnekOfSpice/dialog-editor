@@ -275,8 +275,6 @@ dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]
 [b][i]omg both[/i][/b]"
 fit_content = true
 scroll_active = false
-visible_characters = 67
-visible_ratio = 1.42553
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
 custom_minimum_size = Vector2(0, 16)
@@ -377,8 +375,6 @@ text = "Text Body Here
 dghfgh"
 fit_content = true
 scroll_active = false
-visible_characters = 67
-visible_ratio = 3.19048
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)
