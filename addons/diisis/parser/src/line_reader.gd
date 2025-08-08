@@ -196,16 +196,11 @@ var choice_list:Container:
 var _auto_advance := false
 var _last_raw_name := ""
 @export_subgroup("Rubies", "ruby_")
-var ruby_container : Control
-## Font size factor for rubies, relative to the normal font size of [member body_label].
-@export_range(0.1, 1, 0.01) var ruby_scale := 0.8
 ## If enalbed (default), generates rubies from [code]<ruby:>[/code] tags.
 ## Since rubies are commonly used by learners of a language and/or for uncommon words, disabling this setting
 ## can be used for a more challenging reading experience without removing the tags
 ## from the DIISIS script.
 @export var ruby_enabled := true
-## [Font] override for rubies. If empty, uses the normal font of [member body_label].
-@export var ruby_font_override : Font
 enum RubySizeMode {
 	## Centers the ruby above its base line.
 	Center,
@@ -215,6 +210,10 @@ enum RubySizeMode {
 	Stretch,
 }
 @export var ruby_size_mode : RubySizeMode = RubySizeMode.Center
+## Font size factor for rubies, relative to the normal font size of [member body_label].
+@export_range(0.1, 1, 0.01) var ruby_scale := 0.8
+## [Font] override for rubies. If empty, uses the normal font of [member body_label].
+@export var ruby_font_override : Font
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -1568,37 +1567,41 @@ func _handle_tags_and_start_reading():
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
-func ensure_ruby_container():
-	if not ruby_container:
-		ruby_container = Control.new()
+func ensure_ruby_container(on_label:=body_label):
+	if not ruby_containers_by_label.get(on_label):
+		var ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_container.focus_mode = Control.FOCUS_NONE
-		body_label.add_child(ruby_container)
+		on_label.add_child(ruby_container)
+		ruby_containers_by_label[on_label] = ruby_container
 
 func set_ruby_enabled(value:bool):
 	ruby_enabled = value
 	update_body_label()
 
-func _build_rubies() -> void:
+var ruby_containers_by_label := {}
+func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _ruby_indices, ruby_strings : Array = _ruby_strings) -> void:
 	if not ruby_enabled:
 		return
-	body_label.clip_contents = false
-	ensure_ruby_container()
-	for label : RubyLabel in _ruby_labels:
-		label.queue_free()
-	_ruby_labels.clear()
+	on_label.clip_contents = false
+	ensure_ruby_container(on_label)
+	ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
+	if on_label == body_label:
+		for label : RubyLabel in _ruby_labels:
+			label.queue_free()
+		_ruby_labels.clear()
 	
 	_body_duplicate.visible_characters = 1
 	_body_duplicate_line_height = _body_duplicate.get_content_height()
 	
 	var ruby_index := 0
-	for ruby_range : Vector2i in _ruby_indices:
-		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x)
-		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y)
+	for ruby_range : Vector2i in ruby_indices:
+		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x, on_label)
+		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y, on_label)
 		
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
-		var ruby_string : String = _ruby_strings[ruby_index]
+		var ruby_string : String = ruby_strings[ruby_index]
 		if start_draw_pos.y == end_draw_pos.y:
 			ruby_segment_indices.append(ruby_range)
 			word_segments.append(ruby_string)
@@ -1606,7 +1609,7 @@ func _build_rubies() -> void:
 			# split over lines
 			
 			var segment_start_index := ruby_range.x
-			_body_duplicate.text = body_label.text
+			_body_duplicate.text = on_label.text
 			var space_pos := segment_start_index
 			_body_duplicate.visible_characters = segment_start_index
 			var current_segment_draw_height : int = _body_duplicate.get_content_height()
@@ -1672,13 +1675,13 @@ func _build_rubies() -> void:
 		
 		# actually draw
 		var segment_index := 0
-		ruby_container.global_position = body_label.global_position
+		ruby_containers_by_label.get(on_label).global_position = on_label.global_position
 		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
 			if indices.x == last_index_end + 1:
 				print(word_segments[segment_index])
-			var ruby = _build_ruby(indices, word_segments[segment_index])
+			var ruby = _build_ruby(on_label, indices, word_segments[segment_index])
 			ruby.segment_index = segment_index
 			segment_index += 1
 			last_index_end = indices.y
@@ -1704,17 +1707,18 @@ func _is_ruby_stretch(ruby_text:String) -> bool:
 			return true
 	return true
 
-func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
-	ensure_ruby_container()
+func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> RubyLabel:
+	ensure_ruby_container(on_label)
 	var ruby_label = RubyLabel.make(indices.x, indices.y, text)
 	if ruby_font_override:
 		ruby_label.set_font(ruby_font_override)
 	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
-	ruby_container.add_child(ruby_label)
-	_ruby_labels.append(ruby_label)
+	ruby_containers_by_label.get(on_label).add_child(ruby_label)
+	if on_label == body_label:
+		_ruby_labels.append(ruby_label)
 	
-	var draw_pos_x := get_body_label_text_draw_pos(indices.x)
-	var draw_pos_y := get_body_label_text_draw_pos(indices.y)
+	var draw_pos_x := get_body_label_text_draw_pos(indices.x, on_label)
+	var draw_pos_y := get_body_label_text_draw_pos(indices.y, on_label)
 	ruby_label.position = draw_pos_x
 	ruby_label.set_height(_body_duplicate_line_height)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
@@ -1728,6 +1732,9 @@ func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	
 	
 	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale))
+	
+	if on_label != body_label:
+		ruby_label.set_visible_ratio(1)
 	
 	return ruby_label
 
@@ -1798,6 +1805,7 @@ func _emit_comment(comment_position:int):
 func preserve_into_past_line_container():
 	if not keep_past_lines:
 		return
+	
 	if max_past_lines > -1:
 		var child_count := past_lines_container.get_child_count()
 		while child_count >= max_past_lines:
@@ -1835,15 +1843,16 @@ func preserve_into_past_line_container():
 	past_line.clip_children = CanvasItem.CLIP_CHILDREN_DISABLED
 	past_lines_container.add_child(past_line)
 	
-	if ruby_enabled and ruby_container:
-		var duplicate = ruby_container.duplicate()
-		past_line.add_child(duplicate)#.reparent(past_line, false)
-		
-		var color = ColorRect.new()
-		past_line.add_child(color)
-		color.custom_minimum_size = Vector2(100, 100)
-		color.color = Color("ff9911B3")
-
+	var indices := _ruby_indices
+	if name_style == NameStyle.NameLabel and preserve_name_in_past_lines and not _last_raw_name in blank_names:
+		var prefix = str(_get_actor_name(_last_raw_name), _get_prepend_separator_sequence())
+		var length := prefix.length()
+		var a := []
+		for pair : Vector2i in indices:
+			a.append(pair + Vector2i(length, length))
+		indices = a
+	
+	_build_rubies(past_line, indices)
 
 func _set_body_label_text(text: String):
 	if body_label:
@@ -1856,18 +1865,18 @@ func _set_body_label_text(text: String):
 	
 	_last_raw_name = current_raw_name
 
-func get_body_label_text_draw_pos(index:int) -> Vector2:
-	_body_duplicate.add_theme_font_override("normal_font", body_label.get_theme_font("normal_font", "RichTextLabel"))
-	_body_duplicate.add_theme_font_size_override("normal_font_size", body_label.get_theme_font_size("normal_font_size", "RichTextLabel"))
-	_body_duplicate.add_theme_stylebox_override("normal", body_label.get_theme_stylebox("normal", "RichTextLabel"))
-	_body_duplicate.text = body_label.text
-	_body_duplicate.custom_minimum_size = body_label.custom_minimum_size
-	_body_duplicate.size = body_label.size
+func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
+	_body_duplicate.add_theme_font_override("normal_font", on_label.get_theme_font("normal_font", "RichTextLabel"))
+	_body_duplicate.add_theme_font_size_override("normal_font_size", on_label.get_theme_font_size("normal_font_size", "RichTextLabel"))
+	_body_duplicate.add_theme_stylebox_override("normal", on_label.get_theme_stylebox("normal", "RichTextLabel"))
+	_body_duplicate.text = on_label.text
+	_body_duplicate.custom_minimum_size = on_label.custom_minimum_size
+	_body_duplicate.size = on_label.size
 	
 	if index == 0:
 		_body_duplicate.visible_characters = 1
 		return Vector2(0, _body_duplicate.get_content_height())
-	if index > body_label.get_parsed_text().length():
+	if index > on_label.get_parsed_text().length():
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
 		return Vector2.ZERO
 	

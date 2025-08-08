@@ -30,6 +30,9 @@ func handle_parent_visible_characters(index:int):
 	else:
 		%RubyLabel.visible_ratio = ratio
 
+## only needed by past lines
+func set_visible_ratio(ratio:float):
+	%RubyLabel.visible_ratio = ratio
 
 func serialize() -> Dictionary:
 	return {

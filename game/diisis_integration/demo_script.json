@@ -241,7 +241,7 @@
 				"new_name_style": null
 			},
 			"ensure_ruby_container": {
-
+				"on_label": null
 			},
 			"evaluate_conditionals": {
 				"enabled_as_default": true
@@ -259,7 +259,7 @@
 				"empty_if_not_text": true
 			},
 			"get_body_label_text_draw_pos": {
-
+				"on_label": null
 			},
 			"get_preferences": {
 
@@ -424,7 +424,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854763025,
+		"id_counter": -9223372036854761653,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -479,7 +479,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
@@ -525,7 +525,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
@@ -534,6 +534,47 @@
 					},
 					{
 						"address": "0.2",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1753474289.815--9223372036854771691"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"id": "1753474289.815--9223372036854771692",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": true,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.3",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -567,47 +608,6 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2,
-						"meta.selector": {
-							"selected": false
-						},
-						"skip": false
-					},
-					{
-						"address": "0.3",
-						"conditionals": {
-							"behavior": 0,
-							"behavior_key": "Show",
-							"facts": {
-								"fact_data_by_name": {
-
-								},
-								"meta.visible": false
-							},
-							"meta.controls_collapsed": true,
-							"meta.visible": false,
-							"operand": 0,
-							"operand_args": [],
-							"operand_key": "AND"
-						},
-						"content": {
-							"meta.locked": false,
-							"meta.validation_status": "OK",
-							"text_id": "1753474289.815--9223372036854771691"
-						},
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"header": [],
-						"id": "1753474289.815--9223372036854771692",
-						"line_type": 0,
-						"meta.conditionals_visible": false,
-						"meta.facts_visible": false,
-						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
 						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
@@ -648,7 +648,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
@@ -689,7 +689,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
@@ -824,7 +824,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
@@ -872,7 +872,7 @@
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
@@ -920,7 +920,7 @@
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 8,
 						"meta.selector": {
 							"selected": false
@@ -961,7 +961,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 9,
 						"meta.selector": {
 							"selected": false
@@ -1555,8 +1555,9 @@
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
 			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg uwu uwu it's so scary>some text and change my name and my color Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et </ruby>dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-			"1753474289.815--9223372036854771691": "[]>narrator:Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
+			"1753474289.815--9223372036854771691": "[]>narrator:<ts_rel:0.1>Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
 			"1754645614.175--9223372036854764369": "[]>amber{target|1}: awa\n[]>narrator{target|2}: narration\n[]>amber{target|2}: awa2\n[]>eterna{target|2}: sdfsdf\n[]>eterna{target|1}: dfgdgffghdgh",
+			"1754666419.567--9223372036854761883": "[]>amber: dfgdfhfg\n[]>amber: <ts_rel:0.1>fhjbgjdffghfghfghghjghhjk",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,
