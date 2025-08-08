@@ -447,6 +447,8 @@ func serialize() -> Dictionary:
 	result["text_speed_by_character_index"] = _text_speed_by_character_index
 	if persist_ui_visibilities:
 		result["ui_visibilities"] = get_ui_visibilities()
+	if body_label:
+		result["visible_characters"] = body_label.visible_characters
 	
 	return result
 
@@ -517,6 +519,9 @@ func deserialize(data: Dictionary):
 	_set_body_label_text(data.get("body_label.text", ""))
 	
 	_build_rubies()
+	
+	if body_label:
+		body_label.visible_characters = data.get("visible_characters")
 
 ## typed dictionaries don't survive saving to json so we need this
 func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
