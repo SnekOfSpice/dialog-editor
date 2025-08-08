@@ -97,7 +97,7 @@ var _last_raw_name := ""
 @export var name_style : NameStyle = NameStyle.NameLabel
 var _prepend_length := 0
 
-@export_group("Text References")
+@export_group("Text Nodes")
 ## A [Label] or [RichTextLabel] that displays a currently speaking character's name.
 @export
 var name_label: Control:
@@ -135,7 +135,7 @@ var name_container: Control:
 			update_configuration_warnings()
 
 
-@export_group("Choice References", "choice_")
+@export_group("Choice Nodes", "choice_")
 ## [Label] used to display the choice title. Invisible if the choice title is empty. Not setting it will result in the choice title not being shown.
 @export var choice_title_label: Label
 ## The Control holding [member choice_list].[br][br]
@@ -149,7 +149,7 @@ var name_container: Control:
 			update_configuration_warnings()
 @export
 ## Container to which all choices get parented.
-var choice_list:Control:
+var choice_list:Container:
 	get:
 		return choice_list
 	set(value):
@@ -206,7 +206,15 @@ var ruby_container : Control
 @export var ruby_enabled := true
 ## [Font] override for rubies. If empty, uses the normal font of [member body_label].
 @export var ruby_font_override : Font
-@export var ruby_stretch_across_base := false
+enum RubySizeMode {
+	## Centers the ruby above its base line.
+	Center,
+	## Centers the ruby above its base line if it contains no spaces. Otherwise, stretches it across the entire base line.
+	SingleWordCenter,
+	## Stretches the ruby across the entire base line, left-adjusted.
+	Stretch,
+}
+@export var ruby_size_mode : RubySizeMode = RubySizeMode.Center
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -577,7 +585,7 @@ func _ready() -> void:
 	
 	_remaining_auto_pause_duration = auto_pause_duration
 	_body_duplicate = RichTextLabel.new()
-	#_body_duplicate.visible = false
+	_body_duplicate.visible = false
 	_body_duplicate.focus_mode = Control.FOCUS_NONE
 	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
@@ -1678,15 +1686,26 @@ func _build_rubies() -> void:
 			segment_index += 1
 			last_index_end = indices.y
 		
-		if ruby_stretch_across_base:
-			for label : RubyLabel in _ruby_labels:
-				if label.segment_index != 0:
-					var offset = label.position.x
-					label.position.x = 0
-					label.set_minimum_width(label.get_minimum_width() + offset)
+		
+		for label : RubyLabel in _ruby_labels:
+			if not _is_ruby_stretch(label.get_text()):
+				continue
+			if label.segment_index != 0:
+				var offset = label.position.x
+				label.position.x = 0
+				label.set_minimum_width(label.get_minimum_width() + offset)
 		
 		ruby_index += 1
-		
+
+func _is_ruby_stretch(ruby_text:String) -> bool:
+	match ruby_size_mode:
+		RubySizeMode.Center:
+			return false
+		RubySizeMode.SingleWordCenter:
+			return " " in ruby_text
+		RubySizeMode.Stretch:
+			return true
+	return true
 
 func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	ensure_ruby_container()
@@ -1701,8 +1720,8 @@ func _build_ruby(indices:=Vector2i.ZERO, text := "") -> RubyLabel:
 	var draw_pos_y := get_body_label_text_draw_pos(indices.y)
 	ruby_label.position = draw_pos_x
 	ruby_label.set_height(_body_duplicate_line_height)
-	ruby_label.set_stretch(ruby_stretch_across_base)
-	if ruby_stretch_across_base:
+	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
+	if _is_ruby_stretch(ruby_label.get_text()):
 		#print("drawing at ", draw_pos_x)
 		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
 	else:

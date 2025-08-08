@@ -423,7 +423,7 @@
 				]
 			}
 		],
-		"id_counter": -9223372036854765167,
+		"id_counter": -9223372036854765129,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -1696,7 +1696,7 @@
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
 			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg uwu uwu it's so scary>some text and change my name and my color Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et </ruby>dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-			"1753474289.815--9223372036854771691": "[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
+			"1753474289.815--9223372036854771691": "[]>narrator:Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,

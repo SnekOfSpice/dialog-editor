@@ -166,7 +166,6 @@ func update_fragile():
 func get_address() -> String:
 	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 
-# TODO: Add enabled / disabled icons
 func set_page_view(view:DiisisEditor.PageView):
 	var default_container : Control = get_default_line_container()
 	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")

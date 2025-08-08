@@ -96,7 +96,6 @@ func _sort_addresses(a1:String, a2: String) -> bool:
 	var last2 = get_split_address(a2).back()
 	return last1 < last2
 
-# TODO: [page name or number if no name] / line type / choice text (concat)
 func humanize_address(address:String) -> String:
 	if not Pages.does_address_exist(address):
 		return "N/A"

@@ -59,6 +59,10 @@ func set_stretch(value:bool):
 	else:
 		%RubyLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 
+
+
+func get_text() -> String:
+	return %RubyLabel.text
 func get_size() -> Vector2:
 	return %RubyLabel.size
 
