@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://stb4ad3iost2"]
 
-[ext_resource type="Script" uid="uid://ydli5pl1jt4u" path="res://addons/diisis/editor/src/text_search_container.gd" id="1_m62qa"]
+[ext_resource type="Script" uid="uid://ydli5pl1jt4u" path="res://addons/diisis/editor/src/windows/text_search_container.gd" id="1_m62qa"]
 
 [node name="TextSearchContainer" type="Control"]
 layout_mode = 3

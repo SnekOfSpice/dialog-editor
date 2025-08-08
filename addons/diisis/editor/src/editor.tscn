@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -18,14 +18,11 @@
 [ext_resource type="Texture2D" uid="uid://cx22s7326cykn" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_line_at_end.png" id="7_67kpi"]
 [ext_resource type="Texture2D" uid="uid://cradtrqafxhb8" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page.png" id="7_m63dd"]
 [ext_resource type="PackedScene" uid="uid://d4nhcwdgxbrlm" path="res://addons/diisis/editor/src/move_page_popup.tscn" id="7_w8mdv"]
-[ext_resource type="PackedScene" uid="uid://c1kjr8wvf4qtt" path="res://addons/diisis/editor/src/facts_popup.tscn" id="8_3kqv2"]
 [ext_resource type="Texture2D" uid="uid://ck5acd5airv8u" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_page_at_end.png" id="8_ajvyk"]
-[ext_resource type="PackedScene" uid="uid://buyg3m00l2a71" path="res://addons/diisis/editor/src/dropdowns_popup.tscn" id="9_i203b"]
 [ext_resource type="Texture2D" uid="uid://bgycyoomk20tr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_folder.png" id="9_mh3o1"]
 [ext_resource type="Texture2D" uid="uid://7ht8k4ris3wj" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_truncated.png" id="9_o3byv"]
 [ext_resource type="Texture2D" uid="uid://b7m22tnt1f2ft" path="res://addons/diisis/editor/visuals/theme/buttons_ui/page_view_minimal.png" id="10_qli38"]
 [ext_resource type="Texture2D" uid="uid://cowtdbgbvq7fp" path="res://addons/diisis/parser/style/icon_instruction_handler.svg" id="14_m63dd"]
-[ext_resource type="PackedScene" uid="uid://cqaxdhdqxqyrw" path="res://addons/diisis/editor/src/text_search_popup.tscn" id="14_uw1uu"]
 [ext_resource type="PackedScene" uid="uid://ceoicybbk4rjn" path="res://addons/diisis/editor/src/file_config_popup.tscn" id="19_rgmxs"]
 [ext_resource type="PackedScene" uid="uid://7a85jmuvrnhr" path="res://addons/diisis/editor/src/locale_selection_window.tscn" id="20_nu372"]
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
@@ -592,16 +589,6 @@ content_scale_aspect = 1
 [node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
 visible = false
 
-[node name="FactsPopup" parent="Popups" instance=ExtResource("8_3kqv2")]
-visible = false
-
-[node name="DropdownWindow" parent="Popups" instance=ExtResource("9_i203b")]
-visible = false
-transient = true
-
-[node name="TextSearchPopup" parent="Popups" instance=ExtResource("14_uw1uu")]
-visible = false
-
 [node name="FileConfigPopup" parent="Popups" instance=ExtResource("19_rgmxs")]
 visible = false
 
@@ -628,6 +615,26 @@ visible = false
 title = "Actor Search"
 visible = false
 container_path = "uid://pq57xgpvu0ih"
+
+[node name="DropdownWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+auto_translate_mode = 1
+title = "Dropdowns"
+size = Vector2i(547, 530)
+visible = false
+container_path = "uid://djiaiay3ntvfy"
+
+[node name="FactsPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
+auto_translate_mode = 1
+title = "Facts"
+visible = false
+container_path = "uid://bhftsn5yhlugv"
+
+[node name="TextSearchPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
+auto_translate_mode = 1
+title = "Search Text"
+size = Vector2i(730, 400)
+visible = false
+container_path = "uid://stb4ad3iost2"
 
 [node name="Camera" type="Camera2D" parent="."]
 visible = false

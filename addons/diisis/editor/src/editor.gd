@@ -322,7 +322,7 @@ func _shortcut_input(event):
 					if event.is_shift_pressed():
 						open_popup($Popups.get_node("FactsPopup"))
 					else:
-						open_popup($Popups.get_node("TextSearchPopup"))
+						open_window_by_string("TextSearchPopup")
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
@@ -672,7 +672,7 @@ func open_handler_window(method_to_select:=""):
 
 func open_facts_window(fact_to_select:=""):
 	var window := open_window_by_string("FactsPopup")
-	window.select_fact(fact_to_select)
+	window.get_child(0).select_fact(fact_to_select)
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
@@ -765,7 +765,7 @@ func _on_utility_id_pressed(id: int) -> void:
 			)
 			popup_accept_dialogue(dialog_text, "Word & Character Count")
 		1: 
-			open_popup($Popups.get_node("TextSearchPopup"))
+			open_window_by_string("TextSearchPopup")
 		2:
 			open_window_by_string("IngestionActorSetupWindow")
 		3:
