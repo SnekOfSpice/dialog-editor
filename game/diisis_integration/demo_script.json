@@ -132,12 +132,14 @@
 		"default_address_mode_pages": 0,
 		"default_locale": "en_US",
 		"dropdown_dialog_arguments": [
-			"amber-emotion"
+			"amber-emotion",
+			"target"
 		],
 		"dropdown_title_for_dialog_syntax": "character",
 		"dropdown_titles": [
 			"amber-emotion",
-			"character"
+			"character",
+			"target"
 		],
 		"dropdowns": {
 			"amber-emotion": [
@@ -147,7 +149,12 @@
 			],
 			"character": [
 				"narrator",
-				"amber"
+				"amber",
+				"eterna"
+			],
+			"target": [
+				"1",
+				"2"
 			]
 		},
 		"empty_strings_for_l10n": false,
@@ -291,6 +298,9 @@
 			"play_sfx": {
 
 			},
+			"preserve_into_past_line_container": {
+
+			},
 			"replace_lc_tags": {
 
 			},
@@ -413,17 +423,8 @@
 
 			}
 		},
-		"head_defaults": [
-			{
-				"data_type": 0.0,
-				"property_name": "property0",
-				"values": [
-					"value1",
-					null
-				]
-			}
-		],
-		"id_counter": -9223372036854765129,
+		"head_defaults": [],
+		"id_counter": -9223372036854763025,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -472,16 +473,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.520--9223372036854774776",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
@@ -527,16 +519,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.570--9223372036854774772",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
@@ -569,7 +552,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1753474289.815--9223372036854771691"
+							"text_id": "1754645614.175--9223372036854764369"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -577,22 +560,13 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
-						"id": "1753474289.815--9223372036854771692",
+						"header": [],
+						"id": "1754645614.175--9223372036854764370",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": false,
+						"meta.is_head_editable": true,
 						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
@@ -619,7 +593,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1752911161.782--9223372036854773741"
+							"text_id": "1753474289.815--9223372036854771691"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -627,17 +601,8 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
-						"id": "1752911161.782--9223372036854773742",
+						"header": [],
+						"id": "1753474289.815--9223372036854771692",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -669,7 +634,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1744987729.490--9223372036854775799"
+							"text_id": "1752911161.782--9223372036854773741"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -677,17 +642,8 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
-						"id": "1744999497.621--9223372036854774767",
+						"header": [],
+						"id": "1752911161.782--9223372036854773742",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -717,10 +673,51 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1744987729.490--9223372036854775799"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"id": "1744999497.621--9223372036854774767",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.is_head_editable": false,
+						"meta.line_index": 5,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.6",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
 							"auto_switch": false,
 							"choices": [
 								{
-									"address": "0.5.0",
+									"address": "0.6.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -769,7 +766,7 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.5.1",
+									"address": "0.6.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -821,30 +818,21 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.763--9223372036854774754",
 						"line_type": 1,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 5,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.6",
+						"address": "0.7",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -878,30 +866,21 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.822--9223372036854774749",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 6,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.7",
+						"address": "0.8",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -935,30 +914,21 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.881--9223372036854774744",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 7,
+						"meta.line_index": 8,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.8",
+						"address": "0.9",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -985,23 +955,14 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999497.931--9223372036854774739",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": false,
-						"meta.line_index": 8,
+						"meta.line_index": 9,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1043,6 +1004,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.530--9223372036854775777"
 						},
@@ -1052,16 +1014,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.626--9223372036854774735",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1107,16 +1060,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.627--9223372036854774732",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
@@ -1150,6 +1094,7 @@
 							"meta.function_calls": [
 								"shake_camera(40)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775774"
 						},
@@ -1159,16 +1104,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.628--9223372036854774728",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1214,16 +1150,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1747205915.630--9223372036854773717",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
@@ -1254,6 +1181,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775772"
 						},
@@ -1263,16 +1191,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.628--9223372036854774724",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1318,16 +1237,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.629--9223372036854774721",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
@@ -1358,6 +1268,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.534--9223372036854775769"
 						},
@@ -1367,16 +1278,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.630--9223372036854774717",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1410,6 +1312,7 @@
 							"meta.function_calls": [
 								"hide_cg(2)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.535--9223372036854775767"
 						},
@@ -1419,16 +1322,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999498.630--9223372036854774713",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1448,6 +1342,7 @@
 				"next": 2.0,
 				"number": 1.0,
 				"page_key": "about instructions",
+				"skip": false,
 				"terminate": false
 			},
 			"2": {
@@ -1485,16 +1380,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999499.058--9223372036854774709",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1540,16 +1426,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999499.059--9223372036854774706",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
@@ -1589,16 +1466,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999499.060--9223372036854774702",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1641,16 +1509,7 @@
 							},
 							"meta.visible": false
 						},
-						"header": [
-							{
-								"data_type": 0.0,
-								"property_name": "property0",
-								"values": [
-									"value1",
-									null
-								]
-							}
-						],
+						"header": [],
 						"id": "1744999499.060--9223372036854774698",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
@@ -1697,6 +1556,7 @@
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
 			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg uwu uwu it's so scary>some text and change my name and my color Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et </ruby>dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
 			"1753474289.815--9223372036854771691": "[]>narrator:Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
+			"1754645614.175--9223372036854764369": "[]>amber{target|1}: awa\n[]>narrator{target|2}: narration\n[]>amber{target|2}: awa2\n[]>eterna{target|2}: sdfsdf\n[]>eterna{target|1}: dfgdgffghdgh",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,

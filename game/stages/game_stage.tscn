@@ -87,6 +87,7 @@ script = ExtResource("1_a36me")
 
 [node name="LineReader" type="Node" parent="." node_paths=PackedStringArray("name_label", "body_label", "text_container", "name_container", "choice_title_label", "choice_container", "choice_list")]
 script = ExtResource("3_pms35")
+name_style = 1
 name_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/NameContainer/MarginContainer/NameLabel")
 body_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel")
 text_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1")
@@ -94,6 +95,7 @@ name_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContain
 choice_title_label = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/Label")
 choice_container = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer")
 choice_list = NodePath("../Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ChoiceContainer/VBoxContainer/ChoiceOptionContainer")
+keep_past_lines = true
 
 [node name="Objects" type="Node2D" parent="."]
 script = ExtResource("3_x2eff")
@@ -193,6 +195,9 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
+[node name="PastContainer" type="VBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
+layout_mode = 2
+
 [node name="NameContainer" type="PanelContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
 layout_mode = 2
 size_flags_horizontal = 0
@@ -238,9 +243,6 @@ custom_minimum_size = Vector2(670, 121.41)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "Text Body Here
-dghfgh [b]Hello :3[/b] [i]yaaayyy[/i]
-[b][i]omg both[/i][/b]"
 fit_content = true
 scroll_active = false
 
@@ -264,6 +266,96 @@ texture = ExtResource("6_mh4vb")
 stretch_mode = 2
 
 [node name="Control" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TextContainer2" type="VBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI"]
+auto_translate_mode = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -249.0
+offset_top = -438.0
+offset_right = 428.0
+offset_bottom = -221.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="PastContainer" type="VBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2"]
+layout_mode = 2
+
+[node name="NameContainer" type="PanelContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/NameContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 1
+
+[node name="NameLabel" type="Label" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/NameContainer/MarginContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Name Label Here"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = -9
+
+[node name="Panel" type="PanelContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer2/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 1
+
+[node name="BodyLabel" type="RichTextLabel" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer2/Panel/MarginContainer"]
+auto_translate_mode = 1
+clip_contents = false
+custom_minimum_size = Vector2(670, 121.41)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PageUnfinished" type="TextureRect" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5_7sulw")
+stretch_mode = 2
+
+[node name="PageFinished" type="TextureRect" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("6_mh4vb")
+stretch_mode = 2
+
+[node name="Control" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
@@ -418,6 +510,7 @@ offset_bottom = 73.0
 [connection signal="start_rolling_credits" from="LineReader" to="Camera2D/VNUICanvasLayer/VNUIRoot/RollingCredits" method="start"]
 [connection signal="start_show_cg" from="LineReader" to="." method="_on_handler_start_show_cg"]
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer2/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_rich_text_label_meta_clicked"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

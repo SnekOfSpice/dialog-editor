@@ -57,31 +57,6 @@ var _auto_continue_duration:= auto_continue_delay
 @export var show_text_during_text := true
 ## If [code]true[/code], shows [param text_container] when instructions are being executed.
 @export var show_text_during_instructions := false
-@export_subgroup("Past Lines")
-## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.
-@export var keep_past_lines := false:
-	set(value):
-		keep_past_lines = value
-		notify_property_list_changed()
-		update_configuration_warnings()
-## [VBoxContainer] to which past text lines get added. See [member keep_past_lines].
-@export var past_lines_container : VBoxContainer:
-	get:
-		return past_lines_container
-	set(value):
-		past_lines_container = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
-## If [member keep_past_lines] is true, limits the number of lines saved to [member past_lines_container][br]
-## Default of -1 means no upper limit.
-@export var max_past_lines := -1
-## If true, the displayed actor names will also be prepended to the text
-## saved with [member keep_past_lines].
-@export var preserve_name_in_past_lines := true
-## [b]Optional[/b] [RichTextLabel] scene that gets used to deposit past lines saved by [member keep_past_lines]. By default, the [LineReader] will create a [RichTextLabel] by itself.
-@export var past_line_label:PackedScene
-var _auto_advance := false
-var _last_raw_name := ""
 
 @export_group("Name Display")
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
@@ -195,6 +170,31 @@ var choice_list:Container:
 ## [/codeblock]
 @export var body_label_function_funnel : Array[String]
 @export var body_label_tint_lines := false
+@export_subgroup("Past Lines")
+## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.
+@export var keep_past_lines := false:
+	set(value):
+		keep_past_lines = value
+		notify_property_list_changed()
+		update_configuration_warnings()
+## [VBoxContainer] to which past text lines get added. See [member keep_past_lines].
+@export var past_lines_container : VBoxContainer:
+	get:
+		return past_lines_container
+	set(value):
+		past_lines_container = value
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+## If [member keep_past_lines] is true, limits the number of lines saved to [member past_lines_container][br]
+## Default of -1 means no upper limit.
+@export var max_past_lines := -1
+## If true, the displayed actor names will also be prepended to the text
+## saved with [member keep_past_lines].
+@export var preserve_name_in_past_lines := true
+## [b]Optional[/b] [RichTextLabel] scene that gets used to deposit past lines saved by [member keep_past_lines]. By default, the [LineReader] will create a [RichTextLabel] by itself.
+@export var past_line_label:PackedScene
+var _auto_advance := false
+var _last_raw_name := ""
 @export_subgroup("Rubies", "ruby_")
 var ruby_container : Control
 ## Font size factor for rubies, relative to the normal font size of [member body_label].
@@ -589,20 +589,14 @@ func _ready() -> void:
 	tree_exiting.connect(Parser.close_connection)
 	
 	_remaining_auto_pause_duration = auto_pause_duration
+	
 	_body_duplicate = RichTextLabel.new()
 	_body_duplicate.visible = false
+	_body_duplicate.bbcode_enabled = true
 	_body_duplicate.focus_mode = Control.FOCUS_NONE
 	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	#_body_duplicate_last_line = TextEdit.new()
-	#_body_duplicate_last_line.focus_mode = Control.FOCUS_NONE
-	#_body_duplicate_last_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	#_body_duplicate_last_line.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	
-	#_body_duplicate.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 	add_child(_body_duplicate)
-	_body_duplicate.bbcode_enabled = true
-	#add_child(_body_duplicate_last_line)
 	
 	if body_label:
 		body_label.visible_ratio = 0
@@ -1590,7 +1584,6 @@ func _build_rubies() -> void:
 		return
 	body_label.clip_contents = false
 	ensure_ruby_container()
-	print("=============")
 	for label : RubyLabel in _ruby_labels:
 		label.queue_free()
 	_ruby_labels.clear()
@@ -1606,7 +1599,6 @@ func _build_rubies() -> void:
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
 		var ruby_string : String = _ruby_strings[ruby_index]
-		prints("HANDING ruby indices ", ruby_range)
 		if start_draw_pos.y == end_draw_pos.y:
 			ruby_segment_indices.append(ruby_range)
 			word_segments.append(ruby_string)
@@ -1802,47 +1794,58 @@ func _emit_comment(comment_position:int):
 	_handled_comments.append(comment_position)
 	_comments.erase(comment_position)
 
+
+func preserve_into_past_line_container():
+	if not keep_past_lines:
+		return
+	if max_past_lines > -1:
+		var child_count := past_lines_container.get_child_count()
+		while child_count >= max_past_lines:
+			past_lines_container.get_child(0).queue_free()
+			child_count -= 1
+	
+	var past_line : RichTextLabel
+	if past_line_label:
+		var instance = past_line_label.instantiate()
+		if instance is RichTextLabel:
+			past_line = instance
+		else:
+			push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
+
+	if not past_line:
+		past_line = RichTextLabel.new()
+		past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
+		past_line.fit_content = true
+		past_line.bbcode_enabled = true
+		past_line.mouse_filter = Control.MOUSE_FILTER_PASS
+	
+	var past_text := ""
+	if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NameLabel and preserve_name_in_past_lines):
+		var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
+		past_text = str(actor_prefix, _get_prepend_separator_sequence())
+	
+	if not preserve_name_in_past_lines and name_style == NameStyle.Prepend:
+		push_warning("preserve_name_in_past_lines is false but name_style is set to Prepend. There will be a name in past lines.")
+	
+	var body_label_to_save = body_label.text
+	
+	past_text += body_label_to_save
+	past_line.text = past_text
+	past_line.clip_contents = false
+	past_line.clip_children = CanvasItem.CLIP_CHILDREN_DISABLED
+	past_lines_container.add_child(past_line)
+	
+	if ruby_enabled and ruby_container:
+		var duplicate = ruby_container.duplicate()
+		past_line.add_child(duplicate)#.reparent(past_line, false)
+		
+		var color = ColorRect.new()
+		past_line.add_child(color)
+		color.custom_minimum_size = Vector2(100, 100)
+		color.color = Color("ff9911B3")
+
+
 func _set_body_label_text(text: String):
-	if keep_past_lines:
-		if max_past_lines > -1:
-			var child_count := past_lines_container.get_child_count()
-			while child_count >= max_past_lines:
-				past_lines_container.get_child(0).queue_free()
-				child_count -= 1
-		
-		var past_line : RichTextLabel
-		if past_line_label:
-			var instance = past_line_label.instantiate()
-			if instance is RichTextLabel:
-				past_line = instance
-			else:
-				push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
-
-		if not past_line:
-			past_line = RichTextLabel.new()
-			past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
-			past_line.fit_content = true
-			past_line.bbcode_enabled = true
-			past_line.mouse_filter = Control.MOUSE_FILTER_PASS
-		
-		var past_text := ""
-		# TODO this is kinda a hack and only properly worth with prepend name style because
-		# if you switch target labels, it tracks the wrong last raw name
-		# lonerdogmoment
-		# but it works for now
-		if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NameLabel and preserve_name_in_past_lines):
-			var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
-			past_text = str(actor_prefix, _get_prepend_separator_sequence())
-		
-		if not preserve_name_in_past_lines and name_style == NameStyle.Prepend:
-			push_warning("preserve_name_in_past_lines is false but name_style is set to Prepend. There will be a name in past lines.")
-		
-		var body_label_to_save = body_label.text
-		
-		past_text += body_label_to_save
-		past_line.text = past_text
-		past_lines_container.add_child(past_line)
-
 	if body_label:
 		body_label.text = text
 		body_label.visible_ratio = 0
@@ -2276,6 +2279,8 @@ func _handle_header(header: Array):
 
 func _set_dialog_line_index(value: int):
 	_dialog_line_index = value
+	
+	preserve_into_past_line_container()
 	
 	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]

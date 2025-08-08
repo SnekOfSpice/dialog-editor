@@ -56,6 +56,7 @@ func _ready():
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	ParserEvents.instruction_completed.connect(on_instruction_completed)
 	ParserEvents.read_new_line.connect(on_read_new_line)
+	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
 	
 	GameWorld.game_stage = self
 	
@@ -88,6 +89,12 @@ func on_read_new_line(_line_index:int):
 
 func on_tree_exit():
 	GameWorld.game_stage = null
+
+@warning_ignore("shadowed_variable")
+@warning_ignore("unused_variable")
+func on_dialog_line_args_passed(actor_name : String , args : Dictionary):
+	if args.has("target"):
+		use_ui(int(args.get("target")))
 
 func on_instruction_started(
 	instruction_text : String,
@@ -440,34 +447,24 @@ func splatter(amount: int) -> void:
 
 func use_ui(id:int):
 	var lr : LineReader = line_reader
-	var root_existed : bool
-	var body_label_text = lr.body_label.text
-	var current_raw_name = lr.current_raw_name
 	
-	if ui_root:
-		root_existed = true
-	else:
-		root_existed = false
 	ui_id = id
 	ui_root = find_child("TextContainer%s" % ui_id)
 	for c in find_child("VNUI").get_children():
 		if c.name.begins_with("TextContainer"):
 			c.visible = c == ui_root
 	
-	lr.body_label = ui_root.find_child("BodyLabel")
+	lr.set_body_label(ui_root.find_child("BodyLabel"), false)
+	lr.set_name_controls(ui_root.find_child("NameLabel"), ui_root.find_child("NameContainer"))
 	lr.text_container = ui_root
-	lr.name_label = ui_root.find_child("NameLabel")
-	lr.name_container = ui_root.find_child("NameContainer")
 	lr.prompt_finished = ui_root.find_child("PageFinished")
 	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
-	
-	if root_existed:
-		lr.update_name_label(current_raw_name)
-		lr.body_label.text = body_label_text
+	lr.enable_keep_past_lines(ui_root.find_child("PastContainer"))
+
 
 func set_static(level:float):
 	target_static = level
-	
+
 
 func set_fade_out(lod:float, mix:float):
 	target_lod = lod

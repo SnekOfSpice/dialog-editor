@@ -745,7 +745,7 @@ func get_all_invalid_instructions() -> String:
 		page_index += 1
 	
 	if not malformed_instructions.is_empty():
-		warning += str("Function error at: ", ", ".join(malformed_instructions))
+		warning += str("Error at: ", ", ".join(malformed_instructions))
 	return warning
 
 

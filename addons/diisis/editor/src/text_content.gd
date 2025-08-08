@@ -515,6 +515,22 @@ func get_compliances() -> Dictionary:
 	var compliances := {}
 	for instruction in get_function_calls():
 		compliances[instruction] = Pages.get_method_validity(instruction)
+	
+	
+	for opener : Dictionary in tags:
+		if opener.get("tag").begins_with("<ruby"):
+			var has_closer := false
+			var start : int = opener.get("start")
+			for closer in tags:
+				if closer.get("start") > start and closer.get("line_index") >= opener.get("line_index"):
+					if closer.get("tag") == "</ruby>":
+						has_closer = true
+						break
+					if closer.get("tag").begins_with("<ruby"):
+						break
+			if not has_closer:
+				compliances[opener.get("tag")] = "No matching closing </ruby> in line %s." % (opener.get("line_index") + 1)
+	
 	return compliances
 
 func index_all_tags():
