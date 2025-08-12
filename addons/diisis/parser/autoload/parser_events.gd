@@ -222,3 +222,11 @@ signal actor_name_about_to_change(actor_name:String)
 
 ## When LineReader reads a new dialog line ([]> and <lc>)
 signal start_new_dialine(dialine:int)
+
+## Emitted when LineReader builds rubies for a label.
+## LineReader won't serialize its own rubies atm, so you can use this to work around that limitation by tracking them yourself.
+signal rubies_built(
+	on_label:RichTextLabel,
+	ruby_indices:Array,
+	ruby_strings:Array
+)

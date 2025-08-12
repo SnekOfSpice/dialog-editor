@@ -199,7 +199,8 @@ var _last_raw_name := ""
 ## If enalbed (default), generates rubies from [code]<ruby:>[/code] tags.
 ## Since rubies are commonly used by learners of a language and/or for uncommon words, disabling this setting
 ## can be used for a more challenging reading experience without removing the tags
-## from the DIISIS script.
+## from the DIISIS script. [br]
+## [b]Note: [signal ParserEvents.rubies_built] will not be called. The robues will not be hidden, will not exist alltogether.
 @export var ruby_enabled := true
 enum RubySizeMode {
 	## Centers the ruby above its base line.
@@ -1569,17 +1570,37 @@ func _handle_tags_and_start_reading():
 
 func ensure_ruby_container(on_label:=body_label):
 	if not ruby_containers_by_label.get(on_label):
+		var ruby_root = ScrollContainer.new()
+		ruby_root.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+		ruby_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ruby_root.focus_mode = Control.FOCUS_NONE
+		ruby_root.custom_minimum_size = on_label.size
+		ruby_roots_by_label[on_label] = ruby_root
+		var vbox = VBoxContainer.new()
+		vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_container.focus_mode = Control.FOCUS_NONE
-		on_label.add_child(ruby_container)
+		#ruby_container.clip_contents = on_label.scroll_active
+		ruby_container.custom_minimum_size = on_label.size
 		ruby_containers_by_label[on_label] = ruby_container
+		
+		ruby_root.add_child(vbox)
+		vbox.add_child(ruby_container)
+		var spacer := vbox.add_spacer(false)
+		spacer.custom_minimum_size.y = 1000
+		
+		on_label.add_child(ruby_root)
 
 func set_ruby_enabled(value:bool):
 	ruby_enabled = value
 	update_body_label()
 
+func update_ruby_root_scroll(value:float, root:ScrollContainer):
+	root.set_v_scroll(value)
+
 var ruby_containers_by_label := {}
+var ruby_roots_by_label := {}
 func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _ruby_indices, ruby_strings : Array = _ruby_strings) -> void:
 	if not ruby_enabled:
 		return
@@ -1590,6 +1611,9 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		for label : RubyLabel in _ruby_labels:
 			label.queue_free()
 		_ruby_labels.clear()
+	
+	if not on_label.get_v_scroll_bar().value_changed.is_connected(update_ruby_root_scroll):
+		on_label.get_v_scroll_bar().value_changed.connect(update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
 	
 	_body_duplicate.visible_characters = 1
 	_body_duplicate_line_height = _body_duplicate.get_content_height()
@@ -1696,6 +1720,8 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 				label.set_minimum_width(label.get_minimum_width() + offset)
 		
 		ruby_index += 1
+	
+	ParserEvents.rubies_built.emit(on_label, ruby_indices, ruby_strings)
 
 func _is_ruby_stretch(ruby_text:String) -> bool:
 	match ruby_size_mode:

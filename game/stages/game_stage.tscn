@@ -239,12 +239,10 @@ theme_override_constants/margin_bottom = 1
 [node name="BodyLabel" type="RichTextLabel" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer"]
 auto_translate_mode = 1
 clip_contents = false
-custom_minimum_size = Vector2(670, 121.41)
+custom_minimum_size = Vector2(670, 40)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-fit_content = true
-scroll_active = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1"]
 custom_minimum_size = Vector2(0, 16)

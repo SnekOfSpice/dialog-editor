@@ -170,8 +170,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not find_child("VNUI").visible:
 			return
 		line_reader.request_advance()
-	elif event.is_action_pressed("go_back"):
-		line_reader.request_go_back()
+	#elif event.is_action_pressed("go_back"):
+		#line_reader.request_go_back()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):

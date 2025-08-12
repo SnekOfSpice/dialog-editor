@@ -128,6 +128,12 @@ const DEFAULT_REPLACEMENT_RULES := [
 		"symbol" : "---",
 		"replacement" : "—"
 	},
+	{
+		"enabled" : false,
+		"name" : "double space",
+		"symbol" : " ",
+		"replacement" : "  "
+	},
 ]
 
 signal pages_modified

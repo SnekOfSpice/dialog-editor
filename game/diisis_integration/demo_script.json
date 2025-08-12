@@ -414,6 +414,9 @@
 			"update_name_label": {
 
 			},
+			"update_ruby_root_scroll": {
+
+			},
 			"use_ui": {
 
 			},
@@ -425,7 +428,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854762431,
+		"id_counter": -9223372036854761793,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -553,7 +556,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1753474289.815--9223372036854771691"
+							"text_id": "1752911161.782--9223372036854773741"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -562,7 +565,7 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1753474289.815--9223372036854771692",
+						"id": "1752911161.782--9223372036854773742",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -594,7 +597,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1754645614.175--9223372036854764369"
+							"text_id": "1753474289.815--9223372036854771691"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -603,7 +606,7 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1754645614.175--9223372036854764370",
+						"id": "1753474289.815--9223372036854771692",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -635,7 +638,7 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1752911161.782--9223372036854773741"
+							"text_id": "1754645614.175--9223372036854764369"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -644,7 +647,7 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1752911161.782--9223372036854773742",
+						"id": "1754645614.175--9223372036854764370",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -761,7 +764,7 @@
 									"meta.selector": {
 										"selected": false
 									},
-									"target_line": 4,
+									"target_line": 2,
 									"target_page": 0,
 									"text_id_disabled": "1744987729.575--9223372036854775792",
 									"text_id_enabled": "1744987729.575--9223372036854775793"
