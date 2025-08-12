@@ -1405,7 +1405,20 @@ func _handle_tags_and_start_reading():
 	var tag_start_position = bbcode_removed_text.find("[")
 	var last_tag_start_position = tag_start_position
 	var tag_end_position = bbcode_removed_text.find("]", tag_start_position)
+	
 	while tag_start_position != -1 and tag_end_position != -1:
+		if bbcode_removed_text.length() >= tag_start_position + 3:
+			if (
+				bbcode_removed_text[tag_start_position + 1] == "i" and
+				bbcode_removed_text[tag_start_position + 2] == "m" and
+				bbcode_removed_text[tag_start_position + 3] == "g"):
+					tag_end_position = bbcode_removed_text.find("[/img]") + 5
+			elif (
+				bbcode_removed_text[tag_start_position + 1] == "u" and
+				bbcode_removed_text[tag_start_position + 2] == "r" and
+				bbcode_removed_text[tag_start_position + 3] == "l"):
+					tag_end_position = bbcode_removed_text.find("[/url]") + 5
+		
 		if tag_start_position > 0:
 			if bbcode_removed_text[tag_start_position - 1] == "\\":
 				bbcode_removed_text = bbcode_removed_text.erase(tag_start_position - 1)

@@ -21,6 +21,7 @@ var cg := ""
 var cg_position := ""
 var base_cg_offset : Vector2
 var is_name_container_visible := false
+var meta_block := false
 
 @onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
 @onready var rtl_custom_minimum_size : Vector2 = find_child("BodyLabel").custom_minimum_size
@@ -132,6 +133,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
 	if event.is_action_pressed("advance"):
+		if meta_block:
+			return
 		for root in cg_roots:
 			if root.visible and emit_insutrction_complete_on_cg_hide:
 				hide_cg()
@@ -410,3 +413,11 @@ func use_ui(id:int):
 	lr.text_container = ui_root
 	lr.prompt_finished = ui_root.find_child("PageFinished")
 	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
+
+
+func _on_body_label_meta_hover_ended(_meta: Variant) -> void:
+	meta_block = false
+
+
+func _on_body_label_meta_hover_started(_meta: Variant) -> void:
+	meta_block = true

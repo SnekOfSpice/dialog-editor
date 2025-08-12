@@ -516,6 +516,14 @@ func get_compliances() -> Dictionary:
 	for instruction in get_function_calls():
 		compliances[instruction] = Pages.get_method_validity(instruction)
 	
+	## this isn't super accurate because somethng like [codehdbfgd] text [/code] will be understood as valid
+	# but i cant be fucked to differentiate all the different tags rn
+	# it catches unclosed img and url tags and that's the most important
+	for bbcode_tag in BBCODE_TAGS:
+		var opening_count := text_box.text.count("[%s" % bbcode_tag)
+		var closing_count := text_box.text.count("[/%s" % bbcode_tag)
+		if opening_count != closing_count:
+			compliances[bbcode_tag] = "%s opening tags imbalanced with %s closing tags" % [opening_count, closing_count]
 	
 	for opener : Dictionary in tags:
 		if opener.get("tag").begins_with("<ruby"):

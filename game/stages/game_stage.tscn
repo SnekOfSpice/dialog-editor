@@ -366,5 +366,7 @@ mouse_filter = 2
 [connection signal="start_hide_cg" from="LineReader" to="." method="hide_cg"]
 [connection signal="start_show_cg" from="LineReader" to="." method="_on_handler_start_show_cg"]
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_body_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/TextContainer1/MarginContainer2/Panel/MarginContainer/BodyLabel" to="." method="_on_body_label_meta_hover_started"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]

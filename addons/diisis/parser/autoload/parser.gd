@@ -452,7 +452,7 @@ func go_back():
 		if trail_shift == 0:
 			dialine_about_to_read = 0
 		elif trail_shift != 0:
-			var line_data : Array = page_data.get(page_index).get("lines")
+			var line_data : Array = page_data.get(prev_page).get("lines")
 			var raw_content : Dictionary = line_data[prev_line].get("content")
 			var content := get_text(raw_content.get("text_id"))
 			dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
