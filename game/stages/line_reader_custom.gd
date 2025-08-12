@@ -127,13 +127,6 @@ func set_x_position(character_name: String, index:int, time:float, wait_for_repo
 		character.set_x_position(int(index), time, wait_for_reposition)
 	return wait_for_reposition
 
-func show_letter() -> bool:
-	if GameWorld.game_stage:
-		GameWorld.game_stage.show_letter()
-		return true
-	return false
-
-
 func sway_camera(intensity : float) -> bool:
 	if GameWorld.camera:
 		GameWorld.camera.set_sway_intensity(intensity)
@@ -143,23 +136,6 @@ func move_camera_to(x: float, y: float, duration: float) -> bool:
 	if GameWorld.camera:
 		GameWorld.camera.move_to(x, y, duration)
 	return false
-
-func set_eye_progress(value: float) -> bool:
-	if GameWorld.game_stage:
-		var one = GameWorld.game_stage.get_character("one")
-		one.set_eye_progress(int(value))
-	return false
-
-func set_static(level : float) -> bool:
-	if GameWorld.game_stage:
-		GameWorld.game_stage.set_static(level)
-	return false
-
-func set_fade_out(lod : float, mix : float) -> bool:
-	if GameWorld.game_stage:
-		GameWorld.game_stage.set_fade_out(lod, mix)
-	return false
-
 
 func wound_fx(shake_intensity: float, splatter_count: float) -> bool:
 	shake_camera(shake_intensity)
@@ -188,8 +164,4 @@ func set_object_visible(object_name: String, visibility: bool) -> bool:
 
 func use_ui(id: float) -> bool:
 	GameWorld.game_stage.use_ui(int(id))
-	return false
-
-func cum(voice: String) -> bool:
-	GameWorld.game_stage.cum(voice)
 	return false

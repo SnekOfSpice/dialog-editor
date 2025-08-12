@@ -34,18 +34,7 @@ var ui_id := 1
 var callable_upon_blocker_clear:Callable
 
 @onready var camera = $Camera2D
-@onready var overlay_static = find_child("Static").get_node("ColorRect")
-@onready var overlay_fade_out = find_child("FadeOut").get_node("ColorRect")
-@onready var overlay_orgasm = find_child("Orgasm").get_node("ColorRect")
 
-
-@onready var orgasm_mat = overlay_orgasm.get_material()
-@onready var fade_mat = overlay_fade_out.get_material()
-@onready var static_mat = overlay_static.get_material()
-
-var target_lod := 0.0
-var target_mix := 0.0
-var target_static := 0.0
 
 func _ready():
 	use_ui(1)
@@ -56,7 +45,6 @@ func _ready():
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	ParserEvents.instruction_completed.connect(on_instruction_completed)
 	ParserEvents.read_new_line.connect(on_read_new_line)
-	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
 	
 	GameWorld.game_stage = self
 	
@@ -90,12 +78,6 @@ func on_read_new_line(_line_index:int):
 func on_tree_exit():
 	GameWorld.game_stage = null
 
-@warning_ignore("shadowed_variable")
-@warning_ignore("unused_variable")
-func on_dialog_line_args_passed(actor_name : String , args : Dictionary):
-	if args.has("target"):
-		use_ui(int(args.get("target")))
-
 func on_instruction_started(
 	instruction_text : String,
 	_delay : float,
@@ -115,20 +97,7 @@ func go_to_main_menu(_unused):
 
 
 func _process(_delta: float) -> void:
-	fade_mat.set_shader_parameter("lod", lerp(fade_mat.get_shader_parameter("lod"), target_lod, 0.02))
-	fade_mat.set_shader_parameter("mix_percentage", lerp(fade_mat.get_shader_parameter("mix_percentage"), target_mix, 0.02))
-	
-	static_mat.set_shader_parameter("intensity", lerp(static_mat.get_shader_parameter("intensity"), target_static, 0.02))
-	static_mat.set_shader_parameter("border_size", lerp(static_mat.get_shader_parameter("border_size"), 1 - target_static, 0.02))
-	
-	orgasm_mat.set_shader_parameter("lod", lerp(orgasm_mat.get_shader_parameter("lod"), 0.0, 0.000175))
-	
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
-
-func cum(_voice:String):
-	orgasm_mat.set_shader_parameter("lod", 1.8)
-	
-	get_tree().create_timer(1.5).timeout.connect(orgasm_mat.set_shader_parameter.bind("lod", 1.4))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not GameWorld.stage_root.screen.is_empty():
@@ -170,8 +139,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not find_child("VNUI").visible:
 			return
 		line_reader.request_advance()
-	#elif event.is_action_pressed("go_back"):
-		#line_reader.request_go_back()
+	elif event.is_action_pressed("go_back"):
+		line_reader.request_go_back()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):
@@ -341,10 +310,7 @@ func serialize() -> Dictionary:
 	result["objects"] = $Objects.serialize()
 	
 	result["start_cover_visible"] = find_child("StartCover").visible
-	result["static"] = overlay_static.get_material().get_shader_parameter("intensity")
-	result["fade_out_lod"] = overlay_fade_out.get_material().get_shader_parameter("lod")
-	result["fade_out_mix_percentage"] = overlay_fade_out.get_material().get_shader_parameter("mix_percentage")
-	
+
 	result["camera"] = $Camera2D.serialize()
 	result["ui_id"] = ui_id
 	result["ui_root_visible"] = ui_root.visible
@@ -389,16 +355,7 @@ func deserialize(data:Dictionary):
 			push_warning("Deserialized game_stage with something wild.")
 			return
 		find_child("TextContainer1").position = fixed_position
-	
-	target_lod = data.get("fade_out_lod", 0.0)
-	target_mix = data.get("fade_out_mix_percentage", 0.0)
-	overlay_fade_out.get_material().set_shader_parameter("lod", target_lod)
-	overlay_fade_out.get_material().set_shader_parameter("mix_percentage", target_mix)
-	
-	target_static = data.get("static", 0.0)
-	overlay_static.get_material().set_shader_parameter("intensity", target_static)
-	overlay_static.get_material().set_shader_parameter("border_size", 1 - target_static)
-	
+
 	use_ui(data.get("ui_id", 1))
 	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
 	ui_root.visible = data.get("ui_root_visible", true)
@@ -413,12 +370,6 @@ func get_character(character_name:String) -> Character:
 
 func _on_history_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
-
-func show_letter():
-	hide_ui()
-	var letter = preload("res://game/objects/letter.tscn").instantiate()
-	add_child(letter)
-	letter.position = Vector2(258, 8)
 
 func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
 	if on_top:
@@ -459,21 +410,3 @@ func use_ui(id:int):
 	lr.text_container = ui_root
 	lr.prompt_finished = ui_root.find_child("PageFinished")
 	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
-	lr.enable_keep_past_lines(ui_root.find_child("PastContainer"))
-
-
-func set_static(level:float):
-	target_static = level
-
-
-func set_fade_out(lod:float, mix:float):
-	target_lod = lod
-	target_mix = mix
-
-
-func _on_button_pressed() -> void:
-	print($LineReader.get_body_label_text_draw_pos($SpinBox.value))
-	
-	for i in $LineReader.body_label.get_parsed_text().length():
-		$LineReader.body_label.visible_characters = i
-		printt(i, $LineReader.body_label.get_content_height())

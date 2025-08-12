@@ -613,7 +613,6 @@ func _ready() -> void:
 	
 	emit_signal("line_reader_ready")
 
-# nts this is where _lmao(a, b) lies RIP
 func _on_go_back_accepted(_page_index:int, _line_index:int, _dialine:int):
 	_reverse_next_instruction = true
 
@@ -1831,6 +1830,9 @@ func _emit_comment(comment_position:int):
 func preserve_into_past_line_container():
 	if not keep_past_lines:
 		return
+	if not past_lines_container:
+		push_warning("Trying to preserve a line when past_lines_container is null")
+		return
 	
 	if max_past_lines > -1:
 		var child_count := past_lines_container.get_child_count()
@@ -1979,7 +1981,7 @@ func _get_full_prepend_name_prefix(actor:String) -> String:
 	return get_actor_config_property("name_prefix", actor) + _get_actor_name(actor) + _get_prepend_separator_sequence() + get_actor_config_property("name_suffix", actor)
 
 func _get_actor_name(actor_key:String) -> String:
-	if not actor_config.has(actor_key):
+	if not actor_config.keys().has(actor_key):
 		return actor_key
 	var display_name : String = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "name_display"), actor_key)
 	if display_name.is_empty():
@@ -1996,7 +1998,7 @@ func _get_actor_outline_size(actor:String) -> int:
 ## Sensitive to chatlog_enabled. If blank, returns label or richtextlabel default color depending on name style
 ## base_property is either color or outline_color
 func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
-	if actor_config.has(actor_key):
+	if actor_config.keys().has(actor_key):
 		var color : Color = (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
 		if color == Color.TRANSPARENT:
 			color = (actor_config.get(actor_key) as LineReaderActorConfig).get(base_property)
@@ -2044,7 +2046,7 @@ func set_actor_config_property_color(config_property:String, actor_key:String, r
 ## [b]Note:[/b] Updating this mid-dialog line will have no effect if [member chatlog_enabled] is true.
 func set_actor_config_property(config_property:String, actor_key:String, value):
 	var previous_value
-	if actor_config.has(actor_key):
+	if actor_config.keys().has(actor_key):
 		previous_value = get_actor_config_property(config_property, actor_key)
 		(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
 	else:
@@ -2074,7 +2076,7 @@ func update_body_label():
 	body_label.visible_characters = visible_characters
 
 func get_actor_config_property(config_property:String, actor_key:String, default : Variant = null) -> Variant:
-	if not actor_config.has(actor_key):
+	if not actor_config.keys().has(actor_key):
 		return default
 	return (actor_config.get(actor_key) as LineReaderActorConfig).get(config_property)
 

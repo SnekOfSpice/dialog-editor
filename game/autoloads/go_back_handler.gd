@@ -26,7 +26,7 @@ func on_read_new_line(line:int):
 	else:
 		states_by_page[Parser.page_index] = {line : state}
 
-func on_go_back_accepted(page:int, line:int):
+func on_go_back_accepted(page:int, line:int, _dialine:int):
 	if not states_by_page.has(page):
 		return
 	if not states_by_page[page].has(line):
