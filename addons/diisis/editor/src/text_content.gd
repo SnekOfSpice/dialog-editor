@@ -648,6 +648,8 @@ func _on_import_ingest_from_clipboard() -> void:
 		text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
 	if find_child("Ingest").is_whitespace_checked():
 		text_box.text = Pages.neaten_whitespace(text_box.text)
+	if find_child("Ingest").is_punctuation_checked():
+		text_box.text = Pages.fix_punctuation(text_box.text)
 
 
 func _on_import_ingest_from_file() -> void:

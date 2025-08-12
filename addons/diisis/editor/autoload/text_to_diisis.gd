@@ -78,6 +78,7 @@ func ingest_pages_from_file(path:String, payload:={}) -> void:
 func ingest_pages(text:String, payload:={}) -> void:
 	var capitalize : bool = payload.get("capitalize", false)
 	var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
+	var fix_punctuation : bool = payload.get("fix_punctuation", false)
 	
 	text = text.replace("\r", "\n")
 	
@@ -117,6 +118,8 @@ func ingest_pages(text:String, payload:={}) -> void:
 				formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
 			if neaten_whitespace:
 				formatted_text = Pages.neaten_whitespace(formatted_text)
+			if fix_punctuation:
+				formatted_text = Pages.fix_punctuation(formatted_text)
 			
 			var line_obj := {
 				"content" :  {
