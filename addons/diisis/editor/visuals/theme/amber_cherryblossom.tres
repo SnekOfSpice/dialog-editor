@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=87 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=88 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontVariation" uid="uid://rwenx6g7xf7e" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_base.tres" id="1_da0q8"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
@@ -26,6 +26,7 @@
 [ext_resource type="FontVariation" uid="uid://d3f5hsmdnpu7v" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_italics.tres" id="17_qlmfo"]
 [ext_resource type="StyleBox" uid="uid://cjwtx12fg17sj" path="res://addons/diisis/editor/visuals/theme/region_panel_dark.tres" id="19_pj604"]
 [ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="24_si63v"]
+[ext_resource type="FontFile" uid="uid://py6byfikelnx" path="res://addons/diisis/editor/visuals/theme/fonts/LinearAtype.ttf" id="26_5t3f0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5foo6"]
 bg_color = Color(0.0794575, 0.0327925, 0.0782667, 1)
@@ -607,6 +608,10 @@ VScrollBar/styles/grabber = SubResource("StyleBoxFlat_nothl")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_afpci")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_2wpir")
 VSplitContainer/styles/split_bar_background = ExtResource("13_qlmfo")
+WhisperLabel/base_type = &"Label"
+WhisperLabel/colors/font_color = Color(1, 1, 1, 0.145098)
+WhisperLabel/font_sizes/font_size = 24
+WhisperLabel/fonts/font = ExtResource("26_5t3f0")
 Window/constants/title_height = 29
 Window/font_sizes/title_font_size = 30
 Window/fonts/title_font = SubResource("FontVariation_da0q8")

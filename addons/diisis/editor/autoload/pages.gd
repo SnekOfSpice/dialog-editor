@@ -95,6 +95,41 @@ const STRING_SETTINGS := {
 }
 var shader := ""
 
+var append_periods := true
+var replacement_rules := []
+const DEFAULT_REPLACEMENT_RULES := [
+	{
+		"enabled" : false,
+		"name" : "ellipsis",
+		"symbol" : "...",
+		"replacement" : "…"
+	},
+	{
+		"enabled" : false,
+		"name" : "leading quote",
+		"symbol" : " \"",
+		"replacement" : " «"
+	},
+	{
+		"enabled" : false,
+		"name" : "trailing quote",
+		"symbol" : "\" ",
+		"replacement" : "» "
+	},
+	{
+		"enabled" : false,
+		"name" : "n dash",
+		"symbol" : "--",
+		"replacement" : "–"
+	},
+	{
+		"enabled" : false,
+		"name" : "m dash",
+		"symbol" : "---",
+		"replacement" : "—"
+	},
+]
+
 signal pages_modified
 
 func sync_line_references():
@@ -159,6 +194,8 @@ func serialize() -> Dictionary:
 		"file_config": get_file_config(),
 		"locales_to_export" : locales_to_export,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
+		"replacement_rules": replacement_rules,
+		"append_periods": append_periods,
 		"use_dialog_syntax": use_dialog_syntax,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
@@ -216,6 +253,8 @@ func deserialize(data:Dictionary):
 		set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
+	replacement_rules = data.get("replacement_rules", [])
+	append_periods = data.get("append_periods", true)
 	
 	apply_file_config(data.get("file_config", {}))
 	
@@ -1725,6 +1764,10 @@ func fix_punctuation(text:String) -> String:
 	var lines = text.split("\n")
 	var result := []
 	for line : String in lines:
+		if not append_periods:
+			result.append(line)
+			continue
+		
 		var ends_with_space := line.ends_with(" ")
 		while ends_with_space:
 			line = line.erase(line.length() - 1)
@@ -1750,8 +1793,16 @@ func fix_punctuation(text:String) -> String:
 			result.append(line)
 		else:
 			result.append(line + ".")
-		
-		
+	
+	for rule : Dictionary in replacement_rules:
+		var enabled : bool = rule.get("enabled")
+		if not enabled:
+			continue
+		var what = rule.get("symbol", "")
+		var forwhat = rule.get("replacement", "")
+		for i in result.size():
+			var line : String = result[i]
+			result[i] = line.replace(what, forwhat)
 	
 	return "\n".join(result)
 

@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://bhftsn5yhlugv"]
+[gd_scene load_steps=3 format=3 uid="uid://bhftsn5yhlugv"]
 
 [ext_resource type="Script" uid="uid://c5iort0nerwih" path="res://addons/diisis/editor/src/windows/facts_popup_content.gd" id="1_x3wnc"]
-[ext_resource type="FontFile" uid="uid://py6byfikelnx" path="res://addons/diisis/editor/visuals/theme/fonts/LinearAtype.ttf" id="2_a21hr"]
 [ext_resource type="PackedScene" uid="uid://cigmq5hpy508j" path="res://addons/diisis/editor/src/create_fact_window.tscn" id="2_bhobo"]
 
 [node name="FactsPopupContent" type="VBoxContainer"]
@@ -16,11 +15,10 @@ script = ExtResource("1_x3wnc")
 layout_mode = 2
 
 [node name="LoveLabel" type="Label" parent="HBoxContainer2"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.145098)
-theme_override_fonts/font = ExtResource("2_a21hr")
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"WhisperLabel"
 text = "DIISIS loves you X angels love you X lessthanthree"
 vertical_alignment = 1
 

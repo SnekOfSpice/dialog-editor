@@ -731,6 +731,8 @@ func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
 			emit_signal("request_reload")
+		1:
+			open_window_by_string("PunctuationRulesWindow")
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:

@@ -16,6 +16,7 @@ shit from ldspcn
 - better scroll in editor
 - better performance
 - add ability to skip entire pages
+- replacement rules
 - rubies
 
 General

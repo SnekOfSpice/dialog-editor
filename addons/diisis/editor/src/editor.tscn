@@ -162,9 +162,11 @@ item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
 [node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
-item_count = 1
+item_count = 2
 item_0/text = "Reload DIISIS editor"
 item_0/id = 0
+item_1/text = "Punctuation & replacement rules..."
+item_1/id = 1
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 auto_translate_mode = 1
@@ -626,6 +628,7 @@ container_path = "uid://djiaiay3ntvfy"
 [node name="FactsPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
 auto_translate_mode = 1
 title = "Facts"
+size = Vector2i(600, 500)
 visible = false
 container_path = "uid://bhftsn5yhlugv"
 
@@ -635,6 +638,12 @@ title = "Search Text"
 size = Vector2i(730, 400)
 visible = false
 container_path = "uid://stb4ad3iost2"
+
+[node name="PunctuationRulesWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+title = "Punctuation & Replacement Rules"
+size = Vector2i(650, 400)
+visible = false
+container_path = "uid://cn0rmafav1qh5"
 
 [node name="Camera" type="Camera2D" parent="."]
 visible = false

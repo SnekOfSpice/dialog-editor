@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://6nbr6k7d3ydw"]
+
+[ext_resource type="Script" uid="uid://0xwfxf7gyx8p" path="res://addons/diisis/editor/src/replacement_rule.gd" id="1_6s5ik"]
+[ext_resource type="Texture2D" uid="uid://cs3n1tliwsul1" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_generic.png" id="2_b4lue"]
+[ext_resource type="FontFile" uid="uid://dxdcq17w685ra" path="res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf" id="2_ie35p"]
+
+[node name="ReplacementRule" type="HBoxContainer"]
+script = ExtResource("1_6s5ik")
+
+[node name="CheckBox" type="CheckBox" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+flat = true
+
+[node name="NameLabel" type="LineEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+expand_to_text_length = true
+flat = true
+
+[node name="SimpleSymbolLabel" type="LineEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_ie35p")
+theme_override_font_sizes/font_size = 12
+placeholder_text = "symbol to replace"
+expand_to_text_length = true
+
+[node name="LineEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_ie35p")
+theme_override_font_sizes/font_size = 12
+placeholder_text = "fancy override"
+expand_to_text_length = true
+
+[node name="DeleteButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("2_b4lue")
+flat = true
+
+[connection signal="pressed" from="CheckBox" to="." method="notify_rule_update"]
+[connection signal="text_submitted" from="NameLabel" to="." method="notify_rule_update"]
+[connection signal="text_submitted" from="SimpleSymbolLabel" to="." method="notify_rule_update"]
+[connection signal="text_submitted" from="LineEdit" to="." method="notify_rule_update"]
+[connection signal="pressed" from="DeleteButton" to="." method="_on_delete_button_pressed"]

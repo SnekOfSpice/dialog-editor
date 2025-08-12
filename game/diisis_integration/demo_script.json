@@ -7,6 +7,7 @@
 		"text_size_id": 2
 	},
 	"pages": {
+		"append_periods": true,
 		"callable_autoloads": [
 			"Sound"
 		],
@@ -424,7 +425,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761653,
+		"id_counter": -9223372036854762431,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -1532,6 +1533,32 @@
 				"terminate": true
 			}
 		},
+		"replacement_rules": [
+			{
+				"enabled": false,
+				"name": "ellipsis",
+				"replacement": "…",
+				"symbol": "..."
+			},
+			{
+				"enabled": true,
+				"name": "leading quote",
+				"replacement": " «",
+				"symbol": " \""
+			},
+			{
+				"enabled": true,
+				"name": "trailing quote",
+				"replacement": "» ",
+				"symbol": "\" "
+			},
+			{
+				"enabled": false,
+				"name": "n dash",
+				"replacement": "–",
+				"symbol": "--"
+			}
+		],
 		"save_on_play": true,
 		"shader": "",
 		"show_facts_buttons": true,
