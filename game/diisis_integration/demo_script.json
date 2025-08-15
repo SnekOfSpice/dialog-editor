@@ -406,7 +406,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761365,
+		"id_counter": -9223372036854761453,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -421,6 +421,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755245262.944--9223372036854761454",
 				"lines": [
 					{
 						"address": "0.0",
@@ -532,9 +533,8 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"meta.locked": false,
-							"meta.validation_status": "OK",
-							"text_id": "1744987729.490--9223372036854775799"
+							"meta.contents_visible": true,
+							"range": 1.0
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -543,11 +543,11 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1744999497.621--9223372036854774767",
-						"line_type": 0,
+						"id": "1755250466.988--9223372036854761329",
+						"line_type": 3,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0,
+						"meta.indent_level": 1,
 						"meta.is_head_editable": true,
 						"meta.line_index": 2,
 						"meta.selector": {
@@ -573,10 +573,51 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1744987729.490--9223372036854775799"
+						},
+						"facts": {
+							"fact_data_by_name": {
+
+							},
+							"meta.visible": false
+						},
+						"header": [],
+						"id": "1744999497.621--9223372036854774767",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 1,
+						"meta.is_head_editable": true,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {
+
+								},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
 							"auto_switch": false,
 							"choices": [
 								{
-									"address": "0.3.0",
+									"address": "0.4.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -625,7 +666,7 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.3.1",
+									"address": "0.4.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -684,14 +725,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.4",
+						"address": "0.5",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -732,14 +773,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.5",
+						"address": "0.6",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -780,14 +821,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.6",
+						"address": "0.7",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -821,7 +862,7 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
@@ -844,6 +885,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755250697.136--9223372036854761389",
 				"lines": [
 					{
 						"address": "1.0",
@@ -1211,6 +1253,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755250697.380--9223372036854761373",
 				"lines": [
 					{
 						"address": "2.0",
@@ -1230,6 +1273,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.696--9223372036854775765"
 						},
@@ -1316,6 +1360,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.697--9223372036854775762"
 						},
@@ -1359,6 +1404,7 @@
 							"meta.function_calls": [
 								"control_camera(1, 0,0,4)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.697--9223372036854775760"
 						},
@@ -1388,6 +1434,7 @@
 				"next": 0.0,
 				"number": 2.0,
 				"page_key": "the end",
+				"skip": false,
 				"terminate": true
 			}
 		},

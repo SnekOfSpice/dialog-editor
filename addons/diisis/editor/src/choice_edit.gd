@@ -7,6 +7,7 @@ var deserialized_loopback_page := 0
 var deserialized_loopback_line := 0
 var deserialized_line_index := 0
 
+var id : String
 var text_id_enabled : String
 var text_id_disabled : String
 
@@ -38,6 +39,7 @@ func init() -> void:
 	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func deserialize(data:Dictionary):
+	id = data.get("id", Pages.get_new_id())
 	text_id_enabled = data.get("text_id_enabled", Pages.get_new_id())
 	text_id_disabled = data.get("text_id_disabled", Pages.get_new_id())
 	var jump_target_page : int = data.get("target_page", 0)
@@ -95,6 +97,8 @@ func update_default_appearance():
 	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
 
 func serialize() -> Dictionary:
+	if not id:
+		id = Pages.get_new_id()
 	if not text_id_enabled:
 		text_id_enabled = Pages.get_new_id()
 	if not text_id_disabled:
@@ -110,6 +114,7 @@ func serialize() -> Dictionary:
 	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
 	
 	return {
+		"id" : id,
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
 		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,

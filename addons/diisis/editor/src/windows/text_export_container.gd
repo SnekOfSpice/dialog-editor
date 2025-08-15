@@ -5,6 +5,7 @@ signal fd_opened
 signal fd_closed
 
 func init():
+	print("TODO PageKeyLabelContainer")
 	for child in %SelectionContainer.get_children():
 		child.queue_free()
 	for i in Pages.get_page_count():
@@ -25,10 +26,13 @@ func _on_option_button_embed_option_pressed(index: int) -> void:
 
 
 func generate_export() -> String:
+	# doesn't do anything atm
 	var modifiers := {
-		"include_instructions" = find_child("IncludeInstructionsCheckBox").button_pressed
+		#"include_instructions" = find_child("IncludeInstructionsCheckBox").button_pressed
 	}
 	var result := ""
+	result += Pages.ingestion_actor_declaration
+	result += "\nEND ACTORS\n"
 	match %Mode.get_selected_id():
 		0: # full
 			for i in Pages.get_page_count():

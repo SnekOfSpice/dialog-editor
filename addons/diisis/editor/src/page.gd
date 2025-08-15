@@ -5,6 +5,7 @@ class_name Page
 var number := 0
 var next := 1
 var lines:Node
+var id : String
 
 @onready var page_key_line_edit : LineEdit = find_child("PageKeyLineEdit")
 
@@ -51,8 +52,11 @@ func serialize() -> Dictionary:
 	if not lines:
 		init(number)
 	var data := {}
+	if not id:
+		id = Pages.get_new_id()
 	
 	data["number"] = int(number)
+	data["id"] = id
 	data["page_key"] = get_page_key()
 	data["next"] = find_child("NextLineEdit").value
 	data["meta.scroll_vertical"] = int(find_child("ScrollContainer").scroll_vertical)
@@ -83,6 +87,7 @@ func deserialize(data: Dictionary):
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
 	set_skip(data.get("skip", false))
+	id = data.get("id", Pages.get_new_id())
 	
 	update_incoming_references_to_page()
 	

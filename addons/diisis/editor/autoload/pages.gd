@@ -1388,28 +1388,111 @@ func get_cascading_trail(start_page:int) -> Array:
 	
 	return trail
 
-func stringify_page(index:int, modifiers := {}) -> String:
-	var result := "PAGE %s" % index
-	var data := get_page_data(index)
-	var i := 0
+func stringify_page(page_index:int, modifiers := {}) -> String:
+	var data := get_page_data(page_index)
+	
+	var result := "PAGE %s ID:%s" % [page_index, data.get("id")]
+	
+	var line_index := 0
 	for line : Dictionary in data.get("lines", []):
-		#print(line)
-		result += "\nLINE %s\n" % i
-		var line_type := get_line_type(index, i)
+		result += "\n"
+		var line_type : int = line.get("line_type")
+		var line_type_letter : String
 		match line_type:
 			DIISIS.LineType.Text:
-				result += get_text(line.get("content").get("text_id"))
-				print(get_text(line.get("content").get("text_id")))
+				line_type_letter = "t"
 			DIISIS.LineType.Instruction:
-				if not modifiers.get("include_instructions", false):
-					i += 1
-					continue
-				result += line.get("content").get("meta.text")
+				line_type_letter = "i"
 			DIISIS.LineType.Choice:
-				push_warning("Choice stringification not supported atm")
-		i += 1
-	result += "\n"
+				line_type_letter = "c"
+			DIISIS.LineType.Folder:
+				line_type_letter = "f"
+		result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
+		result += " ID:%s\n" % line.get("id")
+		var content : Dictionary = line.get("content")
+		match line_type:
+			DIISIS.LineType.Text:
+				var text : String = get_text(content.get("text_id"))
+				text = text.replace("[]>", "")
+				result += text
+			DIISIS.LineType.Instruction:
+				result += content.get("meta.text")
+				var reverse_text : String = content.get("meta.reverse_text")
+				var has_reverse : bool = content.get("meta.has_reverse", false)
+				if not reverse_text.is_empty():
+					var prefix := "\n"
+					if has_reverse:
+						prefix += "<"
+					else:
+						prefix += "x<"
+					result += prefix + content.get("meta.reverse_text")
+			DIISIS.LineType.Choice:
+				var choices : Array = content.get("choices")
+				var first_choice := true # just for visual \n placement
+				for choice : Dictionary in choices:
+					if not first_choice:
+						result += "\n"
+					first_choice = false
+					
+					var enabled_text : String = Pages.get_text(choice.get("text_id_enabled", ""))
+					var disabled_text : String = Pages.get_text(choice.get("text_id_disabled", ""))
+					if not enabled_text.is_empty():
+						result += ">" + enabled_text
+					if not disabled_text.is_empty():
+						result += "<" + disabled_text
+					
+					result += "ID:"+choice.get("id")
+			DIISIS.LineType.Folder:
+				result += str(content.get("range", 0))
+		line_index += 1
+	result += "\n\n\n"
 	return result
+
+## function used by Text2Diisis
+func update_line_content(new_content_by_line_id:Dictionary):
+	var ids_to_update := new_content_by_line_id.keys()
+	for i in get_page_count():
+		var data = get_page_data(i)
+		
+		for line : Dictionary in data.get("lines", []):
+			var line_id : String = line.get("id")
+			if line_id in ids_to_update:
+				var line_type : DIISISGlobal.LineType = line.get("line_type")
+				var new_content : Dictionary = new_content_by_line_id.get(line_id)
+				var line_content : Dictionary = line.get("content")
+				match line_type:
+					DIISISGlobal.LineType.Text:
+						var new_text : String = new_content.get("text")
+						var text_id : String = line_content.get("text_id")
+						save_text(text_id, new_text)
+					DIISISGlobal.LineType.Choice:
+						print("awawawa work here")
+						var text_id_enabled : String = line_content.get("text_id_enabled")
+						var text_id_disabled : String = line_content.get("text_id_disabled")
+						var choice_texts : Array = new_content.get("choice_texts")
+						var existing_choices : Array = line_content.get("choices", [])
+						var choice_index := 0
+						while choice_index < max(choice_texts.size(), existing_choices.size()):
+							if choice_index >= choice_texts.size() and choice_index < existing_choices.size():
+								# there's nothing new to be gained here
+								break
+							# TODO THIS is where we're at rn
+							if choice_texts.has("disabled"):
+								pass
+							choice_index += 1
+					DIISISGlobal.LineType.Instruction:
+						line["content"]["meta.text"] = new_content.get("meta.text")
+						line["content"]["meta.has_reverse"] = new_content.get("meta.has_reverse", line.get("content").get("meta.has_reverse"))
+						line["content"]["meta.reverse_text"] = new_content.get("meta.reverse_text", line.get("content").get("meta.reverse_text"))
+					DIISISGlobal.LineType.Folder:
+						line["content"]["range"] = new_content.get("range")
+		
+		page_data[i] = data
+	# actually write a Pages function to update content by line id
+	# get line type so you know if content should be updated in the text data or directly in the line data
+	pass
+		
+	# then call editor.update
 
 func remove_tags(t:String) -> String:
 	var text := t
