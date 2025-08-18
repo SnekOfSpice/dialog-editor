@@ -121,53 +121,56 @@ func ingest_pages(text:String, payload:={}) -> void:
 	
 	var constructed_page := ""
 	
-
-	
 	if import_mode == ImportMode.UpdateExistingData:
 		update_existing_data(text_lines, payload, actors)
 	elif import_mode == ImportMode.OverrideFile:
 		override_existing_data(text_lines, payload, actors)
 		
 	return
-	#var real_pages := [] ## this currently wont work anymore
-	#while not text_lines.is_empty():
-		#var current_line : String = text_lines.pop_front()
-		#current_line += "\n"
-		#if current_line == "PAGE\n":
-			#real_pages.append(constructed_page)
-			#constructed_page = ""
-			##continue
-		#else:
-			#constructed_page += current_line
-	#if not constructed_page.is_empty():
-		#real_pages.append(constructed_page)
-		#
-	#for page in real_pages:
-		#await get_tree().process_frame
-		#Pages.editor.request_add_page_after_current()
-		#await get_tree().process_frame
-		#var lines : PackedStringArray = page.split("CONTENT\n")
-		#for line in lines:
-			#var formatted_text := format_text(str("CONTENT\n", line), actors)
-			#
-			#if capitalize:
-				#formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
-			#if neaten_whitespace:
-				#formatted_text = Pages.neaten_whitespace(formatted_text)
-			#if fix_punctuation:
-				#formatted_text = Pages.fix_punctuation(formatted_text)
-			#
-			#var line_obj := {
-				#"content" :  {
-					#"content" : formatted_text
-				#}
-			#}
-			#await get_tree().process_frame
-			#Pages.editor.add_line_to_end_of_page(line_obj)
-			#await get_tree().process_frame
 
 func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_override:=[]):
 	var new_page_data := {}
+	
+	var imported_lines_per_page := []
+	var working_page := []
+	while not imported_lines.is_empty():
+		var line : String = imported_lines.pop_front()
+		if line.begins_with("PAGE") and not working_page.is_empty():
+			imported_lines_per_page.append(working_page)
+		working_page.append(line)
+	if not working_page.is_empty():
+		imported_lines_per_page.append(working_page)
+	
+	
+	for lines_for_page : Array in imported_lines_per_page:
+		var page_line : String = lines_for_page.pop_front()
+		var current_page_data := {}
+		
+		if page_line.contains("ID:"):
+			var id : String = page_line.split("ID:")[1]
+			current_page_data = get_page_data(id)
+		
+		var current_line_data := []
+		
+		var lines_for_line_content := []
+		var line_content_farm := lines_for_page.duplicate(true)
+		var working_imported_lines_for_line := []
+		while not line_content_farm.is_empty():
+			var local_line : String = line_content_farm.pop_front()
+			if local_line.begins_with("LINE") and not working_imported_lines_for_line.is_empty():
+				lines_for_line_content.append(working_imported_lines_for_line.duplicate(true))
+				working_imported_lines_for_line.clear()
+			working_imported_lines_for_line.append(local_line)
+		if not working_imported_lines_for_line.is_empty():
+			lines_for_line_content.append(working_imported_lines_for_line.duplicate(true))
+		
+		print("\n\n".join(lines_for_line_content))
+		
+		var cpn : int = new_page_data.size()
+		current_page_data["number"] = cpn
+		new_page_data[cpn] = current_page_data
+	
+	return
 	
 	# iterare over every imported_lines
 	# ingest content when needed
@@ -183,7 +186,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 			if not current_page_data.is_empty(): # happens on first iteration
 				current_page_data["lines"] = current_line_data
 				new_page_data[current_page_data.get("number")] = current_page_data.duplicate(true)
-			current_page_data = get_page_data_without_line_data(page_id)
+			current_page_data = get_page_data(page_id)
 		
 	if not current_page_data.is_empty(): # happens on first iteration
 		new_page_data[current_page_data.get("number")] = current_page_data.duplicate(true)
@@ -279,11 +282,10 @@ func get_line_data_by_id(line_id:String) -> Dictionary:
 				return line.duplicate(true)
 	return {}
 
-func get_page_data_without_line_data(page_id:String) -> Dictionary:
+func get_page_data(page_id:String) -> Dictionary:
 	for i in Pages.page_data.size():
 		var page_data = Pages.get_page_data(i)
 		if page_data.get("id", "") == page_id:
 			var ddata = page_data.duplicate(true)
-			ddata.erase("lines")
 			return ddata
 	return {}

@@ -533,7 +533,7 @@ func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
 const OPENING_COVER_WELCOME_MESSAGE := "[img=200]uid://cakx4eotyolmx[/img]\n
-[font_size=28][b]Opening DIISIS\n
+[font_size=28][b]Opening DIISIS
 please wait :3
 "
 func set_opening_cover_visible(value:bool, message:=OPENING_COVER_WELCOME_MESSAGE):

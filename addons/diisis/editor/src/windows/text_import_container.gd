@@ -7,7 +7,7 @@ signal fd_closed
 func init():
 	%ImportMode.init()
 	%ImportMode.select(0)
-	%ImportTextLabel.text = ""
+	set_import_text("")
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -34,6 +34,7 @@ func _on_import_mode_option_pressed(index: int) -> void:
 	
 
 func set_import_text(text:String):
+	%ImportButton.disabled = text.is_empty()
 	%ImportTextLabel.text = text
 
 func _on_clipboard_button_pressed() -> void:

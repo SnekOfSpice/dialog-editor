@@ -102,7 +102,8 @@ layout_mode = 2
 button_pressed = true
 text = "Fix Punctuation"
 
-[node name="Button" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="ImportButton" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Import"
 
@@ -127,4 +128,4 @@ size_flags_vertical = 3
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
 [connection signal="option_pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/ImportMode" to="." method="_on_import_mode_option_pressed"]
-[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/ImportButton" to="." method="_on_button_pressed"]

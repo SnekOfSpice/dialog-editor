@@ -109,7 +109,6 @@ func serialize() -> Dictionary:
 	
 	var jump_page_target_page : int = find_child("PageSelect").value
 	var jump_page_target_line : int = find_child("LineSelect").value
-	
 	Pages.save_text(text_id_enabled, find_child("LineEditEnabled").text)
 	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
 	
@@ -234,6 +233,16 @@ func update():
 		find_child("LoopbackLineSelect").value = deserialized_loopback_page
 	if deserialized_loopback_page > find_child("LoopbackPageSelect").value:
 		find_child("LoopbackPageSelect").value = deserialized_loopback_page
+	if Pages.text_hacks_by_id.has(text_id_enabled):
+		var new_text : String = Pages.text_hacks_by_id.get(text_id_enabled)
+		find_child("LineEditEnabled").text = new_text
+		Pages.text_hacks_by_id.erase(text_id_enabled)
+		Pages.save_text(text_id_enabled, new_text)
+	if Pages.text_hacks_by_id.has(text_id_disabled):
+		var new_text : String = Pages.text_hacks_by_id.get(text_id_disabled)
+		find_child("LineEditDisabled").text = Pages.text_hacks_by_id.get(text_id_disabled)
+		Pages.text_hacks_by_id.erase(text_id_disabled)
+		Pages.save_text(text_id_disabled, new_text)
 	
 	Pages.editor.get_current_page().update_incoming_references()
 

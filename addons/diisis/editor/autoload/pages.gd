@@ -40,6 +40,11 @@ var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
 
+# oh god have mercy on me
+# im sorry diisis this is an actual sti I just gave you jfc
+# i couldnt figure out why the choice labels would just refuse to get updated on import
+var text_hacks_by_id := {}
+
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
@@ -1456,6 +1461,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 func update_line_content(new_content_by_line_id:Dictionary):
 	editor.set_opening_cover_visible(true, "Importing, please wait >.<")
 	var ids_to_update := new_content_by_line_id.keys()
+	
 	for page_index in get_page_count():
 		var data = get_page_data(page_index)
 		
@@ -1476,8 +1482,11 @@ func update_line_content(new_content_by_line_id:Dictionary):
 						var choice_index := 0
 						
 						var choice_item_data_by_choice_id := {}
+						var id_order := []
 						for choice : Dictionary in choice_texts:
-							choice_item_data_by_choice_id[choice.get("id")] = choice
+							var id : String = choice.get("id", get_new_id())
+							choice_item_data_by_choice_id[id] = choice
+							id_order.append(id)
 						
 						# first go over all existing choices and update from there
 						
@@ -1488,18 +1497,16 @@ func update_line_content(new_content_by_line_id:Dictionary):
 								var text_id_disabled : String = choice.get("text_id_disabled")
 								
 								var new_data : Dictionary = choice_item_data_by_choice_id.get(id)
-								
 								if new_data.has("enabled"):
-									save_text(text_id_enabled, new_data.get("enabled"))
+									text_hacks_by_id[text_id_enabled] = new_data.get("enabled")
 								if new_data.has("disabled"):
-									save_text(text_id_disabled, new_data.get("disabled"))
+									text_hacks_by_id[text_id_disabled] = new_data.get("disabled")
 								
 								choice_item_data_by_choice_id.erase(id)
 						
 						# all remaining bits of choice data that haven't been used up in existing choices
 						for key : String in choice_item_data_by_choice_id.keys():
 							var unused_data : Dictionary = choice_item_data_by_choice_id.get(key)
-							
 							var new_choice_id := key
 							
 							var new_choice := {}
@@ -1514,6 +1521,9 @@ func update_line_content(new_content_by_line_id:Dictionary):
 								save_text(new_disabled_text_id, unused_data.get("disabled"))
 							
 							existing_choices.append(new_choice)
+						
+						existing_choices = sort_choices(id_order, existing_choices)
+						
 						line["content"]["choices"] = existing_choices
 					DIISISGlobal.LineType.Instruction:
 						line["content"]["meta.text"] = new_content.get("meta.text")
@@ -1531,7 +1541,16 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	editor.hide_window_by_string("TextImportWindow")
 	editor.refresh(false)
 	editor.set_opening_cover_visible(false)
+
+func sort_choices(id_order:Array, choices:Array) -> Array:
+	var result := []
+	result.resize(choices.size())
 	
+	for choice : Dictionary in choices:
+		var target_index := id_order.find(choice.get("id"))
+		result[target_index] = choice
+	
+	return result
 
 func remove_tags(t:String) -> String:
 	var text := t
