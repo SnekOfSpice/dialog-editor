@@ -1374,24 +1374,25 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 
 
 func get_cascading_trail(start_page:int) -> Array:
-	var trail := [start_page]
+	var trail := []
 	
-	var terminate : bool = get_page_data(start_page).get("terminate", false)
-	var next : int = get_page_data(start_page).get("next")
+	var terminate := false
+	var current_page := start_page
+	
 	while not terminate:
-		if trail.has(next):
-			push_warning("Cyclic pages %s starting from %s" % [next, start_page])
-			break
-		trail.append(next)
-		next = get_page_data(next).get("next")
-		terminate = get_page_data(next).get("terminate", false)
+		trail.append(current_page)
+		terminate = get_page_data(current_page).get("terminate", false)
+		current_page = get_page_data(current_page).get("next")
 	
 	return trail
 
 func stringify_page(page_index:int, modifiers := {}) -> String:
 	var data := get_page_data(page_index)
 	
-	var result := "PAGE %s ID:%s" % [page_index, data.get("id")]
+	var include_ids : bool = modifiers.get("include_ids", true)
+	var result := "PAGE %s" % page_index
+	if include_ids:
+		result += " ID:%s" % data.get("id")
 	
 	var line_index := 0
 	for line : Dictionary in data.get("lines", []):
@@ -1408,7 +1409,9 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 			DIISIS.LineType.Folder:
 				line_type_letter = "f"
 		result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
-		result += " ID:%s\n" % line.get("id")
+		if include_ids:
+			result += " ID:%s" % line.get("id")
+		result += "\n"
 		var content : Dictionary = line.get("content")
 		match line_type:
 			DIISIS.LineType.Text:
@@ -1441,7 +1444,8 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 					if not disabled_text.is_empty():
 						result += "<" + disabled_text
 					
-					result += "ID:"+choice.get("id")
+					if include_ids:
+						result += "ID:"+choice.get("id")
 			DIISIS.LineType.Folder:
 				result += str(content.get("range", 0))
 		line_index += 1
@@ -1450,9 +1454,10 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 
 ## function used by Text2Diisis
 func update_line_content(new_content_by_line_id:Dictionary):
+	editor.set_opening_cover_visible(true, "Importing, please wait >.<")
 	var ids_to_update := new_content_by_line_id.keys()
-	for i in get_page_count():
-		var data = get_page_data(i)
+	for page_index in get_page_count():
+		var data = get_page_data(page_index)
 		
 		for line : Dictionary in data.get("lines", []):
 			var line_id : String = line.get("id")
@@ -1466,20 +1471,50 @@ func update_line_content(new_content_by_line_id:Dictionary):
 						var text_id : String = line_content.get("text_id")
 						save_text(text_id, new_text)
 					DIISISGlobal.LineType.Choice:
-						print("awawawa work here")
-						var text_id_enabled : String = line_content.get("text_id_enabled")
-						var text_id_disabled : String = line_content.get("text_id_disabled")
 						var choice_texts : Array = new_content.get("choice_texts")
 						var existing_choices : Array = line_content.get("choices", [])
 						var choice_index := 0
-						while choice_index < max(choice_texts.size(), existing_choices.size()):
-							if choice_index >= choice_texts.size() and choice_index < existing_choices.size():
-								# there's nothing new to be gained here
-								break
-							# TODO THIS is where we're at rn
-							if choice_texts.has("disabled"):
-								pass
-							choice_index += 1
+						
+						var choice_item_data_by_choice_id := {}
+						for choice : Dictionary in choice_texts:
+							choice_item_data_by_choice_id[choice.get("id")] = choice
+						
+						# first go over all existing choices and update from there
+						
+						for choice : Dictionary in existing_choices:
+							var id : String = choice.get("id", "")
+							if choice_item_data_by_choice_id.has(id):
+								var text_id_enabled : String = choice.get("text_id_enabled")
+								var text_id_disabled : String = choice.get("text_id_disabled")
+								
+								var new_data : Dictionary = choice_item_data_by_choice_id.get(id)
+								
+								if new_data.has("enabled"):
+									save_text(text_id_enabled, new_data.get("enabled"))
+								if new_data.has("disabled"):
+									save_text(text_id_disabled, new_data.get("disabled"))
+								
+								choice_item_data_by_choice_id.erase(id)
+						
+						# all remaining bits of choice data that haven't been used up in existing choices
+						for key : String in choice_item_data_by_choice_id.keys():
+							var unused_data : Dictionary = choice_item_data_by_choice_id.get(key)
+							
+							var new_choice_id := key
+							
+							var new_choice := {}
+							new_choice["id"] = key
+							if unused_data.has("enabled"):
+								var new_enabled_text_id := get_new_id()
+								new_choice["text_id_enabled"] = new_enabled_text_id
+								save_text(new_enabled_text_id, unused_data.get("enabled"))
+							if unused_data.has("disabled"):
+								var new_disabled_text_id := get_new_id()
+								new_choice["text_id_disabled"] = new_disabled_text_id
+								save_text(new_disabled_text_id, unused_data.get("disabled"))
+							
+							existing_choices.append(new_choice)
+						line["content"]["choices"] = existing_choices
 					DIISISGlobal.LineType.Instruction:
 						line["content"]["meta.text"] = new_content.get("meta.text")
 						line["content"]["meta.has_reverse"] = new_content.get("meta.has_reverse", line.get("content").get("meta.has_reverse"))
@@ -1487,12 +1522,16 @@ func update_line_content(new_content_by_line_id:Dictionary):
 					DIISISGlobal.LineType.Folder:
 						line["content"]["range"] = new_content.get("range")
 		
-		page_data[i] = data
+		page_data[page_index] = data
 	# actually write a Pages function to update content by line id
 	# get line type so you know if content should be updated in the text data or directly in the line data
 	pass
-		
-	# then call editor.update
+	
+	await get_tree().process_frame
+	editor.hide_window_by_string("TextImportWindow")
+	editor.refresh(false)
+	editor.set_opening_cover_visible(false)
+	
 
 func remove_tags(t:String) -> String:
 	var text := t

@@ -7,6 +7,7 @@ signal fd_closed
 func init():
 	%ImportMode.init()
 	%ImportMode.select(0)
+	%ImportTextLabel.text = ""
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)

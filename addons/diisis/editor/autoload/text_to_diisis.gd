@@ -128,8 +128,6 @@ func ingest_pages(text:String, payload:={}) -> void:
 	elif import_mode == ImportMode.OverrideFile:
 		override_existing_data(text_lines, payload, actors)
 		
-	for line in text_lines:
-		print(line)
 	return
 	#var real_pages := [] ## this currently wont work anymore
 	#while not text_lines.is_empty():
@@ -194,22 +192,10 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 
 func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_override:=[]):
 	var line_content_by_id : Dictionary[String, Dictionary] = {}
-	var line_data : Dictionary
 	while not imported_lines.is_empty():
 		var line : String = imported_lines.pop_front()
 		if line.begins_with("PAGE"):
 			continue
-		var line_type : DIISISGlobal.LineType
-		if line.begins_with("LINE i"):
-			line_type = DIISISGlobal.LineType.Instruction
-		if line.begins_with("LINE c"):
-			line_type = DIISISGlobal.LineType.Choice
-		if line.begins_with("LINE f"):
-			line_type = DIISISGlobal.LineType.Folder
-		else:
-			line_type = DIISISGlobal.LineType.Text
-		var line_id = line.split("ID:")[1]
-		
 		var lines_for_line_content := []
 		var line_content_farm := imported_lines.duplicate(true)
 		while not line_content_farm.is_empty():
@@ -217,79 +203,73 @@ func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_ove
 			if local_line.begins_with("LINE"):
 				break
 			lines_for_line_content.append(local_line)
-			imported_lines.pop_front()
+			imported_lines.remove_at(0)
+		var line_id = line.split("ID:")[1]
 		
-		# construct line_data_by_id
-		match line_type:
-			DIISISGlobal.LineType.Text:
-				var capitalize : bool = payload.get("capitalize", false)
-				var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
-				var fix_punctuation : bool = payload.get("fix_punctuation", false)
-				var formatted_text := format_text("\n".join(lines_for_line_content), actor_ingestion_override)
-				if capitalize:
-					formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
-				if neaten_whitespace:
-					formatted_text = Pages.neaten_whitespace(formatted_text)
-				if fix_punctuation:
-					formatted_text = Pages.fix_punctuation(formatted_text)
-				line_content_by_id[line_id] = {
-					"text" : formatted_text
-				}
-			DIISISGlobal.LineType.Choice:
-				var choice_texts := []
-				for content_line : String in lines_for_line_content:
-					var text_data := {}
-					if content_line.contains("ID:"):
-						var parts = content_line.split("ID:")
-						content_line = parts[0]
-						text_data["id"] = parts[1]
-					if content_line.begins_with(">"): # enabled exists
-						content_line = content_line.trim_prefix(">")
-						var enabled_text : String
-						var disabled_text : String
-						if content_line.contains("<"):
-							var split = content_line.split("<")
-							enabled_text = split[0]
-							disabled_text = split[1]
-						else:
-							enabled_text = content_line
-						text_data["enabled"] = enabled_text
-						if not disabled_text.is_empty():
-							text_data["disabled"] = disabled_text
-					elif content_line.begins_with("<"): # only disabled
-						text_data["disabled"] = content_line.trim_prefix("<")
-					choice_texts.append(text_data)
-				line_content_by_id[line_id] = {
-					"choice_texts" : choice_texts
-				}
-			DIISISGlobal.LineType.Instruction:
-				var instruction_data := {}
-				for content_line : String in lines_for_line_content:
-					if content_line.begins_with("x<"): # reverse present but disabled
-						instruction_data["meta.has_reverse"] = false
-						instruction_data["meta.reverse_text"] = content_line.trim_prefix("x<")
-					elif content_line.begins_with("<"): # reverse present but disabled
-						instruction_data["meta.has_reverse"] = true
-						instruction_data["meta.reverse_text"] = content_line.trim_prefix("<")
-					else: # default
-						instruction_data["meta.text"] = content_line
-				line_content_by_id[line_id] = instruction_data
-			DIISISGlobal.LineType.Folder:
-				line_content_by_id[line_id] = {
-					"range" : lines_for_line_content.front()
-				}
+		if line.begins_with("LINE i"):
+			var instruction_data := {}
+			for content_line : String in lines_for_line_content:
+				if content_line.begins_with("x<"): # reverse present but disabled
+					instruction_data["meta.has_reverse"] = false
+					instruction_data["meta.reverse_text"] = content_line.trim_prefix("x<")
+				elif content_line.begins_with("<"): # reverse present but disabled
+					instruction_data["meta.has_reverse"] = true
+					instruction_data["meta.reverse_text"] = content_line.trim_prefix("<")
+				else: # default
+					instruction_data["meta.text"] = content_line
+			line_content_by_id[line_id] = instruction_data
+		if line.begins_with("LINE c"):
+			var choice_texts := []
+			for content_line : String in lines_for_line_content:
+				var text_data := {}
+				if content_line.contains("ID:"):
+					var parts = content_line.split("ID:")
+					content_line = parts[0]
+					text_data["id"] = parts[1]
+				if content_line.begins_with(">"): # enabled exists
+					content_line = content_line.trim_prefix(">")
+					var enabled_text : String
+					var disabled_text : String
+					if content_line.contains("<"):
+						var split = content_line.split("<")
+						enabled_text = split[0]
+						disabled_text = split[1]
+					else:
+						enabled_text = content_line
+					text_data["enabled"] = enabled_text
+					if not disabled_text.is_empty():
+						text_data["disabled"] = disabled_text
+				elif content_line.begins_with("<"): # only disabled
+					text_data["disabled"] = content_line.trim_prefix("<")
+				choice_texts.append(text_data)
+			line_content_by_id[line_id] = {
+				"choice_texts" : choice_texts.duplicate(true)
+			}
+		if line.begins_with("LINE f"):
+			var range : float = float(lines_for_line_content.front())
+			line_content_by_id[line_id] = {
+				"range" : range
+			}
+		else:
+			if line_content_by_id.has(line_id):
+				# idk why this happens but nontext lines get counted double
+				continue
+			var capitalize : bool = payload.get("capitalize", false)
+			var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
+			var fix_punctuation : bool = payload.get("fix_punctuation", false)
+			var formatted_text := format_text("\n".join(lines_for_line_content), actor_ingestion_override)
+			if capitalize:
+				formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
+			if neaten_whitespace:
+				formatted_text = Pages.neaten_whitespace(formatted_text)
+			if fix_punctuation:
+				formatted_text = Pages.fix_punctuation(formatted_text)
+			line_content_by_id[line_id] = {
+				"text" : formatted_text
+			}
 	
 	# then go over Pages.page_data and insert the updated line content
-	
 	Pages.update_line_content(line_content_by_id)
-	#for line_id :String in line_content_by_id.keys():
-		#
-		##var pages_line_data := get_line_data_by_id(line_id)
-		#
-		
-	
-
-
 
 func get_line_data_by_id(line_id:String) -> Dictionary:
 	for i in Pages.page_data.size():

@@ -69,7 +69,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
-	$OpeningCover.visible = true
+	set_opening_cover_visible(true)
 	was_playing_scene = EditorInterface.is_playing_scene()
 	Pages.clear()
 	DiisisEditorActions.clear()
@@ -191,7 +191,7 @@ func load_page(number: int, discard_without_saving:=false):
 	page_instance.init(number)
 	update_controls()
 	await get_tree().process_frame
-	$OpeningCover.visible = false
+	set_opening_cover_visible(false)
 
 func get_line_data(index:int):
 	return 
@@ -532,11 +532,19 @@ func serialize() -> Dictionary:
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
+const OPENING_COVER_WELCOME_MESSAGE := "[img=200]uid://cakx4eotyolmx[/img]\n
+[font_size=28][b]Opening DIISIS\n
+please wait :3
+"
+func set_opening_cover_visible(value:bool, message:=OPENING_COVER_WELCOME_MESSAGE):
+	$OpeningCover.visible = value
+	$OpeningCover.get_child(0).text = message
+
 func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	
 	if not file:
-		$OpeningCover.visible = false
+		set_opening_cover_visible(false)
 		return
 	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
@@ -658,6 +666,10 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.content_scale_factor = content_scale
 	popup.size *= content_scale
 
+func hide_window_by_string(window_name:String) -> Window:
+	var window : Window = $Popups.get_node(window_name)
+	window.hide()
+	return window
 
 func open_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)

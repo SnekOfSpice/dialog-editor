@@ -10,10 +10,10 @@ LINE i 0.1 ID:1744999497.570--9223372036854774772
 set_bgm(default, 0)
 
 LINE f 0.2 ID:1755250466.988--9223372036854761329
-1.0
+2.0
 
 LINE t 0.3 ID:1744999497.621--9223372036854774767
-narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!
+narrator: Thank you for downloading DIISIS.gfxfgtxcfgcc You seem to have set it up so it doesn't explode your project. <mp>Good job!
 narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]"demo_script.json"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow & read along to the tour :3
 amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.
 narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.
@@ -23,8 +23,8 @@ narrator: Facts can either be boolean (true or false) or integers (whole numbers
 narrator: Isn't she cool?
 
 LINE c 0.4 ID:1744999497.763--9223372036854774754
->Yes I love herID:1755252332.556--9223372036854761294
->No actually, robots are scaryID:1755252333.056--9223372036854761290
+>Yes I love herID:1755512415.997--9223372036854761465
+>No actually, robots are scaryID:1755512416.338--9223372036854761461
 
 LINE t 0.5 ID:1744999497.822--9223372036854774749
 amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!

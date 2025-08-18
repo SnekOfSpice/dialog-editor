@@ -406,7 +406,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761453,
+		"id_counter": -9223372036854761415,
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -649,6 +649,7 @@
 										},
 										"meta.visible": false
 									},
+									"id": "1755512415.997--9223372036854761465",
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
@@ -691,6 +692,7 @@
 										},
 										"meta.visible": false
 									},
+									"id": "1755512416.338--9223372036854761461",
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,

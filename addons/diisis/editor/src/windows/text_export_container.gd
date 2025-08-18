@@ -76,6 +76,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(generate_export())
 	file.close()
+	get_parent().hide()
 
 
 func _on_file_button_pressed() -> void:
