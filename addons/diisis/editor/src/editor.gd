@@ -115,10 +115,12 @@ func init(active_file_path:="") -> void:
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = find_child("File")
 	file_item.add_separator()
+	file_item.add_item("Import...", 6)
+	file_item.add_item("Export...", 5)
 	# nts those submenus have to be invisible otherwise they break for the first hover
-	var ingest : PopupMenu = file_item.get_node("IngestMenu")
-	file_item.add_submenu_node_item("Ingest Pages", ingest)
-	ingest.init()
+	#var ingest : PopupMenu = file_item.get_node("IngestMenu")
+	#file_item.add_submenu_node_item("Ingest Pages", ingest)
+	#ingest.init()
 	
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	file_item.add_separator()
@@ -663,6 +665,7 @@ func open_window_by_string(window_name:String) -> Window:
 		"HandlerWindow",
 		"FactsPopup",
 		"TextExportWindow",
+		"TextImportWindow",
 	])
 	return window
 
@@ -712,6 +715,8 @@ func _on_file_id_pressed(id: int) -> void:
 			)
 		5:
 			open_window_by_string("TextExportWindow")
+		6:
+			open_window_by_string("TextImportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)

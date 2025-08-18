@@ -1,0 +1,130 @@
+[gd_scene load_steps=3 format=3 uid="uid://b25wlaux80jy4"]
+
+[ext_resource type="Script" uid="uid://qhrmp28h113l" path="res://addons/diisis/editor/src/windows/text_import_container.gd" id="1_mj3nd"]
+[ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_vu8ce"]
+
+[node name="TextImportContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mj3nd")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a File"
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.txt", "*.dtf")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="VBoxContainer" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="HSplitContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Add Data..."
+
+[node name="FileButton" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "From file..."
+alignment = 0
+
+[node name="ClipboardButton" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 2
+text = "From Clipboard"
+alignment = 0
+
+[node name="HBoxContainer" type="VBoxContainer" parent="HSplitContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ImportModeNotice0" type="RichTextLabel" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#F7D468]Assumes that all parts of the imported text contain an ID that corresponds to an existing ID. The IDs need to be laid out in accordance with DIISIS Text File (DTF) specification.
+
+The existing file structure will be preserved, and the ingested data is \"overlaid\". Data beyond the scope of the imported text, such as facts and headers, are preserved.[/color]"
+vertical_alignment = 2
+
+[node name="ImportModeNotice1" type="RichTextLabel" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#F7D468][NOT IMPLEMENTED YET]Erased all current page data and builds new lines from the imported text.
+
+Any existing data from lines and choices with IDs existent in the imported text will be ingested and updated like with Import Mode \"Update Existing Data\" in addition to the new data.
+[/color]"
+vertical_alignment = 2
+
+[node name="ImportMode" parent="HSplitContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_vu8ce")]
+unique_name_in_owner = true
+layout_mode = 2
+options = Array[String](["Update Existing Data", "Override"])
+
+[node name="Label" type="Label" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Text"
+
+[node name="CapitalizeCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Capitalize"
+
+[node name="NeatenWhitespaceCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Neaten Whitespace"
+
+[node name="FixPunctuationCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Fix Punctuation"
+
+[node name="Button" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Import"
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Text to import:"
+
+[node name="ImportTextLabel" type="RichTextLabel" parent="HSplitContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
+[connection signal="option_pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/ImportMode" to="." method="_on_import_mode_option_pressed"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]

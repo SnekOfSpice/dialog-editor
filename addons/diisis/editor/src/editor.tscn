@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="28_g0iye"]
 [ext_resource type="PackedScene" uid="uid://b81qxlexbcshc" path="res://addons/diisis/editor/src/change_text_id_window.tscn" id="29_jb16f"]
 [ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
+[ext_resource type="PackedScene" uid="uid://c425o5b1gsvvk" path="res://addons/diisis/editor/src/windows/text_import_window.tscn" id="31_24jcx"]
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
 [ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
 [ext_resource type="PackedScene" uid="uid://dy0ea1htdu04v" path="res://addons/diisis/editor/src/windows/generic_subwindow.tscn" id="34_ajvyk"]
@@ -134,7 +135,7 @@ theme = ExtResource("1_nb6ej")
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
 content_scale_aspect = 4
-item_count = 5
+item_count = 4
 item_0/text = "New    (Ctrl+N)"
 item_0/id = 9
 item_1/text = "Save    (Ctrl+S)"
@@ -143,8 +144,6 @@ item_2/text = "Save As..."
 item_2/id = 1
 item_3/text = "Open    (Ctrl+O)"
 item_3/id = 2
-item_4/text = "Export as text..."
-item_4/id = 5
 
 [node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
 visible = false
@@ -611,6 +610,9 @@ size = Vector2i(400, 2040)
 visible = false
 
 [node name="TextExportWindow" parent="Popups" instance=ExtResource("34_m63dd")]
+visible = false
+
+[node name="TextImportWindow" parent="Popups" instance=ExtResource("31_24jcx")]
 visible = false
 
 [node name="ActorSearchWindow" parent="Popups" instance=ExtResource("34_ajvyk")]

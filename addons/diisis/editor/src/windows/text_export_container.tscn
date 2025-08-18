@@ -55,47 +55,75 @@ unique_name_in_owner = true
 layout_mode = 2
 columns = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
-visible = false
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Selected Pages"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PageKeyLabelContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
 text = "Options"
 
-[node name="IncludeInstructionsCheckBox" type="CheckBox" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="IncludeInstructionsCheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Include Instructions"
 
-[node name="PageKeyLabelContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="IncludeIDsCheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
+button_pressed = true
+text = "Include IDs"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-size_flags_vertical = 10
+size_flags_vertical = 8
 
-[node name="ClipboardButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="ClipboardButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 10
 text = "Copy to Clipboard"
 
-[node name="FileButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="FileButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Export as file..."
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Export as Text"
-always_on_top = true
 access = 2
-filters = PackedStringArray("*.txt")
+filters = PackedStringArray("*.txt", "*.dtf")
 
 [connection signal="option_pressed" from="VBoxContainer/HBoxContainer/Mode" to="." method="_on_option_button_embed_option_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
