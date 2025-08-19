@@ -115,8 +115,9 @@ func init(active_file_path:="") -> void:
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = find_child("File")
 	file_item.add_separator()
-	file_item.add_item("Import...", 6)
-	file_item.add_item("Export...", 5)
+	file_item.add_item("Import    (Shift+I)", 6)
+	file_item.add_item("Export    (Shift+E)", 5)
+	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	#var ingest : PopupMenu = file_item.get_node("IngestMenu")
 	#file_item.add_submenu_node_item("Ingest Pages", ingest)
@@ -311,7 +312,10 @@ func _shortcut_input(event):
 		if event.is_command_or_control_pressed():
 			match event.key_label:
 				KEY_E:
-					get_current_page().set_editing_page_key(true)
+					if event.is_shift_pressed():
+						open_window_by_string("TextExportWindow")
+					else:
+						get_current_page().set_editing_page_key(true)
 				KEY_G:
 					find_child("GoTo").toggle_active()
 				KEY_N:
@@ -319,7 +323,10 @@ func _shortcut_input(event):
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_I:
-					open_window_by_string("IngestionActorSetupWindow")
+					if event.is_shift_pressed():
+						open_window_by_string("TextImportWindow")
+					else:
+						open_window_by_string("IngestionActorSetupWindow")
 				KEY_F:
 					if event.is_shift_pressed():
 						open_popup($Popups.get_node("FactsPopup"))

@@ -6,7 +6,7 @@ signal fd_closed
 
 func init():
 	%ImportMode.init()
-	%ImportMode.select(0)
+	%ImportMode.select(Pages.preferences_import.get("mode", 0))
 	set_import_text("")
 
 func _on_file_dialog_file_selected(path: String) -> void:
@@ -48,3 +48,8 @@ func _on_button_pressed() -> void:
 	payload["neaten_whitespace"] = find_child("NeatenWhitespaceCheckBox").button_pressed
 	payload["fix_punctuation"] = find_child("FixPunctuationCheckBox").button_pressed
 	TextToDiisis.ingest_pages(%ImportTextLabel.text, payload)
+
+func get_preferences() -> Dictionary:
+	return {
+		"mode" : %ImportMode.get_selected_id(),
+	}

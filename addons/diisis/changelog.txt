@@ -13,10 +13,14 @@ shit from ldspcn
 - linearize_pages
 - introduce generic subwindow to editor
 - text export
+- text import
 - better scroll in editor
 - better performance
 - add ability to skip entire pages
-- replacement rules
+- pucntuation & replacement:
+	- period toggle
+	- apostrophes toggle
+	- replacement rules
 - rubies
 
 General

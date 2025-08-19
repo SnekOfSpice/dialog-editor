@@ -24,11 +24,21 @@ grow_vertical = 2
 layout_mode = 2
 text = "General punctuation rules"
 
-[node name="PeriodCheckBox" type="CheckBox" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PeriodCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Append periods"
+
+[node name="ApostropheCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+button_pressed = true
+text = "Fix common apostrophes"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
@@ -91,7 +101,8 @@ size_flags_horizontal = 10
 text = "Defaults"
 icon = ExtResource("2_looju")
 
-[connection signal="pressed" from="VBoxContainer/PeriodCheckBox" to="." method="_on_period_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PeriodCheckBox" to="." method="_on_period_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ApostropheCheckBox" to="." method="_on_period_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/AddRuleButton" to="." method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/SaveRulesButton" to="." method="_on_save_rules_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/AddDefaultsButton" to="." method="_on_add_defaults_button_pressed"]

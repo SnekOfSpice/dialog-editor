@@ -7,6 +7,7 @@ func _on_about_to_popup() -> void:
 
 
 func _on_close_requested() -> void:
+	Pages.preferences_import = $TextImportContainer.get_preferences()
 	hide()
 
 

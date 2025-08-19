@@ -17,6 +17,9 @@ var text_lead_time_other_actor := 0.0
 const NEGATIVE_INF := -int(INF)
 var id_counter := NEGATIVE_INF
 
+var punctuation_marks := [
+			".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
+		]
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -101,7 +104,10 @@ const STRING_SETTINGS := {
 var shader := ""
 
 var append_periods := true
+var fix_apostrophes := true
 var replacement_rules := []
+var preferences_import := {}
+var preferences_export := {}
 const DEFAULT_REPLACEMENT_RULES := [
 	{
 		"enabled" : false,
@@ -187,31 +193,34 @@ func is_header_schema_empty():
 
 func serialize() -> Dictionary:
 	var data := {
-		"head_defaults" : head_defaults,
-		"id_counter" : id_counter,
-		"page_data" : page_data,
-		"text_data" : text_data,
-		"default_locale" : default_locale,
-		"custom_method_defaults": custom_method_defaults,
-		"full_custom_method_defaults": _get_custom_method_full_defaults(),
-		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"append_periods": append_periods,
 		"callable_autoloads": callable_autoloads,
-		"ingestion_actor_declaration": ingestion_actor_declaration,
-		"facts": facts,
+		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"custom_method_defaults": custom_method_defaults,
+		"default_address_mode_pages": default_address_mode_pages,
+		"default_locale" : default_locale,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
 		"dropdown_dialog_arguments": dropdown_dialog_arguments,
 		"dropdown_title_for_dialog_syntax": dropdown_title_for_dialog_syntax,
-		"file_config": get_file_config(),
-		"locales_to_export" : locales_to_export,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
+		"evaluator_modified_times": evaluator_modified_times,
+		"facts": facts,
+		"file_config": get_file_config(),
+		"fix_apostrophes" : fix_apostrophes,
+		"full_custom_method_defaults": _get_custom_method_full_defaults(),
+		"head_defaults" : head_defaults,
+		"id_counter" : id_counter,
+		"ingestion_actor_declaration": ingestion_actor_declaration,
+		"locales_to_export" : locales_to_export,
+		"page_data" : page_data,
+		"preferences_export" : preferences_export,
+		"preferences_import" : preferences_import,
 		"replacement_rules": replacement_rules,
-		"append_periods": append_periods,
-		"use_dialog_syntax": use_dialog_syntax,
+		"text_data" : text_data,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
-		"default_address_mode_pages": default_address_mode_pages,
-		"evaluator_modified_times": evaluator_modified_times,
+		"use_dialog_syntax": use_dialog_syntax,
 	}
 	for setting in TOGGLE_SETTINGS.keys():
 		data[setting] = get(setting)
@@ -266,6 +275,9 @@ func deserialize(data:Dictionary):
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	replacement_rules = data.get("replacement_rules", [])
 	append_periods = data.get("append_periods", true)
+	fix_apostrophes = data.get("fix_apostrophes", true)
+	preferences_import = data.get("preferences_import", {})
+	preferences_export = data.get("preferences_export", {})
 	
 	apply_file_config(data.get("file_config", {}))
 	
@@ -1920,9 +1932,7 @@ func fix_punctuation(text:String) -> String:
 			line = line.erase(line.length() - 1)
 			ends_with_space = line.ends_with(" ")
 		var has_punctuation := false
-		var punctuation_marks := [
-			".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
-		]
+		
 		for i in 10:
 			punctuation_marks.append(str(i))
 		
@@ -1940,6 +1950,69 @@ func fix_punctuation(text:String) -> String:
 			result.append(line)
 		else:
 			result.append(line + ".")
+	
+	var apostrophe_pairs := [
+		["arent", "aren't"],
+		["cant", "can't"],
+		["couldnt", "couldn’t"],
+		["didnt", "didn't"],
+		["dont", "don't"],
+		["hadnt", "hadn't"],
+		["hasnt", "hasn't"],
+		["havent", "haven't"],
+		["hed", "he'd"],
+		["hes", "he's"],
+		["ive", "I've"],
+		["isnt", "isn't"],
+		["mightnt", "mightn't"],
+		["mustnt", "mustn't"],
+		["shant", "shan't"],
+		["shes", "she's"],
+		["shouldnt", "shouldn't"],
+		["thats", "that's"],
+		["theres", "there's"],
+		["theyd", "they'd"],
+		["theyll", "they'll"],
+		["theyre", "they're"],
+		["theyve", "they've"],
+		["weve", "we've"],
+		["werent", "weren't"],
+		["whatll", "what'll"],
+		["whatre", "what're"],
+		["whats", "what's"],
+		["whatve", "what've"],
+		["wheres", "where's"],
+		["whod", "who'd"],
+		["wholl", "who'll"],
+		["whos", "who's"],
+		["whove", "who've"],
+		["wont", "won't"],
+		["wouldnt", "wouldn't"],
+		["youd", "you'd"],
+		["youll", "you'll"],
+		["youre", "you're"],
+		["youve", "you've"],
+	]
+	var suffixes := punctuation_marks.duplicate(true)
+	suffixes.append(" ")
+	if fix_apostrophes:
+		for i in result.size():
+			var line : String = result[i]
+			for pair : Array in apostrophe_pairs:
+				for j in 3:
+					for suffix1 in suffixes:
+						for suffix2 in suffixes:
+							var what : String = suffix1 + pair[0] + suffix2
+							var forwhat : String = suffix1 + pair[1] + suffix2
+							if j == 0:
+								what = what.capitalize()
+								forwhat = forwhat.capitalize()
+							elif j == 1:
+								what = what.to_upper()
+								forwhat = forwhat.to_upper()
+							line = line.replace(what, forwhat)
+						
+			result[i] = line
 	
 	for rule : Dictionary in replacement_rules:
 		var enabled : bool = rule.get("enabled")

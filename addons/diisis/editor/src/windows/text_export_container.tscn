@@ -89,28 +89,43 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Options"
 
-[node name="IncludeInstructionsCheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-text = "Include Instructions"
-
 [node name="IncludeIDsCheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 text = "Include IDs"
 
+[node name="Warnings" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="IDWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Warnings"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=F7D468]Not including IDs will result in the generated data not being able to integrate back into the existing script![/color]"
+fit_content = true
+
+[node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Warnings"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=F54927]Invalid Range![/color]"
+fit_content = true
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-size_flags_vertical = 8
+size_flags_vertical = 10
 
 [node name="ClipboardButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 10
 text = "Copy to Clipboard"
 
 [node name="FileButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Export as file..."
 
@@ -120,9 +135,11 @@ access = 2
 filters = PackedStringArray("*.txt", "*.dtf")
 
 [connection signal="option_pressed" from="VBoxContainer/HBoxContainer/Mode" to="." method="_on_option_button_embed_option_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_warnings_u"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/IncludeIDsCheckBox" to="." method="update_warnings"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]

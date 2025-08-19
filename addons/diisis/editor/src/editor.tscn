@@ -136,13 +136,13 @@ theme = ExtResource("1_nb6ej")
 size = Vector2i(159, 228)
 content_scale_aspect = 4
 item_count = 4
-item_0/text = "New    (Ctrl+N)"
+item_0/text = "New    (N)"
 item_0/id = 9
-item_1/text = "Save    (Ctrl+S)"
+item_1/text = "Save    (S)"
 item_1/id = 0
 item_2/text = "Save As..."
 item_2/id = 1
-item_3/text = "Open    (Ctrl+O)"
+item_3/text = "Open    (O)"
 item_3/id = 2
 
 [node name="IngestMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar/File" instance=ExtResource("5_ows1f")]
