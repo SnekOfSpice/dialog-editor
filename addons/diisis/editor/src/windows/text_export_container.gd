@@ -87,6 +87,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	file.store_string(generate_export())
 	file.close()
 	get_parent().hide()
+	Pages.editor.notify("Exported to %s!" % path)
 
 
 func _on_file_button_pressed() -> void:

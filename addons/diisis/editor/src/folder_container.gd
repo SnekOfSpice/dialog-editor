@@ -9,6 +9,7 @@ func update(line_index:int, max_reach):
 	if deserialized_range > -1:
 		find_child("FolderRangeSpinContainer").set_value_no_signal(deserialized_range)
 		deserialized_range = -1
+		
 	
 	find_child("Label").text = str(
 		"spans: (", line_index, " - ", int(line_index + find_child("FolderRangeSpinContainer").value),")", "\n",

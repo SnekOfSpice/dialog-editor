@@ -17,15 +17,18 @@ var text_lead_time_other_actor := 0.0
 const NEGATIVE_INF := -int(INF)
 var id_counter := NEGATIVE_INF
 
-var punctuation_marks := [
-			".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
-		]
+# needs to be duplicated to modify
+const PUNCTUATION_MARKS := [
+	".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
+]
+
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
 	"_",
 	"1","2","3","4","5","6","7","8","9","0",
-	"."]
+	"."
+]
 const LETTERS := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
 
 var empty_strings_for_l10n := false
@@ -108,6 +111,7 @@ var fix_apostrophes := true
 var replacement_rules := []
 var preferences_import := {}
 var preferences_export := {}
+var import_modified_times_by_path := {}
 const DEFAULT_REPLACEMENT_RULES := [
 	{
 		"enabled" : false,
@@ -211,6 +215,7 @@ func serialize() -> Dictionary:
 		"full_custom_method_defaults": _get_custom_method_full_defaults(),
 		"head_defaults" : head_defaults,
 		"id_counter" : id_counter,
+		"import_modified_times_by_path" : import_modified_times_by_path,
 		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"locales_to_export" : locales_to_export,
 		"page_data" : page_data,
@@ -278,6 +283,7 @@ func deserialize(data:Dictionary):
 	fix_apostrophes = data.get("fix_apostrophes", true)
 	preferences_import = data.get("preferences_import", {})
 	preferences_export = data.get("preferences_export", {})
+	import_modified_times_by_path = data.get("import_modified_times_by_path", {})
 	
 	apply_file_config(data.get("file_config", {}))
 	
@@ -1471,7 +1477,6 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 
 ## function used by Text2Diisis
 func update_line_content(new_content_by_line_id:Dictionary):
-	editor.set_opening_cover_visible(true, "Importing, please wait >.<")
 	var ids_to_update := new_content_by_line_id.keys()
 	
 	for page_index in get_page_count():
@@ -1552,6 +1557,7 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	await get_tree().process_frame
 	editor.hide_window_by_string("TextImportWindow")
 	editor.refresh(false)
+	await get_tree().process_frame
 	editor.set_opening_cover_visible(false)
 
 func sort_choices(id_order:Array, choices:Array) -> Array:
@@ -1922,6 +1928,7 @@ func neaten_whitespace(text:String) -> String:
 func fix_punctuation(text:String) -> String:
 	var lines = text.split("\n")
 	var result := []
+	var punctuation_marks := PUNCTUATION_MARKS.duplicate(true)
 	for line : String in lines:
 		if not append_periods:
 			result.append(line)
@@ -1993,8 +2000,9 @@ func fix_punctuation(text:String) -> String:
 		["youre", "you're"],
 		["youve", "you've"],
 	]
-	var suffixes := punctuation_marks.duplicate(true)
+	var suffixes := PUNCTUATION_MARKS.duplicate(true)
 	suffixes.append(" ")
+	
 	if fix_apostrophes:
 		for i in result.size():
 			var line : String = result[i]
@@ -2004,12 +2012,16 @@ func fix_punctuation(text:String) -> String:
 						for suffix2 in suffixes:
 							var what : String = suffix1 + pair[0] + suffix2
 							var forwhat : String = suffix1 + pair[1] + suffix2
+							
 							if j == 0:
 								what = what.capitalize()
 								forwhat = forwhat.capitalize()
 							elif j == 1:
 								what = what.to_upper()
 								forwhat = forwhat.to_upper()
+							#if line != line.replace(what, forwhat):
+								#printt(suffix1 , pair[1] , suffix2)
+								#await get_tree().process_frame
 							line = line.replace(what, forwhat)
 						
 			result[i] = line

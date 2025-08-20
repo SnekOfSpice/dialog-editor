@@ -135,8 +135,8 @@ access = 2
 filters = PackedStringArray("*.txt", "*.dtf")
 
 [connection signal="option_pressed" from="VBoxContainer/HBoxContainer/Mode" to="." method="_on_option_button_embed_option_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_warnings_u"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_warnings_u"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/IncludeIDsCheckBox" to="." method="update_warnings"]

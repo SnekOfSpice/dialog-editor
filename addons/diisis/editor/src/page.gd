@@ -266,6 +266,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			added_new_line = true
 		var line:Line
 		var line_data = data_by_index.get(at_index, {})
+		var instanced_new_line : bool
 		if at_index >= lines.get_child_count() or force_new_line_object:
 			line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
 			lines.add_child(line)
@@ -275,9 +276,11 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			line.connect("insert_line", request_add_line)
 			line.connect("delete_line", request_delete_line)
 			line.connect("move_to", move_line_to)
+			instanced_new_line = true
 		else:
 			line = lines.get_child(at_index)
 			line.deserialize({})
+			instanced_new_line = false
 		
 		if line_data != {}:
 			line.deserialize(line_data)
@@ -286,11 +289,12 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			line.add_choice_item(0)
 			line.add_choice_item(1)
 		
-		for l : Line in lines.get_children():
-			if l.line_type == DIISIS.LineType.Folder:
-				var range : Vector2 = l.get_folder_range_v()
-				if at_index > range.x and at_index <= range.y:
-					l.change_folder_range(1)
+		if instanced_new_line:
+			for l : Line in lines.get_children():
+				if l.line_type == DIISIS.LineType.Folder:
+					var range : Vector2 = l.get_folder_range_v()
+					if at_index > range.x and at_index <= range.y:
+						l.change_folder_range(1)
 		
 		if change_line_references:
 			var to = Pages.editor.get_current_page().get_line_count() - 1 if Pages.editor.get_current_page() else indices.max()
