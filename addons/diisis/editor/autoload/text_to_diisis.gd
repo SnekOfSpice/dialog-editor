@@ -131,16 +131,22 @@ func ingest_pages(text:String, payload:={}) -> void:
 func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_override:=[]):
 	var new_page_data := {}
 	
+	var handled_line_ids := []
+	
 	var imported_lines_per_page := []
 	var working_page := []
+	var page_content_line : String = imported_lines.pop_front()
+	working_page.append(page_content_line)
 	while not imported_lines.is_empty():
-		var line : String = imported_lines.pop_front()
-		if line.begins_with("PAGE") and not working_page.is_empty():
-			imported_lines_per_page.append(working_page)
-		working_page.append(line)
+		page_content_line = imported_lines.pop_front()
+		if page_content_line.begins_with("PAGE"):
+			if not working_page.is_empty():
+				imported_lines_per_page.append(working_page.duplicate(true))
+			working_page.clear()
+		#else:
+		working_page.append(page_content_line)
 	if not working_page.is_empty():
 		imported_lines_per_page.append(working_page)
-	
 	
 	for lines_for_page : Array in imported_lines_per_page:
 		var page_line : String = lines_for_page.pop_front()
@@ -149,14 +155,14 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 		if page_line.contains("ID:"):
 			var id : String = page_line.split("ID:")[1]
 			current_page_data = get_page_data(id)
-		
-		var current_line_data := []
-		
 		var lines_for_line_content := []
 		var line_content_farm := lines_for_page.duplicate(true)
 		var working_imported_lines_for_line := []
+		var local_line : String = line_content_farm.pop_front()
+		
+		working_imported_lines_for_line.append(local_line)
 		while not line_content_farm.is_empty():
-			var local_line : String = line_content_farm.pop_front()
+			local_line = line_content_farm.pop_front()
 			if local_line.begins_with("LINE") and not working_imported_lines_for_line.is_empty():
 				lines_for_line_content.append(working_imported_lines_for_line.duplicate(true))
 				working_imported_lines_for_line.clear()
@@ -164,12 +170,107 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 		if not working_imported_lines_for_line.is_empty():
 			lines_for_line_content.append(working_imported_lines_for_line.duplicate(true))
 		
-		print("\n\n".join(lines_for_line_content))
+		var line_data_on_page := []
+		for lines : Array in lines_for_line_content:
+			var line_data := {}
+			var line_declaration = lines.pop_front()
+			
+			var line_id : String
+			if line_declaration.contains("ID:"):
+				line_id = line_declaration.split("ID:")[1]
+			if not line_id.is_empty():
+				if handled_line_ids.has(line_id):
+					continue
+				line_data = get_line_data_by_id(line_id)
+				handled_line_ids.append(line_id)
+			
+			var line_type : DIISISGlobal.LineType
+			if line_declaration.begins_with("LINE i"):
+				line_type = DIISISGlobal.LineType.Instruction
+				line_data["content"] = make_instruction_data(lines)
+			elif line_declaration.begins_with("LINE c"):
+				line_type = DIISISGlobal.LineType.Choice
+				var texts : Array = make_choice_data(lines).get("choice_texts")
+				var content := {}
+				var choices := []
+				
+				var pre_existing_choices : Array = line_data.get("content", {}).get("choices", [])
+				var pre_existing_ids := []
+				for choice : Dictionary in pre_existing_choices:
+					pre_existing_ids.append(choice.get("id"))
+				
+				# contains all optional fields "id" "enabled" "disabled"
+				for text_data : Dictionary in texts:
+					var text_id : String = text_data.get("id", "")
+					var choice_data := {}
+					if pre_existing_ids.has(text_id):
+						choice_data = pre_existing_choices[pre_existing_ids.find(text_id)].duplicate(true)
+						choice_data["id"] = text_id
+						
+						if text_data.has("enabled"):
+							var id = choice_data.get("text_id_enabled")
+							Pages.save_text(id, text_data.get("enabled"))
+						if text_data.has("disabled"):
+							var id = choice_data.get("text_id_disabled")
+							Pages.save_text(id, text_data.get("disabled"))
+					else:
+						if text_data.has("id"):
+							choice_data["id"] = text_data.get("id")
+						if text_data.has("enabled"):
+							var id = Pages.get_new_id()
+							Pages.save_text(id, text_data.get("enabled"))
+							choice_data["text_id_enabled"] = id
+						if text_data.has("disabled"):
+							var id = Pages.get_new_id()
+							Pages.save_text(id, text_data.get("disabled"))
+							choice_data["text_id_disabled"] = id
+					
+					choices.append(choice_data)
+				content["choices"] = choices
+				line_data["content"] = content
+			elif line_declaration.begins_with("LINE f"):
+				line_type = DIISISGlobal.LineType.Folder
+				line_data["content"] = make_folder_data(lines)
+			else:
+				line_type = DIISISGlobal.LineType.Text
+				var text_data = make_text_data(lines)
+				var id = line_data.get("content", {}).get("text_id", Pages.get_new_id())
+				line_data["content"] = {"text_id" : id}
+				Pages.save_text(id, text_data.get("text"))
+			line_data["line_type"] = line_type
+			line_data_on_page.append(line_data)
+			#await get_tree().process_frame
+		current_page_data["lines"] = line_data_on_page
 		
 		var cpn : int = new_page_data.size()
 		current_page_data["number"] = cpn
 		new_page_data[cpn] = current_page_data
+	await get_tree().process_frame
+	var file = FileAccess.open("user://import_override_temp.json", FileAccess.WRITE)
+	var path := Pages.editor.get_save_path()
+	var data = Pages.serialize()
+	var data_to_save := {}
+	data_to_save["editor"] = Pages.editor.serialize()
+	data_to_save["original_path"] = Pages.editor.get_save_path()
+	data_to_save["pages"] = Pages.serialize()
+	data_to_save["pages"]["page_data"] = new_page_data
 	
+	file.store_string(JSON.stringify(data_to_save, "\t"))
+	file.close()
+	await get_tree().process_frame
+	Pages.editor.open_new_file.emit()
+	#await get_tree().process_frame
+	#Pages.editor.open_from_path("user://import_override_temp.json")
+	#await get_tree().process_frame
+	#Pages.editor.set_save_path(path)
+	#Pages.page_data = new_page_data.duplicate(true)
+	#
+	#await get_tree().process_frame
+	#Pages.editor.hide_window_by_string("TextImportWindow")
+	#Pages.editor.refresh(false)
+	#await get_tree().process_frame
+	#
+	#Pages.editor.step_through_pages()
 	return
 	
 	# iterare over every imported_lines
@@ -192,6 +293,65 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 		new_page_data[current_page_data.get("number")] = current_page_data.duplicate(true)
 	
 
+func make_instruction_data(lines:Array) -> Dictionary:
+	var instruction_data := {}
+	for content_line : String in lines:
+		if content_line.begins_with("x<"): # reverse present but disabled
+			instruction_data["meta.has_reverse"] = false
+			instruction_data["meta.reverse_text"] = content_line.trim_prefix("x<")
+		elif content_line.begins_with("<"): # reverse present but disabled
+			instruction_data["meta.has_reverse"] = true
+			instruction_data["meta.reverse_text"] = content_line.trim_prefix("<")
+		else: # default
+			instruction_data["meta.text"] = content_line
+	return instruction_data
+
+func make_choice_data(lines:Array) -> Dictionary:
+	var choice_texts := []
+	for content_line : String in lines:
+		var text_data := {}
+		if content_line.contains("ID:"):
+			var parts = content_line.split("ID:")
+			content_line = parts[0]
+			text_data["id"] = parts[1]
+		if content_line.begins_with(">"): # enabled exists
+			content_line = content_line.trim_prefix(">")
+			var enabled_text : String
+			var disabled_text : String
+			if content_line.contains("<"):
+				var split = content_line.split("<")
+				enabled_text = split[0]
+				disabled_text = split[1]
+			else:
+				enabled_text = content_line
+			text_data["enabled"] = enabled_text
+			if not disabled_text.is_empty():
+				text_data["disabled"] = disabled_text
+		elif content_line.begins_with("<"): # only disabled
+			text_data["disabled"] = content_line.trim_prefix("<")
+		choice_texts.append(text_data)
+	return {"choice_texts" : choice_texts.duplicate(true)}
+
+func make_text_data(lines:Array, payload:={}, actor_ingestion_override:=[]) -> Dictionary:
+	var capitalize : bool = payload.get("capitalize", false)
+	var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
+	var fix_punctuation : bool = payload.get("fix_punctuation", false)
+	var formatted_text := format_text("\n".join(lines), actor_ingestion_override)
+	if capitalize:
+		formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
+	if neaten_whitespace:
+		formatted_text = Pages.neaten_whitespace(formatted_text)
+	if fix_punctuation:
+		formatted_text = Pages.fix_punctuation(formatted_text)
+	return {
+		"text" : formatted_text
+	}
+
+func make_folder_data(lines:Array) -> Dictionary:
+	var range := float(lines.front())
+	return {
+		"range" : range
+	}
 
 func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_override:=[]):
 	var line_content_by_id : Dictionary[String, Dictionary] = {}
@@ -210,66 +370,16 @@ func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_ove
 		var line_id = line.split("ID:")[1]
 		
 		if line.begins_with("LINE i"):
-			var instruction_data := {}
-			for content_line : String in lines_for_line_content:
-				if content_line.begins_with("x<"): # reverse present but disabled
-					instruction_data["meta.has_reverse"] = false
-					instruction_data["meta.reverse_text"] = content_line.trim_prefix("x<")
-				elif content_line.begins_with("<"): # reverse present but disabled
-					instruction_data["meta.has_reverse"] = true
-					instruction_data["meta.reverse_text"] = content_line.trim_prefix("<")
-				else: # default
-					instruction_data["meta.text"] = content_line
-			line_content_by_id[line_id] = instruction_data
+			line_content_by_id[line_id] = make_instruction_data(lines_for_line_content)
 		if line.begins_with("LINE c"):
-			var choice_texts := []
-			for content_line : String in lines_for_line_content:
-				var text_data := {}
-				if content_line.contains("ID:"):
-					var parts = content_line.split("ID:")
-					content_line = parts[0]
-					text_data["id"] = parts[1]
-				if content_line.begins_with(">"): # enabled exists
-					content_line = content_line.trim_prefix(">")
-					var enabled_text : String
-					var disabled_text : String
-					if content_line.contains("<"):
-						var split = content_line.split("<")
-						enabled_text = split[0]
-						disabled_text = split[1]
-					else:
-						enabled_text = content_line
-					text_data["enabled"] = enabled_text
-					if not disabled_text.is_empty():
-						text_data["disabled"] = disabled_text
-				elif content_line.begins_with("<"): # only disabled
-					text_data["disabled"] = content_line.trim_prefix("<")
-				choice_texts.append(text_data)
-			line_content_by_id[line_id] = {
-				"choice_texts" : choice_texts.duplicate(true)
-			}
+			line_content_by_id[line_id] = make_choice_data(lines_for_line_content)
 		if line.begins_with("LINE f"):
-			var range : float = float(lines_for_line_content.front())
-			line_content_by_id[line_id] = {
-				"range" : range
-			}
+			line_content_by_id[line_id] = make_folder_data(lines_for_line_content)
 		else:
 			if line_content_by_id.has(line_id):
 				# idk why this happens but nontext lines get counted double
 				continue
-			var capitalize : bool = payload.get("capitalize", false)
-			var neaten_whitespace : bool = payload.get("neaten_whitespace", false)
-			var fix_punctuation : bool = payload.get("fix_punctuation", false)
-			var formatted_text := format_text("\n".join(lines_for_line_content), actor_ingestion_override)
-			if capitalize:
-				formatted_text = Pages.capitalize_sentence_beginnings(formatted_text)
-			if neaten_whitespace:
-				formatted_text = Pages.neaten_whitespace(formatted_text)
-			if fix_punctuation:
-				formatted_text = Pages.fix_punctuation(formatted_text)
-			line_content_by_id[line_id] = {
-				"text" : formatted_text
-			}
+			line_content_by_id[line_id] = make_text_data(lines_for_line_content, payload, actor_ingestion_override)
 	
 	# then go over Pages.page_data and insert the updated line content
 	Pages.update_line_content(line_content_by_id)

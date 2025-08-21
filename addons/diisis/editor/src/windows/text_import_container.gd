@@ -51,8 +51,8 @@ func _on_clipboard_button_pressed() -> void:
 
 
 func _on_button_pressed() -> void:
-	Pages.editor.set_opening_cover_visible(true, "Importing, please wait >.<")
-	await get_tree().process_frame
+	#Pages.editor.set_opening_cover_visible(true, "Importing, please wait >.<")
+	#await get_tree().process_frame
 	var payload := {}
 	payload["import_mode"] = %ImportMode.get_selected_id()
 	payload["capitalize"] = find_child("CapitalizeCheckBox").button_pressed

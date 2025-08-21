@@ -148,6 +148,24 @@ func init(active_file_path:="") -> void:
 		var mat = ShaderMaterial.new()
 		mat.shader = load(Pages.shader)
 		rect.material = mat
+	
+	await get_tree().process_frame
+	
+	if active_file_path == "user://import_override_temp.json":
+		var access = FileAccess.open("user://import_override_temp.json", FileAccess.READ)
+		var data = JSON.parse_string(access.get_as_text())
+		access.close()
+		set_save_path(data.get("original_path"))
+		
+		await get_tree().process_frame
+		
+		
+		var d = DirAccess.remove_absolute("user://import_override_temp.json")
+		step_through_pages()
+		
+		await get_tree().process_frame
+		
+		load_page(0)
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -225,6 +243,9 @@ func get_selected_page_view() -> PageView:
 			break
 	
 	return view
+
+func get_save_path() -> String:
+	return str(active_dir, active_file_name)
 
 func set_save_path(value:String):
 	var parts = value.split("/")
@@ -558,7 +579,6 @@ func open_from_path(path:String):
 	file.close()
 	
 	set_save_path(path)
-	
 	Pages.deserialize(data.get("pages"))
 	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	

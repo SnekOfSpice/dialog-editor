@@ -233,7 +233,10 @@ func open_editor():
 func open_new_file():
 	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
-	dia_editor_window.file_path = ""
+	if FileAccess.file_exists("user://import_override_temp.json"):
+		dia_editor_window.file_path = "user://import_override_temp.json"
+	else:
+		dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
 	dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)

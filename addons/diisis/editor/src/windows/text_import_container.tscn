@@ -72,7 +72,7 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
-text = "[color=#F7D468][NOT IMPLEMENTED YET]Erased all current page data and builds new lines from the imported text.
+text = "[color=#F7D468]Erases all current page data and builds new lines from the imported text.
 
 Any existing data from lines and choices with IDs existent in the imported text will be ingested and updated like with Import Mode \"Update Existing Data\" in addition to the new data.
 [/color]"
