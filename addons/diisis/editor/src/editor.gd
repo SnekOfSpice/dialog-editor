@@ -869,7 +869,7 @@ func step_through_pages():
 	var steps : int = Pages.get_page_count()
 	var i := 0
 	while i < steps:
-		%ImportProgressLabel.text = "%s/%s" % [i, steps]
+		%ImportProgressLabel.text = "Regenerating page %s/%s" % [i+1, steps]
 		load_page(next_page)
 		await get_tree().process_frame
 		next_page = get_current_page_number() + 1

@@ -15,11 +15,15 @@ func init():
 		label.text = str(i, " - ", key)
 		%PageKeyLabelContainer.add_child(label)
 	
+	var selection := (Pages.preferences_export.get("selection", []) as Array)
+	for i in selection.size():
+		selection[i] = int(selection[i])
 	for i in Pages.get_page_count():
 		var button = CheckBox.new()
 		button.text = str(i)
-		button.button_pressed = (Pages.preferences_export.get("selection", []) as Array).has(i)
+		button.button_pressed = selection.has(i)
 		button.pressed.connect(update_key_labels)
+		button.pressed.connect(update_warnings)
 		%SelectionContainer.add_child(button)
 	%Mode.init()
 	%Mode.select(Pages.preferences_export.get("mode", 0))
@@ -37,6 +41,7 @@ func init():
 	var line_types_to_include : Array = Pages.preferences_export.get("line_types_to_include", [0,1,2,3])
 	for i in line_types_to_include.size():
 		line_types_to_include[i] = int(line_types_to_include[i])
+	
 	%IncludeText.button_pressed = DIISISGlobal.LineType.Text in line_types_to_include
 	%IncludeChoice.button_pressed = DIISISGlobal.LineType.Choice in line_types_to_include
 	%IncludeInstruction.button_pressed = DIISISGlobal.LineType.Instruction in line_types_to_include
@@ -53,7 +58,7 @@ func _on_option_button_embed_option_pressed(index: int) -> void:
 	update_key_labels()
 
 
-func generate_export() -> String:
+func generate_export(page_range:=get_selected_page_range()) -> String:
 	var modifiers := {
 		"syntax_detail" : %SyntaxDetailButton.get_selected_id(),
 		"line_types_to_include" : get_line_types_to_include(),
@@ -63,8 +68,11 @@ func generate_export() -> String:
 		result += Pages.ingestion_actor_declaration
 		result += "\nEND ACTORS\n"
 	
-	for i in get_selected_page_range():
+	for i in page_range:
 		result += Pages.stringify_page(i, modifiers)
+	
+	while result.begins_with("\n"):
+		result = result.trim_prefix("\n")
 	
 	return result
 
@@ -132,9 +140,11 @@ func update_warnings() -> void:
 	%ClipboardButton.disabled = is_range_invalid
 	%FileButton.disabled = is_range_invalid
 	
-	for example : RichTextLabel in %Examples.get_children():
-		example.visible = example.name.ends_with(str(%SyntaxDetailButton.get_selected_id()))
-
+	var range := get_selected_page_range()
+	if range.is_empty():
+		%LiveExample.text = generate_export([0])
+	else:
+		%LiveExample.text = generate_export([range.front()])
 
 func get_line_types_to_include() -> Array:
 	var line_types_to_include := []

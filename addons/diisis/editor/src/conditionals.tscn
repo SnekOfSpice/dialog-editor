@@ -42,7 +42,7 @@ layout_mode = 2
 [node name="AddConditionButton" type="Button" parent="VBoxContainer/Controls/BehaviorContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
-tooltip_text = "add conditional"
+tooltip_text = "Add conditional"
 icon = ExtResource("3_y885n")
 
 [node name="CollapseControlButton" type="Button" parent="VBoxContainer/Controls/BehaviorContainer"]

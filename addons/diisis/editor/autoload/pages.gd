@@ -1571,11 +1571,11 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	
 	if not unused_ids.is_empty():
 		editor.notify(
-			str("Importing has unused ids: ", "\n".join(unused_ids),
+			str("Importing has unused ids:\n", "\n".join(unused_ids),
 			"\n\n",
 			"Import mode \"Update\" is intended to be used to update existing lines only. To add new ones from text, use import mode \"Override\"."
 			),
-			unused_ids.size() * 7
+			max(unused_ids.size() * 7, 20)
 		)
 
 func sort_choices(id_order:Array, choices:Array) -> Array:

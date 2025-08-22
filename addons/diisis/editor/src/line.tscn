@@ -275,7 +275,7 @@ theme_override_constants/margin_top = 9
 [node name="DeleteButton" type="Button" parent="PanelContainer/Control/DeleteContainer"]
 z_index = 4
 layout_mode = 2
-tooltip_text = "Delete line."
+tooltip_text = "Delete line"
 focus_mode = 0
 icon = ExtResource("13_f7stu")
 

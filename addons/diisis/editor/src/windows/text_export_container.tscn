@@ -28,6 +28,7 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="Mode" parent="VBoxContainer/HBoxContainer" instance=ExtResource("2_6ol86")]
 unique_name_in_owner = true
@@ -66,8 +67,8 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer"]
 layout_mode = 2
@@ -135,6 +136,7 @@ layout_mode = 2
 [node name="IncludeText" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 button_pressed = true
 text = "Text"
 icon = ExtResource("3_m824d")
@@ -142,6 +144,7 @@ icon = ExtResource("3_m824d")
 [node name="IncludeChoice" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 button_pressed = true
 text = "Choice
 "
@@ -150,6 +153,7 @@ icon = ExtResource("4_fj3ry")
 [node name="IncludeInstruction" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 button_pressed = true
 text = "Instruction"
 icon = ExtResource("5_7wfad")
@@ -157,6 +161,7 @@ icon = ExtResource("5_7wfad")
 [node name="IncludeFolder" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 button_pressed = true
 text = "Folder"
 icon = ExtResource("6_pr4dg")
@@ -164,60 +169,32 @@ icon = ExtResource("6_pr4dg")
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="MarginContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
-text = "Export example:"
+size_flags_vertical = 3
 
-[node name="Examples" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export Preview"
+
+[node name="LiveExample" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
-
-[node name="Example0" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
-visible = false
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
-bbcode_enabled = true
-text = "a: amber
-END ACTORS
-PAGE 0 ID:somepageid
-
-LINE t 0.0ID:first-line-id
-amber: welcome to the export dialog!
-
-LINE i 0.1ID:second-line-id
-play_sfx(air_horn)"
-fit_content = true
-
-[node name="Example1" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
-visible = false
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
-bbcode_enabled = true
-text = "a: amber
-END ACTORS
-PAGE 0
-
-LINE t 0.0
-amber: welcome to the export dialog!
-
-LINE i 0.1
-play_sfx(air_horn)"
-fit_content = true
-
-[node name="Example2" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
-visible = false
-layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
 bbcode_enabled = true
 text = "amber: welcome to the export dialog!
 
 play_sfx(air_horn)"
-fit_content = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-size_flags_vertical = 10
+size_flags_vertical = 8
 
 [node name="ClipboardButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -242,6 +219,10 @@ filters = PackedStringArray("*.txt", "*.dtf")
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
 [connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="update_warnings_u"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeText" to="." method="update_warnings"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeChoice" to="." method="update_warnings"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeInstruction" to="." method="update_warnings"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeFolder" to="." method="update_warnings"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]

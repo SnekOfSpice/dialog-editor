@@ -12,7 +12,6 @@
 [node name="AddressSelectActionContainer" type="CenterContainer" groups=["address_selectors"]]
 auto_translate_mode = 1
 script = ExtResource("1_1ayp7")
-address_depth = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -20,6 +19,7 @@ layout_mode = 2
 [node name="SelectCheckBox" type="CheckBox" parent="HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+tooltip_text = "Select"
 focus_mode = 0
 
 [node name="MenuBar" type="MenuBar" parent="HBoxContainer"]

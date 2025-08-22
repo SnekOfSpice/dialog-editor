@@ -14,6 +14,7 @@ func serialize() -> Dictionary:
 
 func deserialize(data:Dictionary):
 	set_selected(data.get("selected", false))
+	
 
 func is_selected() -> bool:
 	return find_child("SelectCheckBox").button_pressed
