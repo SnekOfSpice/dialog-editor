@@ -344,8 +344,10 @@ func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_ove
 			var next_line : String = lines_for_line_content.pop_front()
 			var message := str(
 				"Line \"", line, "\" does not contain ID. Import mode \"Update\" requires all objects to have their ID with them.\n",
-				"Intended content:\n",
-				next_line
+				"Intended content: (click on the text below to copy it)\n",
+				"[url=copy-%s]" % next_line,
+				next_line,
+				"[/url]"
 			)
 			Pages.editor.notify(message, 20)
 			Pages.editor.hide_window_by_string("TextImportWindow")

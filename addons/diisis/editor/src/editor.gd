@@ -1101,10 +1101,20 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 func _on_refresh_button_pressed() -> void:
 	refresh()
 
+func clipboard_set_notify(text:String) -> void:
+	DisplayServer.clipboard_set(text)
+	var message := "Copied to clipboard:\n"
+	message += text.left(30)
+	if text.length() > 30:
+		message += "..."
+	notify(message)
+
 func handle_meta(meta:Variant):
 	if str(meta).begins_with("goto-"):
 		goto_with_meta(meta)
-	if str(meta).begins_with("open-"):
+	elif str(meta).begins_with("copy-"):
+		clipboard_set_notify(str(meta).trim_prefix("copy-"))
+	elif str(meta).begins_with("open-"):
 		var target_window := str(meta).trim_prefix("open-")
 		open_window_by_string(target_window)
 

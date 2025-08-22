@@ -14,4 +14,7 @@ func _on_delete_button_pressed() -> void:
 
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	if str(meta).begins_with("copy-"):
+		Pages.editor.clipboard_set_notify(str(meta).trim_prefix("copy-"))
+		return
 	OS.shell_open(meta)

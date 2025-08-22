@@ -1570,11 +1570,12 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	editor.step_through_pages()
 	
 	if not unused_ids.is_empty():
+		var message := "Importing has unused ids: (Click on an ID to copy it)\n"
+		for id : String in unused_ids:
+			message += "[url=copy-%s]%s[/url]\n" % [id, id]
+		message += "\nImport mode \"Update\" is intended to be used to update existing lines only. To add new ones from text, use import mode \"Override\"."
 		editor.notify(
-			str("Importing has unused ids:\n", "\n".join(unused_ids),
-			"\n\n",
-			"Import mode \"Update\" is intended to be used to update existing lines only. To add new ones from text, use import mode \"Override\"."
-			),
+			message,
 			max(unused_ids.size() * 7, 20)
 		)
 

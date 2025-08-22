@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bu6s26nqoo5qw" path="res://addons/diisis/editor/src/editor_notification.gd" id="1_vds6m"]
 
 [node name="EditorNotification" type="PanelContainer"]
+z_index = 7
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
