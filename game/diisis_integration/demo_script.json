@@ -407,7 +407,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761419,
+		"id_counter": -9223372036854761452,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -1408,18 +1408,18 @@
 		"preferences_export": {
 			"cascade_start": 0.0,
 			"line_types_to_include": [
-				0,
-				1,
-				2,
-				3
+				0.0,
+				1.0,
+				2.0,
+				3.0
 			],
-			"mode": 3,
+			"mode": 3.0,
 			"range_end": 0.0,
 			"range_start": 0.0,
 			"selection": [
-				0
+				0.0
 			],
-			"syntax_detail": 0
+			"syntax_detail": 0.0
 		},
 		"preferences_import": {
 			"mode": 0.0

@@ -190,6 +190,11 @@ func _on_window_factor_window_mouse_entered():
 		return
 	if $QuitDialog.visible:
 		return
+	if not window_factor_window:
+		return
+	window_factor_window = find_child("WindowFactorWindow")
+	if not window_factor_window:
+		return
 	window_factor_window.grab_focus()
 
 

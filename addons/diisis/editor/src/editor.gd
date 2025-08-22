@@ -643,8 +643,14 @@ func _on_instruction_definition_timer_timeout() -> void:
 	update_error_text_box()
 
 func update_error_text_box():
-	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
-	find_child("ErrorTextBox").text += Pages.get_all_invalid_address_pointers()
+	var error_text_box : RichTextLabel = find_child("ErrorTextBox")
+	var invalid_instructions := Pages.get_all_invalid_instructions()
+	error_text_box.text = ""
+	if not error_text_box.text.is_empty() and Pages.evaluator_paths.is_empty():
+		error_text_box.text += "Function errors are present but no evaluating LineReader has been defined. Consider defining one in [url=open-HandlerWindow-1]Setup > Functions & Variables[/url]. "
+	
+	error_text_box.text += invalid_instructions
+	error_text_box.text += Pages.get_all_invalid_address_pointers()
 	
 	for node in get_tree().get_nodes_in_group("diisis_method_validator"):
 		node.update_compliance_prompt()
@@ -1108,7 +1114,19 @@ func goto_with_meta(meta:Variant):
 		request_go_to_address(target_address, str("Go to ", target_address))
 
 func _on_error_text_box_meta_clicked(meta: Variant) -> void:
-	goto_with_meta(meta)
+	meta = str(meta)
+	if meta.begins_with("open-"):
+		meta = meta.trim_prefix("open-")
+		var callable_after_open
+		if meta.begins_with("HandlerWindow"):
+			var tab := int(meta.split("-")[1])
+			meta = meta.split("-")[0]
+			callable_after_open = $Popups/HandlerWindow.set_tab.bind(tab)
+		open_window_by_string(meta)
+		if callable_after_open:
+			callable_after_open.call()
+	else:
+		goto_with_meta(meta)
 
 
 

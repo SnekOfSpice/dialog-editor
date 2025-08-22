@@ -435,7 +435,7 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 
 func change_page_references_dir(changed_page: int, operation:int):
 	for page in page_data.values():
-		var next = page.get("next")
+		var next = page.get("next", page.get("number") + 1)
 		if next >= changed_page:
 			page["next"] = next + operation
 		
@@ -445,10 +445,10 @@ func change_page_references_dir(changed_page: int, operation:int):
 				var content = line.get("content")
 				var choices = content.get("choices")
 				for choice : Dictionary in choices:
-					if choice.get("target_page") >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
-						choice["target_page"] = choice.get("target_page") + operation
-					if choice.get("loopback_target_page") >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
-						choice["loopback_target_page"] = choice.get("loopback_target_page") + operation
+					if choice.get("target_page", 0) >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						choice["target_page"] = choice.get("target_page", 0) + operation
+					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						choice["loopback_target_page"] = choice.get("loopback_target_page", 0) + operation
 	
 	await get_tree().process_frame
 	editor.refresh(false)

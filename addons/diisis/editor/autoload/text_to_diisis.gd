@@ -150,6 +150,8 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 	
 	for lines_for_page : Array in imported_lines_per_page:
 		var page_line : String = lines_for_page.pop_front()
+		if lines_for_page.is_empty():
+			continue
 		var current_page_data := {}
 		
 		if page_line.contains("ID:"):

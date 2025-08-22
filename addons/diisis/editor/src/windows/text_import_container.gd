@@ -5,12 +5,18 @@ signal fd_opened
 signal fd_closed
 
 func init():
+	var is_data_empty : bool = Pages.editor.get_save_path().is_empty()#Pages.get_page_data(0, true).get("lines", []).is_empty()
 	%ImportMode.init()
-	%ImportMode.select(Pages.preferences_import.get("mode", 0))
+	%BlankOverrideNotice.visible = is_data_empty
+	if is_data_empty:
+		%ImportMode.select(1)
+	else:
+		%ImportMode.select(Pages.preferences_import.get("mode", 0))
+	_on_import_mode_option_pressed(%ImportMode.get_selected_id())
 	set_import_text("")
 	%ImportAgainWarning.visible = false
 	%FileButton.grab_focus()
-	
+	%ImportMode.set_item_disabled(0, is_data_empty)
 	$FileDialog.clear_filters()
 	$FileDialog.add_filter("*.txt", "Raw text")
 	$FileDialog.add_filter("*.dtf", "DIISIS text file") # . Can be opened in plain text but denotes syntactic layout that permits re-import into DIISIS.

@@ -4,12 +4,14 @@ extends Control
 func init():
 	for child in $TabContainer.get_children():
 		child.init()
-	$TabContainer.current_tab = 0
-	_on_tab_container_tab_changed(0)
+	set_tab(0)
+
+func set_tab(tab:int) -> void:
+	$TabContainer.current_tab = tab
+	_on_tab_container_tab_changed(tab)
 
 func select_function(method:String):
-	$TabContainer.current_tab = 0
-	_on_tab_container_tab_changed(0)
+	set_tab(0)
 	find_child("Arguments").select_function(method)
 
 func _on_tab_container_tab_changed(tab: int) -> void:

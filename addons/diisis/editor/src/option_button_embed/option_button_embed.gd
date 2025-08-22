@@ -20,7 +20,7 @@ func add_item(item:String):
 	text = options.front()
 
 func select(index:int):
-	text = options[clamp(index, 0, options.size() - 1)]
+	text = options[wrapi(index, 0, options.size())]
 
 func get_selected_id() -> int:
 	return options.find(text)
@@ -41,7 +41,34 @@ func build_options():
 		button.add_theme_stylebox_override("hover", load("res://addons/diisis/editor/src/option_button_embed/hover.tres"))
 		button.pressed.connect(on_option_pressed.bind(i))
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.disabled = disabled_items.has(i)
 		i += 1
+	
+	#var is_selected_disabled := is_item_disabled(get_selected_id())
+	#var safety := 0
+	#var index := get_selected_id()
+	#while is_selected_disabled:
+		#select(index + safety)
+		#safety += 1
+		#is_selected_disabled = is_item_disabled(get_selected_id())
+		#
+		#if safety > options.size():
+			#break
+
+func is_item_disabled(index:int) -> bool:
+	return disabled_items.has(index)
+
+var disabled_items := []
+
+func set_item_disabled(index:int, is_disabled:bool):
+	if is_disabled:
+		if not disabled_items.has(index):
+			disabled_items.append(index)
+	else:
+		disabled_items.erase(index)
+	#(container.get_child(index) as Button).disabled = is_disabled
+	
+	
 
 func _on_pressed() -> void:
 	if $Window.visible:

@@ -688,6 +688,7 @@ scroll_active = false
 horizontal_alignment = 1
 
 [node name="ImportingCover" type="ColorRect" parent="."]
+visible = false
 z_index = 10
 layout_mode = 1
 anchors_preset = 15
@@ -726,7 +727,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "10/10"
+text = "Booting up import..."
 horizontal_alignment = 1
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
