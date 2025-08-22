@@ -247,7 +247,6 @@ func update():
 	
 
 func update_incoming_references():
-	print("dfhbgdfjg")
 	await get_tree().process_frame
 	Pages.editor.get_current_page().update_incoming_references()
 
@@ -351,12 +350,10 @@ func _on_loopback_line_select_value_changed(value: float) -> void:
 
 func _on_loopback_toggle_toggled(toggled_on: bool) -> void:
 	set_loopback(toggled_on)
-	print("calling page update: choice loopback value changed")
 	Pages.editor.get_current_page().update_incoming_references()
 
 
 func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
-	print("calling page update: choice jump value changed")
 	set_do_jump_page(toggled_on)
 	Pages.editor.get_current_page().update_incoming_references()
 

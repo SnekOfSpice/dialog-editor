@@ -49,21 +49,18 @@ func get_current_page() -> Page:
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
-	print("refresh ser ", serialize_before_load)
 	var cpn:int
 	if get_current_page():
 		cpn = get_current_page().number
 	else:
 		return
 	if serialize_before_load:
-		print("refreshing")
 		get_current_page().save()
 	await get_tree().process_frame
 	if fragile:
 		for node in get_tree().get_nodes_in_group("diisis_fragile"):
 			node.update_fragile()
 	else:
-		print("refresh load_page ", not serialize_before_load)
 		load_page(cpn, not serialize_before_load)
 	
 	await get_tree().process_frame
@@ -72,6 +69,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 
 func init(active_file_path:="") -> void:
 	set_opening_cover_visible(true)
+	set_importing_cover_visible(false)
 	was_playing_scene = EditorInterface.is_playing_scene()
 	Pages.clear()
 	DiisisEditorActions.clear()
@@ -154,6 +152,7 @@ func init(active_file_path:="") -> void:
 	await get_tree().process_frame
 	
 	if active_file_path == "user://import_override_temp.json":
+		set_importing_cover_visible(true)
 		var access = FileAccess.open("user://import_override_temp.json", FileAccess.READ)
 		var data = JSON.parse_string(access.get_as_text())
 		access.close()
@@ -416,7 +415,6 @@ func update_controls():
 	if not current_page:
 		await get_tree().process_frame
 		if not current_page:
-			print("still no page", page_container.get_child_count())
 			#var page_instance:Page
 			#if page_container.get_child_count() == 0:
 				#page_instance = _page.instantiate()
@@ -431,8 +429,6 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("GoTo").set_current_page_count(str(current_page.number))
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
-	#print("editor.update_controls")
-	#Pages.sync_line_references()
 	
 	await get_tree().process_frame
 	current_page.update()
@@ -463,19 +459,15 @@ func _on_next_pressed() -> void:
 
 
 func request_load_previous_page():
-	print("load1")
 	request_load_page(get_current_page().number - 1, "Move to previous page")
 
 func request_load_next_page():
-	print("load2")
 	request_load_page(get_current_page().number + 1, "Move to next page")
 
 func request_load_first_page():
-	print("load3")
 	request_load_page(0, "Move to first page")
 
 func request_load_last_page():
-	print("load4")
 	request_load_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
@@ -486,8 +478,7 @@ func request_add_last_page():
 func request_delete_current_page():
 	request_delete_page(get_current_page_number())
 
-func request_delete_page(number:int):
-	print("load5")
+func request_delete_page(number:int) -> void:
 	if Pages.get_page_count() <= 1:
 		push_warning("you cannot delete the last page")
 		return
@@ -513,7 +504,6 @@ func request_add_page_after_current():
 	request_add_page(get_current_page_number() + 1)
 
 func request_add_page(at:int, page_reference_change:=1):
-	print("load6")
 	undo_redo.create_action("Insert page")
 	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at, page_reference_change))
 	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(at))
@@ -537,7 +527,6 @@ func save_to_file(path:String, is_autosave:=false):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var data_to_save = {}
-	print("wow1")
 	data_to_save["pages"] = Pages.serialize()
 	data_to_save["editor"] = serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
@@ -556,7 +545,6 @@ func save_to_file(path:String, is_autosave:=false):
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
 	await get_tree().process_frame
-	print("refresh1")
 	refresh()
 
 func serialize() -> Dictionary:
@@ -571,13 +559,10 @@ func serialize() -> Dictionary:
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
-const OPENING_COVER_WELCOME_MESSAGE := "[img=200]uid://cakx4eotyolmx[/img]\n
-[font_size=28][b]Opening DIISIS
-please wait :3
-"
-func set_opening_cover_visible(value:bool, message:=OPENING_COVER_WELCOME_MESSAGE):
+func set_opening_cover_visible(value:bool):
 	$OpeningCover.visible = value
-	$OpeningCover.get_child(0).text = message
+func set_importing_cover_visible(value:bool):
+	$ImportingCover.visible = value
 
 func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -595,8 +580,7 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	var editor_data = data.get("editor", {})
-	#print("open from path ", editor_data.get("current_page_number", 0))
-	#load_page(editor_data.get("current_page_number", 0), true)
+	
 	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
@@ -614,7 +598,6 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
-	print("load7")
 	load_page(editor_data.get("current_page_number", 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
@@ -694,7 +677,6 @@ func open_popup(popup:Window, fit_to_size:=false):
 		popup.size.x -= 50
 	
 	popup.content_scale_factor = content_scale
-	print("refresh2")
 	refresh()
 	popup.popup()
 	popup.grab_focus()
@@ -766,10 +748,8 @@ func _on_file_id_pressed(id: int) -> void:
 				"About DIISIS"
 			)
 		5:
-			print("----------- opening export window")
 			open_window_by_string("TextExportWindow")
 		6:
-			print("----------- opening import window")
 			open_window_by_string("TextImportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
@@ -888,7 +868,6 @@ func step_through_pages():
 		next_page = 0
 	var steps : int = Pages.get_page_count()
 	var i := 0
-	print("load8")
 	while i < steps:
 		load_page(next_page)
 		await get_tree().process_frame
@@ -896,12 +875,13 @@ func step_through_pages():
 		if next_page >= Pages.get_page_count():
 			next_page = 0
 		i += 1
+	await get_tree().process_frame
+	set_importing_cover_visible(false)
 
 
 func _on_funny_debug_button_pressed() -> void:
 	for id in Pages.text_data.keys():
 		var id_count := 0
-		#print(id)
 		for number in Pages.page_data.keys():
 			var page_data = Pages.page_data.get(number)
 			for line in page_data.get("lines"):
@@ -909,7 +889,6 @@ func _on_funny_debug_button_pressed() -> void:
 					#id_count += 1
 				if line.get("line_type") == DIISIS.LineType.Text:
 					var tid = line.get("content").get("text_id")
-					#print(tid)
 					if tid == id:
 						id_count += 1
 		if id_count > 1:
@@ -1113,7 +1092,6 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 	file.close()
 
 func _on_refresh_button_pressed() -> void:
-	print("refresh3")
 	refresh()
 
 func handle_meta(meta:Variant):
@@ -1291,14 +1269,12 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 
 func _on_handler_window_close_requested() -> void:
 	await get_tree().process_frame
-	print("refresh4")
 	Pages.update_all_compliances()
 	await get_tree().process_frame
 	refresh()
 
 
 func _on_file_config_popup_close_requested() -> void:
-	print("close1")
 	get_current_page().update_incoming_references()
 
 

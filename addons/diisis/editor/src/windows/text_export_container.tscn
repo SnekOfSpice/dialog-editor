@@ -112,7 +112,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=F7D468]Choosing anything other than \"Full Interoperability\" will result in the generated data not being able to integrate back into the existing script![/color]"
+text = "[color=F7D468]Choosing anything other than \"Full Interoperability\" will result in the generated data not being able to integrate back into the existing script through File>Import![/color]"
 fit_content = true
 
 [node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings"]
@@ -237,8 +237,8 @@ access = 2
 filters = PackedStringArray("*.txt", "*.dtf")
 
 [connection signal="option_pressed" from="VBoxContainer/HBoxContainer/Mode" to="." method="_on_option_button_embed_option_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_warnings_u"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
 [connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="update_warnings_u"]

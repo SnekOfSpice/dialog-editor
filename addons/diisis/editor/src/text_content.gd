@@ -343,8 +343,6 @@ func update_tag_hint():
 	update_compliance_prompt()
 
 func update():
-	if text_id == "1755780876.863--9223372036854761294":
-		printt("updating the text container of text_id ", text_id, "has text box", text_box.text, " and saved text ", Pages.get_text(text_id))
 	fill_active_actors()
 	update_compliance_prompt()
 

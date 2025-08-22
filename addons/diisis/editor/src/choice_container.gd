@@ -44,7 +44,6 @@ func deserialize(data):
 	find_child("AutoSwitchButton").button_pressed = auto_switch
 	title_id = data.get("title_id", Pages.get_new_id())
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
-	print("---got choices ", data.get("choices"))
 	for d in data.get("choices", []):
 		add_choice(-1, d)
 	
