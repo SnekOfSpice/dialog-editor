@@ -30,6 +30,7 @@ func init():
 	%SyntaxDetailButton.init()
 	%SyntaxDetailButton.select(Pages.preferences_export.get("syntax_detail", 0))
 	_on_option_button_embed_option_pressed(%Mode.get_selected_id())
+	_on_syntax_detail_button_option_pressed(%SyntaxDetailButton.get_selected_id())
 	%StartSpinBox.max_value = Pages.get_page_count() - 1
 	%EndSpinBox.max_value = Pages.get_page_count() - 1
 	%CascadeStartSpinbox.max_value = Pages.get_page_count() - 1
@@ -106,7 +107,8 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	file.store_string(generate_export())
 	file.close()
 	get_parent().hide()
-	Pages.editor.notify("Exported to %s!" % path)
+	var dir_path : String = path.substr(0, path.rfind("/"))
+	Pages.editor.notify("Exported to [url=%s]%s[/url]!" % [dir_path, path])
 
 
 func _on_file_button_pressed() -> void:
@@ -168,3 +170,13 @@ func get_preferences() -> Dictionary:
 		"cascade_start" : %CascadeStartSpinbox.value,
 		"selection" : get_selected_page_button_indices(),
 	}
+
+
+func _on_syntax_detail_button_option_pressed(index: int) -> void:
+	if index == 0:
+		$FileDialog.clear_filters()
+		$FileDialog.add_filter("*.txt", "Raw text")
+		$FileDialog.add_filter("*.dtf", "DIISIS text file") # . Can be opened in plain text but denotes syntactic layout that permits re-import into DIISIS.
+	else:
+		$FileDialog.clear_filters()
+		$FileDialog.add_filter("*.txt", "Raw text")

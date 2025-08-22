@@ -10,6 +10,10 @@ func init():
 	set_import_text("")
 	%ImportAgainWarning.visible = false
 	%FileButton.grab_focus()
+	
+	$FileDialog.clear_filters()
+	$FileDialog.add_filter("*.txt", "Raw text")
+	$FileDialog.add_filter("*.dtf", "DIISIS text file") # . Can be opened in plain text but denotes syntactic layout that permits re-import into DIISIS.
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)

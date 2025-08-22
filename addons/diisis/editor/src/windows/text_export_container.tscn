@@ -218,6 +218,7 @@ filters = PackedStringArray("*.txt", "*.dtf")
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
+[connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="_on_syntax_detail_button_option_pressed"]
 [connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="update_warnings_u"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeText" to="." method="update_warnings"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeChoice" to="." method="update_warnings"]
