@@ -644,7 +644,7 @@ func _on_instruction_definition_timer_timeout() -> void:
 
 func update_error_text_box():
 	var error_text_box : RichTextLabel = find_child("ErrorTextBox")
-	var invalid_instructions := Pages.get_all_invalid_instructions()
+	var invalid_instructions : String = Pages.get_all_invalid_instructions()
 	error_text_box.text = ""
 	if not error_text_box.text.is_empty() and Pages.evaluator_paths.is_empty():
 		error_text_box.text += "Function errors are present but no evaluating LineReader has been defined. Consider defining one in [url=open-HandlerWindow-1]Setup > Functions & Variables[/url]. "
