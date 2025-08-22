@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cydqb83ch6oxk"]
+[gd_scene load_steps=8 format=3 uid="uid://cydqb83ch6oxk"]
 
 [ext_resource type="Script" uid="uid://c17vjvxhcqtwk" path="res://addons/diisis/editor/src/windows/text_export_container.gd" id="1_quqrk"]
 [ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_6ol86"]
+[ext_resource type="Texture2D" uid="uid://cneqtkwtfwwmw" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png" id="3_m824d"]
+[ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="4_fj3ry"]
+[ext_resource type="Texture2D" uid="uid://cowtdbgbvq7fp" path="res://addons/diisis/parser/style/icon_instruction_handler.svg" id="5_7wfad"]
+[ext_resource type="Texture2D" uid="uid://bgycyoomk20tr" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_folder.png" id="6_pr4dg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m824d"]
 
 [node name="TextExportContainer" type="Control"]
 layout_mode = 3
@@ -89,27 +95,123 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Options"
 
-[node name="IncludeIDsCheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="SyntaxDetailButton" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" instance=ExtResource("2_6ol86")]
 unique_name_in_owner = true
 layout_mode = 2
-button_pressed = true
-text = "Include IDs"
+options = Array[String](["Full Interoperability", "File Outline", "Display Text Only"])
 
-[node name="Warnings" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="Warnings" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="IDWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Warnings"]
+[node name="IDWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=F7D468]Not including IDs will result in the generated data not being able to integrate back into the existing script![/color]"
+text = "[color=F7D468]Choosing anything other than \"Full Interoperability\" will result in the generated data not being able to integrate back into the existing script![/color]"
 fit_content = true
 
-[node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Warnings"]
+[node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 text = "[color=F54927]Invalid Range![/color]"
+fit_content = true
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+text = "Include Line Types:"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="IncludeText" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Text"
+icon = ExtResource("3_m824d")
+
+[node name="IncludeChoice" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Choice
+"
+icon = ExtResource("4_fj3ry")
+
+[node name="IncludeInstruction" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Instruction"
+icon = ExtResource("5_7wfad")
+
+[node name="IncludeFolder" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Folder"
+icon = ExtResource("6_pr4dg")
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export example:"
+
+[node name="Examples" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Example0" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
+visible = false
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
+bbcode_enabled = true
+text = "a: amber
+END ACTORS
+PAGE 0 ID:somepageid
+
+LINE t 0.0ID:first-line-id
+amber: welcome to the export dialog!
+
+LINE i 0.1ID:second-line-id
+play_sfx(air_horn)"
+fit_content = true
+
+[node name="Example1" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
+visible = false
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
+bbcode_enabled = true
+text = "a: amber
+END ACTORS
+PAGE 0
+
+LINE t 0.0
+amber: welcome to the export dialog!
+
+LINE i 0.1
+play_sfx(air_horn)"
+fit_content = true
+
+[node name="Example2" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/Examples"]
+visible = false
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_m824d")
+bbcode_enabled = true
+text = "amber: welcome to the export dialog!
+
+play_sfx(air_horn)"
 fit_content = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
@@ -139,7 +241,7 @@ filters = PackedStringArray("*.txt", "*.dtf")
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_warnings_u"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
-[connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/IncludeIDsCheckBox" to="." method="update_warnings"]
+[connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="update_warnings_u"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/ClipboardButton" to="." method="_on_clipboard_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]

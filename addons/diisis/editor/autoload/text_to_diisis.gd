@@ -154,6 +154,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 		
 		if page_line.contains("ID:"):
 			var id : String = page_line.split("ID:")[1]
+			print("hehe1")
 			current_page_data = get_page_data(id)
 		var lines_for_line_content := []
 		var line_content_farm := lines_for_page.duplicate(true)
@@ -236,6 +237,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 				var text_data = make_text_data(lines)
 				var id = line_data.get("content", {}).get("text_id", Pages.get_new_id())
 				line_data["content"] = {"text_id" : id}
+				print("text1")
 				Pages.save_text(id, text_data.get("text"))
 			line_data["line_type"] = line_type
 			line_data_on_page.append(line_data)
@@ -259,38 +261,6 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 	file.close()
 	await get_tree().process_frame
 	Pages.editor.open_new_file.emit()
-	#await get_tree().process_frame
-	#Pages.editor.open_from_path("user://import_override_temp.json")
-	#await get_tree().process_frame
-	#Pages.editor.set_save_path(path)
-	#Pages.page_data = new_page_data.duplicate(true)
-	#
-	#await get_tree().process_frame
-	#Pages.editor.hide_window_by_string("TextImportWindow")
-	#Pages.editor.refresh(false)
-	#await get_tree().process_frame
-	#
-	#Pages.editor.step_through_pages()
-	return
-	
-	# iterare over every imported_lines
-	# ingest content when needed
-	# then override Pages.page_data
-	# update
-	var page_id : String
-	var current_page_data : Dictionary
-	var current_line_data : Dictionary
-	while not imported_lines.is_empty():
-		var line : String = imported_lines.pop_front()
-		if line.begins_with("PAGE"):
-			page_id = line.split("ID:")[1]
-			if not current_page_data.is_empty(): # happens on first iteration
-				current_page_data["lines"] = current_line_data
-				new_page_data[current_page_data.get("number")] = current_page_data.duplicate(true)
-			current_page_data = get_page_data(page_id)
-		
-	if not current_page_data.is_empty(): # happens on first iteration
-		new_page_data[current_page_data.get("number")] = current_page_data.duplicate(true)
 	
 
 func make_instruction_data(lines:Array) -> Dictionary:
@@ -330,6 +300,8 @@ func make_choice_data(lines:Array) -> Dictionary:
 		elif content_line.begins_with("<"): # only disabled
 			text_data["disabled"] = content_line.trim_prefix("<")
 		choice_texts.append(text_data)
+	
+	print("CCCmade choices ", choice_texts.size(), choice_texts)
 	return {"choice_texts" : choice_texts.duplicate(true)}
 
 func make_text_data(lines:Array, payload:={}, actor_ingestion_override:=[]) -> Dictionary:
@@ -381,11 +353,13 @@ func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_ove
 				continue
 			line_content_by_id[line_id] = make_text_data(lines_for_line_content, payload, actor_ingestion_override)
 	
+	print("-------- are we saving the page after this?")
 	# then go over Pages.page_data and insert the updated line content
 	Pages.update_line_content(line_content_by_id)
 
 func get_line_data_by_id(line_id:String) -> Dictionary:
 	for i in Pages.page_data.size():
+		print("hehe2")
 		var page_data = Pages.get_page_data(i)
 		for line : Dictionary in page_data.get("lines", []):
 			if line.get("id") == line_id:
@@ -393,6 +367,7 @@ func get_line_data_by_id(line_id:String) -> Dictionary:
 	return {}
 
 func get_page_data(page_id:String) -> Dictionary:
+	print("hehe3")
 	for i in Pages.page_data.size():
 		var page_data = Pages.get_page_data(i)
 		if page_data.get("id", "") == page_id:

@@ -51,6 +51,7 @@ func _on_clipboard_button_pressed() -> void:
 
 
 func _on_button_pressed() -> void:
+	print("----------- importing!!!")
 	#Pages.editor.set_opening_cover_visible(true, "Importing, please wait >.<")
 	#await get_tree().process_frame
 	var payload := {}
@@ -60,9 +61,9 @@ func _on_button_pressed() -> void:
 	payload["fix_punctuation"] = find_child("FixPunctuationCheckBox").button_pressed
 	TextToDiisis.ingest_pages(%ImportTextLabel.text, payload)
 	
-	await get_tree().process_frame
-	
-	Pages.editor.step_through_pages()
+	#await get_tree().process_frame
+	#
+	#Pages.editor.step_through_pages()
 
 
 func get_preferences() -> Dictionary:

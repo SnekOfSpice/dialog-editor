@@ -67,6 +67,7 @@ func serialize() -> Dictionary:
 	data["skip"] = find_child("SkipCheckBox").button_pressed
 	
 	var lines_data := []
+	print("serializing page")
 	for c in lines.get_children():
 		if not c is Line:
 			continue
@@ -89,6 +90,7 @@ func deserialize(data: Dictionary):
 	set_skip(data.get("skip", false))
 	id = data.get("id", Pages.get_new_id())
 	
+	print("referes1")
 	update_incoming_references_to_page()
 	
 	await get_tree().process_frame
@@ -188,6 +190,7 @@ func get_line(at_index:int) -> Line:
 	return lines.get_child(at_index)
 
 func get_line_data(at_index:int) -> Dictionary:
+	print("aha3")
 	return lines.get_child(at_index).serialize()
 
 func request_delete_line(at_index:int):
@@ -496,6 +499,7 @@ func get_max_reach_after_indented_index(index: int):
 	return reach
 
 func update_incoming_references_to_page():
+	print("update_incoming_references_to_page")
 	var refs := get_references_to_this_page()
 	var ref_count := refs.size()
 	var ref_label : RichTextLabel = find_child("IncomingReferences")
@@ -512,6 +516,7 @@ func update_incoming_references_to_page():
 		ref_label.tooltip_text = "View %s incoming references." % ref_count
 
 func update_incoming_references():
+	print("page is about to sync line refs in update_incoming_references")
 	Pages.sync_line_references()
 	update_incoming_references_to_page()
 	for line : Line in lines.get_children():
@@ -541,6 +546,8 @@ func update():
 			if folder_range_i == 0:
 				continue
 			for j in range(idx, idx + folder_range_i + 1):
+				if j >= lines.get_child_count():
+					break
 				lines.get_child(j).change_indent_level(1)
 				if j > idx: # if beyond the folder itself
 					lines.get_child(j).visible = is_folder_content_visible
@@ -550,6 +557,9 @@ func update():
 		node.set_page_view(Pages.editor.get_selected_page_view())
 	
 	find_child("Facts").update()
+	
+	print("updating page")
+	update_incoming_references()
 	
 
 func _on_next_line_edit_value_changed(value: float) -> void:

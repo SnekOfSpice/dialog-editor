@@ -19,9 +19,15 @@ func serialize() -> Dictionary:
 	var result = {}
 	
 	var choices = []
+	var handled_ids := [] # idk why this is happening but importing duplicates some things so we do this
 	for c : ChoiceEdit in $ChoiceList.get_children():
-		choices.append(c.serialize())
+		var data := c.serialize()
+		if handled_ids.has(data.get("id")):
+			continue
+		choices.append(data)
+		handled_ids.append(data.get("id"))
 	result["choices"] = choices
+	
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed
 	result["meta.do_jump_page"] = do_jump_page
 	result["meta.editing_view"] = editing_view
@@ -38,6 +44,7 @@ func deserialize(data):
 	find_child("AutoSwitchButton").button_pressed = auto_switch
 	title_id = data.get("title_id", Pages.get_new_id())
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
+	print("---got choices ", data.get("choices"))
 	for d in data.get("choices", []):
 		add_choice(-1, d)
 	

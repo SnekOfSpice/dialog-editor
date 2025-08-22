@@ -83,21 +83,28 @@ unique_name_in_owner = true
 layout_mode = 2
 options = Array[String](["Update Existing Data", "Override"])
 
-[node name="Label" type="Label" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Text"
+theme_override_constants/margin_left = 3
 
-[node name="CapitalizeCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Text Line Handling"
+
+[node name="CapitalizeCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 button_pressed = true
 text = "Capitalize"
 
-[node name="NeatenWhitespaceCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="NeatenWhitespaceCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 button_pressed = true
 text = "Neaten Whitespace"
 
-[node name="FixPunctuationCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="FixPunctuationCheckBox" type="CheckBox" parent="HSplitContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 button_pressed = true
 text = "Fix Punctuation"

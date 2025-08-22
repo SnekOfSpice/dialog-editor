@@ -14,5 +14,6 @@ func open_popup():
 	if not popup:
 		push_warning("No popup set.")
 		return
+	print("opening popup")
 	Pages.editor.refresh()
 	popup.popup()

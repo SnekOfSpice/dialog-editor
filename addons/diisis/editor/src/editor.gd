@@ -49,19 +49,21 @@ func get_current_page() -> Page:
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
-	
+	print("refresh ser ", serialize_before_load)
 	var cpn:int
 	if get_current_page():
 		cpn = get_current_page().number
 	else:
 		return
 	if serialize_before_load:
+		print("refreshing")
 		get_current_page().save()
 	await get_tree().process_frame
 	if fragile:
 		for node in get_tree().get_nodes_in_group("diisis_fragile"):
 			node.update_fragile()
 	else:
+		print("refresh load_page ", not serialize_before_load)
 		load_page(cpn, not serialize_before_load)
 	
 	await get_tree().process_frame
@@ -161,11 +163,12 @@ func init(active_file_path:="") -> void:
 		
 		
 		var d = DirAccess.remove_absolute("user://import_override_temp.json")
+		await get_tree().process_frame
+		load_page(0)
+		await get_tree().process_frame
 		step_through_pages()
 		
-		await get_tree().process_frame
 		
-		load_page(0)
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -428,8 +431,8 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("GoTo").set_current_page_count(str(current_page.number))
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
-	
-	Pages.sync_line_references()
+	#print("editor.update_controls")
+	#Pages.sync_line_references()
 	
 	await get_tree().process_frame
 	current_page.update()
@@ -460,15 +463,19 @@ func _on_next_pressed() -> void:
 
 
 func request_load_previous_page():
+	print("load1")
 	request_load_page(get_current_page().number - 1, "Move to previous page")
 
 func request_load_next_page():
+	print("load2")
 	request_load_page(get_current_page().number + 1, "Move to next page")
 
 func request_load_first_page():
+	print("load3")
 	request_load_page(0, "Move to first page")
 
 func request_load_last_page():
+	print("load4")
 	request_load_page(Pages.get_page_count() - 1, "Move to last page")
 
 func _on_add_last_pressed() -> void:
@@ -480,6 +487,7 @@ func request_delete_current_page():
 	request_delete_page(get_current_page_number())
 
 func request_delete_page(number:int):
+	print("load5")
 	if Pages.get_page_count() <= 1:
 		push_warning("you cannot delete the last page")
 		return
@@ -505,6 +513,7 @@ func request_add_page_after_current():
 	request_add_page(get_current_page_number() + 1)
 
 func request_add_page(at:int, page_reference_change:=1):
+	print("load6")
 	undo_redo.create_action("Insert page")
 	undo_redo.add_do_method(DiisisEditorActions.add_page.bind(at, page_reference_change))
 	undo_redo.add_do_method(DiisisEditorActions.load_page.bind(at))
@@ -528,6 +537,7 @@ func save_to_file(path:String, is_autosave:=false):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var data_to_save = {}
+	print("wow1")
 	data_to_save["pages"] = Pages.serialize()
 	data_to_save["editor"] = serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
@@ -546,6 +556,7 @@ func save_to_file(path:String, is_autosave:=false):
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
 	await get_tree().process_frame
+	print("refresh1")
 	refresh()
 
 func serialize() -> Dictionary:
@@ -603,6 +614,7 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
+	print("load7")
 	load_page(editor_data.get("current_page_number", 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
@@ -682,7 +694,8 @@ func open_popup(popup:Window, fit_to_size:=false):
 		popup.size.x -= 50
 	
 	popup.content_scale_factor = content_scale
-	Pages.editor.refresh()
+	print("refresh2")
+	refresh()
 	popup.popup()
 	popup.grab_focus()
 	
@@ -753,8 +766,10 @@ func _on_file_id_pressed(id: int) -> void:
 				"About DIISIS"
 			)
 		5:
+			print("----------- opening export window")
 			open_window_by_string("TextExportWindow")
 		6:
+			print("----------- opening import window")
 			open_window_by_string("TextImportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
@@ -873,6 +888,7 @@ func step_through_pages():
 		next_page = 0
 	var steps : int = Pages.get_page_count()
 	var i := 0
+	print("load8")
 	while i < steps:
 		load_page(next_page)
 		await get_tree().process_frame
@@ -1097,6 +1113,7 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 	file.close()
 
 func _on_refresh_button_pressed() -> void:
+	print("refresh3")
 	refresh()
 
 func handle_meta(meta:Variant):
@@ -1274,12 +1291,14 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 
 func _on_handler_window_close_requested() -> void:
 	await get_tree().process_frame
+	print("refresh4")
 	Pages.update_all_compliances()
 	await get_tree().process_frame
 	refresh()
 
 
 func _on_file_config_popup_close_requested() -> void:
+	print("close1")
 	get_current_page().update_incoming_references()
 
 

@@ -157,6 +157,7 @@ func sync_line_references():
 	loopback_references_by_page.clear()
 	jump_page_references_by_page.clear()
 	for page_index in page_data.keys():
+		#print("sync_line_references")
 		var page := get_page_data(page_index)
 		var line_index := 0
 		for line in page.get("lines", []):
@@ -196,6 +197,7 @@ func is_header_schema_empty():
 	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
+	print("wow2")
 	var data := {
 		"append_periods": append_periods,
 		"callable_autoloads": callable_autoloads,
@@ -372,10 +374,12 @@ func swap_line_references(on_page:int, from:int, to:int):
 	
 	if edited_current_page:
 		await get_tree().process_frame
+		print("refr1")
 		editor.refresh(false, true)
 
 
 func get_lines(page_number: int):
+	print("hehe5")
 	return get_page_data(page_number).get("lines")
 
 func swap_page_references(from: int, to: int):
@@ -402,6 +406,7 @@ func swap_page_references(from: int, to: int):
 						elif choice.get("loopback_target_page") == to:
 							choice["loopback_target_page"] = from
 	await get_tree().process_frame
+	print("refr2")
 	editor.refresh(false)
 
 func change_line_references_directional(on_page:int, starting_index_of_change:int, end_index_of_change:int, operation:int):
@@ -430,6 +435,7 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	local_line_insert_offset += operation
 	if edited_current_page:
 		await get_tree().process_frame
+		print("refr3")
 		editor.refresh(false, true)
 	
 
@@ -451,6 +457,7 @@ func change_page_references_dir(changed_page: int, operation:int):
 						choice["loopback_target_page"] = choice.get("loopback_target_page") + operation
 	
 	await get_tree().process_frame
+	print("refr4")
 	editor.refresh(false)
 
 func key_exists(key: String) -> bool:
@@ -475,6 +482,7 @@ func get_page_number_by_key(key:String) -> int:
 ## when deserializing, UI elements such as choices may try to reference things that are further down the page
 ## then this ensures it'll fall back onto the saved data
 func get_lines_safe(page_index:int, min_line_index:int) -> Array:
+	print("hehe6")
 	var page = get_page_data(page_index)
 	var lines : Array = page.get("lines")
 	if lines.size() > min_line_index:
@@ -483,6 +491,7 @@ func get_lines_safe(page_index:int, min_line_index:int) -> Array:
 		return page_data.get(page_index).get("lines")
 	
 func get_line_type(page_index:int, line_index:int) -> int:
+	print("lines2")
 	var lines = get_lines_safe(page_index, line_index)
 	return int(lines[line_index].get("line_type"))
 
@@ -495,6 +504,7 @@ func get_file_config() -> Dictionary:
 	}
 
 func get_line_type_str(page_index:int, line_index:int) -> String:
+	print("linetype1")
 	var line_type = get_line_type(page_index, line_index)
 	match line_type:
 		DIISIS.LineType.Text:
@@ -585,6 +595,7 @@ func get_data_from_address(address:String) -> Dictionary:
 	# if current page is address
 	if cpn == address_page:
 		var target = DiisisEditorUtil.get_node_at_address(address)
+		print("text17")
 		return target.serialize()
 	# get from internal data
 	var depth = DiisisEditorUtil.get_address_depth(address)
@@ -792,7 +803,9 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 func get_instruction_arg_count(instruction_name: String) -> int:
 	return get_custom_method_arg_names(instruction_name).size()
 
-func get_page_data(index:int) -> Dictionary:
+func get_page_data(index:int, force_cached := false) -> Dictionary:
+	if force_cached:
+		return page_data.get(index)
 	if editor.get_current_page_number() == index:
 		return editor.get_current_page().serialize()
 	return page_data.get(index)
@@ -828,6 +841,7 @@ func get_all_invalid_address_pointers() -> String:
 	
 		var lines : Array = page.get("lines", [])
 		if page.get("number") == editor.get_current_page_number():
+			print("???")
 			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
@@ -865,6 +879,7 @@ func apply_new_header_schema(new_schema: Array):
 			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
 	
 	editor.refresh(false)
+	print("refr5")
 	head_defaults = new_schema
 
 
@@ -1001,6 +1016,7 @@ func get_text_on_all_pages() -> String:
 	return result
 
 func get_text_on_page(page_number:int) -> String:
+	print("hehe8")
 	var result := ""
 	var data := get_page_data(page_number)
 	for line in data.get("lines", []):
@@ -1093,6 +1109,7 @@ func rename_dropdown_title(from:String, to:String):
 			var content : String = Pages.get_text(text_id)
 			content = content.replace(str("{", from, "|"), str("{", to, "|"))
 			content = content.replace(str("[]>", from), str("[]>", to))
+			print("text2")
 			Pages.save_text(text_id, content)
 
 func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
@@ -1124,7 +1141,7 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 						var old_speaker := str("[]>", old_option)
 						var new_speaker := str("[]>", new_option)
 						content = content.replace(old_speaker, new_speaker)
-					
+					print("text3")
 					Pages.save_text(text_id, content)
 					
 					i += 1
@@ -1153,6 +1170,7 @@ func delete_dropdown(title:String, erase_from_text:=true):
 					content = content.replace(option_str, "")
 					i += 1
 				content = content.replace("{}", "")
+				print("text13")
 				Pages.save_text(text_id, content)
 	
 	dropdown_titles.erase(title)
@@ -1160,7 +1178,7 @@ func delete_dropdown(title:String, erase_from_text:=true):
 	dropdowns.erase(title)
 	
 	await get_tree().process_frame
-	
+	print("refr5")
 	Pages.editor.refresh(false)
 
 func register_fact(fact_name : String, value):
@@ -1209,6 +1227,7 @@ func alter_fact(from:String, to=null):
 					str("<fact:", from, ">"),
 					str("<fact:", to, ">")
 				)
+				print("text5")
 				save_text(text_id, text)
 			if line.get("line_type") == DIISIS.LineType.Choice:
 				var options = line.get("content")
@@ -1238,7 +1257,7 @@ func alter_fact(from:String, to=null):
 	if to is String:
 		facts[to] = facts.get(from)
 	facts.erase(from)
-	
+	print("refr7")
 	editor.refresh(false)
 	
 func is_fact_new_and_not_empty(fact_name: String) -> bool:
@@ -1412,15 +1431,23 @@ func get_cascading_trail(start_page:int) -> Array:
 func stringify_page(page_index:int, modifiers := {}) -> String:
 	var data := get_page_data(page_index)
 	
-	var include_ids : bool = modifiers.get("include_ids", true)
-	var result := "PAGE %s" % page_index
+	var syntax_detail : int = modifiers.get("syntax_detail", 0)
+	var line_types_to_include : Array = modifiers.get("line_types_to_include",[0,1,2,3])
+	var include_ids := syntax_detail == 0
+	var include_file_outline := syntax_detail != 2
+	var result := ""
+	if include_file_outline:
+		result += "PAGE %s" % page_index
 	if include_ids:
 		result += " ID:%s" % data.get("id")
 	
 	var line_index := 0
 	for line : Dictionary in data.get("lines", []):
-		result += "\n"
 		var line_type : int = line.get("line_type")
+		if not line_type in line_types_to_include:
+			line_index += 1
+			continue
+		result += "\n"
 		var line_type_letter : String
 		match line_type:
 			DIISIS.LineType.Text:
@@ -1431,7 +1458,8 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 				line_type_letter = "c"
 			DIISIS.LineType.Folder:
 				line_type_letter = "f"
-		result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
+		if include_file_outline:
+			result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
 		if include_ids:
 			result += " ID:%s" % line.get("id")
 		result += "\n"
@@ -1470,9 +1498,14 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 					if include_ids:
 						result += "ID:"+choice.get("id")
 			DIISIS.LineType.Folder:
+				if not include_file_outline:
+					line_index += 1
+					continue
 				result += str(content.get("range", 0))
 		line_index += 1
-	result += "\n\n\n"
+	result += "\n"
+	if include_file_outline:
+		result += "\n\n"
 	return result
 
 ## function used by Text2Diisis
@@ -1480,7 +1513,7 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	var ids_to_update := new_content_by_line_id.keys()
 	
 	for page_index in get_page_count():
-		var data = get_page_data(page_index)
+		var data = get_page_data(page_index, true)
 		
 		for line : Dictionary in data.get("lines", []):
 			var line_id : String = line.get("id")
@@ -1506,7 +1539,7 @@ func update_line_content(new_content_by_line_id:Dictionary):
 							id_order.append(id)
 						
 						# first go over all existing choices and update from there
-						
+						printt("CCCExisting choices ", existing_choices.size(), existing_choices)
 						for choice : Dictionary in existing_choices:
 							var id : String = choice.get("id", "")
 							if choice_item_data_by_choice_id.has(id):
@@ -1518,9 +1551,9 @@ func update_line_content(new_content_by_line_id:Dictionary):
 									text_hacks_by_id[text_id_enabled] = new_data.get("enabled")
 								if new_data.has("disabled"):
 									text_hacks_by_id[text_id_disabled] = new_data.get("disabled")
-								
+								print("CCCerasing ", id)
 								choice_item_data_by_choice_id.erase(id)
-						
+						printt("CCCremaining choices ", choice_item_data_by_choice_id.size(), choice_item_data_by_choice_id)
 						# all remaining bits of choice data that haven't been used up in existing choices
 						for key : String in choice_item_data_by_choice_id.keys():
 							var unused_data : Dictionary = choice_item_data_by_choice_id.get(key)
@@ -1540,7 +1573,7 @@ func update_line_content(new_content_by_line_id:Dictionary):
 							existing_choices.append(new_choice)
 						
 						existing_choices = sort_choices(id_order, existing_choices)
-						
+						printt("CCCfinal choices ", existing_choices.size(), existing_choices)
 						line["content"]["choices"] = existing_choices
 					DIISISGlobal.LineType.Instruction:
 						line["content"]["meta.text"] = new_content.get("meta.text")
@@ -1550,15 +1583,15 @@ func update_line_content(new_content_by_line_id:Dictionary):
 						line["content"]["range"] = new_content.get("range")
 		
 		page_data[page_index] = data
-	# actually write a Pages function to update content by line id
-	# get line type so you know if content should be updated in the text data or directly in the line data
-	pass
 	
 	await get_tree().process_frame
 	editor.hide_window_by_string("TextImportWindow")
 	editor.refresh(false)
-	await get_tree().process_frame
 	editor.set_opening_cover_visible(false)
+	
+	await get_tree().process_frame
+	
+	editor.step_through_pages()
 
 func sort_choices(id_order:Array, choices:Array) -> Array:
 	var result := []
@@ -2077,6 +2110,7 @@ func get_speakers() -> Array:
 
 ## exact means only the passed speakers can be entered
 func get_text_line_adrs_with_speakers(speakers:Array, exact:=false) -> Array:
+	print("hehe9")
 	if speakers.is_empty():
 		push_warning("Speakers is empty. Returning empty results.")
 		return []
@@ -2173,6 +2207,7 @@ func get_facts_data(address:String) -> Dictionary:
 	var cpn : int = editor.get_current_page_number()
 	match DiisisEditorUtil.get_address_depth(address):
 		DiisisEditorUtil.AddressDepth.Page:
+			print("?????")
 			var data : Dictionary = editor.get_current_page().serialize()
 			return data.get("facts", {}).get("fact_data_by_name", {})
 		DiisisEditorUtil.AddressDepth.Line:
@@ -2185,6 +2220,7 @@ func get_facts_data(address:String) -> Dictionary:
 	return {}
 
 func get_line_data_adr(address:String) -> Dictionary:
+	print("lines1")
 	var data := {}
 	var parts = DiisisEditorUtil.get_split_address(address)
 	return get_lines_safe(parts[0], parts[1])[parts[1]]
@@ -2207,6 +2243,7 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 					for key : String in line_payload.keys():
 						facts_by_address[key] = line_payload.get(key)#.get(line_address)
 		DiisisEditorUtil.AddressDepth.Line:
+			print("linetype2")
 			var line_type := get_line_type(parts[0], parts[1])
 			var line_data = get_line_data(parts[0], parts[1])
 			var line_facts_data = get_facts_data(address)
@@ -2293,4 +2330,5 @@ func linearize_pages():
 		data["terminate"] = i == get_page_count() - 1
 		page_data[i] = data
 	await get_tree().process_frame
+	print("refr9")
 	editor.refresh(false)

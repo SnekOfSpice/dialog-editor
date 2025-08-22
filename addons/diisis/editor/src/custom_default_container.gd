@@ -210,7 +210,6 @@ func serialize_values_container():
 		var limiters = dropdown_container.get_child(default_index)
 		if limiters is DropdownTypeSelector:
 			var data : Array = limiters.serialize().duplicate(true)
-			#print("saving limiters ", data, " for ", arg_name, " of ", method_name)
 			method_limiters[arg_name] = data
 	return {
 		"custom_method_defaults" : method_defaults,
