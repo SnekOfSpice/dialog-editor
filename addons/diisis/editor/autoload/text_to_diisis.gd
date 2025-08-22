@@ -336,6 +336,19 @@ func update_existing_data(imported_lines:Array, payload:={}, actor_ingestion_ove
 				break
 			lines_for_line_content.append(local_line)
 			imported_lines.remove_at(0)
+		
+		if not line.contains("ID:"):
+			Pages.editor.set_importing_cover_visible(false)
+			var next_line : String = lines_for_line_content.pop_front()
+			var message := str(
+				"Line \"", line, "\" does not contain ID. Import mode \"Update\" requires all objects to have their ID with them.\n",
+				"Intended content:\n",
+				next_line
+			)
+			Pages.editor.notify(message, 20)
+			Pages.editor.hide_window_by_string("TextImportWindow")
+			return
+		
 		var line_id = line.split("ID:")[1]
 		
 		if line.begins_with("LINE i"):

@@ -9,6 +9,7 @@ func init():
 	%ImportMode.select(Pages.preferences_import.get("mode", 0))
 	set_import_text("")
 	%ImportAgainWarning.visible = false
+	%FileButton.grab_focus()
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -22,6 +23,8 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	else:
 		%ImportAgainWarning.visible = false
 	Pages.import_modified_times_by_path[path] = modified_time
+	
+	%ImportButton.grab_focus()
 
 func _on_file_button_pressed() -> void:
 	emit_signal("fd_opened")

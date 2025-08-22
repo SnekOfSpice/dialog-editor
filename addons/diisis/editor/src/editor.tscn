@@ -688,7 +688,6 @@ scroll_active = false
 horizontal_alignment = 1
 
 [node name="ImportingCover" type="ColorRect" parent="."]
-visible = false
 z_index = 10
 layout_mode = 1
 anchors_preset = 15
@@ -698,26 +697,36 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.152941, 0.121569, 0.145098, 1)
 
-[node name="Label" type="RichTextLabel" parent="ImportingCover"]
-custom_minimum_size = Vector2(400, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="ImportingCover"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -138.0
-offset_right = 200.0
-offset_bottom = 138.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="ImportingCover/VBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m63dd")
 bbcode_enabled = true
 text = "[img=200]uid://cakx4eotyolmx[/img]
 [font_size=28][b]Importing, please wait >.<"
 fit_content = true
 scroll_active = false
+horizontal_alignment = 1
+
+[node name="ImportProgressLabel" type="Label" parent="ImportingCover/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10/10"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]

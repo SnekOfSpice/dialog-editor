@@ -208,7 +208,7 @@ func load_page(number: int, discard_without_saving:=false):
 		page_instance = page_container.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
 		page_instance.request_delete.connect(request_delete_current_page)
-		
+	
 	page_instance.init(number)
 	update_controls()
 	await get_tree().process_frame
@@ -690,7 +690,7 @@ func open_popup(popup:Window, fit_to_size:=false):
 
 func hide_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)
-	window.hide()
+	window.close_requested.emit()
 	return window
 
 func open_window_by_string(window_name:String) -> Window:
@@ -869,6 +869,7 @@ func step_through_pages():
 	var steps : int = Pages.get_page_count()
 	var i := 0
 	while i < steps:
+		%ImportProgressLabel.text = "%s/%s" % [i, steps]
 		load_page(next_page)
 		await get_tree().process_frame
 		next_page = get_current_page_number() + 1

@@ -1490,13 +1490,14 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 ## function used by Text2Diisis
 func update_line_content(new_content_by_line_id:Dictionary):
 	var ids_to_update := new_content_by_line_id.keys()
-	
+	var unused_ids := ids_to_update.duplicate(true)
 	for page_index in get_page_count():
 		var data = get_page_data(page_index, true)
 		
 		for line : Dictionary in data.get("lines", []):
 			var line_id : String = line.get("id")
 			if line_id in ids_to_update:
+				unused_ids.erase(line_id)
 				var line_type : DIISISGlobal.LineType = line.get("line_type")
 				var new_content : Dictionary = new_content_by_line_id.get(line_id)
 				var line_content : Dictionary = line.get("content")
@@ -1567,6 +1568,15 @@ func update_line_content(new_content_by_line_id:Dictionary):
 	await get_tree().process_frame
 	
 	editor.step_through_pages()
+	
+	if not unused_ids.is_empty():
+		editor.notify(
+			str("Importing has unused ids: ", "\n".join(unused_ids),
+			"\n\n",
+			"Import mode \"Update\" is intended to be used to update existing lines only. To add new ones from text, use import mode \"Override\"."
+			),
+			unused_ids.size() * 7
+		)
 
 func sort_choices(id_order:Array, choices:Array) -> Array:
 	var result := []

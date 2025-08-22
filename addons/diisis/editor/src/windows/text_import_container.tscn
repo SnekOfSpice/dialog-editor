@@ -40,6 +40,7 @@ layout_mode = 2
 text = "Add Data..."
 
 [node name="FileButton" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "From file..."
 alignment = 0

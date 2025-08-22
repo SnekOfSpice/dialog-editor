@@ -3,7 +3,7 @@ n: narrator
 END ACTORS
 PAGE 0 ID:1755245262.944--9223372036854761454
 
-LINE
+LINE ID:dfhjbg
 narrator:uwu
 
 LINE i 0.0 ID:1744999497.520--9223372036854774776
@@ -15,7 +15,7 @@ set_bgm(default, 0)
 LINE t 0.2 ID:1755676258.893--9223372036854760239
 amber:ghjuhzj
 
-LINE i
+LINE i ID:dfhjbgdfdfgfd
 set_bgm(default, 2)
 
 LINE f 0.3 ID:1755250466.988--9223372036854761329
@@ -83,6 +83,6 @@ set_background(skyline, 2.0)
 LINE t 2.2 ID:1744999499.060--9223372036854774702
 narrator: There you go <3
 
-LINE
+LINE ID:u<hgh<h
 n: good fucking riddancve
 

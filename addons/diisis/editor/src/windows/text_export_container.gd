@@ -42,6 +42,7 @@ func init():
 	%IncludeInstruction.button_pressed = DIISISGlobal.LineType.Instruction in line_types_to_include
 	%IncludeFolder.button_pressed = DIISISGlobal.LineType.Folder in line_types_to_include
 	
+	%FileButton.grab_focus()
 	update_warnings()
 
 func _on_option_button_embed_option_pressed(index: int) -> void:
