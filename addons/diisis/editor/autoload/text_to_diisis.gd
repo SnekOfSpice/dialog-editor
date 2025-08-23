@@ -148,9 +148,11 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 	if not working_page.is_empty():
 		imported_lines_per_page.append(working_page)
 	
+	var goal_page_count := imported_lines_per_page.size()
 	for lines_for_page : Array in imported_lines_per_page:
 		var page_line : String = lines_for_page.pop_front()
 		if lines_for_page.is_empty():
+			goal_page_count -= 1
 			continue
 		var current_page_data := {}
 		
@@ -248,6 +250,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 		var cpn : int = new_page_data.size()
 		current_page_data["number"] = cpn
 		new_page_data[cpn] = current_page_data
+		current_page_data["terminate"] = cpn == goal_page_count - 1
 	await get_tree().process_frame
 	var file = FileAccess.open("user://import_override_temp.json", FileAccess.WRITE)
 	var path := Pages.editor.get_save_path()
