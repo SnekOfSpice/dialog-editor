@@ -68,6 +68,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	Pages.editor = self
 	set_opening_cover_visible(true)
 	set_importing_cover_visible(false)
 	was_playing_scene = EditorInterface.is_playing_scene()
@@ -78,7 +79,6 @@ func init(active_file_path:="") -> void:
 	page_container = core.find_child("PageContainer")
 	
 	Pages.connect("pages_modified", update_controls)
-	Pages.editor = self
 	is_open = true
 	
 	request_add_page(0, 0)
