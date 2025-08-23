@@ -124,15 +124,15 @@ func init(active_file_path:="") -> void:
 	#ingest.init()
 	
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
-	file_item.add_separator()
-	file_item.add_item("Preferences...", 3)
-	file_item.add_item("About...", 4)
+	file_item.add_item("Open with Ctrl + ...")
+	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
+	var utility_item : PopupMenu = find_child("Utility")
 	if Pages.silly:
-		var utility_item : PopupMenu = find_child("Utility")
 		utility_item.add_separator("Silly")
 		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
-	
+	utility_item.add_item("Open with Ctrl + ...")
+	utility_item.set_item_disabled(utility_item.item_count - 1, true)
 	
 	open_from_path(active_file_path)
 	
@@ -741,18 +741,7 @@ func _on_file_id_pressed(id: int) -> void:
 			if active_dir != "":
 				$Popups.get_node("FDOpen").current_dir = active_dir
 			open_popup($Popups.get_node("FDOpen"), true)
-		3:
-			# config
-			open_popup($Popups.get_node("FileConfigPopup"), true)
-		4:
-			popup_accept_dialogue(
-				str(
-					"[center][color=#f51068][b]DIISIS is a machine of gore and wires[/b][/color]", "\n\n",
-					"[color=#ffffff][b]DIISIS is antifascist software[/b][/color]", "\n\n",
-					"[color=#ff42d6][b]DIISIS loves you[/b][/color][/center]",
-				),
-				"About DIISIS"
-			)
+		
 		5:
 			open_window_by_string("TextExportWindow")
 		6:
@@ -778,6 +767,18 @@ func _on_editor_id_pressed(id: int) -> void:
 			emit_signal("request_reload")
 		1:
 			open_window_by_string("PunctuationRulesWindow")
+		3:
+			# config
+			open_popup($Popups.get_node("FileConfigPopup"), true)
+		4:
+			popup_accept_dialogue(
+				str(
+					"[center][color=#f51068][b]DIISIS is a machine of gore and wires[/b][/color]", "\n\n",
+					"[color=#ffffff][b]DIISIS is antifascist software[/b][/color]", "\n\n",
+					"[color=#ff42d6][b]DIISIS loves you[/b][/color][/center]",
+				),
+				"About DIISIS"
+			)
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:

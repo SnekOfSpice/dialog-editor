@@ -407,7 +407,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761452,
+		"id_counter": -9223372036854761332,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -580,6 +580,7 @@
 						},
 						"content": {
 							"auto_switch": false,
+							"choice_order": [],
 							"choices": [
 								{
 									"address": "0.3.0",
@@ -857,7 +858,7 @@
 					{
 						"address": "1.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -867,7 +868,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -884,12 +885,12 @@
 						},
 						"header": [],
 						"id": "1744999498.626--9223372036854774735",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
 						},
@@ -898,7 +899,7 @@
 					{
 						"address": "1.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -908,7 +909,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -930,12 +931,12 @@
 						},
 						"header": [],
 						"id": "1744999498.627--9223372036854774732",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
 						},
@@ -944,7 +945,7 @@
 					{
 						"address": "1.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -954,7 +955,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -974,12 +975,12 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774728",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						},
@@ -988,7 +989,7 @@
 					{
 						"address": "1.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -998,7 +999,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1020,12 +1021,12 @@
 						},
 						"header": [],
 						"id": "1747205915.630--9223372036854773717",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1034,7 +1035,7 @@
 					{
 						"address": "1.4",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1044,7 +1045,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1061,12 +1062,12 @@
 						},
 						"header": [],
 						"id": "1744999498.628--9223372036854774724",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4.0,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1075,7 +1076,7 @@
 					{
 						"address": "1.5",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1085,7 +1086,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1107,12 +1108,12 @@
 						},
 						"header": [],
 						"id": "1744999498.629--9223372036854774721",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5.0,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1121,7 +1122,7 @@
 					{
 						"address": "1.6",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1131,7 +1132,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1148,12 +1149,12 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774717",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6.0,
+						"meta.line_index": 6,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1162,7 +1163,7 @@
 					{
 						"address": "1.7",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1172,7 +1173,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1192,23 +1193,23 @@
 						},
 						"header": [],
 						"id": "1744999498.630--9223372036854774713",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 7.0,
+						"meta.line_index": 7,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 266,
 				"meta.selected": false,
 				"next": 2.0,
-				"number": 1.0,
+				"number": 1,
 				"page_key": "about instructions",
 				"skip": false,
 				"terminate": false
@@ -1225,7 +1226,7 @@
 					{
 						"address": "2.0",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1235,7 +1236,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1252,12 +1253,12 @@
 						},
 						"header": [],
 						"id": "1744999499.058--9223372036854774709",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 0.0,
+						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1266,7 +1267,7 @@
 					{
 						"address": "2.1",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1276,7 +1277,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1298,12 +1299,12 @@
 						},
 						"header": [],
 						"id": "1744999499.059--9223372036854774706",
-						"line_type": 2.0,
+						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 1.0,
+						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1312,7 +1313,7 @@
 					{
 						"address": "2.2",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1322,7 +1323,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1339,12 +1340,12 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774702",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 2.0,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						},
@@ -1353,7 +1354,7 @@
 					{
 						"address": "2.3",
 						"conditionals": {
-							"behavior": 0.0,
+							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
@@ -1363,7 +1364,7 @@
 							},
 							"meta.controls_collapsed": true,
 							"meta.visible": false,
-							"operand": 0.0,
+							"operand": 0,
 							"operand_args": [],
 							"operand_key": "AND"
 						},
@@ -1383,23 +1384,23 @@
 						},
 						"header": [],
 						"id": "1744999499.060--9223372036854774698",
-						"line_type": 0.0,
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
-						"meta.indent_level": 0.0,
+						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3.0,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					}
 				],
-				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.address_mode_next": 0,
+				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 0.0,
-				"number": 2.0,
+				"number": 2,
 				"page_key": "the end",
 				"skip": false,
 				"terminate": true
@@ -1408,69 +1409,45 @@
 		"preferences_export": {
 			"cascade_start": 0.0,
 			"line_types_to_include": [
-				0.0,
-				1.0,
-				2.0,
-				3.0
+				0,
+				1,
+				2,
+				3
 			],
-			"mode": 3.0,
+			"mode": 3,
 			"range_end": 0.0,
 			"range_start": 0.0,
 			"selection": [
-				0.0
+				0,
+				1
 			],
-			"syntax_detail": 0.0
+			"syntax_detail": 0
 		},
 		"preferences_import": {
-			"mode": 0.0
+			"mode": 0
 		},
-		"replacement_rules": [
-			{
-				"enabled": false,
-				"name": "ellipsis",
-				"replacement": "…",
-				"symbol": "..."
-			},
-			{
-				"enabled": true,
-				"name": "leading quote",
-				"replacement": " «",
-				"symbol": " \""
-			},
-			{
-				"enabled": true,
-				"name": "trailing quote",
-				"replacement": "» ",
-				"symbol": "\" "
-			},
-			{
-				"enabled": false,
-				"name": "n dash",
-				"replacement": "–",
-				"symbol": "--"
-			}
-		],
+		"replacement_rules": [],
 		"save_on_play": true,
 		"shader": "",
 		"show_facts_buttons": true,
 		"silly": true,
 		"text_data": {
-			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.Json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.Png[/img] button in the top right corner inside Godot! <mp>Click there now to follow & read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called «Facts» to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called «liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
+			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow & read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "Opinion on Amber?",
 			"1744987729.575--9223372036854775792": "",
 			"1744987729.575--9223372036854775793": "Yes I love her",
 			"1744987729.626--9223372036854775788": "",
 			"1744987729.626--9223372036854775789": "No actually, robots are scary",
 			"1744987729.749--9223372036854775782": "[]>amber{amber-emotion|sad}: I promise I'm not scary!",
-			"1744987729.798--9223372036854775779": "[]>narrator: And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator: You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].\nPAGE 1 ID:1755250697.136--9223372036854761389",
-			"1744987741.530--9223372036854775777": "[]>narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.Svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
+			"1744987729.798--9223372036854775779": "[]>narrator: And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator: You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].",
+			"1744987741.530--9223372036854775777": "[]>narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
 			"1744987741.532--9223372036854775772": "[]>narrator: This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
 			"1744987741.532--9223372036854775774": "[]>narrator: Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator: Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
-			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b]\n <mp>And the music rocks too. <mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity. <mp>But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs).\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
-			"1744987741.535--9223372036854775767": "[]>narrator: When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>\nPAGE 2 ID:1755250697.380--9223372036854761373",
+			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <mp>[b]Those are good things.[/b] <ap>...And the music rocks too.\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
+			"1744987741.535--9223372036854775767": "[]>narrator: When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",
 			"1744987742.696--9223372036854775765": "[]>narrator: With that, we can start to wrap up.\n[]>amber: Change of scenery please!",
-			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.Png[/img] symbol in the top left in DIISIS).\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]",
-			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3",
+			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS).\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]",
+			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
 			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg uwu uwu it's so scary>some text and change my name and my color Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et </ruby>dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
 			"1753474289.815--9223372036854771691": "[]>narrator:<ts_rel:0.1>Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",

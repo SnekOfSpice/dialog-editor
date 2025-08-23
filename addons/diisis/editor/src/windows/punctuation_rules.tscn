@@ -55,7 +55,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Replacement rules applied when \"Fix Punctuation\" gets called on Text Lines or Ingestion."
+text = "Replacement rules applied when \"Fix Punctuation\" gets called on Ingestion (Text Lines) or Importing (File)."
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2

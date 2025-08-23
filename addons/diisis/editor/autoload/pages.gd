@@ -22,6 +22,23 @@ const PUNCTUATION_MARKS := [
 	".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
 ]
 
+const PREFERENCE_PROPS := [
+	"preferences_import",
+	"preferences_import",
+	"replacement_rules",
+	"append_periods",
+	"fix_apostrophes",
+	"save_on_play",
+	"warn_on_fact_deletion",
+	"silly",
+	"show_facts_buttons",
+	"collapse_conditional_controls_by_default",
+	"first_index_as_page_reference_only",
+	"validate_function_calls_on_focus",
+	"shader",
+	"default_address_mode_pages",
+]
+
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -197,11 +214,10 @@ func is_header_schema_empty():
 
 func serialize() -> Dictionary:
 	var data := {
-		"append_periods": append_periods,
 		"callable_autoloads": callable_autoloads,
 		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
 		"custom_method_defaults": custom_method_defaults,
-		"default_address_mode_pages": default_address_mode_pages,
+		#"default_address_mode_pages": default_address_mode_pages,
 		"default_locale" : default_locale,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
@@ -211,7 +227,6 @@ func serialize() -> Dictionary:
 		"evaluator_modified_times": evaluator_modified_times,
 		"facts": facts,
 		"file_config": get_file_config(),
-		"fix_apostrophes" : fix_apostrophes,
 		"full_custom_method_defaults": _get_custom_method_full_defaults(),
 		"head_defaults" : head_defaults,
 		"id_counter" : id_counter,
@@ -219,18 +234,15 @@ func serialize() -> Dictionary:
 		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"locales_to_export" : locales_to_export,
 		"page_data" : page_data,
-		"preferences_export" : preferences_export,
-		"preferences_import" : preferences_import,
-		"replacement_rules": replacement_rules,
 		"text_data" : text_data,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"use_dialog_syntax": use_dialog_syntax,
 	}
-	for setting in TOGGLE_SETTINGS.keys():
-		data[setting] = get(setting)
-	for setting in STRING_SETTINGS.keys():
-		data[setting] = get(setting)
+	#for setting in TOGGLE_SETTINGS.keys():
+		#data[setting] = get(setting)
+	#for setting in STRING_SETTINGS.keys():
+		#data[setting] = get(setting)
 	return data
 
 func deserialize(data:Dictionary):
@@ -270,19 +282,14 @@ func deserialize(data:Dictionary):
 	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
-	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
+	#default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
-	for setting in TOGGLE_SETTINGS.keys():
-		set(setting, data.get(setting, get(setting)))
-	for setting in STRING_SETTINGS.keys():
-		set(setting, data.get(setting, get(setting)))
+	#for setting in TOGGLE_SETTINGS.keys():
+		#set(setting, data.get(setting, get(setting)))
+	#for setting in STRING_SETTINGS.keys():
+		#set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
-	replacement_rules = data.get("replacement_rules", [])
-	append_periods = data.get("append_periods", true)
-	fix_apostrophes = data.get("fix_apostrophes", true)
-	preferences_import = data.get("preferences_import", {})
-	preferences_export = data.get("preferences_export", {})
 	import_modified_times_by_path = data.get("import_modified_times_by_path", {})
 	
 	apply_file_config(data.get("file_config", {}))
@@ -1868,6 +1875,24 @@ func capitalize_sentence_beginnings(text:String) -> String:
 				scan_index += 1
 				continue
 			var tag = text.substr(scan_index, tag_end - scan_index + 1)
+			
+			if text.length() >= scan_index + 3:
+				if (
+					text[scan_index + 1] == "i" and
+					text[scan_index + 2] == "m" and
+					text[scan_index + 3] == "g"):
+						var end_pos := text.find("[/img]", scan_index)
+						if end_pos != -1:
+							tag_end = end_pos + 5
+							tag = text.substr(scan_index, tag_end - scan_index+1)
+				elif (
+					text[scan_index + 1] == "u" and
+					text[scan_index + 2] == "r" and
+					text[scan_index + 3] == "l"):
+						var end_pos := text.find("[/url]", scan_index)
+						if end_pos != -1:
+							tag_end = end_pos + 5
+							tag = text.substr(scan_index, tag_end - scan_index+1)
 			tags_in_text.append(tag)
 		scan_index += 1
 	for letter : String in LETTERS:
@@ -1884,6 +1909,9 @@ func capitalize_sentence_beginnings(text:String) -> String:
 			text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
 			text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
 	
+	# this isn't really that good but oh well nya
+	for file_ending in ["json", "svg", "png", "jpg", "txt", "tres", "res", "tscn", "scn", "dtf", "html", "webp", "ogg", "wav", "mp3", "mp4", "mov"]:
+		text = text.replacen(".%s" % file_ending, ".%s" % file_ending)
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	

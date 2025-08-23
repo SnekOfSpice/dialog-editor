@@ -191,7 +191,8 @@ func deserialize(data: Dictionary):
 			var content : Dictionary = data.get("content", {})
 			if Pages.editor.is_importing():
 				var choice_order : Array = content.get("choice_order", [])
-				content["choices"] = Pages.sort_choices(choice_order, content.get("choices"))
+				if not choice_order.is_empty():
+					content["choices"] = Pages.sort_choices(choice_order, content.get("choices"))
 				
 			find_child("ChoiceContainer").deserialize(content)
 		DIISIS.LineType.Instruction:
