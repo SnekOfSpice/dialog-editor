@@ -1104,8 +1104,8 @@ func _on_refresh_button_pressed() -> void:
 func clipboard_set_notify(text:String) -> void:
 	DisplayServer.clipboard_set(text)
 	var message := "Copied to clipboard:\n"
-	message += text.left(30)
-	if text.length() > 30:
+	message += text.left(36)
+	if text.length() > 36:
 		message += "..."
 	notify(message)
 
@@ -1356,3 +1356,6 @@ func _on_ingest_menu_ingest_from_file() -> void:
 		["PAGE",
 		find_child("IngestMenu").build_payload()
 		])
+
+func is_importing() -> bool:
+	return $ImportingCover.visible

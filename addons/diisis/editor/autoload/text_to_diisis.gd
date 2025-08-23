@@ -193,7 +193,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 			elif line_declaration.begins_with("LINE c"):
 				line_type = DIISISGlobal.LineType.Choice
 				var texts : Array = make_choice_data(lines).get("choice_texts")
-				var content := {}
+				var content := line_data.get("content", {})
 				var choices := []
 				
 				var pre_existing_choices : Array = line_data.get("content", {}).get("choices", [])
@@ -203,11 +203,11 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 				
 				# contains all optional fields "id" "enabled" "disabled"
 				for text_data : Dictionary in texts:
-					var text_id : String = text_data.get("id", "")
+					var item_id : String = text_data.get("id", "")
 					var choice_data := {}
-					if pre_existing_ids.has(text_id):
-						choice_data = pre_existing_choices[pre_existing_ids.find(text_id)].duplicate(true)
-						choice_data["id"] = text_id
+					if pre_existing_ids.has(item_id):
+						choice_data = pre_existing_choices[pre_existing_ids.find(item_id)].duplicate(true)
+						choice_data["id"] = item_id
 						
 						if text_data.has("enabled"):
 							var id = choice_data.get("text_id_enabled")
@@ -228,6 +228,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 							choice_data["text_id_disabled"] = id
 					
 					choices.append(choice_data)
+				
 				content["choices"] = choices
 				line_data["content"] = content
 			elif line_declaration.begins_with("LINE f"):

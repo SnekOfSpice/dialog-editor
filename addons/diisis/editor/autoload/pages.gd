@@ -1548,7 +1548,7 @@ func update_line_content(new_content_by_line_id:Dictionary):
 								save_text(new_disabled_text_id, unused_data.get("disabled"))
 							
 							existing_choices.append(new_choice)
-						
+						line["content"]["choice_order"] = id_order.duplicate(true)
 						existing_choices = sort_choices(id_order, existing_choices)
 						line["content"]["choices"] = existing_choices
 					DIISISGlobal.LineType.Instruction:

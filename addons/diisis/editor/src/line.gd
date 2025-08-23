@@ -188,7 +188,12 @@ func deserialize(data: Dictionary):
 		DIISIS.LineType.Text:
 			find_child("TextContent").deserialize(data.get("content", {}))
 		DIISIS.LineType.Choice:
-			find_child("ChoiceContainer").deserialize(data.get("content", {}))
+			var content : Dictionary = data.get("content", {})
+			if Pages.editor.is_importing():
+				var choice_order : Array = content.get("choice_order", [])
+				content["choices"] = Pages.sort_choices(choice_order, content.get("choices"))
+				
+			find_child("ChoiceContainer").deserialize(content)
 		DIISIS.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content", {}))
 		DIISIS.LineType.Folder:
