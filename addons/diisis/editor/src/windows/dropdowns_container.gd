@@ -4,7 +4,7 @@ extends Control
 var working_memory_dropdowns := {}
 var working_memory_titles := []
 
-func fill():
+func init():
 	find_child("AddButton").disabled = true
 	working_memory_dropdowns = Pages.dropdowns.duplicate(true)
 	working_memory_titles = Pages.dropdown_titles.duplicate(true)

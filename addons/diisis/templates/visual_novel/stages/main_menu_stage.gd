@@ -36,12 +36,12 @@ func _ready() -> void:
 
 func update_load_button():
 	find_child("LoadButton").visible = Options.has_savedata()
-	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress_from_file(Options.get_savedata_path()) * 100), "%)")
+	find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress(Options.get_savedata_dir_name()) * 100), "%)")
 	
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		if GameWorld.stage_root.get_node("ScreenContainer").get_child_count() == 0:
+		if GameWorld.stage_root.find_child("ScreenContainer").get_child_count() == 0:
 			GameWorld.stage_root.set_screen("")
 		else:
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)

@@ -1,12 +1,15 @@
-[gd_scene load_steps=15 format=3 uid="uid://bl3r0kwwycrmw"]
+[gd_scene load_steps=18 format=3 uid="uid://bl3r0kwwycrmw"]
 
 [ext_resource type="Script" uid="uid://subqq2sc1dmq" path="res://addons/diisis/editor/src/page.gd" id="1_2lug2"]
 [ext_resource type="Texture2D" uid="uid://c5jprlaidnag" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_goto.png" id="2_2dyyr"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="2_eeb01"]
+[ext_resource type="Texture2D" uid="uid://bvfeiavga4a2q" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_enabled.png" id="2_vubmj"]
+[ext_resource type="Texture2D" uid="uid://cmdgrenadfgy7" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_disabled.png" id="2_ykglj"]
 [ext_resource type="Texture2D" uid="uid://ddfoy8nqykk88" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png" id="3_m7kjo"]
 [ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="4_rsy28"]
 [ext_resource type="FontVariation" uid="uid://bcys5sythdtnk" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_bold.tres" id="4_v77o4"]
 [ext_resource type="Texture2D" uid="uid://bl7wslwydkk7g" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_page.png" id="6_yg0hh"]
+[ext_resource type="PackedScene" uid="uid://bixawifxp2bsf" path="res://addons/diisis/editor/src/go_to_highlight.tscn" id="10_3lfos"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6srl"]
 bg_color = Color(0.28, 0.0924, 0.229973, 0.156863)
@@ -48,7 +51,15 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_m6srl")
 custom_minimum_size = Vector2(550, 0)
 layout_mode = 2
 
+[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/Info"]
+layout_mode = 2
+tooltip_text = "Skip"
+theme_type_variation = &"Special"
+theme_override_icons/checked = ExtResource("2_vubmj")
+theme_override_icons/unchecked = ExtResource("2_ykglj")
+
 [node name="IncomingReferences" type="RichTextLabel" parent="PanelContainer/Info"]
+self_modulate = Color(1, 1, 1, 0.639216)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
@@ -112,6 +123,7 @@ theme_override_styles/read_only = SubResource("StyleBoxEmpty_yg0hh")
 expand_to_text_length = true
 
 [node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
+self_modulate = Color(1, 1, 1, 0.737255)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Terminate: Terminates the page, stopping the parser from reading the next one automatically, emitting page_terminated.
@@ -187,13 +199,16 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
+[node name="GoToHighlight" parent="MarginContainer" instance=ExtResource("10_3lfos")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="Lines" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
@@ -207,6 +222,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 mouse_filter = 2
 
+[connection signal="toggled" from="PanelContainer/Info/SkipCheckBox" to="." method="set_skip"]
 [connection signal="meta_clicked" from="PanelContainer/Info/IncomingReferences" to="." method="_on_incoming_references_meta_clicked"]
 [connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
 [connection signal="toggled" from="PanelContainer/Info/PageKeyEditContainer/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]

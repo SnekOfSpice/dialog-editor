@@ -16,6 +16,10 @@ run/main_scene="res://addons/diisis/templates/visual_novel/stages/stage_root.tsc
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://cakx4eotyolmx"
 
+[audio]
+
+buses/default_bus_layout="res://addons/diisis/templates/visual_novel/sounds/default_bus_layout.tres"
+
 [autoload]
 
 DIISIS="*res://addons/diisis/shared/autoload/Diisis.tscn"

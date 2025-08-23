@@ -5,6 +5,8 @@ enum AddressDepth {
 	Page, Line, ChoiceItem
 }
 
+var block_next_flash_highlight := true
+
 const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
 const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
@@ -94,7 +96,6 @@ func _sort_addresses(a1:String, a2: String) -> bool:
 	var last2 = get_split_address(a2).back()
 	return last1 < last2
 
-# TODO: [page name or number if no name] / line type / choice text (concat)
 func humanize_address(address:String) -> String:
 	if not Pages.does_address_exist(address):
 		return "N/A"
@@ -182,3 +183,43 @@ func actual_search(what:String):
 	editor.select(result.y, result.x, result.y, result.x)
 	editor.center_viewport_to_caret()
 	get_tree().root.grab_focus()
+
+
+func flash_highlight(highlight:ColorRect):
+	highlight.self_modulate.a = 0.4
+	var t = create_tween()
+	t.tween_property(highlight, "self_modulate:a", 0, 4).set_ease(Tween.EASE_IN_OUT)
+
+
+func array_equals(a:Array, b:Array) -> bool:
+	a.sort()
+	b.sort()
+	if a.size() != b.size():
+		return false
+	for i in a.size():
+		var value_a = a[i]
+		var value_b = b[i]
+		if (value_a != value_b) or (typeof(value_a) != typeof(value_b)):
+			if typeof(value_a) == TYPE_ARRAY and typeof(value_b) == TYPE_ARRAY:
+				return array_equals(value_a, value_b)
+			if typeof(value_a) == TYPE_DICTIONARY and typeof(value_b) == TYPE_DICTIONARY:
+				return dictionary_equals(value_a, value_b)
+			return false
+	return true
+
+func dictionary_equals(a:Dictionary, b:Dictionary) -> bool:
+	if a.size() != b.size():
+		return false
+	for key in a.keys():
+		if not b.keys().has(key):
+			return false
+	for key in a.keys():
+		var value_a = a.get(key)
+		var value_b = b.get(key)
+		if (value_a != value_b) or (typeof(value_a) != typeof(value_b)):
+			if typeof(value_a) == TYPE_ARRAY and typeof(value_b) == TYPE_ARRAY:
+				return array_equals(value_a, value_b)
+			if typeof(value_a) == TYPE_DICTIONARY and typeof(value_b) == TYPE_DICTIONARY:
+				return dictionary_equals(value_a, value_b)
+			return false
+	return true

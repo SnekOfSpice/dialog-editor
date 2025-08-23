@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bixawifxp2bsf"]
+
+[node name="GoToHighlight" type="ColorRect"]
+self_modulate = Color(0.928909, 0.685293, 0.608057, 0.392157)
+mouse_filter = 2

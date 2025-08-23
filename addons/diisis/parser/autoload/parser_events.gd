@@ -65,16 +65,9 @@ signal actor_name_changed(
 )
 
 
-## [param header] is an [Array] where every item is
-## [codeblock]
-## {
-##    "data_type": int,
-##    "property_name": String,
-##    "values": Array of size 2
-## }
-##[/codeblock]
+## [param header] has keys that are the property name of a header property. For values: Strings and booleans are passed as values. Dropdowns are passed as arrays of size 2 with the dropdown title in first position and the value in the second (both are strings).
 signal new_header(
-	header:Array[Dictionary]
+	header:Dictionary
 )
 
 ## Emitted when a page is finished. Is emitted before [signal page_terminated].
@@ -212,7 +205,7 @@ signal go_back_declined(reason:Parser.RollbackDeclineReason)
 ## []>narrator: Text!
 ## []>narrator: More text!
 ## [/codeblock]
-signal go_back_accepted(page:int, line:int)
+signal go_back_accepted(page:int, line:int, dialine_about_to_read:int)
 
 signal read_new_line(line_index:int)
 
@@ -224,3 +217,16 @@ signal advanced()
 
 ## Emitted when [method Parser.function_acceded] is called.
 signal acceded()
+
+signal actor_name_about_to_change(actor_name:String)
+
+## When LineReader reads a new dialog line ([]> and <lc>)
+signal start_new_dialine(dialine:int)
+
+## Emitted when LineReader builds rubies for a label.
+## LineReader won't serialize its own rubies atm, so you can use this to work around that limitation by tracking them yourself.
+signal rubies_built(
+	on_label:RichTextLabel,
+	ruby_indices:Array,
+	ruby_strings:Array
+)

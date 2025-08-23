@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://stb4ad3iost2"]
 
-[ext_resource type="Script" uid="uid://ydli5pl1jt4u" path="res://addons/diisis/editor/src/text_search_container.gd" id="1_m62qa"]
+[ext_resource type="Script" uid="uid://ydli5pl1jt4u" path="res://addons/diisis/editor/src/windows/text_search_container.gd" id="1_m62qa"]
 
 [node name="TextSearchContainer" type="Control"]
 layout_mode = 3
@@ -45,6 +45,10 @@ text = "Case Sensitive"
 layout_mode = 2
 focus_mode = 0
 text = "Include Tags"
+
+[node name="CurrentPageOnlyCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Current Page"
 
 [node name="ReplaceContainer" type="HBoxContainer" parent="VBoxContainer"]
 visible = false
@@ -102,6 +106,7 @@ bbcode_enabled = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SearchButton" to="." method="_on_search_button_pressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer3/CaseSensitiveButton" to="." method="_on_case_sensitive_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer3/IncludeTagsButton" to="." method="_on_include_tags_button_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer3/CurrentPageOnlyCheckBox" to="." method="_on_current_page_only_check_box_toggled"]
 [connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceLocallyButton" to="." method="request_replace_local"]
 [connection signal="pressed" from="VBoxContainer/ReplaceContainer/VBoxContainer/ReplaceAllInTypeButton" to="." method="request_replace_all_in_type"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]

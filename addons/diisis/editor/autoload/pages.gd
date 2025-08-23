@@ -17,12 +17,35 @@ var text_lead_time_other_actor := 0.0
 const NEGATIVE_INF := -int(INF)
 var id_counter := NEGATIVE_INF
 
+# needs to be duplicated to modify
+const PUNCTUATION_MARKS := [
+	".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
+]
+
+const PREFERENCE_PROPS := [
+	"preferences_import",
+	"preferences_import",
+	"replacement_rules",
+	"append_periods",
+	"fix_apostrophes",
+	"save_on_play",
+	"warn_on_fact_deletion",
+	"silly",
+	"show_facts_buttons",
+	"collapse_conditional_controls_by_default",
+	"first_index_as_page_reference_only",
+	"validate_function_calls_on_focus",
+	"shader",
+	"default_address_mode_pages",
+]
+
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
 	"_",
 	"1","2","3","4","5","6","7","8","9","0",
-	"."]
+	"."
+]
 const LETTERS := ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
 
 var empty_strings_for_l10n := false
@@ -39,6 +62,11 @@ var custom_method_dropdown_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
+
+# oh god have mercy on me
+# im sorry diisis this is an actual sti I just gave you jfc
+# i couldnt figure out why the choice labels would just refuse to get updated on import
+var text_hacks_by_id := {}
 
 enum DataTypes {_String, _DropDown, _Boolean}
 const DATA_TYPE_STRINGS := {
@@ -66,6 +94,7 @@ var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode
 
 const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
 const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
+const TOOLTIP_FIX_PUNCTUATION := "Add periods. (maybe do other stuff in the future)"
 
 #region toggle settings
 const TOGGLE_SETTINGS := {
@@ -74,7 +103,7 @@ const TOGGLE_SETTINGS := {
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
 	"silly" : "Adds a bit of visual fluff to the editor :3",
-	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off.",
+	"first_index_as_page_reference_only" : "If enabled, Pages will only consider being referenced by choices when those choices target line index 0. If disabled, the page indexes all choices that point to any line on it.",
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
 }
 var save_on_play := true
@@ -83,7 +112,7 @@ var silly := true
 var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
 var first_index_as_page_reference_only := true
-var validate_function_calls_on_focus := true
+var validate_function_calls_on_focus := false
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -93,6 +122,51 @@ const STRING_SETTINGS := {
 	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
 }
 var shader := ""
+
+var append_periods := true
+var fix_apostrophes := true
+var replacement_rules := []
+var preferences_import := {}
+var preferences_export := {}
+var import_modified_times_by_path := {}
+const DEFAULT_REPLACEMENT_RULES := [
+	{
+		"enabled" : false,
+		"name" : "ellipsis",
+		"symbol" : "...",
+		"replacement" : "…"
+	},
+	{
+		"enabled" : false,
+		"name" : "leading quote",
+		"symbol" : " \"",
+		"replacement" : " «"
+	},
+	{
+		"enabled" : false,
+		"name" : "trailing quote",
+		"symbol" : "\" ",
+		"replacement" : "» "
+	},
+	{
+		"enabled" : false,
+		"name" : "n dash",
+		"symbol" : "--",
+		"replacement" : "–"
+	},
+	{
+		"enabled" : false,
+		"name" : "m dash",
+		"symbol" : "---",
+		"replacement" : "—"
+	},
+	{
+		"enabled" : false,
+		"name" : "double space",
+		"symbol" : " ",
+		"replacement" : "  "
+	},
+]
 
 signal pages_modified
 
@@ -140,34 +214,35 @@ func is_header_schema_empty():
 
 func serialize() -> Dictionary:
 	var data := {
-		"head_defaults" : head_defaults,
-		"id_counter" : id_counter,
-		"page_data" : page_data,
-		"text_data" : text_data,
-		"default_locale" : default_locale,
-		"custom_method_defaults": custom_method_defaults,
-		"full_custom_method_defaults": _get_custom_method_full_defaults(),
-		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
 		"callable_autoloads": callable_autoloads,
-		"ingestion_actor_declaration": ingestion_actor_declaration,
-		"facts": facts,
+		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"custom_method_defaults": custom_method_defaults,
+		#"default_address_mode_pages": default_address_mode_pages,
+		"default_locale" : default_locale,
 		"dropdowns": dropdowns,
 		"dropdown_titles": dropdown_titles,
 		"dropdown_dialog_arguments": dropdown_dialog_arguments,
 		"dropdown_title_for_dialog_syntax": dropdown_title_for_dialog_syntax,
-		"file_config": get_file_config(),
-		"locales_to_export" : locales_to_export,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
-		"use_dialog_syntax": use_dialog_syntax,
+		"evaluator_modified_times": evaluator_modified_times,
+		"facts": facts,
+		"file_config": get_file_config(),
+		"full_custom_method_defaults": _get_custom_method_full_defaults(),
+		"head_defaults" : head_defaults,
+		"id_counter" : id_counter,
+		"import_modified_times_by_path" : import_modified_times_by_path,
+		"ingestion_actor_declaration": ingestion_actor_declaration,
+		"locales_to_export" : locales_to_export,
+		"page_data" : page_data,
+		"text_data" : text_data,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
-		"default_address_mode_pages": default_address_mode_pages,
-		"evaluator_modified_times": evaluator_modified_times,
+		"use_dialog_syntax": use_dialog_syntax,
 	}
-	for setting in TOGGLE_SETTINGS.keys():
-		data[setting] = get(setting)
-	for setting in STRING_SETTINGS.keys():
-		data[setting] = get(setting)
+	#for setting in TOGGLE_SETTINGS.keys():
+		#data[setting] = get(setting)
+	#for setting in STRING_SETTINGS.keys():
+		#data[setting] = get(setting)
 	return data
 
 func deserialize(data:Dictionary):
@@ -207,14 +282,15 @@ func deserialize(data:Dictionary):
 	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
-	default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
+	#default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
-	for setting in TOGGLE_SETTINGS.keys():
-		set(setting, data.get(setting, get(setting)))
-	for setting in STRING_SETTINGS.keys():
-		set(setting, data.get(setting, get(setting)))
+	#for setting in TOGGLE_SETTINGS.keys():
+		#set(setting, data.get(setting, get(setting)))
+	#for setting in STRING_SETTINGS.keys():
+		#set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
+	import_modified_times_by_path = data.get("import_modified_times_by_path", {})
 	
 	apply_file_config(data.get("file_config", {}))
 	
@@ -307,7 +383,7 @@ func swap_line_references(on_page:int, from:int, to:int):
 
 
 func get_lines(page_number: int):
-	return page_data.get(page_number).get("lines")
+	return get_page_data(page_number).get("lines")
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
@@ -366,7 +442,7 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 
 func change_page_references_dir(changed_page: int, operation:int):
 	for page in page_data.values():
-		var next = page.get("next")
+		var next = page.get("next", page.get("number") + 1)
 		if next >= changed_page:
 			page["next"] = next + operation
 		
@@ -376,10 +452,10 @@ func change_page_references_dir(changed_page: int, operation:int):
 				var content = line.get("content")
 				var choices = content.get("choices")
 				for choice : Dictionary in choices:
-					if choice.get("target_page") >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
-						choice["target_page"] = choice.get("target_page") + operation
-					if choice.get("loopback_target_page") >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
-						choice["loopback_target_page"] = choice.get("loopback_target_page") + operation
+					if choice.get("target_page", 0) >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						choice["target_page"] = choice.get("target_page", 0) + operation
+					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						choice["loopback_target_page"] = choice.get("loopback_target_page", 0) + operation
 	
 	await get_tree().process_frame
 	editor.refresh(false)
@@ -397,15 +473,24 @@ func key_exists(key: String) -> bool:
 func get_page_key(page_index:int) -> String:
 	return str(page_data.get(page_index, {}).get("page_key", ""))
 
-func get_page_number_by_key(key:String):
+func get_page_number_by_key(key:String) -> int:
 	for page in page_data.values():
 		if page.get("page_key") == key:
 			return page.get("number")
 	return -1
 
+## when deserializing, UI elements such as choices may try to reference things that are further down the page
+## then this ensures it'll fall back onto the saved data
+func get_lines_safe(page_index:int, min_line_index:int) -> Array:
+	var page = get_page_data(page_index)
+	var lines : Array = page.get("lines")
+	if lines.size() > min_line_index:
+		return lines
+	else:
+		return page_data.get(page_index).get("lines")
+	
 func get_line_type(page_index:int, line_index:int) -> int:
-	var page = page_data.get(page_index, {})
-	var lines = page.get("lines")
+	var lines = get_lines_safe(page_index, line_index)
 	return int(lines[line_index].get("line_type"))
 
 func apply_file_config(data:Dictionary):
@@ -501,7 +586,7 @@ func delete_page_data(at: int):
 	
 	change_page_references_dir(at, -1)
 
-func get_data_from_address(address:String):
+func get_data_from_address(address:String) -> Dictionary:
 	var cpn = editor.get_current_page_number()
 	var address_page = DiisisEditorUtil.get_split_address(address)[0]
 	# if current page is address
@@ -521,6 +606,8 @@ func get_data_from_address(address:String):
 		var lines : Array = page_data.get(address_page).get("lines")
 		var line : Dictionary = lines[parts[1]]
 		return line.get("content", {}).get("choices", [])[parts[2]]
+	push_warning("This shouldn't happen.")
+	return {}
 
 func delete_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()
@@ -712,7 +799,9 @@ func get_custom_method_defaults(instruction_name: String) -> Dictionary:
 func get_instruction_arg_count(instruction_name: String) -> int:
 	return get_custom_method_arg_names(instruction_name).size()
 
-func get_page_data(index:int) -> Dictionary:
+func get_page_data(index:int, force_cached := false) -> Dictionary:
+	if force_cached:
+		return page_data.get(index)
 	if editor.get_current_page_number() == index:
 		return editor.get_current_page().serialize()
 	return page_data.get(index)
@@ -733,7 +822,7 @@ func get_all_invalid_instructions() -> String:
 		page_index += 1
 	
 	if not malformed_instructions.is_empty():
-		warning += str("Function error at: ", ", ".join(malformed_instructions))
+		warning += str("Error at: ", ", ".join(malformed_instructions))
 	return warning
 
 
@@ -819,7 +908,6 @@ func transform_header(header_to_transform: Array, new_schema: Array, old_schema)
 				"values": a,
 				"data_type": new_type,
 			}
-			prints("converting ", header_to_transform[i], " to ", converted_value)
 			transformed[i] = converted_value
 			
 			
@@ -944,11 +1032,15 @@ func get_text_on_page(page_number:int) -> String:
 	return result
 
 ## Returns word count in x and character count in y
-func get_count_on_page(page_number:int) -> Vector2i:
+func get_count_on_page(page_number:int, include_skipped:=false) -> Vector2i:
 	var character_count := 0
 	var word_count := 0
 	var data := get_page_data(page_number)
+	if data.get("skip", false) and not include_skipped:
+		return Vector2i.ZERO
 	for line in data.get("lines", []):
+		if line.get("skip", false) and not include_skipped:
+			continue
 		var line_type = line.get("line_type")
 		var content = line.get("content")
 		if line_type == DIISIS.LineType.Choice:
@@ -973,10 +1065,10 @@ func get_count_on_page(page_number:int) -> Vector2i:
 	return Vector2(word_count, character_count)
 
 ## Returns word count in x and character count in y
-func get_count_total() -> Vector2i:
+func get_count_total(include_skipped:=false) -> Vector2i:
 	var sum := Vector2.ZERO
 	for i in page_data.keys():
-		var result = get_count_on_page(i)
+		var result = get_count_on_page(i, include_skipped)
 		sum.x += result.x
 		sum.y += result.y
 	
@@ -1005,8 +1097,6 @@ func rename_dropdown_title(from:String, to:String):
 		for line : Dictionary in lines:
 			if line.get("line_type") != DIISIS.LineType.Text:
 				continue
-			if line["content"]["active_actors_title"] == from:
-				line["content"]["active_actors_title"] = to
 			var text_id : String = line.get("content", {}).get("text_id")
 			var content : String = Pages.get_text(text_id)
 			content = content.replace(str("{", from, "|"), str("{", to, "|"))
@@ -1042,7 +1132,6 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 						var old_speaker := str("[]>", old_option)
 						var new_speaker := str("[]>", new_option)
 						content = content.replace(old_speaker, new_speaker)
-					
 					Pages.save_text(text_id, content)
 					
 					i += 1
@@ -1078,7 +1167,6 @@ func delete_dropdown(title:String, erase_from_text:=true):
 	dropdowns.erase(title)
 	
 	await get_tree().process_frame
-	
 	Pages.editor.refresh(false)
 
 func register_fact(fact_name : String, value):
@@ -1156,7 +1244,6 @@ func alter_fact(from:String, to=null):
 	if to is String:
 		facts[to] = facts.get(from)
 	facts.erase(from)
-	
 	editor.refresh(false)
 	
 func is_fact_new_and_not_empty(fact_name: String) -> bool:
@@ -1313,6 +1400,202 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	}
 	return result
 
+
+func get_cascading_trail(start_page:int) -> Array:
+	var trail := []
+	
+	var terminate := false
+	var current_page := start_page
+	
+	while not terminate:
+		trail.append(current_page)
+		terminate = get_page_data(current_page).get("terminate", false)
+		current_page = get_page_data(current_page).get("next")
+	
+	return trail
+
+func stringify_page(page_index:int, modifiers := {}) -> String:
+	var data := get_page_data(page_index)
+	
+	var syntax_detail : int = modifiers.get("syntax_detail", 0)
+	var line_types_to_include : Array = modifiers.get("line_types_to_include",[0,1,2,3])
+	var include_ids := syntax_detail == 0
+	var include_file_outline := syntax_detail != 2
+	var result := ""
+	if include_file_outline:
+		result += "PAGE %s" % page_index
+	if include_ids:
+		result += " ID:%s" % data.get("id")
+	
+	var line_index := 0
+	for line : Dictionary in data.get("lines", []):
+		var line_type : int = line.get("line_type")
+		if not line_type in line_types_to_include:
+			line_index += 1
+			continue
+		result += "\n"
+		var line_type_letter : String
+		match line_type:
+			DIISIS.LineType.Text:
+				line_type_letter = "t"
+			DIISIS.LineType.Instruction:
+				line_type_letter = "i"
+			DIISIS.LineType.Choice:
+				line_type_letter = "c"
+			DIISIS.LineType.Folder:
+				line_type_letter = "f"
+		if include_file_outline:
+			result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
+		if include_ids:
+			result += " ID:%s" % line.get("id")
+		result += "\n"
+		var content : Dictionary = line.get("content")
+		match line_type:
+			DIISIS.LineType.Text:
+				var text : String = get_text(content.get("text_id"))
+				text = text.replace("[]>", "")
+				result += text
+			DIISIS.LineType.Instruction:
+				result += content.get("meta.text")
+				var reverse_text : String = content.get("meta.reverse_text")
+				var has_reverse : bool = content.get("meta.has_reverse", false)
+				if not reverse_text.is_empty():
+					var prefix := "\n"
+					if has_reverse:
+						prefix += "<"
+					else:
+						prefix += "x<"
+					result += prefix + content.get("meta.reverse_text")
+			DIISIS.LineType.Choice:
+				var choices : Array = content.get("choices")
+				var first_choice := true # just for visual \n placement
+				for choice : Dictionary in choices:
+					if not first_choice:
+						result += "\n"
+					first_choice = false
+					
+					var enabled_text : String = Pages.get_text(choice.get("text_id_enabled", ""))
+					var disabled_text : String = Pages.get_text(choice.get("text_id_disabled", ""))
+					if not enabled_text.is_empty():
+						result += ">" + enabled_text
+					if not disabled_text.is_empty():
+						result += "<" + disabled_text
+					
+					if include_ids:
+						result += "ID:"+choice.get("id")
+			DIISIS.LineType.Folder:
+				if not include_file_outline:
+					line_index += 1
+					continue
+				result += str(content.get("range", 0))
+		line_index += 1
+	result += "\n"
+	if include_file_outline:
+		result += "\n\n"
+	return result
+
+## function used by Text2Diisis
+func update_line_content(new_content_by_line_id:Dictionary):
+	var ids_to_update := new_content_by_line_id.keys()
+	var unused_ids := ids_to_update.duplicate(true)
+	for page_index in get_page_count():
+		var data = get_page_data(page_index, true)
+		
+		for line : Dictionary in data.get("lines", []):
+			var line_id : String = line.get("id")
+			if line_id in ids_to_update:
+				unused_ids.erase(line_id)
+				var line_type : DIISISGlobal.LineType = line.get("line_type")
+				var new_content : Dictionary = new_content_by_line_id.get(line_id)
+				var line_content : Dictionary = line.get("content")
+				match line_type:
+					DIISISGlobal.LineType.Text:
+						var new_text : String = new_content.get("text")
+						var text_id : String = line_content.get("text_id")
+						save_text(text_id, new_text)
+					DIISISGlobal.LineType.Choice:
+						var choice_texts : Array = new_content.get("choice_texts")
+						var existing_choices : Array = line_content.get("choices", [])
+						var choice_index := 0
+						
+						var choice_item_data_by_choice_id := {}
+						var id_order := []
+						for choice : Dictionary in choice_texts:
+							var id : String = choice.get("id", get_new_id())
+							choice_item_data_by_choice_id[id] = choice
+							id_order.append(id)
+						
+						# first go over all existing choices and update from there
+						for choice : Dictionary in existing_choices:
+							var id : String = choice.get("id", "")
+							if choice_item_data_by_choice_id.has(id):
+								var text_id_enabled : String = choice.get("text_id_enabled")
+								var text_id_disabled : String = choice.get("text_id_disabled")
+								
+								var new_data : Dictionary = choice_item_data_by_choice_id.get(id)
+								if new_data.has("enabled"):
+									text_hacks_by_id[text_id_enabled] = new_data.get("enabled")
+								if new_data.has("disabled"):
+									text_hacks_by_id[text_id_disabled] = new_data.get("disabled")
+								choice_item_data_by_choice_id.erase(id)
+						# all remaining bits of choice data that haven't been used up in existing choices
+						for key : String in choice_item_data_by_choice_id.keys():
+							var unused_data : Dictionary = choice_item_data_by_choice_id.get(key)
+							var new_choice_id := key
+							
+							var new_choice := {}
+							new_choice["id"] = key
+							if unused_data.has("enabled"):
+								var new_enabled_text_id := get_new_id()
+								new_choice["text_id_enabled"] = new_enabled_text_id
+								save_text(new_enabled_text_id, unused_data.get("enabled"))
+							if unused_data.has("disabled"):
+								var new_disabled_text_id := get_new_id()
+								new_choice["text_id_disabled"] = new_disabled_text_id
+								save_text(new_disabled_text_id, unused_data.get("disabled"))
+							
+							existing_choices.append(new_choice)
+						line["content"]["choice_order"] = id_order.duplicate(true)
+						existing_choices = sort_choices(id_order, existing_choices)
+						line["content"]["choices"] = existing_choices
+					DIISISGlobal.LineType.Instruction:
+						line["content"]["meta.text"] = new_content.get("meta.text")
+						line["content"]["meta.has_reverse"] = new_content.get("meta.has_reverse", line.get("content").get("meta.has_reverse"))
+						line["content"]["meta.reverse_text"] = new_content.get("meta.reverse_text", line.get("content").get("meta.reverse_text"))
+					DIISISGlobal.LineType.Folder:
+						line["content"]["range"] = new_content.get("range")
+		
+		page_data[page_index] = data
+	
+	await get_tree().process_frame
+	editor.hide_window_by_string("TextImportWindow")
+	editor.refresh(false)
+	editor.set_opening_cover_visible(false)
+	
+	await get_tree().process_frame
+	
+	editor.step_through_pages()
+	
+	if not unused_ids.is_empty():
+		var message := "Importing has unused ids: (Click on an ID to copy it)\n"
+		for id : String in unused_ids:
+			message += "[url=copy-%s]%s[/url]\n" % [id, id]
+		message += "\nImport mode \"Update\" is intended to be used to update existing lines only. To add new ones from text, use import mode \"Override\"."
+		editor.notify(
+			message,
+			max(unused_ids.size() * 7, 20)
+		)
+
+func sort_choices(id_order:Array, choices:Array) -> Array:
+	var result := []
+	result.resize(choices.size())
+	
+	for choice : Dictionary in choices:
+		var target_index := id_order.find(choice.get("id"))
+		result[target_index] = choice
+	
+	return result
+
 func remove_tags(t:String) -> String:
 	var text := t
 	var pairs = ["<>", "[]"]
@@ -1320,6 +1603,9 @@ func remove_tags(t:String) -> String:
 		var scan_index := 0
 		while scan_index < text.length():
 			if text[scan_index] == pair[0]:
+				if text.find(pair[1]) < scan_index:
+					scan_index += 1
+					continue
 				var local_scan_index := scan_index
 				var control_to_replace := ""
 				while text[local_scan_index] != pair[1]:
@@ -1397,7 +1683,7 @@ func update_compliances(instruction_name:String):
 					line["content"]["meta.validation_status"] = "OK"
 			elif line.get("line_type") == DIISIS.LineType.Text:
 				var functions : Array = content.get("meta.function_calls", [])
-				var compliance := "OK"
+				var compliance : String = "OK"
 				for function in functions:
 					var validity = get_method_validity(function)
 					if validity != "OK":
@@ -1416,7 +1702,8 @@ func get_custom_method_typesd(instruction_name:String) -> Dictionary:
 		result[arg.get("name")] = arg.get("type")
 	
 	return result
-
+func get_custom_method_base_default(instruction_name:String, arg_name:String):
+	return get_custom_method_base_defaultsd(instruction_name).get(arg_name)
 func get_default_arg_value(instruction_name:String, arg_name:String):
 	return get_custom_method_defaults(instruction_name).get(arg_name)
 
@@ -1489,7 +1776,7 @@ func get_method_validity(instruction:String) -> String:
 		while arg_string.ends_with(" "):
 			arg_string = arg_string.trim_suffix(" ")
 		var arg_value : String = arg_string.split(":")[0]
-		if arg_value.is_empty():
+		if arg_value.is_empty() and get_custom_method_base_default(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is empty")
 		if arg_value == "*" and get_default_arg_value(entered_name, template_arg_names[i]) == null:
 			return str("Argument ", i+1, " is declared as default but argument ", template_arg_names[i], " has no default value.")
@@ -1502,6 +1789,8 @@ func get_method_validity(instruction:String) -> String:
 	return "OK"
 
 func get_type_compliance(method:String, arg:String, value:String, type:int, arg_index:int) -> String:
+	if value.is_empty() and get_custom_method_base_defaultsd(method).get(arg) != null:
+		return ""
 	var default_notice := ""
 	if value == "*":
 		value = str(get_custom_method_defaults(method).get(arg))
@@ -1548,7 +1837,7 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_position := text.find("...")
 	var elipse_length := 3
 	while elipse_position != -1:
-		if elipse_position < text.length():
+		if elipse_position < text.length() - elipse_length:
 			if text[elipse_position + elipse_length + 1] in LETTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
@@ -1586,6 +1875,24 @@ func capitalize_sentence_beginnings(text:String) -> String:
 				scan_index += 1
 				continue
 			var tag = text.substr(scan_index, tag_end - scan_index + 1)
+			
+			if text.length() >= scan_index + 3:
+				if (
+					text[scan_index + 1] == "i" and
+					text[scan_index + 2] == "m" and
+					text[scan_index + 3] == "g"):
+						var end_pos := text.find("[/img]", scan_index)
+						if end_pos != -1:
+							tag_end = end_pos + 5
+							tag = text.substr(scan_index, tag_end - scan_index+1)
+				elif (
+					text[scan_index + 1] == "u" and
+					text[scan_index + 2] == "r" and
+					text[scan_index + 3] == "l"):
+						var end_pos := text.find("[/url]", scan_index)
+						if end_pos != -1:
+							tag_end = end_pos + 5
+							tag = text.substr(scan_index, tag_end - scan_index+1)
 			tags_in_text.append(tag)
 		scan_index += 1
 	for letter : String in LETTERS:
@@ -1602,12 +1909,17 @@ func capitalize_sentence_beginnings(text:String) -> String:
 			text = text.replace(str(prefix, " <mp>", letter), str(prefix, " <mp>", letter.capitalize()))
 			text = text.replace(str(prefix, " <lc>", letter), str(prefix, " <lc>", letter.capitalize()))
 	
+	# this isn't really that good but oh well nya
+	for file_ending in ["json", "svg", "png", "jpg", "txt", "tres", "res", "tscn", "scn", "dtf", "html", "webp", "ogg", "wav", "mp3", "mp4", "mov"]:
+		text = text.replacen(".%s" % file_ending, ".%s" % file_ending)
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	
 	for index in letter_indices_after_elipses.keys():
 		var letter : String = letter_indices_after_elipses.get(index)
 		text[index] = letter
+	
+	text = text.replace(" i ", " I ")
 	
 	return text
 
@@ -1656,8 +1968,119 @@ func neaten_whitespace(text:String) -> String:
 	text = text.replace("] .", "].")
 	text = text.replace("> .", ">.")
 	text = text.replace(": //", "://")
+	text = text.replace(":...", ": ...")
 	
 	return text
+
+func fix_punctuation(text:String) -> String:
+	var lines = text.split("\n")
+	var result := []
+	var punctuation_marks := PUNCTUATION_MARKS.duplicate(true)
+	for line : String in lines:
+		if not append_periods:
+			result.append(line)
+			continue
+		
+		var ends_with_space := line.ends_with(" ")
+		while ends_with_space:
+			line = line.erase(line.length() - 1)
+			ends_with_space = line.ends_with(" ")
+		var has_punctuation := false
+		
+		for i in 10:
+			punctuation_marks.append(str(i))
+		
+		if line.ends_with("]"):
+			var opening_index = line.rfind("[")
+			if opening_index > 0:
+				if not line[opening_index - 1] in punctuation_marks:
+					line = line.insert(opening_index, ".")
+		
+		for mark in punctuation_marks:
+			if line.ends_with(mark):
+				has_punctuation = true
+		
+		if has_punctuation:
+			result.append(line)
+		else:
+			result.append(line + ".")
+	
+	var apostrophe_pairs := [
+		["arent", "aren't"],
+		["cant", "can't"],
+		["couldnt", "couldn’t"],
+		["didnt", "didn't"],
+		["dont", "don't"],
+		["hadnt", "hadn't"],
+		["hasnt", "hasn't"],
+		["havent", "haven't"],
+		["hed", "he'd"],
+		["hes", "he's"],
+		["ive", "I've"],
+		["isnt", "isn't"],
+		["mightnt", "mightn't"],
+		["mustnt", "mustn't"],
+		["shant", "shan't"],
+		["shes", "she's"],
+		["shouldnt", "shouldn't"],
+		["thats", "that's"],
+		["theres", "there's"],
+		["theyd", "they'd"],
+		["theyll", "they'll"],
+		["theyre", "they're"],
+		["theyve", "they've"],
+		["weve", "we've"],
+		["werent", "weren't"],
+		["whatll", "what'll"],
+		["whatre", "what're"],
+		["whats", "what's"],
+		["whatve", "what've"],
+		["wheres", "where's"],
+		["whod", "who'd"],
+		["wholl", "who'll"],
+		["whos", "who's"],
+		["whove", "who've"],
+		["wont", "won't"],
+		["wouldnt", "wouldn't"],
+		["youd", "you'd"],
+		["youll", "you'll"],
+		["youre", "you're"],
+		["youve", "you've"],
+	]
+	var suffixes := PUNCTUATION_MARKS.duplicate(true)
+	suffixes.append(" ")
+	
+	if fix_apostrophes:
+		for i in result.size():
+			var line : String = result[i]
+			for pair : Array in apostrophe_pairs:
+				for j in 3:
+					for suffix1 in suffixes:
+						for suffix2 in suffixes:
+							var what : String = suffix1 + pair[0] + suffix2
+							var forwhat : String = suffix1 + pair[1] + suffix2
+							
+							if j == 0:
+								what = what.capitalize()
+								forwhat = forwhat.capitalize()
+							elif j == 1:
+								what = what.to_upper()
+								forwhat = forwhat.to_upper()
+							line = line.replace(what, forwhat)
+						
+			result[i] = line
+	
+	for rule : Dictionary in replacement_rules:
+		var enabled : bool = rule.get("enabled")
+		if not enabled:
+			continue
+		var what = rule.get("symbol", "")
+		var forwhat = rule.get("replacement", "")
+		for i in result.size():
+			var line : String = result[i]
+			result[i] = line.replace(what, forwhat)
+	
+	return "\n".join(result)
 
 func save_text(id:String, text:String) -> void:
 	text_data[id] = text
@@ -1695,6 +2118,34 @@ func get_text_id_address_and_type(id:String) -> Array:
 
 func get_speakers() -> Array:
 	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
+
+## exact means only the passed speakers can be entered
+func get_text_line_adrs_with_speakers(speakers:Array, exact:=false) -> Array:
+	if speakers.is_empty():
+		push_warning("Speakers is empty. Returning empty results.")
+		return []
+	var results := []
+	for i in page_data.size():
+		var pdata = get_page_data(i)
+		for line : Dictionary in pdata.get("lines", []):
+			if line.get("line_type") != DIISIS.LineType.Text:
+				continue
+			var text = get_text(line.get("content").get("text_id"))
+			var contains_all := true
+			for speaker : String in speakers:
+				if not text.contains("[]>%s" % speaker):
+					contains_all = false
+					break
+			if exact:
+				for global_speaker in get_speakers():
+					if global_speaker in speakers:
+						continue
+					if text.contains("[]>%s" % global_speaker):
+						contains_all = false
+						break
+			if contains_all:
+				results.append(line.get("address"))
+	return results
 
 func change_text_id(old_id:String, new_id:String) -> void:
 	for page in page_data.values():
@@ -1780,12 +2231,7 @@ func get_facts_data(address:String) -> Dictionary:
 func get_line_data_adr(address:String) -> Dictionary:
 	var data := {}
 	var parts = DiisisEditorUtil.get_split_address(address)
-	var cpn : int = editor.get_current_page_number()
-	if cpn == parts[0]:
-		data = editor.get_current_page().get_line_data(parts[1])
-	else:
-		data = page_data.get(cpn).get("lines")[parts[1]]
-	return data
+	return get_lines_safe(parts[0], parts[1])[parts[1]]
 
 func get_line_data(page_index:int, line_index:int) -> Dictionary:
 	return get_line_data_adr(str(page_index, ".", line_index))
@@ -1882,3 +2328,13 @@ func make_puppy() -> String:
 	if has_whiskers:
 		emoticon += w[1]
 	return emoticon
+
+
+func linearize_pages():
+	for i in get_page_count():
+		var data := get_page_data(i)
+		data["next"] = i + 1
+		data["terminate"] = i == get_page_count() - 1
+		page_data[i] = data
+	await get_tree().process_frame
+	editor.refresh(false)

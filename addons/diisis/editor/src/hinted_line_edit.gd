@@ -16,6 +16,11 @@ signal text_entered(new_text:String)
 signal caret_changed()
 
 func update_hint(new_text: String):
+	if "(" in new_text:
+		if (new_text.find(")", caret_column) != -1 and new_text.rfind("(", caret_column-1) != -1) or caret_column >= new_text.length() - 1:
+			$ArgHint.hide()
+			return
+	new_text = new_text.split("(")[0]
 	if new_text.is_empty() or not has_focus():
 		$ArgHint.hide()
 		return
@@ -67,7 +72,9 @@ func _on_gui_input(event: InputEvent) -> void:
 		if virtual_hint_line < 0:
 			virtual_hint_line = $ArgHint.get_hint_line_count() - 1
 	just_submitted = false
+	
 	update_hint(text)
+	
 	if Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_TAB):
 		just_submitted = true
 		var text_in_hint : String = $ArgHint.get_text_in_line(virtual_hint_line)
@@ -76,7 +83,11 @@ func _on_gui_input(event: InputEvent) -> void:
 		text_in_hint = text_in_hint.replace(">", "")
 		text_in_hint = text_in_hint.replace("[b]", "")
 		text_in_hint = text_in_hint.replace("[/b]", "")
-		text = str(text_in_hint, submission_append)
+		if text.find(")") > text.find("(") and "(" in text:
+			var keep = text.split("(")[1]
+			text = str(text_in_hint, "(", keep)
+		else:
+			text = str(text_in_hint, submission_append)
 		
 		await get_tree().process_frame
 		$ArgHint.hide()

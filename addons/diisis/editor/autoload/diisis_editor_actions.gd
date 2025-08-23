@@ -102,6 +102,7 @@ func go_to(address:String, discard_without_saving:=false):
 	if parts.size() >= 2:
 		await get_tree().process_frame
 		Pages.editor.get_current_page().ensure_control_at_address_is_visible(address)
+	Pages.editor.get_current_page().flash_highlight(address)
 
 func load_page(at:int):
 	go_to(str(at))
@@ -252,7 +253,19 @@ func copy(depth:int, single_address_override := "") -> Array:
 
 	var data_at_depth := {}
 	for address in selected_addresses:
-		data_at_depth[address] = Pages.get_data_from_address(address).duplicate(true)
+		var data_to_copy = Pages.get_data_from_address(address).duplicate(true)
+		if depth == DiisisEditorUtil.AddressDepth.Line:
+			data_to_copy["id"] = Pages.get_new_id()
+			if data_to_copy.get("line_type") == DIISIS.LineType.Text:
+				var content = data_to_copy.get("content")
+				var tid = content.get("text_id")
+				var text = Pages.get_text(tid)
+				var new_tid = Pages.get_new_id()
+				content["text_id"] = new_tid
+				Pages.save_text(new_tid, text)
+				data_to_copy["content"] = content
+		data_at_depth[address] = data_to_copy
+	
 	clipboard[depth] = data_at_depth
 	Pages.editor.notify(str("Added ", data_at_depth.size(), " items to clipboard!"))
 	return selected_addresses

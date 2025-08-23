@@ -101,10 +101,6 @@ func save_prefs():
 	# Save it to a file (overwrite if already exists).
 	config.save(OPTIONS_PATH)
 
-func does_savegame_exist():
-	if not ResourceLoader.exists(get_savedata_path()):
-		return false
-	return true
 
 func get_save_thumbnail_path(slot := save_slot) -> String:
 	return str("user://thumbnail", slot, ".png")
@@ -114,11 +110,14 @@ func get_save_thumbnail_size() -> Vector2:
 	ProjectSettings.get_setting("display/window/size/viewport_width") * 0.15,
 	ProjectSettings.get_setting("display/window/size/viewport_height") * 0.15)
 
-func get_savedata_path(slot := save_slot) -> String:
-	return str("user://savegame", slot,".json")
+func get_savedata_dir_name(slot := save_slot) -> String:
+	return str("slot", slot)
 
 func has_savedata(slot := save_slot) -> bool:
-	return ResourceLoader.exists(get_savedata_path(slot))
+	var err = DirAccess.open(str("user://", get_savedata_dir_name(slot)))
+	if not err:
+		return false
+	return true
 
 func set_save_slot(slot : int):
 	save_slot = slot
@@ -135,10 +134,10 @@ func save_gamestate():
 		var path := get_save_thumbnail_path()
 		GameWorld.stage_root.screenshot_to_save.save_png(path)
 	
-	Parser.save_parser_state_to_file(get_savedata_path(), data_to_save)
+	Parser.save_parser_state(get_savedata_dir_name(), data_to_save)
 
 func load_gamestate():
-	var game_data := Parser.load_parser_state_from_file(get_savedata_path())
+	var game_data := Parser.load_parser_state(get_savedata_dir_name())
 	Sound.deserialize(game_data.get("Sound", {}))
 	GameWorld.deserialize(game_data.get("GameWorld", {}))
 	GoBackHandler.deserialize(game_data.get("GoBackHandler", {}))

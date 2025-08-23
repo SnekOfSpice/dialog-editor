@@ -80,43 +80,12 @@ func _on_save_button_pressed() -> void:
 func _on_func_name_label_item_rect_changed() -> void:
 	find_child("FuncNameContainer").visible = not find_child("FuncNameLabel").text.is_empty()
 
-func array_equals(a:Array, b:Array) -> bool:
-	a.sort()
-	b.sort()
-	if a.size() != b.size():
-		return false
-	for i in a.size():
-		var value_a = a[i]
-		var value_b = b[i]
-		if (value_a != value_b) or (typeof(value_a) != typeof(value_b)):
-			if typeof(value_a) == TYPE_ARRAY and typeof(value_b) == TYPE_ARRAY:
-				return array_equals(value_a, value_b)
-			if typeof(value_a) == TYPE_DICTIONARY and typeof(value_b) == TYPE_DICTIONARY:
-				return dictionary_equals(value_a, value_b)
-			return false
-	return true
 
-func dictionary_equals(a:Dictionary, b:Dictionary) -> bool:
-	if a.size() != b.size():
-		return false
-	for key in a.keys():
-		if not b.keys().has(key):
-			return false
-	for key in a.keys():
-		var value_a = a.get(key)
-		var value_b = b.get(key)
-		if (value_a != value_b) or (typeof(value_a) != typeof(value_b)):
-			if typeof(value_a) == TYPE_ARRAY and typeof(value_b) == TYPE_ARRAY:
-				return array_equals(value_a, value_b)
-			if typeof(value_a) == TYPE_DICTIONARY and typeof(value_b) == TYPE_DICTIONARY:
-				return dictionary_equals(value_a, value_b)
-			return false
-	return true
 
 func custom_equals() -> bool:
 	var defined_defaults : Dictionary = Pages.custom_method_defaults
 	var defined_limiters : Dictionary = Pages.custom_method_dropdown_limiters
-	return dictionary_equals(defined_defaults, custom_defaults) and dictionary_equals(defined_limiters, custom_limiters)
+	return DiisisEditorUtil.dictionary_equals(defined_defaults, custom_defaults) and DiisisEditorUtil.dictionary_equals(defined_limiters, custom_limiters)
 
 
 func _on_values_changed():
@@ -241,7 +210,6 @@ func serialize_values_container():
 		var limiters = dropdown_container.get_child(default_index)
 		if limiters is DropdownTypeSelector:
 			var data : Array = limiters.serialize().duplicate(true)
-			#print("saving limiters ", data, " for ", arg_name, " of ", method_name)
 			method_limiters[arg_name] = data
 	return {
 		"custom_method_defaults" : method_defaults,

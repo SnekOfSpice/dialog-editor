@@ -4,15 +4,19 @@ extends Control
 var deserialized_range:=-1
 
 func update(line_index:int, max_reach):
-	find_child("FolderRangeSpinContainer").max_value = max_reach
+	max_reach = max(max_reach, deserialized_range)
+	
+	var spinner : SpinBox = find_child("FolderRangeSpinContainer")
+	spinner.max_value = max_reach
 	
 	if deserialized_range > -1:
-		find_child("FolderRangeSpinContainer").set_value_no_signal( deserialized_range)
+		spinner.max_value
+		spinner.set_value_no_signal(deserialized_range)
+		deserialized_range = -1
 	
 	find_child("Label").text = str(
-		"spans: (", line_index, " - ", int(line_index + find_child("FolderRangeSpinContainer").value),")", "\n",
-		"max span: ", max_reach + line_index,# "\n",
-		#"deserialized: ", deserialized_range
+		"spans: (", line_index, " - ", int(line_index + spinner.value),")", "\n",
+		"max span: ", max_reach + line_index,
 		)
 
 func set_page_view(view:DiisisEditor.PageView):

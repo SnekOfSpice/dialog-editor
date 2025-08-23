@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqfaywphjr2k2"]
+
+[ext_resource type="Script" uid="uid://cslhootqpfnuq" path="res://addons/diisis/editor/src/windows/dialog_config.gd" id="1_xasws"]
+
+[node name="Dialog" type="PanelContainer"]
+script = ExtResource("1_xasws")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="UseDialogSyntaxCheckBox" type="CheckBox" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Use Dialog Syntax"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Text Line Lead Time"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "| Same Actor"
+
+[node name="LeadTimeSpinBoxSameActor" type="SpinBox" parent="VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+step = 0.01
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "| Other Actor"
+
+[node name="LeadTimeSpinBoxOtherActor" type="SpinBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+step = 0.01
+
+[connection signal="toggled" from="VBoxContainer/UseDialogSyntaxCheckBox" to="." method="_on_use_dialog_syntax_check_box_toggled"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/HBoxContainer/LeadTimeSpinBoxSameActor" to="." method="_on_lead_time_spin_box_same_actor_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/HBoxContainer2/LeadTimeSpinBoxOtherActor" to="." method="_on_lead_time_spin_box_other_actor_value_changed"]

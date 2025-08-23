@@ -10,7 +10,6 @@
 		"callable_autoloads": [
 			"Sound"
 		],
-		"collapse_conditional_controls_by_default": true,
 		"custom_method_defaults": {
 
 		},
@@ -31,11 +30,18 @@
 			"callv_custom": {
 				"method_name": []
 			},
+			"clear_body_label_actor_wrappers": {
+				"actor": []
+			},
 			"cum": {
 				"voice": []
 			},
 			"execute": {
 				"instruction_text": []
+			},
+			"get_actor_config_property": {
+				"actor_key": [],
+				"config_property": []
 			},
 			"get_property_from_self_or_autoload": {
 				"property": []
@@ -49,6 +55,20 @@
 			"play_sfx": {
 				"_name": []
 			},
+			"replace_lc_tags": {
+				"full_line_text": []
+			},
+			"set_actor_color": {
+				"actor_key": []
+			},
+			"set_actor_config_property": {
+				"actor_key": [],
+				"config_property": []
+			},
+			"set_actor_config_property_color": {
+				"actor_key": [],
+				"config_property": []
+			},
 			"set_actor_name": {
 				"actor_key": [],
 				"actor_name": []
@@ -59,6 +79,19 @@
 			"set_bgm": {
 				"_name": []
 			},
+			"set_body_label_actor_wrappers": {
+				"actor": [],
+				"prefix": [],
+				"suffix": []
+			},
+			"set_body_label_prefix": {
+				"actor": [],
+				"prefix": []
+			},
+			"set_body_label_suffix": {
+				"actor": [],
+				"suffix": []
+			},
 			"set_character_name": {
 				"character": [],
 				"new_name": []
@@ -66,6 +99,12 @@
 			"set_emotion": {
 				"actor_name": [],
 				"emotion_name": []
+			},
+			"set_name_prefix": {
+				"prefix": []
+			},
+			"set_name_suffix": {
+				"suffix": []
 			},
 			"set_object_visible": {
 				"object_name": []
@@ -89,7 +128,6 @@
 				"actor_name": []
 			}
 		},
-		"default_address_mode_pages": 0,
 		"default_locale": "en_US",
 		"dropdown_dialog_arguments": [
 			"amber-emotion"
@@ -123,7 +161,6 @@
 				"res://game/stages/line_reader_custom.gd"
 			]
 		},
-		"first_index_as_page_reference_only": true,
 		"full_custom_method_defaults": {
 			"Sound.awa": {
 
@@ -145,6 +182,9 @@
 
 			},
 			"Sound.set_audio_player_volume": {
+
+			},
+			"add_text_display_delay": {
 
 			},
 			"advance": {
@@ -176,17 +216,19 @@
 			"control_camera": {
 
 			},
-			"cum": {
-
-			},
 			"deserialize": {
 
 			},
 			"deserialize_instruction_handler_data": {
 
 			},
-			"enable_past_lines": {
-				"name_style": 1
+			"enable_keep_past_lines": {
+				"keep_text": false,
+				"new_label": null,
+				"new_name_style": null
+			},
+			"ensure_ruby_container": {
+				"on_label": null
 			},
 			"evaluate_conditionals": {
 				"enabled_as_default": true
@@ -197,11 +239,26 @@
 			"finish_waiting_for_instruction": {
 
 			},
+			"get_actor_config_property": {
+				"default": null
+			},
+			"get_actor_names_in_line": {
+				"empty_if_not_text": true
+			},
+			"get_body_label_text_draw_pos": {
+				"on_label": null
+			},
 			"get_preferences": {
 
 			},
 			"get_property_from_self_or_autoload": {
 
+			},
+			"get_subaddress": {
+
+			},
+			"get_subaddress_arr": {
+				"fill_with_zero": true
 			},
 			"get_ui_visibilities": {
 
@@ -215,6 +272,10 @@
 			"interrupt": {
 				"hide_controls": true
 			},
+			"is_advance_blocked": {
+				"include_auto_continue": true,
+				"include_warnings": false
+			},
 			"move_camera_to": {
 
 			},
@@ -222,6 +283,12 @@
 				"bgm": "One <3"
 			},
 			"play_sfx": {
+
+			},
+			"preserve_into_past_line_container": {
+
+			},
+			"replace_lc_tags": {
 
 			},
 			"request_advance": {
@@ -239,6 +306,15 @@
 			"serialize_instruction_handler_data": {
 
 			},
+			"set_actor_color": {
+
+			},
+			"set_actor_config_property": {
+
+			},
+			"set_actor_config_property_color": {
+
+			},
 			"set_actor_name": {
 
 			},
@@ -254,19 +330,29 @@
 			"set_character_name": {
 
 			},
+			"set_chatlog_enabled": {
+
+			},
+			"set_custom_text_speed_override": {
+
+			},
 			"set_emotion": {
 
 			},
-			"set_eye_progress": {
-
+			"set_name_controls": {
+				"container": null,
+				"keep_text": true
 			},
-			"set_fade_out": {
-
+			"set_name_prefix": {
+				"update": true
+			},
+			"set_name_suffix": {
+				"update": true
 			},
 			"set_object_visible": {
 
 			},
-			"set_static": {
+			"set_ruby_enabled": {
 
 			},
 			"set_text_style": {
@@ -284,10 +370,10 @@
 			"show_character": {
 
 			},
-			"show_letter": {
+			"splatter_blood": {
 
 			},
-			"splatter_blood": {
+			"strarr_to_vec2iarr": {
 
 			},
 			"sway_camera": {
@@ -296,7 +382,13 @@
 			"trim_trimmables": {
 
 			},
+			"update_body_label": {
+
+			},
 			"update_name_label": {
+
+			},
+			"update_ruby_root_scroll": {
 
 			},
 			"use_ui": {
@@ -310,7 +402,11 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854773593,
+		"id_counter": -9223372036854761419,
+		"import_modified_times_by_path": {
+			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
+			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
+		},
 		"ingestion_actor_declaration": "a: amber\nn: narrator",
 		"locales_to_export": [
 			"de_DE",
@@ -325,6 +421,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755245262.944--9223372036854761454",
 				"lines": [
 					{
 						"address": "0.0",
@@ -436,6 +533,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987729.490--9223372036854775799"
 						},
@@ -477,6 +575,7 @@
 						},
 						"content": {
 							"auto_switch": false,
+							"choice_order": [],
 							"choices": [
 								{
 									"address": "0.3.0",
@@ -511,6 +610,7 @@
 										},
 										"meta.visible": false
 									},
+									"id": "1755512415.997--9223372036854761465",
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
@@ -522,7 +622,7 @@
 									"meta.selector": {
 										"selected": false
 									},
-									"target_line": 4,
+									"target_line": 2,
 									"target_page": 0,
 									"text_id_disabled": "1744987729.575--9223372036854775792",
 									"text_id_enabled": "1744987729.575--9223372036854775793"
@@ -553,6 +653,7 @@
 										},
 										"meta.visible": false
 									},
+									"id": "1755512416.338--9223372036854761461",
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
@@ -618,6 +719,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "amber-is-happy"
 						},
@@ -665,6 +767,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987729.749--9223372036854775782"
 						},
@@ -705,6 +808,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987729.798--9223372036854775779"
 						},
@@ -734,6 +838,7 @@
 				"next": 1.0,
 				"number": 0,
 				"page_key": "beginning",
+				"skip": false,
 				"terminate": false
 			},
 			"1": {
@@ -743,6 +848,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755250697.136--9223372036854761389",
 				"lines": [
 					{
 						"address": "1.0",
@@ -762,6 +868,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.530--9223372036854775777"
 						},
@@ -851,6 +958,7 @@
 							"meta.function_calls": [
 								"shake_camera(40)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775774"
 						},
@@ -937,6 +1045,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.532--9223372036854775772"
 						},
@@ -1023,6 +1132,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.534--9223372036854775769"
 						},
@@ -1066,6 +1176,7 @@
 							"meta.function_calls": [
 								"hide_cg(2)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987741.535--9223372036854775767"
 						},
@@ -1090,11 +1201,12 @@
 					}
 				],
 				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 0.0,
+				"meta.scroll_vertical": 266.0,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1.0,
 				"page_key": "about instructions",
+				"skip": false,
 				"terminate": false
 			},
 			"2": {
@@ -1104,6 +1216,7 @@
 					},
 					"meta.visible": false
 				},
+				"id": "1755250697.380--9223372036854761373",
 				"lines": [
 					{
 						"address": "2.0",
@@ -1123,6 +1236,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.696--9223372036854775765"
 						},
@@ -1209,6 +1323,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.697--9223372036854775762"
 						},
@@ -1252,6 +1367,7 @@
 							"meta.function_calls": [
 								"control_camera(1, 0,0,4)"
 							],
+							"meta.locked": false,
 							"meta.validation_status": "OK",
 							"text_id": "1744987742.697--9223372036854775760"
 						},
@@ -1281,15 +1397,12 @@
 				"next": 0.0,
 				"number": 2.0,
 				"page_key": "the end",
+				"skip": false,
 				"terminate": true
 			}
 		},
-		"save_on_play": true,
-		"shader": "",
-		"show_facts_buttons": true,
-		"silly": true,
 		"text_data": {
-			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script \"demo_script.json\" so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot!\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
+			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow & read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "Opinion on Amber?",
 			"1744987729.575--9223372036854775792": "",
 			"1744987729.575--9223372036854775793": "Yes I love her",
@@ -1298,20 +1411,23 @@
 			"1744987729.749--9223372036854775782": "[]>amber{amber-emotion|sad}: I promise I'm not scary!",
 			"1744987729.798--9223372036854775779": "[]>narrator: And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator: You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].",
 			"1744987741.530--9223372036854775777": "[]>narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
-			"1744987741.532--9223372036854775772": "[]>narrator:This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
-			"1744987741.532--9223372036854775774": "[]>narrator:Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator:Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
-			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <ap>[b]Those are good things.[/b] \n<mp>And the music rocks too. <mp>\n(As you can see in the script, newline characters don't need to be escaped in any capacity. <mp>But if you want, you can use \\ n and \\ t without the spaces for newlines and tabs)\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
-			"1744987741.535--9223372036854775767": "[]>narrator:When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",
+			"1744987741.532--9223372036854775772": "[]>narrator: This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
+			"1744987741.532--9223372036854775774": "[]>narrator: Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator: Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
+			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <mp>[b]Those are good things.[/b] <ap>...And the music rocks too.\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",
+			"1744987741.535--9223372036854775767": "[]>narrator: When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",
 			"1744987742.696--9223372036854775765": "[]>narrator: With that, we can start to wrap up.\n[]>amber: Change of scenery please!",
-			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS)\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow] ",
+			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS).\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0,0,4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]",
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
 			"1747669421.946--9223372036854773668": "[]>amber:hi",
+			"1752911161.782--9223372036854773741": "[]>amber:hi :3 i will talk <ruby:furigana uwu this is some long ass ruby goddamn wow fuck this fucking faggot shit lmfaaooo fhgbdfj dfjg uwu uwu it's so scary>some text and change my name and my color Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et </ruby>dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <ruby:smaller ruby uwu>Stet clita kasd gubergren</ruby>, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+			"1753474289.815--9223372036854771691": "[]>narrator:<ts_rel:0.1>Hi! This a small demo of rubies, a language feature found e.g. in Japanese as <ruby:furigana>振り仮名</ruby> :3\n[]>narrator: small <ruby:the ruby>with ruby</ruby>\n[]>narrator: djfhgjdfgb dfgjbdfhj bg dfjhbgjdf bdjgf dbgnbcbn cvnmb cv dkjd fkjdkf df nfb cvmnbcnv dcbdb cvbb <ruby:dfgdf>djfgb dfgh df</ruby> jdhfgj dbdhj g g g g g g g g g g g g g fg f ff f lmao<ruby:ee e>extra</ruby>",
+			"1754645614.175--9223372036854764369": "[]>amber{target|1}: awa\n[]>narrator{target|2}: narration\n[]>amber{target|2}: awa2\n[]>eterna{target|2}: sdfsdf\n[]>eterna{target|1}: dfgdgffghdgh",
+			"1754666419.567--9223372036854761883": "[]>amber: dfgdfhfg\n[]>amber: <ts_rel:0.1>fhjbgjdffghfghfghghjghhjk",
+			"1755780876.863--9223372036854761294": "[]>amber:test line",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,
 		"text_lead_time_same_actor": 0.0,
-		"use_dialog_syntax": true,
-		"validate_function_calls_on_focus": false,
-		"warn_on_fact_deletion": true
+		"use_dialog_syntax": true
 	}
 }

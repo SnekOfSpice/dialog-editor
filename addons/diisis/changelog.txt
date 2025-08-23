@@ -1,36 +1,52 @@
 -------------------------------------------------
 DIISIS 0.6
-This shit breaks compatibility on so many levels! Might as well be a new plugin!
+This shit breaks compatibility on so many levels! Might as well be a new plugin! Also includes LONER_DOG additions :3
 
 General
 - Introduce text IDs
 - Change to Godot 4.4.1
 - option to delete dropdowns
-- Skip line option
+- add ability to skip individual lines and entire pages
 - clean up documentation, especially LineReader and ParserEvents
 - fixes all around
 - automatically check for updates (can be disabled in Project Settings)
 - Refactor the entire instruction system
 - InstructionHandler is gone
+- numerous bug fixes
+- better performance
+- text export
+- text import
+- rubies
+- LineReaderActorConfig as a new resource!
 
 Editor
-- Add text ingestion (TextToDiisis) (raw text ingestion into text boxes and files at large)
+- Add text ingestion (raw text ingestion into text boxes and files at large)
 - instructions:
 	- add default args
 	- dropdown arg limiters
 - Option for Save on Play (true by default)
-- General layout improvements & slimmification
-- Incoming references window for Jump Page/Loopback
+- Visual overhaul
+	- General layout improvements & slimmification
+	- Change editor fonts
+	- Add option to collapse Conditionals
+	- choice item views
+	- incoming page refs
 - fact deletion warning (if a page, line, or choice item contains a fact, this warns you of it. can be disabled in preferences)
 - add editor menu
 	- step through pages
 	- editor reload
-- silly.
-- new fonts
-- Conditionals collapsing
-- choice item views
-- incoming page refs
+- Add option to be silly
+- Add several windows
+	- add actor search utility
+	- Incoming references window for Jump Page/Loopback
+	- add "fix punctuation" text option. Includes:
+		- period toggle
+		- apostrophes toggle
+		- replacement rules
 - more bbcode in hinting
+- When going to a specific address, the specified object will flash (page / line / choice item)
+- Less janky scroll behavior
+- Add linearize_pages option to Pages window
 
 Runtime
 - name style prepend got a few more options and consistency 
@@ -43,17 +59,19 @@ Runtime
 - Empty pages will now cause the Parser to go to their next page, and not return without change.
 
 VN Template
-- improve template by using _unhaled_input instead of _input, fixing a few input bugs
+- improve template by using _unhandled_input instead of _input, fixing a few input bugs
 - add screen fade in / out
 - tscn CG support (they have to be Control nodes)
-- demo script contains more info now
+- demo_script.json contains more info now
 - text speed preview in options screen
 
 under the hood
+- remove chunks as a concept in line reader
 - move instruction argument interpreting parser-side. this shrinks files down a bit and gets rid of a bit of code duplication since inline calls were interpreted at runtime already. regular instructions now just follow suit.
-- give lines an ID. Isn't used directly but should help with tracking things throughout merge conflicts
+- give lines an ID. Isn't used directly but should help with tracking things throughout merge conflicts and is necessary for importing/export text
 - some code cleanup in the plugin itself!
 - change LineReader to inherit from Node instead of Control
+- introduce generic subwindow to editor
 
 -------------------------------------------------
 DIISIS 0.5.1 2025-03-18

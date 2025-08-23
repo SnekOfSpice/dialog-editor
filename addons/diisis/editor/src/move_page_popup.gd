@@ -33,6 +33,7 @@ func fill():
 		item.connect("move_page", swap_pages)
 		item.connect("on_direct_swap", direct_swap)
 		item.connect("go_to", on_item_go_to)
+		item.init()
 	
 	find_child("SearchLineEdit").text = ""
 	find_child("SearchLineEdit").grab_focus()
@@ -74,3 +75,10 @@ func _on_reset_address_mode_pressed() -> void:
 func _on_reset_address_mode_popup_change_to_mode(mode: AddressModeButton.Mode) -> void:
 	for item in find_child("Items").get_children():
 		item.set_address_mode(mode)
+
+
+func _on_v_id_pressed(id: int) -> void:
+	match id:
+		0:
+			Pages.linearize_pages()
+			fill()

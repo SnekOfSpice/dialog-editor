@@ -14,7 +14,7 @@ signal request_popup
 var facts : ItemList
 var previous_selection := 0
 
-func fill():
+func init():
 	for child in get_children():
 		if child is SubViewport:
 			child.queue_free()
@@ -226,7 +226,7 @@ func _on_save_new_default_button_pressed() -> void:
 	
 	if facts.get_selected_items().size() > 0:
 		previous_selection = facts.get_selected_items()[0]
-	fill()
+	init()
 	
 
 
@@ -243,7 +243,7 @@ func _on_create_button_pressed() -> void:
 func _on_create_fact_window_fact_created() -> void:
 	if facts.get_selected_items().size() > 0:
 		previous_selection = facts.get_selected_items()[0]
-	fill()
+	init()
 
 
 func _on_new_default_check_box_toggled(toggled_on: bool) -> void:

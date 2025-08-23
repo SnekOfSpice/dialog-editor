@@ -7,6 +7,7 @@ var title_id : String
 var editing_view := 0
 
 var choice_list : VBoxContainer
+var choice_order := []
 
 func init():
 	find_child("AddButton").grab_focus()
@@ -19,12 +20,19 @@ func serialize() -> Dictionary:
 	var result = {}
 	
 	var choices = []
+	var handled_ids := [] # idk why this is happening but importing duplicates some things so we do this
 	for c : ChoiceEdit in $ChoiceList.get_children():
-		choices.append(c.serialize())
+		var data := c.serialize()
+		if handled_ids.has(data.get("id")):
+			continue
+		choices.append(data)
+		handled_ids.append(data.get("id"))
 	result["choices"] = choices
+	
 	result["auto_switch"] = find_child("AutoSwitchButton").button_pressed
 	result["meta.do_jump_page"] = do_jump_page
 	result["meta.editing_view"] = editing_view
+	result["choice_order"] = choice_order
 	Pages.save_text(title_id, find_child("ChoiceTitleLineEdit").text)
 	result["title_id"] = title_id
 	
@@ -37,9 +45,14 @@ func deserialize(data):
 	var auto_switch = data.get("auto_switch", false)
 	find_child("AutoSwitchButton").button_pressed = auto_switch
 	title_id = data.get("title_id", Pages.get_new_id())
+	#var choice_order : Array = data.get("choice_order", [])
+	var choices : Array = data.get("choices", [])
+	choice_order = data.get("choice_order", [])
+	#printt("order", choice_order.size(), choices.size())
+	#if not choice_order.is_empty() and (choice_order.size() == choices.size()):
+		#choices = Pages.sort_choices(choice_order, choices)
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
-	
-	for d in data.get("choices", []):
+	for d in choices:
 		add_choice(-1, d)
 	
 	set_auto_switch(auto_switch)

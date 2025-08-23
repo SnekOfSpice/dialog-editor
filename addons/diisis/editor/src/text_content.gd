@@ -4,17 +4,17 @@ class_name TextContent
 
 signal drop_focus()
 
-const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", "-", ":", ";", "#", "*", "+", "~", "'"]
+const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", ":", ";", "#", "*", "+", "~", "'"]
 const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "font", "rainbow", "pulse", "wave", "tornado", "shake", "fade", "code", "char", "center", "left", "right", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
 
 var active_actors := [] # list of character names
-var active_actors_title := ""
 
 var entered_arguments := 0
 var used_arguments := []
 var tags := []
 var text_id : String
 var last_character_after_caret : String
+var caret_movement_to_do := 0
 
 var text_box : CodeEdit
 
@@ -52,15 +52,36 @@ func init() -> void:
 	var text_actions : PopupMenu = find_child("Text Actions")
 	text_actions.add_submenu_node_item("Ingest Line", ingest)
 	ingest.init()
+	
+	var actor_prepend = PopupMenu.new()
+	for actor in Pages.get_speakers():
+		actor_prepend.add_item(actor)
+	text_actions.add_submenu_node_item("Prepend actor in empty lines", actor_prepend)
+	actor_prepend.index_pressed.connect(on_actor_prepend_index_pressed)
+	
+	submenu_offset = text_actions.item_count
+	
 	text_actions.add_separator("Prettify")
-	text_actions.add_item("Capitalize", 0)
-	text_actions.add_item("Neaten Whitespace", 1)
-	text_actions.add_separator()
-	text_actions.add_item("Set Text ID...", 4)
+	text_actions.add_item("Capitalize", ID_CAPITALIZE)
+	text_actions.set_item_tooltip(ID_CAPITALIZE + submenu_offset + 1, Pages.TOOLTIP_CAPITALIZE)
+	text_actions.add_item("Neaten Whitespace", ID_WHITESPACE)
+	text_actions.set_item_tooltip(ID_WHITESPACE + submenu_offset + 1, Pages.TOOLTIP_NEATEN_WHITESPACE)
+	text_actions.add_item("Fix Punctuation", ID_PUNCTUATION)
+	text_actions.set_item_tooltip(ID_PUNCTUATION + submenu_offset + 1, Pages.TOOLTIP_NEATEN_WHITESPACE)
+	text_actions.add_separator("Meta")
+	text_actions.add_item("Set Text ID...", ID_TEXT_ID)
+	text_actions.add_item("Lock", ID_LOCK)
+	text_actions.set_item_as_checkable(ID_LOCK+submenu_offset, true)
+	text_actions.set_item_checked(ID_LOCK+submenu_offset, false)
 	
+	find_child("ScrollContainer").init()
 	
-	text_actions.set_item_tooltip(1, Pages.TOOLTIP_CAPITALIZE)
-	text_actions.set_item_tooltip(2, Pages.TOOLTIP_NEATEN_WHITESPACE)
+const ID_CAPITALIZE := 0
+const ID_WHITESPACE := 1
+const ID_PUNCTUATION := 2
+const ID_TEXT_ID := 4
+const ID_LOCK := 6
+var submenu_offset := 0
 	
 func serialize() -> Dictionary:
 	if not text_id:
@@ -69,6 +90,7 @@ func serialize() -> Dictionary:
 	var result := {}
 	
 	result["text_id"] = text_id
+	result["meta.locked"] = is_locked()
 	result["meta.validation_status"] = get_overall_compliance()
 	if not get_function_calls().is_empty():
 		result["meta.function_calls"] = get_function_calls()
@@ -82,8 +104,10 @@ func deserialize(data: Dictionary):
 	if text_box.text.is_empty(): # compat
 		text_box.text = data.get("content", "")
 	active_actors = data.get("active_actors", [])
-	active_actors_title = data.get("active_actors_title", "")
 	fill_active_actors()
+	var text_actions : PopupMenu = find_child("Text Actions")
+	if text_actions.item_count > 0:
+		text_actions.set_item_checked(ID_LOCK+submenu_offset, data.get("meta.locked", false))
 
 func set_page_view(view:DiisisEditor.PageView):
 	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full
@@ -103,9 +127,12 @@ func set_page_view(view:DiisisEditor.PageView):
 			text_box.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 			text_box.scroll_fit_content_height = false
 
+func set_caret_movement_to_do(value:int):
+	caret_movement_to_do = value
+	call_thread_safe("process_caret_movement")
 
-var caret_movement_to_do := 0
-func _process(delta: float) -> void:
+func process_caret_movement():
+	await get_tree().process_frame
 	if caret_movement_to_do != 0:
 		move_caret(caret_movement_to_do)
 		caret_movement_to_do = 0
@@ -123,14 +150,16 @@ func get_word_under_caret() -> String:
 		word = character_at_position + word
 		
 		i -= 1
-	i = start_position + 1
-	while not (character_at_position in WORD_SEPARATORS) and i < line.length():
+	i = start_position
+	if i < line.length() - 1:
 		character_at_position = line[i]
-		if character_at_position in WORD_SEPARATORS:
-			break
-		word += character_at_position
-		
-		i += 1
+		while not (character_at_position in WORD_SEPARATORS) and i < line.length():
+			character_at_position = line[i]
+			if character_at_position in WORD_SEPARATORS:
+				break
+			word += character_at_position
+			
+			i += 1
 	
 	return word
 
@@ -215,7 +244,13 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("<"):
 		for a in DIISIS.control_sequences:
-			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, str(a, ":" if (a in DIISIS.control_sequences_with_colon) else "", ">"))
+			var full_tag : String = a
+			if a in DIISIS.control_sequences_with_colon:
+				full_tag += ":"
+			full_tag += ">"
+			if a in DIISIS.control_sequences_with_closing_tag:
+				full_tag += "</%s>" % a
+			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
 		for a in Pages.dropdowns.get(Pages.auto_complete_context, []):
@@ -367,7 +402,6 @@ func fill_active_actors():
 	active_actors.clear()
 	for v in Pages.get_speakers():
 		active_actors.append(v)
-	active_actors_title = title
 
 
 func _on_text_box_focus_entered() -> void:
@@ -385,9 +419,9 @@ func _on_text_box_text_changed() -> void:
 				text_box.insert_text_at_caret("()")
 				await get_tree().process_frame
 				text_box.set_caret_column(prev_col)
-				caret_movement_to_do = 1
+				set_caret_movement_to_do(1)
 			elif is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr, "()")):
-				caret_movement_to_do = -1
+				set_caret_movement_to_do(-1)
 
 	var line_index = text_box.get_caret_line()
 	var col_index = text_box.get_caret_column()
@@ -410,39 +444,56 @@ func _on_text_box_code_completion_requested() -> void:
 	for arg_name in Pages.dropdown_dialog_arguments:
 		if is_text_before_caret(str(arg_name, "|}")):
 			Pages.auto_complete_context = arg_name
-			caret_movement_to_do = -1
+			set_caret_movement_to_do(-1)
 		elif is_text_before_caret(str(arg_name, "|")):
 			Pages.auto_complete_context = arg_name
 		elif is_text_after_caret("|"):
-			caret_movement_to_do = 1
+			set_caret_movement_to_do(1)
 
-	for control in ["func", "name", "clname", "var", "fact", "call", "ts_rel", "ts_abs", "comment"]:
+	for control in DIISIS.control_sequences_with_colon:
 		if is_text_before_caret(str("<", control, ":>")):
-			caret_movement_to_do = -1
+			set_caret_movement_to_do(-1)
+			Pages.auto_complete_context = control
+			break
+	
+	for control : String in DIISIS.control_sequences_with_closing_tag:
+		if is_text_before_caret(str("</", control, ">")):
+			set_caret_movement_to_do(-(control.length() + 3))
 			Pages.auto_complete_context = control
 			break
 	
 	for tag in BBCODE_TAGS:
 		if is_text_before_caret(str("=][/", tag, "]")):
-			caret_movement_to_do = -str("][/", tag, "]").length()
+			set_caret_movement_to_do(-str("][/", tag, "]").length())
 			break
 		elif is_text_before_caret(str("[/", tag, "]")):
-			caret_movement_to_do = -str("[/", tag, "]").length()
+			set_caret_movement_to_do(-str("[/", tag, "]").length())
 			break
 	
 	update_tag_hint()
 
-
+func is_locked() -> bool:
+	var text_actions : PopupMenu = find_child("Text Actions")
+	if text_actions.item_count == 0:
+		return false
+	return find_child("Text Actions").is_item_checked(ID_LOCK+submenu_offset)
 func _on_text_actions_id_pressed(id: int) -> void:
 	match id:
-		0:
+		ID_CAPITALIZE:
 			text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
-		1:
+		ID_WHITESPACE:
 			text_box.text = Pages.neaten_whitespace(text_box.text)
-		3:
+		ID_PUNCTUATION:
+			text_box.text = Pages.fix_punctuation(text_box.text)
+		ID_TEXT_ID:
 			if not text_id:
 				text_id = Pages.get_new_id()
 			Pages.editor.prompt_change_text_id(text_id)
+		ID_LOCK:
+			var is_locked : bool = is_locked()
+			var text_actions : PopupMenu = find_child("Text Actions")
+			text_actions.set_item_checked(ID_LOCK+submenu_offset, not is_locked)
+			text_box.editable = is_locked
 
 func get_overall_compliance() -> String:
 	for compliance : String in get_compliances().values():
@@ -464,6 +515,30 @@ func get_compliances() -> Dictionary:
 	var compliances := {}
 	for instruction in get_function_calls():
 		compliances[instruction] = Pages.get_method_validity(instruction)
+	
+	## this isn't super accurate because somethng like [codehdbfgd] text [/code] will be understood as valid
+	# but i cant be fucked to differentiate all the different tags rn
+	# it catches unclosed img and url tags and that's the most important
+	for bbcode_tag in BBCODE_TAGS:
+		var opening_count := text_box.text.count("[%s" % bbcode_tag)
+		var closing_count := text_box.text.count("[/%s" % bbcode_tag)
+		if opening_count != closing_count:
+			compliances[bbcode_tag] = "%s opening tags imbalanced with %s closing tags" % [opening_count, closing_count]
+	
+	for opener : Dictionary in tags:
+		if opener.get("tag").begins_with("<ruby"):
+			var has_closer := false
+			var start : int = opener.get("start")
+			for closer in tags:
+				if closer.get("start") > start and closer.get("line_index") >= opener.get("line_index"):
+					if closer.get("tag") == "</ruby>":
+						has_closer = true
+						break
+					if closer.get("tag").begins_with("<ruby"):
+						break
+			if not has_closer:
+				compliances[opener.get("tag")] = "No matching closing </ruby> in line %s." % (opener.get("line_index") + 1)
+	
 	return compliances
 
 func index_all_tags():
@@ -562,7 +637,15 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				Pages.editor.open_window_by_string("FactsPopup")
 			elif not tag.is_empty():
 				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
-
+			
+			var word_under_caret = get_word_under_caret()
+			if word_under_caret in Pages.dropdown_titles:
+				Pages.editor.open_window_by_string("DropdownWindow")
+				return
+			for dropdown : Array in Pages.dropdowns.values():
+				if word_under_caret in dropdown:
+					Pages.editor.open_window_by_string("DropdownWindow")
+			
 
 func _on_import_ingest_from_clipboard() -> void:
 	var text : String = TextToDiisis.format_text(DisplayServer.clipboard_get())
@@ -573,6 +656,8 @@ func _on_import_ingest_from_clipboard() -> void:
 		text_box.text = Pages.capitalize_sentence_beginnings(text_box.text)
 	if find_child("Ingest").is_whitespace_checked():
 		text_box.text = Pages.neaten_whitespace(text_box.text)
+	if find_child("Ingest").is_punctuation_checked():
+		text_box.text = Pages.fix_punctuation(text_box.text)
 
 
 func _on_import_ingest_from_file() -> void:
@@ -580,3 +665,9 @@ func _on_import_ingest_from_file() -> void:
 	Pages.editor.popup_ingest_file_dialog([
 		address,
 		find_child("Ingest").build_payload()])
+
+func on_actor_prepend_index_pressed(index:int):
+	for i in text_box.get_line_count():
+		var line : String = text_box.get_line(i)
+		if not line.begins_with("[]>"):
+			text_box.set_line(i, str("[]>", Pages.get_speakers()[index], ": ", line))

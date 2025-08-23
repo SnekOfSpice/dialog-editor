@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://djiaiay3ntvfy"]
 
-[ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/dropdowns_container.gd" id="1_6xnc2"]
+[ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/windows/dropdowns_container.gd" id="1_6xnc2"]
 [ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_81ktr"]
 
 [node name="Container" type="MarginContainer"]

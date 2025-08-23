@@ -49,7 +49,6 @@ func get_current_page() -> Page:
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
-	
 	var cpn:int
 	if get_current_page():
 		cpn = get_current_page().number
@@ -69,6 +68,10 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	Pages.editor = self
+	set_opening_cover_visible(true)
+	set_importing_cover_visible(false)
+	was_playing_scene = EditorInterface.is_playing_scene()
 	Pages.clear()
 	DiisisEditorActions.clear()
 	opening = true
@@ -76,7 +79,6 @@ func init(active_file_path:="") -> void:
 	page_container = core.find_child("PageContainer")
 	
 	Pages.connect("pages_modified", update_controls)
-	Pages.editor = self
 	is_open = true
 	
 	request_add_page(0, 0)
@@ -113,21 +115,24 @@ func init(active_file_path:="") -> void:
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = find_child("File")
 	file_item.add_separator()
+	file_item.add_item("Import    (Shift+I)", 6)
+	file_item.add_item("Export    (Shift+E)", 5)
+	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
-	var ingest : PopupMenu = file_item.get_node("IngestMenu")
-	file_item.add_submenu_node_item("Ingest Pages", ingest)
-	ingest.init()
+	#var ingest : PopupMenu = file_item.get_node("IngestMenu")
+	#file_item.add_submenu_node_item("Ingest Pages", ingest)
+	#ingest.init()
 	
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
-	file_item.add_separator()
-	file_item.add_item("Preferences...", 3)
-	file_item.add_item("About...", 4)
+	file_item.add_item("Open with Ctrl + ...")
+	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
+	var utility_item : PopupMenu = find_child("Utility")
 	if Pages.silly:
-		var utility_item : PopupMenu = find_child("Utility")
 		utility_item.add_separator("Silly")
 		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
-	
+	utility_item.add_item("Open with Ctrl + ...")
+	utility_item.set_item_disabled(utility_item.item_count - 1, true)
 	
 	open_from_path(active_file_path)
 	
@@ -143,6 +148,26 @@ func init(active_file_path:="") -> void:
 		var mat = ShaderMaterial.new()
 		mat.shader = load(Pages.shader)
 		rect.material = mat
+	
+	await get_tree().process_frame
+	
+	if active_file_path == "user://import_override_temp.json":
+		set_importing_cover_visible(true)
+		var access = FileAccess.open("user://import_override_temp.json", FileAccess.READ)
+		var data = JSON.parse_string(access.get_as_text())
+		access.close()
+		set_save_path(data.get("original_path"))
+		
+		await get_tree().process_frame
+		
+		
+		var d = DirAccess.remove_absolute("user://import_override_temp.json")
+		await get_tree().process_frame
+		load_page(0)
+		await get_tree().process_frame
+		step_through_pages()
+		
+		
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -183,10 +208,11 @@ func load_page(number: int, discard_without_saving:=false):
 		page_instance = page_container.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
 		page_instance.request_delete.connect(request_delete_current_page)
-		
+	
 	page_instance.init(number)
 	update_controls()
 	await get_tree().process_frame
+	set_opening_cover_visible(false)
 
 func get_line_data(index:int):
 	return 
@@ -219,6 +245,9 @@ func get_selected_page_view() -> PageView:
 			break
 	
 	return view
+
+func get_save_path() -> String:
+	return str(active_dir, active_file_name)
 
 func set_save_path(value:String):
 	var parts = value.split("/")
@@ -306,7 +335,10 @@ func _shortcut_input(event):
 		if event.is_command_or_control_pressed():
 			match event.key_label:
 				KEY_E:
-					get_current_page().set_editing_page_key(true)
+					if event.is_shift_pressed():
+						open_window_by_string("TextExportWindow")
+					else:
+						get_current_page().set_editing_page_key(true)
 				KEY_G:
 					find_child("GoTo").toggle_active()
 				KEY_N:
@@ -314,16 +346,19 @@ func _shortcut_input(event):
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_I:
-					open_window_by_string("IngestionActorSetupWindow")
+					if event.is_shift_pressed():
+						open_window_by_string("TextImportWindow")
+					else:
+						open_window_by_string("IngestionActorSetupWindow")
 				KEY_F:
 					if event.is_shift_pressed():
 						open_popup($Popups.get_node("FactsPopup"))
 					else:
-						open_popup($Popups.get_node("TextSearchPopup"))
+						open_window_by_string("TextSearchPopup")
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
-					open_popup($Popups.get_node("DropdownPopup"))
+					open_popup($Popups.get_node("DropdownWindow"))
 				KEY_H:
 					open_popup($Popups.get_node("HeaderPopup"))
 				KEY_R:
@@ -380,7 +415,6 @@ func update_controls():
 	if not current_page:
 		await get_tree().process_frame
 		if not current_page:
-			print("still no page", page_container.get_child_count())
 			#var page_instance:Page
 			#if page_container.get_child_count() == 0:
 				#page_instance = _page.instantiate()
@@ -395,8 +429,6 @@ func update_controls():
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("GoTo").set_current_page_count(str(current_page.number))
 	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
-	
-	Pages.sync_line_references()
 	
 	await get_tree().process_frame
 	current_page.update()
@@ -446,7 +478,7 @@ func request_add_last_page():
 func request_delete_current_page():
 	request_delete_page(get_current_page_number())
 
-func request_delete_page(number:int):
+func request_delete_page(number:int) -> void:
 	if Pages.get_page_count() <= 1:
 		push_warning("you cannot delete the last page")
 		return
@@ -527,24 +559,28 @@ func serialize() -> Dictionary:
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
+func set_opening_cover_visible(value:bool):
+	$OpeningCover.visible = value
+func set_importing_cover_visible(value:bool):
+	$ImportingCover.visible = value
+
 func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	
 	if not file:
+		set_opening_cover_visible(false)
 		return
 	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
 	set_save_path(path)
-	
 	Pages.deserialize(data.get("pages"))
 	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	await get_tree().process_frame
 	var editor_data = data.get("editor", {})
-	#print("open from path ", editor_data.get("current_page_number", 0))
-	#load_page(editor_data.get("current_page_number", 0), true)
+	
 	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
 	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
@@ -578,6 +614,7 @@ func request_go_to_address(address:String, action_message:=""):
 	undo_redo.commit_action()
 
 func request_load_page(number:int, action_message:=""):
+	DiisisEditorUtil.block_next_flash_highlight = true
 	request_go_to_address(str(number), action_message)
 
 func notify(message:String, duration:=5.0):
@@ -606,8 +643,14 @@ func _on_instruction_definition_timer_timeout() -> void:
 	update_error_text_box()
 
 func update_error_text_box():
-	find_child("ErrorTextBox").text = Pages.get_all_invalid_instructions()
-	find_child("ErrorTextBox").text += Pages.get_all_invalid_address_pointers()
+	var error_text_box : RichTextLabel = find_child("ErrorTextBox")
+	var invalid_instructions : String = Pages.get_all_invalid_instructions()
+	error_text_box.text = ""
+	if not error_text_box.text.is_empty() and Pages.evaluator_paths.is_empty():
+		error_text_box.text += "Function errors are present but no evaluating LineReader has been defined. Consider defining one in [url=open-HandlerWindow-1]Setup > Functions & Variables[/url]. "
+	
+	error_text_box.text += invalid_instructions
+	error_text_box.text += Pages.get_all_invalid_address_pointers()
 	
 	for node in get_tree().get_nodes_in_group("diisis_method_validator"):
 		node.update_compliance_prompt()
@@ -640,7 +683,7 @@ func open_popup(popup:Window, fit_to_size:=false):
 		popup.size.x -= 50
 	
 	popup.content_scale_factor = content_scale
-	Pages.editor.refresh()
+	refresh()
 	popup.popup()
 	popup.grab_focus()
 	
@@ -651,12 +694,18 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.content_scale_factor = content_scale
 	popup.size *= content_scale
 
+func hide_window_by_string(window_name:String) -> Window:
+	var window : Window = $Popups.get_node(window_name)
+	window.close_requested.emit()
+	return window
 
 func open_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)
 	open_popup(window, window_name in [
 		"HandlerWindow",
 		"FactsPopup",
+		"TextExportWindow",
+		"TextImportWindow",
 	])
 	return window
 
@@ -666,7 +715,7 @@ func open_handler_window(method_to_select:=""):
 
 func open_facts_window(fact_to_select:=""):
 	var window := open_window_by_string("FactsPopup")
-	window.select_fact(fact_to_select)
+	window.get_child(0).select_fact(fact_to_select)
 
 # opens opoup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
@@ -692,18 +741,11 @@ func _on_file_id_pressed(id: int) -> void:
 			if active_dir != "":
 				$Popups.get_node("FDOpen").current_dir = active_dir
 			open_popup($Popups.get_node("FDOpen"), true)
-		3:
-			# config
-			open_popup($Popups.get_node("FileConfigPopup"), true)
-		4:
-			popup_accept_dialogue(
-				str(
-					"[center][color=#f51068][b]DIISIS is a machine of gore and wires[/b][/color]", "\n\n",
-					"[color=#ffffff][b]DIISIS is antifascist software[/b][/color]", "\n\n",
-					"[color=#ff42d6][b]DIISIS loves you[/b][/color][/center]",
-				),
-				"About DIISIS"
-			)
+		
+		5:
+			open_window_by_string("TextExportWindow")
+		6:
+			open_window_by_string("TextImportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
@@ -723,29 +765,61 @@ func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
 			emit_signal("request_reload")
+		1:
+			open_window_by_string("PunctuationRulesWindow")
+		3:
+			# config
+			open_popup($Popups.get_node("FileConfigPopup"), true)
+		4:
+			popup_accept_dialogue(
+				str(
+					"[center][color=#f51068][b]DIISIS is a machine of gore and wires[/b][/color]", "\n\n",
+					"[color=#ffffff][b]DIISIS is antifascist software[/b][/color]", "\n\n",
+					"[color=#ff42d6][b]DIISIS loves you[/b][/color][/center]",
+				),
+				"About DIISIS"
+			)
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:
 		0: 
 			var total : Vector2i = Pages.get_count_total()
+			var total_with_skip : Vector2i = Pages.get_count_total(true)
 			var on_page : Vector2i = Pages.get_count_on_page(get_current_page_number())
+			var on_page_with_skip : Vector2i = Pages.get_count_on_page(get_current_page_number(), true)
+			
+			var total_word_skip_diff := ""
+			var total_char_skip_diff := ""
+			var page_word_skip_diff := ""
+			var page_char_skip_diff := ""
+			
+			if total.x != total_with_skip.x:
+				total_word_skip_diff = " (%s including skipped)" % total_with_skip.x
+			if total.y != total_with_skip.y:
+				total_char_skip_diff = " (%s including skipped)" % total_with_skip.y
+			if on_page.x != on_page_with_skip.x:
+				page_word_skip_diff = " (%s including skipped)" % on_page_with_skip.x
+			if on_page.y != on_page_with_skip.y:
+				page_char_skip_diff = " (%s including skipped)" % on_page_with_skip.y
 			var dialog_text := str(
-				"Total Word Count: [b]%s[/b]\n" % total.x,
-				"Total Character Count: [b]%s[/b]" % total.y,
+				"Total Word Count: [b]%s[/b] %s\n" % [total.x, total_word_skip_diff],
+				"Total Character Count: [b]%s[/b] %s" % [total.y, total_char_skip_diff],
 				"\n\n",
-				"Word Count on page: [b]%s[/b]\n" % on_page.x,
-				"Character Count on page: [b]%s[/b]\n" % on_page.y,
+				"Word Count on page: [b]%s[/b] %s\n" % [on_page.x, page_word_skip_diff],
+				"Character Count on page: [b]%s[/b] %s\n" % [on_page.y, page_char_skip_diff],
 				"\n",
 				"[wave amp=10.0 freq=-4 connected=1][color=f2e260]Note:[/color][/wave]",
 				" Words are counted by spaces."
 			)
 			popup_accept_dialogue(dialog_text, "Word & Character Count")
 		1: 
-			open_popup($Popups.get_node("TextSearchPopup"))
+			open_window_by_string("TextSearchPopup")
 		2:
 			open_window_by_string("IngestionActorSetupWindow")
 		3:
 			step_through_pages()
+		4:
+			open_window_by_string("ActorSearchWindow")
 
 
 func _on_setup_id_pressed(id: int) -> void:
@@ -753,14 +827,15 @@ func _on_setup_id_pressed(id: int) -> void:
 		1: # header
 			open_popup($Popups.get_node("HeaderPopup"))
 		2: # dd
-			open_popup($Popups.get_node("DropdownPopup"))
+			open_popup($Popups.get_node("DropdownWindow"))
 		3: # instr
 			open_popup($Popups.get_node("HandlerWindow"), true)
 		5: # facts
 			open_popup($Popups.get_node("FactsPopup"), true)
 		6: # pages
 			open_popup($Popups.get_node("MovePagePopup"))
-
+		8:
+			open_window_by_string("DialogConfigWindow")
 
 #endregion
 
@@ -803,15 +878,32 @@ func step_through_pages():
 	var steps : int = Pages.get_page_count()
 	var i := 0
 	while i < steps:
+		%ImportProgressLabel.text = "Regenerating page %s/%s" % [i+1, steps]
 		load_page(next_page)
 		await get_tree().process_frame
 		next_page = get_current_page_number() + 1
 		if next_page >= Pages.get_page_count():
 			next_page = 0
 		i += 1
+	await get_tree().process_frame
+	set_importing_cover_visible(false)
 
 
 func _on_funny_debug_button_pressed() -> void:
+	for id in Pages.text_data.keys():
+		var id_count := 0
+		for number in Pages.page_data.keys():
+			var page_data = Pages.page_data.get(number)
+			for line in page_data.get("lines"):
+				#if line.get("id") == id:
+					#id_count += 1
+				if line.get("line_type") == DIISIS.LineType.Text:
+					var tid = line.get("content").get("text_id")
+					if tid == id:
+						id_count += 1
+		if id_count > 1:
+			printt(id_count, id)
+	return
 	emit_signal("request_reload")
 	return
 	step_through_pages()
@@ -1012,13 +1104,42 @@ func _on_fd_merge_l_10n_file_selected(path: String) -> void:
 func _on_refresh_button_pressed() -> void:
 	refresh()
 
+func clipboard_set_notify(text:String) -> void:
+	DisplayServer.clipboard_set(text)
+	var message := "Copied to clipboard:\n"
+	message += text.left(36)
+	if text.length() > 36:
+		message += "..."
+	notify(message)
+
+func handle_meta(meta:Variant):
+	if str(meta).begins_with("goto-"):
+		goto_with_meta(meta)
+	elif str(meta).begins_with("copy-"):
+		clipboard_set_notify(str(meta).trim_prefix("copy-"))
+	elif str(meta).begins_with("open-"):
+		var target_window := str(meta).trim_prefix("open-")
+		open_window_by_string(target_window)
+
 func goto_with_meta(meta:Variant):
 	if str(meta).begins_with("goto-"):
 		var target_address := str(meta).trim_prefix("goto-")
 		request_go_to_address(target_address, str("Go to ", target_address))
 
 func _on_error_text_box_meta_clicked(meta: Variant) -> void:
-	goto_with_meta(meta)
+	meta = str(meta)
+	if meta.begins_with("open-"):
+		meta = meta.trim_prefix("open-")
+		var callable_after_open
+		if meta.begins_with("HandlerWindow"):
+			var tab := int(meta.split("-")[1])
+			meta = meta.split("-")[0]
+			callable_after_open = $Popups/HandlerWindow.set_tab.bind(tab)
+		open_window_by_string(meta)
+		if callable_after_open:
+			callable_after_open.call()
+	else:
+		goto_with_meta(meta)
 
 
 
@@ -1238,3 +1359,6 @@ func _on_ingest_menu_ingest_from_file() -> void:
 		["PAGE",
 		find_child("IngestMenu").build_payload()
 		])
+
+func is_importing() -> bool:
+	return $ImportingCover.visible

@@ -16,7 +16,7 @@ size_flags_vertical = 3
 [node name="NoTitleWarning" type="RichTextLabel" parent="."]
 layout_mode = 2
 bbcode_enabled = true
-text = "[center][color=fb40a9]No speaker dropdown has been set. Please set one up in [url=speakers]Setup > Dropdowns > Dialog[/url].[/color][/center]"
+text = "[center][color=fb40a9]No speaker dropdown has been set. Please set one up in [url=open-DropdownWindow]Setup > Dropdowns > Dialog[/url].[/color][/center]"
 fit_content = true
 scroll_active = false
 

@@ -5,12 +5,14 @@ class_name Page
 var number := 0
 var next := 1
 var lines:Node
+var id : String
 
 @onready var page_key_line_edit : LineEdit = find_child("PageKeyLineEdit")
 
 signal request_delete()
 
 func init(n:=number):
+	%GoToHighlight.self_modulate.a = 0
 	var data = Pages.page_data.get(n)
 	number = n
 	lines = find_child("Lines")
@@ -50,15 +52,19 @@ func serialize() -> Dictionary:
 	if not lines:
 		init(number)
 	var data := {}
+	if not id:
+		id = Pages.get_new_id()
 	
-	data["number"] = number
+	data["number"] = int(number)
+	data["id"] = id
 	data["page_key"] = get_page_key()
 	data["next"] = find_child("NextLineEdit").value
-	data["meta.scroll_vertical"] = find_child("ScrollContainer").scroll_vertical
+	data["meta.scroll_vertical"] = int(find_child("ScrollContainer").scroll_vertical)
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	data["facts"] = find_child("Facts").serialize()
 	data["meta.selected"] = find_child("LineSelector").button_pressed
-	data["meta.address_mode_next"] = find_child("AddressModeButton").get_mode()
+	data["meta.address_mode_next"] = int(find_child("AddressModeButton").get_mode())
+	data["skip"] = find_child("SkipCheckBox").button_pressed
 	
 	var lines_data := []
 	for c in lines.get_children():
@@ -80,12 +86,18 @@ func deserialize(data: Dictionary):
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("LineSelector").button_pressed = data.get("meta.selected", false)
 	find_child("AddressModeButton").set_mode(data.get("meta.address_mode_next", Pages.default_address_mode_pages))
+	set_skip(data.get("skip", false))
+	id = data.get("id", Pages.get_new_id())
 	
 	update_incoming_references_to_page()
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
 	update()
+
+func set_skip(value:bool):
+	modulate.a = 0.6 if value else 1
+	find_child("SkipCheckBox").button_pressed = value
 
 func deserialize_lines(lines_data: Array):
 	# instantiate lines
@@ -231,6 +243,7 @@ func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 
 func ensure_control_at_address_is_visible(address:String):
 	find_child("ScrollContainer").scroll_vertical = 0
+	await get_tree().process_frame
 	var target = DiisisEditorUtil.get_node_at_address(address)
 	find_child("ScrollContainer").ensure_control_visible(target)
 
@@ -247,9 +260,13 @@ func request_add_line(at_index:int):
 
 func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, change_line_references:=false):
 	indices.sort()
+	var added_new_line := false
 	for at_index in indices:
+		if at_index >= lines.get_child_count():
+			added_new_line = true
 		var line:Line
 		var line_data = data_by_index.get(at_index, {})
+		var instanced_new_line : bool
 		if at_index >= lines.get_child_count() or force_new_line_object:
 			line = preload("res://addons/diisis/editor/src/line.tscn").instantiate()
 			lines.add_child(line)
@@ -259,9 +276,11 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			line.connect("insert_line", request_add_line)
 			line.connect("delete_line", request_delete_line)
 			line.connect("move_to", move_line_to)
+			instanced_new_line = true
 		else:
 			line = lines.get_child(at_index)
 			line.deserialize({})
+			instanced_new_line = false
 		
 		if line_data != {}:
 			line.deserialize(line_data)
@@ -270,11 +289,12 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			line.add_choice_item(0)
 			line.add_choice_item(1)
 		
-		for l : Line in lines.get_children():
-			if l.line_type == DIISIS.LineType.Folder:
-				var range : Vector2 = l.get_folder_range_v()
-				if at_index > range.x and at_index <= range.y:
-					l.change_folder_range(1)
+		if instanced_new_line:
+			for l : Line in lines.get_children():
+				if l.line_type == DIISIS.LineType.Folder:
+					var range : Vector2 = l.get_folder_range_v()
+					if at_index > range.x and at_index <= range.y:
+						l.change_folder_range(1)
 		
 		if change_line_references:
 			var to = Pages.editor.get_current_page().get_line_count() - 1 if Pages.editor.get_current_page() else indices.max()
@@ -285,6 +305,10 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			to,
 			 + 1
 			)
+	
+	if added_new_line:
+		await get_tree().process_frame
+		find_child("ScrollContainer").scroll_vertical = find_child("ScrollContainer").get_v_scroll_bar().max_value
 
 func add_line(at_index:int, data := {}):
 	add_lines([at_index], {at_index: data})
@@ -477,8 +501,9 @@ func update_incoming_references_to_page():
 	var ref_label : RichTextLabel = find_child("IncomingReferences")
 	ref_label.visible = ref_count != 0
 	if ref_count == 1:
-		ref_label.text = "[url=goto-%s]%s[/url] " % [refs[0], refs[0]]
-		ref_label.tooltip_text = "%s points here. Click to go there." % refs[0]
+		var page : String = refs[0]
+		ref_label.text = "[url=goto-%s]%s[/url] " % [page, page]
+		ref_label.tooltip_text = "%s points here. Click to go there.\nPage Key: %s" % [page, Pages.get_page_key(int(page))]
 	else:
 		var bars := ""
 		for i in min(ref_count, 8):
@@ -516,6 +541,8 @@ func update():
 			if folder_range_i == 0:
 				continue
 			for j in range(idx, idx + folder_range_i + 1):
+				if j >= lines.get_child_count():
+					break
 				lines.get_child(j).change_indent_level(1)
 				if j > idx: # if beyond the folder itself
 					lines.get_child(j).visible = is_folder_content_visible
@@ -525,6 +552,8 @@ func update():
 		node.set_page_view(Pages.editor.get_selected_page_view())
 	
 	find_child("Facts").update()
+	
+	update_incoming_references()
 	
 
 func _on_next_line_edit_value_changed(value: float) -> void:
@@ -619,3 +648,17 @@ func _on_incoming_references_meta_clicked(meta: Variant) -> void:
 		Pages.editor.view_incoming_references(number)
 	else:
 		Pages.editor.goto_with_meta(meta)
+
+
+func flash_highlight(address:String):
+	if DiisisEditorUtil.block_next_flash_highlight:
+		DiisisEditorUtil.block_next_flash_highlight = false
+		return
+	var parts = DiisisEditorUtil.get_split_address(address)
+	match parts.size():
+		1:
+			DiisisEditorUtil.flash_highlight(%GoToHighlight)
+		2:
+			get_line(parts[1]).flash_highlight()
+		3:
+			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()

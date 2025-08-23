@@ -7,6 +7,7 @@ var deserialized_loopback_page := 0
 var deserialized_loopback_line := 0
 var deserialized_line_index := 0
 
+var id : String
 var text_id_enabled : String
 var text_id_disabled : String
 
@@ -19,6 +20,7 @@ enum EditingView{
 }
 
 func init() -> void:
+	%GoToHighlight.self_modulate.a = 0
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("Conditionals").init()
@@ -37,6 +39,7 @@ func init() -> void:
 	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func deserialize(data:Dictionary):
+	id = data.get("id", Pages.get_new_id())
 	text_id_enabled = data.get("text_id_enabled", Pages.get_new_id())
 	text_id_disabled = data.get("text_id_disabled", Pages.get_new_id())
 	var jump_target_page : int = data.get("target_page", 0)
@@ -94,6 +97,8 @@ func update_default_appearance():
 	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
 
 func serialize() -> Dictionary:
+	if not id:
+		id = Pages.get_new_id()
 	if not text_id_enabled:
 		text_id_enabled = Pages.get_new_id()
 	if not text_id_disabled:
@@ -104,11 +109,11 @@ func serialize() -> Dictionary:
 	
 	var jump_page_target_page : int = find_child("PageSelect").value
 	var jump_page_target_line : int = find_child("LineSelect").value
-	
 	Pages.save_text(text_id_enabled, find_child("LineEditEnabled").text)
 	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
 	
 	return {
+		"id" : id,
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
 		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
@@ -165,7 +170,6 @@ func update_fragile():
 func get_address() -> String:
 	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
 
-# TODO: Add enabled / disabled icons
 func set_page_view(view:DiisisEditor.PageView):
 	var default_container : Control = get_default_line_container()
 	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")
@@ -192,7 +196,8 @@ func set_page_view(view:DiisisEditor.PageView):
 	update_default_appearance()
 	
 
-func _on_page_select_value_changed(value: float) -> void:
+func _on_target_value_changed(value:float) -> void:
+	await get_tree().process_frame
 	update()
 
 func update():
@@ -229,7 +234,20 @@ func update():
 		find_child("LoopbackLineSelect").value = deserialized_loopback_page
 	if deserialized_loopback_page > find_child("LoopbackPageSelect").value:
 		find_child("LoopbackPageSelect").value = deserialized_loopback_page
+	if Pages.text_hacks_by_id.has(text_id_enabled):
+		var new_text : String = Pages.text_hacks_by_id.get(text_id_enabled)
+		find_child("LineEditEnabled").text = new_text
+		Pages.text_hacks_by_id.erase(text_id_enabled)
+		Pages.save_text(text_id_enabled, new_text)
+	if Pages.text_hacks_by_id.has(text_id_disabled):
+		var new_text : String = Pages.text_hacks_by_id.get(text_id_disabled)
+		find_child("LineEditDisabled").text = Pages.text_hacks_by_id.get(text_id_disabled)
+		Pages.text_hacks_by_id.erase(text_id_disabled)
+		Pages.save_text(text_id_disabled, new_text)
 	
+
+func update_incoming_references():
+	await get_tree().process_frame
 	Pages.editor.get_current_page().update_incoming_references()
 
 func set_selected(value:bool):
@@ -431,3 +449,8 @@ func set_editing_view(value:int):
 		EditingView.Invisible:
 			find_child("ChoiceEdit").visible = false
 			find_child("ChoiceLabel").visible = false
+
+
+func flash_highlight():
+	DiisisEditorUtil.flash_highlight(%GoToHighlight)
+	

@@ -47,7 +47,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_kqqtk")
 text = "XXX"
 icon = ExtResource("1_lc617")
 script = ExtResource("1_aukyl")
-options = ["a", "b"]
+options = Array[String](["a", "b"])
 
 [node name="Window" type="Window" parent="."]
 initial_position = 2

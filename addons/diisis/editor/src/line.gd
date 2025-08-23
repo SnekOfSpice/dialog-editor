@@ -12,6 +12,7 @@ signal move_to (child, idx)
 signal delete_line
 
 func init() -> void:
+	%GoToHighlight.self_modulate.a = 0
 	grab_focus()
 	find_child("Header").init()
 	find_child("Conditionals").init()
@@ -140,7 +141,7 @@ func serialize() -> Dictionary:
 	
 	var data = {}
 	
-	data["line_type"] = line_type
+	data["line_type"] = int(line_type)
 	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
@@ -149,7 +150,7 @@ func serialize() -> Dictionary:
 	data["meta.line_index"] = get_index()
 	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
-	data["meta.indent_level"] = indent_level
+	data["meta.indent_level"] = int(indent_level)
 	data["meta.selector"] = find_child("AddressSelectActionContainer").serialize()
 	data["address"] = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
 	data["id"] = id
@@ -187,7 +188,13 @@ func deserialize(data: Dictionary):
 		DIISIS.LineType.Text:
 			find_child("TextContent").deserialize(data.get("content", {}))
 		DIISIS.LineType.Choice:
-			find_child("ChoiceContainer").deserialize(data.get("content", {}))
+			var content : Dictionary = data.get("content", {})
+			if Pages.editor.is_importing():
+				var choice_order : Array = content.get("choice_order", [])
+				if not choice_order.is_empty():
+					content["choices"] = Pages.sort_choices(choice_order, content.get("choices"))
+				
+			find_child("ChoiceContainer").deserialize(content)
 		DIISIS.LineType.Instruction:
 			find_child("InstructionContainer").deserialize(data.get("content", {}))
 		DIISIS.LineType.Folder:
@@ -346,3 +353,6 @@ func _on_delete_button_mouse_exited() -> void:
 	if not is_instance_valid(find_child("SkipCheckBox")):
 		return
 	set_skip(find_child("SkipCheckBox").button_pressed)
+
+func flash_highlight():
+	DiisisEditorUtil.flash_highlight(%GoToHighlight)

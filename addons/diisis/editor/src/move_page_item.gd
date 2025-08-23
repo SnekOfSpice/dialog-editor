@@ -8,8 +8,17 @@ signal move_page (page_number, current_n, new_n)
 signal go_to(page_number)
 signal on_direct_swap (page_number)
 
-func _ready() -> void:
+func init() -> void:
 	find_child("DirectStartedLabel").text = ""
+	if Pages.page_data.get(number).get("skip", false):
+		modulate.a = 0.6
+		%SkipTexture.visible = true
+	else:
+		modulate.a = 1
+		%SkipTexture.visible = false
+
+func get_number():
+	return number
 
 func set_number(n: int):
 	if not Pages.page_data.keys().has(n):
@@ -32,7 +41,7 @@ func set_number(n: int):
 	find_child("AddressModeButton").set_mode(Pages.page_data.get(n).get("meta.address_mode_next", Pages.default_address_mode_pages))
 	find_child("AddressModeButton").visible = not terminates
 	
-	find_child("WordCountLabel").text = str(Pages.get_word_count_on_page_approx(number))
+	find_child("WordCountLabel").text = str(Pages.get_count_on_page(number, true).x)
 
 func get_next() -> int:
 	return next

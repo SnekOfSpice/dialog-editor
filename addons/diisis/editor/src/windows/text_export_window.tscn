@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b81gsltqnausa"]
+
+[ext_resource type="PackedScene" uid="uid://cydqb83ch6oxk" path="res://addons/diisis/editor/src/windows/text_export_container.tscn" id="1_02dyu"]
+[ext_resource type="Script" uid="uid://cfidxoh0y47y2" path="res://addons/diisis/editor/src/windows/text_export_window.gd" id="1_ohqg8"]
+
+[node name="TextExportWindow" type="Window"]
+title = "Text Export"
+script = ExtResource("1_ohqg8")
+
+[node name="TextExportContainer" parent="." instance=ExtResource("1_02dyu")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="fd_closed" from="TextExportContainer" to="." method="_on_text_export_container_fd_closed"]
+[connection signal="fd_opened" from="TextExportContainer" to="." method="_on_text_export_container_fd_opened"]

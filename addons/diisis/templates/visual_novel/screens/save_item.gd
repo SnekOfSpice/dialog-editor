@@ -17,7 +17,7 @@ func set_slot(slot:int):
 	
 	find_child("Slot").text = str("Slot ", slot + 1)
 	
-	var data_path := Options.get_savedata_path(save_slot)
+	var data_path : String = Options.get_savedata_path(save_slot)
 	if ResourceLoader.exists(data_path):
 		var time = FileAccess.get_modified_time(data_path)
 		var label = Time.get_datetime_string_from_unix_time(time, true)

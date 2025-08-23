@@ -27,6 +27,8 @@ func _on_close_requested() -> void:
 func _on_close_dialog_canceled() -> void:
 	$CloseDialog.hide()
 
+func set_tab(tab:int) -> void:
+	$HandlerSetupContainer.set_tab(tab)
 
 func _on_close_dialog_confirmed() -> void:
 	always_on_top = true

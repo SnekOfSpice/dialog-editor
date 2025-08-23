@@ -72,6 +72,10 @@ func display_results(search:String):
 	
 	find_child("ResultCountLabel").text = "%s results" % result_count
 	
+	
+	if item_list.item_count == 0:
+		return
+	
 	var reselected_text := false
 	for idx in item_list.item_count:
 		if item_list.get_item_text(idx) == selection_text_before:
@@ -146,6 +150,9 @@ func _on_search_button_pressed() -> void:
 func update_query(query:String) -> void:
 	last_search_query = query
 	display_results(last_search_query)
+	var page_only : bool = find_child("CurrentPageOnlyCheckBox").button_pressed
+	if page_only:
+		_on_current_page_only_check_box_toggled(true)
 
 func _on_item_list_item_selected(index: int) -> void:
 	var address = find_child("ItemList").get_item_text(index)
@@ -231,3 +238,25 @@ func _on_result_label_meta_clicked(meta: Variant) -> void:
 	elif meta.begins_with("fact/"):
 		var fact = meta.trim_prefix("fact/")
 		Pages.editor.open_facts_window(fact)
+
+
+func _on_current_page_only_check_box_toggled(toggled_on: bool) -> void:
+	var item_list:ItemList = find_child("ItemList")
+	if toggled_on:
+		var i := 0
+		var count := item_list.item_count
+		var category_count := 0
+		while i < count:
+			var item_text := item_list.get_item_text(i)
+			if item_text.begins_with(str(Pages.editor.get_current_page_number(), ".")):
+				i += 1
+				continue
+			if item_text.begins_with("--"):
+				i += 1
+				category_count += 1
+				continue
+			item_list.remove_item(i)
+			count = item_list.item_count
+		find_child("ResultCountLabel").text = "%s results" % (item_list.item_count - category_count)
+	else:
+		_on_search_button_pressed()

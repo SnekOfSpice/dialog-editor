@@ -37,6 +37,11 @@ func _on_about_to_popup() -> void:
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
 		mode = config.get_value("editor", "mode", mode)
+		
+		for prop : String in Pages.PREFERENCE_PROPS:
+			config.set_value("editor", prop, Pages.get(prop))
+			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+		
 	
 	await get_tree().process_frame
 	update_content_scale(1.0)
@@ -115,6 +120,9 @@ func save_preferences():
 	config.set_value("editor", "position", position)
 	config.set_value("editor", "mode", mode)
 	
+	for prop : String in Pages.PREFERENCE_PROPS:
+		config.set_value("editor", prop, Pages.get(prop))
+	
 	config.save(PREFERENCE_PATH)
 
 func close_editor():
@@ -189,6 +197,11 @@ func _on_window_factor_window_mouse_entered():
 	if not has_focus():
 		return
 	if $QuitDialog.visible:
+		return
+	if not window_factor_window:
+		return
+	window_factor_window = find_child("WindowFactorWindow")
+	if not window_factor_window:
 		return
 	window_factor_window.grab_focus()
 
