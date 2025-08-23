@@ -3,9 +3,6 @@ extends Control
 
 
 func init():
-	find_child("UseDialogSyntaxCheckBox").button_pressed = Pages.use_dialog_syntax
-	find_child("LeadTimeSpinBoxSameActor").value = Pages.text_lead_time_same_actor
-	find_child("LeadTimeSpinBoxOtherActor").value = Pages.text_lead_time_other_actor
 	find_child("AddressModeButtonPage").set_mode(Pages.default_address_mode_pages)
 	
 	for child in find_child("ToggleSettings").get_children():
@@ -48,17 +45,6 @@ func init():
 		find_child("StringSettings").add_child(container)
 	
 	$TabContainer.current_tab = 0
-
-func _on_use_dialog_syntax_check_box_pressed():
-	Pages.use_dialog_syntax = find_child("UseDialogSyntaxCheckBox").button_pressed
-
-
-func _on_lead_time_spin_box_same_actor_value_changed(value):
-	Pages.text_lead_time_same_actor = value
-
-
-func _on_lead_time_spin_box_other_actor_value_changed(value):
-	Pages.text_lead_time_other_actor = value
 
 
 func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void:

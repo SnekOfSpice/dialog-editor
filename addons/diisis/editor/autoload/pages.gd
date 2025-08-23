@@ -103,7 +103,7 @@ const TOGGLE_SETTINGS := {
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
 	"silly" : "Adds a bit of visual fluff to the editor :3",
-	"first_index_as_page_reference_only" : "Pages will only treat being referenced by choices when they target index 0 if on, or any line on the page if off.",
+	"first_index_as_page_reference_only" : "If enabled, Pages will only consider being referenced by choices when those choices target line index 0. If disabled, the page indexes all choices that point to any line on it.",
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
 }
 var save_on_play := true
@@ -112,7 +112,7 @@ var silly := true
 var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
 var first_index_as_page_reference_only := true
-var validate_function_calls_on_focus := true
+var validate_function_calls_on_focus := false
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}

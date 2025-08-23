@@ -834,6 +834,8 @@ func _on_setup_id_pressed(id: int) -> void:
 			open_popup($Popups.get_node("FactsPopup"), true)
 		6: # pages
 			open_popup($Popups.get_node("MovePagePopup"))
+		8:
+			open_window_by_string("DialogConfigWindow")
 
 #endregion
 
