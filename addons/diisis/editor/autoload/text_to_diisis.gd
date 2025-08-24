@@ -238,7 +238,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 				line_data["content"] = make_folder_data(lines)
 			else:
 				line_type = DIISISGlobal.LineType.Text
-				var text_data = make_text_data(lines)
+				var text_data = make_text_data(lines, payload, actor_ingestion_override)
 				var id = line_data.get("content", {}).get("text_id", Pages.get_new_id())
 				line_data["content"] = {"text_id" : id}
 				Pages.save_text(id, text_data.get("text"))
