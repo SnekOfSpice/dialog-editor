@@ -271,7 +271,7 @@ func read_page(starting_page_index: int, starting_line_index := 0):
 	page_index = starting_page_index
 	lines = page_data.get(page_index).get("lines")
 	max_line_index_on_page = lines.size() - 1
-	
+	page_id = page_data.get("id", "")
 	line_index = starting_line_index
 	
 	var page_bound_facts : Dictionary = page_data.get(page_index).get("facts", {}).get("fact_data_by_name", {})
@@ -470,6 +470,9 @@ func go_back():
 			line_reader._go_to_end_of_dialog_line()
 		address_trail_index = address_trail.size() - 1
 
+var page_id : String
+var line_id : String
+
 func read_line(index: int):
 	if lines.size() == 0:
 		push_warning(str("No lines defined for page ", page_index))
@@ -487,7 +490,10 @@ func read_line(index: int):
 	var new_address := str(page_index, ".", line_index)
 
 	address_trail.append(str(page_index, ".", line_index))
-	emit_signal("read_new_line", lines[index])
+	
+	var line_data : Dictionary = lines[index]
+	line_id = line_data.get("id", "")
+	emit_signal("read_new_line", line_data)
 	
 
 func read_next_line(finished_line_index: int):

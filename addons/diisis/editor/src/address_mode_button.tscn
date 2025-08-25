@@ -10,6 +10,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 tooltip_text = "ADR: target an address itself, aka don't adjust page indices. !! may null !!
 OBJ: target an object at an address, aka adjust page indices."
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("1_4lfae")
 script = ExtResource("1_i1bym")
 

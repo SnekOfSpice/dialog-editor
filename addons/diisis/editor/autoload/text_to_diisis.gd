@@ -23,6 +23,7 @@ func format_text_from_file(path:String) -> String:
 
 func format_text(text:String, head_replacer_overrides := []) -> String:
 	text = text.replace("\r", "\n")
+	
 	var lines := text.split("\n", false)
 	
 	if not lines.has(str("LINE")):
@@ -48,14 +49,19 @@ func format_text(text:String, head_replacer_overrides := []) -> String:
 		head_replacers = _build_replacers(head)
 	else:
 		head_replacers = head_replacer_overrides
+		
 	
 	var true_content := []
 	for line : String in content:
 		var replaced := false
 		for replacer : Array in head_replacers:
 			var key : String = replacer[0]
+			var alt_key := ""
+			var can_use_space_suffix := not Pages.require_colons_on_actor_ingestion
+			if can_use_space_suffix:
+				alt_key = key.replace(":", "")
 			var value : String = replacer[1]
-			if not line.begins_with(key):
+			if not (line.begins_with(key) or (line.begins_with(alt_key) and can_use_space_suffix)):
 				var raw_value : = value.trim_prefix("[]>")
 				raw_value = raw_value.trim_suffix(":")
 				if line.begins_with(raw_value + ":") or line.begins_with(raw_value + "{"):
@@ -64,10 +70,14 @@ func format_text(text:String, head_replacer_overrides := []) -> String:
 					true_content.append(line)
 					break
 				continue
-			line = line.trim_prefix(key)
-			if line.begins_with(":"):
-				value = value.trim_suffix(":")
-			line = str(value, line)
+			if line.begins_with(key):
+				line = line.trim_prefix(key)
+				if line.begins_with(":"):
+					value = value.trim_suffix(":")
+				line = str(value, line)
+			elif line.begins_with(alt_key) and can_use_space_suffix:
+				line = line.trim_prefix(alt_key)
+				line = str(value, line)
 			true_content.append(line)
 			replaced = true
 			break

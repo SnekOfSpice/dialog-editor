@@ -153,6 +153,7 @@ self_modulate = Color(1, 1, 1, 0.815686)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 3
 theme_override_fonts/normal_font = ExtResource("4_v77o4")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_v77o4")
 bbcode_enabled = true

@@ -37,6 +37,7 @@ const PREFERENCE_PROPS := [
 	"validate_function_calls_on_focus",
 	"shader",
 	"default_address_mode_pages",
+	"require_colons_on_actor_ingestion"
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -105,6 +106,7 @@ const TOGGLE_SETTINGS := {
 	"silly" : "Adds a bit of visual fluff to the editor :3",
 	"first_index_as_page_reference_only" : "If enabled, Pages will only consider being referenced by choices when those choices target line index 0. If disabled, the page indexes all choices that point to any line on it.",
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
+	"require_colons_on_actor_ingestion" : "If enabled, requires ingested dialogue to start with key + \":\". If disabled, a trailing space is fine too but might lead to unintended syntax if you have a dialog line starting with \"a \" (article) or \"n \"(shortform of &)."
 }
 var save_on_play := true
 var warn_on_fact_deletion := true
@@ -113,6 +115,7 @@ var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
 var first_index_as_page_reference_only := true
 var validate_function_calls_on_focus := false
+var require_colons_on_actor_ingestion := true
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
