@@ -115,7 +115,7 @@ var show_facts_buttons := true
 var collapse_conditional_controls_by_default := true
 var first_index_as_page_reference_only := true
 var validate_function_calls_on_focus := false
-var require_colons_on_actor_ingestion := true
+var require_colons_on_actor_ingestion := false
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
