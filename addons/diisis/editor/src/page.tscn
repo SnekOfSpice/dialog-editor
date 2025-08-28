@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ddfoy8nqykk88" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png" id="3_m7kjo"]
 [ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="4_rsy28"]
 [ext_resource type="FontVariation" uid="uid://bcys5sythdtnk" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_bold.tres" id="4_v77o4"]
+[ext_resource type="PackedScene" uid="uid://dn3865weo5t6o" path="res://addons/diisis/editor/src/title_line_edit.tscn" id="5_jp831"]
 [ext_resource type="Texture2D" uid="uid://bl7wslwydkk7g" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_page.png" id="6_yg0hh"]
 [ext_resource type="PackedScene" uid="uid://bixawifxp2bsf" path="res://addons/diisis/editor/src/go_to_highlight.tscn" id="10_3lfos"]
 
@@ -21,8 +22,6 @@ border_color = Color(0.09, 0.09, 0.09, 0.764706)
 border_blend = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v77o4"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yg0hh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gmiuk"]
 
@@ -90,12 +89,6 @@ layout_mode = 2
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Info/PageKeyEditContainer"]
 layout_mode = 2
 
-[node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/Info/PageKeyEditContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 4
-text = "edit page key"
-
 [node name="Number" type="Label" parent="PanelContainer/Info/PageKeyEditContainer"]
 layout_mode = 2
 tooltip_text = "Page index (address[0])"
@@ -108,19 +101,12 @@ visible = false
 layout_mode = 2
 text = "|"
 
-[node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/Info/PageKeyEditContainer"]
+[node name="PageKeyLineEdit" parent="PanelContainer/Info/PageKeyEditContainer" node_paths=PackedStringArray("parent_container") instance=ExtResource("5_jp831")]
 layout_mode = 2
-size_flags_vertical = 4
 tooltip_text = "Edit page key (click or Ctrl+E)
 [Escape] to cancel
 [Enter] to save"
-theme_override_colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
-theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 16
-theme_override_styles/read_only = SubResource("StyleBoxEmpty_yg0hh")
-expand_to_text_length = true
+parent_container = NodePath("..")
 
 [node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
 self_modulate = Color(1, 1, 1, 0.737255)
@@ -226,11 +212,12 @@ mouse_filter = 2
 [connection signal="toggled" from="PanelContainer/Info/SkipCheckBox" to="." method="set_skip"]
 [connection signal="meta_clicked" from="PanelContainer/Info/IncomingReferences" to="." method="_on_incoming_references_meta_clicked"]
 [connection signal="toggled" from="PanelContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]
-[connection signal="toggled" from="PanelContainer/Info/PageKeyEditContainer/PageKeyEditButton" to="." method="_on_page_key_edit_button_toggled"]
+[connection signal="editing_cancelled" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_editing_cancelled"]
+[connection signal="editing_set" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_editing_set"]
 [connection signal="focus_exited" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_focus_exited"]
-[connection signal="gui_input" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_gui_input"]
-[connection signal="mouse_entered" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_mouse_entered"]
-[connection signal="mouse_exited" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_mouse_exited"]
+[connection signal="request_save" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_request_save"]
+[connection signal="request_start_editing" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_request_start_editing"]
+[connection signal="request_text_before_editing" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_request_text_before_editing"]
 [connection signal="text_changed" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_changed"]
 [connection signal="text_submitted" from="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit" to="." method="_on_page_key_line_edit_text_submitted"]
 [connection signal="toggled" from="PanelContainer/Info/TerminateCheck" to="." method="_on_terminate_check_toggled"]

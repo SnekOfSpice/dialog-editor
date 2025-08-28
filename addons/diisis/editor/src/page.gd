@@ -7,11 +7,12 @@ var next := 1
 var lines:Node
 var id : String
 
-@onready var page_key_line_edit : LineEdit = find_child("PageKeyLineEdit")
+var page_key_line_edit : TitleLineEdit
 
 signal request_delete()
 
 func init(n:=number):
+	page_key_line_edit = find_child("PageKeyLineEdit")
 	%GoToHighlight.self_modulate.a = 0
 	var data = Pages.page_data.get(n)
 	number = n
@@ -146,29 +147,15 @@ func enable_page_key_edit(value: bool):
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
 	else:
-		find_child("PageKeyEditButton").grab_focus()
+		find_child("SkipCheckBox").grab_focus()
 
 func save_page_key_from_line_edit():
 	save()
 	enable_page_key_edit(false)
-	find_child("PageKeyEditButton").button_pressed = false
 
 
-func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
-	set_editing_page_key(button_pressed)
-
-var page_key_before_edit := ""
-func set_editing_page_key(value:bool):
-	if value:
-		if not page_key_line_edit.editable:
-			page_key_before_edit = get_page_key()
-	else:
-		save_page_key_from_line_edit()
-	enable_page_key_edit(value)
 
 
-func _on_page_key_line_edit_text_changed(new_text: String) -> void:
-	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
 
 func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = lines.get_child(at_index)
@@ -584,11 +571,12 @@ func _on_cancel_deletion_button_pressed() -> void:
 	find_child("DeletePromptContainer").visible = false
 
 
+
 func _on_page_key_line_edit_text_submitted(new_text: String) -> void:
 	try_save_page_key(new_text)
 
 func try_save_page_key(new_key):
-	if Pages.key_exists(new_key) and page_key_before_edit != new_key:
+	if Pages.key_exists(new_key) and page_key_line_edit.text_before_editing != new_key:
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
 		if block_next_duplicate_key_warning:
@@ -599,31 +587,12 @@ func try_save_page_key(new_key):
 	save_page_key_from_line_edit()
 
 
-func _on_page_key_line_edit_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if not page_key_line_edit.editable:
-				set_editing_page_key(true)
-	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_ESCAPE:
-			page_key_line_edit.text = page_key_before_edit
-			set_editing_page_key(false)
 
 
 func _on_page_key_line_edit_focus_exited() -> void:
 	try_save_page_key(page_key_line_edit.text)
 
 
-func _on_page_key_line_edit_mouse_entered() -> void:
-	find_child("PageKeyEditContainer").custom_minimum_size.x = find_child("PageKeyEditContainer").size.x
-	page_key_line_edit.add_theme_stylebox_override("normal", load("uid://wygkuwnsf32l"))
-	page_key_line_edit.add_theme_stylebox_override("read_only", load("uid://wygkuwnsf32l"))
-
-
-func _on_page_key_line_edit_mouse_exited() -> void:
-	find_child("PageKeyEditContainer").custom_minimum_size.x = 0
-	page_key_line_edit.remove_theme_stylebox_override("normal")
-	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())
 
 
 func _on_next_key_meta_clicked(meta: Variant) -> void:
@@ -662,3 +631,17 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
+
+
+
+func _on_page_key_line_edit_editing_set(value: bool) -> void:
+	enable_page_key_edit(value)
+
+
+func _on_page_key_line_edit_request_save() -> void:
+	save_page_key_from_line_edit()
+
+
+
+func _on_page_key_line_edit_request_text_before_editing() -> void:
+	page_key_line_edit.text_before_editing = get_page_key()
