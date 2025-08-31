@@ -1,6 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://cfwk1hhwqrp2n"]
+[gd_scene load_steps=3 format=3 uid="uid://cfwk1hhwqrp2n"]
 
 [ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_or1s3"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0.129412, 0.0980392, 0.0588235, 0.686275)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.501961, 0.294118, 0.368627, 0.796078)
+border_blend = true
 
 [node name="Control" type="VBoxContainer"]
 anchors_preset = 15
@@ -66,6 +79,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_or1s3")
 
 [node name="Label" type="Label" parent="HBoxContainer/HBoxContainer/SpeakerNotice"]
 layout_mode = 2
