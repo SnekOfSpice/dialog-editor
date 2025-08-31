@@ -51,6 +51,11 @@ text = "Clear Search"
 auto_translate_mode = 1
 layout_mode = 2
 
+[node name="Label2" type="Label" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "Add:"
+
 [node name="CreateDDNameTextEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -73,6 +78,7 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
+[connection signal="visibility_changed" from="TabContainer/Definitions" to="." method="_on_definitions_visibility_changed"]
 [connection signal="text_changed" from="TabContainer/Definitions/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
 [connection signal="pressed" from="TabContainer/Definitions/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
 [connection signal="text_changed" from="TabContainer/Definitions/Controls/CreateDDContainer/CreateDDNameTextEdit" to="." method="_on_create_dd_name_text_edit_text_changed"]

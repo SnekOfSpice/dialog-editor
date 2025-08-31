@@ -86,7 +86,7 @@ func go_to(address:String, discard_without_saving:=false):
 	var parts := DiisisEditorUtil.get_split_address(address)
 	# prepare current page to change
 	if Pages.editor.get_current_page():
-		Pages.editor.get_current_page().set_page_key(Pages.editor.get_current_page().find_child("PageKeyLineEdit").text)
+		Pages.editor.get_current_page().set_page_key(Pages.editor.get_current_page().get_page_key())
 		Pages.editor.get_current_page().save()
 		Pages.editor.get_current_page().enable_page_key_edit(false)
 	

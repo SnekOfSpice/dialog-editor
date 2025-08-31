@@ -14,14 +14,20 @@ func get_string_contents(filter:="") -> String:
 		search_content += option_contents
 	return search_content
 
+func update_speaker_label():
+	var title : String = find_child("TitleLabel").text
+	var is_speaker : bool = Pages.dropdown_title_for_dialog_syntax == title
+	%ReplaceSpeakersCheckBox.visible = is_speaker
+	%SpeakerNotice.visible = is_speaker
+
 func init(title:String):
 	find_child("TitleLabel").text = title
 	find_child("LineEdit").text = title
 	find_child("EditContainer").visible = false
 	find_child("OptionsContainer").visible = false
-	find_child("ReplaceSpeakersCheckBox").visible = Pages.dropdown_title_for_dialog_syntax == title
+	update_speaker_label()
 	find_child("ReplaceInTextCheckBox").button_pressed = true
-	find_child("ReplaceSpeakersCheckBox").button_pressed = true
+	%ReplaceSpeakersCheckBox.button_pressed = true
 	find_child("Parameters").visible = false
 	find_child("DuplicateOptionsLabel").visible = false
 	find_child("DeleteParameters").visible = false
@@ -31,6 +37,9 @@ func init(title:String):
 func _on_edit_button_pressed() -> void:
 	find_child("EditContainer").visible = true
 	find_child("DisplayContainer").visible = false
+	find_child("LineEdit").grab_focus()
+	find_child("LineEdit").caret_column = find_child("LineEdit").text.length()
+	
 
 
 func _on_save_title_button_pressed() -> void:
@@ -53,7 +62,7 @@ func _on_discard_title_button_pressed() -> void:
 
 
 func _on_line_edit_text_changed(new_text: String) -> void:
-	find_child("SaveOptionsButton").disabled = find_child("TitleLabel").text != find_child("LineEdit").text
+	set_save_options_button_disabled((find_child("TitleLabel").text != find_child("LineEdit").text) or find_child("EditContainer").visible)
 	if Pages.is_new_dropdown_title_invalid(new_text, find_child("TitleLabel").text):
 		find_child("SaveTitleButton").disabled = true
 		return
@@ -79,10 +88,10 @@ func _on_dropdown_options_text_text_changed() -> void:
 				break
 			args.append(arg)
 	if has_duplicate:
-		find_child("SaveOptionsButton").disabled = true
+		set_save_options_button_disabled(true)
 		find_child("DuplicateOptionsLabel").visible = true
 		return
-	find_child("SaveOptionsButton").disabled = find_child("TitleLabel").text != find_child("LineEdit").text
+	set_save_options_button_disabled((find_child("TitleLabel").text != find_child("LineEdit").text) or find_child("EditContainer").visible)
 	find_child("DuplicateOptionsLabel").visible = false
 	
 	if "".join(args) == "".join(dropdown_options):
@@ -94,12 +103,20 @@ func _on_dropdown_options_text_text_changed() -> void:
 	
 
 func _on_discard_options_button_pressed() -> void:
+	var text_edit : TextEdit = find_child("DropdownOptionsText")
+	var col = text_edit.get_caret_column()
+	var line = text_edit.get_caret_line()
+	
 	find_child("DropdownOptionsText").text = "\n".join(dropdown_options)
 	find_child("ExpandButton").disabled = false
+	_on_dropdown_options_text_text_changed()
+	
+	text_edit.set_caret_column(col)
+	text_edit.set_caret_line(line)
 
 
 func _on_save_options_button_pressed() -> void:
-	var replace_speaker : bool = find_child("ReplaceSpeakersCheckBox").button_pressed
+	var replace_speaker : bool = %ReplaceSpeakersCheckBox.button_pressed
 	var replace_in_text : bool = find_child("ReplaceInTextCheckBox").button_pressed
 	var entered_args = find_child("DropdownOptionsText").text.split("\n")
 	var args := []
@@ -119,8 +136,11 @@ func _on_save_options_button_pressed() -> void:
 
 
 func _on_edit_container_visibility_changed() -> void:
-	find_child("SaveOptionsButton").disabled = find_child("EditContainer").visible
+	set_save_options_button_disabled(find_child("EditContainer").visible)
 
+func set_save_options_button_disabled(value:bool):
+	find_child("SaveOptionsButton").disabled = value
+	find_child("SaveTitleWarning").visible = value
 
 func _on_options_container_visibility_changed():
 	if find_child("OptionsContainer").visible:
@@ -148,7 +168,7 @@ func set_list_size(s: Vector2):
 
 
 func _on_replace_in_text_check_box_toggled(toggled_on: bool) -> void:
-	find_child("ReplaceSpeakersCheckBox").disabled = not toggled_on
+	%ReplaceSpeakersCheckBox.disabled = not toggled_on
 
 
 func _on_save_parameters_button_pressed() -> void:
@@ -166,3 +186,15 @@ func _on_delete_button_pressed() -> void:
 
 func _on_delete_parameters_button_pressed() -> void:
 	find_child("DeleteParameters").visible = not find_child("DeleteParameters").visible
+
+
+func _on_line_edit_text_submitted(_new_text: String) -> void:
+	if find_child("SaveTitleButton").disabled:
+		return
+	_on_save_title_button_pressed()
+
+
+func _on_line_edit_gui_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			_on_discard_title_button_pressed()

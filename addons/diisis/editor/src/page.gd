@@ -7,12 +7,11 @@ var next := 1
 var lines:Node
 var id : String
 
-var page_key_line_edit : TitleLineEdit
+@onready var page_key_line_edit : LineEdit = find_child("PageKeyLineEdit")
 
 signal request_delete()
 
 func init(n:=number):
-	page_key_line_edit = find_child("PageKeyLineEdit")
 	%GoToHighlight.self_modulate.a = 0
 	var data = Pages.page_data.get(n)
 	number = n
@@ -31,10 +30,15 @@ func get_next():
 	return next
 
 func get_page_key() -> String:
-	return str(find_child("PageKeyLineEdit").text)
+	var line_edit_text : String = find_child("PageKeyLineEdit").text
+	if is_change_valid(line_edit_text):
+		return line_edit_text
+	else:
+		return page_key_before_edit
 
 func set_page_key(value:String):
 	find_child("PageKeyLineEdit").text = value
+	page_key_before_edit = value
 
 func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
@@ -91,6 +95,7 @@ func deserialize(data: Dictionary):
 	id = data.get("id", Pages.get_new_id())
 	
 	update_incoming_references_to_page()
+	update_input_validity(true)
 	
 	await get_tree().process_frame
 	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
@@ -147,14 +152,48 @@ func enable_page_key_edit(value: bool):
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
 	else:
-		find_child("SkipCheckBox").grab_focus()
+		find_child("PageKeyEditButton").grab_focus()
 
 func save_page_key_from_line_edit():
 	save()
 	enable_page_key_edit(false)
+	find_child("PageKeyEditButton").button_pressed = false
 
 
+func _on_page_key_edit_button_toggled(button_pressed: bool) -> void:
+	set_editing_page_key(button_pressed)
 
+var page_key_before_edit := ""
+func set_editing_page_key(value:bool):
+	if value:
+		if not page_key_line_edit.editable:
+			page_key_before_edit = get_page_key()
+	else:
+		save_page_key_from_line_edit()
+	enable_page_key_edit(value)
+
+func is_change_valid(text : String) -> bool:
+	var exists : bool = Pages.key_exists(text)
+	# THIS SHIT?? MAYBE??
+	var page_number_of_text : int = Pages.get_page_number_by_key(text)
+	var invalid := exists and page_number_of_text != number
+	
+	return not invalid
+
+
+func _on_page_key_line_edit_text_changed(new_text: String) -> void:
+	var page_number_of_text : int = Pages.get_page_number_by_key(new_text)
+	update_input_validity(is_change_valid(new_text), "Key already exists at page %s" % page_number_of_text)
+	#find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
+
+func update_input_validity(is_valid:bool, warning_text:="") -> void:
+	if is_valid:
+		%PageKeyLineEdit.add_theme_color_override("font_color", Color("#ffffff"))
+		%PageKeyWarning.visible = false
+	else:
+		%PageKeyLineEdit.add_theme_color_override("font_color", Color("#bbbbbb"))
+		%PageKeyWarning.text = warning_text
+		%PageKeyWarning.visible = true
 
 
 func get_lines_to_delete(at_index) -> Array[Line]:
@@ -571,12 +610,11 @@ func _on_cancel_deletion_button_pressed() -> void:
 	find_child("DeletePromptContainer").visible = false
 
 
-
 func _on_page_key_line_edit_text_submitted(new_text: String) -> void:
 	try_save_page_key(new_text)
 
 func try_save_page_key(new_key):
-	if Pages.key_exists(new_key) and page_key_line_edit.text_before_editing != new_key:
+	if Pages.key_exists(new_key) and page_key_before_edit != new_key:
 		page_key_line_edit.grab_focus()
 		page_key_line_edit.caret_column = page_key_line_edit.text.length()
 		if block_next_duplicate_key_warning:
@@ -587,12 +625,31 @@ func try_save_page_key(new_key):
 	save_page_key_from_line_edit()
 
 
+func _on_page_key_line_edit_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if not page_key_line_edit.editable:
+				set_editing_page_key(true)
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			page_key_line_edit.text = page_key_before_edit
+			set_editing_page_key(false)
 
 
 func _on_page_key_line_edit_focus_exited() -> void:
 	try_save_page_key(page_key_line_edit.text)
 
 
+func _on_page_key_line_edit_mouse_entered() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = find_child("PageKeyEditContainer").size.x
+	page_key_line_edit.add_theme_stylebox_override("normal", load("uid://wygkuwnsf32l"))
+	page_key_line_edit.add_theme_stylebox_override("read_only", load("uid://wygkuwnsf32l"))
+
+
+func _on_page_key_line_edit_mouse_exited() -> void:
+	find_child("PageKeyEditContainer").custom_minimum_size.x = 0
+	page_key_line_edit.remove_theme_stylebox_override("normal")
+	page_key_line_edit.add_theme_stylebox_override("read_only", StyleBoxEmpty.new())
 
 
 func _on_next_key_meta_clicked(meta: Variant) -> void:
@@ -631,17 +688,3 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
-
-
-
-func _on_page_key_line_edit_editing_set(value: bool) -> void:
-	enable_page_key_edit(value)
-
-
-func _on_page_key_line_edit_request_save() -> void:
-	save_page_key_from_line_edit()
-
-
-
-func _on_page_key_line_edit_request_text_before_editing() -> void:
-	page_key_line_edit.text_before_editing = get_page_key()
