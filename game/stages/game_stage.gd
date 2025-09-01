@@ -478,3 +478,13 @@ func on_actor_name_changed(
 		actor_name = actor
 		is_name_container_visible = name_container_visible
 		return
+
+func _on_body_label_meta_hover_started(_meta: Variant) -> void:
+	meta_blocker = true
+
+func _on_body_label_meta_hover_ended(_meta: Variant) -> void:
+	meta_blocker = false
+
+
+func _on_body_label_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(str(meta))

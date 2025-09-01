@@ -199,7 +199,7 @@ custom_minimum_size = Vector2(670, 121)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-mouse_filter = 2
+mouse_filter = 1
 bbcode_enabled = true
 text = "Body Label"
 fit_content = true
@@ -328,5 +328,8 @@ grow_vertical = 2
 [connection signal="start_show_cg" from="LineReader" to="." method="_on_handler_start_show_cg"]
 [connection signal="stop_accepting_advance" from="LineReader" to="." method="_on_line_reader_stop_accepting_advance"]
 [connection signal="pressed" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/AndroidHackButton" to="." method="_on_android_hack_button_pressed"]
+[connection signal="meta_clicked" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_hover_started"]
 [connection signal="pressed" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="pressed" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
