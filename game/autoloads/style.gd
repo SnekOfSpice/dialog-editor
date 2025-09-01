@@ -29,11 +29,7 @@ const RICH_TEXT_LABEL_FONTS := [
 
 var rich_text_label_font_size_index := 0
 const RICH_TEXT_LABEL_FONT_SIZE_OFFSETS := [
-	{
-		"bold_font" : 0,
-		"bold_italics_font" : -10,
-		"italics_font" : 1,
-	},
+	{},
 	{},
 ]
 

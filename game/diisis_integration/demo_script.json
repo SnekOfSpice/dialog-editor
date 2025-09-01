@@ -1,8 +1,6 @@
 {
 	"editor": {
 		"current_page_number": 0,
-		"ingest_capitalize": false,
-		"ingest_whitespace": true,
 		"page_view": 0,
 		"text_size_id": 2
 	},
@@ -176,7 +174,7 @@
 				"from": 0.0
 			},
 			"Sound.play_sfx": {
-
+				"random_pitch": true
 			},
 			"Sound.serialize": {
 
@@ -319,7 +317,7 @@
 
 			},
 			"set_background": {
-
+				"fade_time": 0.0
 			},
 			"set_bgm": {
 
@@ -339,6 +337,12 @@
 			"set_emotion": {
 
 			},
+			"set_eye_progress": {
+
+			},
+			"set_fade_out": {
+
+			},
 			"set_name_controls": {
 				"container": null,
 				"keep_text": true
@@ -355,7 +359,7 @@
 			"set_ruby_enabled": {
 
 			},
-			"set_text_style": {
+			"set_static": {
 
 			},
 			"set_x_position": {
@@ -402,7 +406,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761419,
+		"id_counter": -9223372036854761309,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -1424,6 +1428,7 @@
 			"1754645614.175--9223372036854764369": "[]>amber{target|1}: awa\n[]>narrator{target|2}: narration\n[]>amber{target|2}: awa2\n[]>eterna{target|2}: sdfsdf\n[]>eterna{target|1}: dfgdgffghdgh",
 			"1754666419.567--9223372036854761883": "[]>amber: dfgdfhfg\n[]>amber: <ts_rel:0.1>fhjbgjdffghfghfghghjghhjk",
 			"1755780876.863--9223372036854761294": "[]>amber:test line",
+			"1756749885.620--9223372036854761450": "[]>",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,

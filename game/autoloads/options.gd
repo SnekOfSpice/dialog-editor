@@ -7,17 +7,19 @@ var music_volume := 1.0
 var sfx_volume := 1.0
 
 @export_group("DIISIS Defaults")
-@export var fullscreen := false
+@export var fullscreen := true
 @export_range(1, LineReader.MAX_TEXT_SPEED, 1) var text_speed := 201
 @export_range(0.1, 60.0, 0.1) var auto_continue_delay := 1.0
 @export var auto_continue := false
 
 var save_slot := 0
-const MAX_SAVE_SLOTS := 4
+const MAX_SAVE_SLOTS := 6
 
 
 var just_finished_game := false
 var unlocked_epilogue := false
+
+var enable_dither := true
 
 func _ready() -> void:
 	var config = ConfigFile.new()
@@ -34,6 +36,7 @@ func _ready() -> void:
 	text_speed = config.get_value("preferences", "text_speed", text_speed)
 	auto_continue_delay = config.get_value("preferences", "auto_continue_delay", auto_continue_delay)
 	auto_continue = config.get_value("preferences", "auto_continue", auto_continue)
+	enable_dither = config.get_value("preferences", "enable_dither", enable_dither)
 	set_fullscreen(config.get_value("preferences", "fullscreen", fullscreen))
 	save_slot = config.get_value("preferences", "save_slot", 0)
 	apply_font_prefs(config.get_value("preferences", "font_prefs", {}))
@@ -76,10 +79,10 @@ func store_font_prefs(prefs:Dictionary):
 
 func apply_font_prefs(prefs:Dictionary):
 	font_prefs = prefs
-	Style.set_label_font(prefs.get("label_font", 0))
-	Style.set_rich_text_label_font(prefs.get("rich_text_label_font", 0))
-	Style.set_rich_text_label_font_size(prefs.get("rich_text_label_font_size", Style.DEFAULT_RTL_FONT_SIZE))
-	Style.set_label_font_size(prefs.get("label_font_size", Style.DEFAULT_LABEL_FONT_SIZE))
+	#Style.set_label_font(prefs.get("label_font", 0))
+	#Style.set_rich_text_label_font(prefs.get("rich_text_label_font", 0))
+	#Style.set_rich_text_label_font_size(prefs.get("rich_text_label_font_size", Style.DEFAULT_RTL_FONT_SIZE))
+	#Style.set_label_font_size(prefs.get("label_font_size", Style.DEFAULT_LABEL_FONT_SIZE))
 
 func save_prefs():
 	var config = ConfigFile.new()
@@ -94,6 +97,7 @@ func save_prefs():
 	config.set_value("preferences", "fullscreen", fullscreen)
 	config.set_value("preferences", "save_slot", save_slot)
 	config.set_value("preferences", "font_prefs", font_prefs)
+	config.set_value("preferences", "enable_dither", enable_dither)
 	
 	config.set_value("state", "just_finished_game", just_finished_game)
 	config.set_value("state", "unlocked_epilogue", unlocked_epilogue)
@@ -124,17 +128,29 @@ func set_save_slot(slot : int):
 	if GameWorld.stage_root.stage == CONST.STAGE_MAIN:
 		GameWorld.stage_root.get_stage_node().set_save_slot(slot)
 
-func save_gamestate():
+func save_gamestate(grab_screenshot:=false):
 	var data_to_save := {}
 	data_to_save["Sound"] = Sound.serialize()
 	data_to_save["GameWorld"] = GameWorld.serialize()
 	data_to_save["GoBackHandler"] = GoBackHandler.serialize()
 	
+	if not GameWorld.stage_root.screenshot_to_save and grab_screenshot:
+		GameWorld.game_stage.grab_thumbnail_screenshot()
+	
 	if GameWorld.stage_root.screenshot_to_save:
-		var path := get_save_thumbnail_path()
-		GameWorld.stage_root.screenshot_to_save.save_png(path)
+		var path_thumb := get_save_thumbnail_path()
+		GameWorld.stage_root.screenshot_to_save.save_png(path_thumb)
+		
+		var path_time := get_save_time_path()
+		var file = FileAccess.open(path_time, FileAccess.WRITE)
+		file.store_string(Time.get_datetime_string_from_system(false, true))
+		file.close()
 	
 	Parser.save_parser_state(get_savedata_dir_name(), data_to_save)
+
+func get_save_time_path(slot := save_slot) -> String:
+	return str("user://time", slot, ".txt")
+
 
 func load_gamestate():
 	var game_data := Parser.load_parser_state(get_savedata_dir_name())
@@ -144,3 +160,6 @@ func load_gamestate():
 	#var character_visibilities : Dictionary= game_data.get("Game.character_visibilities", {})
 	#for c in get_tree().get_nodes_in_group("Character"):
 		#c.deserialize(character_visibilities.get(c.character_name, {}))
+
+func set_enable_dither(value:bool):
+	enable_dither = value

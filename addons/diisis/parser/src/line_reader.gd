@@ -457,8 +457,8 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if not data:
 		return
-	for actor : String in data.get("actors", []):
-		actor_config[actor] = null
+	#for actor : String in data.get("actors", []):
+		#actor_config[actor] = null
 	awaiting_inline_call = data.get("awaiting_inline_call", "")
 	_built_virtual_choices = data.get("built_virtual_choices", {})
 	_call_strings = data.get("call_strings", {})

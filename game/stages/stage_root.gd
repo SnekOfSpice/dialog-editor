@@ -3,6 +3,7 @@ class_name StageRoot
 
 var stage := ""
 var screen := ""
+var pause_state_before_open:bool
 
 @export_group("Screen Fade", "screen_fade_")
 @export_exp_easing("positive_only") var screen_fade_in := 1.0
@@ -14,28 +15,32 @@ func _ready():
 	change_stage(CONST.STAGE_MAIN)
 	set_screen("")
 	GameWorld.stage_root = self
+	Options.set_fullscreen(Options.fullscreen)
+	
+	get_tree().get_root().connect("go_back_requested", set_screen.bind(CONST.SCREEN_OPTIONS))
 
 func set_screen(screen_path:String, payload := {}):
-	#if is_instance_valid(Parser.line_reader):
-		#if Parser.line_reader.is_executing:
-			#return
+	if is_instance_valid(Parser.line_reader):
+		if Parser.line_reader.is_executing:
+			return
 	
-	if stage == CONST.STAGE_GAME:
-		screenshot_to_save = get_viewport().get_texture().get_image()
-		var s = Options.get_save_thumbnail_size()
-		screenshot_to_save.resize(s.x, s.y)
-	
+	if screen.is_empty():
+		pause_state_before_open = Parser.paused
 	var screen_container:Control
-	if (null if not is_instance_valid(GameWorld.camera) else GameWorld.camera) is GameCamera:
-		screen_container = GameWorld.camera.get_screen_container()
-	else:
+	if get_stage_node():
+		if get_stage_node().get_screen_container():
+			screen_container = get_stage_node().get_screen_container()
+	if not screen_container:
 		screen_container = find_child("ScreenContainer")
 	
 	if screen_path.is_empty():
+		Parser.set_paused(pause_state_before_open)
 		if screen_fade_out == 0 or screen_container.get_child_count() == 0:
 			for c in screen_container.get_children():
 				c.queue_free()
 			screen_container.visible = false
+			if is_instance_valid(GameWorld.game_stage):
+				GameWorld.game_stage.screen_close_blocker = false
 		else:
 			var tween
 			for c in screen_container.get_children():
@@ -43,13 +48,25 @@ func set_screen(screen_path:String, payload := {}):
 				t.tween_property(c, "modulate:a", 0, screen_fade_out)
 				t.set_ease(Tween.EASE_OUT_IN)
 				t.finished.connect(c.queue_free)
+				if is_instance_valid(GameWorld.game_stage):
+					t.finished.connect(GameWorld.game_stage.set.bind("screen_close_blocker", false))
 				tween = t
 			tween.finished.connect(screen_container.set_visible.bind(false))
 		screen = screen_path
 		return
+	else:
+		for c : Screen in screen_container.get_children():
+			c.queue_free()
+	
+	if stage == CONST.STAGE_GAME and screen.is_empty():
+		grab_thumbnail_screenshot()
+	
 	var new_screen = load(str(CONST.SCREEN_ROOT, screen_path)).instantiate()
 	
 	match screen_path:
+		CONST.SCREEN_SAVE:
+			if payload.get("save", false):
+				new_screen.button_mode = SaveScreen.ButtonMode.Save
 		CONST.SCREEN_NOTICE:
 			new_screen.handle_payload(payload)
 	
@@ -62,57 +79,12 @@ func set_screen(screen_path:String, payload := {}):
 		t.set_ease(Tween.EASE_OUT_IN)
 	screen_container.visible = true
 	screen = screen_path
+	hook_up_button_sfx(new_screen)
 
-func set_background(background:String, fade_time:=0.0):
-	if background == "none" or background == "null" or background.is_empty():
-		background = GameWorld.background
-	var path = CONST.fetch("BACKGROUND", background)
-	if not path:
-		push_warning(str("COULDN'T FIND BACKGROUND ", background, "!"))
-		return
-	var new_background:Node2D
-	var old_backgrounds:=$Background.get_children()
-	if path.ends_with(".png") or path.ends_with(".jpg") or path.ends_with(".jpeg"):
-		new_background = Sprite2D.new()
-		new_background.texture = load(path)
-		
-		new_background.centered = false
-	
-	elif path.ends_with(".tscn"):
-		new_background = load(path).instantiate()
-	else:
-		push_error(str("Background ", background, " does not end in .png, .jpg, .jpeg or .tscn."))
-		return
-	
-	$Background.add_child(new_background)
-	$Background.move_child(new_background, 0)
-	
-	var background_size := Vector2.ZERO
-	if new_background is Sprite2D:
-		background_size = new_background.texture.get_size()
-	elif new_background.has_method("get_size"):
-		background_size = new_background.get_size()
-	
-	var overshoot = background_size - Vector2(
-		ProjectSettings.get_setting("display/window/size/viewport_width"),
-		ProjectSettings.get_setting("display/window/size/viewport_height")
-		)
-	if overshoot.x > 0:
-		new_background.position.x = - overshoot.x * 0.5
-	if overshoot.y > 0:
-		new_background.position.y = - overshoot.y * 0.5
-	
-	
-	for old_node : Node in old_backgrounds:
-		var fade_tween := get_tree().create_tween()
-		fade_tween.tween_property(old_node, "modulate:a", 0.0, fade_time)
-		fade_tween.finished.connect(old_node.queue_free)
-	
-	GameWorld.background = background
-	
-	if is_instance_valid(GameWorld.game_stage):
-		GameWorld.game_stage.get_node("Objects").hide_all()
-		
+func grab_thumbnail_screenshot():
+	screenshot_to_save = get_viewport().get_texture().get_image()
+	var s = Options.get_save_thumbnail_size()
+	screenshot_to_save.resize(s.x, s.y)
 
 func new_gamestate():
 	game_start_callable = Parser.reset_and_start
@@ -132,8 +104,6 @@ func change_stage(stage_path:String):
 	await get_tree().process_frame
 	
 	set_screen("")
-	for c in $Background.get_children():
-		c.queue_free()
 	var new_stage = load(str(CONST.STAGE_ROOT, stage_path)).instantiate()
 	
 	if stage_path == CONST.STAGE_GAME:
@@ -153,9 +123,20 @@ func change_stage(stage_path:String):
 			#new_stage.blockers_cleared.connect(game_start_callable)
 	
 	$StageContainer.add_child(new_stage)
-	
+	hook_up_button_sfx(new_stage)
 	stage = stage_path
 
-func get_stage_node() -> Node:
+func get_stage_node() -> Stage:
+	if $StageContainer.get_child_count() == 0:
+		return null
 	return $StageContainer.get_child(0)
 	
+
+func hook_up_button_sfx(start_node:Node):
+	return
+	@warning_ignore("unreachable_code")
+	if start_node is Button and start_node.name != "AndroidHackButton":
+		start_node.mouse_entered.connect(Sound.play_sfx.bind("hover"))
+		start_node.pressed.connect(Sound.play_sfx.bind("clicker"))
+	for child in start_node.get_children():
+		hook_up_button_sfx(child)

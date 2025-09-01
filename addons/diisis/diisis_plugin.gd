@@ -90,6 +90,15 @@ func setup_vn_template():
 		"events": [e10]
 		}
 	)
+	var e11 = InputEventKey.new()
+	e11.keycode = KEY_L
+	e11.physical_keycode = KEY_L
+	ProjectSettings.set_setting("input/history",
+		{
+		"deadzone": 0.5,
+		"events": [e11]
+		}
+	)
 	
 	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound", "style"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")

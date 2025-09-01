@@ -647,9 +647,9 @@ func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictio
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
+	load_actor_config(save_dir_path)
 	deserialize(data.get("Parser", {}))
 	
-	load_actor_config(save_dir_path)
 	
 	paused = pause_after_load
 	

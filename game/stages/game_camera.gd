@@ -2,6 +2,7 @@ extends Camera2D
 class_name GameCamera
 
 @export var fade = 5.0
+@onready var cg_bottom_container : Control = find_child("CGBottomContainer")
 
 var rng = RandomNumberGenerator.new()
 
@@ -67,6 +68,9 @@ func _process(delta: float) -> void:
 			x * sway_intensity,
 			y * sway_intensity),
 		sway_intensity_lerp_strength) + flat_offset
+	
+	for child : CGTexture in cg_bottom_container.get_children():
+		child.set_texture_offset(offset)
 	sway_intensity_lerp_strength = lerp(sway_intensity_lerp_strength, 0.02, 0.03)
 	
 	if GameWorld.game_stage:

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=23 format=3 uid="uid://drk5fhsdjoewf"]
+[gd_resource type="Theme" load_steps=34 format=3 uid="uid://drk5fhsdjoewf"]
 
 [ext_resource type="FontFile" uid="uid://crmw2vdncpny" path="res://game/visuals/theme/fonts/justabit.ttf" id="1_r8rta"]
 [ext_resource type="Texture2D" uid="uid://b03ftnlcv35es" path="res://game/visuals/theme/ui/checked.png" id="2_3fvlq"]
@@ -98,6 +98,28 @@ corner_radius_bottom_left = 65
 expand_margin_top = 1.0
 expand_margin_right = 1.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r8rta"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3fvlq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_otl4c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_romdp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a473t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jx71q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r2378"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_56p6j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2x88o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0muyt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ablvl"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fvlq"]
 bg_color = Color(0.442911, 0.442911, 0.442911, 1)
 border_width_top = 2
@@ -135,6 +157,7 @@ expand_margin_top = 2.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76e30"]
+content_margin_left = 6.0
 content_margin_top = 4.0
 bg_color = Color(0.0840718, 0.0611886, 0.0503078, 0.968627)
 skew = Vector2(0.14, 0)
@@ -180,6 +203,22 @@ CheckBox/icons/checked = ExtResource("2_3fvlq")
 CheckBox/icons/checked_disabled = ExtResource("3_otl4c")
 CheckBox/icons/unchecked = ExtResource("4_romdp")
 CheckBox/icons/unchecked_disabled = ExtResource("5_a473t")
+GameControlsButton/base_type = &"Button"
+GameControlsButton/colors/font_color = Color(0, 0, 0, 1)
+GameControlsButton/colors/font_hover_color = Color(0.303233, 0.303233, 0.303233, 1)
+GameControlsButton/colors/font_outline_color = Color(0.909804, 0.741176, 0.772549, 0.286275)
+GameControlsButton/constants/outline_size = 10
+GameControlsButton/styles/disabled = SubResource("StyleBoxEmpty_r8rta")
+GameControlsButton/styles/disabled_mirrored = SubResource("StyleBoxEmpty_3fvlq")
+GameControlsButton/styles/focus = SubResource("StyleBoxEmpty_otl4c")
+GameControlsButton/styles/hover = SubResource("StyleBoxEmpty_romdp")
+GameControlsButton/styles/hover_mirrored = SubResource("StyleBoxEmpty_a473t")
+GameControlsButton/styles/hover_pressed = SubResource("StyleBoxEmpty_jx71q")
+GameControlsButton/styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_r2378")
+GameControlsButton/styles/normal = SubResource("StyleBoxEmpty_56p6j")
+GameControlsButton/styles/normal_mirrored = SubResource("StyleBoxEmpty_2x88o")
+GameControlsButton/styles/pressed = SubResource("StyleBoxEmpty_0muyt")
+GameControlsButton/styles/pressed_mirrored = SubResource("StyleBoxEmpty_ablvl")
 HSlider/icons/grabber = ExtResource("6_jx71q")
 HSlider/icons/grabber_highlight = ExtResource("7_r2378")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_3fvlq")

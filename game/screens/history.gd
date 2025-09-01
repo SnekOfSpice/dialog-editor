@@ -1,5 +1,6 @@
 extends Screen
 
+@warning_ignore("integer_division")
 @onready var index : int = Parser.history.size() / 100
 @onready var max_index := index
 
@@ -12,6 +13,8 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	super(event)
+	if event.is_action_pressed("history"):
+		close()
 
 func _on_close_button_pressed() -> void:
 	close()
