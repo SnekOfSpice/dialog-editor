@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://r1ntcqdujfol"]
+[gd_scene load_steps=16 format=3 uid="uid://r1ntcqdujfol"]
 
 [ext_resource type="Script" uid="uid://j84s4qlkmfxw" path="res://game/stages/game_stage.gd" id="1_a36me"]
 [ext_resource type="Script" uid="uid://dycysb8joq17f" path="res://addons/diisis/parser/src/resources/line_reader_actor_config.gd" id="3_aqeli"]
@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="6_e6caa"]
 [ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Script" uid="uid://c2vvnjn4tl6a7" path="res://game/stages/game_camera.gd" id="9_lbjue"]
+[ext_resource type="PackedScene" uid="uid://cg68f27bymn00" path="res://game/stages/rolling_credits.tscn" id="11_o4gqq"]
 [ext_resource type="PackedScene" uid="uid://cjy7vf1xrnq5y" path="res://game/screens/chapter_cover.tscn" id="12_vf2y4"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
 [ext_resource type="Script" uid="uid://byyv78vc44g4u" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
@@ -60,7 +61,6 @@ choice_title_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBo
 choice_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel")
 choice_list = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceList")
 chatlog_fuse_lines = false
-choice_button_keyboard_focus = false
 input_prompt_delay = 1.29
 input_prompt_lerp_weight = 0.233
 inline_name_separator = "~"
@@ -79,7 +79,7 @@ script = ExtResource("3_x2eff")
 
 [node name="Characters" type="Node2D" parent="LineReader"]
 
-[node name="Character" parent="LineReader/Characters" instance=ExtResource("5_aqeli")]
+[node name="Amber" parent="LineReader/Characters" instance=ExtResource("5_aqeli")]
 position = Vector2(574, 366)
 character_name = "amber"
 
@@ -302,6 +302,9 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("13_qfsh6")
+
+[node name="RollingCredits" parent="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot" instance=ExtResource("11_o4gqq")]
+layout_mode = 1
 
 [node name="BlackLayer" type="CanvasLayer" parent="LineReader/Camera2D"]
 
