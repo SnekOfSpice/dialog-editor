@@ -31,9 +31,7 @@ var emotion := ""
 var target_x := 0.0
 var target_visibility := visible
 
-var emotions_by_page := {}
-
-@onready var active_mat = $Sprite.get_material()
+@onready var active_mat : Material = $Sprite.get_material()
 
 func _ready():
 	for emotion_name in extras.keys():
@@ -79,7 +77,6 @@ func serialize() -> Dictionary:
 	result["visible"] = target_visibility
 	result["emotion"] = emotion
 	result["target_x"] = target_x
-	result["emotions_by_page"] = emotions_by_page
 	result["progress"] = active_mat.get_shader_parameter("progress")
 	
 	var extra_data := {}
@@ -98,7 +95,6 @@ func deserialize(data: Dictionary):
 	target_x = data.get("target_x", position.x)
 	visible = data.get("visible", false)
 	target_visibility = data.get("visible", false)
-	emotions_by_page = data.get("emotions_by_page", {})
 	active_mat.set_shader_parameter("progress", data.get("progress", 0.0))
 	
 	var extra_data : Dictionary = data.get("extras", {})

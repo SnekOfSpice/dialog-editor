@@ -40,6 +40,8 @@ func get_default_targets() -> Dictionary:
 	return result
 
 func _ready():
+	if devmode_enabled:
+		set_background("void")
 	find_child("CreditsLayer").visible = false
 	find_child("BlackLayer").visible = true
 	find_child("DevModeLabel").visible = devmode_enabled
@@ -184,22 +186,14 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	if cg_path.ends_with(".tscn"):
 		cg_node = load(cg_path).instantiate()
 	else:
-		#if cg_root
-		#cg_node = ColorRect.new()
-		#cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
-		#cg_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		#cg_node.color = Color.BLACK
 		cg_node = preload("res://game/cg/cg_texture.tscn").instantiate()
-		#cg_node.add_child(tex)
-		#cg_node.position -=  Vector2(1000, 750) * 0.7 * 0.5
-		#  Vector2(1000, 750) * 0.7 * 0.5
 		cg_node.set_anchors_preset(Control.PRESET_CENTER)
 		cg_node.texture = load(cg_path)
 		cg_node.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		cg_node.custom_minimum_size = Vector2(1000, 750)
-		#if not "ending" in cg_name:
-			#cg_node.position.y += 54
-			#cg_node.custom_minimum_size *= 0.7
+		cg_node.custom_minimum_size = Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height")
+		)
 	
 	cg_root.add_child(cg_node)
 	

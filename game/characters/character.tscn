@@ -1,20 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://chfbyvpvah4eu"]
+[gd_scene load_steps=4 format=3 uid="uid://chfbyvpvah4eu"]
 
 [ext_resource type="Script" uid="uid://dwljiy8g41imy" path="res://game/characters/character.gd" id="1_upf4t"]
 [ext_resource type="Texture2D" uid="uid://dg5q71bcceghv" path="res://game/characters/sprites/amber-neutral.png" id="2_lhaq4"]
-[ext_resource type="Shader" uid="uid://bjc0tl7n3j8f5" path="res://game/characters/active.gdshader" id="2_xmhwu"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_urdom"]
-resource_local_to_scene = true
-shader = ExtResource("2_xmhwu")
-shader_parameter/outline_c = Color(0.0051104, 0.000858558, 1.88011e-10, 1)
-shader_parameter/progress = 0.0
+[ext_resource type="Material" uid="uid://44cw5qgkdvgg" path="res://game/characters/active_material.tres" id="2_ygg2l"]
 
 [node name="Character" type="Node2D"]
 script = ExtResource("1_upf4t")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_urdom")
+material = ExtResource("2_ygg2l")
 texture = ExtResource("2_lhaq4")
 
 [node name="Extras" type="Node2D" parent="."]
