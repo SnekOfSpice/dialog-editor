@@ -1,14 +1,14 @@
-extends Control
+extends Stage
 class_name GameStage
 
 @onready var characters := {}
 
-enum TextStyle {
-	ToBottom,
-	ToCharacter,
-}
+var background : String = ""
 
-@export var text_style := TextStyle.ToBottom
+@export_group("Devmode", "devmode_")
+@export var devmode_enabled := false
+@export var devmode_start_page := 0
+@export var devmode_start_line := 0
 @export var stylebox_regular : StyleBox
 @export var stylebox_cg : StyleBox
 
@@ -21,39 +21,41 @@ var cg := ""
 var cg_position := ""
 var base_cg_offset : Vector2
 var is_name_container_visible := false
-var meta_block := false
-
-@onready var text_container_custom_minimum_size : Vector2 = find_child("TextContainer1").custom_minimum_size
-@onready var rtl_custom_minimum_size : Vector2 = find_child("BodyLabel").custom_minimum_size
 
 @onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
-@onready var text_start_position = find_child("TextContainer1").position
-
-var ui_id := 1
-@onready var ui_root : Control = find_child(str("TextContainer", ui_id))
 
 var callable_upon_blocker_clear:Callable
+var meta_blocker := false
+var screen_close_blocker := false
+@onready var camera = %Camera2D
 
-@onready var camera = $Camera2D
+var target_lod := 0.0
+var target_mix := 0.0
 
+
+func get_default_targets() -> Dictionary:
+	var result := {}
+	for actor in line_reader.name_map.keys():
+		result[actor] = 0
+	return result
 
 func _ready():
-	use_ui(1)
+	if devmode_enabled:
+		set_background("void")
+	find_child("CreditsLayer").visible = false
+	find_child("BlackLayer").visible = true
+	find_child("DevModeLabel").visible = devmode_enabled
+	#GoBackHandler.store_into_subaddress(get_default_targets(), targets_by_subaddress, "0.0.0")
 	find_child("StartCover").visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
-	ParserEvents.body_label_text_changed.connect(on_body_label_text_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
-	ParserEvents.instruction_completed.connect(on_instruction_completed)
-	ParserEvents.read_new_line.connect(on_read_new_line)
 	
 	GameWorld.game_stage = self
 	
 	line_reader.auto_continue = Options.auto_continue
 	line_reader.text_speed = Options.text_speed
 	line_reader.auto_continue_delay = Options.auto_continue_delay
-	
-	set_text_style(text_style)
 	
 	for character in find_child("Characters").get_children():
 		character.visible = false
@@ -68,30 +70,26 @@ func _ready():
 	if callable_upon_blocker_clear:
 		callable_upon_blocker_clear.call()
 	else:
-		Parser.reset_and_start()
+		if devmode_enabled:
+			Parser.reset_and_start(devmode_start_page, devmode_start_line)
+		else:
+			Parser.reset_and_start()
 	
 	await get_tree().process_frame
 	find_child("StartCover").visible = false
 
-func on_read_new_line(_line_index:int):
-	Options.save_gamestate()
 
 func on_tree_exit():
 	GameWorld.game_stage = null
 
 func on_instruction_started(
-	instruction_text : String,
+	_instruction_text : String,
 	_delay : float,
 ):
-	if instruction_text.begins_with("black_fade"):
-		find_child("ControlsContainer").visible = false
+	find_child("StartCover").visible = false
 
-func on_instruction_completed(
-	instruction_text : String,
-	_delay : float,
-):
-	if instruction_text.begins_with("black_fade"):
-		find_child("ControlsContainer").visible = true
+func show_start_cover():
+	find_child("StartCover").visible = true
 
 func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
@@ -100,16 +98,19 @@ func go_to_main_menu(_unused):
 func _process(_delta: float) -> void:
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
 
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not GameWorld.stage_root.screen.is_empty():
 		return
+	if event is InputEventScreenTouch:
+		attempt_advance(event)
 	if event is InputEventKey:
-		if event.pressed:
+		if event.is_released():
 			if InputMap.action_has_event("ui_cancel", event):
 				GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 			if InputMap.action_has_event("screenshot", event):
 				var screenshot := get_viewport().get_texture().get_image()
-				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name"), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
+				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name").replace("://", " "), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
 				screenshot.save_png(path)
 				
 				var notification_popup = preload("res://game/systems/notification.tscn").instantiate()
@@ -120,6 +121,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if InputMap.action_has_event("toggle_auto_continue", event):
 				line_reader.auto_continue = not line_reader.auto_continue
 				Options.auto_continue = line_reader.auto_continue
+				Options.save_prefs()
 			if InputMap.action_has_event("toggle_ui", event):
 				if find_child("VNUI").visible:
 					hide_ui()
@@ -129,21 +131,36 @@ func _unhandled_input(event: InputEvent) -> void:
 				find_child("Cheats").visible = not find_child("Cheats").visible
 				
 	if event is InputEventMouse:
-		if event.is_pressed() and InputMap.action_has_event("ui_cancel", event):
+		if event.is_released() and InputMap.action_has_event("ui_cancel", event):
 			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 
-	if event.is_action_pressed("advance"):
-		if meta_block:
+	if (event.is_action_pressed("advance")):
+		attempt_advance(event)
+	if event.is_action_pressed("history"):
+		if GameWorld.stage_root.screen == CONST.SCREEN_HISTORY:
+			GameWorld.stage_root.set_screen("")
+		else:
+			GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
+		
+	#elif event.is_action_pressed("go_back"):
+		#line_reader.request_go_back()
+
+func attempt_advance(event:InputEvent):
+	if event.is_shift_pressed() and event is InputEventKey:
+		return
+	if screen_close_blocker:
+		screen_close_blocker = false
+		return
+	if meta_blocker:
+		meta_blocker = false
+		return
+	for root in cg_roots:
+		if root.visible and emit_insutrction_complete_on_cg_hide:
+			hide_cg()
 			return
-		for root in cg_roots:
-			if root.visible and emit_insutrction_complete_on_cg_hide:
-				hide_cg()
-				return
-		if not find_child("VNUI").visible:
-			return
-		line_reader.request_advance()
-	elif event.is_action_pressed("go_back"):
-		line_reader.request_go_back()
+	if not find_child("VNUI").visible:
+		return
+	line_reader.request_advance()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):
@@ -153,9 +170,9 @@ func hide_ui():
 	find_child("VNUI").visible = false
 
 func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
-	if stylebox_cg:
-		var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-		ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
+	#if stylebox_cg:
+		#var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
+		#ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
 	
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	cg_root.visible = true
@@ -169,9 +186,14 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	if cg_path.ends_with(".tscn"):
 		cg_node = load(cg_path).instantiate()
 	else:
-		cg_node = TextureRect.new()
-		cg_node.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cg_node = preload("res://game/cg/cg_texture.tscn").instantiate()
+		cg_node.set_anchors_preset(Control.PRESET_CENTER)
 		cg_node.texture = load(cg_path)
+		cg_node.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		cg_node.custom_minimum_size = Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height")
+		)
 	
 	cg_root.add_child(cg_node)
 	
@@ -183,6 +205,10 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	else:
 		t.tween_property(cg_root, "modulate:a", 1.0, fade_in_duration)
 	
+	for child in cg_root.get_children():
+		if child == cg_node:
+			continue
+		t.finished.connect(child.queue_free)
 	
 	var background_size : Vector2
 	if cg_node is TextureRect:
@@ -201,6 +227,8 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 		container.position.y = - overshoot.y * 0.5
 	base_cg_offset = container.position
 	
+	
+	
 	cg = cg_name
 
 func set_cg_top(cg_name:String, fade_in_duration:float):
@@ -215,15 +243,6 @@ func set_cg_offset(offset:Vector2):
 	find_child("CGTopContainer").position = offset + base_cg_offset
 	find_child("CGBottomContainer").position = offset + base_cg_offset
 
-func set_text_style(style:TextStyle):
-	text_style = style
-	if text_style == TextStyle.ToBottom:
-		find_child("TextContainer1").custom_minimum_size = text_container_custom_minimum_size
-		find_child("TextContainer1").position = text_start_position
-		find_child("BodyLabel").custom_minimum_size = rtl_custom_minimum_size
-	elif text_style == TextStyle.ToCharacter:
-		find_child("TextContainer1").custom_minimum_size.x = 230
-		find_child("BodyLabel").custom_minimum_size.x = 230
 
 func hide_cg(fade_out := 0.0):
 	cg = ""
@@ -247,52 +266,14 @@ func _clear_cg():
 			Parser.function_acceded()
 			emit_insutrction_complete_on_cg_hide = false
 	
-	if stylebox_regular:
-		var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-		ui1panel.add_theme_stylebox_override("panel", stylebox_regular)
+	#if stylebox_regular:
+		#var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
+		#ui1panel.add_theme_stylebox_override("panel", stylebox_regular)
 	
 
-func on_actor_name_changed(
-	actor: String,
-	name_container_visible: bool
-	):
-		actor_name = actor
-		is_name_container_visible = name_container_visible
-		return
-		
-func on_body_label_text_changed(
-	_old_text: String,
-	_new_text: String,
-	lead_time: float,
-):
-	if text_style == TextStyle.ToBottom:
-		return
-	## move to neutral position if not visible
-	## move to actor if visible
-	var center = size * 0.5
-	var actor_position:Vector2
-	
-	if is_name_container_visible:
-		if not characters.get(actor_name):
-			return
-		actor_position = characters.get(actor_name).position
-		var offset : int = sign(center.direction_to(actor_position).x) * 60
-		actor_position.x -= offset
-		if sign(offset) == 1:
-			actor_position.x -= line_reader.text_container.size.x
-		actor_position.y -= 100
-	else: # name container isn't visible
-		actor_position.x = center.x - line_reader.text_container.size.x * 0.5
-		actor_position.y = size.y - line_reader.text_container.size.y - 60
-	
-	if dialog_box_tween:
-		dialog_box_tween.kill()
-	dialog_box_tween = create_tween()
-	
-	var text_container : CenterContainer = find_child("TextContainer1")
-	text_container.position = actor_position
-	text_container.position.y += 10
-	dialog_box_tween.tween_property(text_container, "position", actor_position, lead_time).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
+
+
 
 func set_callable_upon_blocker_clear(callable:Callable):
 	callable_upon_blocker_clear = callable
@@ -308,25 +289,37 @@ func serialize() -> Dictionary:
 	result["cg"] = cg
 	result["cg_position"] = cg_position
 	result["base_cg_offset"] = base_cg_offset
-	result["text_container_position"] = find_child("TextContainer1").position
-	result["text_style"] = text_style
-	result["objects"] = $Objects.serialize()
+	result["background"] = background
+	result["objects"] = %Objects.serialize()
 	
 	result["start_cover_visible"] = find_child("StartCover").visible
 
-	result["camera"] = $Camera2D.serialize()
-	result["ui_id"] = ui_id
-	result["ui_root_visible"] = ui_root.visible
+	result["camera"] = %Camera2D.serialize()
+
+	result["text_content_default"] = serialize_text_content(%DefaultTextContainer)
 	
 	return result
+
+func serialize_text_content(root:Control) -> Dictionary:
+	var result := {}
+	result["root_visible"] = root.visible
+	result["rotation_degrees"] = root.rotation_degrees
+	result["body_text"] = root.find_child("BodyLabel").text
+	result["visible_characters"] = root.find_child("BodyLabel").visible_characters
+	return result
+func deserialize_text_content(root:Control, data:Dictionary) -> void:
+	root.visible = data.get("root_visible", false)
+	root.rotation_degrees = data.get("rotation_degrees", 0)
+	root.find_child("BodyLabel").text = data.get("body_text", "")
+	root.find_child("BodyLabel").visible_characters = data.get("visible_characters", -1)
 
 func deserialize(data:Dictionary):
 	var character_data : Dictionary = data.get("character_data", {})
 	for character : Character in find_child("Characters").get_children():
 		character.deserialize(character_data.get(character.character_name, {}))
 	
-	$Objects.deserialize(data.get("objects", {}))
-	$Camera2D.deserialize(data.get("camera", {}))
+	%Objects.deserialize(data.get("objects", {}))
+	%Camera2D.deserialize(data.get("camera", {}))
 	
 	var cg_name : String = data.get("cg", "")
 	if cg_name.is_empty():
@@ -342,31 +335,26 @@ func deserialize(data:Dictionary):
 	
 	find_child("StartCover").visible = data.get("start_cover_visible", false)
 	
-	set_text_style(data.get("text_style", TextStyle.ToBottom))
-	if text_style == TextStyle.ToCharacter:
-		# gets deserialized as string for some reason??
-		var fixed_position : Vector2
-		var deserialized_position = data.get("text_container_position", find_child("TextContainer1").position)
-		if deserialized_position is String:
-			deserialized_position = deserialized_position.trim_prefix("(")
-			deserialized_position = deserialized_position.trim_suffix(")")
-			var parts = deserialized_position.split(",")
-			fixed_position = Vector2(float(parts[0]), float(parts[1]))
-		elif deserialized_position is Vector2:
-			fixed_position = deserialized_position
-		else:
-			push_warning("Deserialized game_stage with something wild.")
-			return
-		find_child("TextContainer1").position = fixed_position
+	target_lod = data.get("fade_out_lod", 0.0)
+	target_mix = data.get("fade_out_mix_percentage", 0.0)
 
-	use_ui(data.get("ui_id", 1))
 	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
-	ui_root.visible = data.get("ui_root_visible", true)
+
+	
+	#window_visibilities_by_subaddress = data.get("window_visibilities_by_subaddress", {})
+	#targets_by_subaddress = data.get("targets_by_subaddress", get_ready_targets_by_subaddress())
+
+	set_background(data.get("background"))
+
+
+	deserialize_text_content(%DefaultTextContainer, data.get("text_content_default", {}))
+	
+	show_ui()
 
 var emit_insutrction_complete_on_cg_hide :bool
 
 func get_character(character_name:String) -> Character:
-	for child : Character in $Characters.get_children():
+	for child : Character in %Characters.get_children():
 		if child.character_name == character_name:
 			return child
 	return null
@@ -379,8 +367,8 @@ func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) ->
 		emit_insutrction_complete_on_cg_hide = true
 		set_cg_top(cg_name, fade_in)
 	else:
-		var t = get_tree().create_timer(fade_in)
-		t.timeout.connect(Parser.function_acceded)
+		#var t = get_tree().create_timer(fade_in)
+		#t.timeout.connect(Parser.function_acceded)
 		set_cg_bottom(cg_name, fade_in)
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
@@ -394,30 +382,103 @@ func _on_chapter_cover_chapter_intro_finished() -> void:
 	find_child("ChapterCover").visible = false
 
 
-func splatter(amount: int) -> void:
-	for i in amount:
-		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
-		find_child("VFXLayer").add_child(sprite)
 
-func use_ui(id:int):
-	var lr : LineReader = line_reader
+func set_fade_out(lod:float, mix:float):
+	target_lod = lod
+	target_mix = mix
+
+
+
+func set_background(new_bg_key:String, fade_time:=0.0):
+	if new_bg_key == "none" or new_bg_key == "null" or new_bg_key.is_empty():
+		new_bg_key = background
+	var path = CONST.fetch("BACKGROUND", new_bg_key)
+	if not path:
+		push_warning(str("COULDN'T FIND BACKGROUND ", new_bg_key, "!"))
+		return
+	var new_background:Node2D
+	var old_backgrounds:=%Background.get_children()
+	if path.ends_with(".png") or path.ends_with(".jpg") or path.ends_with(".jpeg"):
+		new_background = Sprite2D.new()
+		new_background.texture = load(path)
+		
+		new_background.centered = false
 	
-	ui_id = id
-	ui_root = find_child("TextContainer%s" % ui_id)
-	for c in find_child("VNUI").get_children():
-		if c.name.begins_with("TextContainer"):
-			c.visible = c == ui_root
+	elif path.ends_with(".tscn"):
+		new_background = load(path).instantiate()
+	else:
+		push_error(str("Background ", new_bg_key, " does not end in .png, .jpg, .jpeg or .tscn."))
+		return
 	
-	lr.set_body_label(ui_root.find_child("BodyLabel"), false)
-	lr.set_name_controls(ui_root.find_child("NameLabel"), ui_root.find_child("NameContainer"))
-	lr.text_container = ui_root
-	lr.prompt_finished = ui_root.find_child("PageFinished")
-	lr.prompt_unfinished = ui_root.find_child("PageUnfinished")
+	%Background.add_child(new_background)
+	%Background.move_child(new_background, 0)
+	
+	var background_size := Vector2.ZERO
+	if new_background is Sprite2D:
+		background_size = new_background.texture.get_size()
+	elif new_background.has_method("get_size"):
+		background_size = new_background.get_size()
+	
+	var overshoot = background_size - Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height")
+		)
+	if overshoot.x > 0:
+		new_background.position.x = - overshoot.x * 0.5
+	if overshoot.y > 0:
+		new_background.position.y = - overshoot.y * 0.5
+	
+	
+	for old_node : Node in old_backgrounds:
+		var fade_tween := get_tree().create_tween()
+		fade_tween.tween_property(old_node, "modulate:a", 0.0, fade_time)
+		fade_tween.finished.connect(old_node.queue_free)
+	
+	background = new_bg_key
+	GameWorld.background = background
 
 
-func _on_body_label_meta_hover_ended(_meta: Variant) -> void:
-	meta_block = false
+var control_tween
+func _on_line_reader_start_accepting_advance() -> void:
+	if control_tween:
+		control_tween.kill()
+	var controls : Control = find_child("ControlsContainer")
+	control_tween = create_tween()
+	control_tween.tween_property(controls, "modulate:a", 1, 1)
+	
+	Options.save_gamestate()
 
+
+func _on_line_reader_stop_accepting_advance() -> void:
+	if control_tween:
+		control_tween.kill()
+	var controls : Control = find_child("ControlsContainer")
+	control_tween = create_tween()
+	control_tween.tween_property(controls, "modulate:a", 0, 1)
+
+func get_screen_container() -> Control:
+	return find_child("ScreenContainer")
+
+
+func _on_android_hack_button_pressed() -> void:
+	var e = InputEventKey.new()
+	attempt_advance(e)
+
+
+func on_actor_name_changed(
+	actor: String,
+	name_container_visible: bool
+	):
+		actor_name = actor
+		is_name_container_visible = name_container_visible
+		return
 
 func _on_body_label_meta_hover_started(_meta: Variant) -> void:
-	meta_block = true
+	meta_blocker = true
+
+func _on_body_label_meta_hover_ended(_meta: Variant) -> void:
+	meta_blocker = false
+
+
+func _on_body_label_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(str(meta))

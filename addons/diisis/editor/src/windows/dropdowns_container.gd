@@ -108,3 +108,11 @@ func _on_dropdowns_container_resized() -> void:
 func _on_create_dd_name_text_edit_text_submitted(_new_text: String) -> void:
 	create_new_dropdown()
 	find_child("AddButton").disabled = true
+
+
+func _on_definitions_visibility_changed() -> void:
+	if not find_child("Definitions").visible:
+		return
+	
+	for child in find_child("DropdownsContainer").get_children():
+		child.update_speaker_label()

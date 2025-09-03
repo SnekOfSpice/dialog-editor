@@ -2,19 +2,15 @@ extends Screen
 
 @onready var rtl : RichTextLabel = find_child("RTLFontLabel")
 
-var pause_state_before_open:bool
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super()
 	
-	pause_state_before_open = Parser.paused
 	Parser.set_paused(true)
 	
 	find_child("QuitButton").visible = not OS.has_feature("web")
 	#find_child("GameButton").visible = GameWorld.stage_root.stage != CONST.STAGE_MAIN
 	#find_child("GameMenu").visible = GameWorld.stage_root.stage != CONST.STAGE_MAIN
-	
-	find_child("TextSpeedSlider").max_value = LineReader.MAX_TEXT_SPEED
 	find_child("TextSpeedSlider").value = Options.text_speed
 	find_child("AutoContinueCheckBox").button_pressed = Options.auto_continue
 	find_child("AutoDelaySlider").value = Options.auto_continue_delay
@@ -29,26 +25,27 @@ func _ready() -> void:
 	find_child("MusicVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music")))
 	find_child("SFXVolumeSlider").value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX")))
 	
-	for font in Style.LABEL_FONTS:
-		var loaded : Font = load(font)
-		find_child("LabelFontOptionButton").add_item(loaded.get_font_name())
-	find_child("LabelFontOptionButton").select(Options.font_prefs.get("label_font", 0))
-	for family : Dictionary in Style.RICH_TEXT_LABEL_FONTS:
-		var loaded : Font = load(family.get("normal_font"))
-		find_child("RTLFontOptionButton").add_item(loaded.get_font_name())
-	find_child("RTLFontOptionButton").select(Options.font_prefs.get("rich_text_label_font", 0))
-	find_child("LabelFontSizeSlider").value = theme.get_font_size("font_size", "Label")
-	find_child("LabelFontSizeLabel").text = str(int(find_child("LabelFontSizeSlider").value))
-	find_child("RTLFontSizeSlider").value = theme.get_font_size("normal_font_size", "RichTextLabel")
-	find_child("RTLFontSizeLabel").text = str(int(find_child("RTLFontSizeSlider").value))
+	%CurrentSlotLabel.text = "Using Slot %s" % (Options.save_slot + 1)
+	%SaveHintLabel.modulate.a = 0
+	#for font in Style.LABEL_FONTS:
+		#var loaded : Font = load(font)
+		#find_child("LabelFontOptionButton").add_item(loaded.get_font_name())
+	#find_child("LabelFontOptionButton").select(Options.font_prefs.get("label_font", 0))
+	#for family : Dictionary in Style.RICH_TEXT_LABEL_FONTS:
+		#var loaded : Font = load(family.get("normal_font"))
+		#find_child("RTLFontOptionButton").add_item(loaded.get_font_name())
+	#find_child("RTLFontOptionButton").select(Options.font_prefs.get("rich_text_label_font", 0))
+	#find_child("LabelFontSizeSlider").value = theme.get_font_size("font_size", "Label")
+	#find_child("LabelFontSizeLabel").text = str(int(find_child("LabelFontSizeSlider").value))
+	#find_child("RTLFontSizeSlider").value = theme.get_font_size("normal_font_size", "RichTextLabel")
+	#find_child("RTLFontSizeLabel").text = str(int(find_child("RTLFontSizeSlider").value))
 	
 	set_menu(0)
 	find_child("SaveContainer").visible = GameWorld.stage_root.stage != CONST.STAGE_MAIN
-
+	
 
 func close():
 	Options.save_prefs()
-	Parser.set_paused(pause_state_before_open)
 	super.close()
 
 func _input(event: InputEvent) -> void:
@@ -64,7 +61,7 @@ func _process(delta: float) -> void:
 			return
 		restart_preview_timer -= delta
 		if restart_preview_timer <= 0:
-			restart_preview_timer = 4
+			restart_preview_timer = get_restart_preview_timer_duration()
 			rtl.visible_ratio = 0
 	else:
 		# just taken directly from line reader
@@ -139,11 +136,16 @@ func _on_text_speed_slider_value_changed(value: float) -> void:
 	else:
 		label.text = str(int(value))
 		find_child("RTLFontLabel").visible_ratio = 0
-		restart_preview_timer = 4
+		restart_preview_timer = get_restart_preview_timer_duration()
 	Options.text_speed = int(value)
 	if is_instance_valid(Parser.line_reader):
 		Parser.line_reader.text_speed = value
 
+func get_restart_preview_timer_duration() -> float:
+	if find_child("AutoContinueCheckBox").button_pressed:
+		return find_child("AutoDelaySlider").value
+	else:
+		return 4
 
 func _on_auto_delay_slider_value_changed(value: float) -> void:
 	var label : Label = find_child("AutoDelayLabel")
@@ -151,6 +153,11 @@ func _on_auto_delay_slider_value_changed(value: float) -> void:
 	Options.auto_continue_delay = value
 	if is_instance_valid(Parser.line_reader):
 		Parser.line_reader.auto_continue_delay = value
+	if value == LineReader.MAX_TEXT_SPEED:
+		find_child("RTLFontLabel").visible_ratio = 1
+	else:
+		find_child("RTLFontLabel").visible_ratio = 0
+	restart_preview_timer = get_restart_preview_timer_duration()
 
 
 func _on_fullscreen_check_box_pressed() -> void:
@@ -164,36 +171,44 @@ func _on_quit_button_pressed() -> void:
 	get_tree().quit()
 
 
-func _on_label_font_option_button_item_selected(index: int) -> void:
-	Style.set_label_font(index)
-
-
-func _on_rtl_font_option_button_item_selected(index: int) -> void:
-	Style.set_rich_text_label_font(index)
-
-
 func _on_label_font_size_slider_value_changed(value: float) -> void:
 	find_child("LabelFontSizeLabel").text = str(int(value))
 
 
 func _on_reset_label_font_size_button_pressed() -> void:
-	find_child("LabelFontSizeSlider").value = Style.DEFAULT_LABEL_FONT_SIZE
-	Style.set_label_font_size(Style.DEFAULT_LABEL_FONT_SIZE)
+	pass
+	#find_child("LabelFontSizeSlider").value = Style.DEFAULT_LABEL_FONT_SIZE
+	#Style.set_label_font_size(Style.DEFAULT_LABEL_FONT_SIZE)
 
 
 func _on_label_font_size_slider_drag_ended(value_changed: bool) -> void:
 	if value_changed:
-		Style.set_label_font_size(find_child("LabelFontSizeSlider").value)
+		pass
+	#Style.set_label_font_size(find_child("LabelFontSizeSlider").value)
 
 
 func _on_rtl_font_size_slider_drag_ended(value_changed: bool) -> void:
 	if value_changed:
-		Style.set_rich_text_label_font_size(find_child("RTLFontSizeSlider").value)
+		pass
+	#Style.set_rich_text_label_font_size(find_child("RTLFontSizeSlider").value)
 
 
 func _on_rtl_font_size_slider_value_changed(value: float) -> void:
 	find_child("RTLFontSizeLabel").text = str(int(value))
 
 func _on_reset_rtl_font_size_button_pressed() -> void:
-	find_child("RTLFontSizeSlider").value = Style.DEFAULT_RTL_FONT_SIZE
-	Style.set_rich_text_label_font_size(Style.DEFAULT_RTL_FONT_SIZE)
+	pass
+	#find_child("RTLFontSizeSlider").value = Style.DEFAULT_RTL_FONT_SIZE
+	#Style.set_rich_text_label_font_size(Style.DEFAULT_RTL_FONT_SIZE)
+
+
+
+func _on_save_to_slot_button_pressed() -> void:
+	GameWorld.stage_root.set_screen(CONST.SCREEN_SAVE, {"save" : true})
+
+
+func show_save_hint():
+	%SaveHintLabel.modulate.a = 1
+
+func hide_save_hint():
+	%SaveHintLabel.modulate.a = 0

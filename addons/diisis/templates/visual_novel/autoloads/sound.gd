@@ -35,14 +35,16 @@ func set_audio_player_volume(volume:float):
 			audio_players.erase(player)
 			player.queue_free()
 
-func play_sfx(sfx:String):
+func play_sfx(sfx:String, random_pitch := true) -> AudioStreamPlayer:
 	var player := AudioStreamPlayer.new()
 	player.stream = load(CONST.fetch("SFX", sfx))
 	player.set_bus("SFX")
 	add_child(player)
 	player.play()
-	player.pitch_scale = randf_range(0.75, 1.0 / 0.75)
+	if random_pitch:
+		player.pitch_scale = randf_range(0.75, 1.0 / 0.75)
 	player.finished.connect(player.queue_free)
+	return player
 
 func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 	if bgm_key == bgm:
@@ -94,5 +96,4 @@ func play_bgm(bgm:String, fade_in:=0.0, from:=0.0):
 func fade_out_bgm(fade_out_time:float):
 	if not main_audio_player:
 		return
-	var t = create_tween()
-	t.tween_property(main_audio_player, "volume_db", linear_to_db(0.0001), fade_out_time)
+	play_bgm("silence", fade_out_time)

@@ -12,6 +12,8 @@ var id : String
 signal request_delete()
 
 func init(n:=number):
+	if not (find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.is_connected(on_scroll_changed):
+		(find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.connect(on_scroll_changed)
 	%GoToHighlight.self_modulate.a = 0
 	var data = Pages.page_data.get(n)
 	number = n
@@ -30,10 +32,15 @@ func get_next():
 	return next
 
 func get_page_key() -> String:
-	return str(find_child("PageKeyLineEdit").text)
+	var line_edit_text : String = find_child("PageKeyLineEdit").text
+	if is_change_valid(line_edit_text):
+		return line_edit_text
+	else:
+		return page_key_before_edit
 
 func set_page_key(value:String):
 	find_child("PageKeyLineEdit").text = value
+	page_key_before_edit = value
 
 func add_fact(fact_name: String, fact_value):
 	var facts = find_child("Facts")
@@ -59,7 +66,6 @@ func serialize() -> Dictionary:
 	data["id"] = id
 	data["page_key"] = get_page_key()
 	data["next"] = find_child("NextLineEdit").value
-	data["meta.scroll_vertical"] = int(find_child("ScrollContainer").scroll_vertical)
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	data["facts"] = find_child("Facts").serialize()
 	data["meta.selected"] = find_child("LineSelector").button_pressed
@@ -76,6 +82,13 @@ func serialize() -> Dictionary:
 	return data
 
 func deserialize(data: Dictionary):
+	var save_path : String = Pages.editor.get_save_path()
+	var scroll_vertical : int
+	if save_path.is_empty():
+		scroll_vertical = 0
+	else:
+		scroll_vertical = Pages.page_scroll_by_idx_by_file_name.get(save_path, {}).get(number, 0)#[number]# = int(find_child("ScrollContainer").scroll_vertical)
+		
 	block_next_duplicate_key_warning = false
 	if not lines:
 		init(int(data.get("next", number+1)))
@@ -90,10 +103,11 @@ func deserialize(data: Dictionary):
 	id = data.get("id", Pages.get_new_id())
 	
 	update_incoming_references_to_page()
+	update_input_validity(true)
 	
 	await get_tree().process_frame
-	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
 	update()
+	find_child("ScrollContainer").scroll_vertical = scroll_vertical
 
 func set_skip(value:bool):
 	modulate.a = 0.6 if value else 1
@@ -166,9 +180,29 @@ func set_editing_page_key(value:bool):
 		save_page_key_from_line_edit()
 	enable_page_key_edit(value)
 
+func is_change_valid(text : String) -> bool:
+	var exists : bool = Pages.key_exists(text)
+	# THIS SHIT?? MAYBE??
+	var page_number_of_text : int = Pages.get_page_number_by_key(text)
+	var invalid := exists and page_number_of_text != number
+	
+	return not invalid
+
 
 func _on_page_key_line_edit_text_changed(new_text: String) -> void:
-	find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
+	var page_number_of_text : int = Pages.get_page_number_by_key(new_text)
+	update_input_validity(is_change_valid(new_text), "Key already exists at page %s" % page_number_of_text)
+	#find_child("PageKeyEditButton").disabled = Pages.key_exists(new_text) and page_key_before_edit != new_text
+
+func update_input_validity(is_valid:bool, warning_text:="") -> void:
+	if is_valid:
+		%PageKeyLineEdit.add_theme_color_override("font_color", Color("#ffffff"))
+		%PageKeyWarning.visible = false
+	else:
+		%PageKeyLineEdit.add_theme_color_override("font_color", Color("#bbbbbb"))
+		%PageKeyWarning.text = warning_text
+		%PageKeyWarning.visible = true
+
 
 func get_lines_to_delete(at_index) -> Array[Line]:
 	var line_to_delete : Line = lines.get_child(at_index)
@@ -662,3 +696,16 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
+
+
+func on_scroll_changed(new_value:int) -> void:
+	if Pages.editor.opening:
+		return
+	
+	var save_path : String = Pages.editor.get_save_path()
+	if save_path.is_empty():
+		return
+	
+	if not Pages.page_scroll_by_idx_by_file_name.has(save_path):
+		Pages.page_scroll_by_idx_by_file_name[save_path] = {}
+	Pages.page_scroll_by_idx_by_file_name[save_path][number] = new_value

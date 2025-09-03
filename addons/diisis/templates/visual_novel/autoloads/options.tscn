@@ -4,5 +4,4 @@
 
 [node name="Options" type="Node"]
 script = ExtResource("1_v8dpk")
-fullscreen = true
 text_speed = 60

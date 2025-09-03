@@ -19,6 +19,7 @@ border_blend = true
 [node name="Conditionals" type="PanelContainer" node_paths=PackedStringArray("visibility_toggle_button", "facts_container")]
 offset_right = 325.0
 offset_bottom = 95.0
+mouse_default_cursor_shape = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tpir1")
 script = ExtResource("1_jnmdf")
 visibility_toggle_button = NodePath("VBoxContainer/VisibilityToggleButton")

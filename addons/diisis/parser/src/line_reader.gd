@@ -457,8 +457,8 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if not data:
 		return
-	for actor : String in data.get("actors", []):
-		actor_config[actor] = null
+	#for actor : String in data.get("actors", []):
+		#actor_config[actor] = null
 	awaiting_inline_call = data.get("awaiting_inline_call", "")
 	_built_virtual_choices = data.get("built_virtual_choices", {})
 	_call_strings = data.get("call_strings", {})
@@ -516,7 +516,7 @@ func deserialize(data: Dictionary):
 		_build_choices(choices, auto_switch)
 	
 	update_name_label(data.get("current_raw_name", "" if blank_names.is_empty() else blank_names.front()))
-	_set_body_label_text(data.get("body_label.text", ""))
+	_set_body_label_text(data.get("body_label.text", ""), true)
 	
 	_build_rubies()
 	
@@ -1895,7 +1895,12 @@ func preserve_into_past_line_container():
 	
 	_build_rubies(past_line, indices)
 
-func _set_body_label_text(text: String):
+func _set_body_label_text(text: String, is_deserializing := false):
+	if text.is_empty() and not is_deserializing:
+		push_warning("Dialog at subaddress %s is an empty String" % get_subaddress())
+		advance()
+		advance()
+		return
 	if body_label:
 		body_label.text = text
 		body_label.visible_ratio = 0

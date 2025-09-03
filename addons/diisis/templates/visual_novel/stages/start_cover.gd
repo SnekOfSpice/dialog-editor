@@ -1,7 +1,8 @@
 extends ColorRect
 
 
-#func _ready() -> void:
+func _ready() -> void:
+	visible = true
 	#visible = Parser.page_index == 0
 	#ParserEvents.read_new_line.connect(on_read_new_line)
 #

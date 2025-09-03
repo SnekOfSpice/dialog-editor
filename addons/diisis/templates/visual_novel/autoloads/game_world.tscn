@@ -4,3 +4,5 @@
 
 [node name="GameWorld" type="Node"]
 script = ExtResource("1_xx7h4")
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

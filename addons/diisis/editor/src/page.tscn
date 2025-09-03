@@ -109,6 +109,7 @@ layout_mode = 2
 text = "|"
 
 [node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/Info/PageKeyEditContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Edit page key (click or Ctrl+E)
@@ -120,7 +121,17 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 16
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_yg0hh")
+keep_editing_on_text_submit = true
 expand_to_text_length = true
+
+[node name="PageKeyWarning" type="Label" parent="PanelContainer/Info/PageKeyEditContainer/PageKeyLineEdit"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 5.0
+offset_top = -22.0
+offset_right = 45.0
+offset_bottom = 1.0
+theme_override_colors/font_color = Color(0.932674, 0.293872, 0.497917, 1)
 
 [node name="TerminateCheck" type="CheckBox" parent="PanelContainer/Info"]
 self_modulate = Color(1, 1, 1, 0.737255)
@@ -153,6 +164,7 @@ self_modulate = Color(1, 1, 1, 0.815686)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 3
 theme_override_fonts/normal_font = ExtResource("4_v77o4")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_v77o4")
 bbcode_enabled = true

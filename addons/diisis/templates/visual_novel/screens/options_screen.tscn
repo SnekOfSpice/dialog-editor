@@ -1,8 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://clvr2siqvathu"]
+[gd_scene load_steps=12 format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" uid="uid://uupjdu0y5l24" path="res://addons/diisis/templates/visual_novel/screens/options_screen.gd" id="1_1als3"]
-[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://addons/diisis/templates/visual_novel/visuals/theme/diisis_theme.tres" id="1_4xofk"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://addons/diisis/templates/visual_novel/visuals/theme/background_panel.tres" id="3_d5t3h"]
+[ext_resource type="Texture2D" uid="uid://d83ssg8alpuj" path="res://addons/diisis/templates/visual_novel/visuals/ui/icon_game.png" id="4_t8ohx"]
+[ext_resource type="Texture2D" uid="uid://bgftuf3xnl3tn" path="res://addons/diisis/templates/visual_novel/visuals/ui/icon_text.png" id="5_j50ih"]
+[ext_resource type="Texture2D" uid="uid://dupker5oqgn2r" path="res://addons/diisis/templates/visual_novel/visuals/ui/icon_display.png" id="6_njvmj"]
+[ext_resource type="Texture2D" uid="uid://fyltmp5v8j8w" path="res://addons/diisis/templates/visual_novel/visuals/ui/icon_sound.png" id="7_0bnqr"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
 
@@ -12,6 +15,8 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_7g5us"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_51xcd"]
+
 [node name="OptionsScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -19,7 +24,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_4xofk")
 script = ExtResource("1_1als3")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -61,6 +65,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_kpjpj")
 text = "Game"
+icon = ExtResource("4_t8ohx")
 
 [node name="TextButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
@@ -68,12 +73,14 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_4bl4s")
 text = "Text"
+icon = ExtResource("5_j50ih")
 
 [node name="DisplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_bdfrv")
 text = "Display"
+icon = ExtResource("6_njvmj")
 
 [node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
 auto_translate_mode = 1
@@ -81,6 +88,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_7g5us")
 text = "Sound"
+icon = ExtResource("7_0bnqr")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -100,6 +108,7 @@ layout_mode = 2
 [node name="GameMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_type_variation = &"MenuPanel"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu"]
 layout_mode = 2
@@ -107,44 +116,89 @@ layout_mode = 2
 [node name="SaveContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+[node name="CurrentSlotLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-bbcode_enabled = true
-text = "[center]Progress is saved automatically."
-fit_content = true
+text = "Current Slot:"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
 layout_mode = 2
-alignment = 1
 
-[node name="SaveButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
 layout_mode = 2
-text = "Save"
+size_flags_horizontal = 3
 
-[node name="MainMenuButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainMenuButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Main Menu"
 
-[node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+[node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 auto_translate_mode = 1
 layout_mode = 2
-text = "Quit"
+text = "Desktop"
+
+[node name="SaveHintLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_51xcd")
+bbcode_enabled = true
+text = "Progress will be saved."
+fit_content = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer3"]
+layout_mode = 2
+text = "Save"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quick Save"
+
+[node name="SaveToSlotButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+text = "Save To Slot..."
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+layout_mode = 2
+text = "Controls"
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "Advance - [LClick] / [Space] / [Right]
+text = "Advance - [LClick] / [Space] / [Right] / [Enter] / [Left]
+Move Window - [LClick] / [RClick] + drag
 Screenshot - [S]
 Toggle UI - [H]
 Toggle auto - [A]
-Go back - [Scroll Down] / [Left]"
+History - [L]"
 fit_content = true
 
 [node name="TextMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(509, 0)
+custom_minimum_size = Vector2(509, 187)
 layout_mode = 2
+theme_type_variation = &"MenuPanel"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu"]
 layout_mode = 2
@@ -168,6 +222,7 @@ layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 min_value = 1.0
+max_value = 200.0
 value = 1.0
 
 [node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
@@ -202,10 +257,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "Fonts"
 
 [node name="HBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
+visible = false
 layout_mode = 2
 
 [node name="LabelFontOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/HBoxContainer"]
@@ -215,10 +272,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "Font Size"
 
 [node name="GridContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
+visible = false
 layout_mode = 2
 
 [node name="ResetLabelFontSizeButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer"]
@@ -240,6 +299,7 @@ value = 24.0
 layout_mode = 2
 
 [node name="GridContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
+visible = false
 layout_mode = 2
 
 [node name="ResetRTLFontSizeButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2"]
@@ -286,6 +346,7 @@ scroll_active = false
 
 [node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
 layout_mode = 2
+theme_type_variation = &"MenuPanel"
 
 [node name="GridContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu"]
 layout_mode = 2
@@ -299,13 +360,16 @@ layout_mode = 2
 text = "Window"
 
 [node name="FullscreenCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer/VBoxContainer"]
+custom_minimum_size = Vector2(134, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 text = "Fullscreen
 "
 
 [node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_type_variation = &"MenuPanel"
 
 [node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu"]
 layout_mode = 2
@@ -369,9 +433,14 @@ text = "Close"
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/TextButton" to="." method="set_menu" binds= [1]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/DisplayButton" to="." method="set_menu" binds= [2]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="show_save_hint"]
+[connection signal="mouse_exited" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="hide_save_hint"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="show_save_hint"]
+[connection signal="mouse_exited" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="hide_save_hint"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/SaveToSlotButton" to="." method="_on_save_to_slot_button_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/TextSpeedSlider" to="." method="_on_text_speed_slider_value_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_pressed"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_value_changed"]

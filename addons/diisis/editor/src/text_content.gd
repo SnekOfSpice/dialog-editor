@@ -398,13 +398,13 @@ func prepare_line_for_text_insertion():
 	text_box.insert_text_at_caret("[]>")
 
 func fill_active_actors():
-	var title = Pages.dropdown_title_for_dialog_syntax
 	active_actors.clear()
 	for v in Pages.get_speakers():
 		active_actors.append(v)
 
 
 func _on_text_box_focus_entered() -> void:
+	fill_active_actors()
 	if text_box.text.is_empty() and Pages.use_dialog_syntax:
 		prepare_line_for_text_insertion()
 

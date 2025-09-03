@@ -289,6 +289,8 @@ max_value = 1e+07
 [node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
+mouse_default_cursor_shape = 3
 
 [node name="LoopbackPanelContainer" type="PanelContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer"]
 layout_mode = 2
@@ -341,6 +343,8 @@ max_value = 1e+07
 [node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2"]
 auto_translate_mode = 1
 layout_mode = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 3
 
 [node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_bcn4k")]
 layout_mode = 2
@@ -374,10 +378,12 @@ icon = ExtResource("15_av1qi")
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="_on_target_value_changed"]
 [connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="update_incoming_references"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="_on_target_value_changed"]
+[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/TargetStringLabel" to="." method="_on_target_string_label_gui_input"]
 [connection signal="toggled" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
 [connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
 [connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="update_incoming_references"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="_on_target_value_changed"]
 [connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="update_incoming_references"]
 [connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="_on_target_value_changed"]
+[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackTargetStringLabel" to="." method="_on_loopback_target_string_label_gui_input"]
 [connection signal="pressed" from="ChoiceEdit/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]

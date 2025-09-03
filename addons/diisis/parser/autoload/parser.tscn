@@ -4,4 +4,3 @@
 
 [node name="Parser" type="Node"]
 script = ExtResource("1_0uufo")
-localization_file = "res://game/diisis_integration/l10n.json"

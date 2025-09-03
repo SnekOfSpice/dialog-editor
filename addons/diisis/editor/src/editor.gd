@@ -119,9 +119,6 @@ func init(active_file_path:="") -> void:
 	file_item.add_item("Export    (Shift+E)", 5)
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
-	#var ingest : PopupMenu = file_item.get_node("IngestMenu")
-	#file_item.add_submenu_node_item("Ingest Pages", ingest)
-	#ingest.init()
 	
 	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
 	file_item.add_item("Open with Ctrl + ...")
@@ -213,6 +210,9 @@ func load_page(number: int, discard_without_saving:=false):
 	update_controls()
 	await get_tree().process_frame
 	set_opening_cover_visible(false)
+	
+	if not get_save_path().is_empty():
+		Pages.current_page_number_by_file_name.set(get_save_path(), number)
 
 func get_line_data(index:int):
 	return 
@@ -552,8 +552,6 @@ func serialize() -> Dictionary:
 		"current_page_number" = get_current_page_number(),
 		"page_view" = get_selected_page_view(),
 		"text_size_id" = find_child("TextSizeButton").get_selected_id(),
-		"ingest_capitalize" = find_child("IngestMenu").is_capitalize_checked(),
-		"ingest_whitespace" = find_child("IngestMenu").is_whitespace_checked(),
 	}
 
 func _on_fd_save_file_selected(path: String) -> void:
@@ -592,13 +590,10 @@ func open_from_path(path:String):
 	set_text_size(editor_data.get("text_size_id", 3))
 	update_page_view(editor_data.get("page_view", PageView.Full))
 	
-	var ingest_menu : PopupMenu = find_child("IngestMenu")
-	ingest_menu.set_capitalize_checked(editor_data.get("ingest_capitalize", ingest_menu.is_capitalize_checked()))
-	ingest_menu.set_whitespace_checked(editor_data.get("ingest_whitespace", ingest_menu.is_whitespace_checked()))
-	
 	await get_tree().process_frame
 	opening = false
-	load_page(editor_data.get("current_page_number", 0), true)
+	print("WE HAVE ", Pages.page_scroll_by_idx_by_file_name)
+	load_page(Pages.current_page_number_by_file_name.get(get_save_path(), 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)
@@ -779,6 +774,8 @@ func _on_editor_id_pressed(id: int) -> void:
 				),
 				"About DIISIS"
 			)
+		5:
+			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki")
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:
@@ -1348,17 +1345,6 @@ func _on_library_of_babel_index_pressed(index: int) -> void:
 	t.timeout.connect(OS.shell_open.bind("https://libraryofbabel.info/search.html"))
 
 
-func _on_ingest_menu_ingest_from_clipboard() -> void:
-	TextToDiisis.ingest_pages(
-		DisplayServer.clipboard_get(),
-		find_child("IngestMenu").build_payload())
-
-
-func _on_ingest_menu_ingest_from_file() -> void:
-	popup_ingest_file_dialog(
-		["PAGE",
-		find_child("IngestMenu").build_payload()
-		])
 
 func is_importing() -> bool:
 	return $ImportingCover.visible

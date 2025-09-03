@@ -16,8 +16,6 @@ script = ExtResource("1_uh8ly")
 screen_fade_in = 0.148651
 screen_fade_out = 0.0883884
 
-[node name="Background" type="Node2D" parent="."]
-
 [node name="StageContainer" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15

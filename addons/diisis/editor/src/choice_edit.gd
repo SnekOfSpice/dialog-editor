@@ -454,3 +454,15 @@ func set_editing_view(value:int):
 func flash_highlight():
 	DiisisEditorUtil.flash_highlight(%GoToHighlight)
 	
+
+
+func _on_target_string_label_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			Pages.editor.request_go_to_address(get_jump_target_address())
+
+
+func _on_loopback_target_string_label_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			Pages.editor.request_go_to_address(get_loopback_target_address())
