@@ -23,21 +23,23 @@ const PUNCTUATION_MARKS := [
 ]
 
 const PREFERENCE_PROPS := [
+	"append_periods",
+	"collapse_conditional_controls_by_default",
+	"current_page_number_by_file_name",
+	"default_address_mode_pages",
+	"first_index_as_page_reference_only",
+	"fix_apostrophes",
+	"page_scroll_by_idx_by_file_name",
 	"preferences_import",
 	"preferences_import",
 	"replacement_rules",
-	"append_periods",
-	"fix_apostrophes",
+	"require_colons_on_actor_ingestion",
 	"save_on_play",
-	"warn_on_fact_deletion",
-	"silly",
-	"show_facts_buttons",
-	"collapse_conditional_controls_by_default",
-	"first_index_as_page_reference_only",
-	"validate_function_calls_on_focus",
 	"shader",
-	"default_address_mode_pages",
-	"require_colons_on_actor_ingestion"
+	"show_facts_buttons",
+	"silly",
+	"validate_function_calls_on_focus",
+	"warn_on_fact_deletion",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -63,7 +65,8 @@ var custom_method_dropdown_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
-
+var current_page_number_by_file_name := {}
+var page_scroll_by_idx_by_file_name := {}
 # oh god have mercy on me
 # im sorry diisis this is an actual sti I just gave you jfc
 # i couldnt figure out why the choice labels would just refuse to get updated on import

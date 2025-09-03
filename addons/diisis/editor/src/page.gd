@@ -12,6 +12,8 @@ var id : String
 signal request_delete()
 
 func init(n:=number):
+	if not (find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.is_connected(on_scroll_changed):
+		(find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.connect(on_scroll_changed)
 	%GoToHighlight.self_modulate.a = 0
 	var data = Pages.page_data.get(n)
 	number = n
@@ -64,7 +66,6 @@ func serialize() -> Dictionary:
 	data["id"] = id
 	data["page_key"] = get_page_key()
 	data["next"] = find_child("NextLineEdit").value
-	data["meta.scroll_vertical"] = int(find_child("ScrollContainer").scroll_vertical)
 	data["terminate"] = find_child("TerminateCheck").button_pressed
 	data["facts"] = find_child("Facts").serialize()
 	data["meta.selected"] = find_child("LineSelector").button_pressed
@@ -81,6 +82,13 @@ func serialize() -> Dictionary:
 	return data
 
 func deserialize(data: Dictionary):
+	var save_path : String = Pages.editor.get_save_path()
+	var scroll_vertical : int
+	if save_path.is_empty():
+		scroll_vertical = 0
+	else:
+		scroll_vertical = Pages.page_scroll_by_idx_by_file_name.get(save_path, {}).get(number, 0)#[number]# = int(find_child("ScrollContainer").scroll_vertical)
+		
 	block_next_duplicate_key_warning = false
 	if not lines:
 		init(int(data.get("next", number+1)))
@@ -98,8 +106,8 @@ func deserialize(data: Dictionary):
 	update_input_validity(true)
 	
 	await get_tree().process_frame
-	find_child("ScrollContainer").scroll_vertical = data.get("meta.scroll_vertical", 0)
 	update()
+	find_child("ScrollContainer").scroll_vertical = scroll_vertical
 
 func set_skip(value:bool):
 	modulate.a = 0.6 if value else 1
@@ -688,3 +696,16 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
+
+
+func on_scroll_changed(new_value:int) -> void:
+	if Pages.editor.opening:
+		return
+	
+	var save_path : String = Pages.editor.get_save_path()
+	if save_path.is_empty():
+		return
+	
+	if not Pages.page_scroll_by_idx_by_file_name.has(save_path):
+		Pages.page_scroll_by_idx_by_file_name[save_path] = {}
+	Pages.page_scroll_by_idx_by_file_name[save_path][number] = new_value

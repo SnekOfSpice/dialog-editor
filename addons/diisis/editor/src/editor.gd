@@ -210,6 +210,9 @@ func load_page(number: int, discard_without_saving:=false):
 	update_controls()
 	await get_tree().process_frame
 	set_opening_cover_visible(false)
+	
+	if not get_save_path().is_empty():
+		Pages.current_page_number_by_file_name.set(get_save_path(), number)
 
 func get_line_data(index:int):
 	return 
@@ -589,7 +592,8 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
-	load_page(editor_data.get("current_page_number", 0), true)
+	print("WE HAVE ", Pages.page_scroll_by_idx_by_file_name)
+	load_page(Pages.current_page_number_by_file_name.get(get_save_path(), 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:
 	open_from_path(path)
