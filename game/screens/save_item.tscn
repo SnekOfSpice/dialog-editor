@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://ci8kef6ajk80i"]
+
+[ext_resource type="Script" uid="uid://mmisnvxbh28j" path="res://game/screens/save_item.gd" id="1_qsytn"]
+[ext_resource type="Texture2D" uid="uid://dyu323vcu5wwa" path="res://game/systems/save_system/no_data.png" id="2_w4nvg"]
+
+[node name="SaveItem" type="Button"]
+custom_minimum_size = Vector2(124, 182)
+offset_right = 124.0
+offset_bottom = 182.0
+script = ExtResource("1_qsytn")
+
+[node name="Container" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 54.0
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Slot" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Slot 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_filter = 2
+texture = ExtResource("2_w4nvg")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Data" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "bla bla bla"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

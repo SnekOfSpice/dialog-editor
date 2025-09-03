@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://44cw5qgkdvgg"]
+
+[ext_resource type="Shader" uid="uid://bjc0tl7n3j8f5" path="res://game/characters/active.gdshader" id="1_0pyal"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_0pyal")
+shader_parameter/outline_c = Color(0.0051104, 0.000858558, 1.88011e-10, 1)
+shader_parameter/progress = 0.0
