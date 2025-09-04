@@ -114,10 +114,10 @@ func get_fact_value():
 	elif data_type == DataType.Int:
 		return find_child("IntValueSpinBox").value
 
-func get_fact_name():
+func get_fact_name() -> String:
 	return find_child("FactName").text
 
-func update_unregsitered_prompt():
+func update_unregsitered_prompt() -> void:
 	var new_text = entered_text
 	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(entered_text)
 	if not Pages.has_fact(new_text) and not new_text.is_empty():
@@ -240,3 +240,11 @@ func _on_fact_name_text_submitted(new_text: String) -> void:
 
 func _on_fact_name_text_changed(new_text: String) -> void:
 	find_child("DataTypeButton").disabled = Pages.has_fact(new_text)
+
+
+func _on_fact_name_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var fact_name := get_fact_name()
+			if Pages.has_fact(fact_name):
+				Pages.editor.open_facts_window(fact_name)

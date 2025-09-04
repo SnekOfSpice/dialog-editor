@@ -112,6 +112,7 @@ text = "register"
 [node name="Hint" parent="." instance=ExtResource("3_i2pc6")]
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
+[connection signal="gui_input" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_gui_input"]
 [connection signal="text_changed" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_changed"]
 [connection signal="text_entered" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_entered"]
 [connection signal="text_submitted" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_text_submitted"]

@@ -178,6 +178,7 @@ ok_button_text = "Delete Fact (NO UNDO)"
 
 [node name="CreateFactWindow" parent="." instance=ExtResource("2_bhobo")]
 visible = false
+always_on_top = true
 
 [connection signal="pressed" from="HBoxContainer2/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="item_clicked" from="Facts" to="." method="_on_facts_item_clicked"]
@@ -195,3 +196,4 @@ visible = false
 [connection signal="canceled" from="ConfirmDelete" to="." method="_on_confirm_delete_canceled"]
 [connection signal="confirmed" from="ConfirmDelete" to="." method="_on_confirm_delete_confirmed"]
 [connection signal="fact_created" from="CreateFactWindow" to="." method="_on_create_fact_window_fact_created"]
+[connection signal="visibility_changed" from="CreateFactWindow" to="." method="_on_create_fact_window_visibility_changed"]

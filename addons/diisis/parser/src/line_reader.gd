@@ -1392,7 +1392,6 @@ func _insert_strings_in_current_dialine():
 	var ends_with_advance := new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
 	
-	# TODO maybe html entities
 	for entity in DIISIS.HTML_ENTITIES.keys():
 		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	

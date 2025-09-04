@@ -51,3 +51,8 @@ func _on_create_button_pressed() -> void:
 		fact_value = int(find_child("DefaultIntSpinBox").value)
 	Pages.register_fact(fact_name, fact_value)
 	emit_signal("close")
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		$VBoxContainer/LineEdit.grab_focus()

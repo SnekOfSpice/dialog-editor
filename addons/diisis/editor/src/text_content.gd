@@ -690,6 +690,7 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame
 			var tag : String = get_tag_under_caret().get("tag", "")
+			var word_under_caret = get_word_under_caret()
 			if tag.begins_with("<call:") or tag.begins_with("<func:"):
 				tag = tag.trim_prefix("<call:")
 				tag = tag.trim_prefix("<func:")
@@ -703,17 +704,16 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				tag = tag.trim_suffix(">")
 				DiisisEditorUtil.search_variable(tag)
 			elif tag.begins_with("<fact:"):
-				Pages.editor.open_window_by_string("FactsPopup")
+				Pages.editor.open_facts_window(tag.trim_prefix("<fact:").trim_suffix(">"))
 			elif not tag.is_empty():
 				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
-			
-			var word_under_caret = get_word_under_caret()
-			if word_under_caret in Pages.dropdown_titles:
+			elif word_under_caret in Pages.dropdown_titles:
 				Pages.editor.open_window_by_string("DropdownWindow")
 				return
-			for dropdown : Array in Pages.dropdowns.values():
-				if word_under_caret in dropdown:
-					Pages.editor.open_window_by_string("DropdownWindow")
+			else:
+				for dropdown : Array in Pages.dropdowns.values():
+					if word_under_caret in dropdown:
+						Pages.editor.open_window_by_string("DropdownWindow")
 			
 
 func _on_import_ingest_from_clipboard() -> void:
