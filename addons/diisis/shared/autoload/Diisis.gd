@@ -35,6 +35,22 @@ var control_sequences_with_colon := [
 ]
 var control_sequences_with_closing_tag := ["ruby"]
 
+
+const HTML_ENTITIES := {
+	"&amp;" : "&",
+	"&lt;" : "<",
+	"&gt;" : ">",
+	"&quot;" : "\"",
+	"&apos;" : "\'",
+	"&cent;" : "¢",
+	"&pound;" : "£",
+	"&yen;" : "¥",
+	"&euro;" : "€",
+	"&copy;" : "©",
+	"&reg;" : "®",
+	"&trade;" : "™",
+}
+
 func type_to_str(type:int) -> String:
 	match type:
 		TYPE_FLOAT:

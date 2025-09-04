@@ -361,7 +361,7 @@ func update_compliance_prompt():
 		if not complaints.is_empty():
 			color_string += "83"
 		complaints.append(str("[color=", color_string, "]",
-			"Invalid tag ", call, ": ", compliances.get(call),
+			"[img]uid://by6pyf3vqncfa[/img] [code]", call, "[/code]: ", compliances.get(call),
 			"[/color]"
 			))
 	label.text = " | ".join(complaints)
@@ -538,6 +538,37 @@ func get_compliances() -> Dictionary:
 						break
 			if not has_closer:
 				compliances[opener.get("tag")] = "No matching closing </ruby> in line %s." % (opener.get("line_index") + 1)
+	
+	var regex = RegEx.new()
+	regex.compile("&.*?;")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		if not entity_match in DIISIS.HTML_ENTITIES.keys():
+			compliances[entity_match] = "Invalid HTML entity"
+	
+	regex.compile("<.*?>")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		if entity_match.contains(":"):
+			var tag_portion_of_match = entity_match.split(":")[0]
+			var is_invalid := true
+			for tag : String in DIISIS.control_sequences_with_colon:
+				if tag_portion_of_match == "<" + tag:
+					is_invalid = false
+					break
+			if is_invalid:
+				compliances[entity_match] = "Invalid tag"
+			continue
+		
+		var is_invalid := true
+		for tag : String in DIISIS.control_sequences:
+			if entity_match == "<" + tag + ">":
+				is_invalid = false
+				break
+		if is_invalid:
+			compliances[entity_match] = "Invalid tag"
+	
+	
 	
 	return compliances
 

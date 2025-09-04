@@ -1385,20 +1385,6 @@ func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
 		return get_actor_config_property(str("body_label_", wrapper), current_raw_name, "")
 	return ""
 
-const HTML_ENTITIES := {
-	"&amp;" : "&",
-	"&lt;" : "<",
-	"&gt;" : ">",
-	"&quot;" : "\"",
-	"&apos;" : "\'",
-	"&cent;" : "¢",
-	"&pound;" : "£",
-	"&yen;" : "¥",
-	"&euro;" : "€",
-	"&copy;" : "©",
-	"&reg;" : "®",
-	"&trade;" : "™",
-}
 
 func _insert_strings_in_current_dialine():
 	var new_text : String = _dialog_lines[_dialog_line_index]
@@ -1407,8 +1393,8 @@ func _insert_strings_in_current_dialine():
 	new_text = new_text.trim_suffix("<advance>")
 	
 	# TODO maybe html entities
-	for entity in HTML_ENTITIES.keys():
-		new_text = new_text.replace(entity, HTML_ENTITIES.get(entity))
+	for entity in DIISIS.HTML_ENTITIES.keys():
+		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	
 	# prepend name
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
