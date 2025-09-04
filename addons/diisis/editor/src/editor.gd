@@ -592,7 +592,6 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
-	print("WE HAVE ", Pages.page_scroll_by_idx_by_file_name)
 	load_page(Pages.current_page_number_by_file_name.get(get_save_path(), 0), true)
 
 func _on_fd_open_file_selected(path: String) -> void:

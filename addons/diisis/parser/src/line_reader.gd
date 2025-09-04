@@ -1223,10 +1223,14 @@ func _replace_tags(lines:Array) -> Array:
 					push_warning("FUCK")
 					break
 				var segment_start_index : int
+				var ampersand := false
 				if text[scan_index] == "[":
 					segment_start_index = text.find("]", scan_index) + 1
 				elif text[scan_index] == "<":
 					segment_start_index = text.find(">", scan_index) + 1
+				elif text[scan_index] == "&":
+					ampersand = true
+					segment_start_index = text.find(";", scan_index) + 1
 				else:
 					segment_start_index = scan_index
 				var segment_end_index : int = text.length() - 1
@@ -1234,28 +1238,44 @@ func _replace_tags(lines:Array) -> Array:
 					segment_end_index = min(segment_end_index, text.find("[", segment_start_index))
 				if text.find("<", segment_start_index) != -1:
 					segment_end_index = min(segment_end_index, text.find("<", segment_start_index))
+				if text.find("&", segment_start_index) != -1:
+					ampersand = true
+					segment_end_index = min(segment_end_index, text.find("&", segment_start_index))
 				scan_index = segment_end_index + 1
 				var end1 = INF
 				var end2 = INF
+				var end3 = INF
 				if text.find("]", scan_index) != -1:
 					end1 = text.find("]", scan_index)
 					end1 += 1
 				if text.find(">", scan_index) != -1:
 					end2 = text.find(">", scan_index)
 					end2 += 1
-				if end1 < INF and end2 < INF:
+				if text.find(";", scan_index) != -1 and ampersand:
+					end3 = text.find(";", scan_index)
+					end3 += 1
+				if end1 < INF and end2 < INF and end3 < INF:
+					scan_index = min(end3, min(end1, end2))
+				elif end1 < INF and end2 < INF:
 					scan_index = min(end1, end2)
+				elif end2 < INF and end3 < INF:
+					scan_index = min(end2, end3)
+				elif end1 < INF and end3 < INF:
+					scan_index = min(end1, end3)
 				elif end1 < INF:
 					scan_index = end1
 				elif end2 < INF:
 					scan_index = end2
+				elif end3 < INF:
+					scan_index = end3
 				var nontag_text := text.substr(segment_start_index, segment_end_index - segment_start_index)
 				last_tag = text.substr(segment_end_index, scan_index - segment_end_index)
+				
 				if not last_tag in ["[img]", ["url"]]:
 					nontag_text = str(callv_custom(call, [nontag_text]))
 				better_text += nontag_text
 				better_text += last_tag
-			print("text", better_text)
+			#print("text", better_text)
 			lines[i] = better_text
 			i += 1
 	
@@ -1365,6 +1385,21 @@ func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
 		return get_actor_config_property(str("body_label_", wrapper), current_raw_name, "")
 	return ""
 
+const HTML_ENTITIES := {
+	"&amp;" : "&",
+	"&lt;" : "<",
+	"&gt;" : ">",
+	"&quot;" : "\"",
+	"&apos;" : "\'",
+	"&cent;" : "¢",
+	"&pound;" : "£",
+	"&yen;" : "¥",
+	"&euro;" : "€",
+	"&copy;" : "©",
+	"&reg;" : "®",
+	"&trade;" : "™",
+}
+
 func _insert_strings_in_current_dialine():
 	var new_text : String = _dialog_lines[_dialog_line_index]
 	new_text = _trim_trimmables(new_text)
@@ -1372,6 +1407,8 @@ func _insert_strings_in_current_dialine():
 	new_text = new_text.trim_suffix("<advance>")
 	
 	# TODO maybe html entities
+	for entity in HTML_ENTITIES.keys():
+		new_text = new_text.replace(entity, HTML_ENTITIES.get(entity))
 	
 	# prepend name
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:

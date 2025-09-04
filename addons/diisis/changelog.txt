@@ -7,9 +7,11 @@ General
 
 Editor
 - Fix a bug in the LineReader find function where it'd add a triple "/"
+- Add HTML entity support (stuff like &lt;)
 
 Runtime
 - Improved an error message in LineReader
+- made LineReader.body_label_function_funnel skip tags
 
 -------------------------------------------------
 DIISIS 0.6 2025-09-03
