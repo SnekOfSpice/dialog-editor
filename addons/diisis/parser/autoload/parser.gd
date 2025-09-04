@@ -436,7 +436,7 @@ func go_back():
 		var instr_text : String = instruction.get("meta.reverse_text", "")
 		if instr_text.is_empty():
 			instr_text = instruction.get("meta.text")
-		line_reader.execute(instr_text)
+		line_reader._execute(instr_text)
 	
 	await get_tree().process_frame
 	address_trail_index += trail_shift
@@ -537,12 +537,12 @@ func get_next(page_index:int) -> int:
 		return -1
 	return int(page_data.get(page_index).get("next"))
 
-func open_connection(new_lr: LineReader):
+func _open_connection(new_lr: LineReader):
 	line_reader = new_lr
 	line_reader.connect("line_finished", read_next_line)
 	line_reader.connect("jump_to_page", read_page)
 
-func close_connection():
+func _close_connection():
 	line_reader.disconnect("line_finished", read_next_line)
 	line_reader.disconnect("jump_to_page", read_page)
 	line_reader = null
@@ -660,7 +660,7 @@ func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictio
 	
 	return data.get("Custom", {})
 
-func str_to_typed(value:String, type:int):
+func _str_to_typed(value:String, type:int):
 	match type:
 		TYPE_FLOAT:
 			return float(value)

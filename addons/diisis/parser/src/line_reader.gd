@@ -419,7 +419,7 @@ func serialize() -> Dictionary:
 	result["dialog_lines"] = _dialog_lines 
 	result["_full_prefix"] = _full_prefix 
 	result["handled_comments"] = _handled_comments
-	result["instruction_handler"] = serialize_instruction_handler_data() 
+	result["instruction_handler"] = _serialize_instruction_handler_data() 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
 	result["_last_raw_name"] = _last_raw_name
 	result["line_data"] = _line_data 
@@ -473,7 +473,7 @@ func deserialize(data: Dictionary):
 	_dialog_lines = data.get("dialog_lines")
 	_full_prefix = data.get("_full_prefix", _full_prefix)
 	_handled_comments = data.get("handled_comments", [])
-	deserialize_instruction_handler_data(data.get("instruction_handler", {}))
+	_deserialize_instruction_handler_data(data.get("instruction_handler", {}))
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	_last_raw_name = data.get("_last_raw_name", "")
 	_line_data = data.get("line_data", {})
@@ -489,7 +489,7 @@ func deserialize(data: Dictionary):
 	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", preserve_name_in_past_lines)
 	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
 	_ruby_strings = data.get("_ruby_strings")
-	_ruby_indices = strarr_to_vec2iarr(data.get("_ruby_indices"))
+	_ruby_indices = _strarr_to_vec2iarr(data.get("_ruby_indices"))
 	_showing_text = data.get("showing_text")
 	_subaddresses_in_history = data.get("_subaddresses_in_history")
 	terminated = data.get("terminated")
@@ -530,7 +530,7 @@ func _set_dict_to_str_str_dict(target_variable: StringName, map: Dictionary):
 	for key in map.keys():
 		target[key] = map.get(key)
 
-func strarr_to_vec2iarr(strings:Array) -> Array:
+func _strarr_to_vec2iarr(strings:Array) -> Array:
 	var result := []
 	
 	for vec : String in strings:
@@ -585,8 +585,8 @@ func _ready() -> void:
 	ParserEvents.body_label_text_changed.connect(_on_body_label_text_changed)
 	ParserEvents.display_name_changed.connect(_on_name_label_updated)
 	
-	Parser.open_connection(self)
-	tree_exiting.connect(Parser.close_connection)
+	Parser._open_connection(self)
+	tree_exiting.connect(Parser._close_connection)
 	
 	_remaining_auto_pause_duration = auto_pause_duration
 	
@@ -769,7 +769,7 @@ func _read_new_line(new_line: Dictionary):
 	if not skip:
 		ParserEvents.read_new_line.emit(line_index)
 	
-	var eval = evaluate_conditionals(_line_data.get("conditionals"))
+	var eval = _evaluate_conditionals(_line_data.get("conditionals"))
 	var conditional_is_true = eval[0]
 	var behavior = eval[1]
 	
@@ -831,7 +831,7 @@ func _read_new_line(new_line: Dictionary):
 				return
 			
 			if Parser.use_dialog_syntax:
-				content = replace_lc_tags(content)
+				content = _replace_lc_tags(content)
 			
 			if Parser.use_dialog_syntax or chatlog_enabled:
 				var lines = content.split("[]>")
@@ -844,7 +844,7 @@ func _read_new_line(new_line: Dictionary):
 					var actor_name = l.split(":")[0]
 					_dialog_actors.append(actor_name)
 					var line : String = l.trim_prefix(str(actor_name, ":"))
-					line = trim_trimmables(line)
+					line = _trim_trimmables(line)
 					if chatlog_enabled:
 						actor_name = _trim_syntax_and_emit_dialog_line_args(actor_name)
 						
@@ -935,7 +935,7 @@ func _read_new_line(new_line: Dictionary):
 	
 	_reverse_next_instruction = false
 
-func replace_lc_tags(full_line_text:String) -> String:
+func _replace_lc_tags(full_line_text:String) -> String:
 	var lc_position := full_line_text.find("<lc>")
 	while lc_position != -1:
 		var context_start := full_line_text.rfind("[]>", lc_position)
@@ -1001,7 +1001,7 @@ func _process(delta: float) -> void:
 		if not has_executed:
 			ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
 			has_executed = true
-			has_received_execute_callback = not execute(execution_text)
+			has_received_execute_callback = not _execute(execution_text)
 		
 		if not has_received_execute_callback:
 			return
@@ -1212,7 +1212,51 @@ func _replace_tags(lines:Array) -> Array:
 		var i := 0
 		while i < lines.size():
 			var text : String = lines[i]
-			lines[i] = str(callv_custom(call, [text]))
+			
+			var scan_index := 0
+			var security := 999
+			var last_tag : String
+			var better_text := ""
+			while scan_index < text.length():
+				security -= 1
+				if security < 0:
+					push_warning("FUCK")
+					break
+				var segment_start_index : int
+				if text[scan_index] == "[":
+					segment_start_index = text.find("]", scan_index) + 1
+				elif text[scan_index] == "<":
+					segment_start_index = text.find(">", scan_index) + 1
+				else:
+					segment_start_index = scan_index
+				var segment_end_index : int = text.length() - 1
+				if text.find("[", segment_start_index) != -1:
+					segment_end_index = min(segment_end_index, text.find("[", segment_start_index))
+				if text.find("<", segment_start_index) != -1:
+					segment_end_index = min(segment_end_index, text.find("<", segment_start_index))
+				scan_index = segment_end_index + 1
+				var end1 = INF
+				var end2 = INF
+				if text.find("]", scan_index) != -1:
+					end1 = text.find("]", scan_index)
+					end1 += 1
+				if text.find(">", scan_index) != -1:
+					end2 = text.find(">", scan_index)
+					end2 += 1
+				if end1 < INF and end2 < INF:
+					scan_index = min(end1, end2)
+				elif end1 < INF:
+					scan_index = end1
+				elif end2 < INF:
+					scan_index = end2
+				var nontag_text := text.substr(segment_start_index, segment_end_index - segment_start_index)
+				last_tag = text.substr(segment_end_index, scan_index - segment_end_index)
+				if not last_tag in ["[img]", ["url"]]:
+					nontag_text = str(callv_custom(call, [nontag_text]))
+				better_text += nontag_text
+				better_text += last_tag
+			print("text", better_text)
+			lines[i] = better_text
 			i += 1
 	
 	var i := 0
@@ -1239,7 +1283,7 @@ func _replace_tags(lines:Array) -> Array:
 						local_scan_index += 1
 					var_name = var_name.trim_suffix(">")
 					control_to_replace += ">"
-					new_text = new_text.replace(control_to_replace, str(get_property_from_self_or_autoload(var_name)))
+					new_text = new_text.replace(control_to_replace, str(_get_property_from_self_or_autoload(var_name)))
 				elif new_text.find("<func:", scan_index) == scan_index:
 					var local_scan_index := scan_index + 6
 					var func_text := ""
@@ -1323,9 +1367,11 @@ func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
 
 func _insert_strings_in_current_dialine():
 	var new_text : String = _dialog_lines[_dialog_line_index]
-	new_text = trim_trimmables(new_text)
+	new_text = _trim_trimmables(new_text)
 	var ends_with_advance := new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
+	
+	# TODO maybe html entities
 	
 	# prepend name
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
@@ -1394,7 +1440,7 @@ func _handle_tags_and_start_reading():
 	_text_speed_by_character_index.clear()
 	
 	var new_text : String = _dialog_lines[_dialog_line_index]
-	new_text = trim_trimmables(new_text)
+	new_text = _trim_trimmables(new_text)
 	
 	if new_text.contains("<advance>") and not new_text.ends_with("<advance>"):
 		push_warning(str("Dialog line \"", new_text, "\" contains an <advance> tag that is not at the end of the line."))
@@ -1580,7 +1626,7 @@ func _handle_tags_and_start_reading():
 	ParserEvents.body_label_text_changed.emit(old_text, cleaned_text, _lead_time)
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
-func ensure_ruby_container(on_label:=body_label):
+func _ensure_ruby_container(on_label:=body_label):
 	if not ruby_containers_by_label.get(on_label):
 		var ruby_root = ScrollContainer.new()
 		ruby_root.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
@@ -1608,7 +1654,7 @@ func set_ruby_enabled(value:bool):
 	ruby_enabled = value
 	update_body_label()
 
-func update_ruby_root_scroll(value:float, root:ScrollContainer):
+func _update_ruby_root_scroll(value:float, root:ScrollContainer):
 	root.set_v_scroll(value)
 
 var ruby_containers_by_label := {}
@@ -1617,15 +1663,15 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 	if not ruby_enabled:
 		return
 	on_label.clip_contents = false
-	ensure_ruby_container(on_label)
+	_ensure_ruby_container(on_label)
 	ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
 	if on_label == body_label:
 		for label : RubyLabel in _ruby_labels:
 			label.queue_free()
 		_ruby_labels.clear()
 	
-	if not on_label.get_v_scroll_bar().value_changed.is_connected(update_ruby_root_scroll):
-		on_label.get_v_scroll_bar().value_changed.connect(update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
+	if not on_label.get_v_scroll_bar().value_changed.is_connected(_update_ruby_root_scroll):
+		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
 	
 	_body_duplicate.visible_characters = 1
 	_body_duplicate_line_height = _body_duplicate.get_content_height()
@@ -1746,7 +1792,7 @@ func _is_ruby_stretch(ruby_text:String) -> bool:
 	return true
 
 func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> RubyLabel:
-	ensure_ruby_container(on_label)
+	_ensure_ruby_container(on_label)
 	var ruby_label = RubyLabel.make(indices.x, indices.y, text)
 	if ruby_font_override:
 		ruby_label.set_font(ruby_font_override)
@@ -1776,7 +1822,7 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	
 	return ruby_label
 
-func trim_trimmables(text:String) -> String:
+func _trim_trimmables(text:String) -> String:
 	var begins_trimmable := _begins_with_trimmable(text)
 	while begins_trimmable:
 		for t in _trimmable_strings:
@@ -1840,7 +1886,7 @@ func _emit_comment(comment_position:int):
 	_comments.erase(comment_position)
 
 
-func preserve_into_past_line_container():
+func _preserve_into_past_line_container():
 	if not keep_past_lines:
 		return
 	if not past_lines_container:
@@ -1952,6 +1998,9 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
 	_text_delay += duration
+## If showing text. Resets on successful [method request_advance] call.
+func set_text_display_delay(duration:float):
+	_text_delay = duration
 
 func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	var color : Color = _get_actor_color(_last_raw_name)
@@ -2111,7 +2160,7 @@ func _build_choices(choices, auto_switch:bool):
 	
 	var built_choices : Array = []
 	for option in choices:
-		var conditional_eval = evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
+		var conditional_eval = _evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
 		var cond_true = conditional_eval[0]
 		var cond_behavior = conditional_eval[1]
 		var facts = option.get("facts").get("fact_data_by_name", {})
@@ -2251,7 +2300,7 @@ func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 	
 
 ## returns an array of size 2. index 0 is if the conditionals are satisfied. index 1 is the behavior if it's true
-func evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
+func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
 	var behavior = conditionals.get("behavior_key")
 	var args : Array = conditionals.get("operand_args")
@@ -2335,7 +2384,7 @@ func _handle_header(header: Array):
 func _set_dialog_line_index(value: int):
 	_dialog_line_index = value
 	
-	preserve_into_past_line_container()
+	_preserve_into_past_line_container()
 	
 	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]
@@ -2477,7 +2526,7 @@ var has_executed := false
 var has_received_execute_callback := false
 var emitted_complete := false
 
-func serialize_instruction_handler_data() -> Dictionary:
+func _serialize_instruction_handler_data() -> Dictionary:
 	return {
 		"delay_before" : delay_before,
 		"delay_after" : delay_after,
@@ -2488,7 +2537,7 @@ func serialize_instruction_handler_data() -> Dictionary:
 		"emitted_complete" : emitted_complete,
 	}
 
-func deserialize_instruction_handler_data(data: Dictionary):
+func _deserialize_instruction_handler_data(data: Dictionary):
 	for key in data:
 		set(key, data.get(key))
 
@@ -2513,7 +2562,7 @@ func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_se
 	ParserEvents.instruction_started.emit(execution_text, delay_before)
 	emitted_complete = false
 
-func get_property_from_self_or_autoload(property:String):
+func _get_property_from_self_or_autoload(property:String):
 	var autoload : String
 	if "." in property:
 		autoload = property.split(".")[0]
@@ -2558,7 +2607,7 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 		var default = Parser.get_custom_method_defaults(func_name).get(arg_names[i])
 		if arg_string == "*" and default != null:
 			arg_string = str(default)
-		args.append(Parser.str_to_typed(arg_string, type))
+		args.append(Parser._str_to_typed(arg_string, type))
 		
 		i += 1
 	
@@ -2587,7 +2636,7 @@ func callv_custom(method_name:String, argv):
 		result = callv(method_name, argv)
 	return result
 
-func execute(instruction_text: String) -> bool:
+func _execute(instruction_text: String) -> bool:
 	var instruction_name := instruction_text.split("(")[0]
 	if (not has_method(instruction_name)) and (not "." in instruction_name):
 		push_error(str("Function ", instruction_name, " not found in ", name,"."))
