@@ -6,6 +6,15 @@ signal drop_focus()
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", ":", ";", "#", "*", "+", "~", "'"]
 const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "font", "rainbow", "pulse", "wave", "tornado", "shake", "fade", "code", "char", "center", "left", "right", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
+const BBCODE_TAGS_WITH_EQUALS_PARAMETER := ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
+const BBCODE_TAGS_WITH_ARGUMENTS := [
+
+"rainbow",
+"pulse",
+"wave",
+"tornado",
+"shake",
+"fade",]
 
 var active_actors := [] # list of character names
 
@@ -302,7 +311,7 @@ func _on_text_box_caret_changed() -> void:
 					tag += " rate=20.0 level=5 connected=1"
 				"fade":
 					tag += " start=4 length=14"
-			if tag in ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]:
+			if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
 				tag += "="
 			if not display_text:
 				display_text = closing_tag
@@ -568,6 +577,35 @@ func get_compliances() -> Dictionary:
 		if is_invalid:
 			compliances[entity_match] = "Invalid tag"
 	
+	regex.compile("\\[\\/?.+?\\]")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		var sections := entity_match.split("[")
+		var proper_tag : String = sections[sections.size() - 1]
+		proper_tag = "[" + proper_tag
+		
+		
+		var is_invalid := true
+		for tag : String in BBCODE_TAGS:
+			if tag in ["img", "url"]:
+				if proper_tag.contains("[url=") or proper_tag.contains("[img]") or proper_tag.contains("[/url]") or proper_tag.contains("[/img]"):
+					is_invalid = false
+					break
+			else:
+				if tag in BBCODE_TAGS_WITH_ARGUMENTS:
+					if proper_tag.begins_with("[%s " % tag):
+						is_invalid = false
+						break
+				if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
+					if proper_tag.begins_with("[%s=" % tag):
+						is_invalid = false
+						break
+				
+				if proper_tag == "[%s]" % tag or proper_tag == "[/%s]" % tag:
+					is_invalid = false
+					break
+		if is_invalid:
+			compliances[proper_tag] = "Invalid tag %s " % str(proper_tag)
 	
 	
 	return compliances
