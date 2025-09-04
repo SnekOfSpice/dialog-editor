@@ -2590,12 +2590,12 @@ func callv_custom(method_name:String, argv):
 func execute(instruction_text: String) -> bool:
 	var instruction_name := instruction_text.split("(")[0]
 	if (not has_method(instruction_name)) and (not "." in instruction_name):
-		push_error(str("Function ", instruction_name, " not found in ", get_script().get_global_name(),"."))
+		push_error(str("Function ", instruction_name, " not found in ", name,"."))
 		return false
 	var result = call_from_string(instruction_text)
 	if not result is bool:
 		if warn_on_non_bool_function_return:
-			push_warning(str("Function ", instruction_name, " in ", get_script().get_global_name(), " should return true or false."))
+			push_warning(str("Function ", instruction_name, " in ", name, " should return true or false."))
 		return false
 	return result
 

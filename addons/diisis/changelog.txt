@@ -1,5 +1,18 @@
 -------------------------------------------------
-DIISIS 0.6
+DIISIS 0.6.1 2025-09-04
+Oopsie it's the patch for a few small things
+
+General
+- Make a few functions private
+
+Editor
+- Fix a bug in the LineReader find function where it'd add a triple "/"
+
+Runtime
+- Improved an error message in LineReader
+
+-------------------------------------------------
+DIISIS 0.6 2025-09-03
 This shit breaks compatibility on so many levels! Might as well be a new plugin! Also includes LONER_DOG additions :3
 
 General
