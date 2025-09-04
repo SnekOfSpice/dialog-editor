@@ -20,8 +20,8 @@ enum ChoiceBehaviorAfterSelection {
 }
 
 
-var control_sequences := ["lc", "ap", "mp", "var", "func", "name", "clname", "fact", "strpos", "call", "advance", "ts_rel", "ts_abs", "ts_reset", "comment", "ruby"]
-var control_sequences_with_colon := [
+const CONTROL_SEQUENCES := ["advance", "ap", "call", "clname", "comment", "fact", "func", "lc", "mp", "name", "ruby", "strpos", "ts_abs", "ts_rel", "ts_reset", "var", ]
+const CONTROL_SEQUENCES_WITH_COLON := [
 	"call",
 	"clname",
 	"comment",
@@ -33,7 +33,7 @@ var control_sequences_with_colon := [
 	"ts_abs",
 	"var",
 ]
-var control_sequences_with_closing_tag := ["ruby"]
+const CONTROL_SEQUENCES_WITH_CLOSING_TAG := ["ruby"]
 
 
 const HTML_ENTITIES := {

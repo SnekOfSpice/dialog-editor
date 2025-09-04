@@ -22,6 +22,13 @@ const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
 const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
 
+## TODO ugly workaround to make internal docs work
+## Godot 4.5 will make this unnecessary
+func _ready() -> void:
+	ResourceSaver.save(preload("res://addons/diisis/parser/src/line_reader.gd"))
+	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser_events.gd"))
+	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser.gd"))
+
 func setup_vn_template():
 	var e1 = InputEventMouseButton.new()
 	e1.button_index = MOUSE_BUTTON_LEFT

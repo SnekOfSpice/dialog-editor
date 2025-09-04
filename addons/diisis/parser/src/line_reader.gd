@@ -17,7 +17,7 @@ const UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_c
 enum NameStyle {
 	## The actor's name will be displayed in [member name_label].
 	NameLabel,
-	## The actor's name will be inserted in front of the text with a sequence of optional spaces and characters (See [param prepend_separator] [param prefix_space] [param prefix_suffix]). [member name_label] will be hidden.
+	## The actor's name will be inserted in front of the text with a sequence of optional spaces and characters (See [member inline_name_space_prefix] [member prefix_space] [member inline_name_space_suffix]). [member name_label] will be hidden.
 	Prepend,
 	## Actor name will not be shown. [member name_label] will be hidden.
 	None,

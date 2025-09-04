@@ -252,12 +252,12 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("<"):
-		for a in DIISIS.control_sequences:
+		for a in DIISIS.CONTROL_SEQUENCES:
 			var full_tag : String = a
-			if a in DIISIS.control_sequences_with_colon:
+			if a in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 				full_tag += ":"
 			full_tag += ">"
-			if a in DIISIS.control_sequences_with_closing_tag:
+			if a in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 				full_tag += "</%s>" % a
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
 		text_box.update_code_completion_options(true)
@@ -459,13 +459,13 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			set_caret_movement_to_do(1)
 
-	for control in DIISIS.control_sequences_with_colon:
+	for control in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 		if is_text_before_caret(str("<", control, ":>")):
 			set_caret_movement_to_do(-1)
 			Pages.auto_complete_context = control
 			break
 	
-	for control : String in DIISIS.control_sequences_with_closing_tag:
+	for control : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 		if is_text_before_caret(str("</", control, ">")):
 			set_caret_movement_to_do(-(control.length() + 3))
 			Pages.auto_complete_context = control
@@ -561,7 +561,7 @@ func get_compliances() -> Dictionary:
 		if entity_match.contains(":"):
 			var tag_portion_of_match = entity_match.split(":")[0]
 			var is_invalid := true
-			for tag : String in DIISIS.control_sequences_with_colon:
+			for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 				if tag_portion_of_match == "<" + tag:
 					is_invalid = false
 					break
@@ -570,7 +570,7 @@ func get_compliances() -> Dictionary:
 			continue
 		
 		var is_invalid := true
-		for tag : String in DIISIS.control_sequences:
+		for tag : String in DIISIS.CONTROL_SEQUENCES:
 			if entity_match == "<" + tag + ">":
 				is_invalid = false
 				break
