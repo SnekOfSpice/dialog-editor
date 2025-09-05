@@ -54,5 +54,8 @@ func _on_create_button_pressed() -> void:
 
 
 func _on_visibility_changed() -> void:
+	# incredibly hacky shit to prevent editor errors
+	if get_parent().get_parent().name != "FactsPopupContent":
+		return
 	if visible:
 		$VBoxContainer/LineEdit.grab_focus()

@@ -4,6 +4,7 @@ Oopsie it's the patch for a few small things
 
 General
 - Make a few functions private
+- Add a hacky workaround to force the internal documentation to work (will be fixed with godot 4.5 afaik)
 
 Editor
 - Fix a bug in the LineReader find function where it'd add a triple "/"
