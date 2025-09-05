@@ -1399,7 +1399,7 @@ func _insert_strings_in_current_dialine():
 		if not has_semicolon:
 			push_warning("Text contains a \"&\". Consider using an HTML entity (&amp;) instead.")
 			break
-		var sub := new_text.substr(amp_index, semicolon_index - amp_index)
+		var sub := new_text.substr(amp_index, semicolon_index - amp_index + 1)
 		if not sub in DIISIS.HTML_ENTITIES.keys():
 			push_warning("Unrecognized HTML entity %s" % sub)
 			break
