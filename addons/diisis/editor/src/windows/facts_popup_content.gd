@@ -238,6 +238,7 @@ func _on_cancel_change_default_button_pressed() -> void:
 
 func _on_create_button_pressed() -> void:
 	$CreateFactWindow.popup()
+	(get_parent() as Window).always_on_top = false
 
 
 func _on_create_fact_window_fact_created() -> void:
@@ -252,3 +253,8 @@ func _on_new_default_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_new_name_edit_text_submitted(_new_text: String) -> void:
 	_on_confirm_rename_button_pressed()
+
+
+func _on_create_fact_window_visibility_changed() -> void:
+	if not $CreateFactWindow.visible:
+		(get_parent() as Window).always_on_top = true

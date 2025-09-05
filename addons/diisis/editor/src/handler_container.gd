@@ -61,5 +61,7 @@ func count_dir(path: String):
 			if expression in lines:
 				has_expression = true
 		if has_expression:
-			found_handlers.append(path + "/" + f)
+			var local_path : String = path + "/" + f
+			local_path = local_path.replace("///", "//") # this happens with scripts in the project root
+			found_handlers.append(local_path)
 			

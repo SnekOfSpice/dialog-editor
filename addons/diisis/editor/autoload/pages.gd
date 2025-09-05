@@ -1964,7 +1964,7 @@ func neaten_whitespace(text:String) -> String:
 		text = text.erase(closing_bb_lead_space_position)
 		closing_bb_lead_space_position = text.find(" [/")
 	
-	for sequence in DIISIS.control_sequences:
+	for sequence in DIISIS.CONTROL_SEQUENCES:
 		var full_sequence := str("<", sequence, ": ")
 		var sequence_pos := text.find(full_sequence)
 		while sequence_pos != -1:

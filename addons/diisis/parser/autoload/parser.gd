@@ -436,7 +436,7 @@ func go_back():
 		var instr_text : String = instruction.get("meta.reverse_text", "")
 		if instr_text.is_empty():
 			instr_text = instruction.get("meta.text")
-		line_reader.execute(instr_text)
+		line_reader._execute(instr_text)
 	
 	await get_tree().process_frame
 	address_trail_index += trail_shift
@@ -537,12 +537,12 @@ func get_next(page_index:int) -> int:
 		return -1
 	return int(page_data.get(page_index).get("next"))
 
-func open_connection(new_lr: LineReader):
+func _open_connection(new_lr: LineReader):
 	line_reader = new_lr
 	line_reader.connect("line_finished", read_next_line)
 	line_reader.connect("jump_to_page", read_page)
 
-func close_connection():
+func _close_connection():
 	line_reader.disconnect("line_finished", read_next_line)
 	line_reader.disconnect("jump_to_page", read_page)
 	line_reader = null
@@ -612,8 +612,10 @@ func deserialize(data: Dictionary):
 	else:
 		line_reader.deserialize(line_reader_data)
 
-
+## [param save_dir_name] can but doesn't have to start with "user://". It shouldn't but can end with "/". This function will clean it up.
 func save_parser_state(save_dir_name: String, additional_data:={}):
+	save_dir_name = save_dir_name.trim_prefix("user://")
+	save_dir_name = save_dir_name.trim_suffix("/")
 	var access = DirAccess.open("user://")
 	var save_dir_path := str("user://", save_dir_name)
 	if not access.dir_exists(save_dir_path):
@@ -631,10 +633,13 @@ func save_parser_state(save_dir_name: String, additional_data:={}):
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	
-	save_actor_config(save_dir_path)
+	_save_actor_config(save_dir_path)
 
-## returns any additional custom arguments that were passed during saving.
+## returns any additional custom arguments that were passed during saving. [br]
+## [param save_dir_name] can but doesn't have to start with "user://". It shouldn't but can end with "/". This function will clean it up.
 func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictionary:
+	save_dir_name = save_dir_name.trim_prefix("user://")
+	save_dir_name = save_dir_name.trim_suffix("/")
 	var save_dir_path := str("user://", save_dir_name)
 	var file_path := str(save_dir_path, "/parser.json")
 	var file = FileAccess.open(file_path, FileAccess.READ)
@@ -647,7 +652,7 @@ func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictio
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
-	load_actor_config(save_dir_path)
+	_load_actor_config(save_dir_path)
 	deserialize(data.get("Parser", {}))
 	
 	
@@ -655,7 +660,7 @@ func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictio
 	
 	return data.get("Custom", {})
 
-func str_to_typed(value:String, type:int):
+func _str_to_typed(value:String, type:int):
 	match type:
 		TYPE_FLOAT:
 			return float(value)
@@ -722,21 +727,21 @@ func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Di
 	
 	return _get_next_line_data_custom(0, page_data_to_visit_next)
 
-func ensure_actor_dir_exists(parent_dir : String):
+func _ensure_actor_dir_exists(parent_dir : String):
 	var access = DirAccess.open(parent_dir)
 	var actor_dir := str(parent_dir, "/actors")
 	if not access.dir_exists(actor_dir):
 		access.make_dir(actor_dir)
 	
 
-func save_actor_config(dir : String):
-	ensure_actor_dir_exists(dir)
+func _save_actor_config(dir : String):
+	_ensure_actor_dir_exists(dir)
 	for actor in line_reader.actor_config.keys():
 		var res_path := str(dir, "/actors/", actor, ".tres")
 		ResourceSaver.save(line_reader.actor_config.get(actor), res_path)
 
-func load_actor_config(dir:String):
-	ensure_actor_dir_exists(dir)
+func _load_actor_config(dir:String):
+	_ensure_actor_dir_exists(dir)
 	for actor in line_reader.actor_config.keys():
 		var res_path := str(dir, "/actors/", actor, ".tres")
 		var res = ResourceLoader.load(res_path)

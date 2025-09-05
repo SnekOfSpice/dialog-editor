@@ -6,6 +6,15 @@ signal drop_focus()
 
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", ":", ";", "#", "*", "+", "~", "'"]
 const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "font", "rainbow", "pulse", "wave", "tornado", "shake", "fade", "code", "char", "center", "left", "right", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
+const BBCODE_TAGS_WITH_EQUALS_PARAMETER := ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
+const BBCODE_TAGS_WITH_ARGUMENTS := [
+
+"rainbow",
+"pulse",
+"wave",
+"tornado",
+"shake",
+"fade",]
 
 var active_actors := [] # list of character names
 
@@ -243,12 +252,12 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("<"):
-		for a in DIISIS.control_sequences:
+		for a in DIISIS.CONTROL_SEQUENCES:
 			var full_tag : String = a
-			if a in DIISIS.control_sequences_with_colon:
+			if a in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 				full_tag += ":"
 			full_tag += ">"
-			if a in DIISIS.control_sequences_with_closing_tag:
+			if a in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 				full_tag += "</%s>" % a
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
 		text_box.update_code_completion_options(true)
@@ -302,7 +311,7 @@ func _on_text_box_caret_changed() -> void:
 					tag += " rate=20.0 level=5 connected=1"
 				"fade":
 					tag += " start=4 length=14"
-			if tag in ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]:
+			if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
 				tag += "="
 			if not display_text:
 				display_text = closing_tag
@@ -361,7 +370,7 @@ func update_compliance_prompt():
 		if not complaints.is_empty():
 			color_string += "83"
 		complaints.append(str("[color=", color_string, "]",
-			"Invalid tag ", call, ": ", compliances.get(call),
+			"[img]uid://by6pyf3vqncfa[/img] [code]", call, "[/code]: ", compliances.get(call),
 			"[/color]"
 			))
 	label.text = " | ".join(complaints)
@@ -450,13 +459,13 @@ func _on_text_box_code_completion_requested() -> void:
 		elif is_text_after_caret("|"):
 			set_caret_movement_to_do(1)
 
-	for control in DIISIS.control_sequences_with_colon:
+	for control in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 		if is_text_before_caret(str("<", control, ":>")):
 			set_caret_movement_to_do(-1)
 			Pages.auto_complete_context = control
 			break
 	
-	for control : String in DIISIS.control_sequences_with_closing_tag:
+	for control : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 		if is_text_before_caret(str("</", control, ">")):
 			set_caret_movement_to_do(-(control.length() + 3))
 			Pages.auto_complete_context = control
@@ -538,6 +547,66 @@ func get_compliances() -> Dictionary:
 						break
 			if not has_closer:
 				compliances[opener.get("tag")] = "No matching closing </ruby> in line %s." % (opener.get("line_index") + 1)
+	
+	var regex = RegEx.new()
+	regex.compile("&.*?;")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		if not entity_match in DIISIS.HTML_ENTITIES.keys():
+			compliances[entity_match] = "Invalid HTML entity"
+	
+	regex.compile("<.*?>")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		if entity_match.contains(":"):
+			var tag_portion_of_match = entity_match.split(":")[0]
+			var is_invalid := true
+			for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
+				if tag_portion_of_match == "<" + tag:
+					is_invalid = false
+					break
+			if is_invalid:
+				compliances[entity_match] = "Invalid tag"
+			continue
+		
+		var is_invalid := true
+		for tag : String in DIISIS.CONTROL_SEQUENCES:
+			if entity_match == "<" + tag + ">":
+				is_invalid = false
+				break
+		if is_invalid:
+			compliances[entity_match] = "Invalid tag"
+	
+	regex.compile("\\[\\/?.+?\\]")
+	for m : RegExMatch in regex.search_all(text_box.text):
+		var entity_match : String  = m.strings[0]
+		var sections := entity_match.split("[")
+		var proper_tag : String = sections[sections.size() - 1]
+		proper_tag = "[" + proper_tag
+		
+		
+		var is_invalid := true
+		for tag : String in BBCODE_TAGS:
+			if tag in ["img", "url"]:
+				if proper_tag.contains("[url=") or proper_tag.contains("[img]") or proper_tag.contains("[/url]") or proper_tag.contains("[/img]"):
+					is_invalid = false
+					break
+			else:
+				if tag in BBCODE_TAGS_WITH_ARGUMENTS:
+					if proper_tag.begins_with("[%s " % tag):
+						is_invalid = false
+						break
+				if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
+					if proper_tag.begins_with("[%s=" % tag):
+						is_invalid = false
+						break
+				
+				if proper_tag == "[%s]" % tag or proper_tag == "[/%s]" % tag:
+					is_invalid = false
+					break
+		if is_invalid:
+			compliances[proper_tag] = "Invalid tag %s " % str(proper_tag)
+	
 	
 	return compliances
 
@@ -621,6 +690,7 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame
 			var tag : String = get_tag_under_caret().get("tag", "")
+			var word_under_caret = get_word_under_caret()
 			if tag.begins_with("<call:") or tag.begins_with("<func:"):
 				tag = tag.trim_prefix("<call:")
 				tag = tag.trim_prefix("<func:")
@@ -634,17 +704,16 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				tag = tag.trim_suffix(">")
 				DiisisEditorUtil.search_variable(tag)
 			elif tag.begins_with("<fact:"):
-				Pages.editor.open_window_by_string("FactsPopup")
+				Pages.editor.open_facts_window(tag.trim_prefix("<fact:").trim_suffix(">"))
 			elif not tag.is_empty():
 				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
-			
-			var word_under_caret = get_word_under_caret()
-			if word_under_caret in Pages.dropdown_titles:
+			elif word_under_caret in Pages.dropdown_titles:
 				Pages.editor.open_window_by_string("DropdownWindow")
 				return
-			for dropdown : Array in Pages.dropdowns.values():
-				if word_under_caret in dropdown:
-					Pages.editor.open_window_by_string("DropdownWindow")
+			else:
+				for dropdown : Array in Pages.dropdowns.values():
+					if word_under_caret in dropdown:
+						Pages.editor.open_window_by_string("DropdownWindow")
 			
 
 func _on_import_ingest_from_clipboard() -> void:

@@ -1,5 +1,23 @@
 -------------------------------------------------
-DIISIS 0.6
+DIISIS 0.6.1 2025-09-04
+Oopsie it's the patch for a few small things
+
+General
+- Make a few functions private
+- Add a hacky workaround to force the internal documentation to work (will be fixed with godot 4.5 afaik)
+
+Editor
+- Fix a bug in the LineReader find function where it'd add a triple "/"
+- Add HTML entity support (stuff like &lt;)
+- click on a fact item to go to its declaration in facts
+- some window ordering fixes
+
+Runtime
+- Improved an error message in LineReader
+- made LineReader.body_label_function_funnel skip tags
+
+-------------------------------------------------
+DIISIS 0.6 2025-09-03
 This shit breaks compatibility on so many levels! Might as well be a new plugin! Also includes LONER_DOG additions :3
 
 General

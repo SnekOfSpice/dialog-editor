@@ -1,3 +1,5 @@
+!! DO NOT DELETE addons/diisis/templates/_meta !!
+
 Along with DIISIS, you get some project templates that integrate it into their workflows.
 Currently the only template is for visual novel-style games, with a focus on narrative that is communicated through text and 2D character sprites on screen.
 

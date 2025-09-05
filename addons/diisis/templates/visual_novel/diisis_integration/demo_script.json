@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"current_page_number": 2,
+		"current_page_number": 0,
 		"page_view": 0,
 		"text_size_id": 2
 	},
@@ -217,22 +217,10 @@
 			"deserialize": {
 
 			},
-			"deserialize_instruction_handler_data": {
-
-			},
 			"enable_keep_past_lines": {
 				"keep_text": false,
 				"new_label": null,
 				"new_name_style": null
-			},
-			"ensure_ruby_container": {
-				"on_label": null
-			},
-			"evaluate_conditionals": {
-				"enabled_as_default": true
-			},
-			"execute": {
-
 			},
 			"finish_waiting_for_instruction": {
 
@@ -247,9 +235,6 @@
 				"on_label": null
 			},
 			"get_preferences": {
-
-			},
-			"get_property_from_self_or_autoload": {
 
 			},
 			"get_subaddress": {
@@ -283,12 +268,6 @@
 			"play_sfx": {
 
 			},
-			"preserve_into_past_line_container": {
-
-			},
-			"replace_lc_tags": {
-
-			},
 			"request_advance": {
 
 			},
@@ -299,9 +278,6 @@
 
 			},
 			"serialize": {
-
-			},
-			"serialize_instruction_handler_data": {
 
 			},
 			"set_actor_color": {
@@ -353,6 +329,9 @@
 			"set_ruby_enabled": {
 
 			},
+			"set_text_display_delay": {
+
+			},
 			"set_x_position": {
 
 			},
@@ -368,22 +347,13 @@
 			"splatter_blood": {
 
 			},
-			"strarr_to_vec2iarr": {
-
-			},
 			"sway_camera": {
-
-			},
-			"trim_trimmables": {
 
 			},
 			"update_body_label": {
 
 			},
 			"update_name_label": {
-
-			},
-			"update_ruby_root_scroll": {
 
 			},
 			"use_ui": {
@@ -394,7 +364,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761421,
+		"id_counter": -9223372036854761368,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -825,7 +795,6 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 1.0,
 				"number": 0,
@@ -1430,7 +1399,6 @@
 					}
 				],
 				"meta.address_mode_next": 0,
-				"meta.scroll_vertical": 0,
 				"meta.selected": false,
 				"next": 0.0,
 				"number": 2,
@@ -1440,7 +1408,7 @@
 			}
 		},
 		"text_data": {
-			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow & read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
+			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow &amp; read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "Opinion on Amber?",
 			"1744987729.575--9223372036854775792": "",
 			"1744987729.575--9223372036854775793": "Yes I love her",
