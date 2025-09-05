@@ -1392,6 +1392,19 @@ func _insert_strings_in_current_dialine():
 	var ends_with_advance := new_text.ends_with("<advance>")
 	new_text = new_text.trim_suffix("<advance>")
 	
+	var amp_index := new_text.find("&")
+	while amp_index != -1:
+		var semicolon_index := new_text.find(";", amp_index)
+		var has_semicolon := semicolon_index != -1
+		if not has_semicolon:
+			push_warning("Text contains a \"&\". Consider using an HTML entity (&amp;) instead.")
+			break
+		var sub := new_text.substr(amp_index, semicolon_index - amp_index)
+		if not sub in DIISIS.HTML_ENTITIES.keys():
+			push_warning("Unrecognized HTML entity %s" % sub)
+			break
+		amp_index = new_text.find("&", amp_index + 1)
+	
 	for entity in DIISIS.HTML_ENTITIES.keys():
 		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	
