@@ -1,3 +1,9 @@
+under the hood
+- plugin will now check if addons/diisis/[...] exists (means you can safely delete the templates if you don't need them)
+	- templates
+	- templates/_meta
+	- templates/_meta/template_setup_confirmation_window.tscn
+
 -------------------------------------------------
 DIISIS 0.6.1 2025-09-04
 Oopsie it's the patch for a few small things
