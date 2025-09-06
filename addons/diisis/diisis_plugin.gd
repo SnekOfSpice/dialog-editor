@@ -205,7 +205,7 @@ func _enter_tree():
 func on_request_setup_template(template:int):
 	var load_error := ""
 	if not ResourceLoader.exists("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"):
-		load_error = "template_setup_confirmation_window.tscn"
+		load_error = "res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"
 	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates/_meta"):
 		load_error = "res://addons/diisis/templates/_meta"
 	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates"):

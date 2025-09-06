@@ -48,7 +48,7 @@ func init() -> void:
 	
 	# these are  the symbols that need to wrap any position where code completion
 	# should be able to be triggered /on both sides/
-	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]", "."]
+	var a : PackedStringArray = [">", "{", "<", "|", "}", ",", ":", "[", "]", ".", "&"]
 	for actor in active_actors:
 		a.append(actor[actor.length() - 1])
 	text_box.code_completion_prefixes = a
@@ -282,6 +282,11 @@ func _on_text_box_caret_changed() -> void:
 			for fact in active_actors:
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
 		text_box.update_code_completion_options(true)
+	elif is_text_before_caret("&"):
+			for key : String in DIISIS.HTML_ENTITIES.keys():
+				var replaced : String = DIISIS.HTML_ENTITIES.get(key)
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, "%s (%s)" % [replaced, key], key.trim_prefix("&"))
+			text_box.update_code_completion_options(true)
 	elif is_text_before_caret("["):
 		for tag in BBCODE_TAGS:
 			var display_text:String
@@ -317,7 +322,6 @@ func _on_text_box_caret_changed() -> void:
 				display_text = closing_tag
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, display_text, str(tag, "][/", closing_tag, "]"))
 		text_box.update_code_completion_options(true)
-		text_box.code_completion_prefixes
 	elif is_text_before_caret("."):
 		var found_autoload := ""
 		var is_var : bool
@@ -342,6 +346,7 @@ func _on_text_box_caret_changed() -> void:
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, str(method, postfix))
 			await get_tree().process_frame
 			text_box.update_code_completion_options(true)
+		
 	
 	update_tag_hint()
 	last_character_after_caret = get_text_after_caret(1)

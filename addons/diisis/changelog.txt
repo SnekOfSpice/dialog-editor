@@ -1,5 +1,15 @@
+
+-------------------------------------------------
+DIISIS 0.6.2 NOISE JAM update :3
+
+General
+- Improve docs in a few places
+
+Editor
+- add HTML entity code completion
+
 under the hood
-- plugin will now check if addons/diisis/[...] exists (means you can safely delete the templates if you don't need them)
+- When trying to set up the VN template, the plugin will now check if addons/diisis/[...] exists and just throw a warning if the files / directories don't exist (means you can safely delete the templates if you don't need them)
 	- templates
 	- templates/_meta
 	- templates/_meta/template_setup_confirmation_window.tscn

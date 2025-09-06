@@ -49,15 +49,11 @@ script = ExtResource("1_a36me")
 unique_name_in_owner = true
 script = ExtResource("3_pms35")
 auto_pause_duration = 0.4
+show_text_during_text = null
 actor_config = Dictionary[String, ExtResource("3_aqeli")]({
 "amber": SubResource("Resource_knhaa")
 })
 blank_names = Array[String](["narrator"])
-chatlog_fuse_lines = false
-input_prompt_delay = 1.29
-input_prompt_lerp_weight = 0.233
-inline_name_separator = "~"
-warn_on_non_bool_function_return = false
 name_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/NameContainer/PanelContainer/NameLabel")
 body_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel")
 text_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer")
@@ -65,6 +61,11 @@ name_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextCon
 choice_title_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceLabel")
 choice_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel")
 choice_list = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceList")
+chatlog_fuse_lines = false
+input_prompt_delay = 1.29
+input_prompt_lerp_weight = 0.233
+inline_name_separator = "~"
+warn_on_non_bool_function_return = false
 
 [node name="Background" type="Node2D" parent="LineReader"]
 unique_name_in_owner = true
