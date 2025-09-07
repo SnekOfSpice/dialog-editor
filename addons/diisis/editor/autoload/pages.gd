@@ -447,8 +447,10 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	
 
 func change_page_references_dir(changed_page: int, operation:int):
+	if operation == 0:
+		return
 	for page in page_data.values():
-		var next = page.get("next", page.get("number") + 1)
+		var next : int = page.get("next", page.get("number") + 1)
 		if next >= changed_page:
 			page["next"] = next + operation
 		
@@ -463,8 +465,15 @@ func change_page_references_dir(changed_page: int, operation:int):
 					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 						choice["loopback_target_page"] = choice.get("loopback_target_page", 0) + operation
 	
+		write_to_user(page, "changed%s" % int(page.get("number")))
+	
 	await get_tree().process_frame
 	editor.refresh(false)
+
+func write_to_user(data:Dictionary, filename):
+	var file = FileAccess.open("user://%s.json" % filename, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data, "\t"))
+	file.close()
 
 func key_exists(key: String) -> bool:
 	if key == "":
