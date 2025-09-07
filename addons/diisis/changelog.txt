@@ -8,6 +8,7 @@ General
 Editor
 - add HTML entity code completion
 - fix inserting and deleting of pages not updating the "next" references
+- make that stuff actually respect a page's address mode
 
 under the hood
 - When trying to set up the VN template, the plugin will now check if addons/diisis/[...] exists and just throw a warning if the files / directories don't exist (means you can safely delete the templates if you don't need them)
