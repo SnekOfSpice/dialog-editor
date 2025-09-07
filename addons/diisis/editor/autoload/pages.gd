@@ -451,7 +451,7 @@ func change_page_references_dir(changed_page: int, operation:int):
 		return
 	for page in page_data.values():
 		var next : int = page.get("next", page.get("number") + 1)
-		if next >= changed_page:
+		if next >= changed_page and page.get("meta.address_mode_next", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 			page["next"] = next + operation
 		
 		
