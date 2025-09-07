@@ -25,7 +25,7 @@ func init(n:=number):
 		var d = DirAccess.remove_absolute(file_path)
 	else:
 		data = Pages.page_data.get(n)
-	Pages.save_data(data, "oninit%s" % n)
+	
 	number = n
 	lines = find_child("Lines")
 	find_child("Number").text = str(n)

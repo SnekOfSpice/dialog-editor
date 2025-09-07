@@ -1,12 +1,13 @@
 
 -------------------------------------------------
-DIISIS 0.6.2 NOISE JAM update :3
+DIISIS 0.6.2 NOISE JAM update :3 (+ the critical "oopsie references to addresses weren't getting updated anymore" patch)
 
 General
 - Improve docs in a few places
 
 Editor
 - add HTML entity code completion
+- fix inserting and deleting of pages not updating the "next" references
 
 under the hood
 - When trying to set up the VN template, the plugin will now check if addons/diisis/[...] exists and just throw a warning if the files / directories don't exist (means you can safely delete the templates if you don't need them)
