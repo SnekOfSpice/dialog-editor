@@ -317,7 +317,7 @@ func get_page_count() -> int:
 	return page_data.size()
 
 func get_line_count(page:int) -> int:
-	return page_data.get(page).get("lines", []).size()
+	return get_page_data(page).get("lines", []).size()
 
 func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
@@ -345,8 +345,8 @@ func swap_pages(page_a: int, page_b: int):
 	
 	swap_page_references(page_a, page_b)
 	
-	var data_a = page_data.get(page_a)
-	var data_b = page_data.get(page_b)
+	var data_a = get_page_data(page_a)
+	var data_b = get_page_data(page_b)
 	data_b["number"] = page_a
 	data_a["number"] = page_b
 	page_data[page_a] = data_b
@@ -475,6 +475,18 @@ func write_to_user(data:Dictionary, filename):
 	file.store_string(JSON.stringify(data, "\t"))
 	file.close()
 
+func consume_from_user(filename:String, suppress_warning := false) -> Dictionary:
+	var file_path := "user://%s.json" % filename
+	var data := {}
+	if ResourceLoader.exists(file_path):
+		var access = FileAccess.open(file_path, FileAccess.READ)
+		data = JSON.parse_string(access.get_as_text())
+		access.close()
+		var d = DirAccess.remove_absolute(file_path)
+	elif not suppress_warning:
+		push_warning("File %s cannot be consumed because it doesn't exist." % filename)
+	return data
+
 func key_exists(key: String) -> bool:
 	if key == "":
 		return false
@@ -533,9 +545,11 @@ func get_choice_text_adr(address:String, length:=-1):
 	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
 	return get_choice_text(parts[0], parts[1], parts[2], length)
 
-func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1):
+func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1) -> String:
 	var page = page_data.get(page_index, {})
-	var lines = page.get("lines")
+	var lines : Array = page.get("lines", [])
+	if lines.size() >= line_index:
+		return "FETCH ERROR"
 	var line = lines[line_index]
 	var choice = line.get("content").get("choices")[choice_index]
 	var choice_text:String
@@ -591,7 +605,7 @@ func delete_page_data(at: int):
 	
 	# reindex all after at, this automatically overwrites the page at at
 	for i in range(at + 1, get_page_count()):
-		var data = page_data.get(i).duplicate(true)
+		var data = get_page_data(i).duplicate(true)
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
 		page_data[new_number] = data
@@ -819,6 +833,8 @@ func get_page_data(index:int, force_cached := false) -> Dictionary:
 		return page_data.get(index)
 	if editor.get_current_page_number() == index:
 		return editor.get_current_page().serialize()
+	if ResourceLoader.exists("user://changed%s.json" % index):
+		page_data[index] = consume_from_user("changed%s" % index)
 	return page_data.get(index)
 
 func get_all_invalid_instructions() -> String:

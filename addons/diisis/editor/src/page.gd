@@ -17,12 +17,8 @@ func init(n:=number):
 	%GoToHighlight.self_modulate.a = 0
 	var data : Dictionary
 	
-	var file_path := "user://changed%s.json" % n
-	if ResourceLoader.exists(file_path):
-		var access = FileAccess.open(file_path, FileAccess.READ)
-		data = JSON.parse_string(access.get_as_text())
-		access.close()
-		var d = DirAccess.remove_absolute(file_path)
+	if ResourceLoader.exists("user://changed%s.json" % n):
+		data = Pages.consume_from_user("changed%s" % n)
 	else:
 		data = Pages.page_data.get(n)
 	
