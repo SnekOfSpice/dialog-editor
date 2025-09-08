@@ -345,8 +345,9 @@ func swap_pages(page_a: int, page_b: int):
 	
 	swap_page_references(page_a, page_b)
 	
-	var data_a = get_page_data(page_a)
-	var data_b = get_page_data(page_b)
+	# it's actually important that we don't use get_page_data here
+	var data_a = page_data.get(page_a)
+	var data_b = page_data.get(page_b)
 	data_b["number"] = page_a
 	data_a["number"] = page_b
 	page_data[page_a] = data_b
