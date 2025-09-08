@@ -2444,8 +2444,12 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 		dialog_line_args = dialog_line_args.split(",")
 		
 		for arg in dialog_line_args:
-			var arg_key = arg.split("|")[0]
-			var arg_value = arg.split("|")[1]
+			var arg_key : String = arg.split("|")[0]
+			var arg_value : String = arg.split("|")[1]
+			
+			arg_key = DIISIS.trim_bilateral_spaces(arg_key)
+			arg_value = DIISIS.trim_bilateral_spaces(arg_value)
+			
 			dialog_line_arg_dict[arg_key] = arg_value
 		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 	return actor_name

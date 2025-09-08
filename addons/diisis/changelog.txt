@@ -4,6 +4,7 @@ DIISIS 0.6.2 NOISE JAM update :3 (+ the critical "oopsie references to addresses
 
 General
 - Improve docs in a few places
+- Trim leading and trailing spaces when handling dialog args
 
 Editor
 - add HTML entity code completion

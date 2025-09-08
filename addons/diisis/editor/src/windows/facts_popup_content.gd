@@ -139,6 +139,7 @@ func _on_rename_fact_button_pressed() -> void:
 	find_child("DeleteFactButton").visible = false
 	find_child("RenameFactButton").visible = false
 	find_child("ChangeDefaultButton").visible = false
+	find_child("NewNameEdit").grab_focus()
 
 func _on_cancel_rename_button_pressed() -> void:
 	find_child("RenameFactButton").visible = true
