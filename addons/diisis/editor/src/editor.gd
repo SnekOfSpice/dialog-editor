@@ -163,8 +163,9 @@ func init(active_file_path:="") -> void:
 		load_page(0)
 		await get_tree().process_frame
 		step_through_pages()
-		
-		
+	elif active_file_path.is_empty():
+		await get_tree().process_frame
+		opening = false
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
