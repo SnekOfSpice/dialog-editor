@@ -317,7 +317,7 @@ func get_page_count() -> int:
 	return page_data.size()
 
 func get_line_count(page:int) -> int:
-	return page_data.get(page).get("lines", []).size()
+	return get_page_data(page).get("lines", []).size()
 
 func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
 	if page_data.keys().has(number) and not overwrite_existing:
@@ -345,6 +345,7 @@ func swap_pages(page_a: int, page_b: int):
 	
 	swap_page_references(page_a, page_b)
 	
+	# it's actually important that we don't use get_page_data here
 	var data_a = page_data.get(page_a)
 	var data_b = page_data.get(page_b)
 	data_b["number"] = page_a
@@ -447,9 +448,11 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	
 
 func change_page_references_dir(changed_page: int, operation:int):
+	if operation == 0:
+		return
 	for page in page_data.values():
-		var next = page.get("next", page.get("number") + 1)
-		if next >= changed_page:
+		var next : int = page.get("next", page.get("number") + 1)
+		if next >= changed_page and page.get("meta.address_mode_next", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 			page["next"] = next + operation
 		
 		
@@ -463,8 +466,27 @@ func change_page_references_dir(changed_page: int, operation:int):
 					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
 						choice["loopback_target_page"] = choice.get("loopback_target_page", 0) + operation
 	
+		write_to_user(page, "changed%s" % int(page.get("number")))
+	
 	await get_tree().process_frame
 	editor.refresh(false)
+
+func write_to_user(data:Dictionary, filename):
+	var file = FileAccess.open("user://%s.json" % filename, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data, "\t"))
+	file.close()
+
+func consume_from_user(filename:String, suppress_warning := false) -> Dictionary:
+	var file_path := "user://%s.json" % filename
+	var data := {}
+	if ResourceLoader.exists(file_path):
+		var access = FileAccess.open(file_path, FileAccess.READ)
+		data = JSON.parse_string(access.get_as_text())
+		access.close()
+		var d = DirAccess.remove_absolute(file_path)
+	elif not suppress_warning:
+		push_warning("File %s cannot be consumed because it doesn't exist." % filename)
+	return data
 
 func key_exists(key: String) -> bool:
 	if key == "":
@@ -524,9 +546,11 @@ func get_choice_text_adr(address:String, length:=-1):
 	var parts : Array[int] = DiisisEditorUtil.get_split_address(address)
 	return get_choice_text(parts[0], parts[1], parts[2], length)
 
-func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1):
+func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1) -> String:
 	var page = page_data.get(page_index, {})
-	var lines = page.get("lines")
+	var lines : Array = page.get("lines", [])
+	if lines.size() >= line_index:
+		return "FETCH ERROR"
 	var line = lines[line_index]
 	var choice = line.get("content").get("choices")[choice_index]
 	var choice_text:String
@@ -582,7 +606,7 @@ func delete_page_data(at: int):
 	
 	# reindex all after at, this automatically overwrites the page at at
 	for i in range(at + 1, get_page_count()):
-		var data = page_data.get(i).duplicate(true)
+		var data = get_page_data(i).duplicate(true)
 		var new_number = data.get("number") - 1
 		data["number"] = new_number
 		page_data[new_number] = data
@@ -810,6 +834,8 @@ func get_page_data(index:int, force_cached := false) -> Dictionary:
 		return page_data.get(index)
 	if editor.get_current_page_number() == index:
 		return editor.get_current_page().serialize()
+	if ResourceLoader.exists("user://changed%s.json" % index):
+		page_data[index] = consume_from_user("changed%s" % index)
 	return page_data.get(index)
 
 func get_all_invalid_instructions() -> String:

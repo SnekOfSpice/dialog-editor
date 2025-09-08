@@ -60,3 +60,14 @@ func type_to_str(type:int) -> String:
 		TYPE_BOOL:
 			return "bool"
 	return "String"
+
+func trim_bilateral_spaces(text:String) -> String:
+	var trimmable_space := text.begins_with(" ")
+	while trimmable_space:
+		text = text.trim_prefix(" ")
+		trimmable_space = text.begins_with(" ")
+	trimmable_space = text.ends_with(" ")
+	while trimmable_space:
+		text = text.trim_suffix(" ")
+		trimmable_space = text.ends_with(" ")
+	return text

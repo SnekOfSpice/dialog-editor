@@ -45,7 +45,7 @@ size_flags_horizontal = 10
 [node name="HelpLabel" type="RichTextLabel" parent="Buttons"]
 visible = false
 layout_mode = 2
-text = "Prepends this to the text to be ingested if it doesn't contain \"CONTENT\" for Text Lines or \"END ACTORS\\n\" for Page ingestion.
+text = "Prepends this to the text to be ingested if it doesn't contain \"LINE\" for Text Lines or \"END ACTORS\\n\" for Page ingestion.
 
 See Ingestion Help menu for more details. tldr is: space-separated [actor shorthand]/[actual name] pairs. colons and []> control sequences will be taken care of, but you can declare them if you want."
 fit_content = true

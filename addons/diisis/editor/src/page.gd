@@ -15,7 +15,13 @@ func init(n:=number):
 	if not (find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.is_connected(on_scroll_changed):
 		(find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.connect(on_scroll_changed)
 	%GoToHighlight.self_modulate.a = 0
-	var data = Pages.page_data.get(n)
+	var data : Dictionary
+	
+	if ResourceLoader.exists("user://changed%s.json" % n):
+		data = Pages.consume_from_user("changed%s" % n)
+	else:
+		data = Pages.page_data.get(n)
+	
 	number = n
 	lines = find_child("Lines")
 	find_child("Number").text = str(n)
@@ -92,7 +98,7 @@ func deserialize(data: Dictionary):
 	block_next_duplicate_key_warning = false
 	if not lines:
 		init(int(data.get("next", number+1)))
-	set_page_key(data.get("page_key", "")) 
+	set_page_key(data.get("page_key", ""))
 	set_next(int(data.get("next", number+1)))
 	find_child("TerminateCheck").button_pressed = data.get("terminate", false)
 	deserialize_lines(data.get("lines", []))

@@ -133,6 +133,10 @@ func close_editor():
 	hide()
 	if is_instance_valid(editor):
 		editor.update_page_view(DiisisEditor.PageView.Full)
+	
+	for i in Pages.page_data.size():
+		Pages.consume_from_user("changed%s" % i, true)
+	
 	queue_free()
 
 func close_editor_and_open_new_file():

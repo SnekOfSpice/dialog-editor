@@ -203,11 +203,21 @@ func _enter_tree():
 	print_rich(welcome_message)
 
 func on_request_setup_template(template:int):
+	var load_error := ""
+	if not ResourceLoader.exists("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"):
+		load_error = "res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"
+	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates/_meta"):
+		load_error = "res://addons/diisis/templates/_meta"
+	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates"):
+		load_error = "res://addons/diisis/templates"
+	if not load_error.is_empty():
+		push_warning("%s doesn't exist! If you moved or deleted the templates, you can restore them by downloading the plugin again." % load_error)
+		return
 	match template:
 		0:
 			if is_instance_valid(confirmation_window):
 				confirmation_window.queue_free()
-			confirmation_window = preload("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn").instantiate()
+			confirmation_window = load("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn").instantiate()
 			get_editor_interface().get_base_control().add_child.call_deferred(confirmation_window)
 			confirmation_window.confirmed.connect(setup_vn_template)
 			confirmation_window.canceled.connect(confirmation_window.queue_free)

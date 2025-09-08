@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
 [ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://tqnyqg7aikhr" path="res://addons/diisis/editor/src/incoming_references_window.tscn" id="30_rtywk"]
 [ext_resource type="PackedScene" uid="uid://c425o5b1gsvvk" path="res://addons/diisis/editor/src/windows/text_import_window.tscn" id="31_24jcx"]
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
+[ext_resource type="PackedScene" uid="uid://dgxh31xj7a6ei" path="res://addons/diisis/editor/src/facts_popup.tscn" id="32_378lj"]
 [ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
 [ext_resource type="PackedScene" uid="uid://dy0ea1htdu04v" path="res://addons/diisis/editor/src/windows/generic_subwindow.tscn" id="34_ajvyk"]
 [ext_resource type="PackedScene" uid="uid://b81gsltqnausa" path="res://addons/diisis/editor/src/windows/text_export_window.tscn" id="34_m63dd"]
@@ -630,13 +631,6 @@ size = Vector2i(547, 530)
 visible = false
 container_path = "uid://djiaiay3ntvfy"
 
-[node name="FactsPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
-auto_translate_mode = 1
-title = "Facts"
-size = Vector2i(600, 500)
-visible = false
-container_path = "uid://bhftsn5yhlugv"
-
 [node name="TextSearchPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
 auto_translate_mode = 1
 title = "Search Text"
@@ -649,6 +643,9 @@ title = "Punctuation & Replacement Rules"
 size = Vector2i(800, 400)
 visible = false
 container_path = "uid://cn0rmafav1qh5"
+
+[node name="FactsPopup" parent="Popups" instance=ExtResource("32_378lj")]
+visible = false
 
 [node name="DialogConfigWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
 title = "Dialog Config"

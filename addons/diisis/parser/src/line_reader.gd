@@ -53,10 +53,10 @@ var _auto_continue_duration:= auto_continue_delay
 @export_subgroup("Show Text During", "show_text_during")
 ## If [code]true[/code], shows [param text_container] when choices are being displayed.
 @export var show_text_during_choices := true
-##
-@export var show_text_during_text := true
 ## If [code]true[/code], shows [param text_container] when instructions are being executed.
 @export var show_text_during_instructions := false
+## As opposed to [member show_text_during_choices] or [member show_text_during_instructions], this property [i]guarantees[/i] that the [member text_container] will be visible when text is being read.
+@export var show_text_during_text := true
 
 @export_group("Name Display")
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
@@ -171,7 +171,8 @@ var choice_list:Container:
 @export var body_label_function_funnel : Array[String]
 @export var body_label_tint_lines := false
 @export_subgroup("Past Lines")
-## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.
+## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.[br]
+## This property can be toggled on manually, although you will have to set some references for it to work. See [method enable_keep_past_lines] for a helper function that enforces all the arguments needed for a one-stop-shop solution to this.
 @export var keep_past_lines := false:
 	set(value):
 		keep_past_lines = value
@@ -2066,8 +2067,10 @@ func set_name_controls(label, container:=name_container, keep_text:=true):
 		name_label.text = old_text
 	
 
-## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label]. [param new_label] becomes [param body_label].
-func enable_keep_past_lines(container: VBoxContainer, keep_text := false, new_label:=body_label, new_name_style := name_style):
+## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label].
+## [br]You can override set a new [param body_label] by passing in the [param new_label] parameter.
+## [br]See also [method set_body_label].
+func enable_keep_past_lines(container: VBoxContainer, keep_text := false, new_label := body_label, new_name_style := name_style):
 	keep_past_lines = true
 	self.past_lines_container = container
 	name_style = new_name_style
@@ -2441,8 +2444,12 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 		dialog_line_args = dialog_line_args.split(",")
 		
 		for arg in dialog_line_args:
-			var arg_key = arg.split("|")[0]
-			var arg_value = arg.split("|")[1]
+			var arg_key : String = arg.split("|")[0]
+			var arg_value : String = arg.split("|")[1]
+			
+			arg_key = DIISIS.trim_bilateral_spaces(arg_key)
+			arg_value = DIISIS.trim_bilateral_spaces(arg_value)
+			
 			dialog_line_arg_dict[arg_key] = arg_value
 		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 	return actor_name

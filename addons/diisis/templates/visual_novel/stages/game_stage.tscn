@@ -49,6 +49,7 @@ script = ExtResource("1_a36me")
 unique_name_in_owner = true
 script = ExtResource("3_pms35")
 auto_pause_duration = 0.4
+show_text_during_text = null
 actor_config = Dictionary[String, ExtResource("3_aqeli")]({
 "amber": SubResource("Resource_knhaa")
 })
@@ -323,13 +324,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[connection signal="request_object_visible" from="LineReader" to="LineReader/Objects" method="set_object_visible"]
-[connection signal="start_accepting_advance" from="LineReader" to="." method="_on_line_reader_start_accepting_advance"]
-[connection signal="start_black_fade" from="LineReader" to="LineReader/Camera2D/BlackLayer/BlackFade" method="_on_handler_start_black_fade"]
-[connection signal="start_chapter_cover" from="LineReader" to="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/ChapterCover" method="set_chapter_cover"]
-[connection signal="start_hide_cg" from="LineReader" to="." method="hide_cg"]
-[connection signal="start_show_cg" from="LineReader" to="." method="_on_handler_start_show_cg"]
-[connection signal="stop_accepting_advance" from="LineReader" to="." method="_on_line_reader_stop_accepting_advance"]
 [connection signal="pressed" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/AndroidHackButton" to="." method="_on_android_hack_button_pressed"]
 [connection signal="meta_clicked" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="LineReader/Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_hover_ended"]

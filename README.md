@@ -2,6 +2,8 @@
 
 Homebrew dialog tool. Find the source code and license and demos on [GitHub](https://github.com/SnekOfSpice/dialog-editor).
 
+Also available on [itch.io](https://snekofspice.itch.io/diisis) and the [Godot Asset Library](https://godotengine.org/asset-library/asset/3188)
+
 # Demos & Project Templates
 
 The plugin comes with a template to [create visual novels](https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template). Remember that DIISIS is only the nodes needed to display text, so any UI and functionality will have to be implemented by you if you do not use a template. This also means that with more coding effort, you can integrate DIISIS  into game loops that are not visual novels.

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfwk1hhwqrp2n"]
+[gd_scene load_steps=4 format=3 uid="uid://cfwk1hhwqrp2n"]
 
 [ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+[ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="2_210d5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_or1s3"]
 content_margin_left = 4.0
@@ -35,9 +36,10 @@ size_flags_vertical = 0
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 focus_mode = 0
-theme_type_variation = &"Special"
+theme_type_variation = &"ButtonUnpressed"
+theme_override_fonts/font = ExtResource("2_210d5")
 toggle_mode = true
-text = "v"
+text = "q"
 
 [node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer"]
 layout_mode = 2

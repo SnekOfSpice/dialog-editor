@@ -6,7 +6,7 @@ var list_size:Vector2
 
 func get_string_contents(filter:="") -> String:
 	var search_content := ""
-	var title_contents := str(find_child("TitleLabel").text, find_child("LineEdit").text)
+	var title_contents := str(find_child("TitleLabel").text, get_line_edit_text())
 	var option_contents := str("".join(dropdown_options), find_child("DropdownOptionsText").text)
 	if filter.is_empty() or filter.to_lower() == "t":
 		search_content += title_contents
@@ -39,12 +39,16 @@ func _on_edit_button_pressed() -> void:
 	find_child("DisplayContainer").visible = false
 	find_child("LineEdit").grab_focus()
 	find_child("LineEdit").caret_column = find_child("LineEdit").text.length()
-	
+
+## trims leading and trailing spaces
+func get_line_edit_text() -> String:
+	var raw_text : String = find_child("LineEdit").text
+	return DIISIS.trim_bilateral_spaces(raw_text)
 
 
 func _on_save_title_button_pressed() -> void:
 	var from : String = find_child("TitleLabel").text
-	var to : String = find_child("LineEdit").text
+	var to : String = get_line_edit_text()
 	find_child("TitleLabel").text = to
 	find_child("EditContainer").visible = false
 	find_child("DisplayContainer").visible = true
@@ -62,8 +66,8 @@ func _on_discard_title_button_pressed() -> void:
 
 
 func _on_line_edit_text_changed(new_text: String) -> void:
-	set_save_options_button_disabled((find_child("TitleLabel").text != find_child("LineEdit").text) or find_child("EditContainer").visible)
-	if Pages.is_new_dropdown_title_invalid(new_text, find_child("TitleLabel").text):
+	set_save_options_button_disabled((find_child("TitleLabel").text != get_line_edit_text()) or find_child("EditContainer").visible)
+	if Pages.is_new_dropdown_title_invalid(DIISIS.trim_bilateral_spaces(new_text), find_child("TitleLabel").text):
 		find_child("SaveTitleButton").disabled = true
 		return
 	find_child("SaveTitleButton").disabled = false
@@ -82,6 +86,7 @@ func _on_dropdown_options_text_text_changed() -> void:
 	var args := []
 	var has_duplicate := false
 	for arg : String in entered_args:
+		arg = DIISIS.trim_bilateral_spaces(arg)
 		if not arg.is_empty():
 			if entered_args.count(arg) > 1:
 				has_duplicate = true
@@ -91,7 +96,7 @@ func _on_dropdown_options_text_text_changed() -> void:
 		set_save_options_button_disabled(true)
 		find_child("DuplicateOptionsLabel").visible = true
 		return
-	set_save_options_button_disabled((find_child("TitleLabel").text != find_child("LineEdit").text) or find_child("EditContainer").visible)
+	set_save_options_button_disabled((find_child("TitleLabel").text != get_line_edit_text()) or find_child("EditContainer").visible)
 	find_child("DuplicateOptionsLabel").visible = false
 	
 	if "".join(args) == "".join(dropdown_options):
@@ -121,6 +126,7 @@ func _on_save_options_button_pressed() -> void:
 	var entered_args = find_child("DropdownOptionsText").text.split("\n")
 	var args := []
 	for arg : String in entered_args:
+		arg = DIISIS.trim_bilateral_spaces(arg)
 		if not arg.is_empty():
 			args.append(arg)
 	var title = find_child("TitleLabel").text
@@ -144,9 +150,9 @@ func set_save_options_button_disabled(value:bool):
 
 func _on_options_container_visibility_changed():
 	if find_child("OptionsContainer").visible:
-		find_child("ExpandButton").text = "v"
+		find_child("ExpandButton").text = "q"
 	else:
-		find_child("ExpandButton").text = ">"
+		find_child("ExpandButton").text = "n"
 
 
 func _on_dropdown_options_text_resized() -> void:
