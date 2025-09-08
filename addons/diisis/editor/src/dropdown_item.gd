@@ -150,9 +150,9 @@ func set_save_options_button_disabled(value:bool):
 
 func _on_options_container_visibility_changed():
 	if find_child("OptionsContainer").visible:
-		find_child("ExpandButton").text = "v"
+		find_child("ExpandButton").text = "q"
 	else:
-		find_child("ExpandButton").text = ">"
+		find_child("ExpandButton").text = "n"
 
 
 func _on_dropdown_options_text_resized() -> void:

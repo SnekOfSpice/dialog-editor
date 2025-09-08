@@ -5,6 +5,7 @@
 [ext_resource type="StyleBox" uid="uid://bvcu5kwhsudya" path="res://addons/diisis/editor/visuals/theme/buttons_ui/focus.tres" id="2_pj604"]
 [ext_resource type="Texture2D" uid="uid://j1bmp2r40pma" path="res://addons/diisis/editor/visuals/theme/buttons_ui/unchecked.png" id="3_3c5a6"]
 [ext_resource type="FontFile" uid="uid://c7cvunsukj6b1" path="res://addons/diisis/editor/visuals/theme/fonts/textfont.tres" id="3_8wpuc"]
+[ext_resource type="StyleBox" uid="uid://dfbe4xr0ohhdi" path="res://addons/diisis/editor/visuals/theme/buttons_ui/button_normal.tres" id="3_jcrxo"]
 [ext_resource type="Texture2D" uid="uid://qqt7d0lnrvcb" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked_disabled.png" id="3_o21m6"]
 [ext_resource type="Texture2D" uid="uid://nos2emfmvumf" path="res://addons/diisis/editor/visuals/theme/buttons_ui/toggled.png" id="4_leuoi"]
 [ext_resource type="Texture2D" uid="uid://6w475lg2k27l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/radio_pressed.png" id="5_bodw7"]
@@ -42,19 +43,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.53, 0.21995, 0.1855, 1)
-expand_margin_left = 2.0
-expand_margin_top = 1.0
-expand_margin_right = 2.0
-expand_margin_bottom = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41heh"]
-bg_color = Color(0.129558, 0.129558, 0.129558, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-border_blend = true
 expand_margin_left = 2.0
 expand_margin_top = 1.0
 expand_margin_right = 2.0
@@ -484,8 +472,10 @@ Button/fonts/font = ExtResource("1_da0q8")
 Button/styles/focus = ExtResource("2_pj604")
 Button/styles/hover = SubResource("StyleBoxFlat_5foo6")
 Button/styles/hover_pressed = SubResource("StyleBoxFlat_bodw7")
-Button/styles/normal = SubResource("StyleBoxFlat_41heh")
+Button/styles/normal = ExtResource("3_jcrxo")
 Button/styles/pressed = SubResource("StyleBoxFlat_1m062")
+ButtonUnpressed/base_type = &"Button"
+ButtonUnpressed/styles/pressed = ExtResource("3_jcrxo")
 CheckBox/font_sizes/font_size = 12
 CheckBox/icons/checked = ExtResource("2_lximw")
 CheckBox/icons/checked_disabled = ExtResource("3_o21m6")
