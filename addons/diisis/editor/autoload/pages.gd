@@ -2370,3 +2370,6 @@ func linearize_pages():
 		page_data[i] = data
 	await get_tree().process_frame
 	editor.refresh(false)
+
+func get_editor_window() -> Window:
+	return editor.get_parent().get_parent()

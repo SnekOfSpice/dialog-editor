@@ -157,6 +157,7 @@ func set_up_delete_modulate(node : Control, button : Button, exit_callable:Calla
 
 ## prefix should be "var" or "func"
 func _search_in_global_and_handler(search:String, prefix:String):
+	select_godot_main_window_tab("Script")
 	if search.contains("."):
 		var script = Pages.get_autoload_script(search.split(".")[0])
 		var func_name = str(prefix, " ", search.split(".")[1])
@@ -223,3 +224,33 @@ func dictionary_equals(a:Dictionary, b:Dictionary) -> bool:
 				return dictionary_equals(value_a, value_b)
 			return false
 	return true
+
+
+func find_child_that_contains(parent:Node, name_substr : String) -> Node:
+	for c in parent.get_children():
+		if c.name.contains(name_substr):
+			return c
+	return null
+
+func select_godot_main_window_tab(tab_name:String) -> void:
+	var editor = find_child_that_contains(get_tree().root, "EditorNode")
+	if not editor:
+		push_warning("Couldn't navigate to %s (on step editor). Please fix >///<" % tab_name)
+		return
+	var panel = find_child_that_contains(editor, "Panel")
+	if not panel:
+		push_warning("Couldn't navigate to %s (on step panel). Please fix >///<" % tab_name)
+		return
+	var vbox = find_child_that_contains(panel, "VBoxContainer")
+	if not vbox:
+		push_warning("Couldn't navigate to %s (on step vbox). Please fix >///<" % tab_name)
+		return
+	var titlebar = find_child_that_contains(vbox, "EditorTitleBar")
+	if not titlebar:
+		push_warning("Couldn't navigate to %s (on step titlebar). Please fix >///<" % tab_name)
+		return
+	for c in titlebar.get_children():
+		if c is HBoxContainer:
+			for hboxchild in c.get_children():
+				if hboxchild.name == tab_name:
+					(hboxchild as Button).pressed.emit()

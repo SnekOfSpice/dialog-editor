@@ -1,6 +1,19 @@
+-------------------------------------------------
+DIISIS 0.6.3
+
+General
+- Clicking the button in the Godot editor now reliably opens the DIISIS window (and toggles between windowed / maximized view)
+
+Editor
+- The "update available" hint now is based on the state of the assetlib instead of github tags
+	- If they ever change the HTML of their page this might break
+	- Said hint now also opens the in-Editor AssetLib instead of the web page
+		- Another thing that might break if the Godot *editor* is changed in layout in big ways
+- "Go to function" search functionality now tries to open Godot's Script editor
 
 -------------------------------------------------
-DIISIS 0.6.2 NOISE JAM update :3 (+ the critical "oopsie references to addresses weren't getting updated anymore" patch)
+DIISIS 0.6.2 2025-09-08
+NOISE JAM update :3 (+ the critical "oopsie references to addresses weren't getting updated anymore" patch)
 
 General
 - Improve docs in a few places
