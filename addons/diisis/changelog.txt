@@ -1,5 +1,6 @@
 -------------------------------------------------
-DIISIS 0.6.3
+DIISIS 0.6.3 2025-09-13
+the mid-noise jam hotfix or "well shit turns out there were a few critical bugs in that last patch"
 
 General
 - Clicking the button in the Godot editor now reliably opens the DIISIS window (and toggles between windowed / maximized view)
