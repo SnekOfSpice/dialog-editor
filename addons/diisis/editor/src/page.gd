@@ -34,6 +34,7 @@ func init(n : int = number):
 	
 	if n > 0:
 		DiisisEditorUtil.set_up_delete_modulate(find_child("Lines"), find_child("DeleteButton"))
+		DiisisEditorUtil.set_up_delete_modulate(find_child("Info"), find_child("DeleteButton"))
 
 func get_next():
 	if find_child("TerminateCheck").button_pressed:
