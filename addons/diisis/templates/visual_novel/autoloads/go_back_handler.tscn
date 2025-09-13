@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cx2gvdr4ulr2f"]
-
-[ext_resource type="Script" uid="uid://c0tbfls2mgdg6" path="res://addons/diisis/templates/visual_novel/autoloads/go_back_handler.gd" id="1_6kqm3"]
-
-[node name="GoBackHandler" type="Node"]
-script = ExtResource("1_6kqm3")
