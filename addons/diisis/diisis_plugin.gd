@@ -241,6 +241,7 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 
 func open_editor():
 	if is_instance_valid(dia_editor_window):
+		dia_editor_window.set_windowed()
 		dia_editor_window.grab_focus()
 	else:
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()

@@ -1,6 +1,28 @@
+-------------------------------------------------
+DIISIS 0.6.3 2025-09-13
+the mid-noise jam hotfix or "well shit turns out there were a few critical bugs in that last patch"
+
+General
+- Clicking the button in the Godot editor now reliably opens the DIISIS window (and toggles between windowed / maximized view)
+
+Editor
+- fix closing tags not being recognized by text content
+- The "update available" hint now is based on the state of the assetlib instead of github tags
+	- If they ever change the HTML of their page this might break
+	- Said hint now also opens the in-Editor AssetLib instead of the web page
+		- Another thing that might break if the Godot *editor* is changed in layout in big ways
+- "Go to function" search functionality now tries to open Godot's Script editor
+- fix some data duplication leading to project fuckery
+
+Runtime
+- fix which parts of dialogue would get escaped for body_label_function_funnel around img and url tags
+- With name style None, some references weren't needed but were still expected, causing errors. that's been fixed.
+- fix actor lead time not initializing correctly on first dialine
+- add custom_blockers
 
 -------------------------------------------------
-DIISIS 0.6.2 NOISE JAM update :3 (+ the critical "oopsie references to addresses weren't getting updated anymore" patch)
+DIISIS 0.6.2 2025-09-08
+NOISE JAM update :3 (+ the critical "oopsie references to addresses weren't getting updated anymore" patch)
 
 General
 - Improve docs in a few places

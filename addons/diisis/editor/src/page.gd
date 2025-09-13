@@ -11,7 +11,7 @@ var id : String
 
 signal request_delete()
 
-func init(n:=number):
+func init(n : int = number):
 	if not (find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.is_connected(on_scroll_changed):
 		(find_child("ScrollContainer") as ScrollContainer).get_v_scroll_bar().value_changed.connect(on_scroll_changed)
 	%GoToHighlight.self_modulate.a = 0
@@ -31,6 +31,10 @@ func init(n:=number):
 	find_child("Facts").init()
 	deserialize(data)
 	page_key_line_edit.placeholder_text = "Page " + str(n)
+	
+	if n > 0:
+		DiisisEditorUtil.set_up_delete_modulate(find_child("Lines"), find_child("DeleteButton"))
+		DiisisEditorUtil.set_up_delete_modulate(find_child("Info"), find_child("DeleteButton"))
 
 func get_next():
 	if find_child("TerminateCheck").button_pressed:

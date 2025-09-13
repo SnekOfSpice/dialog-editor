@@ -118,7 +118,7 @@ func delete_page(at:int):
 	Pages.delete_page_data(at)
 	
 	await get_tree().process_frame
-	Pages.editor.get_current_page().update()
+	Pages.editor.refresh(false)
 
 func add_page(at:int, page_reference_change:=1):
 	var cached_versions : Array = cached_pages.get(at, [])

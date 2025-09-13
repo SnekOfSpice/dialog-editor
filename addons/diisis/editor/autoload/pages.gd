@@ -589,10 +589,9 @@ func add_page_data(at: int, new_data := {}):
 	# reindex all after at
 	for i in range(get_page_count() - 1, at - 1, -1):
 		var data = page_data.get(i)
-		var new_number = i + 1
+		var new_number := int(i + 1)
 		data["number"] = new_number
 		page_data[new_number] = data
-	
 	# insert page
 	create_page_data(at, true, new_data)
 
@@ -604,15 +603,21 @@ func delete_page_data(at: int):
 		push_warning(str("cannot delete last page"))
 		return
 	
-	# reindex all after at, this automatically overwrites the page at at
-	for i in range(at + 1, get_page_count()):
+	var new_data := {}
+	for i in get_page_count():
 		var data = get_page_data(i).duplicate(true)
-		var new_number = data.get("number") - 1
-		data["number"] = new_number
-		page_data[new_number] = data
+		if data.get("number") == at:
+			continue
+		if data.get("number") > at:
+			var new_number : int = data.get("number") - 1
+			data["number"] = new_number
+			new_data[new_number] = data
+		else:
+			new_data[int(i)] = data
+	page_data.clear()
+	page_data = new_data
 	
-	# the last page is now a duplicate
-	page_data.erase(get_page_count() - 1)
+	await get_tree().process_frame
 	
 	change_page_references_dir(at, -1)
 
@@ -847,7 +852,7 @@ func get_all_invalid_instructions() -> String:
 		var line_index := 0
 		for line in lines:
 			if line.get("line_type") in [DIISIS.LineType.Instruction, DIISIS.LineType.Text]:
-				var compliance = line.get("content").get("meta.validation_status")
+				var compliance : String = line.get("content").get("meta.validation_status")
 				if compliance != "OK":
 					malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
 			line_index += 1
@@ -2370,3 +2375,6 @@ func linearize_pages():
 		page_data[i] = data
 	await get_tree().process_frame
 	editor.refresh(false)
+
+func get_editor_window() -> Window:
+	return editor.get_parent().get_parent()

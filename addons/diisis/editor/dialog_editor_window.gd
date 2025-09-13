@@ -266,3 +266,11 @@ func _on_editor_history_altered(is_altered: bool) -> void:
 func _on_focus_entered() -> void:
 	if Pages.validate_function_calls_on_focus:
 		Pages.update_all_compliances()
+
+func minimize():
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MINIMIZED, get_window_id())
+func set_windowed():
+	if DisplayServer.window_get_mode(get_window_id()) == DisplayServer.WINDOW_MODE_WINDOWED:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED, get_window_id())
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, get_window_id())
