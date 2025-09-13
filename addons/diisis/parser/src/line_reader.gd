@@ -323,6 +323,7 @@ var _remaining_prompt_delay := input_prompt_delay
 @export var warn_advance_on_awaiting_inline_call := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
+@export var warn_advance_on_custom_blockers := true
 @export_subgroup("Misc")
 ## Serializes and deserializes the [member visibility] property of all UI nodes [LineReader] references.
 @export var persist_ui_visibilities := true
@@ -362,6 +363,7 @@ var _full_prefix := ""
 var _dialog_actors := []
 var _dialog_line_index := 0
 var _is_last_actor_name_different := true
+var _raw_name_was_empty := true
 var _text_speed_by_character_index := []
 
 ## Current actor key used in dialogue.
@@ -434,6 +436,7 @@ func serialize() -> Dictionary:
 	result["pause_positions"] = _pause_positions 
 	result["pause_types"] = _pause_types
 	result["preserve_name_in_past_lines"] = preserve_name_in_past_lines
+	result["_raw_name_was_empty"] = _raw_name_was_empty
 	result["remaining_auto_pause_duration"] = _remaining_auto_pause_duration 
 	#var rubies := []
 	#for label : RubyLabel in _ruby_labels:
@@ -488,6 +491,7 @@ func deserialize(data: Dictionary):
 	_pause_positions = data.get("pause_positions")
 	_pause_types = data.get("pause_types")
 	preserve_name_in_past_lines = data.get("preserve_name_in_past_lines", preserve_name_in_past_lines)
+	_raw_name_was_empty = data.get("_raw_name_was_empty", true)
 	_remaining_auto_pause_duration = data.get("remaining_auto_pause_duration")
 	_ruby_strings = data.get("_ruby_strings")
 	_ruby_indices = _strarr_to_vec2iarr(data.get("_ruby_indices"))
@@ -568,7 +572,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if show_input_prompt and not prompt_finished:
 		warnings.append("Prompt Finished is null")
 	if show_input_prompt and prompt_finished == prompt_unfinished and prompt_unfinished:
-		warnings.append("Prompt Finished and Prompt Unfinished cannot be the same node.")
+		warnings.append("Avoid using the same node for Prompt Finished and Prompt Unfinished.")
 	if keep_past_lines and not past_lines_container:
 		warnings.append("Past Text Container is null")
 	
@@ -633,7 +637,31 @@ func apply_preferences(prefs:Dictionary):
 	auto_continue = prefs.get("auto_continue", auto_continue)
 	auto_continue_delay = prefs.get("auto_continue_delay", auto_continue_delay)
 
+## While [member custom_blockers] is [i]greater than[/i] 0, calls to [method request_advance] will fail. This property is intended to be used by parts of the game outside of the players control, such as forcing voicelines to play out.
+## If an [code]<advance>[/code] tag was hit while [member custom_blockers] was more than 0, once the last blocker is removed, LineReader will advance on its own. [member auto_continue] will also be paused while there are more than 0 blockers.
+## [br]See [method add_custom_blocker] [method clear_custom_blockers] [method remove_custom_blocker]
+var custom_blockers := 0
+## Adds 1 to [member custom_blockers].
+func add_custom_blocker():
+	call_deferred("_set_custom_blockers", custom_blockers + 1)
+## Removes [b]all[/b] [member custom_blockers].
+func clear_custom_blockers():
+	call_deferred("_set_custom_blockers", 0)
+## Subtracts 1 from [member custom_blockers].
+func remove_custom_blocker():
+	call_deferred("_set_custom_blockers", custom_blockers - 1)
+
+func _set_custom_blockers(new_value:int):
+	custom_blockers = new_value
+	_is_advance_blocked = is_advance_blocked(false, false)
+	_update_input_prompt(0)
+
+## you can use this to poll the internal state
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
+	if _lead_time > 0:
+		if include_warnings:
+			push_warning("Cannot advance because _lead_time > 0.")
+		return false
 	if Engine.is_editor_hint():
 		return false
 	if Parser.paused:
@@ -659,6 +687,10 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 	if _is_choice_presented() and block_advance_during_choices:
 		if warn_advance_on_choices_presented and include_warnings:
 			push_warning("Cannot advance because choices are presented and block_advance_during_choices is true.")
+		return true
+	if custom_blockers > 0:
+		if warn_advance_on_custom_blockers and include_warnings:
+			push_warning("Cannot advance because custom_blockers > 0.")
 		return true
 	return false
 
@@ -899,7 +931,6 @@ func _read_new_line(new_line: Dictionary):
 			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id")))
 			_build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
-			
 			var text : String
 			var delay_before: float
 			var delay_after: float
@@ -985,7 +1016,6 @@ func _process(delta: float) -> void:
 	if Parser.paused:
 		return
 	
-	_update_input_prompt(delta)
 	var new_block := is_advance_blocked(false, include_auto_continue_in_accept_advance_signal)
 	if _is_advance_blocked != new_block:
 		if new_block:
@@ -993,6 +1023,7 @@ func _process(delta: float) -> void:
 		else:
 			emit_signal("start_accepting_advance")
 	_is_advance_blocked = new_block
+	_update_input_prompt(delta)
 	
 	if is_executing:
 		if delay_before > 0:
@@ -1113,6 +1144,9 @@ func _process(delta: float) -> void:
 		_last_visible_characters = -1
 		_last_visible_ratio = 0
 	
+	if is_advance_blocked(false, false):
+		return
+	
 	if _last_visible_characters == -1 and _auto_advance:
 		advance()
 		_auto_advance = false
@@ -1150,7 +1184,7 @@ func _remove_symbols(from: String, symbols:=non_word_characters) -> String:
 	return s
 
 func _update_input_prompt(delta:float):
-	if (not show_input_prompt) or auto_continue:
+	if (not show_input_prompt) or _is_advance_blocked:
 		if prompt_finished:
 			prompt_finished.visible = false
 		if prompt_unfinished:
@@ -1234,7 +1268,7 @@ func _replace_tags(lines:Array) -> Array:
 					segment_start_index = text.find(";", scan_index) + 1
 				else:
 					segment_start_index = scan_index
-				var segment_end_index : int = text.length() - 1
+				var segment_end_index : int = text.length()
 				if text.find("[", segment_start_index) != -1:
 					segment_end_index = min(segment_end_index, text.find("[", segment_start_index))
 				if text.find("<", segment_start_index) != -1:
@@ -1272,11 +1306,11 @@ func _replace_tags(lines:Array) -> Array:
 				var nontag_text := text.substr(segment_start_index, segment_end_index - segment_start_index)
 				last_tag = text.substr(segment_end_index, scan_index - segment_end_index)
 				
-				if not last_tag in ["[img]", ["url"]]:
+				if not last_tag in ["[/img]", "[/url]"]:
 					nontag_text = str(callv_custom(call, [nontag_text]))
 				better_text += nontag_text
 				better_text += last_tag
-			#print("text", better_text)
+			
 			lines[i] = better_text
 			i += 1
 	
@@ -1645,9 +1679,11 @@ func _handle_tags_and_start_reading():
 		_lead_time = Parser.text_lead_time_other_actor
 	else:
 		_lead_time = Parser.text_lead_time_same_actor
+	if _raw_name_was_empty:
+		_lead_time = Parser.text_lead_time_same_actor
 	
 	_prepend_length = 0
-	if name_style == NameStyle.None:
+	if name_style == NameStyle.None and name_container:
 		name_container.modulate.a = 0.0
 	elif name_style == NameStyle.Prepend:
 		name_container.modulate.a = 0.0
@@ -2113,6 +2149,8 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 	if name_style == NameStyle.Prepend or chatlog_enabled: # prepend goes in body_label
 		return body_label.get_theme_color("default_color", "RichTextLabel")
 	else:
+		if name_style == NameStyle.None and not name_label:
+			return body_label.get_theme_color("default_color", "RichTextLabel")
 		return name_label.get_theme_color("font_color", "Label")
 	
 
@@ -2460,7 +2498,8 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 ## Uses the raw keys defined in DIISIS.
 func update_name_label(actor_name: String):
 	ParserEvents.actor_name_about_to_change.emit(actor_name)
-	_is_last_actor_name_different = actor_name != current_raw_name
+	_is_last_actor_name_different = (actor_name != current_raw_name)
+	_raw_name_was_empty = current_raw_name.is_empty()
 	current_raw_name = actor_name
 	
 	var display_name : String = _get_actor_name(actor_name)

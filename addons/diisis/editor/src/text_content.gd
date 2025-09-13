@@ -579,6 +579,10 @@ func get_compliances() -> Dictionary:
 			if entity_match == "<" + tag + ">":
 				is_invalid = false
 				break
+		for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
+			if entity_match == "</" + tag + ">":
+				is_invalid = false
+				break
 		if is_invalid:
 			compliances[entity_match] = "Invalid tag"
 	

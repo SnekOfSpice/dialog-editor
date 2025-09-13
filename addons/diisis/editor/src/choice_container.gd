@@ -45,12 +45,8 @@ func deserialize(data):
 	var auto_switch = data.get("auto_switch", false)
 	find_child("AutoSwitchButton").button_pressed = auto_switch
 	title_id = data.get("title_id", Pages.get_new_id())
-	#var choice_order : Array = data.get("choice_order", [])
 	var choices : Array = data.get("choices", [])
 	choice_order = data.get("choice_order", [])
-	#printt("order", choice_order.size(), choices.size())
-	#if not choice_order.is_empty() and (choice_order.size() == choices.size()):
-		#choices = Pages.sort_choices(choice_order, choices)
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
 	for d in choices:
 		add_choice(-1, d)
