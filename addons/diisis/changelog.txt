@@ -1,4 +1,10 @@
 -------------------------------------------------
+DIISIS 0.6.4 
+
+Editor
+- small layout improvements
+
+-------------------------------------------------
 DIISIS 0.6.3 2025-09-13
 the mid-noise jam hotfix or "well shit turns out there were a few critical bugs in that last patch"
 
