@@ -2602,6 +2602,8 @@ enum CallMode {
 var delay_before := 0.0
 var delay_after := 0.0
 var execution_text := ""
+## This variable determines if [LineReader] is currently awaiting the callback of [method Parser.function_acceded].
+## [br][b]Do not write to it.[/b]
 var is_executing := false
 var has_executed := false
 var has_received_execute_callback := false

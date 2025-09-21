@@ -48,6 +48,7 @@ layout_mode = 2
 
 [node name="MenuBar" type="MenuBar" parent="DialogSyntaxContainer/PanelContainer"]
 layout_mode = 2
+prefer_global_menu = false
 
 [node name="Text Actions" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar"]
 size = Vector2i(167, 100)

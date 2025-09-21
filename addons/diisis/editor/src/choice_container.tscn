@@ -57,6 +57,7 @@ icon_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+prefer_global_menu = false
 
 [node name="Select" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar"]
 item_count = 7

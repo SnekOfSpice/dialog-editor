@@ -131,6 +131,7 @@ icon = ExtResource("4_eueb5")
 [node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_nb6ej")
+prefer_global_menu = false
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/MenuBar"]
 size = Vector2i(159, 228)
@@ -492,6 +493,7 @@ script = ExtResource("7_7syci")
 page_view = 2
 
 [node name="TextSizeButton" type="OptionButton" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Font Size"
 focus_mode = 0

@@ -40,6 +40,8 @@ const PREFERENCE_PROPS := [
 	"silly",
 	"validate_function_calls_on_focus",
 	"warn_on_fact_deletion",
+	"editor_page_view",
+	"editor_text_size_id",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -128,6 +130,9 @@ const STRING_SETTINGS := {
 	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
 }
 var shader := ""
+
+var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
+var editor_text_size_id : int
 
 var append_periods := true
 var fix_apostrophes := true

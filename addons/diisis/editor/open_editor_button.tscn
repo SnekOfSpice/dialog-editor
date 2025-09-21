@@ -20,6 +20,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("3_72chw")
+prefer_global_menu = false
 
 [node name="v" type="PopupMenu" parent="MenuBar"]
 item_count = 1

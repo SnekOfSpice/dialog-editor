@@ -186,6 +186,7 @@ func set_content_scale(factor:float):
 		window.content_scale_factor = content_scale
 
 func update_page_view(view:PageView):
+	Pages.editor_page_view = view
 	for node in get_tree().get_nodes_in_group("diisis_page_view_sensitive"):
 		node.set_page_view(view)
 
@@ -528,8 +529,9 @@ func save_to_file(path:String, is_autosave:=false):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var data_to_save = {}
+	# there used to be editor here
+	# dont need it anymore but lets keep the nesting for compatibility and future versions
 	data_to_save["pages"] = Pages.serialize()
-	data_to_save["editor"] = serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	if is_autosave:
@@ -547,13 +549,6 @@ func save_to_file(path:String, is_autosave:=false):
 	
 	await get_tree().process_frame
 	refresh()
-
-func serialize() -> Dictionary:
-	return {
-		"current_page_number" = get_current_page_number(),
-		"page_view" = get_selected_page_view(),
-		"text_size_id" = find_child("TextSizeButton").get_selected_id(),
-	}
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
@@ -575,21 +570,17 @@ func open_from_path(path:String):
 	
 	set_save_path(path)
 	Pages.deserialize(data.get("pages"))
-	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	await get_tree().process_frame
-	var editor_data = data.get("editor", {})
-	
-	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
-	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
 	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
 		if not button.pressed.is_connected(update_page_view):
 			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 3))
-	update_page_view(editor_data.get("page_view", PageView.Full))
+	set_text_size(Pages.editor_text_size_id)
+	%TextSizeButton.select(Pages.editor_text_size_id)
+	update_page_view(Pages.editor_page_view)
 	
 	await get_tree().process_frame
 	opening = false
@@ -1171,6 +1162,7 @@ func _on_text_size_button_item_selected(index: int) -> void:
 	set_text_size(index)
 	
 func set_text_size(size_index:int):
+	Pages.editor_text_size_id = size_index
 	var label_size = font_sizes[size_index]
 	if theme.get_font_size("font_size", "CodeEdit") == label_size:
 		return
@@ -1184,6 +1176,8 @@ func set_text_size(size_index:int):
 	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
 	theme.set_font_size("font_size", "LineEdit", label_size)
 	theme.set_font_size("font_size", "Button",  label_size + 2)
+	
+	
 
 
 func popup_ingest_file_dialog(context:Array):

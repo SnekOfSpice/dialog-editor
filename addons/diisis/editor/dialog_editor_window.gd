@@ -33,7 +33,8 @@ func _on_about_to_popup() -> void:
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
-		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
+		var scale : float = config.get_value("editor", "content_scale", 1.0)
+		find_child("WindowFactorScale").set_value(scale)
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
 		mode = config.get_value("editor", "mode", mode)
@@ -43,8 +44,9 @@ func _on_about_to_popup() -> void:
 			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
 		
 	
+		await get_tree().process_frame
+		update_content_scale(scale)
 	await get_tree().process_frame
-	update_content_scale(1.0)
 	find_child("UpdateAvailable").check_for_updates()
 
 func _on_close_requested() -> void:
