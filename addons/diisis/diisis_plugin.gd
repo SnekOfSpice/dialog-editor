@@ -193,7 +193,6 @@ func _enter_tree():
 	toolbar_button.request_open_diisis.connect(open_editor)
 	toolbar_button.request_setup_template.connect(on_request_setup_template)
 	
-	
 	await get_tree().process_frame
 	toolbar_button.get_parent().move_child(toolbar_button, -2)
 	

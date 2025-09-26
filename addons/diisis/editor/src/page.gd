@@ -321,6 +321,7 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 			line.connect("delete_line", request_delete_line)
 			line.connect("move_to", move_line_to)
 			instanced_new_line = true
+			Pages.apply_font_size_overrides(line)
 		else:
 			line = lines.get_child(at_index)
 			line.deserialize({})

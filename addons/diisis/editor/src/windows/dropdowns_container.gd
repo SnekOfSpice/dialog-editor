@@ -20,6 +20,7 @@ func init():
 		item.set_list_size(Pages.editor.get_window().size * 0.25)
 	
 	_on_clear_search_button_pressed()
+	Pages.apply_font_size_overrides(self)
 
 func fill_code_edit(tab_title: String):
 	var s = ""
@@ -45,6 +46,7 @@ func fill_dialog_argument_checkboxes():
 	
 	for item in items:
 		item.set_syntax_button_group(load("res://addons/diisis/editor/src/dialog_argument_syntax_button_group.tres"))
+	Pages.apply_font_size_overrides(self)
 
 func toggle_dropdown_dialog_argument(dropdown_title: String, value: bool):
 	if value:
@@ -98,6 +100,7 @@ func create_new_dropdown() -> void:
 	find_child("DropdownsContainer").add_child(item)
 	item.set_list_size(Pages.editor.get_window().size * 0.25)
 	find_child("CreateDDNameTextEdit").text = ""
+	Pages.apply_font_size_overrides(self)
 
 
 func _on_dropdowns_container_resized() -> void:

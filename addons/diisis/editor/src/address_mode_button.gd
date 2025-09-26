@@ -20,6 +20,7 @@ func _make_custom_tooltip(for_text:String) -> Object:
 	tt.init()
 	if _get_target_address():
 		tt.add_address(_get_target_address())
+	Pages.apply_font_size_overrides(tt)
 	return tt
 
 func get_mode() -> Mode:

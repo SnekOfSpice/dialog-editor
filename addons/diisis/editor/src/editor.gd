@@ -30,7 +30,6 @@ enum PageView {
 	Minimal
 }
 
-var font_sizes = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 
 signal scale_editor_up()
 signal scale_editor_down()
@@ -88,9 +87,9 @@ func init(active_file_path:="") -> void:
 	var text_size_button : OptionButton = find_child("TextSizeButton")
 	text_size_button.clear()
 	
-	for s in font_sizes:
+	for s in Pages.FONT_SIZES:
 		text_size_button.add_item(str(s))
-	text_size_button.select(3)
+	text_size_button.select(2)
 	
 	tree_entered.connect(on_tree_entered)
 	
@@ -203,6 +202,7 @@ func load_page(number: int, discard_without_saving:=false):
 	if page_container.get_child_count() == 0:
 		page_instance = preload("res://addons/diisis/editor/src/page.tscn").instantiate()
 		page_container.add_child(page_instance)
+		Pages.apply_font_size_overrides(page_instance)
 	else:
 		page_instance = page_container.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
@@ -608,6 +608,7 @@ func notify(message:String, duration:=5.0):
 	$NotificationContainer.add_child(notification)
 	$NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
+	Pages.apply_font_size_overrides(notification)
 
 func _on_add_line_button_pressed() -> void:
 	add_line_to_end_of_page()
@@ -1167,21 +1168,8 @@ func _on_text_size_button_item_selected(index: int) -> void:
 	
 func set_text_size(size_index:int):
 	Pages.editor_text_size_id = size_index
-	var label_size = font_sizes[size_index]
-	if theme.get_font_size("font_size", "CodeEdit") == label_size:
-		return
-	var edit_size = label_size + 2# (14.0/16.0)
-	theme.set_font_size("font_size", "Label", label_size)
-	theme.set_font_size("font_size", "CodeEdit", label_size)
-	theme.set_font_size("bold_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("bold_italics_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("italics_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("mono_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("font_size", "LineEdit", label_size)
-	theme.set_font_size("font_size", "Button",  label_size + 2)
-	
-	
+	var label_size = Pages.FONT_SIZES[size_index]
+	Pages.set_size_override(Pages.get_editor_window(), label_size)
 
 
 func popup_ingest_file_dialog(context:Array):
@@ -1225,6 +1213,7 @@ func popup_confirm_dialogue(rich_text:="", title:="", confirm_callable:=Callable
 	dialog.content_scale_factor = content_scale
 	if not title.is_empty():
 		dialog.title = title
+	Pages.apply_font_size_overrides(dialog)
 	return dialog
 func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextAcceptDialog:
 	var dialog = preload("res://addons/diisis/editor/src/rich_text_accept_dialog.tscn").instantiate()
@@ -1239,6 +1228,7 @@ func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTe
 		dialog.position = at
 	if Pages.silly:
 		dialog.ok_button_text = Pages.make_puppy()
+	Pages.apply_font_size_overrides(dialog)
 	return dialog
 
 # returns true if the prompt got opened

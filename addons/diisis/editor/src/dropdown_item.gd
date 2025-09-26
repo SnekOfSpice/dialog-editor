@@ -34,6 +34,7 @@ func init(title:String):
 	find_child("DeleteParametersButton").visible = Pages.dropdown_dialog_arguments.has(title)
 	dropdown_options = Pages.dropdowns.get(title)
 
+
 func _on_edit_button_pressed() -> void:
 	find_child("EditContainer").visible = true
 	find_child("DisplayContainer").visible = false

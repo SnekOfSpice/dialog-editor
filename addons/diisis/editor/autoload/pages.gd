@@ -21,6 +21,7 @@ var id_counter := NEGATIVE_INF
 const PUNCTUATION_MARKS := [
 	".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
 ]
+const FONT_SIZES = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 
 const PREFERENCE_PROPS := [
 	"append_periods",
@@ -132,7 +133,7 @@ const STRING_SETTINGS := {
 var shader := ""
 
 var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
-var editor_text_size_id : int
+var editor_text_size_id : int = 3
 
 var append_periods := true
 var fix_apostrophes := true
@@ -2381,5 +2382,92 @@ func linearize_pages():
 	await get_tree().process_frame
 	editor.refresh(false)
 
-func get_editor_window() -> Window:
+func get_editor_window() -> DiisisEditorWindow:
 	return editor.get_parent().get_parent()
+
+func apply_font_size_overrides(from:Node):
+	set_size_override(from, FONT_SIZES[editor_text_size_id])
+
+
+
+func set_size_override(from:Node, new_size : int):
+	var theme_factor := float(new_size) / 14.0
+	if from is Label:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "Label")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is LineEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "LineEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is SpinBox:
+		var line_edit : LineEdit = from.get_line_edit()#.get_theme_font_size("font_size", "LineEdit"))
+		line_edit.remove_theme_font_size_override("font_size")
+		var font_size : int = line_edit.get_theme_font_size("font_size", "LineEdit")
+		line_edit.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is CodeEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CodeEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is TextEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "TextEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is MenuBar:
+		var parent : Node = from.get_parent()
+		parent.custom_minimum_size.x = 0
+		await RenderingServer.frame_post_draw
+		parent.custom_minimum_size.x = parent.size.x * theme_factor
+		
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "MenuBar")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is MenuButton:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "MenuButton")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is RichTextLabel:
+		for size_name in [
+			"bold_font_size",
+			"bold_italics_font_size",
+			"italics_font_size",
+			"mono_font_size",
+			"normal_font_size"
+		]:
+			from.remove_theme_font_size_override(size_name)
+			var font_size : int = from.get_theme_font_size(size_name, "RichTextLabel")
+			from.add_theme_font_size_override(size_name, font_size * theme_factor)
+	elif from is PopupMenu:
+		for size_name in [
+			"font_separator_size",
+			"font_size",
+			"title_font_size",
+		]:
+			from.remove_theme_font_size_override(size_name)
+			var font_size : int = from.get_theme_font_size(size_name, "RichTextLabel")
+			from.add_theme_font_size_override(size_name, font_size * theme_factor)
+	elif from is Button:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "Button")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is TabContainer:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "TabContainer")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is Window:
+		from.remove_theme_font_size_override("title_font_size")
+		var font_size : int = from.get_theme_font_size("title_font_size", "Window")
+		from.add_theme_font_size_override("title_font_size", font_size * theme_factor)
+	
+	if from is CheckBox:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CheckBox")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	if from is CheckButton:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CheckButton")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	
+	
+	for child in from.get_children():
+		set_size_override(child, new_size)

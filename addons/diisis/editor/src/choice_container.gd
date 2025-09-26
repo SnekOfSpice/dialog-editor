@@ -69,6 +69,7 @@ func add_choice(at_index:=-1, choice_data:={}):
 	choice.connect("move_choice_edit", request_move_choice_edit)
 	choice.grab_focus()
 	update()
+	Pages.apply_font_size_overrides(choice)
 
 func request_add_choice():
 	var undo_redo = Pages.editor.undo_redo

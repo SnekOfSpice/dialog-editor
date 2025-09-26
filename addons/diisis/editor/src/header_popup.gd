@@ -40,7 +40,7 @@ func add_empty_property():
 	p.set_is_editing_default(true)
 	#p.connect("property_default_changed", change_header_default)
 	#p.connect("erase_property", erase_property_from_temp)
-	
+	Pages.apply_font_size_overrides(self)
 
 func erase_property_from_temp(property):
 	new_header.erase(property)

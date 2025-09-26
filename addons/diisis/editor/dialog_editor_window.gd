@@ -1,5 +1,6 @@
 @tool
 extends Window
+class_name DiisisEditorWindow
 
 var editor : DiisisEditor
 var editor_window : Window

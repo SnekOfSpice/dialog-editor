@@ -83,6 +83,7 @@ func add_fact_from_serialized(fact_data:Dictionary):
 	f.deserialize(fact_data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()
+	Pages.apply_font_size_overrides(self)
 
 func add_fact(fact_name: String, fact_value, conditional:=false):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
@@ -96,6 +97,7 @@ func add_fact(fact_name: String, fact_value, conditional:=false):
 	f.deserialize(data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()
+	Pages.apply_font_size_overrides(self)
 
 func update():
 	await get_tree().process_frame
