@@ -2403,7 +2403,7 @@ func set_size_override(from:Node, new_size : int):
 	elif from is SpinBox:
 		var line_edit : LineEdit = from.get_line_edit()#.get_theme_font_size("font_size", "LineEdit"))
 		line_edit.remove_theme_font_size_override("font_size")
-		var font_size : int = line_edit.get_theme_font_size("font_size", "LineEdit")
+		var font_size : int = line_edit.get_theme_font_size("font_size", "SpinBoxInnerLineEdit")
 		line_edit.add_theme_font_size_override("font_size", font_size * theme_factor)
 	elif from is CodeEdit:
 		from.remove_theme_font_size_override("font_size")

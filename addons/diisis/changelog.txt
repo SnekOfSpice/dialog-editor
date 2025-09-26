@@ -5,6 +5,7 @@ Editor
 - small layout improvements
 - fix menubars on  mac not working as intended
 - fix editor scale not being preserved when opening the window again
+- preserve window size when opening the editor after minimizing
 
 -------------------------------------------------
 DIISIS 0.6.3 2025-09-13

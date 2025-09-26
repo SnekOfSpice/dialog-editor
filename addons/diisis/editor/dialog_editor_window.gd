@@ -272,8 +272,12 @@ func _on_focus_entered() -> void:
 
 func minimize():
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MINIMIZED, get_window_id())
+
 func set_windowed():
-	if DisplayServer.window_get_mode(get_window_id()) == DisplayServer.WINDOW_MODE_WINDOWED:
+	var window_size := DisplayServer.window_get_size(get_window_id())
+	var screen_with_window := DisplayServer.window_get_current_screen(get_window_id())
+	var screen_size := DisplayServer.screen_get_size(screen_with_window)
+	if window_size.x == screen_size.x:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED, get_window_id())
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, get_window_id())

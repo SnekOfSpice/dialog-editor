@@ -84,6 +84,7 @@ size_flags_horizontal = 3
 columns = 3
 
 [node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
@@ -102,6 +103,7 @@ text = "Before Call"
 text_overrun_behavior = 1
 
 [node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
