@@ -57,7 +57,9 @@ func update_hint(new_text: String):
 		$ArgHint.popup()
 		just_submitted = false
 	
-	var caret_pos = Vector2i(global_position + Vector2(get_caret_draw_pos().x, 0))
+	var caret_pos = Vector2i(global_position)
+	caret_pos.x += int(get_caret_draw_pos().x)
+	caret_pos *= Pages.editor.content_scale
 	caret_pos.y += size.y
 	$ArgHint.build_str(option_list_string)
 	$ArgHint.position = caret_pos
