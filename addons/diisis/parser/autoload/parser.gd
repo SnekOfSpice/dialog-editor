@@ -538,6 +538,8 @@ func get_next(page_index:int) -> int:
 	return int(page_data.get(page_index).get("next"))
 
 func _open_connection(new_lr: LineReader):
+	if is_instance_valid(line_reader):
+		push_warning("Parser already had a LineReader connected to it. Not freeing the previous LineReader may have unintended consequences.")
 	line_reader = new_lr
 	line_reader.connect("line_finished", read_next_line)
 	line_reader.connect("jump_to_page", read_page)
