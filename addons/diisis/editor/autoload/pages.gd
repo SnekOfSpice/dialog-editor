@@ -43,6 +43,9 @@ const PREFERENCE_PROPS := [
 	"warn_on_fact_deletion",
 	"editor_page_view",
 	"editor_text_size_id",
+	"ingest_is_capitalize_checked",
+	"ingest_is_whitespace_checked",
+	"ingest_is_punctuation_checked",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -134,6 +137,10 @@ var shader := ""
 
 var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
 var editor_text_size_id : int = 3
+
+var ingest_is_capitalize_checked := false
+var ingest_is_whitespace_checked := true
+var ingest_is_punctuation_checked := false
 
 var append_periods := true
 var fix_apostrophes := true

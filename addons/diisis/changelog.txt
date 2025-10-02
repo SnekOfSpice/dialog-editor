@@ -7,6 +7,7 @@ Editor
 - fix editor scale not being preserved when opening the window again
 - preserve window size when opening the editor after minimizing
 - importing bug fix
+- save text line ingest window toggles across text lines
 
 Runtime
 - warning on adding a second line reader
