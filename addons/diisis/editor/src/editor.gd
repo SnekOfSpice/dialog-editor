@@ -30,7 +30,6 @@ enum PageView {
 	Minimal
 }
 
-var font_sizes = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 
 signal scale_editor_up()
 signal scale_editor_down()
@@ -88,9 +87,9 @@ func init(active_file_path:="") -> void:
 	var text_size_button : OptionButton = find_child("TextSizeButton")
 	text_size_button.clear()
 	
-	for s in font_sizes:
+	for s in Pages.FONT_SIZES:
 		text_size_button.add_item(str(s))
-	text_size_button.select(3)
+	text_size_button.select(2)
 	
 	tree_entered.connect(on_tree_entered)
 	
@@ -186,6 +185,7 @@ func set_content_scale(factor:float):
 		window.content_scale_factor = content_scale
 
 func update_page_view(view:PageView):
+	Pages.editor_page_view = view
 	for node in get_tree().get_nodes_in_group("diisis_page_view_sensitive"):
 		node.set_page_view(view)
 
@@ -202,6 +202,7 @@ func load_page(number: int, discard_without_saving:=false):
 	if page_container.get_child_count() == 0:
 		page_instance = preload("res://addons/diisis/editor/src/page.tscn").instantiate()
 		page_container.add_child(page_instance)
+		Pages.apply_font_size_overrides(page_instance)
 	else:
 		page_instance = page_container.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
@@ -525,11 +526,15 @@ func save_to_file(path:String, is_autosave:=false):
 		if not DirAccess.dir_exists_absolute(BACKUP_PATH):
 			DirAccess.make_dir_absolute(BACKUP_PATH)
 	
+	if not is_autosave:
+		Pages.purge_unused_text_ids()
+	
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var data_to_save = {}
+	# there used to be editor here
+	# dont need it anymore but lets keep the nesting for compatibility and future versions
 	data_to_save["pages"] = Pages.serialize()
-	data_to_save["editor"] = serialize()
 	file.store_string(JSON.stringify(data_to_save, "\t"))
 	file.close()
 	if is_autosave:
@@ -547,13 +552,6 @@ func save_to_file(path:String, is_autosave:=false):
 	
 	await get_tree().process_frame
 	refresh()
-
-func serialize() -> Dictionary:
-	return {
-		"current_page_number" = get_current_page_number(),
-		"page_view" = get_selected_page_view(),
-		"text_size_id" = find_child("TextSizeButton").get_selected_id(),
-	}
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
@@ -575,21 +573,17 @@ func open_from_path(path:String):
 	
 	set_save_path(path)
 	Pages.deserialize(data.get("pages"))
-	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	await get_tree().process_frame
-	var editor_data = data.get("editor", {})
-	
-	find_child("ViewTypesButtonContainer").get_child(editor_data.get("page_view", PageView.Full)).button_pressed = true
-	find_child("TextSizeButton").select(editor_data.get("text_size_id", 3))
 	
 	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
 		if not button.pressed.is_connected(update_page_view):
 			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(editor_data.get("text_size_id", 3))
-	update_page_view(editor_data.get("page_view", PageView.Full))
+	set_text_size(Pages.editor_text_size_id)
+	%TextSizeButton.select(Pages.editor_text_size_id)
+	update_page_view(Pages.editor_page_view)
 	
 	await get_tree().process_frame
 	opening = false
@@ -617,6 +611,7 @@ func notify(message:String, duration:=5.0):
 	$NotificationContainer.add_child(notification)
 	$NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
+	Pages.apply_font_size_overrides(notification)
 
 func _on_add_line_button_pressed() -> void:
 	add_line_to_end_of_page()
@@ -845,11 +840,15 @@ func request_arg_hint(text_box:Control):
 	var caret_pos = Vector2i.ZERO
 	#if text_box is TextEdit:
 	caret_pos += Vector2i(text_box.get_caret_draw_pos())
+	
+	
 	if text_box is LineEdit:
 		caret_pos.x -= 50
-		#caret_pos.x += text_box.get_theme_font("font").get_string_size(text_box.text.substr(text_box.get_caret_column())).x
+		caret_pos.x = text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
 		#caret_pos.y += text_box.size.y
-	caret_pos += Vector2i(text_box.global_position)
+		caret_pos.y += Vector2i(text_box.global_position).y
+	elif text_box is TextEdit:
+		caret_pos += Vector2i(text_box.global_position)
 	caret_pos *= content_scale
 	caret_pos += Vector2(0, 10) * content_scale
 	
@@ -859,11 +858,11 @@ func request_arg_hint(text_box:Control):
 	text_box.call_deferred("grab_focus")
 
 func _place_arg_hint(at:Vector2):
-	find_child("ArgHint").position = Vector2i(at)
+	(find_child("ArgHint") as DIISISArgHint).position = Vector2i(at)
 
-func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int):
-	find_child("ArgHint").build(instruction_name, full_arg_text, caret_column)
-	find_child("ArgHint").popup()
+func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int, on_node : Control = null):
+	(find_child("ArgHint") as DIISISArgHint).build(instruction_name, full_arg_text, caret_column, on_node)
+	(find_child("ArgHint") as DIISISArgHint).popup()
 
 func hide_arg_hint():
 	find_child("ArgHint").hide()
@@ -1171,19 +1170,9 @@ func _on_text_size_button_item_selected(index: int) -> void:
 	set_text_size(index)
 	
 func set_text_size(size_index:int):
-	var label_size = font_sizes[size_index]
-	if theme.get_font_size("font_size", "CodeEdit") == label_size:
-		return
-	var edit_size = label_size + 2# (14.0/16.0)
-	theme.set_font_size("font_size", "Label", label_size)
-	theme.set_font_size("font_size", "CodeEdit", label_size)
-	theme.set_font_size("bold_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("bold_italics_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("italics_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("mono_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("normal_font_size", "RichTextLabel", label_size)
-	theme.set_font_size("font_size", "LineEdit", label_size)
-	theme.set_font_size("font_size", "Button",  label_size + 2)
+	Pages.editor_text_size_id = size_index
+	var label_size = Pages.FONT_SIZES[size_index]
+	Pages.set_size_override(Pages.get_editor_window(), label_size)
 
 
 func popup_ingest_file_dialog(context:Array):
@@ -1227,6 +1216,7 @@ func popup_confirm_dialogue(rich_text:="", title:="", confirm_callable:=Callable
 	dialog.content_scale_factor = content_scale
 	if not title.is_empty():
 		dialog.title = title
+	Pages.apply_font_size_overrides(dialog)
 	return dialog
 func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextAcceptDialog:
 	var dialog = preload("res://addons/diisis/editor/src/rich_text_accept_dialog.tscn").instantiate()
@@ -1241,6 +1231,7 @@ func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTe
 		dialog.position = at
 	if Pages.silly:
 		dialog.ok_button_text = Pages.make_puppy()
+	Pages.apply_font_size_overrides(dialog)
 	return dialog
 
 # returns true if the prompt got opened

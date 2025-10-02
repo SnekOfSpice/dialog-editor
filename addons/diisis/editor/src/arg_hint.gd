@@ -1,12 +1,13 @@
 @tool
 extends Window
+class_name DIISISArgHint
 
 func build_str(text:String):
 	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	find_child("TextLabel").text = text
 
-func build(instruction_name: String, full_text:String, caret_column:int):
+func build(instruction_name: String, full_text:String, caret_column:int, on_node : Control = null):
 	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	var arg_names = Pages.get_custom_method_arg_names(instruction_name)
@@ -38,7 +39,14 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		arg_strings.append(arg_string)
 		arg_strings_no_bbcode.append(arg_string_no_bbcode)
 		i += 1
-	var args_before_caret :int = full_text.count(",", 0, caret_column)
+	# we need -1 if on text edit or +0 if on line edit for some fucking reason lmfao
+	var count_end : int
+	if on_node is TextEdit:
+		count_end = caret_column - 1
+	else:
+		count_end = caret_column
+	var args_before_caret :int = full_text.count(",", 0, count_end)
+	
 	
 	var hint := ""
 	
@@ -61,7 +69,7 @@ func build(instruction_name: String, full_text:String, caret_column:int):
 		i += 1
 	find_child("TextLabel").text = hint
 	
-	position.x -= get_theme_font("font").get_string_size(string_before_column).x
+	position.x -= get_theme_font("font").get_string_size(string_before_column).x * Pages.editor.content_scale
 	await get_tree().process_frame
 	if hint.is_empty():
 		hide()

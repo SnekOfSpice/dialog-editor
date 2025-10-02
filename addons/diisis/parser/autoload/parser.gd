@@ -176,8 +176,11 @@ func get_facts_of_value(b: bool) -> Array:
 func get_address() -> String:
 	return str(page_index, ".", line_index)
 
-func get_page_key(page_index:int):
+func get_page_key(page_index:int) -> String:
 	return page_data.get(page_index, {}).get("page_key", "")
+
+func get_page_count() -> int:
+	return page_data.size()
 
 func append_to_history(text:String):
 	history.append(text)
@@ -538,6 +541,8 @@ func get_next(page_index:int) -> int:
 	return int(page_data.get(page_index).get("next"))
 
 func _open_connection(new_lr: LineReader):
+	if is_instance_valid(line_reader):
+		push_warning("Parser already had a LineReader connected to it. Not freeing the previous LineReader may have unintended consequences.")
 	line_reader = new_lr
 	line_reader.connect("line_finished", read_next_line)
 	line_reader.connect("jump_to_page", read_page)
@@ -586,7 +591,7 @@ func serialize() -> Dictionary:
 	result["Parser.page_index"] = page_index
 	result["Parser.line_index"] = line_index
 	result["Parser.history"] = history
-	result["Parser.line_reader"] = line_reader.serialize()
+	result["Parser.line_reader"] = line_reader._serialize()
 	result["Parser.game_progress"] = _get_game_progress()
 	result["Parser.selected_choices"] = selected_choices
 	result["address_trail"] = address_trail
@@ -610,7 +615,7 @@ func deserialize(data: Dictionary):
 	if line_reader_data.is_empty():
 		read_page(page_index, line_index)
 	else:
-		line_reader.deserialize(line_reader_data)
+		line_reader._deserialize(line_reader_data)
 
 ## [param save_dir_name] can but doesn't have to start with "user://". It shouldn't but can end with "/". This function will clean it up.
 func save_parser_state(save_dir_name: String, additional_data:={}):

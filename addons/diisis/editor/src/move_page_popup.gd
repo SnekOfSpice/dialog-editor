@@ -38,6 +38,7 @@ func fill():
 	find_child("SearchLineEdit").text = ""
 	find_child("SearchLineEdit").grab_focus()
 	filter_items("")
+	Pages.apply_font_size_overrides(self)
 
 func direct_swap(page_clicked: int):
 	if direct_swap_start == -1:

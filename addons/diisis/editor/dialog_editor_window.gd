@@ -1,5 +1,6 @@
 @tool
 extends Window
+class_name DiisisEditorWindow
 
 var editor : DiisisEditor
 var editor_window : Window
@@ -33,7 +34,8 @@ func _on_about_to_popup() -> void:
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
-		find_child("WindowFactorScale").set_value(config.get_value("editor", "content_scale", 1.0))
+		var scale : float = config.get_value("editor", "content_scale", 1.0)
+		find_child("WindowFactorScale").set_value(scale)
 		size = config.get_value("editor", "size", size)
 		position = config.get_value("editor", "position", position)
 		mode = config.get_value("editor", "mode", mode)
@@ -43,8 +45,9 @@ func _on_about_to_popup() -> void:
 			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
 		
 	
+		await get_tree().process_frame
+		update_content_scale(scale)
 	await get_tree().process_frame
-	update_content_scale(1.0)
 	find_child("UpdateAvailable").check_for_updates()
 
 func _on_close_requested() -> void:
@@ -269,8 +272,12 @@ func _on_focus_entered() -> void:
 
 func minimize():
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MINIMIZED, get_window_id())
+
 func set_windowed():
-	if DisplayServer.window_get_mode(get_window_id()) == DisplayServer.WINDOW_MODE_WINDOWED:
+	var window_size := DisplayServer.window_get_size(get_window_id())
+	var screen_with_window := DisplayServer.window_get_current_screen(get_window_id())
+	var screen_size := DisplayServer.screen_get_size(screen_with_window)
+	if window_size.x == screen_size.x:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED, get_window_id())
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, get_window_id())

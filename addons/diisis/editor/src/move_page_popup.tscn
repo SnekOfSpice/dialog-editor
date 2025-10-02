@@ -31,6 +31,7 @@ layout_mode = 2
 [node name="MenuBar" type="MenuBar" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_axq7y")
+prefer_global_menu = false
 
 [node name="v" type="PopupMenu" parent="VBoxContainer/HBoxContainer/MenuBar"]
 item_count = 1

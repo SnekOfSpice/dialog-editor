@@ -12,6 +12,7 @@
 [node name="AddressSelectActionContainer" type="CenterContainer" groups=["address_selectors"]]
 auto_translate_mode = 1
 script = ExtResource("1_1ayp7")
+address_depth = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -26,6 +27,7 @@ focus_mode = 0
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("2_ki453")
+prefer_global_menu = false
 
 [node name="v" type="PopupMenu" parent="HBoxContainer/MenuBar"]
 item_count = 7

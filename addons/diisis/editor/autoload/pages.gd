@@ -21,6 +21,7 @@ var id_counter := NEGATIVE_INF
 const PUNCTUATION_MARKS := [
 	".", "?", "~", "!", ":", ";", "]", ">", "*", "<", "\"", "-", "^"
 ]
+const FONT_SIZES = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 
 const PREFERENCE_PROPS := [
 	"append_periods",
@@ -40,6 +41,11 @@ const PREFERENCE_PROPS := [
 	"silly",
 	"validate_function_calls_on_focus",
 	"warn_on_fact_deletion",
+	"editor_page_view",
+	"editor_text_size_id",
+	"ingest_is_capitalize_checked",
+	"ingest_is_whitespace_checked",
+	"ingest_is_punctuation_checked",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -128,6 +134,13 @@ const STRING_SETTINGS := {
 	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
 }
 var shader := ""
+
+var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
+var editor_text_size_id : int = 3
+
+var ingest_is_capitalize_checked := false
+var ingest_is_whitespace_checked := true
+var ingest_is_punctuation_checked := false
 
 var append_periods := true
 var fix_apostrophes := true
@@ -2376,5 +2389,114 @@ func linearize_pages():
 	await get_tree().process_frame
 	editor.refresh(false)
 
-func get_editor_window() -> Window:
+func get_editor_window() -> DiisisEditorWindow:
 	return editor.get_parent().get_parent()
+
+func apply_font_size_overrides(from:Node):
+	set_size_override(from, FONT_SIZES[editor_text_size_id])
+
+
+
+func set_size_override(from:Node, new_size : int):
+	var theme_factor := float(new_size) / 14.0
+	if from is Label:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "Label")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is LineEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "LineEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is SpinBox:
+		var line_edit : LineEdit = from.get_line_edit()#.get_theme_font_size("font_size", "LineEdit"))
+		line_edit.remove_theme_font_size_override("font_size")
+		var font_size : int = line_edit.get_theme_font_size("font_size", "SpinBoxInnerLineEdit")
+		line_edit.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is CodeEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CodeEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is TextEdit:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "TextEdit")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is MenuBar:
+		var parent : Node = from.get_parent()
+		parent.custom_minimum_size.x = 0
+		await RenderingServer.frame_post_draw
+		parent.custom_minimum_size.x = parent.size.x * theme_factor
+		
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "MenuBar")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is MenuButton:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "MenuButton")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is RichTextLabel:
+		for size_name in [
+			"bold_font_size",
+			"bold_italics_font_size",
+			"italics_font_size",
+			"mono_font_size",
+			"normal_font_size"
+		]:
+			from.remove_theme_font_size_override(size_name)
+			var font_size : int = from.get_theme_font_size(size_name, "RichTextLabel")
+			from.add_theme_font_size_override(size_name, font_size * theme_factor)
+	elif from is PopupMenu:
+		for size_name in [
+			"font_separator_size",
+			"font_size",
+			"title_font_size",
+		]:
+			from.remove_theme_font_size_override(size_name)
+			var font_size : int = from.get_theme_font_size(size_name, "RichTextLabel")
+			from.add_theme_font_size_override(size_name, font_size * theme_factor)
+	elif from is Button:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "Button")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is TabContainer:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "TabContainer")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	elif from is Window:
+		from.remove_theme_font_size_override("title_font_size")
+		var font_size : int = from.get_theme_font_size("title_font_size", "Window")
+		from.add_theme_font_size_override("title_font_size", font_size * theme_factor)
+	
+	if from is CheckBox:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CheckBox")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	if from is CheckButton:
+		from.remove_theme_font_size_override("font_size")
+		var font_size : int = from.get_theme_font_size("font_size", "CheckButton")
+		from.add_theme_font_size_override("font_size", font_size * theme_factor)
+	
+	
+	for child in from.get_children():
+		set_size_override(child, new_size)
+
+func purge_unused_text_ids():
+	var used_text_ids := []
+	
+	for i in get_page_count():
+		var page_data : Dictionary = get_page_data(i)
+		for line : Dictionary in page_data.get("lines", []):
+			var line_type : DIISIS.LineType = line.get("line_type")
+			var content : Dictionary = line.get("content")
+			match line_type:
+				DIISIS.LineType.Text:
+					used_text_ids.append(content.get("text_id"))
+				DIISIS.LineType.Choice:
+					used_text_ids.append(content.get("title_id"))
+					var choices : Array = content.get("choices")
+					for choice : Dictionary in choices:
+						used_text_ids.append(choice.get("text_id_enabled"))
+						used_text_ids.append(choice.get("text_id_disabled"))
+	
+	for key in text_data.keys():
+		if not key in used_text_ids:
+			text_data.erase(key)

@@ -142,9 +142,12 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 	var new_page_data := {}
 	
 	var handled_line_ids := []
-	
 	var imported_lines_per_page := []
 	var working_page := []
+	
+	if not (imported_lines.front() as String).begins_with("PAGE"):
+		imported_lines.insert(0, "PAGE")
+	
 	var page_content_line : String = imported_lines.pop_front()
 	working_page.append(page_content_line)
 	while not imported_lines.is_empty():
@@ -266,7 +269,7 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 	var path := Pages.editor.get_save_path()
 	var data = Pages.serialize()
 	var data_to_save := {}
-	data_to_save["editor"] = Pages.editor.serialize()
+	#data_to_save["editor"] = Pages.editor.serialize()
 	data_to_save["original_path"] = Pages.editor.get_save_path()
 	data_to_save["pages"] = Pages.serialize()
 	data_to_save["pages"]["page_data"] = new_page_data

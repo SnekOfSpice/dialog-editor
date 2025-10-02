@@ -15,9 +15,11 @@ script = ExtResource("1_6xnc2")
 [node name="TabContainer" type="TabContainer" parent="."]
 auto_translate_mode = 1
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 current_tab = 0
 
 [node name="Definitions" type="VBoxContainer" parent="TabContainer"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 metadata/_tab_index = 0
@@ -34,17 +36,20 @@ layout_mode = 2
 [node name="Label" type="Label" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Search:"
 
 [node name="SearchLineEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
 placeholder_text = "t: for titles, o: for options. other queries search both"
 
 [node name="ClearSearchButton" type="Button" parent="TabContainer/Definitions/Controls/SearchContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Clear Search"
 
 [node name="CreateDDContainer" type="HBoxContainer" parent="TabContainer/Definitions/Controls"]
@@ -54,30 +59,48 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Add:"
 
 [node name="CreateDDNameTextEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
 
 [node name="AddButton" type="Button" parent="TabContainer/Definitions/Controls/CreateDDContainer"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
+theme_override_font_sizes/font_size = 16
 icon = ExtResource("2_81ktr")
 
+[node name="NoDropdownsNotice" type="RichTextLabel" parent="TabContainer/Definitions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 16
+theme_override_font_sizes/italics_font_size = 16
+theme_override_font_sizes/mono_font_size = 16
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 16
+bbcode_enabled = true
+text = "Add a dropdown using the [img]uid://bvgegkc6o5k18[/img] button. Dropdowns are explicitly-named groups of strings under a certain title. This can be used to declare characters to speak during dialogue, which can be set up in the [code]Dialog[/code] tab of this window."
+fit_content = true
+
 [node name="DropdownsContainer" type="VBoxContainer" parent="TabContainer/Definitions"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 
 [node name="Dialog" type="VBoxContainer" parent="TabContainer"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="visibility_changed" from="TabContainer/Definitions" to="." method="_on_definitions_visibility_changed"]
 [connection signal="text_changed" from="TabContainer/Definitions/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
 [connection signal="pressed" from="TabContainer/Definitions/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]

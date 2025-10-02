@@ -17,6 +17,7 @@ func init():
 
 func add_rule(rule_definition:Dictionary):
 	var rule_item = preload("res://addons/diisis/editor/src/replacement_rule.tscn").instantiate()
+	Pages.apply_font_size_overrides(rule_item)
 	find_child("ReplacementRules").add_child(rule_item)
 	rule_item.deserialize(rule_definition)
 	rule_item.rule_updated.connect(on_rule_updated)

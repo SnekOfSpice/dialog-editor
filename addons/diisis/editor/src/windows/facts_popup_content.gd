@@ -132,7 +132,6 @@ func _on_facts_item_clicked(index: int, _at_position:=Vector2.ZERO, _mouse_butto
 		ref_choices_condition.add_item(str(r))
 		
 
-
 func _on_rename_fact_button_pressed() -> void:
 	find_child("FactRenameEditContainer").visible = true
 	find_child("CancelRenameButton").visible = true

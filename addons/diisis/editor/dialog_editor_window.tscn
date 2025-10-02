@@ -92,7 +92,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Scale with click & drag, mouse wheel, or CTRL+/-"
 min_value = 0.5
-max_value = 1.5
+max_value = 5.0
 step = 0.01
 value = 1.0
 

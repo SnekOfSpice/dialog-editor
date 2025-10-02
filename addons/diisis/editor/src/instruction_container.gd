@@ -24,8 +24,8 @@ func serialize():
 	result["name"] = instruction_name
 	result["reverse_name"] = instruction_name_reverse
 	
-	result["delay_before"] = find_child("DelayBeforeSpinBox").value
-	result["delay_after"] = find_child("DelayAfterSpinBox").value
+	result["delay_before"] = %DelayBeforeSpinBox.value
+	result["delay_after"] = %DelayAfterSpinBox.value
 	
 	result["meta.validation_status"] = Pages.get_method_validity(instruction_text)
 	result["meta.text"] = instruction_text
@@ -39,8 +39,8 @@ func deserialize(data: Dictionary):
 	instruction_edit.set_text(data.get("meta.text", ""))
 	instruction_edit_reverse.set_text(data.get("meta.reverse_text", ""))
 	
-	find_child("DelayBeforeSpinBox").value = float(data.get("delay_before", data.get("delay.before", data.get("delay", 0.0))))
-	find_child("DelayAfterSpinBox").value = float(data.get("delay_after", data.get("delay.after", 0.0)))
+	%DelayBeforeSpinBox.value = float(data.get("delay_before", data.get("delay.before", data.get("delay", 0.0))))
+	%DelayAfterSpinBox.value = float(data.get("delay_after", data.get("delay.after", 0.0)))
 	
 	find_child("HasReverseCheckBox").button_pressed = data.get("meta.has_reverse", false)
 	_on_has_reverse_check_box_toggled(data.get("meta.has_reverse", false))

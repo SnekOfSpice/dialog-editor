@@ -1,4 +1,30 @@
 -------------------------------------------------
+DIISIS 0.6.4 
+
+Editor
+- small layout improvements
+- fix menubars on  mac not working as intended
+- fix editor scale not being preserved when opening the window again
+- preserve window size when opening the editor after minimizing
+- importing bug fix
+- save text line ingest window toggles across text lines
+
+Runtime
+- warning on adding a second line reader
+- building a choice with zero presented choices will advance the line
+- add LineReader.allow_mid_line_advance
+- add Parser.get_page_count()
+- add features around terminators to LineReader
+
+VN Template
+- reintroduced faggotry into the body label placeholder text in game_stage.tscn
+- Merge custom line reader and game stage into one node for better code structure
+- add audio bus layout setup to vn template setup
+
+Under the Hood
+- Purge text whose IDs are no longer referenced from the script file
+
+-------------------------------------------------
 DIISIS 0.6.3 2025-09-13
 the mid-noise jam hotfix or "well shit turns out there were a few critical bugs in that last patch"
 

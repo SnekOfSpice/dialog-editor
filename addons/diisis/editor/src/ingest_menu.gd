@@ -1,5 +1,6 @@
 @tool
 extends PopupMenu
+class_name DiisisIngestMenu
 
 # while we use ID in the signal, because of how tooltip initialization works
 # we actualy need the index here
@@ -56,18 +57,16 @@ func _on_index_pressed(index: int) -> void:
 	match index:
 		CAPITALIZE_INDEX:
 			target_value = not is_capitalize_checked()
+			set_capitalize_checked(target_value)
+			Pages.ingest_is_capitalize_checked = target_value
 		WHITESPACE_INDEX:
 			target_value = not is_whitespace_checked()
+			set_whitespace_checked(target_value)
+			Pages.ingest_is_whitespace_checked = target_value
 		PUNCTUATION_INDEX:
 			target_value = not is_punctuation_checked()
-	for item in get_tree().get_nodes_in_group("diisis_ingest_menu"):
-		match index:
-			CAPITALIZE_INDEX:
-				item.set_capitalize_checked(target_value)
-			WHITESPACE_INDEX:
-				item.set_whitespace_checked(target_value)
-			PUNCTUATION_INDEX:
-				item.set_punctuation_checked(target_value)
+			set_punctuation_checked(target_value)
+			Pages.ingest_is_punctuation_checked = target_value
 	if index == 7:
 		Pages.editor.open_window_by_string("IngestionActorSetupWindow")
 	if index == 8:
@@ -109,3 +108,10 @@ func _on_index_pressed(index: int) -> void:
 		),
 		"Ingestion Help",
 		canvas_transform.get_origin())
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		set_capitalize_checked(Pages.ingest_is_capitalize_checked)
+		set_whitespace_checked(Pages.ingest_is_whitespace_checked)
+		set_punctuation_checked(Pages.ingest_is_punctuation_checked)

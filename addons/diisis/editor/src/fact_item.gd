@@ -231,7 +231,7 @@ func _on_fact_name_text_entered(new_text: String) -> void:
 
 
 func _on_fact_name_text_submitted(new_text: String) -> void:
-	if find_child("RegisterContainer").visible:
+	if not $Hint.visible:
 		_on_register_button_pressed()
 		_on_fact_name_text_changed(new_text)
 		find_child("FactName").text = new_text

@@ -1,4 +1,5 @@
-extends Stage
+@tool
+extends LineReader
 class_name GameStage
 
 @onready var characters := {}
@@ -12,7 +13,7 @@ var background : String = ""
 @export var stylebox_regular : StyleBox
 @export var stylebox_cg : StyleBox
 
-@onready var line_reader : LineReader = find_child("LineReader")
+#@onready var line_reader : LineReader = find_child("LineReader")
 
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
@@ -35,11 +36,14 @@ var target_mix := 0.0
 
 func get_default_targets() -> Dictionary:
 	var result := {}
-	for actor in line_reader.name_map.keys():
+	for actor in actor_config.keys():
 		result[actor] = 0
 	return result
 
 func _ready():
+	super()
+	if Engine.is_editor_hint():
+		return
 	if devmode_enabled:
 		set_background("void")
 	find_child("CreditsLayer").visible = false
@@ -53,14 +57,14 @@ func _ready():
 	
 	GameWorld.game_stage = self
 	
-	line_reader.auto_continue = Options.auto_continue
-	line_reader.text_speed = Options.text_speed
-	line_reader.auto_continue_delay = Options.auto_continue_delay
+	auto_continue = Options.auto_continue
+	text_speed = Options.text_speed
+	auto_continue_delay = Options.auto_continue_delay
 	
 	for character in find_child("Characters").get_children():
 		character.visible = false
 	
-	grab_focus()
+	#grab_focus()
 	
 	tree_exiting.connect(on_tree_exit)
 	
@@ -95,7 +99,10 @@ func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	super(delta)
 	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
 
 
@@ -105,7 +112,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		attempt_advance(event)
 	if event is InputEventKey:
-		if event.is_released():
+		if event.is_pressed():
 			if InputMap.action_has_event("ui_cancel", event):
 				GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
 			if InputMap.action_has_event("screenshot", event):
@@ -119,8 +126,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				find_child("VNUIRoot").add_child(notification_popup)
 				notification_popup.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
 			if InputMap.action_has_event("toggle_auto_continue", event):
-				line_reader.auto_continue = not line_reader.auto_continue
-				Options.auto_continue = line_reader.auto_continue
+				auto_continue = not auto_continue
+				Options.auto_continue = auto_continue
 				Options.save_prefs()
 			if InputMap.action_has_event("toggle_ui", event):
 				if find_child("VNUI").visible:
@@ -160,7 +167,7 @@ func attempt_advance(event:InputEvent):
 			return
 	if not find_child("VNUI").visible:
 		return
-	line_reader.request_advance()
+	request_advance()
 
 func show_ui():
 	if is_instance_valid(find_child("VNUI")):
@@ -290,7 +297,6 @@ func serialize() -> Dictionary:
 	result["cg_position"] = cg_position
 	result["base_cg_offset"] = base_cg_offset
 	result["background"] = background
-	result["objects"] = %Objects.serialize()
 	
 	result["start_cover_visible"] = find_child("StartCover").visible
 
@@ -318,7 +324,6 @@ func deserialize(data:Dictionary):
 	for character : Character in find_child("Characters").get_children():
 		character.deserialize(character_data.get(character.character_name, {}))
 	
-	%Objects.deserialize(data.get("objects", {}))
 	%Camera2D.deserialize(data.get("camera", {}))
 	
 	var cg_name : String = data.get("cg", "")
@@ -362,25 +367,21 @@ func get_character(character_name:String) -> Character:
 func _on_history_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
 
-func _on_handler_start_show_cg(cg_name: String, fade_in: float, on_top: bool) -> void:
-	if on_top:
+func show_cg(cg_name: String, fade_in: float, continue_dialog_through_cg: bool) -> bool:
+	if continue_dialog_through_cg:
+		set_cg_bottom(cg_name, fade_in)
+	else:
 		emit_insutrction_complete_on_cg_hide = true
 		set_cg_top(cg_name, fade_in)
-	else:
-		#var t = get_tree().create_timer(fade_in)
-		#t.timeout.connect(Parser.function_acceded)
-		set_cg_bottom(cg_name, fade_in)
+		
+	
+	return not continue_dialog_through_cg
 
 func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
 
 func _on_menu_button_pressed() -> void:
 	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
-
-func _on_chapter_cover_chapter_intro_finished() -> void:
-	Parser.function_acceded()
-	find_child("ChapterCover").visible = false
-
 
 
 func set_fade_out(lod:float, mix:float):
@@ -395,7 +396,7 @@ func set_background(new_bg_key:String, fade_time:=0.0):
 	var path = CONST.fetch("BACKGROUND", new_bg_key)
 	if not path:
 		push_warning(str("COULDN'T FIND BACKGROUND ", new_bg_key, "!"))
-		return
+		return false
 	var new_background:Node2D
 	var old_backgrounds:=%Background.get_children()
 	if path.ends_with(".png") or path.ends_with(".jpg") or path.ends_with(".jpeg"):
@@ -429,6 +430,7 @@ func set_background(new_bg_key:String, fade_time:=0.0):
 		new_background.position.y = - overshoot.y * 0.5
 	
 	
+	
 	for old_node : Node in old_backgrounds:
 		var fade_tween := get_tree().create_tween()
 		fade_tween.tween_property(old_node, "modulate:a", 0.0, fade_time)
@@ -436,6 +438,7 @@ func set_background(new_bg_key:String, fade_time:=0.0):
 	
 	background = new_bg_key
 	GameWorld.background = background
+	return false
 
 
 var control_tween
@@ -482,3 +485,103 @@ func _on_body_label_meta_hover_ended(_meta: Variant) -> void:
 
 func _on_body_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
+
+
+func play_sfx(_name:String):
+	Sound.play_sfx(_name)
+	return false
+
+func set_bgm(_name:String, fade_in:float):
+	Sound.play_bgm(_name, fade_in)
+	return false
+
+
+func black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:="none", new_bgm:="none"):
+	var bg = new_background
+	if new_background == "none":
+		bg = background
+	
+	var bgm = new_bgm
+	if new_bgm == "none":
+		bgm = Sound.bgm_key
+	
+	%BlackFade.start(fade_in,
+	hold_time,
+	fade_out,
+	hide_characters,
+	bg,
+	bgm,
+	)
+	return true
+
+
+func hide_all_characters() -> bool:
+	for character: Character in get_tree().get_nodes_in_group("character"):
+		character.visible = false
+	return false
+
+
+func zoom_to(value : float, duration : float) -> bool:
+	camera.zoom_to(value, duration)
+	return false
+
+func splatter_blood(amount) -> bool:
+	for i in int(amount):
+		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
+		find_child("VFXLayer").add_child(sprite)
+	return false
+
+func set_emotion(actor_name: String, emotion_name: String) -> bool:
+	for character : Character in get_tree().get_nodes_in_group("character"):
+		if character.character_name == actor_name:
+			character.set_emotion(emotion_name)
+	return false
+
+func show_character(character_name: String, clear_others: bool) -> bool:
+	for character : Character in get_tree().get_nodes_in_group("character"):
+		if character.character_name == character_name:
+			character.visible = true
+		elif clear_others:
+			character.visible = false
+	return false
+
+
+func shake_camera(strength:float) -> bool:
+	camera.apply_shake(strength)
+	return false
+
+
+func set_x_position(character_name: String, index:int, time:float, wait_for_reposition:bool) -> bool:
+	if GameWorld.game_stage:
+		var character : Character = GameWorld.game_stage.get_character(character_name)
+		@warning_ignore("narrowing_conversion")
+		character.set_x_position(int(index), time, wait_for_reposition)
+	return wait_for_reposition
+
+
+func sway_camera(intensity : float) -> bool:
+	camera.set_sway_intensity(intensity)
+	return false
+
+func move_camera_to(x: float, y: float, duration: float) -> bool:
+	camera.move_to(x, y, duration)
+	return false
+
+
+func control_camera(zoom : float, x : float, y : float, duration : float) -> bool:
+	zoom_to(zoom, duration)
+	move_camera_to(x, y, duration)
+	return false
+
+func roll_credits() -> bool:
+	find_child("RollingCredits").start()
+	return true
+
+func set_character_name(character: String, new_name: String) -> bool:
+	if Parser.line_reader:
+		Parser.line_reader.set_actor_name(character, new_name)
+	return false
+
+func use_ui(id: float) -> bool:
+	GameWorld.game_stage.use_ui(int(id))
+	return false

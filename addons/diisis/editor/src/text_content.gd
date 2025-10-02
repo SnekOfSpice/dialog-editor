@@ -670,7 +670,7 @@ func update_inline_tag_prompt():
 			Pages.editor.hide_arg_hint()
 		else:
 			# ARG SECTION
-			Pages.editor.build_arg_hint(instruction_name, args, caret_column - data["start"] - 6 - instruction_name.length())
+			Pages.editor.build_arg_hint(instruction_name, args, caret_column - data["start"] - 6 - instruction_name.length(), text_box)
 	else:
 		Pages.editor.hide_arg_hint()
 		

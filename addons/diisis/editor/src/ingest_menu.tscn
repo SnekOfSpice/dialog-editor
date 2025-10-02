@@ -5,7 +5,7 @@
 
 [node name="IngestMenu" type="PopupMenu" groups=["diisis_ingest_menu"]]
 auto_translate_mode = 1
-size = Vector2i(207, 201)
+size = Vector2i(207, 228)
 visible = true
 unfocusable = true
 theme = ExtResource("1_qabkt")
@@ -37,3 +37,4 @@ item_8/id = 6
 script = ExtResource("1_nqodx")
 
 [connection signal="index_pressed" from="." to="." method="_on_index_pressed"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
