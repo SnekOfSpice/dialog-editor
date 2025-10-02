@@ -57,6 +57,8 @@ var _auto_continue_duration:= auto_continue_delay
 @export var show_text_during_instructions := false
 ## As opposed to [member show_text_during_choices] or [member show_text_during_instructions], this property [i]guarantees[/i] that the [member text_container] will be visible when text is being read.
 @export var show_text_during_text := true
+## If disabled, [method advance] can only be called if the line reader is at the end of the current chunk
+@export var allow_mid_line_advance := true
 
 @export_group("Name Display")
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
@@ -656,13 +658,14 @@ func _set_custom_blockers(new_value:int):
 	_is_advance_blocked = is_advance_blocked(false, false)
 	_update_input_prompt(0)
 
+
 ## you can use this to poll the internal state
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
+	if Engine.is_editor_hint():
+		return false
 	if _lead_time > 0:
 		if include_warnings:
 			push_warning("Cannot advance because _lead_time > 0.")
-		return false
-	if Engine.is_editor_hint():
 		return false
 	if Parser.paused:
 		if warn_advance_on_parser_paused and include_warnings:
@@ -720,6 +723,10 @@ func advance():
 				_remaining_prompt_delay = input_prompt_delay
 				_set_dialog_line_index(_dialog_line_index + 1)
 		else:
+			if not allow_mid_line_advance:
+				if body_label.visible_characters != _get_end_of_chunk_position():
+					push_warning("Cannot advance because allow_mid_line_advance is false and you're not at the end of the chunk.")
+					return false
 			if _next_pause_position_index < _pause_positions.size():
 				body_label.visible_characters = _get_end_of_chunk_position() 
 				if _next_pause_type != _PauseTypes.EoL:
@@ -1077,7 +1084,7 @@ func _process(delta: float) -> void:
 		else:
 			var old_text_length : int = body_label.visible_characters
 			if full_words:
-				var next_space_position = body_label.text.find(" ", body_label.visible_characters + 1)
+				var next_space_position = body_label.get_parsed_text().find(" ", body_label.visible_characters + 1)
 				if body_label.visible_ratio != 1:
 					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
@@ -2342,6 +2349,9 @@ func _build_choices(choices, auto_switch:bool):
 		_built_virtual_choices = built_choices
 		for c in choice_list.get_children():
 			c.visible = false
+	
+	if built_choices.is_empty() and not auto_switch:
+		emit_signal("line_finished", line_index)
 
 func _set_choice_title_or_warn(title: String):
 	current_choice_title = title

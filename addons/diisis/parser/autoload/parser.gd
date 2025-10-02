@@ -176,8 +176,11 @@ func get_facts_of_value(b: bool) -> Array:
 func get_address() -> String:
 	return str(page_index, ".", line_index)
 
-func get_page_key(page_index:int):
+func get_page_key(page_index:int) -> String:
 	return page_data.get(page_index, {}).get("page_key", "")
+
+func get_page_count() -> int:
+	return page_data.size()
 
 func append_to_history(text:String):
 	history.append(text)

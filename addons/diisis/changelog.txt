@@ -6,9 +6,13 @@ Editor
 - fix menubars on  mac not working as intended
 - fix editor scale not being preserved when opening the window again
 - preserve window size when opening the editor after minimizing
+- importing bug fix
 
 Runtime
 - warning on adding a second line reader
+- building a choice with zero presented choices will advance the line
+- add LineReader.allow_mid_line_advance
+- add Parser.get_page_count()
 
 VN Template
 - reintroduced faggotry into the body label placeholder text in game_stage.tscn
