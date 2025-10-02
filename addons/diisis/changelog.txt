@@ -19,6 +19,7 @@ Runtime
 VN Template
 - reintroduced faggotry into the body label placeholder text in game_stage.tscn
 - Merge custom line reader and game stage into one node for better code structure
+- add audio bus layout setup to vn template setup
 
 Under the Hood
 - Purge text whose IDs are no longer referenced from the script file

@@ -30,6 +30,12 @@ func _ready() -> void:
 	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser.gd"))
 
 func setup_vn_template():
+	var bus_path_game := str("res://game/sounds/default_bus_layout.tres")
+	var bus_path_plugin := str("res://addons/diisis/templates/visual_novel/sounds/default_bus_layout.tres")
+	if ResourceLoader.exists(bus_path_game):
+		AudioServer.set_bus_layout(load(bus_path_game))
+	if ResourceLoader.exists(bus_path_plugin):
+		AudioServer.set_bus_layout(load(bus_path_plugin))
 	var e1 = InputEventMouseButton.new()
 	e1.button_index = MOUSE_BUTTON_LEFT
 	var e2 = InputEventKey.new()
