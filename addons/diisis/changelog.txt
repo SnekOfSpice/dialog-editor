@@ -18,6 +18,9 @@ Runtime
 VN Template
 - reintroduced faggotry into the body label placeholder text in game_stage.tscn
 
+Under the Hood
+- Purge text whose IDs are no longer referenced from the script file
+
 -------------------------------------------------
 DIISIS 0.6.3 2025-09-13
 the mid-noise jam hotfix or "well shit turns out there were a few critical bugs in that last patch"

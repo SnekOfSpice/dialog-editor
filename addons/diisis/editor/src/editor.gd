@@ -526,6 +526,9 @@ func save_to_file(path:String, is_autosave:=false):
 		if not DirAccess.dir_exists_absolute(BACKUP_PATH):
 			DirAccess.make_dir_absolute(BACKUP_PATH)
 	
+	if not is_autosave:
+		Pages.purge_unused_text_ids()
+	
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var data_to_save = {}

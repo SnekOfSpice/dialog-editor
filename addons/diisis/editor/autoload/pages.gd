@@ -2478,3 +2478,25 @@ func set_size_override(from:Node, new_size : int):
 	
 	for child in from.get_children():
 		set_size_override(child, new_size)
+
+func purge_unused_text_ids():
+	var used_text_ids := []
+	
+	for i in get_page_count():
+		var page_data : Dictionary = get_page_data(i)
+		for line : Dictionary in page_data.get("lines", []):
+			var line_type : DIISIS.LineType = line.get("line_type")
+			var content : Dictionary = line.get("content")
+			match line_type:
+				DIISIS.LineType.Text:
+					used_text_ids.append(content.get("text_id"))
+				DIISIS.LineType.Choice:
+					used_text_ids.append(content.get("title_id"))
+					var choices : Array = content.get("choices")
+					for choice : Dictionary in choices:
+						used_text_ids.append(choice.get("text_id_enabled"))
+						used_text_ids.append(choice.get("text_id_disabled"))
+	
+	for key in text_data.keys():
+		if not key in used_text_ids:
+			text_data.erase(key)
