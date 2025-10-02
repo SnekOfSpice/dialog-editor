@@ -591,7 +591,7 @@ func serialize() -> Dictionary:
 	result["Parser.page_index"] = page_index
 	result["Parser.line_index"] = line_index
 	result["Parser.history"] = history
-	result["Parser.line_reader"] = line_reader.serialize()
+	result["Parser.line_reader"] = line_reader._serialize()
 	result["Parser.game_progress"] = _get_game_progress()
 	result["Parser.selected_choices"] = selected_choices
 	result["address_trail"] = address_trail
@@ -615,7 +615,7 @@ func deserialize(data: Dictionary):
 	if line_reader_data.is_empty():
 		read_page(page_index, line_index)
 	else:
-		line_reader.deserialize(line_reader_data)
+		line_reader._deserialize(line_reader_data)
 
 ## [param save_dir_name] can but doesn't have to start with "user://". It shouldn't but can end with "/". This function will clean it up.
 func save_parser_state(save_dir_name: String, additional_data:={}):

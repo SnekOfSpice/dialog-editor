@@ -126,7 +126,7 @@ func change_stage(stage_path:String):
 	hook_up_button_sfx(new_stage)
 	stage = stage_path
 
-func get_stage_node() -> Stage:
+func get_stage_node() -> Control:
 	if $StageContainer.get_child_count() == 0:
 		return null
 	return $StageContainer.get_child(0)

@@ -36,8 +36,17 @@
 				"actor_key": [],
 				"config_property": []
 			},
+			"get_character": {
+				"character_name": []
+			},
 			"get_property_from_self_or_autoload": {
 				"property": []
+			},
+			"on_actor_name_changed": {
+				"actor": []
+			},
+			"on_instruction_started": {
+				"_instruction_text": []
 			},
 			"play_chapter_intro": {
 				"bgm": [],
@@ -84,6 +93,15 @@
 			"set_body_label_suffix": {
 				"actor": [],
 				"suffix": []
+			},
+			"set_cg": {
+				"cg_name": []
+			},
+			"set_cg_bottom": {
+				"cg_name": []
+			},
+			"set_cg_top": {
+				"cg_name": []
 			},
 			"set_character_name": {
 				"character": [],
@@ -144,6 +162,7 @@
 		"empty_strings_for_l10n": false,
 		"evaluator_modified_times": {
 			"res://game/autoloads/sound.tscn": 1742548751,
+			"res://game/stages/game_stage.gd": 1759398990,
 			"res://game/stages/line_reader_custom.gd": 1747815894
 		},
 		"facts": {
@@ -151,7 +170,7 @@
 		},
 		"file_config": {
 			"evaluator_paths": [
-				"res://game/stages/line_reader_custom.gd"
+				"res://game/stages/game_stage.gd"
 			]
 		},
 		"full_custom_method_defaults": {
@@ -192,8 +211,12 @@
 			"apply_ui_visibilities": {
 
 			},
-			"black_fade": {
+			"attempt_advance": {
 
+			},
+			"black_fade": {
+				"new_background": "none",
+				"new_bgm": "none"
 			},
 			"call_from_string": {
 				"call_mode": 0,
@@ -218,6 +241,9 @@
 			"deserialize": {
 
 			},
+			"deserialize_text_content": {
+
+			},
 			"enable_keep_past_lines": {
 				"keep_text": false,
 				"new_label": null,
@@ -235,7 +261,16 @@
 			"get_body_label_text_draw_pos": {
 				"on_label": null
 			},
+			"get_character": {
+
+			},
+			"get_default_targets": {
+
+			},
 			"get_preferences": {
+
+			},
+			"get_screen_container": {
 
 			},
 			"get_subaddress": {
@@ -247,11 +282,17 @@
 			"get_ui_visibilities": {
 
 			},
+			"go_to_main_menu": {
+
+			},
 			"hide_all_characters": {
 
 			},
 			"hide_cg": {
-				"fade_out": 2.0
+				"fade_out": 0.0
+			},
+			"hide_ui": {
+
 			},
 			"interrupt": {
 				"hide_controls": true
@@ -263,8 +304,14 @@
 			"move_camera_to": {
 
 			},
-			"play_chapter_intro": {
-				"bgm": "One <3"
+			"on_actor_name_changed": {
+
+			},
+			"on_instruction_started": {
+
+			},
+			"on_tree_exit": {
+
 			},
 			"play_sfx": {
 
@@ -282,6 +329,9 @@
 
 			},
 			"serialize": {
+
+			},
+			"serialize_text_content": {
 
 			},
 			"set_actor_color": {
@@ -305,6 +355,21 @@
 			"set_body_label": {
 				"keep_text": true
 			},
+			"set_callable_upon_blocker_clear": {
+
+			},
+			"set_cg": {
+
+			},
+			"set_cg_bottom": {
+
+			},
+			"set_cg_offset": {
+
+			},
+			"set_cg_top": {
+
+			},
 			"set_character_name": {
 
 			},
@@ -317,6 +382,9 @@
 			"set_emotion": {
 
 			},
+			"set_fade_out": {
+
+			},
 			"set_name_controls": {
 				"container": null,
 				"keep_text": true
@@ -326,9 +394,6 @@
 			},
 			"set_name_suffix": {
 				"update": true
-			},
-			"set_object_visible": {
-
 			},
 			"set_ruby_enabled": {
 
@@ -346,6 +411,12 @@
 
 			},
 			"show_character": {
+
+			},
+			"show_start_cover": {
+
+			},
+			"show_ui": {
 
 			},
 			"splatter_blood": {
@@ -368,7 +439,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761452,
+		"id_counter": -9223372036854761332,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -411,9 +482,9 @@
 							"delay_before": 0.0,
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
-							"meta.text": "set_background(default, 2)",
+							"meta.text": "black_fade(0, 0, 1, true, default, default)",
 							"meta.validation_status": "OK",
-							"name": "set_background",
+							"name": "black_fade",
 							"reverse_name": ""
 						},
 						"facts": {
@@ -453,14 +524,9 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"delay_after": 0.0,
-							"delay_before": 0.0,
-							"meta.has_reverse": false,
-							"meta.reverse_text": "",
-							"meta.text": "set_bgm(default, 0)",
+							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"name": "set_bgm",
-							"reverse_name": ""
+							"text_id": "1744987729.490--9223372036854775799"
 						},
 						"facts": {
 							"fact_data_by_name": {
@@ -469,8 +535,8 @@
 							"meta.visible": false
 						},
 						"header": [],
-						"id": "1744999497.570--9223372036854774772",
-						"line_type": 2,
+						"id": "1744999497.621--9223372036854774767",
+						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
@@ -499,52 +565,11 @@
 							"operand_key": "AND"
 						},
 						"content": {
-							"meta.locked": false,
-							"meta.validation_status": "OK",
-							"text_id": "1744987729.490--9223372036854775799"
-						},
-						"facts": {
-							"fact_data_by_name": {
-
-							},
-							"meta.visible": false
-						},
-						"header": [],
-						"id": "1744999497.621--9223372036854774767",
-						"line_type": 0,
-						"meta.conditionals_visible": false,
-						"meta.facts_visible": false,
-						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
-						"meta.line_index": 2,
-						"meta.selector": {
-							"selected": false
-						},
-						"skip": false
-					},
-					{
-						"address": "0.3",
-						"conditionals": {
-							"behavior": 0,
-							"behavior_key": "Show",
-							"facts": {
-								"fact_data_by_name": {
-
-								},
-								"meta.visible": false
-							},
-							"meta.controls_collapsed": true,
-							"meta.visible": false,
-							"operand": 0,
-							"operand_args": [],
-							"operand_key": "AND"
-						},
-						"content": {
 							"auto_switch": false,
 							"choice_order": [],
 							"choices": [
 								{
-									"address": "0.3.0",
+									"address": "0.2.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -594,7 +619,7 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.3.1",
+									"address": "0.2.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
@@ -654,14 +679,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 3,
+						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.4",
+						"address": "0.3",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -702,14 +727,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 4,
+						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.5",
+						"address": "0.4",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -750,14 +775,14 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 5,
+						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.6",
+						"address": "0.5",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -791,7 +816,7 @@
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
 						"meta.is_head_editable": true,
-						"meta.line_index": 6,
+						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false
 						},

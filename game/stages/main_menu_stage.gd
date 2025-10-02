@@ -1,4 +1,4 @@
-extends Stage
+extends Control
 
 ## Music key (same as instructions in DIISIS) to be played on [method _ready] Doesn't play anything if empty.
 @export var menu_music := ""

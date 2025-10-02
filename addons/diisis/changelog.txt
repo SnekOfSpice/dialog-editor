@@ -14,9 +14,11 @@ Runtime
 - building a choice with zero presented choices will advance the line
 - add LineReader.allow_mid_line_advance
 - add Parser.get_page_count()
+- add features around terminators to LineReader
 
 VN Template
 - reintroduced faggotry into the body label placeholder text in game_stage.tscn
+- Merge custom line reader and game stage into one node for better code structure
 
 Under the Hood
 - Purge text whose IDs are no longer referenced from the script file

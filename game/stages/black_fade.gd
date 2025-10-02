@@ -57,7 +57,7 @@ func on_clear_reached():
 	Parser.function_acceded()
 
 
-func _on_handler_start_black_fade(fade_in_duration, hold_time, fade_out_duration, hide_characters, new_background, new_bgm):
+func start(fade_in_duration, hold_time, fade_out_duration, hide_characters, new_background, new_bgm):
 	#if GameWorld.skip or GameWorld.game_stage.devmode_enabled:
 		#fade_out_duration = 0.1
 		#hold_time = 0.1
