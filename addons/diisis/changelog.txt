@@ -1,5 +1,12 @@
 -------------------------------------------------
-DIISIS 0.6.4 
+DIISIS 0.7
+
+General
+- Upgrade to Godot 4.5
+
+-------------------------------------------------
+DIISIS 0.6.4 2025-10-02
+the post-noise-jam update!!!!
 
 Editor
 - small layout improvements
