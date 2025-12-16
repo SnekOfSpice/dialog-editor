@@ -156,7 +156,7 @@ signal instruction_completed_after_delay(
 )
 
 ## Emitted when the Parser is put into or out of pause with [method Parser.set_paused]. [param is_paused] is the new state.
-signal parser_paused_changed(
+signal pause_change(
 	is_paused:bool
 )
 
@@ -214,6 +214,8 @@ signal line_skipped()
 
 ## Emitted when [method LineReader.request_advance] successfully advances the [LineReader].
 signal advanced()
+## awa
+signal line_finished(line_index:int)
 
 ## Emitted when [method Parser.function_acceded] is called.
 signal acceded()

@@ -565,7 +565,7 @@ transparent_bg = true
 gui_embed_subwindows = true
 title = "Open a File"
 initial_position = 4
-size = Vector2i(312, 175)
+size = Vector2i(348, 175)
 transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Open"
@@ -578,7 +578,7 @@ transparent_bg = true
 gui_embed_subwindows = true
 title = "Open a File"
 initial_position = 4
-size = Vector2i(312, 175)
+size = Vector2i(348, 175)
 transparent = true
 theme = ExtResource("1_nb6ej")
 ok_button_text = "Open"
@@ -610,7 +610,7 @@ visible = false
 visible = false
 
 [node name="IngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
-size = Vector2i(400, 2040)
+size = Vector2i(400, 2646)
 visible = false
 
 [node name="TextExportWindow" parent="Popups" instance=ExtResource("34_m63dd")]
@@ -656,6 +656,7 @@ container_path = "uid://cqfaywphjr2k2"
 visible = false
 
 [node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
+oversampling_override = 1.0
 size = Vector2i(12, 10)
 
 [node name="OpeningCover" type="ColorRect" parent="."]

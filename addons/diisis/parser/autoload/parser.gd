@@ -66,6 +66,9 @@ var address_trail := []
 
 var last_modified_time = 0
 
+## dynamically built helper array to speed up some function calls
+var page_keys := []
+
 func _get_live_source_path(suppress_error:=false) -> String:
 	var source_path:String
 	if not source_file_override.is_empty():
@@ -127,6 +130,10 @@ func init(data:Dictionary):
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
 	#locale = _default_locale
+	
+	page_keys.clear()
+	for pdata in page_data.values():
+		page_keys.append(pdata.get("page_key", ""))
 
 func get_custom_method_defaults(method_name:String) -> Dictionary:
 	return full_custom_method_defaults.get(method_name, {})
@@ -152,19 +159,38 @@ func reset_and_start(start_page_index := 0, start_line_index := 0):
 	history = []
 	selected_choices = []
 
-## Pauses the Parser. If [param suppress_event] is true, [signal ParserEvents.parser_paused_changed]
+## Pauses the Parser. If [param suppress_event] is true, [signal ParserEvents.pause_change]
 ## won't be emitted.
 func set_paused(value:bool, suppress_event:=false):
 	paused = value
 	if not suppress_event:
-		ParserEvents.parser_paused_changed.emit(paused)
+		ParserEvents.pause_change.emit(paused)
 
+## Returns the value of fact with name [param fact].
+func get_fact(fact: String, suppress_error:=false) -> Variant:
+	if not facts.has(fact):
+		if not suppress_error:
+			push_error("Fact is not registered. Returning null." % fact)
+		return null
+	return facts.get(fact)
 
-func get_fact(fact_name: String):
-	if not facts.has(fact_name):
-		push_error(str("Fact ", fact_name, " is not registered. Returning false."))
+## Typesafe version of [method get_fact] that returns a boolean. throws a warning and returns false if the cached value isn't of type bool or doesn't exist.
+func get_factb(fact: String) -> bool:
+	var value := get_fact(fact, true)
+	if value is bool:
+		return value
+	else:
+		push_warning("Fact %s is not a boolean or doesn't exist. Returning false." % fact)
 		return false
-	return facts.get(fact_name)
+
+## Typesafe version of [method get_fact] that returns an integer. throws a warning and returns 0 if the cached value isn't of type int or doesn't exist.
+func get_facti(fact: String) -> int:
+	var value := get_fact(fact, true)
+	if value is int:
+		return value
+	else:
+		push_warning("Fact %s is not an int or doesn't exist. Returning 0.")
+		return 0
 
 func get_facts_of_value(b: bool) -> Array:
 	var result := []
@@ -176,8 +202,11 @@ func get_facts_of_value(b: bool) -> Array:
 func get_address() -> String:
 	return str(page_index, ".", line_index)
 
-func get_page_key(page_index:int) -> String:
-	return page_data.get(page_index, {}).get("page_key", "")
+func get_page_key(page:int) -> String:
+	return page_keys[page]
+
+func has_page_key(key:String) -> bool:
+	return page_keys.has(key)
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -245,10 +274,7 @@ func get_dropdown_strings_from_header_values(values:=[0,0]) -> Array:
 	return result
 
 func get_page_number(key:String) -> int:
-	for data in page_data.values():
-		if data.get("page_key", "") == key:
-			return data.get("number")
-	return -1
+	return page_keys.find(key)
 
 func read_page_by_key(key:String, starting_line_index := 0):
 	var number = get_page_number(key)
@@ -551,6 +577,17 @@ func _close_connection():
 	line_reader.disconnect("line_finished", read_next_line)
 	line_reader.disconnect("jump_to_page", read_page)
 	line_reader = null
+
+## Helper function 
+## this is equivalent to calling change fact with a dictionary
+func change_fact_through_res(resource : ParserFactChange, suppress_event:=false):
+	var data := {
+			"fact_name" = resource.fact_name,
+			"data_type" = int(resource.data_type),
+			"fact_value" = resource.value
+		}
+	change_fact(data, suppress_event)
+	
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.[br]

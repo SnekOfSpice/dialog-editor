@@ -62,6 +62,9 @@ func init() -> void:
 	text_actions.add_submenu_node_item("Ingest Line", ingest)
 	ingest.init()
 	
+	text_actions.add_item("Use Ctrl+Shift+V to ingest")
+	text_actions.set_item_disabled(text_actions.item_count - 1, true)
+	
 	var actor_prepend = PopupMenu.new()
 	for actor in Pages.get_speakers():
 		actor_prepend.add_item(actor)
@@ -269,7 +272,7 @@ func _on_text_box_caret_changed() -> void:
 		text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, "a", "a")
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret(":") and is_text_after_caret(">"):
-		if is_text_before_caret("func:") or is_text_before_caret("call:"):
+		if is_text_before_caret("func:") or is_text_before_caret("call:") or is_text_before_caret("fbrf:"):
 			for method in Pages.get_all_instruction_names():
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, method, method)
 		elif is_text_before_caret("var:"):
@@ -326,7 +329,7 @@ func _on_text_box_caret_changed() -> void:
 		var found_autoload := ""
 		var is_var : bool
 		for autoload in Pages.callable_autoloads:
-			if is_text_before_caret(str("<call:", autoload, ".")) or is_text_before_caret(str("<func:", autoload, ".")):
+			if is_text_before_caret(str("<call:", autoload, ".")) or is_text_before_caret(str("<func:", autoload, ".")) or is_text_before_caret(str("<fbrf:", autoload, ".")):
 				found_autoload = autoload
 				is_var = false
 				break
@@ -426,7 +429,7 @@ func _on_text_box_focus_entered() -> void:
 func _on_text_box_text_changed() -> void:
 	update_tag_hint()
 	
-	if Pages.auto_complete_context in ["call", "func"]:
+	if Pages.auto_complete_context in ["call", "func", "fbrf"]:
 		for instr in Pages.get_all_instruction_names():
 			if is_text_before_caret(str("<", Pages.auto_complete_context, ":", instr)) and is_text_after_caret(">") and not last_character_after_caret == ")":
 				var prev_col := text_box.get_caret_column()
@@ -519,7 +522,7 @@ func get_function_calls() -> Array:
 	var result := []
 	for tag_data : Dictionary in tags.duplicate(true):
 		var tag : String = tag_data.get("tag")
-		if tag.begins_with("<call:") or tag.begins_with("<func:"):
+		if tag.begins_with("<call:") or tag.begins_with("<func:") or tag.begins_with("<fbrf:"):
 			var instruction := tag.split(":")[1]
 			instruction = instruction.trim_suffix(">")
 			result.append(instruction)
@@ -533,11 +536,11 @@ func get_compliances() -> Dictionary:
 	## this isn't super accurate because somethng like [codehdbfgd] text [/code] will be understood as valid
 	# but i cant be fucked to differentiate all the different tags rn
 	# it catches unclosed img and url tags and that's the most important
-	for bbcode_tag in BBCODE_TAGS:
-		var opening_count := text_box.text.count("[%s" % bbcode_tag)
-		var closing_count := text_box.text.count("[/%s" % bbcode_tag)
-		if opening_count != closing_count:
-			compliances[bbcode_tag] = "%s opening tags imbalanced with %s closing tags" % [opening_count, closing_count]
+	#for bbcode_tag in BBCODE_TAGS:
+		#var opening_count := text_box.text.count("[%s" % bbcode_tag)
+		#var closing_count := text_box.text.count("[/%s" % bbcode_tag)
+		#if opening_count != closing_count:
+			#compliances[bbcode_tag] = "%s opening tags imbalanced with %s closing tags" % [opening_count, closing_count]
 	
 	for opener : Dictionary in tags:
 		if opener.get("tag").begins_with("<ruby"):
@@ -593,29 +596,34 @@ func get_compliances() -> Dictionary:
 		var proper_tag : String = sections[sections.size() - 1]
 		proper_tag = "[" + proper_tag
 		
-		
-		var is_invalid := true
-		for tag : String in BBCODE_TAGS:
-			if tag in ["img", "url"]:
-				if proper_tag.contains("[url=") or proper_tag.contains("[img]") or proper_tag.contains("[/url]") or proper_tag.contains("[/img]"):
-					is_invalid = false
-					break
-			else:
-				if tag in BBCODE_TAGS_WITH_ARGUMENTS:
-					if proper_tag.begins_with("[%s " % tag):
-						is_invalid = false
-						break
-				if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
-					if proper_tag.begins_with("[%s=" % tag):
-						is_invalid = false
-						break
-				
-				if proper_tag == "[%s]" % tag or proper_tag == "[/%s]" % tag:
-					is_invalid = false
-					break
-		if is_invalid:
-			compliances[proper_tag] = "Invalid tag %s " % str(proper_tag)
+		# still wanna be able to use [] for art
+		#var is_invalid := true
+		#for tag : String in BBCODE_TAGS:
+			#if tag in ["img", "url"]:
+				#if proper_tag.contains("[url=") or proper_tag.contains("[img]") or proper_tag.contains("[/url]") or proper_tag.contains("[/img]"):
+					#is_invalid = false
+					#break
+			#else:
+				#if tag in BBCODE_TAGS_WITH_ARGUMENTS:
+					#if proper_tag.begins_with("[%s " % tag):
+						#is_invalid = false
+						#break
+				#if tag in BBCODE_TAGS_WITH_EQUALS_PARAMETER:
+					#if proper_tag.begins_with("[%s=" % tag):
+						#is_invalid = false
+						#break
+				#
+				#if proper_tag == "[%s]" % tag or proper_tag == "[/%s]" % tag:
+					#is_invalid = false
+					#break
+		#if is_invalid:
+			#compliances[proper_tag] = "Invalid tag %s " % str(proper_tag)
 	
+	if text_box.text.contains("<fbrf:"):
+		if not text_box.text.begins_with("<fbrf:"):
+			compliances["Full Body Replacement Function"] = "<fbrf:...> tags will only be parsed starting from the first place in the text box."
+		if not text_box.text.ends_with(">"):
+			compliances["Full Body Replacement Function"] = "text cannot end with anything other than >"
 	
 	return compliances
 
@@ -656,7 +664,7 @@ func update_inline_tag_prompt():
 	if is_text_before_caret(")"):
 		Pages.editor.hide_arg_hint()
 		return
-	if tag.begins_with("<call") or tag.begins_with("<func"):
+	if tag.begins_with("<call") or tag.begins_with("<func") or tag.begins_with("<fbrf"):
 		var caret_column := text_box.get_caret_column()
 		Pages.editor.request_arg_hint(text_box)
 		tag = tag.erase(0, 6)
@@ -695,14 +703,18 @@ func set_text(text:String):
 
 
 func _on_text_box_gui_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_V and event.is_command_or_control_pressed() and event.shift_pressed:
+			_on_import_ingest_from_clipboard()
 	if event is InputEventMouseButton:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame
 			var tag : String = get_tag_under_caret().get("tag", "")
 			var word_under_caret = get_word_under_caret()
-			if tag.begins_with("<call:") or tag.begins_with("<func:"):
+			if tag.begins_with("<call:") or tag.begins_with("<func:") or tag.begins_with("<fbrf:"):
 				tag = tag.trim_prefix("<call:")
 				tag = tag.trim_prefix("<func:")
+				tag = tag.trim_prefix("<fbrf:")
 				tag = tag.trim_suffix(">")
 				if event.is_shift_pressed():
 					Pages.editor.open_handler_window(tag.split("(")[0])

@@ -254,16 +254,6 @@ func copy(depth:int, single_address_override := "") -> Array:
 	var data_at_depth := {}
 	for address in selected_addresses:
 		var data_to_copy = Pages.get_data_from_address(address).duplicate(true)
-		if depth == DiisisEditorUtil.AddressDepth.Line:
-			data_to_copy["id"] = Pages.get_new_id()
-			if data_to_copy.get("line_type") == DIISIS.LineType.Text:
-				var content = data_to_copy.get("content")
-				var tid = content.get("text_id")
-				var text = Pages.get_text(tid)
-				var new_tid = Pages.get_new_id()
-				content["text_id"] = new_tid
-				Pages.save_text(new_tid, text)
-				data_to_copy["content"] = content
 		data_at_depth[address] = data_to_copy
 	
 	clipboard[depth] = data_at_depth
@@ -295,9 +285,42 @@ func get_clipboard_for_start_address(address:String) -> Dictionary:
 
 func insert_from_clipboard(start_address:String):
 	var insert_depth = DiisisEditorUtil.get_address_depth(start_address)
-	var data_at_depth = clipboard.get(insert_depth, {})
+	var data_at_depth : Dictionary = clipboard.get(insert_depth, {})
 	var start_address_parts = DiisisEditorUtil.get_split_address(start_address)
+	
+	# create new ids to avoid linking disconnectedlines to the same text ids etc
 	if insert_depth == DiisisEditorUtil.AddressDepth.Line:
+		for key in data_at_depth.keys():
+			var data : Dictionary = data_at_depth.get(key)
+			data["id"] = Pages.get_new_id()
+			var content : Dictionary = data.get("content")
+			if data.get("line_type") == DIISIS.LineType.Text:
+				var text : String = Pages.get_text(content.get("text_id"))
+				var new_tid : String = Pages.get_new_id()
+				content["text_id"] = new_tid
+				Pages.save_text(new_tid, text)
+				data["content"] = content
+			elif data.get("line_type") == DIISIS.LineType.Choice:
+				var title_text : String = Pages.get_text(content.get("title_id"))
+				var new_tid : String = Pages.get_new_id()
+				content["title_id"] = new_tid
+				Pages.save_text(new_tid, title_text)
+				
+				for choice : Dictionary in content.get("choices", []) as Array:
+					var enabled_text : String = Pages.get_text(choice.get("text_id_enabled"))
+					new_tid = Pages.get_new_id()
+					choice["text_id_enabled"] = new_tid
+					Pages.save_text(new_tid, enabled_text)
+					var disabled_text : String = Pages.get_text(choice.get("text_id_disabled"))
+					new_tid = Pages.get_new_id()
+					choice["text_id_disabled"] = new_tid
+					Pages.save_text(new_tid, disabled_text)
+				
+				data["content"] = content
+			
+			data_at_depth[key] = data
+		
+		
 		var indices := []
 		var data_by_index := {}
 		var i := 0
@@ -334,7 +357,18 @@ func insert_from_clipboard(start_address:String):
 				start_address_parts[2] + i,
 			)
 			addresses.append(new_address)
-			data_by_address[new_address] = data_at_depth.get(address)
+			var data : Dictionary = data_at_depth.get(address)
+			
+			var enabled_text : String = Pages.get_text(data.get("text_id_enabled"))
+			var new_tid = Pages.get_new_id()
+			data["text_id_enabled"] = new_tid
+			Pages.save_text(new_tid, enabled_text)
+			var disabled_text : String = Pages.get_text(data.get("text_id_disabled"))
+			new_tid = Pages.get_new_id()
+			data["text_id_disabled"] = new_tid
+			Pages.save_text(new_tid, disabled_text)
+			
+			data_by_address[new_address] = data
 			i += 1
 		
 		var undo_redo = Pages.editor.undo_redo

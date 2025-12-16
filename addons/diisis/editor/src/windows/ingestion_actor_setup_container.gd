@@ -40,6 +40,15 @@ func _on_auto_ingest_button_pressed() -> void:
 	
 	var initials_by_actor := {}
 	
+	var count_by_initial := {}
+	for actor : String in actors:
+		if actor.is_empty():
+			continue
+		var initial = actor[0]
+		var count :int = count_by_initial.get(initial, 0)
+		count += 1
+		count_by_initial[initial] = count
+	
 	var last_initial : String
 	var last_initial_count := 0
 	for actor : String in actors:
@@ -50,8 +59,9 @@ func _on_auto_ingest_button_pressed() -> void:
 			last_initial = initial
 			last_initial_count = 0
 		
-		var suffix : String = str(last_initial_count) if last_initial_count > 0 else ""
 		last_initial_count += 1
+		var suffix : String = str(last_initial_count) if count_by_initial.get(initial) > 0 else ""
+		
 		initials_by_actor[actor] = initial + suffix
 	
 	var lines := []

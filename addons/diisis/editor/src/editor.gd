@@ -696,6 +696,7 @@ func open_window_by_string(window_name:String) -> Window:
 		"FactsPopup",
 		"TextExportWindow",
 		"TextImportWindow",
+		"FileConfigPopup",
 	])
 	return window
 
@@ -759,7 +760,7 @@ func _on_editor_id_pressed(id: int) -> void:
 			open_window_by_string("PunctuationRulesWindow")
 		3:
 			# config
-			open_popup($Popups.get_node("FileConfigPopup"), true)
+			open_window_by_string("FileConfigPopup")
 		4:
 			popup_accept_dialogue(
 				str(
@@ -825,6 +826,9 @@ func _on_setup_id_pressed(id: int) -> void:
 		5: # facts
 			open_popup($Popups.get_node("FactsPopup"), true)
 		6: # pages
+			if Pages.get_page_count() == 0:
+				notify("No pages in file.") # popup relies on there being pages
+				return
 			open_popup($Popups.get_node("MovePagePopup"))
 		8:
 			open_window_by_string("DialogConfigWindow")

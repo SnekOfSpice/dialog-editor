@@ -19,6 +19,7 @@ height = 20
 fill_to = Vector2(0, 1)
 
 [node name="RichTextConfirmationDialog" type="ConfirmationDialog"]
+oversampling_override = 1.0
 position = Vector2i(0, 36)
 size = Vector2i(372, 100)
 visible = true
@@ -31,7 +32,7 @@ script = ExtResource("1_kqefd")
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 364.0
-offset_bottom = 60.0
+offset_bottom = 62.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(350, 0)
@@ -62,3 +63,4 @@ size_flags_vertical = 8
 texture = SubResource("GradientTexture2D_01m3r")
 
 [connection signal="item_rect_changed" from="MarginContainer/ScrollContainer/RichTextLabel" to="." method="_on_rich_text_label_item_rect_changed"]
+[connection signal="meta_clicked" from="MarginContainer/ScrollContainer/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]

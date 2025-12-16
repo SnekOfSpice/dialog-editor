@@ -85,6 +85,7 @@ custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_colors/line_number_color = Color(0.802977, 0.00154115, 0.932703, 0.4)
 placeholder_text = "enter text here"
 wrap_mode = 1
 autowrap_mode = 2
