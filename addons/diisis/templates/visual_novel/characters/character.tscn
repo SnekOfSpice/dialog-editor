@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://chfbyvpvah4eu"]
+
+[ext_resource type="Script" uid="uid://dwljiy8g41imy" path="res://addons/diisis/templates/visual_novel/characters/character.gd" id="1_upf4t"]
+[ext_resource type="Texture2D" uid="uid://dg5q71bcceghv" path="res://addons/diisis/templates/visual_novel/characters/sprites/amber-neutral.png" id="2_lhaq4"]
+[ext_resource type="Material" uid="uid://44cw5qgkdvgg" path="res://addons/diisis/templates/visual_novel/characters/active_material.tres" id="2_ygg2l"]
+
+[node name="Character" type="Node2D"]
+script = ExtResource("1_upf4t")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = ExtResource("2_ygg2l")
+texture = ExtResource("2_lhaq4")
+
+[node name="Extras" type="Node2D" parent="."]
