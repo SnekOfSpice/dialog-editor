@@ -1,0 +1,192 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3u3nrek114bl"]
+
+[ext_resource type="Script" uid="uid://dnbopb4ksr64p" path="res://game/stages/main_menu_stage.gd" id="1_wqqgh"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="3_fjoxk"]
+[ext_resource type="Texture2D" uid="uid://cragbc6muwrx1" path="res://game/backgrounds/main_menu.png" id="4_o4dm7"]
+
+[node name="MainMenuStage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wqqgh")
+menu_music = "main_menu"
+
+[node name="Background" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("4_o4dm7")
+centered = false
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="UILayer"]
+offset_left = 16.0
+offset_top = 248.0
+offset_right = 687.0
+offset_bottom = 476.0
+theme = ExtResource("3_fjoxk")
+theme_override_constants/margin_left = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="StartButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 30
+text = "New Game"
+alignment = 2
+
+[node name="LoadButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 30
+text = "Load"
+alignment = 2
+
+[node name="EpilogueButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer"]
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 30
+text = "Epilogue"
+alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveContainer" type="MarginContainer" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = 10
+
+[node name="Vbox" type="HBoxContainer" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="SaveSlotLabel" type="Label" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox"]
+layout_mode = 2
+text = "Save Slot: 1"
+
+[node name="SaveSlotButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox"]
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+text = "Change"
+
+[node name="Control" type="Control" parent="UILayer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="VBoxContainer" parent="UILayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="OptionsButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Options"
+alignment = 2
+
+[node name="CWButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Content Warning"
+alignment = 2
+
+[node name="CreditsButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Credits"
+alignment = 2
+
+[node name="QuitButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/HBoxContainer2"]
+auto_translate_mode = 1
+layout_mode = 2
+focus_mode = 0
+text = "Quit"
+alignment = 2
+
+[node name="ScreenLayer" type="CanvasLayer" parent="."]
+
+[node name="ScreenContainer" type="Control" parent="ScreenLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_fjoxk")
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="."]
+
+[node name="UnlockedEpilogueOverlay" type="ColorRect" parent="CanvasLayer3"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_fjoxk")
+color = Color(0, 0, 0, 0.635294)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer3/UnlockedEpilogueOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][b]Epilogue unlocked.[/b][/center]"
+fit_content = true
+
+[node name="UnlockedEpilogueButton" type="Button" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Got it"
+
+[node name="BlackLayer" type="CanvasLayer" parent="."]
+layer = 7
+visible = false
+
+[node name="Black" type="ColorRect" parent="BlackLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/HBoxContainer2/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/HBoxContainer2/CWButton" to="." method="_on_cw_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/HBoxContainer2/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/HBoxContainer2/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer/UnlockedEpilogueButton" to="." method="_on_unlocked_epilogue_button_pressed"]
