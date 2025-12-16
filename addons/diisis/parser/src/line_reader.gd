@@ -760,7 +760,6 @@ func advance():
 		if body_label.visible_ratio >= 1.0:
 			if _dialog_line_index >= _dialog_lines.size() - 1:
 				_remaining_prompt_delay = input_prompt_delay
-				ParserEvents.line_finished.emit(line_index)
 				emit_signal("line_finished", line_index)
 			else:
 				_remaining_prompt_delay = input_prompt_delay
@@ -782,7 +781,6 @@ func advance():
 				_remaining_prompt_delay = input_prompt_delay
 	else:
 		emit_signal("line_finished", line_index)
-		ParserEvents.line_finished.emit(line_index)
 	
 	ParserEvents.advanced.emit()
 

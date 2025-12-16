@@ -174,7 +174,7 @@ func get_fact(fact: String, suppress_error:=false) -> Variant:
 		return null
 	return facts.get(fact)
 
-## Typesafe version of [method get_fact] that returns a boolean. throws a warning and returns false if the cached value isn't of type bool or doesn't exist.
+## Typesafe version of [method get_fact] that returns a boolean. Throws a warning and returns false if the cached value isn't of type bool or doesn't exist.
 func get_factb(fact: String) -> bool:
 	var value := get_fact(fact, true)
 	if value is bool:
@@ -183,7 +183,7 @@ func get_factb(fact: String) -> bool:
 		push_warning("Fact %s is not a boolean or doesn't exist. Returning false." % fact)
 		return false
 
-## Typesafe version of [method get_fact] that returns an integer. throws a warning and returns 0 if the cached value isn't of type int or doesn't exist.
+## Typesafe version of [method get_fact] that returns an integer. Throws a warning and returns 0 if the cached value isn't of type int or doesn't exist.
 func get_facti(fact: String) -> int:
 	var value := get_fact(fact, true)
 	if value is int:
@@ -578,8 +578,8 @@ func _close_connection():
 	line_reader.disconnect("jump_to_page", read_page)
 	line_reader = null
 
-## Helper function 
-## this is equivalent to calling change fact with a dictionary
+## Helper function. 
+## This is equivalent to calling [method change_fact] with a dictionary containing the fields of [ParserFactChange].
 func change_fact_through_res(resource : ParserFactChange, suppress_event:=false):
 	var data := {
 			"fact_name" = resource.fact_name,
@@ -591,6 +591,7 @@ func change_fact_through_res(resource : ParserFactChange, suppress_event:=false)
 
 ## Changes [param fact_name] to [param new_value]. If [param suppress_event] is [code]true[/code]
 ## [signal ParserEvents.fact_changed] won't be emitted.[br]
+## See also [method change_fact_through_res].
 func change_fact(fact_item_data:Dictionary, suppress_event:=false):
 	var fact_name : String = fact_item_data.get("fact_name", "")
 	var old_value = facts.get(fact_name, false)

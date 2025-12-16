@@ -1,7 +1,7 @@
 class_name ParserFactChange
 extends Resource
 
-## helper resource used by parser.change_fact_through ´_res
+## Helper resource used by [method Parser.change_fact_through_res].
 
 enum DataType {
 	Bool,

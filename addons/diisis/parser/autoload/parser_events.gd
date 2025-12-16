@@ -214,8 +214,6 @@ signal line_skipped()
 
 ## Emitted when [method LineReader.request_advance] successfully advances the [LineReader].
 signal advanced()
-## awa
-signal line_finished(line_index:int)
 
 ## Emitted when [method Parser.function_acceded] is called.
 signal acceded()
