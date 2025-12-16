@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="ParserFactChange" load_steps=2 format=3 uid="uid://bg5fq0la121bh"]
+
+[ext_resource type="Script" uid="uid://jkkqramv26mk" path="res://addons/diisis/parser/src/resources/parser_fact_change.gd" id="1_acxgj"]
+
+[resource]
+script = ExtResource("1_acxgj")

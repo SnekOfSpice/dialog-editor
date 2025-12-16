@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name MovePageItem
 
 var number := 0
 var next := 0
@@ -41,7 +42,12 @@ func set_number(n: int):
 	find_child("AddressModeButton").set_mode(Pages.page_data.get(n).get("meta.address_mode_next", Pages.default_address_mode_pages))
 	find_child("AddressModeButton").visible = not terminates
 	
-	find_child("WordCountLabel").text = str(Pages.get_count_on_page(number, true).x)
+	find_child("WordCountLabel").text = str(get_word_count())
+
+
+func get_word_count() -> int:
+	return Pages.get_count_on_page(number, true).x
+
 
 func get_next() -> int:
 	return next
@@ -72,3 +78,12 @@ func set_address_mode(mode:AddressModeButton.Mode):
 	Pages.page_data[number]["meta.address_mode_next"] = mode
 	if Pages.editor.get_current_page_number() == number:
 		Pages.editor.get_current_page().find_child("AddressModeButton").set_mode(mode)
+
+
+func set_movable(value: bool):
+	%DownButton.visible = value
+	%UpButton.visible = value
+
+var movable: bool:
+	get():
+		return %DownButton.visible

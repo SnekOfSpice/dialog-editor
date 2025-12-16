@@ -20,12 +20,13 @@ enum ChoiceBehaviorAfterSelection {
 }
 
 
-const CONTROL_SEQUENCES := ["advance", "ap", "call", "clname", "comment", "fact", "func", "lc", "mp", "name", "ruby", "strpos", "ts_abs", "ts_rel", "ts_reset", "var", ]
+const CONTROL_SEQUENCES := ["advance", "ap", "call", "clname", "comment", "fact", "fbrf", "func", "lc", "mp", "name", "ruby", "strpos", "ts_abs", "ts_rel", "ts_reset", "var", ]
 const CONTROL_SEQUENCES_WITH_COLON := [
 	"call",
 	"clname",
 	"comment",
 	"fact",
+	"fbrf",
 	"func",
 	"name",
 	"ruby",

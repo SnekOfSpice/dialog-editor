@@ -1,5 +1,34 @@
 -------------------------------------------------
-DIISIS 0.6.4 
+DIISIS 0.6.5 2025-12-16
+surprise maintenance release
+
+Hosting noise jam and working on everyday sororicide brought forth many things that need addressing in a more surgical manner. Diisis was improved on many things.
+This release wasn't really planned, but it fixes a few important bugs, while lacking many of the bigger overhauls I wanted to put into 0.7, so for now, please take this offer with my upmost gratitude :awawa:
+
+General
+- Introduce fbrf tag: Full Body Replacement Function. put it as the sole text into your text line and it will fetch dialogue from the associated function. can be used for dynamic dialogue generation!
+- Fix bug where img and url bbcode would fuck with pause positions
+- name label history got broken with loner dog oopsie (fixed)
+
+Editor
+- Change auto actor population to instead start with numbers when initials are duplicated (might change again in the future idk)
+- Fix bug where inserting copied lines back to back would link them to the same text ids
+- Add ctrl + shift + v shortcut for text boxes to ingest with actor formatting
+- expand actor search window to include "any" option
+- add page menu filter & sort
+- add linearize confirm dialog
+
+Runtime
+- introduce ParserFactChange as helper class
+- add typesafe get_fact versions to Parser
+- rename ParserEvents.parser_paused_changed to ParserEvents.pause_change
+
+Under the Hood
+- give generic confirm windows in diisis the ability to open other windows
+
+-------------------------------------------------
+DIISIS 0.6.4 2025-10-02
+the post-noise-jam update!!!!
 
 Editor
 - small layout improvements

@@ -15,3 +15,9 @@ func _on_rich_text_label_item_rect_changed() -> void:
 		find_child("ScrollHintTop"),
 		find_child("ScrollHintBottom"),
 	)
+
+
+func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	meta = str(meta)
+	if meta.begins_with("openwindow-"):
+		Pages.editor.open_window_by_string(meta.trim_prefix("openwindow-"))

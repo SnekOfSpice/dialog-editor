@@ -1,10 +1,17 @@
 @tool
 extends Control
+class_name ActorSearchContainer
+
+enum SearchMode {
+	Any,
+	All,
+	Exact
+}
 
 func init():
 	%ActorList.clear()
 	%ResultsList.clear()
-	var speakers := Pages.get_speakers()
+	var speakers : Array = Pages.get_speakers()
 	speakers.sort()
 	for actor in speakers:
 		%ActorList.add_item(actor)
@@ -22,7 +29,15 @@ func fetch_results() -> void:
 	var actors := []
 	for index in selected_indices:
 		actors.append(%ActorList.get_item_text(index))
-	var adrs : Array = Pages.get_text_line_adrs_with_speakers(actors, find_child("ExactCheckBox").button_pressed)
+	
+	var mode : SearchMode
+	if %AnyCheckBox.button_pressed:
+		mode = SearchMode.Any
+	if %AllCheckBox.button_pressed:
+		mode = SearchMode.All
+	if %ExactCheckBox.button_pressed:
+		mode = SearchMode.Exact
+	var adrs : Array = Pages.get_text_line_adrs_with_speakers(actors, mode)
 	for address in adrs:
 		%ResultsList.add_item(address)
 		if address == previous_selected_address:

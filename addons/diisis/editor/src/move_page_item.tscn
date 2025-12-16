@@ -61,11 +61,13 @@ layout_mode = 2
 texture = ExtResource("3_2ukc8")
 
 [node name="DownButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("2_5k4sn")
 
 [node name="UpButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_8tuqg")

@@ -886,6 +886,12 @@ func _read_new_line(new_line: Dictionary):
 		choices = _line_data.get("content").get("choices")
 	if line_type == DIISIS.LineType.Text:
 		content = Parser.get_text(raw_content.get("text_id"))
+		if content.begins_with("<fbrf:"):
+			var tag : String = content.substr(0, content.find(">") + 1)
+			if content.trim_prefix(tag).is_empty():
+				var func_name : String = content.trim_prefix("<fbrf:").trim_suffix(">")
+				var full_body_replacement : String = call_from_string(func_name, CallMode.Func)
+				content = full_body_replacement
 	var content_name = _line_data.get("content").get("name")
 	
 	#for key in UI_PROPERTIES:
@@ -1307,6 +1313,16 @@ func _replace_tags(lines:Array) -> Array:
 			var security := 999
 			var last_tag : String
 			var better_text := ""
+			
+			if text.begins_with("[") and text.find("]") != -1:
+				better_text = text.substr(0, text.find("]") + 1)
+				scan_index = text.find("]") + 1
+			if text.begins_with("<") and text.find(">") != -1:
+				better_text = text.substr(0, text.find(">") + 1)
+				scan_index = text.find(">") + 1
+			if text.begins_with("&") and text.find(";") != -1:
+				better_text = text.substr(0, text.find(";") + 1)
+				scan_index = text.find(";") + 1
 			while scan_index < text.length():
 				security -= 1
 				if security < 0:
@@ -1502,19 +1518,8 @@ func _insert_strings_in_current_dialine():
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
 		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
 		
-		var display_name: String = _get_actor_name(current_raw_name)
+		_full_prefix = _get_full_prefix(current_raw_name)
 		
-		var wrappers := _get_actor_color_prepend_tag_pair(current_raw_name)
-		_full_prefix = str(
-			name_prefix,
-			get_actor_config_property("name_prefix", current_raw_name, ""),
-			wrappers[0],
-			display_name,
-			wrappers[1],
-			get_actor_config_property("name_suffix", current_raw_name, ""),
-			name_suffix,
-			_get_prepend_separator_sequence(),
-		)
 		new_text = str(
 			_full_prefix,
 			new_text
@@ -1583,12 +1588,12 @@ func _handle_tags_and_start_reading():
 				bbcode_removed_text[tag_start_position + 1] == "i" and
 				bbcode_removed_text[tag_start_position + 2] == "m" and
 				bbcode_removed_text[tag_start_position + 3] == "g"):
-					tag_end_position = bbcode_removed_text.find("[/img]") + 5
+					tag_end_position = bbcode_removed_text.find("[/img]") + 4
 			elif (
 				bbcode_removed_text[tag_start_position + 1] == "u" and
 				bbcode_removed_text[tag_start_position + 2] == "r" and
 				bbcode_removed_text[tag_start_position + 3] == "l"):
-					tag_end_position = bbcode_removed_text.find("[/url]") + 5
+					tag_end_position = bbcode_removed_text.find("[/url]") + 4
 		
 		if tag_start_position > 0:
 			if bbcode_removed_text[tag_start_position - 1] == "\\":
@@ -2208,10 +2213,6 @@ func _find_next_pause():
 	if _pause_types.size() > 0 and _next_pause_position_index < _pause_types.size():
 		_next_pause_type = _pause_types[_next_pause_position_index]
 
-func _get_full_prepend_name_prefix(actor:String) -> String:
-	if name_style != NameStyle.Prepend:
-		return ""
-	return get_actor_config_property("name_prefix", actor) + _get_actor_name(actor) + _get_prepend_separator_sequence() + get_actor_config_property("name_suffix", actor)
 
 func _get_actor_name(actor_key:String) -> String:
 	if not actor_config.keys().has(actor_key):
@@ -2679,10 +2680,31 @@ func _on_body_label_text_changed(old_text: String,
 	if _currently_speaking_name in blank_names:
 		name_prefix = "    "
 	elif _currently_speaking_visible:
-		name_prefix = str("[b]", _get_full_prepend_name_prefix(_currently_speaking_name), "[/b]: ")
+		name_prefix = str("[b]", _get_full_prefix(_currently_speaking_name, false), "[/b]: ")
 	else:
 		name_prefix == ""
 	Parser.call_deferred("append_to_history", (str(name_prefix, new_text)))
+
+
+func _get_full_prefix(actor_key : String, include_separator := true) -> String:
+	if name_style == NameStyle.None:
+		return ""
+	elif name_style == NameStyle.NameLabel and not _currently_speaking_visible:
+		return ""
+	var display_name: String = _get_actor_name(current_raw_name)
+	var wrappers := _get_actor_color_prepend_tag_pair(current_raw_name)
+	var full_prefix = str(
+		name_prefix,
+		get_actor_config_property("name_prefix", current_raw_name, ""),
+		wrappers[0],
+		display_name,
+		wrappers[1],
+		get_actor_config_property("name_suffix", current_raw_name, ""),
+		name_suffix,
+		_get_prepend_separator_sequence() if include_separator else "",
+	)
+	return full_prefix
+
 
 func _on_comment(comment: String, pos : int):
 	prints(str(Parser.get_address(), ":", pos), comment)
@@ -2908,12 +2930,12 @@ func set_custom_text_speed_override(value:int):
 								#label.text[scan_index + 1] == "i" and
 								#label.text[scan_index + 2] == "m" and
 								#label.text[scan_index + 3] == "g"):
-									#tag_end = label.text.find("[/img]") + 5
+									#tag_end = label.text.find("[/img]") + 4
 							#elif (
 								#label.text[scan_index + 1] == "u" and
 								#label.text[scan_index + 2] == "r" and
 								#label.text[scan_index + 3] == "l"):
-									#tag_end = label.text.find("[/url]") + 5
+									#tag_end = label.text.find("[/url]") + 4
 						#bbcode_padding += tag_end - scan_index + 2
 						#scan_index = tag_end
 				#
@@ -2934,3 +2956,8 @@ func set_custom_text_speed_override(value:int):
 		#i += 1
 	##_line_chunks = new_chunks
 	#label.queue_free()
+
+func is_at_end_of_line(non_text_return_value:=true) -> bool:
+	if line_type != DIISIS.LineType.Text:
+		return non_text_return_value
+	return body_label.visible_ratio == 1 and _dialog_line_index == _dialog_lines.size() - 1

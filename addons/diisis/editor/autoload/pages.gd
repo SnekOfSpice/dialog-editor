@@ -26,6 +26,7 @@ const FONT_SIZES = [8, 10, 12, 14, 16, 20, 26, 32, 40, 48, 60]
 const PREFERENCE_PROPS := [
 	"append_periods",
 	"collapse_conditional_controls_by_default",
+	"confirm_linearize",
 	"current_page_number_by_file_name",
 	"default_address_mode_pages",
 	"first_index_as_page_reference_only",
@@ -113,6 +114,7 @@ const TOGGLE_SETTINGS := {
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
 	"silly" : "Adds a bit of visual fluff to the editor :3",
+	"confirm_linearize" : "Adds a confirm dialogue to the \"Linearize\" option in the Pages window.",
 	"first_index_as_page_reference_only" : "If enabled, Pages will only consider being referenced by choices when those choices target line index 0. If disabled, the page indexes all choices that point to any line on it.",
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
 	"require_colons_on_actor_ingestion" : "If enabled, requires ingested dialogue to start with key + \":\". If disabled, a trailing space is fine too but might lead to unintended syntax if you have a dialog line starting with \"a \" (article) or \"n \"(shortform of &)."
@@ -143,6 +145,7 @@ var ingest_is_whitespace_checked := true
 var ingest_is_punctuation_checked := false
 
 var append_periods := true
+var confirm_linearize := true
 var fix_apostrophes := true
 var replacement_rules := []
 var preferences_import := {}
@@ -1671,7 +1674,7 @@ func remove_tags(t:String) -> String:
 						text[scan_index + 1] == "i" and
 						text[scan_index + 2] == "m" and
 						text[scan_index + 3] == "g"):
-							tag_end = text.find("[/img]") + 5
+							tag_end = text.find("[/img]") + 4
 							control_to_replace = text.substr(scan_index, tag_end - scan_index+1)
 				text = text.erase(scan_index, control_to_replace.length())
 			scan_index += 1
@@ -2170,9 +2173,9 @@ func get_speakers() -> Array:
 	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
 
 ## exact means only the passed speakers can be entered
-func get_text_line_adrs_with_speakers(speakers:Array, exact:=false) -> Array:
+func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearchContainer.SearchMode.All) -> Array:
 	if speakers.is_empty():
-		push_warning("Speakers is empty. Returning empty results.")
+		#push_warning("Speakers is empty. Returning empty results.")
 		return []
 	var results := []
 	for i in page_data.size():
@@ -2182,15 +2185,27 @@ func get_text_line_adrs_with_speakers(speakers:Array, exact:=false) -> Array:
 				continue
 			var text = get_text(line.get("content").get("text_id"))
 			var contains_all := true
-			for speaker : String in speakers:
-				if not text.contains("[]>%s" % speaker):
-					contains_all = false
-					break
-			if exact:
-				for global_speaker in get_speakers():
-					if global_speaker in speakers:
-						continue
-					if text.contains("[]>%s" % global_speaker):
+			if search_mode == ActorSearchContainer.SearchMode.Any:
+				contains_all = false
+				for speaker : String in speakers:
+					if text.contains("[]>%s" % speaker):
+						contains_all = true
+						break
+			if search_mode == ActorSearchContainer.SearchMode.All:
+				for speaker : String in speakers:
+					if not text.contains("[]>%s" % speaker):
+						contains_all = false
+						break
+			if search_mode == ActorSearchContainer.SearchMode.Exact:
+				for speaker : String in speakers:
+					if not text.contains("[]>%s" % speaker):
+						contains_all = false
+						break
+				var invalid_speakers := get_speakers()
+				for speaker in speakers:
+					invalid_speakers.erase(speaker)
+				for invalid_speaker in invalid_speakers:
+					if text.contains("[]>%s" % invalid_speaker):
 						contains_all = false
 						break
 			if contains_all:
