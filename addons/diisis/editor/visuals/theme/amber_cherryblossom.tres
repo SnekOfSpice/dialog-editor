@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=88 format=3 uid="uid://jddhsc4auo55"]
+[gd_resource type="Theme" load_steps=90 format=3 uid="uid://jddhsc4auo55"]
 
 [ext_resource type="FontVariation" uid="uid://rwenx6g7xf7e" path="res://addons/diisis/editor/visuals/theme/fonts/text_main_base.tres" id="1_da0q8"]
 [ext_resource type="Texture2D" uid="uid://cwsdrumkp66fc" path="res://addons/diisis/editor/visuals/theme/buttons_ui/checked.png" id="2_lximw"]
@@ -374,6 +374,10 @@ border_blend = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajats"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g8bc5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4vs5k"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qlmfo"]
 content_margin_left = 6.0
 content_margin_top = 8.0
@@ -583,6 +587,11 @@ Special/styles/hover = ExtResource("24_si63v")
 Special/styles/hover_pressed = ExtResource("24_si63v")
 Special/styles/normal = SubResource("StyleBoxEmpty_s2ov1")
 Special/styles/pressed = SubResource("StyleBoxEmpty_ajats")
+SpecialButton/base_type = &"Button"
+SpecialButton/styles/hover = ExtResource("24_si63v")
+SpecialButton/styles/hover_pressed = ExtResource("24_si63v")
+SpecialButton/styles/normal = SubResource("StyleBoxEmpty_g8bc5")
+SpecialButton/styles/pressed = SubResource("StyleBoxEmpty_4vs5k")
 SpinBox/icons/updown = null
 TabContainer/fonts/font = ExtResource("15_2tqnn")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_qlmfo")

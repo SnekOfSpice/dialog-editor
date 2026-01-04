@@ -178,7 +178,7 @@ layout_mode = 2
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
-text = "Replace in Text"
+text = "Adjust Text"
 
 [node name="ReplaceSpeakersCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters"]
 unique_name_in_owner = true

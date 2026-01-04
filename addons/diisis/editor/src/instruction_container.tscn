@@ -3,13 +3,11 @@
 [ext_resource type="Script" uid="uid://duqpwgbdr1oq8" path="res://addons/diisis/editor/src/instruction_container.gd" id="1_mqxig"]
 [ext_resource type="PackedScene" uid="uid://dtmrdrq7nyrh0" path="res://addons/diisis/editor/src/instruction_text_edit.tscn" id="4_hkwpw"]
 [ext_resource type="Texture2D" uid="uid://dyfl6ft15am3y" path="res://addons/diisis/editor/visuals/theme/buttons_ui/reverse_checked.png" id="5_iimji"]
-[ext_resource type="StyleBox" uid="uid://wygkuwnsf32l" path="res://addons/diisis/editor/visuals/theme/buttons_ui/special_button.tres" id="5_lenhj"]
 [ext_resource type="Script" uid="uid://b1jpwk3skthlu" path="res://addons/diisis/editor/src/tooltip_maker.gd" id="6_iimji"]
 [ext_resource type="Texture2D" uid="uid://1f6bex5oka8p" path="res://addons/diisis/editor/visuals/theme/buttons_ui/reverse_unchecked.png" id="6_lenhj"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lenhj"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r0scc"]
+[ext_resource type="Texture2D" uid="uid://txmjbhflcui6" path="res://addons/diisis/editor/visuals/theme/buttons_ui/advance_checked.png" id="7_r0scc"]
+[ext_resource type="Texture2D" uid="uid://b3na7eeeiehkg" path="res://addons/diisis/editor/visuals/theme/buttons_ui/advance_unchecked.png" id="8_6mnbm"]
+[ext_resource type="Script" uid="uid://bocur4gr4xvq4" path="res://addons/diisis/editor/src/richtext_tooltip_haver.gd" id="8_r0scc"]
 
 [node name="InstructionContainer" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
 anchors_preset = -1
@@ -48,10 +46,7 @@ size_flags_vertical = 4
 tooltip_text = "Reverse! Function that gets called when LineReader goes back. Ignores execution pre-/post-delays.
 If checked and left empty, will use the default instruction."
 focus_mode = 0
-theme_override_styles/hover_pressed = ExtResource("5_lenhj")
-theme_override_styles/hover = ExtResource("5_lenhj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_lenhj")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_r0scc")
+theme_type_variation = &"SpecialButton"
 theme_override_icons/checked = ExtResource("5_iimji")
 theme_override_icons/unchecked = ExtResource("6_lenhj")
 
@@ -85,6 +80,7 @@ columns = 3
 
 [node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
@@ -104,6 +100,7 @@ text_overrun_behavior = 1
 
 [node name="DelayAfterSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 max_value = 99999.0
 step = 0.01
@@ -119,6 +116,16 @@ custom_minimum_size = Vector2(50.015, 0)
 layout_mode = 2
 text = "After Call"
 text_overrun_behavior = 1
+
+[node name="YieldForAdvanceCheckBox" type="CheckBox" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Advance Yield - Stop the Line Reader from reading after this instruction has been executed until [code]request_advance()[/code] has been called."
+theme_type_variation = &"SpecialButton"
+theme_override_icons/checked = ExtResource("7_r0scc")
+theme_override_icons/unchecked = ExtResource("8_6mnbm")
+script = ExtResource("8_r0scc")
 
 [connection signal="request_search" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_request_search"]
 [connection signal="request_search_in_setup" from="HBoxContainer/HBoxContainer/VBoxContainer/InstructionTextEdit" to="." method="_on_instruction_text_edit_request_search_in_setup"]

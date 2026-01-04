@@ -495,6 +495,7 @@ func _serialize() -> Dictionary:
 		result["ui_visibilities"] = get_ui_visibilities()
 	if body_label:
 		result["visible_characters"] = body_label.visible_characters
+	result["_yield_instruction_to_advance"] = _yield_instruction_to_advance
 	
 	return result
 
@@ -542,6 +543,7 @@ func _deserialize(data: Dictionary):
 	terminated = data.get("terminated")
 	_text_delay = data.get("_text_delay", _text_delay)
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	_yield_instruction_to_advance = data.get("_yield_instruction_to_advance", false)
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
 	
@@ -700,7 +702,7 @@ func _set_custom_blockers(new_value:int):
 	_is_advance_blocked = is_advance_blocked(false, false)
 	_update_input_prompt(0)
 
-
+var _yield_instruction_to_advance := false
 ## you can use this to poll the internal state
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
 	if Engine.is_editor_hint():
@@ -714,7 +716,7 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 			push_warning("Cannot advance because Parser.paused is true.")
 		return true
 	if is_executing:
-		if warn_advance_on_executing and include_warnings:
+		if warn_advance_on_executing and include_warnings and not _yield_instruction_to_advance:
 			push_warning("Cannot advance because is_executing is true.")
 		return true
 	if terminated:
@@ -752,11 +754,10 @@ func advance():
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
+	_yield_instruction_to_advance = false
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if _showing_text:
-		_lead_time = 0.0
-		_full_word_timer = 0
 		if body_label.visible_ratio >= 1.0:
 			if _dialog_line_index >= _dialog_lines.size() - 1:
 				_remaining_prompt_delay = input_prompt_delay
@@ -782,6 +783,8 @@ func advance():
 	else:
 		emit_signal("line_finished", line_index)
 	
+	_lead_time = 0.0
+	_full_word_timer = 0.0
 	ParserEvents.advanced.emit()
 
 ## Go back up the dialogue tree, if possible. Pushes an appropriate warning if it fails.
@@ -837,6 +840,8 @@ func apply_ui_visibilities(data:Dictionary):
 		prop.set("visible", data.get(property))
 
 func _on_instruction_wrapped_completed():
+	if _yield_instruction_to_advance:
+		return
 	emit_signal("line_finished", line_index)
 
 func _close(_terminating_page):
@@ -998,6 +1003,8 @@ func _read_new_line(new_line: Dictionary):
 			
 			if not _reverse_next_instruction:
 				text = instruction_content.get("meta.text")
+				has_received_execute_callback = new_line.get("content").get("advance_yield", false)
+				_yield_instruction_to_advance = has_received_execute_callback
 			else:
 				text = instruction_content.get("meta.reverse_text", "")
 			
@@ -1012,6 +1019,7 @@ func _read_new_line(new_line: Dictionary):
 				_remaining_prompt_delay = input_prompt_delay
 				
 				return
+			
 			_wrapper_execute(text, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not _line_data.get("content", {}).get("meta.contents_visible", true):
@@ -1063,7 +1071,9 @@ func _get_current_text_speed() -> float:
 	
 	return current_text_speed
 
-func _process(delta: float) -> void:
+# we use physics process because there's a delta spike on startup and that can mess with _full_word_timer
+# and afaik there's no other reason to use either process or physics process
+func _physics_process(delta: float) -> void:#(delta: float) -> void:
 	# this is a @tool script so this prevents the console from getting flooded
 	if Engine.is_editor_hint():
 		return
@@ -1123,23 +1133,25 @@ func _process(delta: float) -> void:
 		return
 	
 	var current_text_speed := _get_current_text_speed()
-	
 	if _next_pause_position_index < _pause_positions.size() and _next_pause_position_index != -1:
 		_find_next_pause()
 	if body_label.visible_characters < _get_end_of_chunk_position():
 		if current_text_speed == MAX_TEXT_SPEED:
 			body_label.visible_characters = _get_end_of_chunk_position()
 		else:
+			var parsed_text := body_label.get_parsed_text()
 			var old_text_length : int = body_label.visible_characters
 			if full_words:
-				var next_space_position = body_label.get_parsed_text().find(" ", body_label.visible_characters + 1)
+				var next_space_position = parsed_text.find(" ", body_label.visible_characters + 1) + 1
+				if next_space_position == 0:
+					next_space_position = -1
 				if body_label.visible_ratio != 1:
 					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
 					body_label.visible_characters = min(next_space_position, _get_end_of_chunk_position())
 					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta * 5.0 # avg word length whatever
 			else:
-				body_label.visible_ratio += (float(current_text_speed) / body_label.get_parsed_text().length()) * delta
+				body_label.visible_ratio += (float(current_text_speed) / parsed_text.length()) * delta
 			# fast text speed can make it go over the end  of the chunk
 			body_label.visible_characters = min(body_label.visible_characters, _get_end_of_chunk_position())
 			if old_text_length != body_label.visible_characters:
@@ -1161,7 +1173,7 @@ func _process(delta: float) -> void:
 	for label : RubyLabel in _ruby_labels:
 		label.handle_parent_visible_characters(body_label.visible_characters)
 	
-	var new_characters_visible_so_far = body_label.text.substr(0, body_label.visible_characters)
+	var new_characters_visible_so_far = body_label.get_parsed_text().substr(0, body_label.visible_characters)
 	var new_characters : String = new_characters_visible_so_far.trim_prefix(_characters_visible_so_far)
 	if " " in new_characters:
 		var split_new_characters : Array = new_characters.split(" ")
@@ -1181,6 +1193,12 @@ func _process(delta: float) -> void:
 				_remove_spaces_and_send_word_read_event(_remove_symbols(_started_word_buffer))
 				_started_word_buffer = ""
 	_characters_visible_so_far = new_characters_visible_so_far
+	if _characters_visible_so_far.length() == body_label.get_parsed_text().length() and not _started_word_buffer.is_empty():
+		var split_rest : Array = _started_word_buffer.split(" ")
+		for word : String in split_rest:
+			_remove_spaces_and_send_word_read_event(_remove_symbols(word))
+		_started_word_buffer = ""
+			
 	
 	if current_text_speed < MAX_TEXT_SPEED:
 		if _last_visible_ratio < 1.0 and body_label.visible_ratio >= 1.0:
@@ -1767,6 +1785,8 @@ func _ensure_ruby_container(on_label:=body_label):
 		ruby_root.custom_minimum_size = on_label.size
 		ruby_roots_by_label[on_label] = ruby_root
 		var vbox = VBoxContainer.new()
+		vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		vbox.focus_mode = Control.FOCUS_NONE
 		vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2179,18 +2199,21 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 
 var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
-func set_body_label(new_body_label:RichTextLabel, keep_text := true):
+func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previous := false):
 	_ensure_terminator_node()
 	
 	if new_body_label == body_label:
 		return
 	var switch_text:bool = body_label != new_body_label
 	var old_text : String
+	var old_label := body_label
 	if switch_text and keep_text and body_label:
 		old_text = body_label.text
 	body_label = new_body_label
 	if switch_text and keep_text:
 		body_label.text = old_text
+	if clear_previous:
+		old_label.text = ""
 
 func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container

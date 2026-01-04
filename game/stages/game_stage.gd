@@ -99,7 +99,7 @@ func go_to_main_menu(_unused):
 	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:#(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 	super(delta)
@@ -149,8 +149,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
 		
-	#elif event.is_action_pressed("go_back"):
-		#line_reader.request_go_back()
+	elif event.is_action_pressed("go_back"):
+		request_go_back()
 
 func attempt_advance(event:InputEvent):
 	if event.is_shift_pressed() and event is InputEventKey:
