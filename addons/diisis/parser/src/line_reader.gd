@@ -47,7 +47,10 @@ enum NameStyle {
 		auto_continue = value
 		notify_property_list_changed()
 ## If [member auto_continue] is [code]true[/code], this is the time before the line reader automatically continues, in seconds.
-@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_continue_delay := 0.2
+@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_continue_delay := 0.2:
+	set(value):
+		auto_continue_delay = value
+		_auto_continue_duration = value
 var _auto_continue_duration:= auto_continue_delay
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export_subgroup("Show Text During", "show_text_during")
@@ -651,8 +654,8 @@ func _ready() -> void:
 	
 	if body_label:
 		body_label.visible_ratio = 0
-		body_label.bbcode_enabled = true
 		body_label.text = ""
+		body_label.bbcode_enabled = true
 		set_body_label(body_label)
 	if name_label:
 		name_label.text = ""
@@ -1050,7 +1053,13 @@ func _replace_lc_tags(full_line_text:String) -> String:
 
 
 func _get_prepend_separator_sequence() -> String:
-	return str(" " if inline_name_space_prefix else "", inline_name_separator, " " if inline_name_space_suffix else "")
+	var sep : String
+	if inline_name_separator == "\\n":
+		sep = "\n"
+	else:
+		sep = inline_name_separator
+	
+	return str(" " if inline_name_space_prefix else "", sep, " " if inline_name_space_suffix else "")
 
 func _get_end_of_chunk_position() -> int:
 	if _pause_positions.size() == 0:
@@ -1104,16 +1113,18 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 			return
 		
 		if delay_after > 0:
+			if _delay_after_max == delay_after:
+				ParserEvents.instruction_completed.emit(execution_text, _delay_after_max)
 			delay_after -= delta
 			if delay_after <= 0:
-				ParserEvents.instruction_completed.emit(execution_text, delay_after)
+				ParserEvents.instruction_completed_after_delay.emit(execution_text, _delay_after_max)
 				emitted_complete = true
 			return
 		elif not emitted_complete:
-			ParserEvents.instruction_completed.emit(execution_text, delay_after)
+			ParserEvents.instruction_completed.emit(execution_text, _delay_after_max)
 		
 		_on_instruction_wrapped_completed()
-		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		ParserEvents.instruction_completed_after_delay.emit(execution_text, _delay_after_max)
 		
 		is_executing = false
 		return
@@ -1151,7 +1162,7 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 					body_label.visible_characters = min(next_space_position, _get_end_of_chunk_position())
 					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta * 5.0 # avg word length whatever
 			else:
-				body_label.visible_ratio += (float(current_text_speed) / parsed_text.length()) * delta
+				body_label.visible_ratio += get_body_label_progress_step(float(current_text_speed), parsed_text, delta)
 			# fast text speed can make it go over the end  of the chunk
 			body_label.visible_characters = min(body_label.visible_characters, _get_end_of_chunk_position())
 			if old_text_length != body_label.visible_characters:
@@ -1532,6 +1543,7 @@ func _insert_strings_in_current_dialine():
 	for entity in DIISIS.HTML_ENTITIES.keys():
 		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	
+	_prepend_length = 0
 	# prepend name
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
 		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
@@ -1543,7 +1555,12 @@ func _insert_strings_in_current_dialine():
 			new_text
 			)
 		
-		_prepend_length = _full_prefix.length()
+		var label := RichTextLabel.new()
+		label.bbcode_enabled = true
+		add_child(label)
+		label.text = _full_prefix
+		_prepend_length = label.get_parsed_text().length()
+		label.queue_free()
 	
 	
 	new_text = str(
@@ -1760,11 +1777,11 @@ func _handle_tags_and_start_reading():
 	if _raw_name_was_empty:
 		_lead_time = Parser.text_lead_time_same_actor
 	
-	_prepend_length = 0
-	if name_style == NameStyle.None and name_container:
-		name_container.modulate.a = 0.0
-	elif name_style == NameStyle.Prepend:
-		name_container.modulate.a = 0.0
+	if name_container:
+		if name_style == NameStyle.None:
+			name_container.modulate.a = 0.0
+		elif name_style == NameStyle.Prepend:
+			name_container.modulate.a = 0.0
 		
 	
 	if body_label_tint_lines and not chatlog_enabled:
@@ -2072,6 +2089,16 @@ func _emit_comment(comment_position:int):
 	_handled_comments.append(comment_position)
 	_comments.erase(comment_position)
 
+## [param for_label] is the body label you want the RichTextLabel for
+static func get_past_line_rich_text_label(for_label : RichTextLabel, text := "", ) -> RichTextLabel:
+	var past_line = RichTextLabel.new()
+	past_line.custom_minimum_size.x = for_label.custom_minimum_size.x
+	past_line.fit_content = true
+	past_line.bbcode_enabled = true
+	past_line.mouse_filter = Control.MOUSE_FILTER_PASS
+	past_line.text = text
+	return past_line
+
 
 func _preserve_into_past_line_container():
 	if not keep_past_lines:
@@ -2095,11 +2122,14 @@ func _preserve_into_past_line_container():
 			push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
 
 	if not past_line:
-		past_line = RichTextLabel.new()
-		past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
-		past_line.fit_content = true
-		past_line.bbcode_enabled = true
-		past_line.mouse_filter = Control.MOUSE_FILTER_PASS
+		past_line = get_past_line_rich_text_label(body_label)
+	
+	past_line.add_theme_font_size_override("normal_font_size", body_label.get_theme_font_size("normal_font_size"))
+	past_line.add_theme_font_size_override("bold_font_size", body_label.get_theme_font_size("bold_font_size"))
+	past_line.add_theme_font_size_override("bold_italics_font_size", body_label.get_theme_font_size("bold_italics_font_size"))
+	past_line.add_theme_font_size_override("italics_font_size", body_label.get_theme_font_size("italics_font_size"))
+	past_line.add_theme_font_size_override("mono_font_size", body_label.get_theme_font_size("mono_font_size"))
+	past_line.set_theme_type_variation(body_label.get_theme_type_variation())
 	
 	var past_text := ""
 	if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NameLabel and preserve_name_in_past_lines):
@@ -2210,6 +2240,7 @@ func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previ
 	if switch_text and keep_text and body_label:
 		old_text = body_label.text
 	body_label = new_body_label
+	body_label.bbcode_enabled = true
 	if switch_text and keep_text:
 		body_label.text = old_text
 	if clear_previous:
@@ -2231,6 +2262,15 @@ func enable_keep_past_lines(container: VBoxContainer, keep_text := false, new_la
 	self.past_lines_container = container
 	name_style = new_name_style
 	set_body_label(new_label, keep_text)
+
+
+func clear_past_lines(clear_body_label:=false) -> void:
+	if past_lines_container:
+		for c in past_lines_container.get_children():
+			c.queue_free()
+	if clear_body_label:
+		body_label.text = ""
+
 
 func _find_next_pause():
 	if _pause_types.size() > 0 and _next_pause_position_index < _pause_types.size():
@@ -2340,15 +2380,16 @@ func get_actor_config_property(config_property:String, actor_key:String, default
 	return (actor_config.get(actor_key) as LineReaderActorConfig).get(config_property)
 
 func _build_choices(choices, auto_switch:bool):
-	if not choice_container:
-		push_error("Tried to build choices when choice_container is null")
-		return
-	if not choice_list:
-		push_error("Tried to build choices when choice_list is null")
-		return
-	
-	for c in choice_list.get_children():
-		c.queue_free()
+	if not auto_switch:
+		if not choice_container:
+			push_error("Tried to build choices when choice_container is null")
+			return
+		if not choice_list:
+			push_error("Tried to build choices when choice_list is null")
+			return
+	if choice_list:
+		for c in choice_list.get_children():
+			c.queue_free()
 	
 	var built_choices : Array = []
 	for option in choices:
@@ -2432,7 +2473,8 @@ func _build_choices(choices, auto_switch:bool):
 		
 		new_option.connect("choice_pressed", _choice_pressed)
 		
-		choice_list.add_child(new_option)
+		if choice_list:
+			choice_list.add_child(new_option)
 		built_choices.append({
 			"button": new_option,
 			"disabled": not enable_option,
@@ -2449,15 +2491,17 @@ func _build_choices(choices, auto_switch:bool):
 		if choice_button_keyboard_focus:
 			new_option.focus_mode = Control.FOCUS_ALL
 	
-	if choice_list.get_child_count() > 0 and choice_button_keyboard_focus:
-		choice_list.get_child(0).call_deferred("grab_focus")
+	if choice_list:
+		if choice_list.get_child_count() > 0 and choice_button_keyboard_focus:
+			choice_list.get_child(0).call_deferred("grab_focus")
 	
 	ParserEvents.choices_presented.emit(built_choices)
 	
 	if virtual_choices:
 		_built_virtual_choices = built_choices
-		for c in choice_list.get_children():
-			c.visible = false
+		if choice_list:
+			for c in choice_list.get_children():
+				c.visible = false
 	
 	if built_choices.is_empty() and not auto_switch:
 		emit_signal("line_finished", line_index)
@@ -2486,8 +2530,9 @@ func choice_pressed_virtual(index:int):
 
 func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 	_built_virtual_choices.clear()
-	for c in choice_list.get_children():
-		c.queue_free()
+	if choice_list:
+		for c in choice_list.get_children():
+			c.queue_free()
 	if do_jump_page:
 		emit_signal("jump_to_page", target_page, target_line)
 		return
@@ -2581,6 +2626,8 @@ func _set_dialog_line_index(value: int):
 	
 	_preserve_into_past_line_container()
 	
+	if _dialog_actors.is_empty():
+		return
 	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]
 		var actor_name: String = _trim_syntax_and_emit_dialog_line_args(raw_name)
@@ -2740,7 +2787,11 @@ enum CallMode {
 }
 
 var delay_before := 0.0
-var delay_after := 0.0
+var delay_after := 0.0:
+	set(value):
+		delay_after = value
+		_delay_after_max = delay_after
+var _delay_after_max : float
 var execution_text := ""
 ## This variable determines if [LineReader] is currently awaiting the callback of [method Parser.function_acceded].
 ## [br][b]Do not write to it.[/b]
@@ -2984,3 +3035,9 @@ func is_at_end_of_line(non_text_return_value:=true) -> bool:
 	if line_type != DIISIS.LineType.Text:
 		return non_text_return_value
 	return body_label.visible_ratio == 1 and _dialog_line_index == _dialog_lines.size() - 1
+
+
+## Gives the amount of progress to make with a body label for any given text.
+## [br]Useful for text speed previews in options menus
+static func get_body_label_progress_step(text_speed : float, parsed_text : String, delta) -> float:
+	return (text_speed / parsed_text.length()) * delta

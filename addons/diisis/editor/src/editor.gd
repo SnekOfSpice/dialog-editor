@@ -165,6 +165,8 @@ func init(active_file_path:="") -> void:
 	elif active_file_path.is_empty():
 		await get_tree().process_frame
 		opening = false
+		if Pages.evaluator_paths.is_empty():
+			Pages.evaluator_paths = get_line_reader_scripts()
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -1343,3 +1345,43 @@ func _on_library_of_babel_index_pressed(index: int) -> void:
 
 func is_importing() -> bool:
 	return $ImportingCover.visible
+
+
+
+var found_handlers := []
+func get_line_reader_scripts() -> Array:
+	found_handlers.clear()
+	_get_line_reader_scripts_r("res://")
+	return found_handlers
+func _get_line_reader_scripts_r(path: String) -> void:
+	var directories = DirAccess.get_directories_at(path)
+	for d in directories:
+		if d == "addons":
+			continue
+		if path == "res://":
+			_get_line_reader_scripts_r(path + d)
+		else:
+			_get_line_reader_scripts_r(path + "/" + d)
+		
+	var files = DirAccess.get_files_at(path)
+	
+	for f in files:
+		if not f.get_extension() == "gd":
+			continue
+		var script : Script = load(path + "/" + f)
+		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
+		var lines = file.get_as_text()
+		
+		var has_expression : = false
+		for expression in [
+			"extends LineReader",
+			"extends\nLineReader",
+			"extends \nLineReader",
+			]:
+			if expression in lines:
+				has_expression = true
+		if has_expression:
+			var local_path : String = path + "/" + f
+			local_path = local_path.replace("///", "//") # this happens with scripts in the project root
+			found_handlers.append(local_path)
+			

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bhjckv7pd2eri"]
+[gd_scene format=3 uid="uid://bhjckv7pd2eri"]
 
 [ext_resource type="Script" uid="uid://b7v4xhanv4kxy" path="res://addons/diisis/editor/src/fact_item.gd" id="1_kk40s"]
 [ext_resource type="PackedScene" uid="uid://cnpn8uwlfg1o4" path="res://addons/diisis/editor/src/hinted_line_edit.tscn" id="2_o88s0"]
@@ -7,23 +7,24 @@
 [ext_resource type="PackedScene" uid="uid://unnyq1pkgbh" path="res://addons/diisis/editor/src/arg_hint.tscn" id="3_i2pc6"]
 [ext_resource type="Texture2D" uid="uid://cs3n1tliwsul1" path="res://addons/diisis/editor/visuals/theme/buttons_ui/delete_generic.png" id="5_02amc"]
 
-[node name="Fact" type="VBoxContainer"]
+[node name="Fact" type="VBoxContainer" unique_id=1050253529]
 offset_right = 289.0
 offset_bottom = 104.0
 size_flags_horizontal = 0
 script = ExtResource("1_kk40s")
 
-[node name="FactItem" type="HBoxContainer" parent="."]
+[node name="FactItem" type="HBoxContainer" parent="." unique_id=1307599062]
 layout_mode = 2
 size_flags_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="FactItem"]
+[node name="HBoxContainer" type="HBoxContainer" parent="FactItem" unique_id=978934071]
 layout_mode = 2
 
-[node name="FactValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer"]
+[node name="FactValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer" unique_id=652288785]
 layout_mode = 2
 
-[node name="DataTypeButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer"]
+[node name="DataTypeButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=652839465]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 selected = 0
@@ -33,22 +34,22 @@ popup/item_0/id = 0
 popup/item_1/text = "Int"
 popup/item_1/id = 1
 
-[node name="FactName" parent="FactItem/HBoxContainer/FactValueContainer" instance=ExtResource("2_o88s0")]
+[node name="FactName" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=1039936652 instance=ExtResource("2_o88s0")]
 custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 placeholder_text = "fact name"
 
-[node name="FactIntValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer/FactValueContainer"]
+[node name="FactIntValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=956119493]
 layout_mode = 2
 
-[node name="IntOperandButton" type="Button" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+[node name="IntOperandButton" type="Button" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer" unique_id=1684246683]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 tooltip_text = "Set (=): Sets the fact to that value
 Add (+): Adds (or subtracts) the value to the fact"
 text = "="
 
-[node name="IntComparatorButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+[node name="IntComparatorButton" type="OptionButton" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer" unique_id=208387502]
 auto_translate_mode = 1
 layout_mode = 2
 tooltip_text = "Sets the comparison mode with the current facts saved in the Parser at runtime.
@@ -69,47 +70,48 @@ popup/item_4/id = 4
 popup/item_5/text = ">="
 popup/item_5/id = 5
 
-[node name="IntValueSpinBox" type="SpinBox" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer"]
+[node name="IntValueSpinBox" type="SpinBox" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer" unique_id=1282004444]
 custom_minimum_size = Vector2(155, 0)
 layout_mode = 2
-min_value = -1e+12
-max_value = 1e+12
+min_value = -1000000000000.0
+max_value = 1000000000000.0
 
-[node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer"]
+[node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=278945707]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 8
 theme_override_icons/checked = ExtResource("2_s4vmr")
 theme_override_icons/unchecked = ExtResource("3_02amc")
 
-[node name="DeleteButton" type="Button" parent="FactItem"]
+[node name="DeleteButton" type="Button" parent="FactItem" unique_id=1571462496]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 tooltip_text = "Delete"
 icon = ExtResource("5_02amc")
 
-[node name="TypeMismatchLabel" type="Label" parent="."]
+[node name="TypeMismatchLabel" type="Label" parent="." unique_id=1096141794]
 layout_mode = 2
 text = "Type mismatch!"
 
-[node name="RegisterContainer" type="HBoxContainer" parent="."]
+[node name="RegisterContainer" type="HBoxContainer" parent="." unique_id=475143086]
 visible = false
 layout_mode = 2
 
-[node name="RegisterLabel" type="RichTextLabel" parent="RegisterContainer"]
+[node name="RegisterLabel" type="RichTextLabel" parent="RegisterContainer" unique_id=396397526]
 custom_minimum_size = Vector2(217.87, 0)
 layout_mode = 2
 text = "Fact \"\" isn't registered in global scope. Would you like to register it?"
 fit_content = true
 
-[node name="RegisterButton" type="Button" parent="RegisterContainer"]
+[node name="RegisterButton" type="Button" parent="RegisterContainer" unique_id=214328113]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 text = "register"
 
-[node name="Hint" parent="." instance=ExtResource("3_i2pc6")]
+[node name="Hint" parent="." unique_id=872857279 instance=ExtResource("3_i2pc6")]
+oversampling_override = 1.0
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
 [connection signal="gui_input" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_gui_input"]

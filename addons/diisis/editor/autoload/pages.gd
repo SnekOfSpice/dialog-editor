@@ -760,6 +760,8 @@ func get_all_instruction_names() -> Array:
 
 func get_autoload_script(autoload:String) -> Script:
 	var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+	if path.begins_with("uid://"):
+		path = ResourceUID.uid_to_path(path)
 	var autoload_script : Script
 	if path.ends_with(".gd"):
 		autoload_script = load(path).instantiate()
@@ -1473,6 +1475,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 	var syntax_detail : int = modifiers.get("syntax_detail", 0)
 	var line_types_to_include : Array = modifiers.get("line_types_to_include",[0,1,2,3])
 	var include_ids := syntax_detail == 0
+	var exclude_args := syntax_detail == 2
 	var include_file_outline := syntax_detail != 2
 	var result := ""
 	if include_file_outline:
@@ -1507,6 +1510,17 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 			DIISIS.LineType.Text:
 				var text : String = get_text(content.get("text_id"))
 				text = text.replace("[]>", "")
+				
+				if exclude_args:
+					var has_args := text.contains("{") and text.contains("}:")
+					while has_args:
+						var next_arg_end := text.find("}:")
+						var next_arg_begin := text.rfind("{", next_arg_end)
+						if next_arg_begin != -1 and next_arg_end != -1:
+							text = text.erase(next_arg_begin, next_arg_end - next_arg_begin + 1)
+						
+						has_args = text.contains("{") and text.contains("}:")
+				
 				result += text
 			DIISIS.LineType.Instruction:
 				result += content.get("meta.text")

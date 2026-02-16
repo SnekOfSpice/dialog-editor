@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cydqb83ch6oxk"]
+[gd_scene format=3 uid="uid://cydqb83ch6oxk"]
 
 [ext_resource type="Script" uid="uid://c17vjvxhcqtwk" path="res://addons/diisis/editor/src/windows/text_export_container.gd" id="1_quqrk"]
 [ext_resource type="PackedScene" uid="uid://c5vpxjprppa8n" path="res://addons/diisis/editor/src/option_button_embed/option_button_embed.tscn" id="2_6ol86"]
@@ -9,7 +9,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m824d"]
 
-[node name="TextExportContainer" type="Control"]
+[node name="TextExportContainer" type="Control" unique_id=1313272215]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_quqrk")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=67743147]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,114 +26,114 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1407107377]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Mode" parent="VBoxContainer/HBoxContainer" instance=ExtResource("2_6ol86")]
+[node name="Mode" parent="VBoxContainer/HBoxContainer" unique_id=1923134865 instance=ExtResource("2_6ol86")]
 unique_name_in_owner = true
 layout_mode = 2
 options = Array[String](["Full", "Range", "Page Cascade", "Select"])
 
-[node name="ModeInput" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="ModeInput" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=218877493]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Range" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+[node name="Range" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput" unique_id=1928093957]
 layout_mode = 2
 
-[node name="StartSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range"]
+[node name="StartSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range" unique_id=798545911]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="EndSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range"]
+[node name="EndSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Range" unique_id=1706412836]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Cascade" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+[node name="Cascade" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ModeInput" unique_id=243553763]
 layout_mode = 2
 
-[node name="CascadeStartSpinbox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Cascade"]
+[node name="CascadeStartSpinbox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ModeInput/Cascade" unique_id=853058516]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SelectionContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/ModeInput"]
+[node name="SelectionContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/ModeInput" unique_id=639088288]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 10
 
-[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer" unique_id=2103508711]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer" unique_id=82214712]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer" unique_id=1145611828]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2"]
+[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2" unique_id=1561855765]
 layout_mode = 2
 text = "Selected Pages"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2" unique_id=587543842]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PageKeyLabelContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2/ScrollContainer"]
+[node name="PageKeyLabelContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/PanelContainer/VBoxContainer2/ScrollContainer" unique_id=1129352100]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer" unique_id=1604738036]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=1510639015]
 layout_mode = 2
 text = "Options"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=108071683]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
-[node name="SyntaxDetailButton" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" instance=ExtResource("2_6ol86")]
+[node name="SyntaxDetailButton" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" unique_id=1492597432 instance=ExtResource("2_6ol86")]
 unique_name_in_owner = true
 layout_mode = 2
 options = Array[String](["Full Interoperability", "File Outline", "Display Text Only"])
 
-[node name="Warnings" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3"]
+[node name="Warnings" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" unique_id=313383900]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="IDWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings"]
+[node name="IDWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings" unique_id=1786441684]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 text = "[color=F7D468]Choosing anything other than \"Full Interoperability\" will result in the generated data not being able to integrate back into the existing script through File>Import![/color]"
 fit_content = true
 
-[node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings"]
+[node name="InvalidRangeWarningLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/Warnings" unique_id=919192346]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 text = "[color=F54927]Invalid Range![/color]"
 fit_content = true
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=1130083253]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=2091698487]
 layout_mode = 2
 text = "Include Line Types:"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=527117726]
 layout_mode = 2
 
-[node name="IncludeText" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="IncludeText" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer" unique_id=1897623607]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -141,7 +141,7 @@ button_pressed = true
 text = "Text"
 icon = ExtResource("3_m824d")
 
-[node name="IncludeChoice" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="IncludeChoice" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer" unique_id=249761037]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -150,7 +150,7 @@ text = "Choice
 "
 icon = ExtResource("4_fj3ry")
 
-[node name="IncludeInstruction" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="IncludeInstruction" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer" unique_id=526288654]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -158,7 +158,7 @@ button_pressed = true
 text = "Instruction"
 icon = ExtResource("5_7wfad")
 
-[node name="IncludeFolder" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="IncludeFolder" type="CheckBox" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer" unique_id=880880355]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -166,21 +166,21 @@ button_pressed = true
 text = "Folder"
 icon = ExtResource("6_pr4dg")
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=870626102]
 layout_mode = 2
 
-[node name="MarginContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="MarginContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=834388979]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer" unique_id=1892918080]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=124874174]
 layout_mode = 2
 text = "Export Preview"
 
-[node name="LiveExample" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="LiveExample" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=472890534]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
@@ -191,24 +191,24 @@ text = "amber: welcome to the export dialog!
 
 play_sfx(air_horn)"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=1957373972]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="ClipboardButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
+[node name="ClipboardButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2" unique_id=89916067]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 10
 text = "Copy to Clipboard"
 
-[node name="FileButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2"]
+[node name="FileButton" type="Button" parent="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2" unique_id=1347032620]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Export as file..."
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1851056706]
 title = "Export as Text"
 access = 2
 filters = PackedStringArray("*.txt", "*.dtf")
@@ -218,8 +218,8 @@ filters = PackedStringArray("*.txt", "*.dtf")
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/StartSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Range/EndSpinBox" to="." method="update_key_labels"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/ModeInput/Cascade/CascadeStartSpinbox" to="." method="update_key_labels"]
-[connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="_on_syntax_detail_button_option_pressed"]
 [connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="update_warnings_u"]
+[connection signal="option_pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3/SyntaxDetailButton" to="." method="_on_syntax_detail_button_option_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeText" to="." method="update_warnings"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeChoice" to="." method="update_warnings"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer/IncludeInstruction" to="." method="update_warnings"]

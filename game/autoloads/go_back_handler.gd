@@ -8,14 +8,15 @@ func _ready() -> void:
 	ParserEvents.read_new_line.connect(on_read_new_line)
 
 func on_read_new_line(line:int):
-	line -= 1
+	await get_tree().process_frame
+	#line -= 1
 	# save the state
 	var state := {}
 	
 	var characters := {}
 	for character : Character in get_tree().get_nodes_in_group("character"):
 		characters[character.character_name] = character.serialize()
-	#state["characters"] = characters
+	state["characters"] = characters
 	state["background"] = GameWorld.game_stage.background
 	state["bgm"] = Sound.bgm_key
 	if is_instance_valid(GameWorld.game_stage):
@@ -34,9 +35,9 @@ func on_go_back_accepted(page:int, line:int, _a):
 	
 	# handle payload
 	var state : Dictionary = states_by_page[page][line]
-	#var characters : Dictionary = state.get("characters", {})
-	#for character : Character in get_tree().get_nodes_in_group("character"):
-		#character.deserialize(characters.get(character.character_name, {}))
+	var characters : Dictionary = state.get("characters", {})
+	for character : Character in get_tree().get_nodes_in_group("character"):
+		character.deserialize(characters.get(character.character_name, {}))
 	
 	
 	if is_instance_valid(GameWorld.game_stage):

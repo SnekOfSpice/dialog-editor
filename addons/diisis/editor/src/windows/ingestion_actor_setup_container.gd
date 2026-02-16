@@ -60,7 +60,7 @@ func _on_auto_ingest_button_pressed() -> void:
 			last_initial_count = 0
 		
 		last_initial_count += 1
-		var suffix : String = str(last_initial_count) if count_by_initial.get(initial) > 0 else ""
+		var suffix : String = str(last_initial_count) if count_by_initial.get(initial) > 1 else ""
 		
 		initials_by_actor[actor] = initial + suffix
 	

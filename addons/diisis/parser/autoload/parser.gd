@@ -25,6 +25,9 @@ extends Node
 ## Mostly useful for visual novels and other linear stories that have few end points.
 @export var full_progress_on_last_page := true
 
+@export_group("Debug")
+@export var startup_fact_payload : Array[ParserFactChange]
+
 var page_data := {}
 var text_data := {}
 var use_dialog_syntax := true
@@ -155,6 +158,15 @@ func reset_and_start(start_page_index := 0, start_line_index := 0):
 	line_reader.terminated = false
 	set_paused(false)
 	reset_facts()
+	
+	# ok so this is a horrible artifact from xxu
+	# i couldnt get gradle to run without a debug export
+	# but i dont want this to do shit on the android distributable
+	# so here we are
+	if OS.has_feature("debug") and (OS.has_feature("editor_hint") or OS.has_feature("editor_runtime")):
+		for change : ParserFactChange in startup_fact_payload:
+			change_fact_through_res(change)
+	
 	read_page(start_page_index, start_line_index)
 	history = []
 	selected_choices = []
@@ -322,6 +334,9 @@ func get_game_progress(dir:String) -> float:
 	data = data.get("Parser", {})
 	return data.get("Parser.game_progress", 0.0)
 
+
+## Best used for kinetic VNs in combination with DIISIS' linearize option.
+## [br]Nonlinear VNs get kinda nonsense values
 func _get_game_progress() -> float:
 	var index_trails := []
 	var handled_page_indices := []
@@ -349,6 +364,9 @@ func _get_game_progress() -> float:
 		if page_index in t:
 			trail = t
 			break
+	
+	if trail.is_empty() and not current_trail.is_empty():
+		trail = current_trail
 	
 	if not trail:
 		return 0.0
