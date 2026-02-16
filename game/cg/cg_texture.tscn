@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dbcde4rs22y2q"]
+[gd_scene format=3 uid="uid://dbcde4rs22y2q"]
 
 [ext_resource type="Script" uid="uid://ckmucfbnoumwk" path="res://game/cg/cg_texture.gd" id="1_68rtf"]
 
-[node name="CGTexture" type="TextureRect"]
+[node name="CGTexture" type="TextureRect" unique_id=1617294822]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

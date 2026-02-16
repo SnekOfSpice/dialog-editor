@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://d3fs4ft445qth"]
+
+[ext_resource type="Script" uid="uid://d3v6c2v1sld3m" path="res://game/autoloads/scene_loader.gd" id="1_ojsub"]
+
+[node name="SceneLoader" type="Node" unique_id=1630648606]
+script = ExtResource("1_ojsub")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1311101751]
+layer = 4
+
+[node name="LoadRect" type="ColorRect" parent="CanvasLayer" unique_id=797125931]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/LoadRect" unique_id=711382320]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -126.0
+offset_top = -37.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "loading"

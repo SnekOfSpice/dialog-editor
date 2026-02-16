@@ -16,11 +16,13 @@ const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 const TEMPLATE_VN_AUTOLOAD_CONST = "CONST"
-const TEMPLATE_VN_AUTOLOAD_GAME_WORLD = "GameWorld"
 const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
 const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
 const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
+const TEMPLATE_VN_AUTOLOAD_GAME = "Game"
+const TEMPLATE_VN_AUTOLOAD_EVENT_BUS = "EventBus"
+const TEMPLATE_VN_AUTOLOAD_SCENE_LOADER = "SceneLoader"
 
 ## TODO ugly workaround to make internal docs work
 ## Godot 4.5 will make this unnecessary
@@ -113,7 +115,7 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name :String in ["const", "game_world", "go_back_handler", "options", "sound", "style"]:
+	for file_name :String in ["scene_loader","event_bus", "const", "go_back_handler", "options", "sound", "style", "game"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
 		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
@@ -137,14 +139,14 @@ func setup_vn_template():
 		popup_accept_dialogue("Error", str("Couldn't find ", source_path_game, "."))
 		return
 	
-	var root_template := "res://addons/diisis/templates/visual_novel/stages/stage_root.tscn"
-	var root_game := "res://game/stages/stage_root.tscn"
+	var root_template := "res://addons/diisis/templates/visual_novel/stages/main_menu_stage.tscn"
+	var root_game := "res://game/stages/main_menu_stage.tscn"
 	if FileAccess.file_exists(root_template):
 		ProjectSettings.set_setting("application/run/main_scene", root_template)
 	elif FileAccess.file_exists(root_game):
 		ProjectSettings.set_setting("application/run/main_scene", root_game)
 	else:
-		popup_accept_dialogue("Error", "Couldn't find stage_root.tscn.")
+		popup_accept_dialogue("Error", "Couldn't find main_menu_stage.tscn.")
 		return
 	
 	ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")

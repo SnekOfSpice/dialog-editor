@@ -16,29 +16,30 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
-run/main_scene="res://game/stages/stage_root.tscn"
+run/main_scene="uid://b3u3nrek114bl"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="uid://cakx4eotyolmx"
 
 [audio]
 
-buses/default_bus_layout="res://game/sounds/default_bus_layout.tres"
+buses/default_bus_layout="uid://bew35uidf58i5"
 
 [autoload]
 
 DIISIS="*uid://c65bwbdhvxdto"
 Parser="*uid://b4ny85mdnxwoy"
 ParserEvents="*uid://dinb6lf0qoexi"
-CONST="*res://game/autoloads/const.tscn"
-GameWorld="*res://game/autoloads/game_world.tscn"
-GoBackHandler="*res://game/autoloads/go_back_handler.tscn"
-Options="*res://game/autoloads/options.tscn"
-Sound="*res://game/autoloads/sound.tscn"
-Style="*res://game/autoloads/style.tscn"
+CONST="*uid://p3oh1wedya4m"
+EventBus="*uid://bm5vpj7w360i7"
+GoBackHandler="*uid://cx2gvdr4ulr2f"
+Options="*uid://b7rjagd305cd2"
+Sound="*uid://c0in5m4lpc6o3"
+Style="*uid://jos1scb1fwc8"
 Pages="*uid://djgc8of5qiexy"
 DiisisEditorUtil="*uid://dxr1r0c3qd0tr"
 DiisisEditorActions="*uid://dfci2vklbcx15"
 TextToDiisis="*uid://d0pi2gsh3lskp"
+SceneLoader="*uid://d3fs4ft445qth"
+Game="*uid://ba05k05ujpqp8"
 
 [diisis]
 

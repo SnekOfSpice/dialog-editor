@@ -6,36 +6,34 @@ extends Screen
 
 func _ready() -> void:
 	super()
-	update_label()
-	find_child("ForwardButton").disabled = true
+	update_labels()
+	%ForwardButton.disabled = true
 	if index == 0:
-		find_child("BackButton").disabled = true
+		%BackButton.disabled = true
 
 func _input(event: InputEvent) -> void:
 	super(event)
 	if event.is_action_pressed("history"):
 		close()
 
-func _on_close_button_pressed() -> void:
-	close()
 
-func update_label():
-	find_child("HistoryLabel").text = Parser.build_history_string("\n", index * 100, index * 100 + 99)
-	find_child("EntryLabel").text = str("Entries: ", index * 100, "-", index * 100 + 99)
+func update_labels():
+	%HistoryLabel.text = Parser.build_history_string("\n", index * 100, index * 100 + 99)
+	%EntryLabel.text = str("Entries: ", index * 100, "-", index * 100 + 99)
 
 func _on_forward_button_pressed() -> void:
 	index += 1
 	if index > 0:
-		find_child("BackButton").disabled = false
+		%BackButton.disabled = false
 	if index >= max_index:
-		find_child("ForwardButton").disabled = true
-	update_label()
+		%ForwardButton.disabled = true
+	update_labels()
 
 
 func _on_back_button_pressed() -> void:
 	index -= 1
 	if index <= 0:
-		find_child("BackButton").disabled = true
+		%BackButton.disabled = true
 	if index < max_index:
-		find_child("ForwardButton").disabled = false
-	update_label()
+		%ForwardButton.disabled = false
+	update_labels()

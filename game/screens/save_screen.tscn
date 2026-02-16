@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1plcm2obfitt"]
+[gd_scene format=3 uid="uid://b1plcm2obfitt"]
 
 [ext_resource type="Script" uid="uid://rrr1l3javlw7" path="res://game/screens/save_screen.gd" id="1_ktv3v"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="2_k1kml"]
+[ext_resource type="PackedScene" uid="uid://80f6ij45cv7n" path="res://game/systems/close_widget.tscn" id="3_k7sq6"]
 
-[node name="SaveScreen" type="Control"]
+[node name="SaveScreen" type="Control" unique_id=1217370253]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ktv3v")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=636896734]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,16 +23,18 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("2_k1kml")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=883733323]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer" unique_id=792048144]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"LabelHeading"
 text = "Save"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer" unique_id=632654861]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -39,16 +42,13 @@ theme_override_constants/margin_top = 120
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="Slots" type="GridContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
+[node name="Slots" type="GridContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=1690523154]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 columns = 3
 
-[node name="CloseButton" type="Button" parent="PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 10
-text = "Close"
+[node name="CloseWidget" parent="." unique_id=544278775 instance=ExtResource("3_k7sq6")]
+layout_mode = 0
 
-[connection signal="pressed" from="PanelContainer/VBoxContainer/CloseButton" to="." method="close"]
+[connection signal="close_requested" from="CloseWidget" to="." method="close"]

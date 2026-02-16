@@ -4,6 +4,8 @@ class_name GameStage
 
 @onready var characters := {}
 
+const PATH := "res://game/stages/game_stage.tscn"
+
 var background : String = ""
 
 @export_group("Devmode", "devmode_")
@@ -47,7 +49,6 @@ func _ready():
 	if devmode_enabled:
 		set_background("void")
 	find_child("CreditsLayer").visible = false
-	find_child("BlackLayer").visible = true
 	find_child("DevModeLabel").visible = devmode_enabled
 	#GoBackHandler.store_into_subaddress(get_default_targets(), targets_by_subaddress, "0.0.0")
 	find_child("StartCover").visible = true
@@ -55,7 +56,7 @@ func _ready():
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	
-	GameWorld.game_stage = self
+	Game.game_stage = self
 	
 	auto_continue = Options.auto_continue
 	text_speed = Options.text_speed
@@ -64,27 +65,24 @@ func _ready():
 	for character in find_child("Characters").get_children():
 		character.visible = false
 	
-	#grab_focus()
+	
 	
 	tree_exiting.connect(on_tree_exit)
 	
 	hide_cg()
 	
 	await get_tree().process_frame
-	if callable_upon_blocker_clear:
-		callable_upon_blocker_clear.call()
+	if Game.start_data:
+		Game.start_data.game_start_callable.call()
 	else:
-		if devmode_enabled:
-			Parser.reset_and_start(devmode_start_page, devmode_start_line)
-		else:
-			Parser.reset_and_start()
+		push_error("No start data defined!")
 	
 	await get_tree().process_frame
 	find_child("StartCover").visible = false
 
 
 func on_tree_exit():
-	GameWorld.game_stage = null
+	Game.game_stage = null
 
 func on_instruction_started(
 	_instruction_text : String,
@@ -96,7 +94,7 @@ func show_start_cover():
 	find_child("StartCover").visible = true
 
 func go_to_main_menu(_unused):
-	GameWorld.stage_root.change_stage(CONST.STAGE_MAIN)
+	SceneLoader.request_background_loading(MainMenu.PATH, true)
 
 
 func _physics_process(delta: float) -> void:#(delta: float) -> void:
@@ -107,14 +105,14 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not GameWorld.stage_root.screen.is_empty():
+	if not Game.screen.is_empty():
 		return
 	if event is InputEventScreenTouch:
 		attempt_advance(event)
 	if event is InputEventKey:
 		if event.is_pressed():
 			if InputMap.action_has_event("ui_cancel", event):
-				GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+				Game.set_screen(CONST.SCREEN_OPTIONS)
 			if InputMap.action_has_event("screenshot", event):
 				var screenshot := get_viewport().get_texture().get_image()
 				var path := str("user://screenshot_", ProjectSettings.get_setting("application/config/name").replace("://", " "), "_", Time.get_datetime_string_from_system().replace(":", "-"), ".png")
@@ -139,15 +137,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				
 	if event is InputEventMouse:
 		if event.is_released() and InputMap.action_has_event("ui_cancel", event):
-			GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+			Game.set_screen(CONST.SCREEN_OPTIONS)
 
 	if (event.is_action_pressed("advance")):
 		attempt_advance(event)
 	if event.is_action_pressed("history"):
-		if GameWorld.stage_root.screen == CONST.SCREEN_HISTORY:
-			GameWorld.stage_root.set_screen("")
+		if Game.screen == CONST.SCREEN_HISTORY:
+			Game.set_screen("")
 		else:
-			GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
+			Game.set_screen(CONST.SCREEN_HISTORY)
 		
 	elif event.is_action_pressed("go_back"):
 		request_go_back()
@@ -343,7 +341,7 @@ func deserialize(data:Dictionary):
 	target_lod = data.get("fade_out_lod", 0.0)
 	target_mix = data.get("fade_out_mix_percentage", 0.0)
 
-	base_cg_offset = GameWorld.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
+	base_cg_offset = Game.str_to_vec2(data.get("base_cg_offset", Vector2.ZERO))
 
 	
 	#window_visibilities_by_subaddress = data.get("window_visibilities_by_subaddress", {})
@@ -365,7 +363,7 @@ func get_character(character_name:String) -> Character:
 	return null
 
 func _on_history_button_pressed() -> void:
-	GameWorld.stage_root.set_screen(CONST.SCREEN_HISTORY)
+	Game.set_screen(CONST.SCREEN_HISTORY)
 
 func show_cg(cg_name: String, fade_in: float, continue_dialog_through_cg: bool) -> bool:
 	if continue_dialog_through_cg:
@@ -381,7 +379,7 @@ func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
 
 func _on_menu_button_pressed() -> void:
-	GameWorld.stage_root.set_screen(CONST.SCREEN_OPTIONS)
+	Game.set_screen(CONST.SCREEN_OPTIONS)
 
 
 func set_fade_out(lod:float, mix:float):
@@ -437,7 +435,6 @@ func set_background(new_bg_key:String, fade_time:=0.0):
 		fade_tween.finished.connect(old_node.queue_free)
 	
 	background = new_bg_key
-	GameWorld.background = background
 	return false
 
 
@@ -496,23 +493,35 @@ func set_bgm(_name:String, fade_in:float):
 	return false
 
 
-func black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:="none", new_bgm:="none"):
-	var bg = new_background
-	if new_background == "none":
-		bg = background
+func chapter_break(
+	new_background : String,
+	new_bgm : String,
+	transition_time := 0.0
+):
+	Sound.switch_to(new_bgm)
+	set_background(new_background, transition_time)
 	
-	var bgm = new_bgm
-	if new_bgm == "none":
-		bgm = Sound.bgm_key
-	
-	%BlackFade.start(fade_in,
-	hold_time,
-	fade_out,
-	hide_characters,
-	bg,
-	bgm,
-	)
+	var callback_timer := get_tree().create_timer(transition_time)
+	callback_timer.timeout.connect(Parser.function_acceded)
 	return true
+
+#func black_fade(fade_in:float, hold_time:float, fade_out:float, hide_characters:bool, new_background:="none", new_bgm:="none"):
+	#var bg = new_background
+	#if new_background == "none":
+		#bg = background
+	#
+	#var bgm = new_bgm
+	#if new_bgm == "none":
+		#bgm = Sound.bgm_key
+	#
+	#%BlackFade.start(fade_in,
+	#hold_time,
+	#fade_out,
+	#hide_characters,
+	#bg,
+	#bgm,
+	#)
+	#return true
 
 
 func hide_all_characters() -> bool:
@@ -531,9 +540,9 @@ func splatter_blood(amount) -> bool:
 		find_child("VFXLayer").add_child(sprite)
 	return false
 
-func set_emotion(actor_name: String, emotion_name: String) -> bool:
+func set_emotion(character_name: String, emotion_name: String) -> bool:
 	for character : Character in get_tree().get_nodes_in_group("character"):
-		if character.character_name == actor_name:
+		if character.character_name == character_name:
 			character.set_emotion(emotion_name)
 	return false
 
@@ -552,8 +561,8 @@ func shake_camera(strength:float) -> bool:
 
 
 func set_x_position(character_name: String, index:int, time:float, wait_for_reposition:bool) -> bool:
-	if GameWorld.game_stage:
-		var character : Character = GameWorld.game_stage.get_character(character_name)
+	if Game.game_stage:
+		var character : Character = Game.game_stage.get_character(character_name)
 		@warning_ignore("narrowing_conversion")
 		character.set_x_position(int(index), time, wait_for_reposition)
 	return wait_for_reposition
@@ -583,5 +592,5 @@ func set_character_name(character: String, new_name: String) -> bool:
 	return false
 
 func use_ui(id: float) -> bool:
-	GameWorld.game_stage.use_ui(int(id))
+	Game.game_stage.use_ui(int(id))
 	return false

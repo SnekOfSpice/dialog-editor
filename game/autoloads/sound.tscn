@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://c0in5m4lpc6o3"]
+[gd_scene format=3 uid="uid://c0in5m4lpc6o3"]
 
 [ext_resource type="Script" uid="uid://cyykq1qeruko0" path="res://game/autoloads/sound.gd" id="1_m5bl6"]
+[ext_resource type="AudioStream" uid="uid://360x65a0o7q4" path="res://game/sounds/music/Modela - It's Not Pretty Here.ogg" id="2_0b2y1"]
+[ext_resource type="AudioStream" uid="uid://dbb4hthnyqqbb" path="res://game/sounds/music/Loyalty Freak Music - CHILL FOR REAL ! - 06 Vroom Vroom Heart Heart -blob_0w0-​.ogg" id="3_3bgx4"]
 
-[node name="Sound" type="Node"]
+[sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_2o6ob"]
+clip_count = 2
+clip_0/name = &"main_menu"
+clip_0/stream = ExtResource("2_0b2y1")
+clip_0/auto_advance = 0
+clip_1/name = &"default"
+clip_1/stream = ExtResource("3_3bgx4")
+clip_1/auto_advance = 0
+
+[node name="Sound" type="Node" unique_id=394927352]
 script = ExtResource("1_m5bl6")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=91353103]
+stream = SubResource("AudioStreamInteractive_2o6ob")
+autoplay = true
+bus = &"Music"

@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://dycysb8joq17f" path="res://addons/diisis/parser/src/resources/line_reader_actor_config.gd" id="2_e6caa"]
 [ext_resource type="PackedScene" uid="uid://chfbyvpvah4eu" path="res://game/characters/character.tscn" id="5_aqeli"]
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="6_e6caa"]
-[ext_resource type="PackedScene" uid="uid://qkegdwc8ux5o" path="res://game/stages/black_fade.tscn" id="8_50byo"]
 [ext_resource type="Script" uid="uid://c2vvnjn4tl6a7" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 [ext_resource type="PackedScene" uid="uid://cg68f27bymn00" path="res://game/stages/rolling_credits.tscn" id="11_o4gqq"]
 [ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
@@ -269,13 +268,6 @@ script = ExtResource("13_qfsh6")
 
 [node name="RollingCredits" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=500386310 instance=ExtResource("11_o4gqq")]
 layout_mode = 1
-
-[node name="BlackLayer" type="CanvasLayer" parent="Camera2D" unique_id=1322955077]
-
-[node name="BlackFade" parent="Camera2D/BlackLayer" unique_id=1203627611 instance=ExtResource("8_50byo")]
-unique_name_in_owner = true
-visible = false
-z_index = 10
 
 [node name="CreditsLayer" type="CanvasLayer" parent="Camera2D" unique_id=1104415815]
 visible = false

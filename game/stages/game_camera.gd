@@ -21,7 +21,7 @@ var screen_shake_hard := false
 var flat_offset := Vector2.ZERO
 
 func _ready() -> void:
-	GameWorld.camera = self
+	Game.camera = self
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -36,9 +36,9 @@ func serialize() -> Dictionary:
 
 
 func deserialize(data:Dictionary):
-	zoom = GameWorld.str_to_vec2(data.get("zoom", zoom))
-	position = GameWorld.str_to_vec2(data.get("position", position))
-	flat_offset = GameWorld.str_to_vec2(data.get("flat_offset", flat_offset))
+	zoom = Game.str_to_vec2(data.get("zoom", zoom))
+	position = Game.str_to_vec2(data.get("position", position))
+	flat_offset = Game.str_to_vec2(data.get("flat_offset", flat_offset))
 	
 
 	
@@ -75,11 +75,11 @@ func _process(delta: float) -> void:
 			child.set_texture_offset(offset)
 	sway_intensity_lerp_strength = lerp(sway_intensity_lerp_strength, 0.02, 0.03)
 	
-	if GameWorld.game_stage:
+	if Game.game_stage:
 		# For shaking CGs like in No Empty Threats, put offset here
 		# but that also requires all CG assets to have extra margins and stuff
 		# and we're not doing that as the base case
-		GameWorld.game_stage.set_cg_offset(Vector2.ZERO)
+		Game.game_stage.set_cg_offset(Vector2.ZERO)
 
 func apply_shake(strength:float):
 	shake_strength = strength

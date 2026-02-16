@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://btwo5sdc17l8h"]
+[gd_scene format=3 uid="uid://btwo5sdc17l8h"]
 
 [ext_resource type="Script" uid="uid://bjhluji0cw88h" path="res://game/screens/cw.gd" id="1_8ylhl"]
-[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="2_xaxk6"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_q4mi2"]
+[ext_resource type="PackedScene" uid="uid://dgeujc7ht7bpl" path="res://game/systems/close_widget.tscn" id="3_q8ilo"]
 
-[node name="CW" type="Control"]
+[node name="CW" type="Control" unique_id=1810115023]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8ylhl")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1980338908]
 auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
@@ -22,50 +22,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource("2_xaxk6")
 theme_override_styles/panel = ExtResource("3_q4mi2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=325937328]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1625549812]
 auto_translate_mode = 1
 layout_mode = 2
-text = "Content Warning"
+theme_type_variation = &"LabelHeading"
+text = "Content Warnings"
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=1902141919]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/PanelContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/PanelContainer" unique_id=916818759]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
 bbcode_enabled = true
-text = "[center]Open cw.tscn and enter your content warnings here!"
+text = "[center]Open cw.tscn and enter your content warnings here![/center]"
 
-[node name="Button" type="Button" parent="."]
-auto_translate_mode = 1
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -46.0
-offset_top = -31.0
-offset_right = 46.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "close"
+[node name="CloseWidget" parent="." unique_id=544278775 instance=ExtResource("3_q8ilo")]
+layout_mode = 0
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="close_requested" from="CloseWidget" to="." method="close"]

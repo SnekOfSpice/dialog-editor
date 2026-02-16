@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6nbwi7lgrijy"]
+[gd_scene format=3 uid="uid://b6nbwi7lgrijy"]
 
 [ext_resource type="Script" uid="uid://crrkao5bv1n7" path="res://game/screens/history.gd" id="1_aiklh"]
 [ext_resource type="Script" uid="uid://cxhdkxbk2nop" path="res://game/screens/auto_scroll_container.gd" id="2_esrbb"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_cnymx"]
+[ext_resource type="PackedScene" uid="uid://dgeujc7ht7bpl" path="res://game/systems/close_widget.tscn" id="4_3pa67"]
 
-[node name="History" type="Control"]
+[node name="History" type="Control" unique_id=1538897150]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +15,7 @@ grow_vertical = 2
 focus_mode = 2
 script = ExtResource("1_aiklh")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1255835894]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,22 +25,23 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_cnymx")
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer" unique_id=427598847]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("3_cnymx")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/PanelContainer" unique_id=166579539]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/PanelContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/PanelContainer/VBoxContainer" unique_id=858232379]
 custom_minimum_size = Vector2(700, 400)
 layout_mode = 2
 script = ExtResource("2_esrbb")
 
-[node name="HistoryLabel" type="RichTextLabel" parent="PanelContainer/PanelContainer/VBoxContainer/ScrollContainer"]
+[node name="HistoryLabel" type="RichTextLabel" parent="PanelContainer/PanelContainer/VBoxContainer/ScrollContainer" unique_id=1229542916]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -51,30 +53,29 @@ ghjgh"
 fit_content = true
 scroll_active = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/PanelContainer/VBoxContainer" unique_id=515297479]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="BackButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=139764204]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "<"
 
-[node name="ForwardButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="ForwardButton" type="Button" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1196483286]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = ">"
 
-[node name="EntryLabel" type="Label" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="EntryLabel" type="Label" parent="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1798995406]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Entries: 0 - 99"
 
-[node name="CloseButton" type="Button" parent="PanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-text = "close history"
+[node name="CloseWidget" parent="." unique_id=544278775 instance=ExtResource("4_3pa67")]
+layout_mode = 0
 
 [connection signal="pressed" from="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="PanelContainer/PanelContainer/VBoxContainer/HBoxContainer/ForwardButton" to="." method="_on_forward_button_pressed"]
-[connection signal="pressed" from="PanelContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="close_requested" from="CloseWidget" to="." method="close"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://clvr2siqvathu"]
+[gd_scene format=3 uid="uid://clvr2siqvathu"]
 
 [ext_resource type="Script" uid="uid://uupjdu0y5l24" path="res://game/screens/options_screen.gd" id="1_1als3"]
 [ext_resource type="StyleBox" uid="uid://dadnwlbrdktog" path="res://game/visuals/theme/background_panel.tres" id="3_d5t3h"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bgftuf3xnl3tn" path="res://game/visuals/ui/icon_text.png" id="5_j50ih"]
 [ext_resource type="Texture2D" uid="uid://dupker5oqgn2r" path="res://game/visuals/ui/icon_display.png" id="6_njvmj"]
 [ext_resource type="Texture2D" uid="uid://fyltmp5v8j8w" path="res://game/visuals/ui/icon_sound.png" id="7_0bnqr"]
+[ext_resource type="PackedScene" uid="uid://dgeujc7ht7bpl" path="res://game/systems/close_widget.tscn" id="8_j50ih"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kpjpj"]
 
@@ -17,7 +18,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_51xcd"]
 
-[node name="OptionsScreen" type="Control"]
+[node name="OptionsScreen" type="Control" unique_id=2008771387]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1als3")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=181415382]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,30 +37,31 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_d5t3h")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1009628448]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 37
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=295397576]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1087176735]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 alignment = 1
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1190586121]
 layout_mode = 2
+theme_type_variation = &"LabelHeading"
 text = "Options"
 horizontal_alignment = 1
 
-[node name="OptionMenusButtonContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="OptionMenusButtonContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer" unique_id=2077284373]
 layout_mode = 2
 alignment = 1
 
-[node name="GameButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="GameButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer" unique_id=1176080189]
 auto_translate_mode = 1
 layout_mode = 2
 toggle_mode = true
@@ -67,7 +69,7 @@ button_group = SubResource("ButtonGroup_kpjpj")
 text = "Game"
 icon = ExtResource("4_t8ohx")
 
-[node name="TextButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="TextButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer" unique_id=235340018]
 auto_translate_mode = 1
 layout_mode = 2
 toggle_mode = true
@@ -75,26 +77,27 @@ button_group = SubResource("ButtonGroup_4bl4s")
 text = "Text"
 icon = ExtResource("5_j50ih")
 
-[node name="DisplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="DisplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer" unique_id=1313077926]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_bdfrv")
-text = "Display"
+text = "Graphics"
 icon = ExtResource("6_njvmj")
 
-[node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer"]
+[node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer" unique_id=1796240452]
 auto_translate_mode = 1
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_7g5us")
-text = "Sound"
+text = "Audio"
 icon = ExtResource("7_0bnqr")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1188672995]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1286617263]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 76
@@ -102,50 +105,59 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 76
 theme_override_constants/margin_bottom = 4
 
-[node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="OptionMenusContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer" unique_id=1923792333]
 layout_mode = 2
 
-[node name="GameMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
+[node name="GameMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer" unique_id=867368696]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"MenuPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu" unique_id=353854803]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SaveContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer" unique_id=1659306266]
 layout_mode = 2
 
-[node name="SaveContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer" unique_id=1704718601]
 layout_mode = 2
 
-[node name="CurrentSlotLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+[node name="CurrentSlotLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer2" unique_id=162617669]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Current Slot:"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+[node name="ChangeSaveSlotButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer2" unique_id=1869961344]
+layout_mode = 2
+text = "Change..."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer" unique_id=2046968662]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer" unique_id=1033362113]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer" unique_id=890651338]
 layout_mode = 2
+theme_type_variation = &"LabelHeading"
 text = "Quit"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer" unique_id=1007658071]
 layout_mode = 2
 
-[node name="MainMenuButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1973973101]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Main Menu"
 
-[node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1443089553]
 auto_translate_mode = 1
 layout_mode = 2
-text = "Desktop"
+text = "Close Game"
 
-[node name="SaveHintLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer"]
+[node name="SaveHintLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer" unique_id=2092993300]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_51xcd")
@@ -153,70 +165,103 @@ bbcode_enabled = true
 text = "Progress will be saved."
 fit_content = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer" unique_id=1214451260]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2" unique_id=1469794112]
 layout_mode = 2
+theme_type_variation = &"LabelHeading"
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer3"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer3" unique_id=460534783]
 layout_mode = 2
+theme_type_variation = &"LabelHeading"
 text = "Save"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2" unique_id=914438535]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+[node name="SaveButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=66352646]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quick Save"
 
-[node name="SaveToSlotButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+[node name="SaveToSlotButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=142618099]
 layout_mode = 2
 text = "Save To Slot..."
 
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer" unique_id=1016671546]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer" unique_id=1062939627]
 layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/VBoxContainer" unique_id=1115964654]
+layout_mode = 2
+theme_type_variation = &"LabelHeading"
 text = "Controls"
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer"]
+[node name="DesktopControls" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/VBoxContainer" unique_id=207799437]
+unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
-text = "Advance - [LClick] / [Space] / [Right] / [Enter] / [Left]
-Move Window - [LClick] / [RClick] + drag
-Screenshot - [S]
+text = "Advance - [LClick] / [Space] / [Enter]
+Screenshot - [T]
 Toggle UI - [H]
 Toggle auto - [A]
 History - [L]"
 fit_content = true
 
-[node name="TextMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
+[node name="MobileControls" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/VBoxContainer" unique_id=1388121384]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "Tap the screen to advance dialogue."
+fit_content = true
+
+[node name="ScreenshotsContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer" unique_id=452450281]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/ScreenshotsContainer" unique_id=1225118681]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/ScreenshotsContainer" unique_id=781718976]
+layout_mode = 2
+theme_type_variation = &"LabelHeading"
+text = "Screenshots"
+
+[node name="OpenScreenshotsFolderButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/ScreenshotsContainer" unique_id=1241787611]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Open Screenshots Folder"
+
+[node name="TextMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer" unique_id=189365782]
 auto_translate_mode = 1
+visible = false
 custom_minimum_size = Vector2(509, 187)
 layout_mode = 2
 theme_type_variation = &"MenuPanel"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu" unique_id=2144748027]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer" unique_id=849638521]
 layout_mode = 2
 
-[node name="VBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2"]
+[node name="VBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2" unique_id=327196602]
+custom_minimum_size = Vector2(566.725, 0)
 layout_mode = 2
 columns = 3
 
-[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=317287091]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Text Speed:"
 
-[node name="TextSpeedSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="TextSpeedSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1184122993]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
@@ -225,17 +270,20 @@ min_value = 1.0
 max_value = 200.0
 value = 1.0
 
-[node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=940005152]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "100"
 
-[node name="AutoContinueCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="AutoContinueCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=1262219617]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+size_flags_vertical = 0
 text = "Auto Continue"
 
-[node name="AutoDelaySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="AutoDelaySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=786932227]
+unique_name_in_owner = true
 auto_translate_mode = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -244,144 +292,122 @@ focus_mode = 0
 max_value = 20.0
 step = 0.1
 
-[node name="AutoDelayLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer"]
+[node name="AutoDelayLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=76890573]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(80.055, 0)
 layout_mode = 2
 text = "Delay"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-visible = false
-layout_mode = 2
-text = "Fonts"
-
-[node name="HBoxContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-visible = false
-layout_mode = 2
-
-[node name="LabelFontOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-
-[node name="RTLFontOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-visible = false
-layout_mode = 2
-text = "Font Size"
-
-[node name="GridContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-visible = false
-layout_mode = 2
-
-[node name="ResetLabelFontSizeButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "R"
-
-[node name="LabelFontSizeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 1
-focus_mode = 0
-min_value = 12.0
-max_value = 70.0
-value = 24.0
-
-[node name="LabelFontSizeLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer"]
-layout_mode = 2
-
-[node name="GridContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3"]
-visible = false
-layout_mode = 2
-
-[node name="ResetRTLFontSizeButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2"]
-layout_mode = 2
-focus_mode = 0
-text = "R"
-
-[node name="RTLFontSizeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 1
-focus_mode = 0
-min_value = 12.0
-max_value = 70.0
-value = 24.0
-
-[node name="RTLFontSizeLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2"]
-layout_mode = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer" unique_id=705436972]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("3_d5t3h")
 
-[node name="TextPreviewContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer"]
+[node name="TextPreviewContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer" unique_id=1390665525]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer" unique_id=1267735810]
 layout_mode = 2
 text = "Preview:"
 
-[node name="LabelFontLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer"]
+[node name="LabelFontLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer" unique_id=597489847]
+visible = false
 layout_mode = 2
 text = "Text Label"
 
-[node name="RTLFontLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer"]
+[node name="BodyPreviewLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/PanelContainer/TextPreviewContainer" unique_id=1471373922]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
 fit_content = true
 scroll_active = false
 
-[node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
+[node name="DisplayMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer" unique_id=1288327679]
 layout_mode = 2
 theme_type_variation = &"MenuPanel"
 
-[node name="GridContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu" unique_id=2035716160]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer" unique_id=1762268941]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer" unique_id=1220194482]
 layout_mode = 2
-size_flags_horizontal = 0
+theme_type_variation = &"LabelHeading"
+text = "Display"
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer" unique_id=1275558516]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer" unique_id=1426660679]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 text = "Window"
 
-[node name="FullscreenCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer/VBoxContainer"]
+[node name="WindowModeOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer" unique_id=1584898208]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(134, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-text = "Fullscreen
-"
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_0/id = 0
+popup/item_1/text = "Borderless"
+popup/item_1/id = 1
+popup/item_2/text = "Fullscreen"
+popup/item_2/id = 2
 
-[node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer"]
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer" unique_id=244333941]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "Screen"
+
+[node name="ScreenOptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer" unique_id=1853046466]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(134, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FPSCounterCheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer" unique_id=515357007]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "FPS counter"
+
+[node name="HSeparator3" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer" unique_id=946384779]
+layout_mode = 2
+
+[node name="SoundMenu" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer" unique_id=952863876]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"MenuPanel"
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu" unique_id=1456122798]
 layout_mode = 2
-columns = 2
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer" unique_id=1935250759]
+layout_mode = 2
+theme_type_variation = &"LabelHeading"
+text = "Volume"
+
+[node name="VolumeSliders" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer" unique_id=1378896986]
+layout_mode = 2
+columns = 3
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=467373016]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Master"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
+[node name="VolumeSliderMaster" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=1426458861]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -390,15 +416,20 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="VolumeLabelMaster" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=1976708124]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=1742291794]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Music"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="VolumeSliderMusic" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=921540231]
+unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -407,15 +438,20 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="VolumeLabelMusic" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=2065928493]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=117521850]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
-text = "SFX"
+text = "Effects"
 
-[node name="SFXVolumeSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer"]
+[node name="VolumeSliderSFX" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=372859205]
+unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -424,15 +460,40 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="VolumeLabelSFX" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=741829665]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Close"
+
+[node name="Label4" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=2012728744]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Interface"
+
+[node name="VolumeSliderUI" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=144594072]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+focus_mode = 0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="VolumeLabelUI" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders" unique_id=1623141188]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CloseWidget" parent="PanelContainer" unique_id=544278775 instance=ExtResource("8_j50ih")]
+layout_mode = 2
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/GameButton" to="." method="set_menu" binds= [0]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/TextButton" to="." method="set_menu" binds= [1]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/DisplayButton" to="." method="set_menu" binds= [2]]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/OptionMenusButtonContainer/SoundButton" to="." method="set_menu" binds= [3]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer2/ChangeSaveSlotButton" to="." method="_on_change_save_slot_button_pressed"]
 [connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="show_save_hint"]
 [connection signal="mouse_exited" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="hide_save_hint"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
@@ -441,19 +502,22 @@ text = "Close"
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/SaveContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/SaveToSlotButton" to="." method="_on_save_to_slot_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/GameMenu/VBoxContainer/ScreenshotsContainer/OpenScreenshotsFolderButton" to="." method="_on_open_screenshots_folder_button_pressed"]
+[connection signal="visibility_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu" to="." method="_on_text_menu_visibility_changed"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/TextSpeedSlider" to="." method="_on_text_speed_slider_drag_ended"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/TextSpeedSlider" to="." method="_on_text_speed_slider_value_changed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_pressed"]
+[connection signal="toggled" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoContinueCheckBox" to="." method="_on_auto_continue_check_box_toggled"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_drag_ended"]
 [connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer/AutoDelaySlider" to="." method="_on_auto_delay_slider_value_changed"]
-[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/HBoxContainer/LabelFontOptionButton" to="." method="_on_label_font_option_button_item_selected"]
-[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/HBoxContainer/RTLFontOptionButton" to="." method="_on_rtl_font_option_button_item_selected"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer/ResetLabelFontSizeButton" to="." method="_on_reset_label_font_size_button_pressed"]
-[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer/LabelFontSizeSlider" to="." method="_on_label_font_size_slider_drag_ended"]
-[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer/LabelFontSizeSlider" to="." method="_on_label_font_size_slider_value_changed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2/ResetRTLFontSizeButton" to="." method="_on_reset_rtl_font_size_button_pressed"]
-[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2/RTLFontSizeSlider" to="." method="_on_rtl_font_size_slider_drag_ended"]
-[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer3/GridContainer2/RTLFontSizeSlider" to="." method="_on_rtl_font_size_slider_value_changed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/GridContainer/VBoxContainer/FullscreenCheckBox" to="." method="_on_fullscreen_check_box_pressed"]
-[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
-[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
-[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/GridContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/CloseButton" to="." method="close"]
+[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer/WindowModeOptionButton" to="." method="_on_window_mode_option_button_item_selected"]
+[connection signal="item_selected" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/GridContainer/ScreenOptionButton" to="." method="_on_screen_option_button_item_selected"]
+[connection signal="toggled" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/DisplayMenu/VBoxContainer/VBoxContainer/FPSCounterCheckBox" to="." method="_on_fps_counter_check_box_toggled"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderMaster" to="." method="_on_volume_slider_master_drag_ended"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderMaster" to="." method="_on_volume_slider_master_value_changed"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderMusic" to="." method="_on_volume_slider_music_drag_ended"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderMusic" to="." method="_on_volume_slider_music_value_changed"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderSFX" to="." method="_on_volume_slider_sfx_drag_ended"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderSFX" to="." method="_on_volume_slider_sfx_value_changed"]
+[connection signal="drag_ended" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderUI" to="." method="_on_volume_slider_ui_drag_ended"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/SoundMenu/VBoxContainer/VolumeSliders/VolumeSliderUI" to="." method="_on_volume_slider_ui_value_changed"]
+[connection signal="close_requested" from="PanelContainer/CloseWidget" to="." method="close"]

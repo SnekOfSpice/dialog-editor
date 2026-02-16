@@ -36,8 +36,14 @@
 				"actor_key": [],
 				"config_property": []
 			},
+			"get_body_label_progress_step": {
+				"parsed_text": []
+			},
 			"get_character": {
 				"character_name": []
+			},
+			"get_past_line_rich_text_label": {
+				"text": []
 			},
 			"get_property_from_self_or_autoload": {
 				"property": []
@@ -174,26 +180,35 @@
 			]
 		},
 		"full_custom_method_defaults": {
-			"Sound.awa": {
+			"Sound.@clip_index_getter": {
+
+			},
+			"Sound.@playback_getter": {
+
+			},
+			"Sound.@stream_getter": {
+
+			},
+			"Sound._ready": {
 
 			},
 			"Sound.deserialize": {
 
 			},
-			"Sound.fade_out_bgm": {
+			"Sound.get_current_clip_name": {
 
 			},
-			"Sound.play_bgm": {
-				"fade_in": 0.0,
-				"from": 0.0
-			},
 			"Sound.play_sfx": {
+				"bus": "SFX",
 				"random_pitch": true
 			},
 			"Sound.serialize": {
 
 			},
-			"Sound.set_audio_player_volume": {
+			"Sound.set_music_volume_linear": {
+				"delay": 0.0
+			},
+			"Sound.switch_to": {
 
 			},
 			"add_custom_blocker": {
@@ -214,10 +229,6 @@
 			"attempt_advance": {
 
 			},
-			"black_fade": {
-				"new_background": "none",
-				"new_bgm": "none"
-			},
 			"call_from_string": {
 				"call_mode": 0,
 				"call_position": -1
@@ -225,11 +236,17 @@
 			"callv_custom": {
 
 			},
+			"chapter_break": {
+				"transition_time": 0.0
+			},
 			"choice_pressed_virtual": {
 
 			},
 			"clear_custom_blockers": {
 
+			},
+			"clear_past_lines": {
+				"clear_body_label": false
 			},
 			"continue_after_interrupt": {
 				"read_line": 0,
@@ -258,6 +275,9 @@
 			"get_actor_names_in_line": {
 				"empty_if_not_text": true
 			},
+			"get_body_label_progress_step": {
+
+			},
 			"get_body_label_text_draw_pos": {
 				"on_label": null
 			},
@@ -266,6 +286,9 @@
 			},
 			"get_default_targets": {
 
+			},
+			"get_past_line_rich_text_label": {
+				"text": ""
 			},
 			"get_preferences": {
 
@@ -300,6 +323,9 @@
 			"is_advance_blocked": {
 				"include_auto_continue": true,
 				"include_warnings": false
+			},
+			"is_at_end_of_line": {
+				"non_text_return_value": true
 			},
 			"move_camera_to": {
 
@@ -353,6 +379,7 @@
 
 			},
 			"set_body_label": {
+				"clear_previous": false,
 				"keep_text": true
 			},
 			"set_callable_upon_blocker_clear": {
@@ -439,7 +466,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854761332,
+		"id_counter": -9223372036854760493,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -478,13 +505,14 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"advance_yield": false,
 							"delay_after": 0.0,
 							"delay_before": 0.0,
 							"meta.has_reverse": false,
 							"meta.reverse_text": "",
-							"meta.text": "black_fade(0, 0, 1, true, default, default)",
+							"meta.text": "chapter_break(default, default)",
 							"meta.validation_status": "OK",
-							"name": "black_fade",
+							"name": "chapter_break",
 							"reverse_name": ""
 						},
 						"facts": {
