@@ -47,6 +47,7 @@ func serialize() -> Dictionary:
 	
 	return data
 
+
 func deserialize(data:Dictionary):
 	switch_to(data.get("current_clip", ""))
 
@@ -60,7 +61,6 @@ func play_sfx(sfx:String, random_pitch := true, bus := "SFX") -> AudioStreamPlay
 	if random_pitch:
 		sfx_player.pitch_scale = randf_range(0.75, 1.0 / 0.75)
 	sfx_player.finished.connect(sfx_player.queue_free)
-	
 	
 	return sfx_player
 

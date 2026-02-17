@@ -1,0 +1,274 @@
+{
+  "main": {
+    "id": "86a9542a9f38b82c",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b4f43e358e72f12",
+        "type": "tabs",
+        "dimension": 80.32994923857868,
+        "children": [
+          {
+            "id": "a7abcf867a07b692",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "VN Template Guide/Creating New Characters.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Creating New Characters"
+            }
+          },
+          {
+            "id": "e9b704d365150fd1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "More Knowledge/Dropdowns.md",
+                "mode": "source",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Dropdowns"
+            }
+          },
+          {
+            "id": "ac3bfd54f79a519e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Facts & Conditionals"
+            }
+          }
+        ],
+        "currentTab": 2
+      },
+      {
+        "id": "26563639c7d0bc11",
+        "type": "tabs",
+        "dimension": 19.670050761421322,
+        "children": [
+          {
+            "id": "b35bf64bdf2cab77",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_Sidebar.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "_Sidebar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1a91283527ed9b12",
+    "type": "split",
+    "children": [
+      {
+        "id": "a05d5e376ff46efd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "082204a3ee987e39",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2c22fa43a6643fa1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "048a1d4df4800a04",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "7f1668909d40f7eb",
+    "type": "split",
+    "children": [
+      {
+        "id": "cb9616f7aa332a00",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "46f7daeb6359ec36",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Facts & Conditionals"
+            }
+          },
+          {
+            "id": "7cad65435515f6b9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Facts & Conditionals"
+            }
+          },
+          {
+            "id": "7a49b83533d5a45e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b70e53a8c0c4b779",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "fac6b33d984f29df",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Facts & Conditionals"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 297.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "ac3bfd54f79a519e",
+  "lastOpenFiles": [
+    "More Knowledge/Dropdowns.md",
+    "VN Template Guide/Creating New Characters.md",
+    "other.md",
+    "_Sidebar.md",
+    "Home.md",
+    "VN Template Guide/General Knowledge.md",
+    "Get the Plugin.md",
+    "Getting Started/Editor Overview.md",
+    "More Knowledge/Adding argument restrictions to functions.md",
+    "More Knowledge/Ingesting Raw Text.md",
+    "More Knowledge/Shortcuts.md",
+    "More Knowledge/Header.md",
+    "More Knowledge/Upgrading to a new version.md",
+    "More Knowledge",
+    "Getting Started/Line Types/Folder.md",
+    "Interactivity/Facts & Conditionals.md",
+    "Interactivity/Accessing functions and variables in DIISIS.md",
+    "Interactivity/Using Event Signals.md",
+    "Interactivity",
+    "Getting Started/Line Types/Instruction.md",
+    "Getting Started/Line Types/Choice.md",
+    "Getting Started/Line Types/Text.md",
+    "Getting Started/Line Types",
+    "Getting Started/LineReader & Parser.md",
+    "Getting Started/High-Level Overview.md",
+    "Getting Started",
+    "VN Template Guide/Adding Assets.md",
+    "VN Template Guide/Getting Started.md",
+    "Assets/let me fester under your skin.gif",
+    "Assets/blinkiesCafe-bQ.gif",
+    "Assets/0269-sickashell.gif",
+    "Assets",
+    "Assets/blinkiesCafe-3f.gif"
+  ]
+}

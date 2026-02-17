@@ -6,7 +6,6 @@
 [ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="6_e6caa"]
 [ext_resource type="Script" uid="uid://c2vvnjn4tl6a7" path="res://game/stages/game_camera.gd" id="9_lbjue"]
 [ext_resource type="PackedScene" uid="uid://cg68f27bymn00" path="res://game/stages/rolling_credits.tscn" id="11_o4gqq"]
-[ext_resource type="PackedScene" uid="uid://biu88w163ploy" path="res://game/systems/cheats.tscn" id="13_qackq"]
 [ext_resource type="Script" uid="uid://byyv78vc44g4u" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
 
 [sub_resource type="Resource" id="Resource_8g0u3"]
@@ -187,18 +186,17 @@ grow_vertical = 0
 
 [node name="HistoryButton" type="Button" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer" unique_id=1696285414]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"GameControlsButton"
+size_flags_horizontal = 8
 text = "History"
 
 [node name="MenuButton" type="Button" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer" unique_id=1619781894]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 8
 focus_mode = 0
-theme_type_variation = &"GameControlsButton"
 text = "Menu"
 
 [node name="ChoicePanel" type="PanelContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=440723789]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -228,10 +226,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="Cheats" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=114410518 instance=ExtResource("13_qackq")]
-visible = false
-layout_mode = 1
 
 [node name="ScreenContainer" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=1094123769]
 visible = false
@@ -267,6 +261,7 @@ color = Color(0, 0, 0, 1)
 script = ExtResource("13_qfsh6")
 
 [node name="RollingCredits" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=500386310 instance=ExtResource("11_o4gqq")]
+visible = false
 layout_mode = 1
 
 [node name="CreditsLayer" type="CanvasLayer" parent="Camera2D" unique_id=1104415815]

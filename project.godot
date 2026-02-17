@@ -18,6 +18,7 @@ config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="uid://b3u3nrek114bl"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="uid://cakx4eotyolmx"
 
 [audio]
 
