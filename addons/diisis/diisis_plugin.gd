@@ -303,7 +303,7 @@ func add_new_dialog_editor_window():
 	else:
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
-
+		dia_editor_window.wrap_controls = true
 
 func _make_visible(visible):
 	if embedder:
@@ -341,9 +341,9 @@ func on_window_request_reload_editor():
 	await get_tree().process_frame
 	open_editor()
 
-func _process(delta: float) -> void:
-	if is_instance_valid(dia_editor_window):
-		dia_editor_window.wrap_controls = true
+#func _process(delta: float) -> void:
+	#if is_instance_valid(dia_editor_window):
+		#dia_editor_window.wrap_controls = true
 
 func _exit_tree():
 	Engine.remove_meta("DIISISPlugin")
