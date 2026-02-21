@@ -17,8 +17,6 @@ metadata/_custom_type_script = "uid://dycysb8joq17f"
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4gqq"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.756863)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_awxun"]
-
 [node name="GameStage" type="Node" unique_id=1546877733 node_paths=PackedStringArray("name_label", "body_label", "text_container", "name_container", "choice_title_label", "choice_container", "choice_list")]
 script = ExtResource("1_a36me")
 actor_config = Dictionary[String, ExtResource("2_e6caa")]({
@@ -263,17 +261,6 @@ script = ExtResource("13_qfsh6")
 [node name="RollingCredits" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=500386310 instance=ExtResource("11_o4gqq")]
 visible = false
 layout_mode = 1
-
-[node name="CreditsLayer" type="CanvasLayer" parent="Camera2D" unique_id=1104415815]
-visible = false
-
-[node name="ColorRect" type="ColorRect" parent="Camera2D/CreditsLayer" unique_id=2120612979]
-material = SubResource("ShaderMaterial_awxun")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/AndroidHackButton" to="." method="_on_android_hack_button_pressed"]
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_clicked"]

@@ -48,7 +48,6 @@ func _ready():
 		return
 	if devmode_enabled:
 		set_background("void")
-	find_child("CreditsLayer").visible = false
 	find_child("DevModeLabel").visible = devmode_enabled
 	#GoBackHandler.store_into_subaddress(get_default_targets(), targets_by_subaddress, "0.0.0")
 	find_child("StartCover").visible = true
