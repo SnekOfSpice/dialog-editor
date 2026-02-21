@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://u1pd7cjv38qc"]
+[gd_scene format=3 uid="uid://u1pd7cjv38qc"]
 
 [ext_resource type="Script" uid="uid://rwq2ob8rphu8" path="res://addons/diisis/editor/dialog_editor_window.gd" id="1_d4u1q"]
 [ext_resource type="PackedScene" uid="uid://bjaj8aln7f08r" path="res://addons/diisis/editor/src/editor.tscn" id="2_4owra"]
@@ -6,8 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://b3170v1u5of2d" path="res://addons/diisis/editor/quit_dialog.tscn" id="3_h4aux"]
 [ext_resource type="PackedScene" uid="uid://dsytvj51tyel4" path="res://addons/diisis/editor/src/update_available.tscn" id="5_vlg08"]
 
-[node name="DialogEditorWindow" type="Window"]
+[node name="DialogEditorWindow" type="Window" unique_id=1217661294]
 gui_embed_subwindows = true
+oversampling_override = 1.0
 title = "DIISIS"
 initial_position = 4
 size = Vector2i(895, 507)
@@ -17,7 +18,7 @@ content_scale_mode = 1
 theme = ExtResource("3_efdl4")
 script = ExtResource("1_d4u1q")
 
-[node name="Window" type="Window" parent="."]
+[node name="Window" type="Window" parent="." unique_id=1620528998]
 size = Vector2i(895, 507)
 visible = false
 wrap_controls = true
@@ -26,7 +27,7 @@ borderless = true
 content_scale_mode = 2
 content_scale_aspect = 4
 
-[node name="Editor" parent="Window" instance=ExtResource("2_4owra")]
+[node name="Editor" parent="Window" unique_id=1075847488 instance=ExtResource("2_4owra")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -35,20 +36,20 @@ offset_bottom = 480.0
 grow_horizontal = 1
 grow_vertical = 1
 size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="QuitDialog" parent="." groups=["diisis_scalable_popup"] instance=ExtResource("3_h4aux")]
+[node name="QuitDialog" parent="." unique_id=204813871 groups=["diisis_scalable_popup"] instance=ExtResource("3_h4aux")]
 size = Vector2i(301, 144)
 visible = false
 
-[node name="WindowFactorWindow" type="Window" parent="."]
+[node name="WindowFactorWindow" type="Window" parent="." unique_id=1281331476]
+oversampling_override = 1.0
 position = Vector2i(0, 484)
 size = Vector2i(1330, 123)
 wrap_controls = true
 transient = true
 borderless = true
 
-[node name="Control" type="Control" parent="WindowFactorWindow"]
+[node name="Control" type="Control" parent="WindowFactorWindow" unique_id=1594612569]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -58,7 +59,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 theme = ExtResource("3_efdl4")
 
-[node name="ColorRect" type="ColorRect" parent="WindowFactorWindow/Control"]
+[node name="ColorRect" type="ColorRect" parent="WindowFactorWindow/Control" unique_id=841184186]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,26 +68,26 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 
-[node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow/Control"]
+[node name="WindowFactorContainer" type="HBoxContainer" parent="WindowFactorWindow/Control" unique_id=1831199788]
 layout_mode = 0
 offset_right = 721.16
 offset_bottom = 26.0
 size_flags_horizontal = 2
 size_flags_vertical = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=332194044]
 layout_mode = 2
 
-[node name="ResetScaleButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer"]
+[node name="ResetScaleButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer" unique_id=579037232]
 layout_mode = 2
 tooltip_text = "Reset editor scale"
 focus_mode = 0
 text = "100"
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=1032902326]
 layout_mode = 2
 
-[node name="WindowFactorScale" type="HSlider" parent="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer"]
+[node name="WindowFactorScale" type="HSlider" parent="WindowFactorWindow/Control/WindowFactorContainer/MarginContainer" unique_id=523387988]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -96,20 +97,20 @@ max_value = 5.0
 step = 0.01
 value = 1.0
 
-[node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+[node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=356604767]
 layout_mode = 2
 text = "100%"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=1200625665]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="UpdateAvailable" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2" instance=ExtResource("5_vlg08")]
+[node name="UpdateAvailable" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2" unique_id=422335859 instance=ExtResource("5_vlg08")]
 layout_mode = 2
 size_flags_vertical = 4
 horizontal_alignment = 2
 
-[node name="HelpButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2"]
+[node name="HelpButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2" unique_id=1202122935]
 layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Open GitHub wiki (F1)"

@@ -1,7 +1,7 @@
-[gd_scene load_steps=35 format=3 uid="uid://bjaj8aln7f08r"]
+[gd_scene format=3 uid="uid://bjaj8aln7f08r"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_nb6ej"]
-[ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="1_r2t7d"]
+[ext_resource type="Script" uid="uid://chwojuffots4c" path="res://addons/diisis/editor/src/editor.gd" id="2_24jcx"]
 [ext_resource type="PackedScene" uid="uid://bl3r0kwwycrmw" path="res://addons/diisis/editor/src/page.tscn" id="2_kbraj"]
 [ext_resource type="Script" uid="uid://c84rlymfbgn1g" path="res://addons/diisis/editor/src/line_type_button.gd" id="3_2h0gj"]
 [ext_resource type="Texture2D" uid="uid://bbfry7sb88x3c" path="res://addons/diisis/editor/visuals/theme/buttons_ui/undo.png" id="3_mqy67"]
@@ -36,18 +36,19 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
-[node name="Editor" type="Control"]
+[node name="Editor" type="Control" unique_id=816289720]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
 focus_mode = 2
 theme = ExtResource("1_nb6ej")
-script = ExtResource("1_r2t7d")
+script = ExtResource("2_24jcx")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=49643919]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -56,7 +57,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.129412, 0.129412, 0.129412, 1)
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1680567462]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,77 +65,77 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Core" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Core" type="VBoxContainer" parent="ScrollContainer" unique_id=1211561382]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core"]
+[node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core" unique_id=1687821056]
 visible = false
 layout_mode = 2
 text = "any test functionality"
 
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core"]
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core" unique_id=1941519239]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="ScrollContainer/Core/MarginContainer"]
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/Core/MarginContainer" unique_id=210181449]
 layout_mode = 2
 color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer" unique_id=1339352738]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-
-[node name="FileControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2" unique_id=157855958]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=149542617]
+layout_mode = 2
+
+[node name="FileControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=841344403]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl" unique_id=2113570841]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer" unique_id=183509625]
 layout_mode = 2
 
-[node name="ToolbarContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer"]
+[node name="ToolbarContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=1342078311]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=1072692679]
 layout_mode = 2
 
-[node name="RefreshButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer"]
+[node name="RefreshButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1059368916]
 visible = false
 layout_mode = 2
 text = "Refresh"
 
-[node name="UndoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer"]
+[node name="UndoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=859003155]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Undo (Ctrl+Z when not focued on a text label.)"
 focus_mode = 0
 icon = ExtResource("3_mqy67")
 
-[node name="RedoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer"]
+[node name="RedoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1463127554]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Redo (Ctrl+Y when not focued on a text label.)"
 focus_mode = 0
 icon = ExtResource("4_eueb5")
 
-[node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer"]
+[node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=585253380]
 layout_mode = 2
 theme = ExtResource("1_nb6ej")
 prefer_global_menu = false
 
-[node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar"]
+[node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1021917216]
 size = Vector2i(159, 228)
 content_scale_aspect = 4
 item_count = 4
@@ -147,7 +148,7 @@ item_2/id = 1
 item_3/text = "Open    (O)"
 item_3/id = 2
 
-[node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File"]
+[node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" unique_id=1686074836]
 item_count = 3
 item_0/text = "Select Locales..."
 item_0/id = 0
@@ -156,7 +157,7 @@ item_1/id = 1
 item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
-[node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar"]
+[node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=5012722]
 item_count = 6
 item_0/text = "Reload DIISIS editor"
 item_0/id = 0
@@ -171,7 +172,7 @@ item_4/id = 4
 item_5/text = "Open wiki (opens browser)"
 item_5/id = 5
 
-[node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar"]
+[node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=747755189]
 auto_translate_mode = 1
 size = Vector2i(209, 100)
 item_count = 7
@@ -192,14 +193,14 @@ item_5/id = 2
 item_6/text = "Step through pages"
 item_6/id = 3
 
-[node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility"]
+[node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" unique_id=549865233]
 item_count = 2
 item_0/text = "Entire Script"
 item_0/id = 0
 item_1/text = "Current Page"
 item_1/id = 1
 
-[node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar"]
+[node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1569031650]
 auto_translate_mode = 1
 size = Vector2i(113, 197)
 item_count = 9
@@ -225,37 +226,37 @@ item_8/text = "Open with Ctrl + ..."
 item_8/id = 7
 item_8/disabled = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=799838949]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label2" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2"]
+[node name="Label2" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=1384151561]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 8
 text = "<"
 
-[node name="LastUndoStepLabel" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2"]
+[node name="LastUndoStepLabel" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=147750605]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=19488174]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=179777342]
 layout_mode = 2
 
-[node name="ShowErrorsButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="ShowErrorsButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=764905863]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 toggle_mode = true
 text = "err"
 
-[node name="ErrorTextBox" type="RichTextLabel" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="ErrorTextBox" type="RichTextLabel" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1748562948]
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -263,21 +264,21 @@ size_flags_vertical = 0
 theme_override_colors/default_color = Color(0.9, 0.27, 0.291, 1)
 bbcode_enabled = true
 
-[node name="PageControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer"]
+[node name="PageControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=1009905370]
 layout_mode = 2
 
-[node name="PageNav" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl"]
+[node name="PageNav" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl" unique_id=842539140]
 layout_mode = 2
 theme_override_constants/separation = 13
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1018657318]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=1226394107]
 layout_mode = 2
 
-[node name="First" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
+[node name="First" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1445829962]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
@@ -287,7 +288,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 text = "|<"
 
-[node name="Prev" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
+[node name="Prev" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=361981923]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
@@ -297,10 +298,10 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 text = "<"
 
-[node name="GoTo" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" instance=ExtResource("4_m6c15")]
+[node name="GoTo" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1604811142 instance=ExtResource("4_m6c15")]
 layout_mode = 2
 
-[node name="Next" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
+[node name="Next" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=721865512]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Go to next page
@@ -309,7 +310,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 text = ">"
 
-[node name="Last" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer"]
+[node name="Last" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1630940154]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Go to last page
@@ -318,24 +319,24 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 text = ">|"
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2"]
+[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=2069447735]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "navigation"
 horizontal_alignment = 1
 
-[node name="VSeparator3" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VSeparator3" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=2055973850]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="JumpContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="JumpContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1791176452]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=1974523925]
 layout_mode = 2
 
-[node name="AddAfter" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
+[node name="AddAfter" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=1035722366]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 8
@@ -346,7 +347,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 icon = ExtResource("7_m63dd")
 
-[node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer"]
+[node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=700582887]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Add page to end
@@ -355,25 +356,25 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 17
 icon = ExtResource("8_ajvyk")
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2"]
+[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=960116116]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "pages"
 horizontal_alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VSeparator" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=457017119]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=544449934]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=310554456]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
+[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=854519008]
 layout_mode = 2
 tooltip_text = "Add Line (Ctrl+A)
 Adds a line to the end of the current page."
@@ -381,10 +382,10 @@ focus_mode = 0
 icon = ExtResource("7_67kpi")
 icon_alignment = 1
 
-[node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer"]
+[node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=38698071]
 layout_mode = 2
 
-[node name="TypeText" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+[node name="TypeText" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=914226950]
 layout_mode = 2
 tooltip_text = "Text (Ctrl+1)"
 focus_mode = 0
@@ -395,7 +396,7 @@ icon = ExtResource("5_cfai3")
 icon_alignment = 1
 script = ExtResource("3_2h0gj")
 
-[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=697695636]
 layout_mode = 2
 tooltip_text = "Choice (Ctrl+2)"
 focus_mode = 0
@@ -406,7 +407,7 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 1
 
-[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=586829818]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
@@ -419,7 +420,7 @@ expand_icon = true
 script = ExtResource("3_2h0gj")
 line_type = 2
 
-[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes"]
+[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=1014220156]
 layout_mode = 2
 tooltip_text = "Folder (Ctrl+4)"
 focus_mode = 0
@@ -430,29 +431,29 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 3
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer"]
+[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=1617129894]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "lines"
 horizontal_alignment = 1
 
-[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=377776600]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="ViewTypes" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav"]
+[node name="ViewTypes" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=90708840]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=1856850894]
 layout_mode = 2
 
-[node name="ViewTypesButtonContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer"]
+[node name="ViewTypesButtonContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1862183397]
 layout_mode = 2
 
-[node name="ViewFullButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer"]
+[node name="ViewFullButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2056397444]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 tooltip_text = "Page view: Full"
@@ -464,7 +465,7 @@ icon = ExtResource("7_32dog")
 icon_alignment = 1
 script = ExtResource("7_7syci")
 
-[node name="ViewTruncatedButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer"]
+[node name="ViewTruncatedButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=1839089254]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -477,7 +478,7 @@ icon_alignment = 1
 script = ExtResource("7_7syci")
 page_view = 1
 
-[node name="ViewMinimalButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer"]
+[node name="ViewMinimalButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2120840586]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -490,29 +491,29 @@ icon_alignment = 1
 script = ExtResource("7_7syci")
 page_view = 2
 
-[node name="TextSizeButton" type="OptionButton" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer"]
+[node name="TextSizeButton" type="OptionButton" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1515539244]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Font Size"
 focus_mode = 0
 allow_reselect = true
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes"]
+[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=2127840181]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "view"
 horizontal_alignment = 1
 
-[node name="PageContainer" type="MarginContainer" parent="ScrollContainer/Core"]
+[node name="PageContainer" type="MarginContainer" parent="ScrollContainer/Core" unique_id=18877755]
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_use_anchors_ = true
 
-[node name="Page" parent="ScrollContainer/Core/PageContainer" instance=ExtResource("2_kbraj")]
+[node name="Page" parent="ScrollContainer/Core/PageContainer" unique_id=1868324178 instance=ExtResource("2_kbraj")]
 layout_mode = 2
 
-[node name="NotificationContainer" type="VBoxContainer" parent="."]
+[node name="NotificationContainer" type="VBoxContainer" parent="." unique_id=2099306740]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -522,13 +523,13 @@ offset_top = 20.0
 offset_bottom = 60.0
 grow_horizontal = 0
 
-[node name="InstructionDefinitionTimer" type="Timer" parent="."]
+[node name="InstructionDefinitionTimer" type="Timer" parent="." unique_id=677886523]
 wait_time = 5.0
 autostart = true
 
-[node name="Popups" type="Node" parent="."]
+[node name="Popups" type="Node" parent="." unique_id=864969664]
 
-[node name="FDSave" type="FileDialog" parent="Popups"]
+[node name="FDSave" type="FileDialog" parent="Popups" unique_id=719783803]
 transparent_bg = true
 gui_embed_subwindows = true
 title = "Save as..."
@@ -538,7 +539,7 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 filters = PackedStringArray("*.json")
 
-[node name="FDExportLocales" type="FileDialog" parent="Popups"]
+[node name="FDExportLocales" type="FileDialog" parent="Popups" unique_id=1000997302]
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
@@ -549,7 +550,7 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 filters = PackedStringArray("*.json")
 
-[node name="FDMergeL10N" type="FileDialog" parent="Popups"]
+[node name="FDMergeL10N" type="FileDialog" parent="Popups" unique_id=933812027]
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
@@ -560,7 +561,7 @@ transparent = true
 theme = ExtResource("1_nb6ej")
 filters = PackedStringArray("*.json")
 
-[node name="FDOpen" type="FileDialog" parent="Popups"]
+[node name="FDOpen" type="FileDialog" parent="Popups" unique_id=24522427]
 transparent_bg = true
 gui_embed_subwindows = true
 title = "Open a File"
@@ -572,7 +573,7 @@ ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json")
 
-[node name="FDIngest" type="FileDialog" parent="Popups"]
+[node name="FDIngest" type="FileDialog" parent="Popups" unique_id=942777749]
 auto_translate_mode = 1
 transparent_bg = true
 gui_embed_subwindows = true
@@ -586,80 +587,76 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.txt")
 
-[node name="HeaderPopup" parent="Popups" instance=ExtResource("5_k116e")]
+[node name="HeaderPopup" parent="Popups" unique_id=1265586781 instance=ExtResource("5_k116e")]
 visible = false
 exclusive = false
 content_scale_aspect = 1
 
-[node name="MovePagePopup" parent="Popups" instance=ExtResource("7_w8mdv")]
+[node name="MovePagePopup" parent="Popups" unique_id=1758037149 instance=ExtResource("7_w8mdv")]
 visible = false
 
-[node name="FileConfigPopup" parent="Popups" instance=ExtResource("19_rgmxs")]
+[node name="FileConfigPopup" parent="Popups" unique_id=1884869694 instance=ExtResource("19_rgmxs")]
 visible = false
 
-[node name="LocaleSelectionWindow" parent="Popups" instance=ExtResource("20_nu372")]
+[node name="LocaleSelectionWindow" parent="Popups" unique_id=915491831 instance=ExtResource("20_nu372")]
 visible = false
 
-[node name="ChangeTextIDWindow" parent="Popups" instance=ExtResource("29_jb16f")]
+[node name="ChangeTextIDWindow" parent="Popups" unique_id=1583914933 instance=ExtResource("29_jb16f")]
 visible = false
 
-[node name="IncomingReferencesWindow" parent="Popups" instance=ExtResource("30_rtywk")]
+[node name="IncomingReferencesWindow" parent="Popups" unique_id=2001101176 instance=ExtResource("30_rtywk")]
 visible = false
 
-[node name="HandlerWindow" parent="Popups" instance=ExtResource("32_24jcx")]
+[node name="HandlerWindow" parent="Popups" unique_id=1946967425 instance=ExtResource("32_24jcx")]
 visible = false
 
-[node name="IngestionActorSetupWindow" parent="Popups" instance=ExtResource("33_378lj")]
-size = Vector2i(400, 2646)
+[node name="IngestionActorSetupWindow" parent="Popups" unique_id=642674317 instance=ExtResource("33_378lj")]
+size = Vector2i(400, 1695)
 visible = false
 
-[node name="TextExportWindow" parent="Popups" instance=ExtResource("34_m63dd")]
+[node name="TextExportWindow" parent="Popups" unique_id=638562642 instance=ExtResource("34_m63dd")]
 visible = false
 
-[node name="TextImportWindow" parent="Popups" instance=ExtResource("31_24jcx")]
+[node name="TextImportWindow" parent="Popups" unique_id=890143595 instance=ExtResource("31_24jcx")]
 visible = false
 
-[node name="ActorSearchWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+[node name="ActorSearchWindow" parent="Popups" unique_id=522262892 instance=ExtResource("34_ajvyk")]
 title = "Actor Search"
 visible = false
 container_path = "uid://pq57xgpvu0ih"
 
-[node name="DropdownWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+[node name="DropdownWindow" parent="Popups" unique_id=1010298652 instance=ExtResource("34_ajvyk")]
 auto_translate_mode = 1
 title = "Dropdowns"
 size = Vector2i(547, 530)
 visible = false
 container_path = "uid://djiaiay3ntvfy"
 
-[node name="TextSearchPopup" parent="Popups" instance=ExtResource("34_ajvyk")]
+[node name="TextSearchPopup" parent="Popups" unique_id=627008366 instance=ExtResource("34_ajvyk")]
 auto_translate_mode = 1
 title = "Search Text"
 size = Vector2i(730, 400)
 visible = false
 container_path = "uid://stb4ad3iost2"
 
-[node name="PunctuationRulesWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+[node name="PunctuationRulesWindow" parent="Popups" unique_id=1361573881 instance=ExtResource("34_ajvyk")]
 title = "Punctuation & Replacement Rules"
 size = Vector2i(800, 400)
 visible = false
 container_path = "uid://cn0rmafav1qh5"
 
-[node name="FactsPopup" parent="Popups" instance=ExtResource("32_378lj")]
+[node name="FactsPopup" parent="Popups" unique_id=1390228242 instance=ExtResource("32_378lj")]
 visible = false
 
-[node name="DialogConfigWindow" parent="Popups" instance=ExtResource("34_ajvyk")]
+[node name="DialogConfigWindow" parent="Popups" unique_id=1071477606 instance=ExtResource("34_ajvyk")]
 title = "Dialog Config"
 visible = false
 container_path = "uid://cqfaywphjr2k2"
 
-[node name="Camera" type="Camera2D" parent="."]
-visible = false
-
-[node name="ArgHint" parent="." instance=ExtResource("28_g0iye")]
-oversampling_override = 1.0
+[node name="ArgHint" parent="." unique_id=2017472624 instance=ExtResource("28_g0iye")]
 size = Vector2i(12, 10)
 
-[node name="OpeningCover" type="ColorRect" parent="."]
+[node name="OpeningCover" type="ColorRect" parent="." unique_id=1500427879]
 visible = false
 z_index = 10
 layout_mode = 1
@@ -670,7 +667,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.152941, 0.121569, 0.145098, 1)
 
-[node name="Label" type="RichTextLabel" parent="OpeningCover"]
+[node name="Label" type="RichTextLabel" parent="OpeningCover" unique_id=305832894]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -693,7 +690,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 1
 
-[node name="ImportingCover" type="ColorRect" parent="."]
+[node name="ImportingCover" type="ColorRect" parent="." unique_id=1961140070]
 visible = false
 z_index = 10
 layout_mode = 1
@@ -704,7 +701,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.152941, 0.121569, 0.145098, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ImportingCover"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ImportingCover" unique_id=1302750678]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -718,7 +715,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="RichTextLabel" parent="ImportingCover/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="ImportingCover/VBoxContainer" unique_id=1158805052]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m63dd")
@@ -729,7 +726,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 1
 
-[node name="ImportProgressLabel" type="Label" parent="ImportingCover/VBoxContainer"]
+[node name="ImportProgressLabel" type="Label" parent="ImportingCover/VBoxContainer" unique_id=648780226]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20

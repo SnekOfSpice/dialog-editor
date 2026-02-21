@@ -11,6 +11,12 @@ const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
 const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
 
+
+var embedded: bool:
+	get():
+		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
+
+
 func get_address(object:Node, address_depth:AddressDepth) -> String:
 	var address := ""
 	

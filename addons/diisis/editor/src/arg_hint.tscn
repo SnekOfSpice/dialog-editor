@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://unnyq1pkgbh"]
+[gd_scene format=3 uid="uid://unnyq1pkgbh"]
 
 [ext_resource type="Script" uid="uid://c8x0g5j6sofbe" path="res://addons/diisis/editor/src/arg_hint.gd" id="1_3il64"]
 
@@ -9,8 +9,9 @@ content_margin_right = 6.0
 content_margin_bottom = 4.0
 bg_color = Color(0.109828, 0.0663, 0.13, 1)
 
-[node name="ArgHint" type="Window"]
+[node name="ArgHint" type="Window" unique_id=1246299580]
 gui_disable_input = true
+oversampling_override = 1.0
 size = Vector2i(12, 8)
 wrap_controls = true
 borderless = true
@@ -18,7 +19,7 @@ unfocusable = true
 mouse_passthrough = true
 script = ExtResource("1_3il64")
 
-[node name="TextLabel" type="RichTextLabel" parent="."]
+[node name="TextLabel" type="RichTextLabel" parent="." unique_id=954907409]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

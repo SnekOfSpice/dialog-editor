@@ -186,6 +186,9 @@
 			"Sound.@playback_getter": {
 
 			},
+			"Sound.@player_getter": {
+
+			},
 			"Sound.@stream_getter": {
 
 			},
@@ -466,7 +469,7 @@
 			}
 		},
 		"head_defaults": [],
-		"id_counter": -9223372036854760493,
+		"id_counter": -9223372036854761295,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0

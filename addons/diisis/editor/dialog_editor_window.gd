@@ -17,6 +17,7 @@ signal closing_editor()
 
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
 
+
 func _on_about_to_popup() -> void:
 	await get_tree().process_frame
 	editor = find_child("Editor")
@@ -34,6 +35,7 @@ func _on_about_to_popup() -> void:
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
+		print("w2")
 		var scale : float = config.get_value("editor", "content_scale", 1.0)
 		find_child("WindowFactorScale").set_value(scale)
 		size = config.get_value("editor", "size", size)
@@ -201,6 +203,7 @@ func _on_window_mouse_exited():
 	grab_focus()
 
 func _on_window_factor_window_mouse_entered():
+	return
 	if not has_focus():
 		return
 	if $QuitDialog.visible:

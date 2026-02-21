@@ -772,7 +772,7 @@ func get_autoload_script(autoload:String) -> Script:
 		autoload_copy.queue_free()
 		return autoload_script
 	else:
-		push_warning("Encountered fucky autoload")
+		push_warning("Encountered fucked autoload at %s" % path)
 		return null
 
 func get_custom_method(instruction_name:String) -> Dictionary:

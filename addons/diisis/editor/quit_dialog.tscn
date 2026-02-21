@@ -1,10 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3170v1u5of2d"]
+[gd_scene format=3 uid="uid://b3170v1u5of2d"]
 
 [ext_resource type="Script" uid="uid://bjvywpwuc1l1i" path="res://addons/diisis/editor/quit_dialog.gd" id="1_pn46y"]
 [ext_resource type="Texture2D" uid="uid://3gqp3bocdpbm" path="res://addons/diisis/editor/visuals/theme/buttons_ui/blank.png" id="1_rxmbd"]
 
-[node name="QuitDialog" type="Window"]
+[node name="QuitDialog" type="Window" unique_id=942557172]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "Close DIISIS?"
 initial_position = 4
 size = Vector2i(301, 150)
@@ -17,7 +18,7 @@ theme_override_icons/close = ExtResource("1_rxmbd")
 theme_override_icons/close_pressed = ExtResource("1_rxmbd")
 script = ExtResource("1_pn46y")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=530376918]
 clip_contents = true
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,37 +28,37 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer" unique_id=1952290176]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer" unique_id=654649677]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/CenterContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/CenterContainer/VBoxContainer" unique_id=1152428871]
 layout_mode = 2
 size_flags_vertical = 4
 bbcode_enabled = true
 text = "fgdfg"
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/CenterContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/CenterContainer/VBoxContainer" unique_id=1780151096]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="CancelButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1268107996]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Stay"
 
-[node name="SaveButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=606272433]
 layout_mode = 2
 text = "Save & Leave"
 
-[node name="QuitButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="QuitButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1588832642]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Leave"

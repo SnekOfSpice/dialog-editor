@@ -67,6 +67,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
+	print("e1")
 	Pages.editor = self
 	set_opening_cover_visible(true)
 	set_importing_cover_visible(false)
@@ -98,7 +99,7 @@ func init(active_file_path:="") -> void:
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
 	
-	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
+	print("e2")
 	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
@@ -167,6 +168,11 @@ func init(active_file_path:="") -> void:
 		opening = false
 		if Pages.evaluator_paths.is_empty():
 			Pages.evaluator_paths = get_line_reader_scripts()
+	
+	if not DiisisEditorUtil.embedded:
+		var cam := Camera2D.new()
+		print("ADDING CAM")
+		add_child(cam)
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -290,6 +296,8 @@ func _process(delta: float) -> void:
 var ctrl_down := false
 var focused_control_before_ctrl:Control
 func _shortcut_input(event):
+	if not visible:
+		return
 	if event is InputEventKey:
 		# on linux (or at least my steam deck), there's a bug where ctrl shortcuts still send their key inputs
 		# so e.g. ctrl+s to save also inserts an s in a text edit if it's currently focused

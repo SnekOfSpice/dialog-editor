@@ -3,9 +3,14 @@ extends EditorPlugin
 class_name DIISISPlugin
 
 var dia_editor_window:Window
+var embedder:Control
 var toolbar_button:Control
 var confirmation_window:Window
 var accept_dialogue:AcceptDialog
+
+var _embedded : bool:
+	get():
+		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
 
 const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_PARSER = "Parser"
@@ -27,6 +32,9 @@ const TEMPLATE_VN_AUTOLOAD_SCENE_LOADER = "SceneLoader"
 ## TODO ugly workaround to make internal docs work
 ## Godot 4.5 will make this unnecessary
 func _ready() -> void:
+	if not ProjectSettings.has_setting("diisis/plugin/view/embedded"):
+		ProjectSettings.set_setting("diisis/plugin/view/embedded", false)
+	printt("2 ", EditorInterface.get_base_control().position)
 	ResourceSaver.save(preload("res://addons/diisis/parser/src/line_reader.gd"))
 	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser_events.gd"))
 	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser.gd"))
@@ -175,6 +183,7 @@ func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
 
 func _enter_tree():
+	printt("1 ", EditorInterface.get_base_control().position)
 	Engine.set_meta("DIISISPlugin", self)
 	# property info doesnt work
 	# but in case you get it to work, here's the descriptions
@@ -194,15 +203,21 @@ func _enter_tree():
 	if not OS.has_feature("editor"):
 		return
 	
-	toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
-	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
-	toolbar_button.visible = true
-	toolbar_button.is_in_editor = true
-	toolbar_button.request_open_diisis.connect(open_editor)
-	toolbar_button.request_setup_template.connect(on_request_setup_template)
+	if _embedded:
+		await get_tree().process_frame
+		print("3")
+		add_new_dialog_editor_window()
+		open_editor()
+	else:
+		toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
+		add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
+		toolbar_button.visible = true
+		toolbar_button.is_in_editor = true
+		toolbar_button.request_open_diisis.connect(open_editor)
+		toolbar_button.request_setup_template.connect(on_request_setup_template)
 	
-	await get_tree().process_frame
-	toolbar_button.get_parent().move_child(toolbar_button, -2)
+		await get_tree().process_frame
+		toolbar_button.get_parent().move_child(toolbar_button, -2)
 	
 
 	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
@@ -247,12 +262,19 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 	accept_dialogue.show()
 
 func open_editor():
+	if _embedded:
+		var project_file_path : String = ProjectSettings.get_setting("diisis/project/file/path")
+		if FileAccess.file_exists(project_file_path) and not project_file_path.is_empty():
+			embedder.init(project_file_path)
+		else:
+			embedder.init()
+		return
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.set_windowed()
 		dia_editor_window.grab_focus()
 	else:
-		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
-		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+		print("1")
+		add_new_dialog_editor_window()
 		
 		var project_file_path : String = ProjectSettings.get_setting("diisis/project/file/path")
 		if FileAccess.file_exists(project_file_path) and not project_file_path.is_empty():
@@ -264,9 +286,42 @@ func open_editor():
 		dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
+
+func add_new_dialog_editor_window():
+	print("call")
+	printt("1 ", EditorInterface.get_base_control().position)
+	if _embedded:
+		embedder = preload("res://addons/diisis/editor/src/editor.tscn").instantiate()
+		#embedder = Control.new()
+		embedder.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		#embedder.add_window(dia_editor_window)
+		EditorInterface.get_editor_main_screen().add_child(embedder)
+		_make_visible(false)
+	else:
+		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
+		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+		print("HELLO")
+
+
+func _make_visible(visible):
+	if embedder:
+		embedder.visible = visible
+
+func _get_plugin_name():
+	return "Main Screen Plugin"
+
+func _has_main_screen():
+	return _embedded
+
+
+func _get_plugin_icon():
+	# Must return some kind of Texture for the icon.
+	return EditorInterface.get_editor_theme().get_icon("Node", "EditorIcons")
+
+
 func open_new_file():
-	dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
-	get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
+	print("2")
+	add_new_dialog_editor_window()
 	if FileAccess.file_exists("user://import_override_temp.json"):
 		dia_editor_window.file_path = "user://import_override_temp.json"
 	else:
@@ -281,6 +336,12 @@ func on_window_request_reload_editor():
 	open_editor()
 
 func _process(delta: float) -> void:
+	var base_control = EditorInterface.get_base_control()
+	var base_window : Window = base_control.get_parent().get_parent()
+	#base_window.borderless = false
+	#base_control.size.x += 5 * delta
+	#for prtop in EditorInterface.get_base_control().get_parent().get_parent().get_property_list():
+		#printt(prtop)
 	if is_instance_valid(dia_editor_window):
 		dia_editor_window.wrap_controls = true
 
