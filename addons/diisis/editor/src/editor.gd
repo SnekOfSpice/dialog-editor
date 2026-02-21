@@ -2,6 +2,10 @@
 extends Control
 class_name DiisisEditor
 
+
+signal request_template_setup(template_id : int)
+
+
 const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
 const BACKUP_PATH := "user://DIISIS_autosave/"
 var auto_save_timer := AUTO_SAVE_INTERVAL
@@ -131,6 +135,12 @@ func init(active_file_path:="") -> void:
 		utility_item.add_submenu_node_item("Find in Library of Babel", %LibraryOfBabel)
 	utility_item.add_item("Open with Ctrl + ...")
 	utility_item.set_item_disabled(utility_item.item_count - 1, true)
+	
+	if DiisisEditorUtil.embedded:
+		%Setup.add_separator("Project")
+		%Setup.add_submenu_node_item("Templates", %TemplatesMenu)
+	%Setup.add_item("Open with Ctrl + ...")
+	%Setup.set_item_disabled(%Setup.item_count - 1, true)
 	
 	open_from_path(active_file_path)
 	
@@ -1399,3 +1409,7 @@ func _get_line_reader_scripts_r(path: String) -> void:
 			local_path = local_path.replace("///", "//") # this happens with scripts in the project root
 			found_handlers.append(local_path)
 			
+
+
+func _on_templates_menu_id_pressed(id: int) -> void:
+	request_template_setup.emit(id)

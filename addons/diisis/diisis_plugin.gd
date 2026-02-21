@@ -299,6 +299,7 @@ func add_new_dialog_editor_window():
 			embedder.init()
 		_make_visible(false)
 		embedder.open_new_file.connect(open_new_file)
+		embedder.request_template_setup.connect(on_request_setup_template)
 	else:
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)

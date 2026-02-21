@@ -229,7 +229,7 @@ auto_translate_mode = 1
 size = Vector2i(113, 197)
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
-item_count = 9
+item_count = 8
 item_0/text = "Edit"
 item_0/id = 0
 item_0/separator = true
@@ -248,9 +248,12 @@ item_6/text = "Facts    (Shift+F)"
 item_6/id = 5
 item_7/text = "Pages    (T)"
 item_7/id = 6
-item_8/text = "Open with Ctrl + ..."
-item_8/id = 7
-item_8/disabled = true
+
+[node name="TemplatesMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Visual Novel"
+item_0/id = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=799838949]
 layout_mode = 2
@@ -848,6 +851,7 @@ size_flags_horizontal = 8
 [connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility/LibraryOfBabel" to="." method="_on_library_of_babel_index_pressed"]
 [connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_id_pressed"]
 [connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
+[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup/TemplatesMenu" to="." method="_on_templates_menu_id_pressed"]
 [connection signal="toggled" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2/ShowErrorsButton" to="." method="_on_show_errors_button_toggled"]
 [connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
