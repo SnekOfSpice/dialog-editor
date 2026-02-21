@@ -64,13 +64,14 @@ var _auto_continue_duration:= auto_continue_delay
 @export var allow_mid_line_advance := true
 
 @export_group("Name Display")
+## Maps display styles to a [LineReaderActorConfig], keyed by the values set in the Speaker Stringset in DIISIS.
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
-## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
+## If the newly speaking actor name is in this array, the name label will be hidden altogether.
 @export var blank_names : Array[String] = []
-## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
+## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
 ## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
 #@export var name_map : Dictionary[String, String] = {}
-## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
+## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
 #@export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
@@ -206,7 +207,7 @@ var _last_raw_name := ""
 ## Since rubies are commonly used by learners of a language and/or for uncommon words, disabling this setting
 ## can be used for a more challenging reading experience without removing the tags
 ## from the DIISIS script. [br]
-## [b]Note: [signal ParserEvents.rubies_built] will not be called. The robues will not be hidden, will not exist alltogether.
+## [b]Note: [signal ParserEvents.rubies_built] will not be called. The robues will not be hidden, will not exist altogether.
 @export var ruby_enabled := true
 enum RubySizeMode {
 	## Centers the ruby above its base line.

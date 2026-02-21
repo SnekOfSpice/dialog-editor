@@ -8,9 +8,9 @@ func init():
 	text_edit.text = Pages.ingestion_actor_declaration
 	find_child("SaveButton").text = "save"
 	find_child("HelpLabel").visible = false
-	find_child("AutoIngestButton").text = "populate from %s" % Pages.dropdown_title_for_dialog_syntax
+	find_child("AutoIngestButton").text = "populate from %s" % Pages.stringkit_title_for_dialog_syntax
 	
-	var speakers_exist := not Pages.dropdown_title_for_dialog_syntax.is_empty()
+	var speakers_exist := not Pages.stringkit_title_for_dialog_syntax.is_empty()
 	text_edit.visible = speakers_exist
 	find_child("NoTitleWarning").visible = not speakers_exist
 	find_child("Buttons").visible = speakers_exist

@@ -6,10 +6,10 @@ func clear():
 
 var auto_complete_context := ""
 
-var dropdowns := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
-var dropdown_titles := ["character", "amber-emotion"]
-var dropdown_dialog_arguments := ["amber-emotion"]
-var dropdown_title_for_dialog_syntax := "character"
+var stringkits := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
+var stringkit_titles := ["character", "amber-emotion"]
+var stringkit_dialog_arguments := ["amber-emotion"]
+var stringkit_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
@@ -67,7 +67,7 @@ var facts := {}
 var local_line_insert_offset:int
 
 var custom_method_defaults := {}
-var custom_method_dropdown_limiters := {}
+var custom_method_stringkit_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
@@ -78,14 +78,14 @@ var page_scroll_by_idx_by_file_name := {}
 # i couldnt figure out why the choice labels would just refuse to get updated on import
 var text_hacks_by_id := {}
 
-enum DataTypes {_String, _DropDown, _Boolean}
+enum DataTypes {_String, _Stringkit, _Boolean}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
 	#DataTypes._Integer : "Integer",
 	#DataTypes._Float : "Float",
 	#DataTypes._Array : "Array",
 	#DataTypes._Dictionary : "Dictionary",
-	DataTypes._DropDown : "Drop Down",
+	DataTypes._Stringkit : "Stringkit",
 	DataTypes._Boolean : "Boolean",
 }
 
@@ -230,14 +230,14 @@ func sync_line_references():
 func serialize() -> Dictionary:
 	var data := {
 		"callable_autoloads": callable_autoloads,
-		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"custom_method_stringkit_limiters": custom_method_stringkit_limiters,
 		"custom_method_defaults": custom_method_defaults,
 		#"default_address_mode_pages": default_address_mode_pages,
 		"default_locale" : default_locale,
-		"dropdowns": dropdowns,
-		"dropdown_titles": dropdown_titles,
-		"dropdown_dialog_arguments": dropdown_dialog_arguments,
-		"dropdown_title_for_dialog_syntax": dropdown_title_for_dialog_syntax,
+		"stringkits": stringkits,
+		"stringkit_titles": stringkit_titles,
+		"stringkit_dialog_arguments": stringkit_dialog_arguments,
+		"stringkit_title_for_dialog_syntax": stringkit_title_for_dialog_syntax,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
 		"evaluator_modified_times": evaluator_modified_times,
 		"facts": facts,
@@ -270,7 +270,7 @@ func deserialize(data:Dictionary):
 	page_data.clear()
 	page_data = int_data.duplicate()
 	custom_method_defaults = data.get("custom_method_defaults", {})
-	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
+	custom_method_stringkit_limiters = data.get("custom_method_stringkit_limiters", {})
 	callable_autoloads = data.get("callable_autoloads", [])
 	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
 	evaluator_modified_times = data.get("evaluator_modified_times", {})
@@ -284,10 +284,11 @@ func deserialize(data:Dictionary):
 		else:
 			fact_fix[fact_name] = int(fact_data.get(fact_name))
 	facts = fact_fix
-	dropdowns = data.get("dropdowns", {})
-	dropdown_titles = data.get("dropdown_titles", [])
-	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
-	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
+	# backwards compatibility with files below 0.7 where stringkits where called dropdowns
+	stringkits = data.get("stringkits", data.get("dropdowns", {}))
+	stringkit_titles = data.get("stringkit_titles", data.get("dropdown_titles", []))
+	stringkit_dialog_arguments = data.get("stringkit_dialog_arguments", data.get("dropdown_dialog_arguments", []))
+	stringkit_title_for_dialog_syntax = data.get("stringkit_title_for_dialog_syntax", data.get("dropdown_title_for_dialog_syntax", ""))
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
@@ -310,7 +311,7 @@ func deserialize(data:Dictionary):
 	# init limiters
 	await get_tree().process_frame
 	for method in get_all_instruction_names():
-		if custom_method_dropdown_limiters.has(method):
+		if custom_method_stringkit_limiters.has(method):
 			continue
 		var arg_data := {}
 		for arg in get_custom_method_arg_names(method):
@@ -318,7 +319,7 @@ func deserialize(data:Dictionary):
 			if type == TYPE_STRING:# or type == TYPE_NIL:
 				arg_data.set(arg, [])
 		if not arg_data.is_empty():
-			custom_method_dropdown_limiters.set(method, arg_data)
+			custom_method_stringkit_limiters.set(method, arg_data)
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -1070,19 +1071,19 @@ func get_count_total(include_skipped:=false) -> Vector2i:
 func rename_fact(from:String, to:String):
 	alter_fact(from, to)
 
-func rename_dropdown_title(from:String, to:String):
-	var dd_values = dropdowns.get(from).duplicate(true)
-	dropdowns[to] = dd_values
+func rename_stringkit_title(from:String, to:String):
+	var dd_values = stringkits.get(from).duplicate(true)
+	stringkits[to] = dd_values
 	if from != to:
-		dropdowns.erase(from)
-		dropdown_titles.insert(dropdown_titles.find(from), to)
-		dropdown_titles.erase(from)
-		if dropdown_dialog_arguments.has(from):
-			var where = dropdown_dialog_arguments.find(from)
-			dropdown_dialog_arguments.insert(where, to)
-			dropdown_dialog_arguments.erase(from)
-		if dropdown_title_for_dialog_syntax == from:
-			dropdown_title_for_dialog_syntax = to
+		stringkits.erase(from)
+		stringkit_titles.insert(stringkit_titles.find(from), to)
+		stringkit_titles.erase(from)
+		if stringkit_dialog_arguments.has(from):
+			var where = stringkit_dialog_arguments.find(from)
+			stringkit_dialog_arguments.insert(where, to)
+			stringkit_dialog_arguments.erase(from)
+		if stringkit_title_for_dialog_syntax == from:
+			stringkit_title_for_dialog_syntax = to
 	
 	# change in line data
 	for page in page_data.values():
@@ -1096,10 +1097,10 @@ func rename_dropdown_title(from:String, to:String):
 			content = content.replace(str("[]>", from), str("[]>", to))
 			Pages.save_text(text_id, content)
 
-func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
+func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
-		var old_options : Array = dropdowns.get(dropdown_title, [])
-		var is_speaker := dropdown_title == dropdown_title_for_dialog_syntax
+		var old_options : Array = stringkits.get(stringkit_title, [])
+		var is_speaker := stringkit_title == stringkit_title_for_dialog_syntax
 		
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
@@ -1114,8 +1115,8 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 					if old_option == new_option:
 						i += 1
 						continue
-					var old_arg := str(dropdown_title, "|", old_option)
-					var new_arg := str(dropdown_title, "|", new_option)
+					var old_arg := str(stringkit_title, "|", old_option)
+					var new_arg := str(stringkit_title, "|", new_option)
 					
 					var text_id : String = line.get("content", {}).get("text_id")
 					var content : String = Pages.get_text(text_id)
@@ -1129,14 +1130,14 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 					
 					i += 1
 	
-	dropdowns[dropdown_title] = options
+	stringkits[stringkit_title] = options
 
-func is_new_dropdown_title_invalid(title:String, previous_title := "") -> bool:
-	return (title in dropdown_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
+func is_new_stringkit_title_invalid(title:String, previous_title := "") -> bool:
+	return (title in stringkit_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
 
-func delete_dropdown(title:String, erase_from_text:=true):
-	if erase_from_text and dropdown_dialog_arguments.has(title):
-		var options : Array = dropdowns.get(title, [])
+func delete_stringkit(title:String, erase_from_text:=true):
+	if erase_from_text and stringkit_dialog_arguments.has(title):
+		var options : Array = stringkits.get(title, [])
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
@@ -1155,9 +1156,9 @@ func delete_dropdown(title:String, erase_from_text:=true):
 				content = content.replace("{}", "")
 				Pages.save_text(text_id, content)
 	
-	dropdown_titles.erase(title)
-	dropdown_dialog_arguments.erase(title)
-	dropdowns.erase(title)
+	stringkit_titles.erase(title)
+	stringkit_dialog_arguments.erase(title)
+	stringkits.erase(title)
 	
 	await get_tree().process_frame
 	Pages.editor.refresh(false)
@@ -1812,21 +1813,21 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
 				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
-	var selected_limiters : Array = custom_method_dropdown_limiters.get(method, {}).get(arg, [])
+	var selected_limiters : Array = custom_method_stringkit_limiters.get(method, {}).get(arg, [])
 	if selected_limiters.size() > 0:
 		# build list of all options
 		var valid_strings := []
 		for dd_name in selected_limiters:
-			valid_strings.append_array(dropdowns.get(dd_name))
+			valid_strings.append_array(stringkits.get(dd_name))
 		
 		if not value in valid_strings:
-			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
+			return str("Stringkit argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
 
-func are_all_of_these_dropdown_titles(names:Array) -> bool:
+func are_all_of_these_stringkit_titles(names:Array) -> bool:
 	var result := true
 	for dd_name in names:
-		if not dd_name in dropdown_titles:
+		if not dd_name in stringkit_titles:
 			result = false
 			break
 	return result
@@ -2122,7 +2123,7 @@ func get_text_id_address_and_type(id:String) -> Array:
 	return ["0.0", "Not Found"]
 
 func get_speakers() -> Array:
-	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
+	return stringkits.get(stringkit_title_for_dialog_syntax, []).duplicate()
 
 ## exact means only the passed speakers can be entered
 func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearchContainer.SearchMode.All) -> Array:

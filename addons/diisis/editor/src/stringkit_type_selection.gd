@@ -1,11 +1,11 @@
 @tool
 extends MarginContainer
-class_name DropdownTypeSelector
+class_name StringkitTypeSelector
 
 const HEIGHT := 32 # used for spacing and visual stuff
 
 signal updated()
-signal updated_selection(item:DropdownTypeSelector)
+signal updated_selection(item:StringkitTypeSelector)
 
 var method := ""
 var arg := ""
@@ -15,10 +15,10 @@ func init(method_name:String, arg_name:String):
 	arg = arg_name
 	for button : Button in find_child("GridContainer").get_children():
 		button.queue_free()
-	for title in Pages.dropdown_titles:
+	for title in Pages.stringkit_titles:
 		var button = CheckBox.new()
 		button.text = title
-		button.tooltip_text = "\n".join(Pages.dropdowns.get(title))
+		button.tooltip_text = "\n".join(Pages.stringkits.get(title))
 		button.pressed.connect(_on_pressed)
 		find_child("GridContainer").add_child(button)
 

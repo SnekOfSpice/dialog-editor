@@ -1,3 +1,5 @@
+
+0.7
 change linereader process to physicsprocess
 add clear_previous arg to set_body_label
 change full words to also include the space after the word
@@ -5,6 +7,11 @@ add advance yield to instuctions
 autosearch linereaders on opening a new file
 add LineReader.clear_past_lines()
 Parser fact payload for debugging
+rename dropdowns to stringkits
+remove headers
+embed option
+4.6 upgrade
+remove dialog args in text only export
 
 -------------------------------------------------
 DIISIS 0.6.5 2025-12-16

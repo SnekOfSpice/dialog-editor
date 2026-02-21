@@ -6,8 +6,8 @@ signal argument_pressed(label: String, pressed:bool)
 signal syntax_pressed(label:String)
 
 func init(text:String):
-	find_child("SelectAsArgumentCheckbox").button_pressed = Pages.dropdown_dialog_arguments.has(text)
-	find_child("SelectAsSyntaxCheckbox").button_pressed = Pages.dropdown_title_for_dialog_syntax == text
+	find_child("SelectAsArgumentCheckbox").button_pressed = Pages.stringkit_dialog_arguments.has(text)
+	find_child("SelectAsSyntaxCheckbox").button_pressed = Pages.stringkit_title_for_dialog_syntax == text
 	find_child("Label").text = text
 
 func _on_select_as_argument_checkbox_toggled(toggled_on: bool) -> void:

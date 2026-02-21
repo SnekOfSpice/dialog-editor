@@ -50,7 +50,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 text = "Set default overrides. Any method called by diisis will have 2 steps of default applied. First the one set in the function signature in [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]LineReader scripts. Then the ones you set here.
 use them with a [font=res://addons/diisis/editor/visuals/theme/fonts/Hack-Regular.ttf]*[/font] in function calls
-Additionally, you can set string-based arguments to only accept dropdown-defined values here."
+Additionally, you can set string-based arguments to only accept stringkit-defined values here."
 fit_content = true
 scroll_active = false
 
@@ -95,7 +95,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="DropdownContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/PanelContainer/HSplitContainer" unique_id=1431659869]
+[node name="StringkitContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/VSplitContainer/PanelContainer/HSplitContainer" unique_id=1431659869]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0

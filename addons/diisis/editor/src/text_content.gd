@@ -242,14 +242,14 @@ func _on_text_box_caret_changed() -> void:
 		text_box.update_code_completion_options(true)
 
 	elif is_text_before_caret("{"):
-		if Pages.dropdown_dialog_arguments.is_empty():
-			Pages.editor.notify("No Dialog Arguments set.\nGo to Setup > Dropdowns to change this.")
-		for actor in Pages.dropdown_dialog_arguments:
+		if Pages.stringkit_dialog_arguments.is_empty():
+			Pages.editor.notify("No Dialog Arguments set.\nGo to Setup > Stringkits to change this.")
+		for actor in Pages.stringkit_dialog_arguments:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, actor, str(actor, "|}"))
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "," and get_text_after_caret(1) == "}":
 		var used_args = get_used_dialog_args_in_line()
-		for arg in Pages.dropdown_dialog_arguments:
+		for arg in Pages.stringkit_dialog_arguments:
 			if arg in used_args:
 				continue
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, arg, str(arg, "|"))
@@ -265,7 +265,7 @@ func _on_text_box_caret_changed() -> void:
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
 		text_box.update_code_completion_options(true)
 	elif get_text_before_caret(1) == "|":
-		for a in Pages.dropdowns.get(Pages.auto_complete_context, []):
+		for a in Pages.stringkits.get(Pages.auto_complete_context, []):
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, a)
 		text_box.update_code_completion_options(true)
 	elif full_actor_before_caret and get_text_after_caret(1) == ":":
@@ -458,7 +458,7 @@ func is_text_after_caret(what:String):
 	return get_text_after_caret(what.length()) == what
 
 func _on_text_box_code_completion_requested() -> void:
-	for arg_name in Pages.dropdown_dialog_arguments:
+	for arg_name in Pages.stringkit_dialog_arguments:
 		if is_text_before_caret(str(arg_name, "|}")):
 			Pages.auto_complete_context = arg_name
 			set_caret_movement_to_do(-1)
@@ -728,13 +728,13 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 				Pages.editor.open_facts_window(tag.trim_prefix("<fact:").trim_suffix(">"))
 			elif not tag.is_empty():
 				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
-			elif word_under_caret in Pages.dropdown_titles:
-				Pages.editor.open_window_by_string("DropdownWindow")
+			elif word_under_caret in Pages.stringkit_titles:
+				Pages.editor.open_window_by_string("StringkitWindow")
 				return
 			else:
-				for dropdown : Array in Pages.dropdowns.values():
-					if word_under_caret in dropdown:
-						Pages.editor.open_window_by_string("DropdownWindow")
+				for stringkit : Array in Pages.stringkits.values():
+					if word_under_caret in stringkit:
+						Pages.editor.open_window_by_string("StringkitWindow")
 			
 
 func _on_import_ingest_from_clipboard() -> void:

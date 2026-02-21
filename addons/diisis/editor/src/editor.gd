@@ -386,7 +386,7 @@ func _shortcut_input(event):
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
-					open_popup($Popups.get_node("DropdownWindow"))
+					open_popup($Popups.get_node("StringkitWindow"))
 				KEY_H:
 					open_popup($Popups.get_node("DialogConfigWindow"))
 				KEY_R:
@@ -842,7 +842,7 @@ func _on_setup_id_pressed(id: int) -> void:
 		1:
 			open_popup($Popups.get_node("DialogConfigWindow"))
 		2:
-			open_popup($Popups.get_node("DropdownWindow"))
+			open_popup($Popups.get_node("StringkitWindow"))
 		3: # instr
 			open_popup($Popups.get_node("HandlerWindow"), true)
 		5: # facts

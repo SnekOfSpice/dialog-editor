@@ -20,9 +20,9 @@ func build(instruction_name: String, full_text:String, caret_column:int, on_node
 		var arg_name : String = arg_names[i]
 		var arg_type : String = DIISIS.type_to_str(arg_types[i])
 
-		var dropdowns : Array = Pages.custom_method_dropdown_limiters.get(instruction_name, {}).get(arg_name, [])
-		if not dropdowns.is_empty():
-			arg_type = ", ".join(dropdowns)
+		var stringkits : Array = Pages.custom_method_stringkit_limiters.get(instruction_name, {}).get(arg_name, [])
+		if not stringkits.is_empty():
+			arg_type = ", ".join(stringkits)
 		
 		var arg_default = arg_defaults.get(arg_name)
 		var arg_string := str(arg_name, " : [i][color=b88d86EE]", arg_type, "[/color][/i]")

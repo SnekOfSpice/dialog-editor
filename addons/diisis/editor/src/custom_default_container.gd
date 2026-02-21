@@ -4,7 +4,7 @@ extends Control
 
 var item_list : ItemList
 var arg_container : VBoxContainer
-var dropdown_container : VBoxContainer
+var stringkit_container : VBoxContainer
 
 var custom_defaults = {}
 var custom_limiters = {}
@@ -13,7 +13,7 @@ func init():
 	find_child("FuncNameLabel").text = ""
 	find_child("FuncNameContainer").visible = false
 	arg_container = find_child("ArgContainer")
-	dropdown_container = find_child("DropdownContainer")
+	stringkit_container = %StringkitContainer
 	clear_values_container()
 	find_child("SaveButton").text = str("save")
 	item_list = find_child("ItemList")
@@ -22,7 +22,7 @@ func init():
 	for method in Pages.get_all_instruction_names():
 		item_list.add_item(method)
 	custom_defaults = Pages.custom_method_defaults.duplicate(true)
-	custom_limiters = Pages.custom_method_dropdown_limiters.duplicate(true)
+	custom_limiters = Pages.custom_method_stringkit_limiters.duplicate(true)
 	if item_list.item_count > 0:
 		item_list.select(0)
 	find_child("Fuck").text = str("DEFAULTS\n", custom_defaults, "\n\nLIMITERS\n", custom_limiters)
@@ -37,7 +37,7 @@ func save_to_local_data():
 		custom_defaults[method_name] = default_data
 	else:
 		custom_defaults.erase(method_name)
-	var limiter_data : Dictionary = data.get("custom_method_dropdown_limiters", {})
+	var limiter_data : Dictionary = data.get("custom_method_stringkit_limiters", {})
 	if not limiter_data.is_empty() and not method_name.is_empty():
 		custom_limiters[method_name] = limiter_data
 	else:
@@ -73,7 +73,7 @@ func _on_go_to_script_button_pressed() -> void:
 func _on_save_button_pressed() -> void:
 	save_to_local_data()
 	Pages.custom_method_defaults = custom_defaults.duplicate(true)
-	Pages.custom_method_dropdown_limiters = custom_limiters.duplicate(true)
+	Pages.custom_method_stringkit_limiters = custom_limiters.duplicate(true)
 	find_child("SaveButton").text = "save"
 
 
@@ -84,7 +84,7 @@ func _on_func_name_label_item_rect_changed() -> void:
 
 func custom_equals() -> bool:
 	var defined_defaults : Dictionary = Pages.custom_method_defaults
-	var defined_limiters : Dictionary = Pages.custom_method_dropdown_limiters
+	var defined_limiters : Dictionary = Pages.custom_method_stringkit_limiters
 	return DiisisEditorUtil.dictionary_equals(defined_defaults, custom_defaults) and DiisisEditorUtil.dictionary_equals(defined_limiters, custom_limiters)
 
 
@@ -103,19 +103,19 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 		created_things.append(item)
 		item.init(method_name, arg_name)
 		item.deserialize(custom_defaults.get(method_name, {}).get(arg_name))
-		item.custom_minimum_size.y = DropdownTypeSelector.HEIGHT
+		item.custom_minimum_size.y = StringkitTypeSelector.HEIGHT
 		item.show_antenna(item.is_string)
 		
 		if item.is_string:
-			var selector : DropdownTypeSelector = preload("res://addons/diisis/editor/src/dropdown_type_selection.tscn").instantiate()
-			dropdown_container.add_child(selector)
+			var selector : StringkitTypeSelector = preload("res://addons/diisis/editor/src/stringkit_type_selection.tscn").instantiate()
+			stringkit_container.add_child(selector)
 			selector.init(method_name, arg_name)
 			selector.deserialize(custom_limiters.get(method_name, {}).get(arg_name, []))
 			created_things.append(selector)
 			has_string = true
 		else:
-			var spacer = dropdown_container.add_spacer(false)
-			spacer.custom_minimum_size.y = DropdownTypeSelector.HEIGHT
+			var spacer = stringkit_container.add_spacer(false)
+			spacer.custom_minimum_size.y = StringkitTypeSelector.HEIGHT
 	Pages.apply_font_size_overrides(self)
 	await get_tree().process_frame
 	
@@ -132,12 +132,12 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 		var limiter_head:Control
 		if has_string:
 			limiter_head = Label.new()
-			limiter_head.text = "Limit String to dropdowns"
+			limiter_head.text = "Limit String to stringkits"
 			limiter_head.add_theme_color_override("font_color", Color.CORAL)
 		else:
 			limiter_head = Control.new()
-		dropdown_container.add_child(limiter_head)
-		dropdown_container.move_child(limiter_head, 0)
+		stringkit_container.add_child(limiter_head)
+		stringkit_container.move_child(limiter_head, 0)
 	
 	# cant remember why but this needs to happen later (here) (not on instantiation)
 	for item in created_things:
@@ -145,9 +145,9 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 			item.updated.connect(_on_values_changed)
 			if item is DefaultArgumentItem:
 				if item.is_string:
-					item.text_updated.connect(validate_dropdown_defaults_from_arg)
-			if item is DropdownTypeSelector:
-				item.updated_selection.connect(validate_dropdown_defaults_from_dd)
+					item.text_updated.connect(validate_stringkit_defaults_from_arg)
+			if item is StringkitTypeSelector:
+				item.updated_selection.connect(validate_stringkit_defaults_from_dd)
 
 func get_argument_items() -> Array:
 	var result := []
@@ -155,10 +155,10 @@ func get_argument_items() -> Array:
 		if item is DefaultArgumentItem and is_instance_valid(item):
 			result.append(item)
 	return result
-func get_dropdown_items() -> Array:
+func get_stringkit_items() -> Array:
 	var result := []
-	for item in dropdown_container.get_children():
-		if item is DropdownTypeSelector and is_instance_valid(item):
+	for item in stringkit_container.get_children():
+		if item is StringkitTypeSelector and is_instance_valid(item):
 			result.append(item)
 	return result
 
@@ -167,30 +167,30 @@ func get_argument_item(arg:String) -> DefaultArgumentItem:
 		if item.arg == arg:
 			return item
 	return null
-func get_dropdown_item(arg:String) -> DropdownTypeSelector:
-	for item in get_dropdown_items():
+func get_stringkit_item(arg:String) -> StringkitTypeSelector:
+	for item in get_stringkit_items():
 		if item.arg == arg:
 			return item
 	return null
 
-func validate_dropdown_defaults_from_arg(arg:DefaultArgumentItem):
-	validate_dropdown_defaults(arg, get_dropdown_item(arg.arg))
-func validate_dropdown_defaults_from_dd(arg:DropdownTypeSelector):
-	validate_dropdown_defaults(get_argument_item(arg.arg), arg)
+func validate_stringkit_defaults_from_arg(arg:DefaultArgumentItem):
+	validate_stringkit_defaults(arg, get_stringkit_item(arg.arg))
+func validate_stringkit_defaults_from_dd(arg:StringkitTypeSelector):
+	validate_stringkit_defaults(get_argument_item(arg.arg), arg)
 
-func validate_dropdown_defaults(arg_item:DefaultArgumentItem, dropdown_item:DropdownTypeSelector):
+func validate_stringkit_defaults(arg_item:DefaultArgumentItem, stringkit_item:StringkitTypeSelector):
 	if arg_item.is_string:
-		var has_limiters : bool = not dropdown_item.serialize().is_empty()
+		var has_limiters : bool = not stringkit_item.serialize().is_empty()
 		var has_default : bool = arg_item.is_using_custom_default()
-		var is_option_invalid : bool = not is_option_in_dropdowns(arg_item.get_value(), dropdown_item.serialize())
-		arg_item.set_dropdown_error(
+		var is_option_invalid : bool = not is_option_in_stringkits(arg_item.get_value(), stringkit_item.serialize())
+		arg_item.set_stringkit_error(
 			has_default and has_limiters and is_option_invalid
 		)
 
-func is_option_in_dropdowns(query:String, dropdown_titles:Array) -> bool:
+func is_option_in_stringkits(query:String, stringkit_titles:Array) -> bool:
 	var valid_strings := []
-	for dd_name in dropdown_titles:
-		valid_strings.append_array(Pages.dropdowns.get(dd_name))
+	for dd_name in stringkit_titles:
+		valid_strings.append_array(Pages.stringkits.get(dd_name))
 		
 	return query in valid_strings
 
@@ -207,20 +207,20 @@ func serialize_values_container():
 			method_name = default.method
 			if default.is_using_custom_default():
 				method_defaults[arg_name] = default.get_value()
-		var limiters = dropdown_container.get_child(default_index)
-		if limiters is DropdownTypeSelector:
+		var limiters = stringkit_container.get_child(default_index)
+		if limiters is StringkitTypeSelector:
 			var data : Array = limiters.serialize().duplicate(true)
 			method_limiters[arg_name] = data
 	return {
 		"custom_method_defaults" : method_defaults,
 		"method" : method_name,
-		"custom_method_dropdown_limiters" : method_limiters,
+		"custom_method_stringkit_limiters" : method_limiters,
 	}
 
 func clear_values_container():
 	for child in arg_container.get_children():
 		child.queue_free()
-	for child in dropdown_container.get_children():
+	for child in stringkit_container.get_children():
 		child.queue_free()
 	await get_tree().process_frame
 

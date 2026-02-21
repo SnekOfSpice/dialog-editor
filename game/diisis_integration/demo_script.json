@@ -6,16 +6,10 @@
 		"custom_method_defaults": {
 
 		},
-		"custom_method_dropdown_limiters": {
-			"Sound.play_bgm": {
-				"bgm": []
-			},
+		"custom_method_stringkit_limiters": {
 			"Sound.play_sfx": {
+				"bus": [],
 				"sfx": []
-			},
-			"black_fade": {
-				"new_background": [],
-				"new_bgm": []
 			},
 			"call_from_string": {
 				"text": []
@@ -26,15 +20,6 @@
 			"chapter_break": {
 				"new_background": [],
 				"new_bgm": []
-			},
-			"clear_body_label_actor_wrappers": {
-				"actor": []
-			},
-			"cum": {
-				"voice": []
-			},
-			"execute": {
-				"instruction_text": []
 			},
 			"get_actor_config_property": {
 				"actor_key": [],
@@ -49,26 +34,14 @@
 			"get_past_line_rich_text_label": {
 				"text": []
 			},
-			"get_property_from_self_or_autoload": {
-				"property": []
-			},
 			"on_actor_name_changed": {
 				"actor": []
 			},
 			"on_instruction_started": {
 				"_instruction_text": []
 			},
-			"play_chapter_intro": {
-				"bgm": [],
-				"bottom_text": [],
-				"new_background": [],
-				"pov_name": []
-			},
 			"play_sfx": {
 				"_name": []
-			},
-			"replace_lc_tags": {
-				"full_line_text": []
 			},
 			"set_actor_color": {
 				"actor_key": []
@@ -86,23 +59,10 @@
 				"actor_name": []
 			},
 			"set_background": {
-				"_name": []
+				"new_bg_key": []
 			},
 			"set_bgm": {
 				"_name": []
-			},
-			"set_body_label_actor_wrappers": {
-				"actor": [],
-				"prefix": [],
-				"suffix": []
-			},
-			"set_body_label_prefix": {
-				"actor": [],
-				"prefix": []
-			},
-			"set_body_label_suffix": {
-				"actor": [],
-				"suffix": []
 			},
 			"set_cg": {
 				"cg_name": []
@@ -118,7 +78,7 @@
 				"new_name": []
 			},
 			"set_emotion": {
-				"actor_name": [],
+				"character_name": [],
 				"emotion_name": []
 			},
 			"set_name_prefix": {
@@ -127,48 +87,20 @@
 			"set_name_suffix": {
 				"suffix": []
 			},
-			"set_object_visible": {
-				"object_name": []
-			},
-			"set_text_style": {
-				"style": []
-			},
 			"set_x_position": {
 				"character_name": []
 			},
 			"show_cg": {
-				"_name": []
+				"cg_name": []
 			},
 			"show_character": {
 				"character_name": []
-			},
-			"trim_trimmables": {
-				"text": []
 			},
 			"update_name_label": {
 				"actor_name": []
 			}
 		},
 		"default_locale": "en_US",
-		"dropdown_dialog_arguments": [
-			"amber-emotion"
-		],
-		"dropdown_title_for_dialog_syntax": "character",
-		"dropdown_titles": [
-			"amber-emotion",
-			"character"
-		],
-		"dropdowns": {
-			"amber-emotion": [
-				"neutral",
-				"happy",
-				"sad"
-			],
-			"character": [
-				"narrator",
-				"amber"
-			]
-		},
 		"empty_strings_for_l10n": false,
 		"evaluator_modified_times": {
 			"res://game/autoloads/sound.tscn": 1742548751,
@@ -472,7 +404,7 @@
 
 			}
 		},
-		"id_counter": -9223372036854761453,
+		"id_counter": -9223372036854761333,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -1458,8 +1390,27 @@
 				"terminate": true
 			}
 		},
+		"stringkit_dialog_arguments": [
+			"amber-emotion"
+		],
+		"stringkit_title_for_dialog_syntax": "character",
+		"stringkit_titles": [
+			"amber-emotion",
+			"character"
+		],
+		"stringkits": {
+			"amber-emotion": [
+				"neutral",
+				"happy",
+				"sad"
+			],
+			"character": [
+				"narrator",
+				"amber"
+			]
+		},
 		"text_data": {
-			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow &amp; read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
+			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for <ruby:hello you faggot>downloading DIISIS</ruby>. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>To open said script, just press on the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] button in the top right corner inside Godot! <mp>Click there now to follow &amp; read along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called \"Facts\" to the option.\n[]>narrator: Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "Opinion on Amber?",
 			"1744987729.575--9223372036854775792": "",
 			"1744987729.575--9223372036854775793": "Yes I love her",

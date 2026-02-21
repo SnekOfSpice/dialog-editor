@@ -145,14 +145,14 @@ func move_line(line:Line, dir:int):
 func swap_pages(page_a:int, page_b:int):
 	Pages.swap_pages(page_a, page_b)
 
-func rename_dropdown_title(from:String, to:String):
-	Pages.rename_dropdown_title(from, to)
+func rename_stringkit_title(from:String, to:String):
+	Pages.rename_stringkit_title(from, to)
 	await get_tree().process_frame
 	
 	Pages.editor.refresh(false)
 
-func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:bool, replace_speaker:bool):
-	Pages.set_dropdown_options(dropdown_title, options, replace_in_text, replace_speaker)
+func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:bool, replace_speaker:bool):
+	Pages.set_stringkit_options(stringkit_title, options, replace_in_text, replace_speaker)
 	await get_tree().process_frame
 	
 	Pages.editor.refresh(false)

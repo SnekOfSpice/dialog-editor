@@ -46,7 +46,7 @@ func init(method_name:String, arg_name:String):
 	#prints("---------- initttttttttt", method_name, arg_name)
 	var override = Pages.custom_method_defaults.get(method_name, {}).get(arg_name)
 	set_use_custom_default(override != null)
-	set_dropdown_error(false)
+	set_stringkit_error(false)
 
 func deserialize(value):
 	#print("got ", value)
@@ -106,6 +106,6 @@ func _on_use_default_check_box_toggled(toggled_on: bool) -> void:
 func show_antenna(value:bool):
 	find_child("HSeparator").visible = value
 
-func set_dropdown_error(value:bool):
-	find_child("DropdownError").modulate.a = 1 if value else 0
+func set_stringkit_error(value:bool):
+	find_child("StringkitError").modulate.a = 1 if value else 0
 	find_child("HSeparator").self_modulate.v = .5 if value else 1

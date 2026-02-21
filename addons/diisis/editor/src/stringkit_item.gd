@@ -1,13 +1,13 @@
 @tool
 extends VBoxContainer
 
-var dropdown_options := []
+var stringkit_options := []
 var list_size:Vector2
 
 func get_string_contents(filter:="") -> String:
 	var search_content := ""
 	var title_contents := str(find_child("TitleLabel").text, get_line_edit_text())
-	var option_contents := str("".join(dropdown_options), find_child("DropdownOptionsText").text)
+	var option_contents := str("".join(stringkit_options), %StringkitOptionsText.text)
 	if filter.is_empty() or filter.to_lower() == "t":
 		search_content += title_contents
 	if filter.is_empty() or filter.to_lower() == "o":
@@ -16,7 +16,7 @@ func get_string_contents(filter:="") -> String:
 
 func update_speaker_label():
 	var title : String = find_child("TitleLabel").text
-	var is_speaker : bool = Pages.dropdown_title_for_dialog_syntax == title
+	var is_speaker : bool = Pages.stringkit_title_for_dialog_syntax == title
 	%ReplaceSpeakersCheckBox.visible = is_speaker
 	%SpeakerNotice.visible = is_speaker
 
@@ -31,8 +31,8 @@ func init(title:String):
 	find_child("Parameters").visible = false
 	find_child("DuplicateOptionsLabel").visible = false
 	find_child("DeleteParameters").visible = false
-	find_child("DeleteParametersButton").visible = Pages.dropdown_dialog_arguments.has(title)
-	dropdown_options = Pages.dropdowns.get(title)
+	find_child("DeleteParametersButton").visible = Pages.stringkit_dialog_arguments.has(title)
+	stringkit_options = Pages.stringkits.get(title)
 
 
 func _on_edit_button_pressed() -> void:
@@ -54,9 +54,9 @@ func _on_save_title_button_pressed() -> void:
 	find_child("EditContainer").visible = false
 	find_child("DisplayContainer").visible = true
 	var undo_redo = Pages.editor.undo_redo
-	undo_redo.create_action("Rename Dropdown Title")
-	undo_redo.add_do_method(DiisisEditorActions.rename_dropdown_title.bind(from, to))
-	undo_redo.add_undo_method(DiisisEditorActions.rename_dropdown_title.bind(to, from))
+	undo_redo.create_action("Rename Stringkit Title")
+	undo_redo.add_do_method(DiisisEditorActions.rename_stringkit_title.bind(from, to))
+	undo_redo.add_undo_method(DiisisEditorActions.rename_stringkit_title.bind(to, from))
 	undo_redo.commit_action()
 
 
@@ -68,7 +68,7 @@ func _on_discard_title_button_pressed() -> void:
 
 func _on_line_edit_text_changed(new_text: String) -> void:
 	set_save_options_button_disabled((find_child("TitleLabel").text != get_line_edit_text()) or find_child("EditContainer").visible)
-	if Pages.is_new_dropdown_title_invalid(DIISIS.trim_bilateral_spaces(new_text), find_child("TitleLabel").text):
+	if Pages.is_new_stringkit_title_invalid(DIISIS.trim_bilateral_spaces(new_text), find_child("TitleLabel").text):
 		find_child("SaveTitleButton").disabled = true
 		return
 	find_child("SaveTitleButton").disabled = false
@@ -76,14 +76,14 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 
 func _on_expand_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		find_child("DropdownOptionsText").text = "\n".join(dropdown_options)
+		%StringkitOptionsText.text = "\n".join(stringkit_options)
 		find_child("OptionsContainer").visible = true
 	else:
 		find_child("OptionsContainer").visible = false
 
 
-func _on_dropdown_options_text_text_changed() -> void:
-	var entered_args := Array(find_child("DropdownOptionsText").text.split("\n"))
+func _on_stringkit_options_text_text_changed() -> void:
+	var entered_args := Array(%StringkitOptionsText.text.split("\n"))
 	var args := []
 	var has_duplicate := false
 	for arg : String in entered_args:
@@ -100,7 +100,7 @@ func _on_dropdown_options_text_text_changed() -> void:
 	set_save_options_button_disabled((find_child("TitleLabel").text != get_line_edit_text()) or find_child("EditContainer").visible)
 	find_child("DuplicateOptionsLabel").visible = false
 	
-	if "".join(args) == "".join(dropdown_options):
+	if "".join(args) == "".join(stringkit_options):
 		find_child("SaveOptionsButton").text = "save options"
 		find_child("ExpandButton").disabled = false
 	else:
@@ -109,13 +109,13 @@ func _on_dropdown_options_text_text_changed() -> void:
 	
 
 func _on_discard_options_button_pressed() -> void:
-	var text_edit : TextEdit = find_child("DropdownOptionsText")
+	var text_edit : TextEdit = %StringkitOptionsText
 	var col = text_edit.get_caret_column()
 	var line = text_edit.get_caret_line()
 	
-	find_child("DropdownOptionsText").text = "\n".join(dropdown_options)
+	%StringkitOptionsText.text = "\n".join(stringkit_options)
 	find_child("ExpandButton").disabled = false
-	_on_dropdown_options_text_text_changed()
+	_on_stringkit_options_text_text_changed()
 	
 	text_edit.set_caret_column(col)
 	text_edit.set_caret_line(line)
@@ -124,7 +124,7 @@ func _on_discard_options_button_pressed() -> void:
 func _on_save_options_button_pressed() -> void:
 	var replace_speaker : bool = %ReplaceSpeakersCheckBox.button_pressed
 	var replace_in_text : bool = find_child("ReplaceInTextCheckBox").button_pressed
-	var entered_args = find_child("DropdownOptionsText").text.split("\n")
+	var entered_args = %StringkitOptionsText.text.split("\n")
 	var args := []
 	for arg : String in entered_args:
 		arg = DIISIS.trim_bilateral_spaces(arg)
@@ -132,10 +132,10 @@ func _on_save_options_button_pressed() -> void:
 			args.append(arg)
 	var title = find_child("TitleLabel").text
 	var undo_redo = Pages.editor.undo_redo
-	dropdown_options = args
-	undo_redo.create_action("Change Dropdown Options")
-	undo_redo.add_do_method(DiisisEditorActions.set_dropdown_options.bind(title, args, replace_in_text, replace_speaker))
-	undo_redo.add_undo_method(DiisisEditorActions.set_dropdown_options.bind(title, dropdown_options, replace_in_text, replace_speaker))
+	stringkit_options = args
+	undo_redo.create_action("Change Stringkit Options")
+	undo_redo.add_do_method(DiisisEditorActions.set_stringkit_options.bind(title, args, replace_in_text, replace_speaker))
+	undo_redo.add_undo_method(DiisisEditorActions.set_stringkit_options.bind(title, stringkit_options, replace_in_text, replace_speaker))
 	undo_redo.commit_action()
 	
 	find_child("OptionsContainer").visible = false
@@ -156,8 +156,8 @@ func _on_options_container_visibility_changed():
 		find_child("ExpandButton").text = "n"
 
 
-func _on_dropdown_options_text_resized() -> void:
-	var text_box_size : Vector2 = find_child("DropdownOptionsText").size
+func _on_stringkit_options_text_resized() -> void:
+	var text_box_size : Vector2 = %StringkitOptionsText.size
 	var scale_factor:float
 	if Pages.editor:
 		scale_factor = Pages.editor.content_scale
@@ -171,7 +171,7 @@ func _on_dropdown_options_text_resized() -> void:
 
 func set_list_size(s: Vector2):
 	list_size = s
-	_on_dropdown_options_text_resized()
+	_on_stringkit_options_text_resized()
 
 
 func _on_replace_in_text_check_box_toggled(toggled_on: bool) -> void:
@@ -183,11 +183,11 @@ func _on_save_parameters_button_pressed() -> void:
 
 
 func _on_delete_button_pressed() -> void:
-	if Pages.dropdown_title_for_dialog_syntax == find_child("TitleLabel").text:
-		Pages.editor.notify("Cannot delete speaker arg dropdown.")
+	if Pages.stringkit_title_for_dialog_syntax == find_child("TitleLabel").text:
+		Pages.editor.notify("Cannot delete speaker arg stringkit.")
 		return
 	var title = find_child("TitleLabel").text
-	Pages.delete_dropdown(title, find_child("EraseFromTextCheckBox").button_pressed)
+	Pages.delete_stringkit(title, find_child("EraseFromTextCheckBox").button_pressed)
 	queue_free()
 
 

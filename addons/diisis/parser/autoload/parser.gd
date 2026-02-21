@@ -36,8 +36,8 @@ var text_lead_time_other_actor := 0.0
 var _default_locale := "en_US"
 var locale := "en_US"
 var l10n := {}
-var dropdown_titles := []
-var dropdowns := {}
+var stringkit_titles := []
+var stringkits := {}
 var file_config := {}
 
 var line_reader : LineReader = null
@@ -55,7 +55,6 @@ var max_line_index_on_page := 0
 
 const MAX_LINE_LENGTH := 10
 
-enum DataTypes {_String, _DropDown, _Boolean}
 
 signal read_new_line(line)
 signal page_terminated(page_index: int)
@@ -123,12 +122,12 @@ func init(data:Dictionary):
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	starting_facts = facts.duplicate(true)
-	dropdown_titles = data.get("dropdown_titles", [])
-	dropdowns = data.get("dropdowns", {})
+	stringkit_titles = data.get("stringkit_titles", [])
+	stringkits = data.get("stringkits", {})
 	file_config = data.get("file_config", {})
 	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
 	Pages.custom_method_defaults = file_config.get("custom_method_defaults", {})
-	Pages.custom_method_dropdown_limiters = file_config.get("custom_method_dropdown_limiters", {})
+	Pages.custom_method_stringkit_limiters = file_config.get("custom_method_stringkit_limiters", {})
 	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")

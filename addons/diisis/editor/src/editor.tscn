@@ -232,7 +232,7 @@ item_count = 7
 item_0/text = "Edit"
 item_0/id = 0
 item_0/separator = true
-item_1/text = "Dropdowns    (D)"
+item_1/text = "Stringkits    (D)"
 item_1/id = 2
 item_2/text = "Functions & Variables    (R)"
 item_2/id = 3
@@ -671,9 +671,9 @@ visible = false
 theme_override_font_sizes/title_font_size = 16
 container_path = "uid://pq57xgpvu0ih"
 
-[node name="DropdownWindow" parent="Popups" unique_id=1010298652 instance=ExtResource("34_ajvyk")]
+[node name="StringkitWindow" parent="Popups" unique_id=1010298652 instance=ExtResource("34_ajvyk")]
 auto_translate_mode = 1
-title = "Dropdowns"
+title = "Stringkits"
 size = Vector2i(547, 530)
 visible = false
 theme_override_font_sizes/title_font_size = 16

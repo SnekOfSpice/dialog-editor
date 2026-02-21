@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cu1kulh4sfm2y"]
+[gd_scene format=3 uid="uid://cu1kulh4sfm2y"]
 
 [ext_resource type="Script" uid="uid://blfdmykhbt57l" path="res://addons/diisis/editor/src/default_argument_item.gd" id="1_i8fpr"]
 
@@ -15,38 +15,38 @@ expand_margin_top = 1.0
 expand_margin_right = 12.0
 expand_margin_bottom = 1.0
 
-[node name="HBoxContainer" type="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" unique_id=1667035157]
 offset_right = 40.0
 offset_bottom = 40.0
 size_flags_horizontal = 3
 script = ExtResource("1_i8fpr")
 
-[node name="ArgNameLabel" type="Label" parent="."]
+[node name="ArgNameLabel" type="Label" parent="." unique_id=1977305075]
 layout_mode = 2
 text = "arg name"
 
-[node name="AddButton" type="Button" parent="."]
+[node name="AddButton" type="Button" parent="." unique_id=83425097]
 layout_mode = 2
 text = "+"
 
-[node name="ValueContainer" type="HBoxContainer" parent="."]
+[node name="ValueContainer" type="HBoxContainer" parent="." unique_id=747411372]
 layout_mode = 2
 
-[node name="Edit" type="PanelContainer" parent="ValueContainer"]
+[node name="Edit" type="PanelContainer" parent="ValueContainer" unique_id=541462231]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="DeleteButton" type="Button" parent="ValueContainer"]
+[node name="DeleteButton" type="Button" parent="ValueContainer" unique_id=996247228]
 layout_mode = 2
 text = "-"
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="." unique_id=2094726010]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxFlat_3ugoh")
 
-[node name="DropdownError" type="Label" parent="HSeparator"]
+[node name="StringkitError" type="Label" parent="HSeparator" unique_id=218550017]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5

@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfwk1hhwqrp2n"]
+[gd_scene format=3 uid="uid://cfwk1hhwqrp2n"]
 
-[ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/dropdown_item.gd" id="1_sgb4l"]
+[ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/stringkit_item.gd" id="1_sgb4l"]
 [ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="2_210d5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_or1s3"]
@@ -16,7 +16,7 @@ border_width_bottom = 2
 border_color = Color(0.501961, 0.294118, 0.368627, 0.796078)
 border_blend = true
 
-[node name="Control" type="VBoxContainer"]
+[node name="Control" type="VBoxContainer" unique_id=1702936769]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,15 +24,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sgb4l")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1460327990]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=281338191]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="ExpandButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="ExpandButton" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=351096166]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 focus_mode = 0
@@ -41,40 +41,40 @@ theme_override_fonts/font = ExtResource("2_210d5")
 toggle_mode = true
 text = "q"
 
-[node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer"]
+[node name="DisplayContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer" unique_id=1886831999]
 layout_mode = 2
 
-[node name="EditButton" type="Button" parent="HBoxContainer/HBoxContainer/DisplayContainer"]
+[node name="EditButton" type="Button" parent="HBoxContainer/HBoxContainer/DisplayContainer" unique_id=1909021443]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
 text = "Edit"
 
-[node name="TitleLabel" type="Label" parent="HBoxContainer/HBoxContainer/DisplayContainer"]
+[node name="TitleLabel" type="Label" parent="HBoxContainer/HBoxContainer/DisplayContainer" unique_id=1009596163]
 layout_mode = 2
 text = "title"
 
-[node name="EditContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer"]
+[node name="EditContainer" type="HBoxContainer" parent="HBoxContainer/HBoxContainer" unique_id=1304055698]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SaveTitleButton" type="Button" parent="HBoxContainer/HBoxContainer/EditContainer"]
+[node name="SaveTitleButton" type="Button" parent="HBoxContainer/HBoxContainer/EditContainer" unique_id=28119731]
 layout_mode = 2
 size_flags_vertical = 0
 text = "save"
 
-[node name="LineEdit" type="LineEdit" parent="HBoxContainer/HBoxContainer/EditContainer"]
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer/HBoxContainer/EditContainer" unique_id=1557835799]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-placeholder_text = "dropdown title"
+placeholder_text = "stringkit title"
 
-[node name="DiscardTitleButton" type="Button" parent="HBoxContainer/HBoxContainer/EditContainer"]
+[node name="DiscardTitleButton" type="Button" parent="HBoxContainer/HBoxContainer/EditContainer" unique_id=2126726092]
 layout_mode = 2
 size_flags_vertical = 0
 text = "discard"
 
-[node name="SpeakerNotice" type="PanelContainer" parent="HBoxContainer/HBoxContainer"]
+[node name="SpeakerNotice" type="PanelContainer" parent="HBoxContainer/HBoxContainer" unique_id=1217040476]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0.721569)
 layout_mode = 2
@@ -83,56 +83,57 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_or1s3")
 
-[node name="Label" type="Label" parent="HBoxContainer/HBoxContainer/SpeakerNotice"]
+[node name="Label" type="Label" parent="HBoxContainer/HBoxContainer/SpeakerNotice" unique_id=627430017]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.992157, 0.678431, 0.513726, 0.839216)
 text = "Speaker"
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1478482125]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PanelContainer" unique_id=1905205635]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/PanelContainer/VBoxContainer" unique_id=1636821170]
 layout_mode = 2
 
-[node name="DeleteButton" type="Button" parent="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="DeleteButton" type="Button" parent="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2" unique_id=679850075]
 layout_mode = 2
 size_flags_horizontal = 10
 focus_mode = 0
 text = "Delete (NO UNDO)"
 
-[node name="DeleteParametersButton" type="Button" parent="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="DeleteParametersButton" type="Button" parent="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2" unique_id=1604979372]
 layout_mode = 2
 focus_mode = 0
 text = "..."
 
-[node name="DeleteParameters" type="HBoxContainer" parent="HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="DeleteParameters" type="HBoxContainer" parent="HBoxContainer/PanelContainer/VBoxContainer" unique_id=1883673206]
 layout_mode = 2
 
-[node name="EraseFromTextCheckBox" type="CheckBox" parent="HBoxContainer/PanelContainer/VBoxContainer/DeleteParameters"]
+[node name="EraseFromTextCheckBox" type="CheckBox" parent="HBoxContainer/PanelContainer/VBoxContainer/DeleteParameters" unique_id=505423719]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
 text = "Erase from Text"
 
-[node name="OptionsContainer" type="VBoxContainer" parent="."]
+[node name="OptionsContainer" type="VBoxContainer" parent="." unique_id=2022501248]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="OptionsContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="OptionsContainer" unique_id=1973889424]
 custom_minimum_size = Vector2(0, -80)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DropdownOptionsText" type="TextEdit" parent="OptionsContainer/ScrollContainer"]
+[node name="StringkitOptionsText" type="TextEdit" parent="OptionsContainer/ScrollContainer" unique_id=400674602]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 scroll_fit_content_height = true
 
-[node name="DuplicateOptionsLabel" type="RichTextLabel" parent="OptionsContainer"]
+[node name="DuplicateOptionsLabel" type="RichTextLabel" parent="OptionsContainer" unique_id=486243745]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
@@ -140,54 +141,54 @@ text = "[color=pink][center]Duplicate Options!"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer" unique_id=35884304]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="PanelContainer" type="PanelContainer" parent="OptionsContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="OptionsContainer/HBoxContainer" unique_id=910613703]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer" unique_id=802918856]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=257814338]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="SaveTitleWarning" type="Label" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveTitleWarning" type="Label" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1258311614]
 unique_name_in_owner = true
 layout_mode = 2
 text = "\"Cannot save options while editing title!\""
 
-[node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=9830907]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 disabled = true
 text = "save options"
 
-[node name="SaveParametersButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveParametersButton" type="Button" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=499869371]
 layout_mode = 2
 focus_mode = 0
 text = "..."
 
-[node name="Parameters" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Parameters" type="HBoxContainer" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=2064740801]
 layout_mode = 2
 
-[node name="ReplaceInTextCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters"]
+[node name="ReplaceInTextCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters" unique_id=1963699196]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
 text = "Adjust Text"
 
-[node name="ReplaceSpeakersCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters"]
+[node name="ReplaceSpeakersCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters" unique_id=825612418]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
 text = "Replace in Speakers"
 
-[node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer"]
+[node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer" unique_id=336660342]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 8
@@ -205,8 +206,8 @@ text = "discard changes"
 [connection signal="pressed" from="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/DeleteParametersButton" to="." method="_on_delete_parameters_button_pressed"]
 [connection signal="visibility_changed" from="OptionsContainer" to="." method="_on_options_container_visibility_changed"]
-[connection signal="resized" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_resized"]
-[connection signal="text_changed" from="OptionsContainer/ScrollContainer/DropdownOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
+[connection signal="resized" from="OptionsContainer/ScrollContainer/StringkitOptionsText" to="." method="_on_dropdown_options_text_resized"]
+[connection signal="text_changed" from="OptionsContainer/ScrollContainer/StringkitOptionsText" to="." method="_on_dropdown_options_text_text_changed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SaveOptionsButton" to="." method="_on_save_options_button_pressed"]
 [connection signal="pressed" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SaveParametersButton" to="." method="_on_save_parameters_button_pressed"]
 [connection signal="toggled" from="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters/ReplaceInTextCheckBox" to="." method="_on_replace_in_text_check_box_toggled"]

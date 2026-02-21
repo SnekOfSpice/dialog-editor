@@ -172,7 +172,7 @@ func get_address() -> String:
 
 func set_page_view(view:DiisisEditor.PageView):
 	var default_container : Control = get_default_line_container()
-	var default_dropdown : CheckBox = find_child("DefaultApparenceSelectionButton")
+	var default_stringkit : CheckBox = find_child("DefaultApparenceSelectionButton")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
 	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.Minimal
@@ -181,7 +181,7 @@ func set_page_view(view:DiisisEditor.PageView):
 	find_child("LoopbackPanelContainer").visible = view != DiisisEditor.PageView.Minimal
 	
 	if view == DiisisEditor.PageView.Full:
-		default_dropdown.visible = true
+		default_stringkit.visible = true
 		buttons.columns = 1
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL

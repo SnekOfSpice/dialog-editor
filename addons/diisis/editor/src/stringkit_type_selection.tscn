@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://c5u8s8734nrbw"]
+
+[ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_ei4ls"]
+[ext_resource type="Script" uid="uid://bmhh4yycopkbe" path="res://addons/diisis/editor/src/stringkit_type_selection.gd" id="1_smtj4"]
+
+[node name="StringkitTypeSelection" type="MarginContainer" unique_id=341802302]
+custom_minimum_size = Vector2(24, 24)
+offset_right = 156.0
+offset_bottom = 24.0
+size_flags_vertical = 0
+theme = ExtResource("1_ei4ls")
+script = ExtResource("1_smtj4")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=285627767]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=384738233]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="PanelContainer/HBoxContainer" unique_id=1276567241]
+visible = false
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="PanelContainer/HBoxContainer" unique_id=1198200441]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/HBoxContainer" unique_id=300519185]
+layout_mode = 2
+size_flags_vertical = 0
+columns = 4
