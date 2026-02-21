@@ -9,7 +9,7 @@ var block_next_flash_highlight := true
 
 const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
-const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
+const BBCODE_LINE_READER := "[img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]"
 
 
 var embedded: bool:

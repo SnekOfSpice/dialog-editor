@@ -31,6 +31,7 @@
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
 [ext_resource type="PackedScene" uid="uid://dgxh31xj7a6ei" path="res://addons/diisis/editor/src/facts_popup.tscn" id="32_378lj"]
 [ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
+[ext_resource type="PackedScene" uid="uid://dsytvj51tyel4" path="res://addons/diisis/editor/src/update_available.tscn" id="34_378lj"]
 [ext_resource type="PackedScene" uid="uid://dy0ea1htdu04v" path="res://addons/diisis/editor/src/windows/generic_subwindow.tscn" id="34_ajvyk"]
 [ext_resource type="PackedScene" uid="uid://b81gsltqnausa" path="res://addons/diisis/editor/src/windows/text_export_window.tscn" id="34_m63dd"]
 
@@ -64,6 +65,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
 
 [node name="Core" type="VBoxContainer" parent="ScrollContainer" unique_id=1211561382]
 clip_contents = true
@@ -74,6 +77,7 @@ size_flags_vertical = 3
 [node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core" unique_id=1687821056]
 visible = false
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "any test functionality"
 
 [node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core" unique_id=1941519239]
@@ -109,11 +113,13 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=1072692679]
+custom_minimum_size = Vector2(295, 0)
 layout_mode = 2
 
 [node name="RefreshButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1059368916]
 visible = false
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Refresh"
 
 [node name="UndoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=859003155]
@@ -121,6 +127,7 @@ layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Undo (Ctrl+Z when not focued on a text label.)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 icon = ExtResource("3_mqy67")
 
 [node name="RedoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1463127554]
@@ -128,16 +135,21 @@ layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Redo (Ctrl+Y when not focued on a text label.)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 icon = ExtResource("4_eueb5")
 
 [node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=585253380]
 layout_mode = 2
 theme = ExtResource("1_nb6ej")
+theme_override_font_sizes/font_size = 16
 prefer_global_menu = false
 
 [node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1021917216]
+unique_name_in_owner = true
 size = Vector2i(159, 228)
 content_scale_aspect = 4
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 4
 item_0/text = "New    (N)"
 item_0/id = 9
@@ -149,6 +161,8 @@ item_3/text = "Open    (O)"
 item_3/id = 2
 
 [node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" unique_id=1686074836]
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 3
 item_0/text = "Select Locales..."
 item_0/id = 0
@@ -158,6 +172,9 @@ item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
 [node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=5012722]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 6
 item_0/text = "Reload DIISIS editor"
 item_0/id = 0
@@ -173,8 +190,11 @@ item_5/text = "Open wiki (opens browser)"
 item_5/id = 5
 
 [node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=747755189]
+unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(209, 100)
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 7
 item_0/text = "Search"
 item_0/id = 6
@@ -194,6 +214,9 @@ item_6/text = "Step through pages"
 item_6/id = 3
 
 [node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" unique_id=549865233]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 2
 item_0/text = "Entire Script"
 item_0/id = 0
@@ -201,8 +224,11 @@ item_1/text = "Current Page"
 item_1/id = 1
 
 [node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1569031650]
+unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(113, 197)
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 9
 item_0/text = "Edit"
 item_0/id = 0
@@ -234,13 +260,13 @@ size_flags_vertical = 0
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 14
 text = "<"
 
 [node name="LastUndoStepLabel" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=147750605]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 14
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=19488174]
 layout_mode = 2
@@ -253,6 +279,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 text = "err"
 
@@ -262,6 +289,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_colors/default_color = Color(0.9, 0.27, 0.291, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 bbcode_enabled = true
 
 [node name="PageControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=1009905370]
@@ -285,7 +317,7 @@ size_flags_vertical = 8
 tooltip_text = "Go to first page
 (Ctrl+Alt+Left)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 text = "|<"
 
 [node name="Prev" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=361981923]
@@ -295,7 +327,7 @@ size_flags_vertical = 8
 tooltip_text = "Go to previous page
 (Alt+Left)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 text = "<"
 
 [node name="GoTo" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1604811142 instance=ExtResource("4_m6c15")]
@@ -307,7 +339,7 @@ size_flags_vertical = 8
 tooltip_text = "Go to next page
 (Alt+Right)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 text = ">"
 
 [node name="Last" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1630940154]
@@ -316,12 +348,12 @@ size_flags_vertical = 8
 tooltip_text = "Go to last page
 (Ctrl+Alt+Right)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 text = ">|"
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=2069447735]
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "navigation"
 horizontal_alignment = 1
 
@@ -344,7 +376,7 @@ size_flags_stretch_ratio = 3.91
 tooltip_text = "Add page after
 (Alt+S)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 icon = ExtResource("7_m63dd")
 
 [node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=700582887]
@@ -353,13 +385,13 @@ size_flags_vertical = 8
 tooltip_text = "Add page to end
 (Shift+Alt+S)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 icon = ExtResource("8_ajvyk")
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=960116116]
 auto_translate_mode = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "pages"
 horizontal_alignment = 1
 
@@ -379,6 +411,7 @@ layout_mode = 2
 tooltip_text = "Add Line (Ctrl+A)
 Adds a line to the end of the current page."
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 icon = ExtResource("7_67kpi")
 icon_alignment = 1
 
@@ -389,6 +422,7 @@ layout_mode = 2
 layout_mode = 2
 tooltip_text = "Text (Ctrl+1)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("4_dg3k4")
@@ -400,6 +434,7 @@ script = ExtResource("3_2h0gj")
 layout_mode = 2
 tooltip_text = "Choice (Ctrl+2)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
 icon = ExtResource("7_0rrj6")
@@ -412,6 +447,7 @@ custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
 icon = ExtResource("14_m63dd")
@@ -424,6 +460,7 @@ line_type = 2
 layout_mode = 2
 tooltip_text = "Folder (Ctrl+4)"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_group = ExtResource("4_dg3k4")
 icon = ExtResource("9_mh3o1")
@@ -434,7 +471,7 @@ line_type = 3
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=1617129894]
 auto_translate_mode = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "lines"
 horizontal_alignment = 1
 
@@ -458,6 +495,7 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 tooltip_text = "Page view: Full"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("6_5vieb")
@@ -471,6 +509,7 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 tooltip_text = "Page view: Truncated"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_group = ExtResource("6_5vieb")
 icon = ExtResource("9_o3byv")
@@ -484,6 +523,7 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 tooltip_text = "Page view: Minimal"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 toggle_mode = true
 button_group = ExtResource("6_5vieb")
 icon = ExtResource("10_qli38")
@@ -496,12 +536,13 @@ unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Font Size"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 allow_reselect = true
 
 [node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=2127840181]
 auto_translate_mode = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "view"
 horizontal_alignment = 1
 
@@ -591,38 +632,49 @@ filters = PackedStringArray("*.txt")
 visible = false
 exclusive = false
 content_scale_aspect = 1
+theme_override_font_sizes/title_font_size = 30
 
 [node name="MovePagePopup" parent="Popups" unique_id=1758037149 instance=ExtResource("7_w8mdv")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="FileConfigPopup" parent="Popups" unique_id=1884869694 instance=ExtResource("19_rgmxs")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="LocaleSelectionWindow" parent="Popups" unique_id=915491831 instance=ExtResource("20_nu372")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="ChangeTextIDWindow" parent="Popups" unique_id=1583914933 instance=ExtResource("29_jb16f")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="IncomingReferencesWindow" parent="Popups" unique_id=2001101176 instance=ExtResource("30_rtywk")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="HandlerWindow" parent="Popups" unique_id=1946967425 instance=ExtResource("32_24jcx")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="IngestionActorSetupWindow" parent="Popups" unique_id=642674317 instance=ExtResource("33_378lj")]
 size = Vector2i(400, 1695)
 visible = false
+theme_override_font_sizes/title_font_size = 16
 
 [node name="TextExportWindow" parent="Popups" unique_id=638562642 instance=ExtResource("34_m63dd")]
 visible = false
+theme_override_font_sizes/title_font_size = 16
 
 [node name="TextImportWindow" parent="Popups" unique_id=890143595 instance=ExtResource("31_24jcx")]
 visible = false
+theme_override_font_sizes/title_font_size = 16
 
 [node name="ActorSearchWindow" parent="Popups" unique_id=522262892 instance=ExtResource("34_ajvyk")]
 title = "Actor Search"
 visible = false
+theme_override_font_sizes/title_font_size = 16
 container_path = "uid://pq57xgpvu0ih"
 
 [node name="DropdownWindow" parent="Popups" unique_id=1010298652 instance=ExtResource("34_ajvyk")]
@@ -630,6 +682,7 @@ auto_translate_mode = 1
 title = "Dropdowns"
 size = Vector2i(547, 530)
 visible = false
+theme_override_font_sizes/title_font_size = 16
 container_path = "uid://djiaiay3ntvfy"
 
 [node name="TextSearchPopup" parent="Popups" unique_id=627008366 instance=ExtResource("34_ajvyk")]
@@ -637,24 +690,29 @@ auto_translate_mode = 1
 title = "Search Text"
 size = Vector2i(730, 400)
 visible = false
+theme_override_font_sizes/title_font_size = 16
 container_path = "uid://stb4ad3iost2"
 
 [node name="PunctuationRulesWindow" parent="Popups" unique_id=1361573881 instance=ExtResource("34_ajvyk")]
 title = "Punctuation & Replacement Rules"
 size = Vector2i(800, 400)
 visible = false
+theme_override_font_sizes/title_font_size = 16
 container_path = "uid://cn0rmafav1qh5"
 
 [node name="FactsPopup" parent="Popups" unique_id=1390228242 instance=ExtResource("32_378lj")]
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="DialogConfigWindow" parent="Popups" unique_id=1071477606 instance=ExtResource("34_ajvyk")]
 title = "Dialog Config"
 visible = false
+theme_override_font_sizes/title_font_size = 16
 container_path = "uid://cqfaywphjr2k2"
 
 [node name="ArgHint" parent="." unique_id=2017472624 instance=ExtResource("28_g0iye")]
 size = Vector2i(12, 10)
+theme_override_font_sizes/title_font_size = 30
 
 [node name="OpeningCover" type="ColorRect" parent="." unique_id=1500427879]
 visible = false
@@ -681,9 +739,14 @@ offset_right = 200.0
 offset_bottom = 138.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m63dd")
 bbcode_enabled = true
-text = "[img=200]uid://cakx4eotyolmx[/img]
+text = "[img=200]res://addons/diisis/logos/legacy_DONTUSE/icon2 fade2 512.png[/img]
 [font_size=28][b]Opening DIISIS
 please wait :3"
 fit_content = true
@@ -718,9 +781,14 @@ grow_vertical = 2
 [node name="Label" type="RichTextLabel" parent="ImportingCover/VBoxContainer" unique_id=1158805052]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m63dd")
 bbcode_enabled = true
-text = "[img=200]uid://cakx4eotyolmx[/img]
+text = "[img=200]res://addons/diisis/logos/legacy_DONTUSE/icon2 fade2 512.png[/img]
 [font_size=28][b]Importing, please wait >.<"
 fit_content = true
 scroll_active = false
@@ -729,9 +797,43 @@ horizontal_alignment = 1
 [node name="ImportProgressLabel" type="Label" parent="ImportingCover/VBoxContainer" unique_id=648780226]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 14
 text = "Booting up import..."
 horizontal_alignment = 1
+
+[node name="EmbedHint" type="ColorRect" parent="." unique_id=296431943]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22.58)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.12941177, 0.12941177, 0.12941177, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="EmbedHint" unique_id=1366185523]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 20.0
+grow_horizontal = 2
+
+[node name="FilePathLabel" type="Label" parent="EmbedHint/HBoxContainer" unique_id=1291232123]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UpdateAvailable" parent="EmbedHint/HBoxContainer" unique_id=1361638744 instance=ExtResource("34_378lj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="SillyCompanionEmbedLabel" type="Label" parent="EmbedHint/HBoxContainer" unique_id=1307989342]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]

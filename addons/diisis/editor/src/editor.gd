@@ -30,6 +30,8 @@ enum PageView {
 	Minimal
 }
 
+var embed_init := false
+
 
 signal scale_editor_up()
 signal scale_editor_down()
@@ -67,7 +69,6 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 func init(active_file_path:="") -> void:
-	print("e1")
 	Pages.editor = self
 	set_opening_cover_visible(true)
 	set_importing_cover_visible(false)
@@ -85,7 +86,7 @@ func init(active_file_path:="") -> void:
 	
 	update_controls()
 	
-	var text_size_button : OptionButton = find_child("TextSizeButton")
+	var text_size_button : OptionButton = %TextSizeButton
 	text_size_button.clear()
 	
 	for s in Pages.FONT_SIZES:
@@ -99,12 +100,10 @@ func init(active_file_path:="") -> void:
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	update_undo_redo_buttons()
 	
-	print("e2")
-	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
 		popup.exclusive = false
-		popup.always_on_top = true
+		popup.always_on_top = not DiisisEditorUtil.embedded
 		popup.wrap_controls = true
 		popup.transient = false
 		popup.popup_window = false
@@ -113,7 +112,7 @@ func init(active_file_path:="") -> void:
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
-	var file_item : PopupMenu = find_child("File")
+	var file_item : PopupMenu = %File
 	file_item.add_separator()
 	file_item.add_item("Import    (Shift+I)", 6)
 	file_item.add_item("Export    (Shift+E)", 5)
@@ -124,10 +123,12 @@ func init(active_file_path:="") -> void:
 	file_item.add_item("Open with Ctrl + ...")
 	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
-	var utility_item : PopupMenu = find_child("Utility")
+	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
+	
+	var utility_item : PopupMenu = %Utility
 	if Pages.silly:
 		utility_item.add_separator("Silly")
-		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
+		utility_item.add_submenu_node_item("Find in Library of Babel", %LibraryOfBabel)
 	utility_item.add_item("Open with Ctrl + ...")
 	utility_item.set_item_disabled(utility_item.item_count - 1, true)
 	
@@ -169,10 +170,15 @@ func init(active_file_path:="") -> void:
 		if Pages.evaluator_paths.is_empty():
 			Pages.evaluator_paths = get_line_reader_scripts()
 	
+	%EmbedHint.visible = DiisisEditorUtil.embedded
+	if DiisisEditorUtil.embedded:
+		%FilePathLabel.text = active_file_path
+		%UpdateAvailable.check_for_updates()
+		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
 	if not DiisisEditorUtil.embedded:
 		var cam := Camera2D.new()
-		print("ADDING CAM")
 		add_child(cam)
+	
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
@@ -718,7 +724,7 @@ func open_facts_window(fact_to_select:=""):
 	var window := open_window_by_string("FactsPopup")
 	window.get_child(0).select_fact(fact_to_select)
 
-# opens opoup if active_dir isn't set, otherwise saves to file
+# opens popup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
 	if active_dir.is_empty():
 		open_save_popup()
@@ -749,7 +755,7 @@ func _on_file_id_pressed(id: int) -> void:
 			open_window_by_string("TextImportWindow")
 		#8:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
-			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
+			#%File.set_item_checked(9, Pages.empty_strings_for_l10n)
 		9:
 			emit_signal("open_new_file")
 
@@ -1161,15 +1167,15 @@ func align_menu_item(menu_item:PopupMenu):
 	menu_item.size *= content_scale * 1.01
 
 func _on_file_visibility_changed() -> void:
-	align_menu_item(find_child("File"))
+	align_menu_item(%File)
 
 
 func _on_setup_visibility_changed() -> void:
-	align_menu_item(find_child("Setup"))
+	align_menu_item(%Setup)
 
 
 func _on_utility_visibility_changed() -> void:
-	align_menu_item(find_child("Utility"))
+	align_menu_item(%Utility)
 
 
 func _on_show_errors_button_toggled(toggled_on: bool) -> void:

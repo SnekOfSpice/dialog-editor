@@ -50,7 +50,7 @@ func _on_about_to_popup() -> void:
 		await get_tree().process_frame
 		update_content_scale(scale)
 	await get_tree().process_frame
-	find_child("UpdateAvailable").check_for_updates()
+	%UpdateAvailable.check_for_updates()
 
 func _on_close_requested() -> void:
 	if is_instance_valid(editor):

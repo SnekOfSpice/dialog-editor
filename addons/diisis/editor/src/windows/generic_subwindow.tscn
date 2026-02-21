@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dy0ea1htdu04v"]
+[gd_scene format=3 uid="uid://dy0ea1htdu04v"]
 
 [ext_resource type="Script" uid="uid://dh3gr3d7j5w0k" path="res://addons/diisis/editor/src/windows/generic_subwindow.gd" id="1_utn4q"]
 
-[node name="GenericSubwindow" type="Window"]
+[node name="GenericSubwindow" type="Window" unique_id=511013998]
+oversampling_override = 1.0
 script = ExtResource("1_utn4q")
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
