@@ -15,13 +15,13 @@ func init():
 		var container = HBoxContainer.new()
 		var button = CheckBox.new()
 		button.toggled.connect(Pages.set_setting.bind(setting))
-		var label = Label.new()
-		label.text = Pages.TOGGLE_SETTINGS.get(setting)
+		#var label = Label.new()
+		#label.text = Pages.TOGGLE_SETTINGS.get(setting)
 		container.add_child(button)
-		container.add_child(label)
-		button.mouse_entered.connect(label.set.bind("visible", true))
-		button.mouse_exited.connect(label.set.bind("visible", false))
-		label.visible = false
+		#container.add_child(label)
+		button.mouse_entered.connect(request_hint.bind(button, Pages.TOGGLE_SETTINGS.get(setting)))
+		button.mouse_exited.connect(%Hint.set.bind("text", ""))
+		#label.visible = false
 		find_child("ToggleSettings").add_child(container)
 		button.button_pressed = Pages.get(setting)
 		button.text = setting.capitalize()
@@ -46,6 +46,14 @@ func init():
 	
 	$TabContainer.current_tab = 0
 
+
+func request_hint(on:Button, with_text : String):
+	var target :float= on.global_position.y - %ToggleSettings.position.y - on.size.y
+	var t = create_tween()
+	t.tween_property(%HintSpacer, "custom_minimum_size:y", target, 0.04).set_trans(Tween.TRANS_CUBIC)
+	#%HintSpacer.custom_minimum_size.y = 
+	print(on.global_position)
+	%Hint.text = with_text
 
 func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void:
 	Pages.default_address_mode_pages = mode

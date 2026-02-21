@@ -30,6 +30,7 @@ name_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextCon
 choice_title_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceLabel")
 choice_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel")
 choice_list = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceList")
+ruby_size_mode = 2
 
 [node name="Background" type="Node2D" parent="." unique_id=1256561869]
 unique_name_in_owner = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bl3r0kwwycrmw"]
+[gd_scene format=3 uid="uid://bl3r0kwwycrmw"]
 
 [ext_resource type="Script" uid="uid://subqq2sc1dmq" path="res://addons/diisis/editor/src/page.gd" id="1_2lug2"]
 [ext_resource type="Texture2D" uid="uid://c5jprlaidnag" path="res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_goto.png" id="2_2dyyr"]
@@ -24,15 +24,15 @@ border_blend = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yg0hh"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gmiuk"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vobab"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mg67t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xj8yh"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mg67t"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vobab"]
 
-[node name="Page" type="VBoxContainer"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gmiuk"]
+
+[node name="Page" type="VBoxContainer" unique_id=135503408]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -41,26 +41,26 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_2lug2")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1834488159]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m6srl")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=148204414]
 layout_mode = 2
 
-[node name="Info" type="HBoxContainer" parent="PanelContainer/HBoxContainer"]
+[node name="Info" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=851636733]
 custom_minimum_size = Vector2(550, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer/Info"]
+[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer/Info" unique_id=1409418502]
 layout_mode = 2
 tooltip_text = "Skip"
 theme_type_variation = &"Special"
 theme_override_icons/checked = ExtResource("2_vubmj")
 theme_override_icons/unchecked = ExtResource("2_ykglj")
 
-[node name="IncomingReferences" type="RichTextLabel" parent="PanelContainer/HBoxContainer/Info"]
+[node name="IncomingReferences" type="RichTextLabel" parent="PanelContainer/HBoxContainer/Info" unique_id=1235529911]
 self_modulate = Color(1, 1, 1, 0.639216)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -73,60 +73,60 @@ scroll_active = false
 autowrap_mode = 0
 meta_underlined = false
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/Info"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/Info" unique_id=750656136]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="LineSelector" type="CheckBox" parent="PanelContainer/HBoxContainer/Info/MarginContainer"]
+[node name="LineSelector" type="CheckBox" parent="PanelContainer/HBoxContainer/Info/MarginContainer" unique_id=1288883830]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 focus_mode = 0
 
-[node name="PageKeyEditContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Info"]
+[node name="PageKeyEditContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Info" unique_id=444598413]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer" unique_id=1664791906]
 layout_mode = 2
 
-[node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer"]
+[node name="PageKeyEditButton" type="CheckButton" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer" unique_id=1493552651]
 visible = false
 layout_mode = 2
 size_flags_vertical = 4
 text = "edit page key"
 
-[node name="Number" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer"]
+[node name="Number" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer" unique_id=1044008835]
 layout_mode = 2
 tooltip_text = "Page index (address[0])"
 mouse_filter = 1
 theme_override_font_sizes/font_size = 16
 text = "0"
 
-[node name="Seperator" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer"]
+[node name="Seperator" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer" unique_id=2102306856]
 visible = false
 layout_mode = 2
 text = "|"
 
-[node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer"]
+[node name="PageKeyLineEdit" type="LineEdit" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer" unique_id=1769543353]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Edit page key (click or Ctrl+E)
 [Escape] to cancel
 [Enter] to save"
-theme_override_colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
-theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.682353, 0.270588, 0.603922)
 theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 16
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_yg0hh")
 keep_editing_on_text_submit = true
 expand_to_text_length = true
 
-[node name="PageKeyWarning" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer/PageKeyLineEdit"]
+[node name="PageKeyWarning" type="Label" parent="PanelContainer/HBoxContainer/Info/PageKeyEditContainer/PageKeyLineEdit" unique_id=884840151]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 5.0
@@ -135,33 +135,33 @@ offset_right = 45.0
 offset_bottom = 1.0
 theme_override_colors/font_color = Color(0.932674, 0.293872, 0.497917, 1)
 
-[node name="TerminateCheck" type="CheckBox" parent="PanelContainer/HBoxContainer/Info"]
+[node name="TerminateCheck" type="CheckBox" parent="PanelContainer/HBoxContainer/Info" unique_id=1865979944]
 self_modulate = Color(1, 1, 1, 0.737255)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Terminate: Terminates the page, stopping the parser from reading the next one automatically, emitting page_terminated.
 Useful for dialog scenes that are broken up with other gameplay and the endings of visual novels."
 focus_mode = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_gmiuk")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_vobab")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_xj8yh")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mg67t")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_xj8yh")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_vobab")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gmiuk")
 theme_override_icons/checked = ExtResource("3_m7kjo")
 theme_override_icons/unchecked = ExtResource("2_2dyyr")
 
-[node name="NextContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Info"]
+[node name="NextContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Info" unique_id=426184162]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/Info/NextContainer"]
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/Info/NextContainer" unique_id=1874780845]
 visible = false
 layout_mode = 2
 text = "->"
 
-[node name="NextLineEdit" type="SpinBox" parent="PanelContainer/HBoxContainer/Info/NextContainer"]
+[node name="NextLineEdit" type="SpinBox" parent="PanelContainer/HBoxContainer/Info/NextContainer" unique_id=1229577782]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="NextKey" type="RichTextLabel" parent="PanelContainer/HBoxContainer/Info/NextContainer"]
+[node name="NextKey" type="RichTextLabel" parent="PanelContainer/HBoxContainer/Info/NextContainer" unique_id=1662142868]
 self_modulate = Color(1, 1, 1, 0.815686)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -175,62 +175,61 @@ scroll_active = false
 autowrap_mode = 0
 meta_underlined = false
 
-[node name="AddressModeButton" parent="PanelContainer/HBoxContainer/Info" node_paths=PackedStringArray("address_source") instance=ExtResource("4_rsy28")]
+[node name="AddressModeButton" parent="PanelContainer/HBoxContainer/Info" unique_id=259103624 node_paths=PackedStringArray("address_source") instance=ExtResource("4_rsy28")]
 layout_mode = 2
 address_source = NodePath("../../../..")
 address_function = "get_next"
 
-[node name="Facts" parent="PanelContainer/HBoxContainer/Info" instance=ExtResource("2_eeb01")]
+[node name="Facts" parent="PanelContainer/HBoxContainer/Info" unique_id=720547428 instance=ExtResource("2_eeb01")]
 layout_mode = 2
 address_depth = 0
 
-[node name="Deletion" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
+[node name="Deletion" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=1879090632]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="DeleteButton" type="Button" parent="PanelContainer/HBoxContainer/Deletion"]
+[node name="DeleteButton" type="Button" parent="PanelContainer/HBoxContainer/Deletion" unique_id=1064513585]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 icon = ExtResource("6_yg0hh")
 
-[node name="DeletePromptContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Deletion"]
+[node name="DeletePromptContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/Deletion" unique_id=1622212768]
 visible = false
 layout_mode = 2
 
-[node name="DeleteConfirmLabel" type="Label" parent="PanelContainer/HBoxContainer/Deletion/DeletePromptContainer"]
+[node name="DeleteConfirmLabel" type="Label" parent="PanelContainer/HBoxContainer/Deletion/DeletePromptContainer" unique_id=2114608334]
 layout_mode = 2
 text = "Press again to delete"
 
-[node name="CancelDeletionButton" type="Button" parent="PanelContainer/HBoxContainer/Deletion/DeletePromptContainer"]
+[node name="CancelDeletionButton" type="Button" parent="PanelContainer/HBoxContainer/Deletion/DeletePromptContainer" unique_id=1871654222]
 layout_mode = 2
 text = "Cancel Page Deletion"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(0, 530)
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1006303991]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="GoToHighlight" parent="MarginContainer" instance=ExtResource("10_3lfos")]
+[node name="GoToHighlight" parent="MarginContainer" unique_id=546247761 instance=ExtResource("10_3lfos")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1542544868]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=70106463]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Lines" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="Lines" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=1866248699]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=172265541]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 mouse_filter = 2

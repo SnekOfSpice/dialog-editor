@@ -327,6 +327,8 @@ func open_new_file():
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 	add_new_dialog_editor_window()
 	if _embedded:
+		await get_tree().process_frame
+		_make_visible(true)
 		return
 	if FileAccess.file_exists("user://import_override_temp.json"):
 		dia_editor_window.file_path = "user://import_override_temp.json"

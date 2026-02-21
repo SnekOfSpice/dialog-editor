@@ -182,7 +182,6 @@ func init(active_file_path:="") -> void:
 	
 	%EmbedHint.visible = DiisisEditorUtil.embedded
 	if DiisisEditorUtil.embedded:
-		%FilePathLabel.text = active_file_path
 		%UpdateAvailable.check_for_updates()
 		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
 	if not DiisisEditorUtil.embedded:
@@ -594,6 +593,8 @@ func open_from_path(path:String):
 		set_opening_cover_visible(false)
 		return
 	
+	%FilePathLabel.text = path
+	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
@@ -706,10 +707,12 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.content_scale_factor = content_scale
 	popup.size *= content_scale
 
+
 func hide_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)
 	window.close_requested.emit()
 	return window
+
 
 func open_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)

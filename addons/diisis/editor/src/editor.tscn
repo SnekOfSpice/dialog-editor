@@ -248,6 +248,8 @@ item_6/id = 6
 
 [node name="TemplatesMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
 unique_name_in_owner = true
+theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_separator_size = 16
 item_count = 1
 item_0/text = "Visual Novel"
 item_0/id = 0
@@ -653,7 +655,7 @@ visible = false
 theme_override_font_sizes/title_font_size = 30
 
 [node name="IngestionActorSetupWindow" parent="Popups" unique_id=642674317 instance=ExtResource("33_378lj")]
-size = Vector2i(400, 1695)
+size = Vector2i(400, 1741)
 visible = false
 theme_override_font_sizes/title_font_size = 16
 
@@ -818,16 +820,23 @@ grow_horizontal = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
 
 [node name="UpdateAvailable" parent="EmbedHint/HBoxContainer" unique_id=1361638744 instance=ExtResource("34_378lj")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 
 [node name="SillyCompanionEmbedLabel" type="Label" parent="EmbedHint/HBoxContainer" unique_id=1307989342]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 14
 
 [connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]

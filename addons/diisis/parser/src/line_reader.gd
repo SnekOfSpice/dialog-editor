@@ -1706,7 +1706,7 @@ func _handle_tags_and_start_reading():
 					push_warning("Empty ruby!")
 				else:
 					_ruby_strings.append(tag_string.trim_prefix("<ruby:").trim_suffix(">"))
-					_ruby_indices.append(Vector2i(scan_index, tag_end)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
+					_ruby_indices.append(Vector2i(scan_index-tag_buffer, tag_end-tag_buffer)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
 				# for some reason this erasure doesn't register here already so we have to leftshift the end tag erasure manually by the tag length
 				bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
@@ -1719,7 +1719,7 @@ func _handle_tags_and_start_reading():
 			while k < _ruby_indices.size():
 				var indices : Vector2i = _ruby_indices[k]
 				if indices.y > scan_index and tag_buffer_gained > 0:
-					_ruby_indices[k] = Vector2i(indices.x, indices.y - tag_buffer_gained)
+					_ruby_indices[k] = Vector2i(indices.x , indices.y - tag_buffer_gained)
 				k += 1
 		
 		_text_speed_by_character_index.append(text_speed_override)
@@ -1795,15 +1795,16 @@ func _handle_tags_and_start_reading():
 func _ensure_ruby_container(on_label:=body_label):
 	if not ruby_containers_by_label.get(on_label):
 		var ruby_root = ScrollContainer.new()
+		ruby_root.clip_contents = false
 		ruby_root.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 		ruby_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_root.focus_mode = Control.FOCUS_NONE
 		ruby_root.custom_minimum_size = on_label.size
 		ruby_roots_by_label[on_label] = ruby_root
-		var vbox = VBoxContainer.new()
-		vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		vbox.focus_mode = Control.FOCUS_NONE
-		vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		#var vbox = VBoxContainer.new()
+		#vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		#vbox.focus_mode = Control.FOCUS_NONE
+		#vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_container.focus_mode = Control.FOCUS_NONE
@@ -1811,10 +1812,10 @@ func _ensure_ruby_container(on_label:=body_label):
 		ruby_container.custom_minimum_size = on_label.size
 		ruby_containers_by_label[on_label] = ruby_container
 		
-		ruby_root.add_child(vbox)
-		vbox.add_child(ruby_container)
-		var spacer := vbox.add_spacer(false)
-		spacer.custom_minimum_size.y = 1000
+		ruby_root.add_child(ruby_container)
+		#vbox.add_child(ruby_container)
+		#var spacer := vbox.add_spacer(false)
+		#spacer.custom_minimum_size.y = 1000
 		
 		on_label.add_child(ruby_root)
 
@@ -1845,10 +1846,11 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 	_body_duplicate_line_height = _body_duplicate.get_content_height()
 	
 	var ruby_index := 0
+	print(ruby_indices)
 	for ruby_range : Vector2i in ruby_indices:
 		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x, on_label)
 		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y, on_label)
-		
+		printt(start_draw_pos, end_draw_pos)
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
 		var ruby_string : String = ruby_strings[ruby_index]
@@ -1965,6 +1967,7 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	if ruby_font_override:
 		ruby_label.set_font(ruby_font_override)
 	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
+	ruby_containers_by_label.get(on_label).size = Vector2.ZERO
 	ruby_containers_by_label.get(on_label).add_child(ruby_label)
 	if on_label == body_label:
 		_ruby_labels.append(ruby_label)
@@ -2181,10 +2184,28 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 	_body_duplicate.custom_minimum_size = on_label.custom_minimum_size
 	_body_duplicate.size = on_label.size
 	
+	
+	var hjdfgjdf := body_label.get_parsed_text().substr(0, index)
+	
+	
+	var label_font : Font = body_label.get_theme_font("normal_font", "RichTextLabel")
+	var fontsize : int = body_label.get_theme_font_size( "normal_font_size", "RichTextLabel",)
+	var h := label_font.get_multiline_string_size(
+		body_label.get_parsed_text().substr(0, index),HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
+		fontsize
+	)
+	
+	var linerange := body_label.get_line_range(body_label.get_character_line(index))
+	
+	var h2 := label_font.get_multiline_string_size(
+		body_label.get_parsed_text().substr(linerange.x, linerange.y - linerange.x),HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
+		fontsize
+	)
+	
 	if index == 0:
 		_body_duplicate.visible_characters = 1
-		return Vector2(0, _body_duplicate.get_content_height())
-	if index > on_label.get_parsed_text().length():
+		return Vector2(0, _body_duplicate.get_visible_content_rect().size.y)
+	if index > on_label.get_parsed_text().length()+1:
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
 		return Vector2.ZERO
 	
@@ -2192,7 +2213,7 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 	var line_sum := 0
 	
 	_body_duplicate.visible_characters = index
-	var height : int = _body_duplicate.get_content_height() 
+	var height : int = _body_duplicate.get_content_height()
 	
 	# get target line
 	_body_duplicate.visible_characters = index
@@ -2209,7 +2230,13 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 	_body_duplicate.text = trailing_line
 	var width : int = _body_duplicate.get_content_width()
 	
-	return Vector2(width, height)
+	var w := label_font.get_multiline_string_size(
+		trailing_line,HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
+		body_label.get_theme_default_font_size()
+	)
+	printt("wwww ",h, w)
+	
+	return Vector2(h.x, h2.y)##Vector2(w.x, h.y)
 
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
