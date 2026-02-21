@@ -277,13 +277,6 @@ func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 	
 	return result
 
-func get_dropdown_strings_from_header_values(values:=[0,0]) -> Array:
-	var result = ["", ""]
-	var title = dropdown_titles[values[0]]
-	var value = dropdowns.get(title)[values[1]]
-	result[0] = title
-	result[1] = value
-	return result
 
 func get_page_number(key:String) -> int:
 	return page_keys.find(key)

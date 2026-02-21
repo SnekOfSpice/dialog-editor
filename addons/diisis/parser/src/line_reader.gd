@@ -884,8 +884,6 @@ func _read_new_line(new_line: Dictionary):
 			emit_signal("line_finished", last_line_index)
 			return
 	
-	_handle_header(_line_data.get("header"))
-	
 	var raw_content = _line_data.get("content")
 	var content = _line_data.get("content").get("content")
 	var content_address
@@ -2598,27 +2596,6 @@ func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 			conditional_is_true = true_facts.size() >= args[0] and true_facts.size() <= args[1]
 	
 	return [conditional_is_true, behavior]
-
-
-func _handle_header(header: Array):
-	var header_data := {}
-	for prop in header:
-		var data_type = prop.get("data_type")
-		var property_name = prop.get("property_name")
-		var values : Array = prop.get("values")
-		
-		var actual_value
-		match int(data_type):
-			Pages.DataTypes._String:
-				actual_value = str(values[0])
-			Pages.DataTypes._DropDown:
-				actual_value = Parser.get_dropdown_strings_from_header_values(values)
-			Pages.DataTypes._Boolean:
-				actual_value = bool(values[0])
-		
-		header_data[property_name] = actual_value
-	
-	ParserEvents.new_header.emit(header_data)
 
 
 func _set_dialog_line_index(value: int):

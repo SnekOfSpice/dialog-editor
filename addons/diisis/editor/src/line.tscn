@@ -1,8 +1,7 @@
-[gd_scene load_steps=30 format=3 uid="uid://b53i8f73mqi3r"]
+[gd_scene format=3 uid="uid://b53i8f73mqi3r"]
 
 [ext_resource type="Script" uid="uid://bpc55ta1uccyf" path="res://addons/diisis/editor/src/line.gd" id="1_6i1bg"]
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_viyfr"]
-[ext_resource type="PackedScene" uid="uid://c23v82ojiuvbs" path="res://addons/diisis/editor/src/header.tscn" id="2_qs17t"]
 [ext_resource type="PackedScene" uid="uid://bgvfjindfxypf" path="res://addons/diisis/editor/src/facts.tscn" id="3_01wq6"]
 [ext_resource type="PackedScene" uid="uid://bixawifxp2bsf" path="res://addons/diisis/editor/src/go_to_highlight.tscn" id="3_f4r4p"]
 [ext_resource type="PackedScene" uid="uid://btcdvjuk2ku18" path="res://addons/diisis/editor/src/choice_container.tscn" id="3_jjtdq"]
@@ -49,7 +48,7 @@ border_blend = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_22pel"]
 
-[node name="Line" type="VBoxContainer" groups=["diisis_page_view_sensitive"]]
+[node name="Line" type="VBoxContainer" unique_id=2128780960 groups=["diisis_page_view_sensitive"]]
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.369
@@ -61,48 +60,48 @@ focus_mode = 2
 theme = ExtResource("1_viyfr")
 script = ExtResource("1_6i1bg")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=483191380]
 layout_mode = 2
 focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k5f2i")
 
-[node name="GoToHighlight" parent="PanelContainer" instance=ExtResource("3_f4r4p")]
+[node name="GoToHighlight" parent="PanelContainer" unique_id=98985741 instance=ExtResource("3_f4r4p")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=845210018]
 layout_mode = 2
 
-[node name="IndentContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
+[node name="IndentContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer" unique_id=1686053324]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer" unique_id=899850954]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="IndentMargin" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
+[node name="IndentMargin" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer" unique_id=562629500]
 layout_mode = 2
 
-[node name="IndentTexture" type="TextureRect" parent="PanelContainer/HBoxContainer/MarginContainer/IndentMargin"]
+[node name="IndentTexture" type="TextureRect" parent="PanelContainer/HBoxContainer/MarginContainer/IndentMargin" unique_id=1250544183]
 layout_mode = 2
 texture = SubResource("GradientTexture2D_rtjbl")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer" unique_id=812543279]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1488576621]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer" unique_id=2012378501]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=511463848]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1891968960]
 layout_mode = 2
 
-[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="SkipCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1166892926]
 layout_mode = 2
 size_flags_horizontal = 0
 tooltip_text = "Skip line in Parser"
@@ -111,11 +110,11 @@ theme_type_variation = &"Special"
 theme_override_icons/checked = ExtResource("3_ly3u8")
 theme_override_icons/unchecked = ExtResource("4_hl0su")
 
-[node name="IndexSpacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="IndexSpacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1961491625]
 custom_minimum_size = Vector2(14, 0)
 layout_mode = 2
 
-[node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer/IndexSpacer"]
+[node name="IndexLabel" type="Label" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer/IndexSpacer" unique_id=1067046499]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -129,31 +128,30 @@ tooltip_text = "Line index (address[1])"
 mouse_filter = 1
 text = "99"
 
-[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
+[node name="AddressSelectActionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=195397491 node_paths=PackedStringArray("status_panels") instance=ExtResource("3_k7b5x")]
 layout_mode = 2
 size_flags_vertical = 3
-address_depth = 1
 status_panels = [NodePath("../../../../PanelContainer"), NodePath("../../../../../../..")]
 
-[node name="HBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=2100265942]
 layout_mode = 2
 
-[node name="MoveControlsContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="MoveControlsContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=976408288]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ynk1p")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer" unique_id=1752932598]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer" unique_id=1590988839]
 layout_mode = 2
 
-[node name="Controls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
+[node name="Controls" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer" unique_id=1908046755]
 layout_mode = 2
 
-[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+[node name="HeadVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls" unique_id=1790573327]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
@@ -163,118 +161,111 @@ focus_mode = 0
 button_pressed = true
 icon = ExtResource("11_mgljy")
 
-[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+[node name="ConditionalsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls" unique_id=1731842373]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 icon = ExtResource("4_4weov")
 
-[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls"]
+[node name="FactsVisibilityToggle" type="CheckButton" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls" unique_id=94221182]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
 icon = ExtResource("5_hfdyk")
 
-[node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer"]
+[node name="MoveControlsButtonContainer" type="GridContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer" unique_id=1166048616]
 layout_mode = 2
 columns = 2
 
-[node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="MoveUp" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer" unique_id=10971285]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Move up"
 focus_mode = 0
 icon = ExtResource("4_1c1vd")
 
-[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="InsertLineAbove" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer" unique_id=963680803]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Add above"
 focus_mode = 0
 icon = ExtResource("7_gphhn")
 
-[node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="MoveDown" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer" unique_id=915613751]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Move down"
 focus_mode = 0
 icon = ExtResource("5_pyps8")
 
-[node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer"]
+[node name="InsertLineBelow" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/MoveControlsButtonContainer" unique_id=1085037806]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Add below"
 focus_mode = 0
 icon = ExtResource("9_f7stu")
 
-[node name="LoopbackReferenceLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="LoopbackReferenceLabel" type="RichTextLabel" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1642749235]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 meta_underlined = false
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1516800197]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_d3j1g")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=1244941173]
 layout_mode = 2
 
-[node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Content" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=425591378]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HeaderContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
-layout_mode = 2
-
-[node name="Header" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/HeaderContainer" node_paths=PackedStringArray("toggle_button") instance=ExtResource("2_qs17t")]
-layout_mode = 2
-toggle_button = NodePath("../../../../../MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/HeadVisibilityToggle")
-
-[node name="Conditionals" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_pymyd")]
+[node name="Conditionals" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" unique_id=1354619149 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_pymyd")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../../../MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/ConditionalsVisibilityToggle")
 
-[node name="Facts" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_01wq6")]
+[node name="Facts" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" unique_id=916696356 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("3_01wq6")]
 layout_mode = 2
 visibility_toggle_button = NodePath("../../../../MarginContainer/VBoxContainer/HBoxContainer/MoveControlsContainer/VBoxContainer/HBoxContainer/Controls/FactsVisibilityToggle")
 
-[node name="SelectAllInRangeButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
+[node name="SelectAllInRangeButton" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" unique_id=1760048033]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Select all in folder range"
-theme_override_styles/hover_pressed = ExtResource("3_o6quh")
-theme_override_styles/hover = ExtResource("3_o6quh")
-theme_override_styles/pressed = ExtResource("3_o6quh")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_22pel")
+theme_override_styles/pressed = ExtResource("3_o6quh")
+theme_override_styles/hover = ExtResource("3_o6quh")
+theme_override_styles/hover_pressed = ExtResource("3_o6quh")
 icon = ExtResource("14_22pel")
 
-[node name="Content" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content"]
+[node name="Content" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content" unique_id=741282519]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextContent" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_ty44c")]
+[node name="TextContent" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" unique_id=1593231871 instance=ExtResource("3_ty44c")]
 layout_mode = 2
 
-[node name="ChoiceContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("3_jjtdq")]
+[node name="ChoiceContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" unique_id=460151961 instance=ExtResource("3_jjtdq")]
 layout_mode = 2
 
-[node name="InstructionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("4_phdce")]
+[node name="InstructionContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" unique_id=1229100601 instance=ExtResource("4_phdce")]
 layout_mode = 2
 
-[node name="FolderContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" instance=ExtResource("9_23thg")]
+[node name="FolderContainer" parent="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/Content/Content" unique_id=1231839459 instance=ExtResource("9_23thg")]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="PanelContainer"]
+[node name="Control" type="Control" parent="PanelContainer" unique_id=670655691]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="DeleteContainer" type="MarginContainer" parent="PanelContainer/Control"]
+[node name="DeleteContainer" type="MarginContainer" parent="PanelContainer/Control" unique_id=1602682971]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -286,14 +277,14 @@ size_flags_horizontal = 10
 mouse_filter = 2
 theme_override_constants/margin_top = 9
 
-[node name="DeleteButton" type="Button" parent="PanelContainer/Control/DeleteContainer"]
+[node name="DeleteButton" type="Button" parent="PanelContainer/Control/DeleteContainer" unique_id=1456461279]
 z_index = 4
 layout_mode = 2
 tooltip_text = "Delete line"
 focus_mode = 0
 icon = ExtResource("13_f7stu")
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="." unique_id=2085912469]
 layout_mode = 2
 
 [connection signal="toggled" from="PanelContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer/SkipCheckBox" to="." method="set_skip"]

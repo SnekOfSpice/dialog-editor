@@ -388,7 +388,7 @@ func _shortcut_input(event):
 				KEY_D:
 					open_popup($Popups.get_node("DropdownWindow"))
 				KEY_H:
-					open_popup($Popups.get_node("HeaderPopup"))
+					open_popup($Popups.get_node("DialogConfigWindow"))
 				KEY_R:
 					open_popup($Popups.get_node("HandlerWindow"), true)
 				KEY_Z:
@@ -651,10 +651,6 @@ func add_line_to_end_of_page(data:={}):
 	undo_redo.commit_action()
 
 
-func _on_header_popup_update() -> void:
-	await get_tree().process_frame
-	get_current_page().update()
-
 func _on_instruction_definition_timer_timeout() -> void:
 	update_error_text_box()
 
@@ -843,9 +839,9 @@ func _on_utility_id_pressed(id: int) -> void:
 
 func _on_setup_id_pressed(id: int) -> void:
 	match id:
-		1: # header
-			open_popup($Popups.get_node("HeaderPopup"))
-		2: # dd
+		1:
+			open_popup($Popups.get_node("DialogConfigWindow"))
+		2:
 			open_popup($Popups.get_node("DropdownWindow"))
 		3: # instr
 			open_popup($Popups.get_node("HandlerWindow"), true)

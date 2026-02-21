@@ -472,7 +472,6 @@
 
 			}
 		},
-		"head_defaults": [],
 		"id_counter": -9223372036854761453,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
@@ -528,13 +527,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.520--9223372036854774776",
 						"line_type": 2,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 0,
 						"meta.selector": {
 							"selected": false
@@ -569,13 +566,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.621--9223372036854774767",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 1,
 						"meta.selector": {
 							"selected": false
@@ -707,13 +702,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.763--9223372036854774754",
 						"line_type": 1,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 2,
 						"meta.selector": {
 							"selected": false
@@ -755,13 +748,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.822--9223372036854774749",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 3,
 						"meta.selector": {
 							"selected": false
@@ -803,13 +794,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.881--9223372036854774744",
 						"line_type": 0,
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 4,
 						"meta.selector": {
 							"selected": false
@@ -844,13 +833,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999497.931--9223372036854774739",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 5,
 						"meta.selector": {
 							"selected": false

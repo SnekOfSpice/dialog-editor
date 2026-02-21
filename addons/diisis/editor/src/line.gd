@@ -14,7 +14,6 @@ signal delete_line
 func init() -> void:
 	%GoToHighlight.self_modulate.a = 0
 	grab_focus()
-	find_child("Header").init()
 	find_child("Conditionals").init()
 	find_child("Facts").init()
 	find_child("TextContent").init()
@@ -29,8 +28,6 @@ func init() -> void:
 	find_child("InsertLineBelow").custom_minimum_size.y = control_button_height
 	
 	await get_tree().process_frame
-	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
-	set_head_editable(Pages.is_header_schema_empty())
 	
 	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"), _on_delete_button_mouse_exited)
 
@@ -39,8 +36,6 @@ func set_page_view(view:DiisisEditor.PageView):
 	var move_controls_buttons : GridContainer = move_controls.find_child("MoveControlsButtonContainer")
 	move_controls.visible = view != DiisisEditor.PageView.Minimal
 	#find_child("LoopbackReferenceLabel").visible = view == DiisisEditor.PageView.Full and not find_child("LoopbackReferenceLabel").text.is_empty()
-	find_child("HeadVisibilityToggle").visible = view != DiisisEditor.PageView.Minimal
-	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	if view == DiisisEditor.PageView.Full:
 		move_controls_buttons.columns = 2
 		#move_controls.find_child("Spacer").visible = true
@@ -107,15 +102,13 @@ func set_line_type(value: int):
 	if line_type == DIISIS.LineType.Folder:
 		find_child("DeleteButton").tooltip_text = "Click to delete folder.\nShift + Click to delete folder + contents."
 
+
 func move_choice_item_by_index(at_index:int, direction:int):
 	if line_type != DIISIS.LineType.Choice:
 		push_warning("trying to move choice item of nonchoice line")
 		return
 	find_child("ChoiceContainer").move_choice_item_by_index(at_index, direction)
 
-func set_head_editable(value: bool):
-	find_child("Header").set_editable(value)
-	find_child("HeadVisibilityToggle").button_pressed = value
 
 func set_skip(value:bool):
 	modulate.a = 0.6 if value else 1
@@ -129,11 +122,10 @@ func set_skip(value:bool):
 			if line:
 				line.set_skip_folder_override(value)
 
+
 func set_skip_folder_override(value:bool):
 	modulate.a = 0.6 if value or find_child("SkipCheckBox").button_pressed else 1
 
-func get_is_head_editable():
-	return find_child("Header").is_editable
 
 func serialize() -> Dictionary:
 	if not id:
@@ -142,11 +134,8 @@ func serialize() -> Dictionary:
 	var data = {}
 	
 	data["line_type"] = int(line_type)
-	data["header"] = find_child("Header").serialize()
 	data["facts"] = find_child("Facts").serialize()
 	data["conditionals"] = find_child("Conditionals").serialize()
-	#data["meta.visible"] = find_child("VisibleToggle").button_pressed
-	data["meta.is_head_editable"] = get_is_head_editable()
 	data["meta.line_index"] = get_index()
 	data["meta.facts_visible"] = find_child("FactsVisibilityToggle").button_pressed
 	data["meta.conditionals_visible"] = find_child("ConditionalsVisibilityToggle").button_pressed
@@ -174,12 +163,9 @@ func deserialize(data: Dictionary):
 	set_line_type(data.get("line_type", Pages.editor.get_selected_line_type()))
 	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
 	
-	# header
-	find_child("HeadVisibilityToggle").visible = not Pages.is_header_schema_empty()
 	find_child("FactsVisibilityToggle").button_pressed = data.get("meta.facts_visible", false)
 	find_child("ConditionalsVisibilityToggle").button_pressed = data.get("meta.conditionals_visible", false)
 	
-	find_child("Header").deserialize(data.get("header", []))
 	find_child("Facts").deserialize(data.get("facts", {}))
 	find_child("Conditionals").deserialize(data.get("conditionals", {}))
 	
@@ -201,10 +187,6 @@ func deserialize(data: Dictionary):
 			find_child("FolderContainer").deserialize(data.get("content", {}))
 			set_indent_level(data.get("meta.indent_level", 0))
 	
-	#var a = data.get("meta.is_head_editable")
-	#if not a:
-		#a = false
-	set_head_editable(data.get("meta.is_head_editable", false))
 	id = data.get("id", Pages.get_new_id())
 	set_skip(data.get("skip", false))
 
@@ -214,8 +196,6 @@ func get_choice_item_count() -> int:
 	
 	return find_child("ChoiceContainer").get_choice_item_count()
 
-func _on_head_visibility_toggle_toggled(button_pressed: bool) -> void:
-	set_head_editable(button_pressed)
 
 func set_selected(value:bool):
 	find_child("AddressSelectActionContainer").set_selected(value)
@@ -250,7 +230,6 @@ func update():
 	for i in range(1, indent_level + 1):
 		indent += ">"
 	find_child("IndexLabel").text = str(get_index(), indent)
-	set_head_editable(get_is_head_editable())
 	if line_type == DIISIS.LineType.Choice:
 		find_child("ChoiceContainer").update()
 	elif line_type == DIISIS.LineType.Text:

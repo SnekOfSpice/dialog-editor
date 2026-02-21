@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://byog66ete7xr3" path="res://addons/diisis/editor/visuals/theme/buttons_ui/redo.png" id="4_eueb5"]
 [ext_resource type="PackedScene" uid="uid://bxsq5rsj1i12f" path="res://addons/diisis/editor/src/go_to.tscn" id="4_m6c15"]
 [ext_resource type="Texture2D" uid="uid://cneqtkwtfwwmw" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png" id="5_cfai3"]
-[ext_resource type="PackedScene" uid="uid://cp0ob2ul8hv0n" path="res://addons/diisis/editor/src/header_popup.tscn" id="5_k116e"]
 [ext_resource type="ButtonGroup" uid="uid://47f4hgcrt6xj" path="res://addons/diisis/editor/src/page_view_button_group.tres" id="6_5vieb"]
 [ext_resource type="Texture2D" uid="uid://vwtk21imr2ax" path="res://addons/diisis/editor/visuals/theme/buttons_ui/icon_choice.png" id="7_0rrj6"]
 [ext_resource type="Script" uid="uid://chvelp1kqeoya" path="res://addons/diisis/editor/src/page_view_button.gd" id="7_7syci"]
@@ -37,7 +36,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
-[node name="Editor" type="Control" unique_id=816289720]
+[node name="DialogConfigWindow" type="Control" unique_id=816289720]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,25 +228,23 @@ auto_translate_mode = 1
 size = Vector2i(113, 197)
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
-item_count = 8
+item_count = 7
 item_0/text = "Edit"
 item_0/id = 0
 item_0/separator = true
-item_1/text = "Header    (H)"
-item_1/id = 1
-item_2/text = "Dropdowns    (D)"
-item_2/id = 2
-item_3/text = "Functions & Variables    (R)"
-item_3/id = 3
-item_4/text = "Dialog Config"
-item_4/id = 8
-item_5/text = "View"
-item_5/id = 4
-item_5/separator = true
-item_6/text = "Facts    (Shift+F)"
-item_6/id = 5
-item_7/text = "Pages    (T)"
-item_7/id = 6
+item_1/text = "Dropdowns    (D)"
+item_1/id = 2
+item_2/text = "Functions & Variables    (R)"
+item_2/id = 3
+item_3/text = "Dialog Config    (H)"
+item_3/id = 8
+item_4/text = "View"
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Facts    (Shift+F)"
+item_5/id = 5
+item_6/text = "Pages    (T)"
+item_6/id = 6
 
 [node name="TemplatesMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
 unique_name_in_owner = true
@@ -631,12 +628,6 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.txt")
 
-[node name="HeaderPopup" parent="Popups" unique_id=1265586781 instance=ExtResource("5_k116e")]
-visible = false
-exclusive = false
-content_scale_aspect = 1
-theme_override_font_sizes/title_font_size = 30
-
 [node name="MovePagePopup" parent="Popups" unique_id=1758037149 instance=ExtResource("7_w8mdv")]
 visible = false
 theme_override_font_sizes/title_font_size = 30
@@ -870,7 +861,6 @@ size_flags_horizontal = 8
 [connection signal="file_selected" from="Popups/FDMergeL10N" to="." method="_on_fd_merge_l_10n_file_selected"]
 [connection signal="file_selected" from="Popups/FDOpen" to="." method="_on_fd_open_file_selected"]
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
-[connection signal="update" from="Popups/HeaderPopup" to="." method="_on_header_popup_update"]
 [connection signal="go_to" from="Popups/MovePagePopup" to="." method="request_load_page"]
 [connection signal="close_requested" from="Popups/FileConfigPopup" to="." method="_on_file_config_popup_close_requested"]
 [connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]

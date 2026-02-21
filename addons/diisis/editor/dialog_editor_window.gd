@@ -35,7 +35,6 @@ func _on_about_to_popup() -> void:
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
-		print("w2")
 		var scale : float = config.get_value("editor", "content_scale", 1.0)
 		find_child("WindowFactorScale").set_value(scale)
 		size = config.get_value("editor", "size", size)

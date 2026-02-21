@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://cn0rmafav1qh5"]
+[gd_scene format=3 uid="uid://cn0rmafav1qh5"]
 
 [ext_resource type="Script" uid="uid://d37r3puwhy6fr" path="res://addons/diisis/editor/src/windows/punctuation_rules.gd" id="1_pcvla"]
 [ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_looju"]
 
-[node name="PunctuationRules" type="Control"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_looju"]
+
+[node name="PunctuationRules" type="Control" unique_id=623177646]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pcvla")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=332127804]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,73 +22,76 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=460055936]
 layout_mode = 2
 text = "General punctuation rules"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1142819985]
 layout_mode = 2
 
-[node name="PeriodCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+[node name="PeriodCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=1173837787]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Append periods"
 
-[node name="ApostropheCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+[node name="ApostropheCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=251510854]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 button_pressed = true
 text = "Fix common apostrophes"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1194883807]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=929636615]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=864264378]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=835501177]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=272854230]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_looju")
 text = "Replacement rules applied when \"Fix Punctuation\" gets called on Ingestion (Text Lines) or Importing (File)."
+fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=728569241]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 
-[node name="AddRuleButton" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+[node name="AddRuleButton" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1960803654]
 layout_mode = 2
 size_flags_horizontal = 8
 icon = ExtResource("2_looju")
 
-[node name="SaveRulesButton" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+[node name="SaveRulesButton" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=344857880]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "save"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=1009175120]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ReplacementRules" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer"]
+[node name="ReplacementRules" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer" unique_id=2030401008]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1948221255]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="ShrineLabel" type="Label" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="ShrineLabel" type="Label" parent="VBoxContainer/PanelContainer/HBoxContainer" unique_id=1752839440]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -95,7 +100,7 @@ theme_type_variation = &"WhisperLabel"
 text = "i will build a shrine to myself even if it kills me X it wont"
 vertical_alignment = 1
 
-[node name="AddDefaultsButton" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="AddDefaultsButton" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer" unique_id=422285509]
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Defaults"
@@ -105,4 +110,5 @@ icon = ExtResource("2_looju")
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ApostropheCheckBox" to="." method="_on_period_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/AddRuleButton" to="." method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/SaveRulesButton" to="." method="_on_save_rules_button_pressed"]
+[connection signal="item_rect_changed" from="VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer/ReplacementRules" to="." method="_on_replacement_rules_item_rect_changed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/AddDefaultsButton" to="." method="_on_add_defaults_button_pressed"]

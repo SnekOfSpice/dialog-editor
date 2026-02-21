@@ -4,7 +4,6 @@ extends Node
 func clear():
 	deserialize({})
 
-var head_defaults := []
 var auto_complete_context := ""
 
 var dropdowns := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
@@ -90,10 +89,6 @@ const DATA_TYPE_STRINGS := {
 	DataTypes._Boolean : "Boolean",
 }
 
-var head_data_types := {
-	"speaker": DataTypes._DropDown,
-	"emotion": DataTypes._String,
-}
 
 var editor:DiisisEditor
 
@@ -231,8 +226,6 @@ func sync_line_references():
 		
 			line_index += 1
 
-func is_header_schema_empty():
-	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
 	var data := {
@@ -250,7 +243,6 @@ func serialize() -> Dictionary:
 		"facts": facts,
 		"file_config": get_file_config(),
 		"full_custom_method_defaults": _get_custom_method_full_defaults(),
-		"head_defaults" : head_defaults,
 		"id_counter" : id_counter,
 		"import_modified_times_by_path" : import_modified_times_by_path,
 		"ingestion_actor_declaration": ingestion_actor_declaration,
@@ -277,7 +269,6 @@ func deserialize(data:Dictionary):
 	
 	page_data.clear()
 	page_data = int_data.duplicate()
-	head_defaults = data.get("head_defaults", [])
 	custom_method_defaults = data.get("custom_method_defaults", {})
 	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
 	callable_autoloads = data.get("callable_autoloads", [])
@@ -920,59 +911,6 @@ func get_all_invalid_address_pointers() -> String:
 		warning = str("Warning: invalid addresses at: ", ", ".join(invalid_addresses))
 	return warning
 
-# new schema with keys and values
-func apply_new_header_schema(new_schema: Array):
-	for i in page_data:
-		var lines = page_data.get(i).get("lines")
-		
-		for line in lines:
-			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
-	
-	editor.refresh(false)
-	head_defaults = new_schema
-
-
-func transform_header(header_to_transform: Array, new_schema: Array, old_schema):
-	# TODO: use sort_custom and add an index to each head property to make this flexible when changing head defaults
-	var transformed = []
-	transformed.resize(new_schema.size())
-	
-	
-	for i in min(old_schema.size(), new_schema.size()):
-		var old_name = header_to_transform[i].get("property_name")
-		var old_value = header_to_transform[i].get("values", [header_to_transform[i].get("value", null), null])
-		var old_type = header_to_transform[i].get("data_type")
-		var old_default = old_schema[i].get("values")
-		
-		var new_name = new_schema[i].get("property_name")
-		var new_value = new_schema[i].get("values", [header_to_transform[i].get("value", null), null])
-		var new_type = new_schema[i].get("data_type")
-		
-		# if the header was the default value here, just apply the new default schema
-		if old_value[0] == old_default[0] and old_value[1] == old_default[1]:
-			transformed[i] = new_schema[i]
-		# the old value wasn't the default...
-		else:
-			
-			var a = new_value
-			if new_value[0] != old_value[0] or new_value[1] != old_value[1]:
-				a = old_value
-			
-			var converted_value = {
-				"property_name": new_name,
-				"values": a,
-				"data_type": new_type,
-			}
-			transformed[i] = converted_value
-			
-			
-	
-	# idk this seems bad
-	for j in transformed.size():
-		if transformed[j] == null:
-			transformed[j] = new_schema[j]
-	
-	return transformed
 
 func lines_referencing_fact(fact_name: String):
 	var ref_pages := []

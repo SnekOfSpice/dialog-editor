@@ -65,11 +65,6 @@ signal actor_name_changed(
 )
 
 
-## [param header] has keys that are the property name of a header property. For values: Strings and booleans are passed as values. Dropdowns are passed as arrays of size 2 with the dropdown title in first position and the value in the second (both are strings).
-signal new_header(
-	header:Dictionary
-)
-
 ## Emitted when a page is finished. Is emitted before [signal page_terminated].
 signal page_finished(
 	page_index: int
