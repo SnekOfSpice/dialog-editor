@@ -19,8 +19,27 @@ var page_container:Control
 
 var content_scale := 1.0
 
-var active_dir := ""
-var active_file_name := ""
+
+#var active_file_name := ""
+var active_path := "":
+	set(path):
+		active_path = path
+		ProjectSettings.set_setting("diisis/project/file/path", path)
+		ProjectSettings.save()
+		DiisisEditorEventBus.active_path_set.emit(path)
+var active_dir : String:
+	get():
+		if active_path.is_empty():
+			return ""
+		var parts = active_path.split("/")
+		var file_name : String = parts[parts.size() - 1]
+		return active_path.trim_suffix(file_name)
+var active_file : String:
+	get():
+		if active_path.is_empty():
+			return ""
+		var parts = active_path.split("/")
+		return parts[parts.size() - 1]
 var time_since_last_save := 0.0
 var error_update_countdown := 0.0
 var last_system_save := {}
@@ -41,7 +60,8 @@ signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
 signal request_reload()
-signal save_path_set(active_dir:String, active_file_name:String)
+#signal save_path_set(active_dir:String, active_file_name:String)
+signal save_path_set(path:String)
 signal history_altered(is_altered:bool)
 
 const DELETE_MODULATE := "#cfa2bfb3"
@@ -84,9 +104,11 @@ func init(active_file_path:="") -> void:
 	page_container = core.find_child("PageContainer")
 	
 	Pages.connect("pages_modified", update_controls)
+	
 	is_open = true
 	
 	request_add_page(0, 0)
+	DiisisEditorEventBus.active_path_set.connect(_on_active_path_set)
 	
 	update_controls()
 	
@@ -184,9 +206,13 @@ func init(active_file_path:="") -> void:
 	if DiisisEditorUtil.embedded:
 		%UpdateAvailable.check_for_updates()
 		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+		if active_file_path.is_empty():
+			%FilePathLabel.text = "~unsaved~"
 	if not DiisisEditorUtil.embedded:
+		# CRITICAL do not touch this camera. i can't remember why we need it but the editor won't be visible without it lmao
 		var cam := Camera2D.new()
 		add_child(cam)
+	
 	
 
 func on_tree_entered():
@@ -271,19 +297,20 @@ func get_selected_page_view() -> PageView:
 	
 	return view
 
+# TODO
 func get_save_path() -> String:
-	return str(active_dir, active_file_name)
+	return active_path
 
-func set_save_path(value:String):
-	var parts = value.split("/")
-	var new_file_name : String = parts[parts.size() - 1]
-	var new_dir : String = value.trim_suffix(new_file_name)
-	if new_dir == active_dir and new_file_name == active_file_name:
+func set_save_path(path:String):
+	#var parts = value.split("/")
+	#var new_file_name : String = parts[parts.size() - 1]
+	#var new_dir : String = value.trim_suffix(new_file_name)
+	#if new_dir == active_dir and new_file_name == active_file_name:
+	if path == active_path:
 		return
-	active_file_name = new_file_name
-	active_dir = value.trim_suffix(active_file_name)
-	emit_signal("save_path_set", active_dir, active_file_name)
-	DiisisEditorUtil.set_project_file_path(active_dir, active_file_name)
+	#active_file_name = new_file_name
+	#active_dir = value.trim_suffix(active_file_name)
+	active_path = path
 
 func _process(delta: float) -> void:
 	if not is_open:
@@ -294,7 +321,7 @@ func _process(delta: float) -> void:
 			save_to_dir_if_active_dir()
 	was_playing_scene = EditorInterface.is_playing_scene()
 	
-	if not active_dir.is_empty() and has_saved:
+	if not active_path.is_empty() and has_saved:
 		time_since_last_save += delta
 	
 	if undo_redo_count_at_last_save != undo_redo.get_history_count():
@@ -571,7 +598,7 @@ func save_to_file(path:String, is_autosave:=false):
 		has_saved = true
 		set_altered_history(false)
 	
-		notify(str("Saved to ", active_file_name, "!"))
+		notify(str("Saved to ", active_file, "!"))
 	
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
@@ -588,12 +615,10 @@ func set_importing_cover_visible(value:bool):
 
 func open_from_path(path:String):
 	var file = FileAccess.open(path, FileAccess.READ)
-	
+	%OpeningCover.show()
 	if not file:
 		set_opening_cover_visible(false)
 		return
-	
-	%FilePathLabel.text = path
 	
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
@@ -735,14 +760,14 @@ func open_facts_window(fact_to_select:=""):
 
 # opens popup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
-	if active_dir.is_empty():
+	if active_path.is_empty():
 		open_save_popup()
 		return
-	save_to_file(str(active_dir, active_file_name))
+	save_to_file(active_path)
 
 func save_to_dir_if_active_dir():
-	if not active_dir.is_empty():
-		save_to_file(str(active_dir, active_file_name))
+	if not active_path.is_empty():
+		save_to_file(active_path)
 
 #region MenuBar
 
@@ -1412,3 +1437,7 @@ func _get_line_reader_scripts_r(path: String) -> void:
 
 func _on_templates_menu_id_pressed(id: int) -> void:
 	request_template_setup.emit(id)
+
+func _on_active_path_set(path : String):
+	%FilePathLabel.text = path
+	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""

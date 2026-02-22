@@ -29,6 +29,9 @@ func _on_about_to_popup() -> void:
 	editor_window.visible = true
 	window_factor_window.visible = true
 	
+	if not DiisisEditorEventBus.active_path_set.is_connected(_on_save_path_set):
+		DiisisEditorEventBus.active_path_set.connect(_on_save_path_set)
+	
 	await get_tree().process_frame
 	update_content_scale(1.0)
 	
@@ -75,7 +78,7 @@ func update_quit_dialog_text(header_text:String):
 		return
 	var text := ""
 	text += header_text
-	if editor.active_dir.is_empty() or not editor.has_saved:
+	if editor.active_path.is_empty() or not editor.has_saved:
 		text += str("You have not saved since opening.")
 	else:
 		var seconds_since_last_save = int(editor.time_since_last_save)
@@ -242,14 +245,16 @@ func _on_editor_request_reload() -> void:
 
 
 func _on_quit_dialog_request_save() -> void:
-	if editor.active_dir.is_empty():
+	if editor.active_path.is_empty():
 		$QuitDialog.hide()
 	editor.attempt_save_to_dir()
 	update_quit_dialog_text(last_quit_header)
 
 
-func _on_editor_save_path_set(active_dir: String, active_file_name: String) -> void:
-	title = str(active_file_name.trim_suffix(".json"), " - DIISIS - (", active_dir, active_file_name, ")")
+func _on_save_path_set(path : String) -> void:
+	var parts := path.split("/")
+	var file_name := parts[parts.size() - 1]
+	title = str(file_name.trim_suffix(".json"), " - DIISIS - (", path, ")")
 
 
 func _on_reset_scale_button_pressed() -> void:

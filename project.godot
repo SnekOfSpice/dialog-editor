@@ -41,10 +41,11 @@ DiisisEditorActions="*uid://dfci2vklbcx15"
 TextToDiisis="*uid://d0pi2gsh3lskp"
 SceneLoader="*uid://d3fs4ft445qth"
 Game="*uid://ba05k05ujpqp8"
+DiisisEditorEventBus="*uid://e5fx4v6mprlc"
 
 [diisis]
 
-project/file/path="res://game/diisis_integration/demo_script.json"
+project/file/path="res://game/diisis_integration/demo_script2.json"
 plugin/updates/check_for_updates=true
 plugin/view/embedded=true
 

@@ -16,6 +16,7 @@ transient = true
 min_size = Vector2i(895, 507)
 content_scale_mode = 1
 theme = ExtResource("3_efdl4")
+theme_override_font_sizes/title_font_size = 30
 script = ExtResource("1_d4u1q")
 
 [node name="Window" type="Window" parent="." unique_id=1620528998]
@@ -26,6 +27,7 @@ transient = true
 borderless = true
 content_scale_mode = 2
 content_scale_aspect = 4
+theme_override_font_sizes/title_font_size = 30
 
 [node name="Editor" parent="Window" unique_id=1075847488 instance=ExtResource("2_4owra")]
 anchors_preset = 0
@@ -40,6 +42,7 @@ size_flags_horizontal = 3
 [node name="QuitDialog" parent="." unique_id=204813871 groups=["diisis_scalable_popup"] instance=ExtResource("3_h4aux")]
 size = Vector2i(301, 144)
 visible = false
+theme_override_font_sizes/title_font_size = 30
 
 [node name="WindowFactorWindow" type="Window" parent="." unique_id=1281331476]
 oversampling_override = 1.0
@@ -48,6 +51,7 @@ size = Vector2i(1330, 123)
 wrap_controls = true
 transient = true
 borderless = true
+theme_override_font_sizes/title_font_size = 30
 
 [node name="Control" type="Control" parent="WindowFactorWindow" unique_id=1594612569]
 layout_mode = 3
@@ -82,6 +86,7 @@ layout_mode = 2
 layout_mode = 2
 tooltip_text = "Reset editor scale"
 focus_mode = 0
+theme_override_font_sizes/font_size = 14
 text = "100"
 
 [node name="MarginContainer" type="MarginContainer" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=1032902326]
@@ -99,6 +104,7 @@ value = 1.0
 
 [node name="WindowFactorLabel" type="Label" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=356604767]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "100%"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="WindowFactorWindow/Control/WindowFactorContainer" unique_id=1200625665]
@@ -109,6 +115,11 @@ size_flags_horizontal = 10
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 horizontal_alignment = 2
 
 [node name="HelpButton" type="Button" parent="WindowFactorWindow/Control/WindowFactorContainer/HBoxContainer2" unique_id=1202122935]
@@ -116,7 +127,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Open GitHub wiki (F1)"
 focus_mode = 0
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "?"
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
@@ -128,7 +139,6 @@ text = "?"
 [connection signal="history_altered" from="Window/Editor" to="." method="_on_editor_history_altered"]
 [connection signal="open_new_file" from="Window/Editor" to="." method="_on_editor_open_new_file"]
 [connection signal="request_reload" from="Window/Editor" to="." method="_on_editor_request_reload"]
-[connection signal="save_path_set" from="Window/Editor" to="." method="_on_editor_save_path_set"]
 [connection signal="scale_editor_down" from="Window/Editor" to="." method="_on_editor_scale_editor_down"]
 [connection signal="scale_editor_up" from="Window/Editor" to="." method="_on_editor_scale_editor_up"]
 [connection signal="request_save" from="QuitDialog" to="." method="_on_quit_dialog_request_save"]

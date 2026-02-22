@@ -36,7 +36,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
-[node name="DialogConfigWindow" type="Control" unique_id=816289720]
+[node name="DIISISEditor" type="Control" unique_id=816289720]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -711,6 +711,7 @@ size = Vector2i(12, 10)
 theme_override_font_sizes/title_font_size = 30
 
 [node name="OpeningCover" type="ColorRect" parent="." unique_id=1500427879]
+unique_name_in_owner = true
 visible = false
 z_index = 10
 layout_mode = 1
@@ -821,6 +822,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
+text = "vbghvb"
 
 [node name="UpdateAvailable" parent="EmbedHint/HBoxContainer" unique_id=1361638744 instance=ExtResource("34_378lj")]
 unique_name_in_owner = true

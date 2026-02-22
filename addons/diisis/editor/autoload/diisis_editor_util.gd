@@ -119,9 +119,6 @@ func humanize_address(address:String) -> String:
 func get_project_source_file_path() -> String:
 	return String(ProjectSettings.get_setting("diisis/project/file/path"))
 
-func set_project_file_path(active_dir:String, active_file_name:String):
-	ProjectSettings.set_setting("diisis/project/file/path", str(active_dir, active_file_name))
-	ProjectSettings.save()
 
 ## max height is a multiple of the editor size
 func limit_scroll_container_height(

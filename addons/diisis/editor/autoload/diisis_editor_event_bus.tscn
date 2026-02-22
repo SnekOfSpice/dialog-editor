@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://e5fx4v6mprlc"]
+
+[ext_resource type="Script" uid="uid://dx24gv0xhgryj" path="res://addons/diisis/editor/autoload/diisis_editor_event_bus.gd" id="1_xltj3"]
+
+[node name="DiisisEditorEventBus" type="Node" unique_id=1819266569]
+script = ExtResource("1_xltj3")

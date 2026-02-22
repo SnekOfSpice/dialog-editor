@@ -17,6 +17,7 @@ const AUTOLOAD_PARSER = "Parser"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
 const AUTOLOAD_EDITOR_TEXT_TO_DIISIS = "TextToDiisis"
 const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
+const AUTOLOAD_EDITOR_EVENT_BUS = "DiisisEditorEventBus"
 const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
@@ -138,8 +139,10 @@ func setup_vn_template():
 		var existing_path : String = ProjectSettings.get_setting("diisis/project/file/path")
 		if not ProjectSettings.has_setting("diisis/project/file/path"):
 			ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
+			DiisisEditorEventBus.active_path_set.emit(source_path_game)
 		elif existing_path.is_empty():
 			ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
+			DiisisEditorEventBus.active_path_set.emit(source_path_game)
 	else:
 		popup_accept_dialogue("Error", str("Couldn't find ", source_path_game, "."))
 		return
@@ -160,10 +163,12 @@ func setup_vn_template():
 	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
 func add_editor_singletons():
+	add_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS, "res://addons/diisis/editor/autoload/diisis_editor_event_bus.tscn")
 	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
 	add_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS, "res://addons/diisis/editor/autoload/text_to_diisis.tscn")
+	
 
 func add_parser_singletons():
 	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
@@ -174,6 +179,7 @@ func remove_editor_singletons():
 	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
 	remove_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS)
 
 func remove_parser_singletons():
 	remove_autoload_singleton(AUTOLOAD_PARSER)
@@ -190,6 +196,7 @@ func _enter_tree():
 		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 		ProjectSettings.save()
+		DiisisEditorEventBus.active_path_set.emit("")
 	ProjectSettings.add_property_info({
 	"name": "diisis/project/file/path",
 	"type": TYPE_STRING,
@@ -325,6 +332,7 @@ func open_new_file():
 		ProjectSettings.set_setting("diisis/project/file/path", "user://import_override_temp.json")
 	else:
 		ProjectSettings.set_setting("diisis/project/file/path", "")
+		DiisisEditorEventBus.active_path_set.emit("")
 	add_new_dialog_editor_window()
 	if _embedded:
 		await get_tree().process_frame
