@@ -120,3 +120,11 @@ func _on_load_button_pressed() -> void:
 
 func get_screen_container() -> Control:
 	return find_child("ScreenContainer")
+
+
+func _on_path_1_pressed() -> void:
+	Parser.full_initialize("res://game/diisis_integration/demo_script.json")
+
+
+func _on_path_2_pressed() -> void:
+	Parser.full_initialize("res://game/diisis_integration/demo_script2.json")

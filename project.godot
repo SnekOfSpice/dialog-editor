@@ -45,9 +45,9 @@ DiisisEditorEventBus="*uid://e5fx4v6mprlc"
 
 [diisis]
 
-project/file/path="res://game/diisis_integration/demo_script2.json"
+project/file/path="res://game/diisis_integration/demo_script.json"
 plugin/updates/check_for_updates=true
-plugin/view/embedded=true
+plugin/view/embedded=false
 
 [display]
 

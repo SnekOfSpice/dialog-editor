@@ -2,23 +2,24 @@
 extends EditorPlugin
 class_name DIISISPlugin
 
-var dia_editor_window:Window
-var embedder:Control
-var toolbar_button:Control
-var confirmation_window:Window
-var accept_dialogue:AcceptDialog
+var dia_editor_window : Window
+var embedder : DiisisEditor
+var toolbar_button : Control
+var confirmation_window : Window
+var accept_dialogue : AcceptDialog
 
 var _embedded : bool:
 	get():
 		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
 
-const AUTOLOAD_PAGES = "Pages"
+
 const AUTOLOAD_PARSER = "Parser"
+const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
+const AUTOLOAD_PAGES = "Pages"
 const AUTOLOAD_EDITOR_ACTIONS = "DiisisEditorActions"
 const AUTOLOAD_EDITOR_TEXT_TO_DIISIS = "TextToDiisis"
 const AUTOLOAD_EDITOR_UTIL = "DiisisEditorUtil"
 const AUTOLOAD_EDITOR_EVENT_BUS = "DiisisEditorEventBus"
-const AUTOLOAD_PARSER_EVENTS = "ParserEvents"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 const TEMPLATE_VN_AUTOLOAD_CONST = "CONST"
@@ -30,12 +31,136 @@ const TEMPLATE_VN_AUTOLOAD_GAME = "Game"
 const TEMPLATE_VN_AUTOLOAD_EVENT_BUS = "EventBus"
 const TEMPLATE_VN_AUTOLOAD_SCENE_LOADER = "SceneLoader"
 
-## TODO ugly workaround to make internal docs work
-## Godot 4.5 will make this unnecessary
-func _ready() -> void:
-	ResourceSaver.save(preload("res://addons/diisis/parser/src/line_reader.gd"))
-	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser_events.gd"))
-	ResourceSaver.save(preload("res://addons/diisis/parser/autoload/parser.gd"))
+
+func _enter_tree():
+	Engine.set_meta("DIISISPlugin", self)
+	if not ProjectSettings.has_setting("diisis/plugin/view/embedded"):
+		ProjectSettings.set_setting("diisis/plugin/view/embedded", false)
+	ProjectSettings.set_restart_if_changed("diisis/plugin/view/embedded", true)
+	# property info doesnt work
+	# but in case you get it to work, here's the descriptions
+	if not ProjectSettings.has_setting("diisis/project/file/path"):
+		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
+		ProjectSettings.set_setting("diisis/project/file/path", "")
+		ProjectSettings.save()
+		DiisisEditorEventBus.active_path_set.emit("")
+	ProjectSettings.add_property_info({
+	"name": "diisis/project/file/path",
+	"type": TYPE_STRING,
+	"hint_string": "one,two,three"
+}
+
+)
+	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
+		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
+		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
+		ProjectSettings.save()
+	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
+	add_editor_singletons()
+	add_parser_singletons()
+	add_custom_type("LineReader", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/icon_line_reader.svg"))
+	
+	if not OS.has_feature("editor"):
+		return
+	
+	if _embedded:
+		await get_tree().process_frame
+		add_new_dialog_editor_window()
+	else:
+		toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
+		add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
+		toolbar_button.visible = true
+		toolbar_button.is_in_editor = true
+		toolbar_button.request_open_diisis.connect(open_editor)
+		toolbar_button.request_setup_template.connect(on_request_setup_template)
+	
+		await get_tree().process_frame
+		toolbar_button.get_parent().move_child(toolbar_button, -2)
+	
+	DiisisEditorEventBus.editor_window_reload_requested.connect(on_editor_window_reload_requested)
+
+	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
+	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
+	print_rich(welcome_message)
+
+
+func _exit_tree():
+	Engine.remove_meta("DIISISPlugin")
+	remove_editor_singletons()
+	remove_parser_singletons()
+	remove_autoload_singleton(AUTOLOAD_SHARED_DIISIS)
+	if dia_editor_window:
+		dia_editor_window.queue_free()
+	if embedder:
+		embedder.queue_free()
+	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
+
+
+func _make_visible(visible):
+	if embedder:
+		embedder.visible = visible
+
+
+func _get_plugin_name():
+	return "DIISIS"
+
+
+func _has_main_screen():
+	return _embedded
+
+
+func _get_plugin_icon():
+	return load("res://addons/diisis/logos/icon_buttonbw smooth.png")
+
+
+func add_editor_singletons():
+	add_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS, "res://addons/diisis/editor/autoload/diisis_editor_event_bus.tscn")
+	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
+	add_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS, "res://addons/diisis/editor/autoload/text_to_diisis.tscn")
+	
+
+func add_parser_singletons():
+	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
+	add_autoload_singleton(AUTOLOAD_PARSER_EVENTS, "res://addons/diisis/parser/autoload/parser_events.tscn")
+
+
+func remove_editor_singletons():
+	remove_autoload_singleton(AUTOLOAD_PAGES)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS)
+	remove_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS)
+
+
+func remove_parser_singletons():
+	remove_autoload_singleton(AUTOLOAD_PARSER)
+	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
+
+
+func on_request_setup_template(template:int):
+	var load_error := ""
+	if not ResourceLoader.exists("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"):
+		load_error = "res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"
+	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates/_meta"):
+		load_error = "res://addons/diisis/templates/_meta"
+	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates"):
+		load_error = "res://addons/diisis/templates"
+	if not load_error.is_empty():
+		push_warning("%s doesn't exist! If you moved or deleted the templates, you can restore them by downloading the plugin again." % load_error)
+		return
+	match template:
+		0:
+			if is_instance_valid(confirmation_window):
+				confirmation_window.queue_free()
+			confirmation_window = load("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn").instantiate()
+			get_editor_interface().get_base_control().add_child.call_deferred(confirmation_window)
+			confirmation_window.confirmed.connect(setup_vn_template)
+			confirmation_window.canceled.connect(confirmation_window.queue_free)
+			confirmation_window.title = "Add Visual Novel Template?"
+			confirmation_window.show()
+
 
 func setup_vn_template():
 	var bus_path_game := str("res://game/sounds/default_bus_layout.tres")
@@ -162,100 +287,7 @@ func setup_vn_template():
 	ProjectSettings.save()
 	popup_accept_dialogue("Setup Successful!", "Visual Novel Template has been set up correctly :3\nRestart the editor to apply <3")
 
-func add_editor_singletons():
-	add_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS, "res://addons/diisis/editor/autoload/diisis_editor_event_bus.tscn")
-	add_autoload_singleton(AUTOLOAD_PAGES, "res://addons/diisis/editor/autoload/pages.tscn")
-	add_autoload_singleton(AUTOLOAD_EDITOR_UTIL, "res://addons/diisis/editor/autoload/diisis_editor_util.tscn")
-	add_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS, "res://addons/diisis/editor/autoload/diisis_editor_actions.tscn")
-	add_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS, "res://addons/diisis/editor/autoload/text_to_diisis.tscn")
-	
 
-func add_parser_singletons():
-	add_autoload_singleton(AUTOLOAD_PARSER, "res://addons/diisis/parser/autoload/parser.tscn")
-	add_autoload_singleton(AUTOLOAD_PARSER_EVENTS, "res://addons/diisis/parser/autoload/parser_events.tscn")
-
-func remove_editor_singletons():
-	remove_autoload_singleton(AUTOLOAD_PAGES)
-	remove_autoload_singleton(AUTOLOAD_EDITOR_UTIL)
-	remove_autoload_singleton(AUTOLOAD_EDITOR_ACTIONS)
-	remove_autoload_singleton(AUTOLOAD_EDITOR_TEXT_TO_DIISIS)
-	remove_autoload_singleton(AUTOLOAD_EDITOR_EVENT_BUS)
-
-func remove_parser_singletons():
-	remove_autoload_singleton(AUTOLOAD_PARSER)
-	remove_autoload_singleton(AUTOLOAD_PARSER_EVENTS)
-
-func _enter_tree():
-	Engine.set_meta("DIISISPlugin", self)
-	if not ProjectSettings.has_setting("diisis/plugin/view/embedded"):
-		ProjectSettings.set_setting("diisis/plugin/view/embedded", false)
-	ProjectSettings.set_restart_if_changed("diisis/plugin/view/embedded", true)
-	# property info doesnt work
-	# but in case you get it to work, here's the descriptions
-	if not ProjectSettings.has_setting("diisis/project/file/path"):
-		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
-		ProjectSettings.set_setting("diisis/project/file/path", "")
-		ProjectSettings.save()
-		DiisisEditorEventBus.active_path_set.emit("")
-	ProjectSettings.add_property_info({
-	"name": "diisis/project/file/path",
-	"type": TYPE_STRING,
-	"hint_string": "one,two,three"
-}
-
-)
-	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
-		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
-		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
-		ProjectSettings.save()
-	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
-	add_editor_singletons()
-	add_parser_singletons()
-	add_custom_type("LineReader", "Node", preload("res://addons/diisis/parser/src/line_reader.gd"), preload("res://addons/diisis/parser/style/icon_line_reader.svg"))
-	
-	if not OS.has_feature("editor"):
-		return
-	
-	if _embedded:
-		await get_tree().process_frame
-		add_new_dialog_editor_window()
-	else:
-		toolbar_button = preload("res://addons/diisis/editor/open_editor_button.tscn").instantiate()
-		add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
-		toolbar_button.visible = true
-		toolbar_button.is_in_editor = true
-		toolbar_button.request_open_diisis.connect(open_editor)
-		toolbar_button.request_setup_template.connect(on_request_setup_template)
-	
-		await get_tree().process_frame
-		toolbar_button.get_parent().move_child(toolbar_button, -2)
-	
-
-	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
-	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
-	print_rich(welcome_message)
-
-func on_request_setup_template(template:int):
-	var load_error := ""
-	if not ResourceLoader.exists("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"):
-		load_error = "res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn"
-	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates/_meta"):
-		load_error = "res://addons/diisis/templates/_meta"
-	if not DirAccess.dir_exists_absolute("res://addons/diisis/templates"):
-		load_error = "res://addons/diisis/templates"
-	if not load_error.is_empty():
-		push_warning("%s doesn't exist! If you moved or deleted the templates, you can restore them by downloading the plugin again." % load_error)
-		return
-	match template:
-		0:
-			if is_instance_valid(confirmation_window):
-				confirmation_window.queue_free()
-			confirmation_window = load("res://addons/diisis/templates/_meta/template_setup_confirmation_window.tscn").instantiate()
-			get_editor_interface().get_base_control().add_child.call_deferred(confirmation_window)
-			confirmation_window.confirmed.connect(setup_vn_template)
-			confirmation_window.canceled.connect(confirmation_window.queue_free)
-			confirmation_window.title = "Add Visual Novel Template?"
-			confirmation_window.show()
 
 func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text:="OK"):
 	if is_instance_valid(accept_dialogue):
@@ -272,6 +304,7 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 	accept_dialogue.ok_button_text = dia_ok_button_text
 	accept_dialogue.show()
 
+
 func open_editor():
 	if _embedded:
 		return
@@ -287,7 +320,6 @@ func open_editor():
 		await get_tree().process_frame
 		dia_editor_window.popup()
 		dia_editor_window.open_new_file.connect(open_new_file)
-		dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
 
@@ -312,20 +344,6 @@ func add_new_dialog_editor_window():
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		dia_editor_window.wrap_controls = true
 
-func _make_visible(visible):
-	if embedder:
-		embedder.visible = visible
-
-func _get_plugin_name():
-	return "DIISIS"
-
-func _has_main_screen():
-	return _embedded
-
-
-func _get_plugin_icon():
-	return load("res://addons/diisis/logos/icon_buttonbw smooth.png")
-
 
 func open_new_file():
 	if FileAccess.file_exists("user://import_override_temp.json") and _embedded:
@@ -344,27 +362,13 @@ func open_new_file():
 		dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
 	dia_editor_window.open_new_file.connect(open_new_file)
-	dia_editor_window.request_reload_editor.connect(on_window_request_reload_editor)
 	dia_editor_window.title = "DIISIS"
 
-func on_window_request_reload_editor():
+
+func on_editor_window_reload_requested():
 	await get_tree().process_frame
 	open_editor()
 
-#func _process(delta: float) -> void:
-	#if is_instance_valid(dia_editor_window):
-		#dia_editor_window.wrap_controls = true
-
-func _exit_tree():
-	Engine.remove_meta("DIISISPlugin")
-	remove_editor_singletons()
-	remove_parser_singletons()
-	remove_autoload_singleton(AUTOLOAD_SHARED_DIISIS)
-	if dia_editor_window:
-		dia_editor_window.queue_free()
-	if embedder:
-		embedder.queue_free()
-	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, toolbar_button)
 
 func get_version() -> String:
 	var config: ConfigFile = ConfigFile.new()

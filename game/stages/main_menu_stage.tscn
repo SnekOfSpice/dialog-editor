@@ -160,6 +160,19 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1479602195]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="path1" type="Button" parent="VBoxContainer" unique_id=516877994]
+layout_mode = 2
+text = "FILE 1"
+
+[node name="path2" type="Button" parent="VBoxContainer" unique_id=60952630]
+layout_mode = 2
+text = "FILE 2"
+
 [connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/StartButton" to="." method="start_new_game"]
 [connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
@@ -168,3 +181,5 @@ color = Color(0, 0, 0, 1)
 [connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
 [connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer/UnlockedEpilogueButton" to="." method="_on_unlocked_epilogue_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/path1" to="." method="_on_path_1_pressed"]
+[connection signal="pressed" from="VBoxContainer/path2" to="." method="_on_path_2_pressed"]

@@ -15,7 +15,6 @@ var game_stage : GameStage
 @export var creating_slideshow := false
 @export var performance_test := false
 
-var fov_before_screen : float
 var just_ended := false
 
 
@@ -97,8 +96,6 @@ func set_screen(screen_path:String, payload := {}) -> Screen:
 		EventBus.screen_changed.emit(old_screen, screen)
 		return null
 	else:
-		if camera:
-			fov_before_screen = camera.fov
 		for c : Screen in %ScreenContainer.get_children():
 			c.queue_free()
 	
@@ -126,8 +123,6 @@ func set_screen(screen_path:String, payload := {}) -> Screen:
 	Game.hook_up_button_sfx(new_screen)
 	
 	EventBus.screen_changed.emit(old_screen, screen)
-	if camera:
-		get_tree().process_frame.connect(camera.set.bind("fov", fov_before_screen), CONNECT_ONE_SHOT)
 	return new_screen
 
 

@@ -71,43 +71,58 @@ var last_modified_time = 0
 ## dynamically built helper array to speed up some function calls
 var page_keys := []
 
-func _get_live_source_path(suppress_error:=false) -> String:
-	var source_path:String
-	if not source_file_override.is_empty():
-		source_path = source_file_override
-	else:
-		source_path = DiisisEditorUtil.get_project_source_file_path()
-		if source_path.is_empty():
-			if not suppress_error:
-				push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
-			return ""
-	# where did that \n come from???
-	return source_path.trim_suffix("\n")
 
-func _get_data() -> Dictionary:
-	var file := FileAccess.open(ProjectSettings.get_setting("diisis/project/file/path"), FileAccess.READ)
+func _get_current_path(suppress_error := false) -> String:
+	if source_file_override:
+		return source_file_override
+	if not last_data_fetch_path.is_empty():
+		return last_data_fetch_path
+	var project_path := String(ProjectSettings.get_setting("diisis/project/file/path"))
+	if project_path.is_empty():
+		if not suppress_error:
+			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
+		return ""
+	# where did that \n come from???
+	return project_path.trim_suffix("\n")
+
+
+
+var last_data_fetch_path := ""
+func _get_data(path:String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if not file:
 		return {}
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
+	last_data_fetch_path = path
 	file.close()
 	return data.get("pages")
 	
 
 func _ready() -> void:
-	var data = _get_data()
+	full_initialize(ProjectSettings.get_setting("diisis/project/file/path"))
 	
-	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
+	ParserEvents.choice_pressed.connect(on_choice_pressed)
+
+
+## Function that gets called automatically once when you run the game,
+## using the [code]diisis/project/file/path[/code] property set in
+## [ProjectSettings], which DIISIS handles automatically when you save a file.
+## [br]Call this function with a path to a file at runtime to manually load a file.
+## This is useful if your game is split across files.
+func full_initialize(path : String):
+	var data = _get_data(path)
 	
-	init(data)
+	last_modified_time = FileAccess.get_modified_time(_get_current_path())
+	
+	_initialize(data)
 	
 	if localization_file:
 		var file := FileAccess.open(localization_file, FileAccess.READ)
 		l10n = JSON.parse_string(file.get_as_text())
 		file.close()
-	
-	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
-func init(data:Dictionary):
+
+func _initialize(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data := {}
 	var loaded_data = data.get("page_data", {})
@@ -143,12 +158,14 @@ func get_custom_method_defaults(method_name:String) -> Dictionary:
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
 		return
-	var source_path := _get_live_source_path(true)
+	
+	# hot reload support
+	var source_path := _get_current_path(true)
 	var modified_time = FileAccess.get_modified_time(source_path)
 	if modified_time != last_modified_time:
 		while not FileAccess.file_exists(source_path):
 			await get_tree().process_frame
-		init(_get_data())
+		_initialize(_get_data(last_data_fetch_path))
 		read_page(page_index, line_index)
 	last_modified_time = FileAccess.get_modified_time(source_path)
 

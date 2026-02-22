@@ -12,7 +12,6 @@ var file_path := ""
 var last_quit_header := ""
 
 signal open_new_file()
-signal request_reload_editor()
 signal closing_editor()
 
 const PREFERENCE_PATH := "user://editor_preferences.cfg"
@@ -53,6 +52,7 @@ func _on_about_to_popup() -> void:
 		update_content_scale(scale)
 	await get_tree().process_frame
 	%UpdateAvailable.check_for_updates()
+	_on_save_path_set(file_path)
 
 func _on_close_requested() -> void:
 	if is_instance_valid(editor):
@@ -151,7 +151,7 @@ func close_editor_and_open_new_file():
 	close_editor()
 
 func reload_editor():
-	emit_signal("request_reload_editor")
+	DiisisEditorEventBus.editor_window_reload_requested.emit()
 	close_editor()
 
 func update_content_scale(scale_factor:float):

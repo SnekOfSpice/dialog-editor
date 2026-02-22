@@ -116,9 +116,6 @@ func humanize_address(address:String) -> String:
 		address_string += str(" / ", Pages.get_choice_text(parts[0], parts[1], parts[2], 25))
 	return address_string
 
-func get_project_source_file_path() -> String:
-	return String(ProjectSettings.get_setting("diisis/project/file/path"))
-
 
 ## max height is a multiple of the editor size
 func limit_scroll_container_height(
