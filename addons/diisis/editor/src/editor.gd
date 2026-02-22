@@ -8,6 +8,8 @@ signal request_template_setup(template_id : int)
 
 const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
 const BACKUP_PATH := "user://DIISIS_autosave/"
+const RECENT_FILES_PATH := "user://recents.json"
+const RECENT_FILE_SEPARATOR := "  ||  "
 var auto_save_timer := AUTO_SAVE_INTERVAL
 var is_open := false
 var opening := true # spaghetti yum
@@ -92,6 +94,11 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	if goto_has_focus:
 		find_child("GoTo")._address_bar_grab_focus()
 
+
+func _exit_tree() -> void:
+	Pages.editor = null
+
+var recents_item : PopupMenu
 func init(active_file_path:="") -> void:
 	Pages.editor = self
 	set_opening_cover_visible(true)
@@ -139,6 +146,14 @@ func init(active_file_path:="") -> void:
 	
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = %File
+	recents_item = PopupMenu.new()
+	%File.add_child(recents_item)
+	recents_item.index_pressed.connect(func(index:int):
+		var recent_path := recents_item.get_item_text(index)
+		recent_path = recent_path.split(RECENT_FILE_SEPARATOR)[1]
+		open_from_path(recent_path))
+	file_item.add_submenu_node_item("Recent", recents_item)
+	update_recents_item()
 	file_item.add_separator()
 	file_item.add_item("Import    (Shift+I)", 6)
 	file_item.add_item("Export    (Shift+E)", 5)
@@ -213,6 +228,7 @@ func init(active_file_path:="") -> void:
 		var cam := Camera2D.new()
 		add_child(cam)
 	
+	save_to_recent_files(active_file_path)
 	
 
 func on_tree_entered():
@@ -599,11 +615,47 @@ func save_to_file(path:String, is_autosave:=false):
 		set_altered_history(false)
 	
 		notify(str("Saved to ", active_file, "!"))
-	
+		
+		save_to_recent_files(active_path)
+		
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
 	await get_tree().process_frame
 	refresh()
+
+
+func get_recent_files() -> Array:
+	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
+	if recent_files.get_length() == 0:
+		return []
+	var recent_data : Array = JSON.parse_string(recent_files.get_as_text()) 
+	print(recent_data)
+	recent_files.close()
+	return recent_data
+
+
+func save_to_recent_files(path : String) -> void:
+	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
+	#if not recent_files:
+		#return
+	var recent_data : Array
+	if recent_files.get_length() > 0:
+		recent_data = JSON.parse_string(recent_files.get_as_text())
+	else:
+		recent_data = []
+	
+	recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+	if recent_data.has(path):
+		recent_data.erase(path)
+	recent_data.insert(0, path)
+	if recent_data.size() > 10:
+		recent_data.resize(10)
+	
+	recent_files.store_string(JSON.stringify(recent_data, "\t"))
+	recent_files.close()
+	
+	update_recents_item()
+
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
@@ -623,6 +675,7 @@ func open_from_path(path:String):
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
+	save_to_recent_files(path)
 	set_save_path(path)
 	Pages.deserialize(data.get("pages"))
 	
@@ -1441,3 +1494,11 @@ func _on_templates_menu_id_pressed(id: int) -> void:
 func _on_active_path_set(path : String):
 	%FilePathLabel.text = path
 	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+
+
+func update_recents_item():
+	recents_item.clear()
+	var recent_data := get_recent_files()
+	for file : String in recent_data:
+		var file_name := file.trim_prefix(file.left(file.rfind("/") + 1))
+		recents_item.add_item("%s%s%s" % [file_name, RECENT_FILE_SEPARATOR, file])

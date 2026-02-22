@@ -12,6 +12,10 @@ remove headers
 embed option
 4.6 upgrade
 remove dialog args in text only export
+recent files
+
+-- under the hood --
+diisiseditorEventbus
 
 -------------------------------------------------
 DIISIS 0.6.5 2025-12-16
