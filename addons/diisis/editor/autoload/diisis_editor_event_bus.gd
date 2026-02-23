@@ -2,5 +2,10 @@
 extends Node
 
 
+var quit := Quit.new()
+
 signal active_path_set(path : String)
-signal editor_window_reload_requested()
+
+class Quit:
+	signal window_reload()
+	signal new_file()

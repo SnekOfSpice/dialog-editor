@@ -52,6 +52,12 @@ const HTML_ENTITIES := {
 	"&trade;" : "™",
 }
 
+const QUIT_DIALOG_TITLE_CLOSE := "Do you want to close DIISIS?"
+const QUIT_DIALOG_TITLE_NEW := "Open a new, blank file?"
+const QUIT_DIALOG_TITLE_RELOAD := "Reload DIISIS?"
+const QUIT_DIALOG_TITLE_OPEN := "Open existing file at [code]%s[/code]?"
+const UNSAVED_FILE_PATH := "DIISIS~unsaved~"
+
 func type_to_str(type:int) -> String:
 	match type:
 		TYPE_FLOAT:

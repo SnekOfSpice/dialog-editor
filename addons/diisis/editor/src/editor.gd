@@ -46,7 +46,16 @@ var time_since_last_save := 0.0
 var error_update_countdown := 0.0
 var last_system_save := {}
 var has_saved := false
-var altered_history := false
+var altered_history := false:
+	set(value):
+		altered_history = value
+		history_altered.emit(altered_history)
+	
+		if altered_history:
+			if not %FilePathLabel.text.begins_with("(*) "):
+				%FilePathLabel.text = str("(*) ", %FilePathLabel.text)
+		else:
+			%FilePathLabel.text = %FilePathLabel.text.trim_prefix("(*) ")
 var was_playing_scene := false
 
 enum PageView {
@@ -61,7 +70,6 @@ var embed_init := false
 signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
-signal request_reload()
 #signal save_path_set(active_dir:String, active_file_name:String)
 signal save_path_set(path:String)
 signal history_altered(is_altered:bool)
@@ -95,8 +103,8 @@ func refresh(serialize_before_load:=true, fragile:=false):
 		find_child("GoTo")._address_bar_grab_focus()
 
 
-func _exit_tree() -> void:
-	Pages.editor = null
+#func _exit_tree() -> void:
+	#Pages.editor = null
 
 var recents_item : PopupMenu
 func init(active_file_path:="") -> void:
@@ -129,9 +137,7 @@ func init(active_file_path:="") -> void:
 	tree_entered.connect(on_tree_entered)
 	
 	core.visible = true
-	undo_redo.clear_history()
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
-	update_undo_redo_buttons()
 	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
@@ -151,7 +157,7 @@ func init(active_file_path:="") -> void:
 	recents_item.index_pressed.connect(func(index:int):
 		var recent_path := recents_item.get_item_text(index)
 		recent_path = recent_path.split(RECENT_FILE_SEPARATOR)[1]
-		open_from_path(recent_path))
+		try_open_from_path(recent_path))
 	file_item.add_submenu_node_item("Recent", recents_item)
 	update_recents_item()
 	file_item.add_separator()
@@ -181,7 +187,7 @@ func init(active_file_path:="") -> void:
 	
 	open_from_path(active_file_path)
 	
-	undo_redo.version_changed.connect(set_altered_history.bind(true))
+	undo_redo.version_changed.connect(set.bind("altered_history", true))
 	
 	if not Pages.shader.is_empty():
 		var layer = CanvasLayer.new()
@@ -222,22 +228,19 @@ func init(active_file_path:="") -> void:
 		%UpdateAvailable.check_for_updates()
 		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
 		if active_file_path.is_empty():
-			%FilePathLabel.text = "~unsaved~"
+			%FilePathLabel.text = DIISIS.UNSAVED_FILE_PATH
 	if not DiisisEditorUtil.embedded:
 		# CRITICAL do not touch this camera. i can't remember why we need it but the editor won't be visible without it lmao
 		var cam := Camera2D.new()
 		add_child(cam)
 	
 	save_to_recent_files(active_file_path)
-	
+
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
 
-func set_altered_history(value:bool):
-	altered_history = value
-	emit_signal("history_altered", altered_history)
 
 func set_content_scale(factor:float):
 	content_scale = factor
@@ -412,7 +415,7 @@ func _shortcut_input(event):
 				KEY_G:
 					find_child("GoTo").toggle_active()
 				KEY_N:
-					emit_signal("open_new_file")
+					try_new_file()
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_I:
@@ -612,7 +615,7 @@ func save_to_file(path:String, is_autosave:=false):
 		time_since_last_save = 0.0
 		last_system_save = Time.get_time_dict_from_system()
 		has_saved = true
-		set_altered_history(false)
+		altered_history = false
 	
 		notify(str("Saved to ", active_file, "!"))
 		
@@ -620,12 +623,16 @@ func save_to_file(path:String, is_autosave:=false):
 		
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
-	await get_tree().process_frame
-	refresh()
+	if not fuck:
+		await get_tree().process_frame
+		refresh()
+	fuck = false
 
 
 func get_recent_files() -> Array:
 	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
+	if not recent_files:
+		return []
 	if recent_files.get_length() == 0:
 		return []
 	var recent_data : Array = JSON.parse_string(recent_files.get_as_text()) 
@@ -635,9 +642,15 @@ func get_recent_files() -> Array:
 
 
 func save_to_recent_files(path : String) -> void:
+	if path.is_empty():
+		return
 	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
-	#if not recent_files:
-		#return
+	if not recent_files:
+		#recent_files.close()
+		recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+		recent_files.store_string(JSON.stringify([path], "\t"))
+		recent_files.close()
+		return
 	var recent_data : Array
 	if recent_files.get_length() > 0:
 		recent_data = JSON.parse_string(recent_files.get_as_text())
@@ -665,7 +678,40 @@ func set_opening_cover_visible(value:bool):
 func set_importing_cover_visible(value:bool):
 	$ImportingCover.visible = value
 
+
+var fuck := false
+func try_open_from_path(path:String):
+	fuck = false
+	if not opening and has_unsaved_changes:
+		fuck = true
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_OPEN % path, open_from_path.bind(path))
+		return
+	open_from_path(path)
+	#if DiisisEditorUtil.embedded and fuck:
+		#await get_tree().process_frame
+		#open_from_path(path)
+func try_new_file():
+	if not opening and has_unsaved_changes:
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW, new_file_request)
+		return
+	new_file_request()
+func try_close_editor_window():
+	if not opening and has_unsaved_changes:
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_CLOSE, close_editor_if_window)
+		return
+	close_editor_if_window()
+func try_reload_editor_window():
+	if not opening and has_unsaved_changes:
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_RELOAD, reload_editor_if_window)
+		return
+	reload_editor_if_window()
+	
+
 func open_from_path(path:String):
+	altered_history = false
+	undo_redo.clear_history()
+	update_undo_redo_buttons()
+	
 	var file = FileAccess.open(path, FileAccess.READ)
 	%OpeningCover.show()
 	if not file:
@@ -692,10 +738,11 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
-	load_page(Pages.current_page_number_by_file_name.get(get_save_path(), 0), true)
+	load_page(Pages.current_page_number_by_file_name.get(path, 0), true)
+	
 
 func _on_fd_open_file_selected(path: String) -> void:
-	open_from_path(path)
+	try_open_from_path(path)
 
 func request_go_to_address(address:String, action_message:=""):
 	if action_message.is_empty():
@@ -844,7 +891,7 @@ func _on_file_id_pressed(id: int) -> void:
 			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
 			#%File.set_item_checked(9, Pages.empty_strings_for_l10n)
 		9:
-			emit_signal("open_new_file")
+			try_new_file()
 
 func _on_l_10n_menu_id_pressed(id: int) -> void:
 	match id:
@@ -855,10 +902,17 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 		2: #merge
 			open_popup($Popups.get_node("FDMergeL10N"), true)
 
+
+var has_unsaved_changes:bool:
+	get():
+		return not (undo_redo.get_history_count() == 0 or not altered_history)
+
+
 func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
-			emit_signal("request_reload")
+			
+			try_reload_editor_window()
 		1:
 			open_window_by_string("PunctuationRulesWindow")
 		3:
@@ -993,164 +1047,7 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
-	for id in Pages.text_data.keys():
-		var id_count := 0
-		for number in Pages.page_data.keys():
-			var page_data = Pages.page_data.get(number)
-			for line in page_data.get("lines"):
-				#if line.get("id") == id:
-					#id_count += 1
-				if line.get("line_type") == DIISIS.LineType.Text:
-					var tid = line.get("content").get("text_id")
-					if tid == id:
-						id_count += 1
-		if id_count > 1:
-			printt(id_count, id)
-	return
-	emit_signal("request_reload")
-	return
-	step_through_pages()
-	return
-	var doms := ["af_ZA",
-"sq_AL",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"hy_AM",
-"az_AZ",
-"eu_ES",
-"be_BY",
-"bn_IN",
-"bs_BA",
-"bg_BG",
-"ca_ES",
-"zh_CN",
-"zh_TW",
-"zh_TW",
-"zh_CN",
-"zh_TW",
-"hr_HR",
-"cs_CZ",
-"da_DK",
-"nl_NL",
-"nl_NL",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"et_EE",
-"fo_FO",
-"fi_FI",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"gl_ES",
-"ka_GE",
-"de_DE",
-"de_DE",
-"de_DE",
-"de_DE",
-"de_DE",
-"el_GR",
-"gu_IN",
-"he_IL",
-"hi_IN",
-"hu_HU",
-"is_IS",
-"id_ID",
-"it_IT",
-"it_IT",
-"ja_JP",
-"kn_IN",
-"kk_KZ",
-"kok_IN",
-"ko_KR",
-"lv_LV",
-"lt_LT",
-"mk_MK",
-"ms_MY",
-"ms_MY",
-"ml_IN",
-"mt_MT",
-"mr_IN",
-"mn_MN",
-"se_NO",
-"nb_NO",
-"nn_NO",
-"fa_IR",
-"pl_PL",
-"pt_BR",
-"pt_BR",
-"pa_IN",
-"ro_RO",
-"ru_RU",
-"sr_BA",
-"sr_BA",
-"sk_SK",
-"sk_SK",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"sw_KE",
-"sv_SE",
-"sv_SE",
-"syr_SY",
-"ta_IN",
-"te_IN",
-"th_TH",
-"tn_ZA",
-"tr_TR",
-"uk_UA",
-"uz_UZ",
-"vi_VN",
-"cy_GB",
-"xh_ZA",
-"zu_ZA"]
-	var uniques := []
-	for d in doms:
-		if not uniques.has(d):
-			uniques.append(d)
+	pass
 
 func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}
@@ -1502,3 +1399,81 @@ func update_recents_item():
 	for file : String in recent_data:
 		var file_name := file.trim_prefix(file.left(file.rfind("/") + 1))
 		recents_item.add_item("%s%s%s" % [file_name, RECENT_FILE_SEPARATOR, file])
+
+
+var last_quit_header : String
+var quit_dialog : Window
+#func _on_quit_dialog_request_save() -> void:
+
+func build_quit_dialog(header_text:String, confirm_callable:Callable=close_editor_if_window):
+	var dialog : DiisisQuitDialog = preload("res://addons/diisis/editor/quit_dialog.tscn").instantiate()
+	quit_dialog = dialog
+	add_child(dialog)
+	last_quit_header = header_text
+	update_quit_dialog_text(header_text)
+	dialog.popup()
+	dialog.confirmed.connect(func(save : bool):
+		if save:
+			
+			if not active_path.is_empty():
+				attempt_save_to_dir()
+				update_quit_dialog_text(last_quit_header)
+		await get_tree().process_frame
+		confirm_callable.call())
+	#dialog.request_save.connect(_on_quit_dialog_request_save)
+	
+	await get_tree().process_frame
+	#dialog.position = Vector2i(size * 0.5) - Vector2i(dialog.size * 0.5)
+
+signal close_window_request()
+signal reload_window_request()
+## only relevant if not embedded
+func close_editor_if_window():
+	close_window_request.emit()
+func reload_editor_if_window():
+	reload_window_request.emit()
+func new_file_request():
+	DiisisEditorEventBus.quit.new_file.emit()
+
+func update_quit_dialog_text(header_text:String):
+	if not is_instance_valid(quit_dialog):
+		return
+	var text := ""
+	text += header_text
+	text += "\n"
+	if active_path.is_empty() or not has_saved:
+		text += str("You have not saved since opening.")
+	else:
+		var seconds_since_last_save = int(time_since_last_save)
+		var minutes_since_last_save := 0
+		var hours_since_last_save := 0
+		var last_system_save = last_system_save
+		
+		var second_word:String
+		var minute_word:String
+		var hour_word:String
+		
+		
+		if seconds_since_last_save >= 60:
+			minutes_since_last_save = floor(seconds_since_last_save / 60.0)
+			seconds_since_last_save -= 60 * minutes_since_last_save
+			if minutes_since_last_save >= 60:
+				hours_since_last_save = floor(minutes_since_last_save / 60.0)
+				minutes_since_last_save -= 60 * hours_since_last_save
+		
+		second_word = "second" if seconds_since_last_save == 1 else "seconds"
+		minute_word = "minute" if minutes_since_last_save == 1 else "minutes"
+		hour_word = "hour" if hours_since_last_save == 1 else "hours"
+		
+		var system_str := str(str(last_system_save.get("hour")).pad_zeros(2), ":", str(last_system_save.get("minute")).pad_zeros(2), ":", str(last_system_save.get("second")).pad_zeros(2))
+		text += str("You last saved at ", system_str, ".\n")
+		
+		var ago_string:=""
+		if hours_since_last_save > 0:
+			ago_string += str(hours_since_last_save, " ", hour_word, ", ")
+		if minutes_since_last_save > 0:
+			ago_string += str(minutes_since_last_save, " ", minute_word, ", ")
+		
+		ago_string += str(seconds_since_last_save, " ", second_word)
+		text += str("(", ago_string, " ago.)")
+	quit_dialog.set_text(text)

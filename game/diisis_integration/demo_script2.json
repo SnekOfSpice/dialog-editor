@@ -404,7 +404,7 @@
 
 			}
 		},
-		"id_counter": -9223372036854761352,
+		"id_counter": -9223372036854761400,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -567,7 +567,7 @@
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
-									"loopback_target_line": 1,
+									"loopback_target_line": 0,
 									"loopback_target_page": 0,
 									"meta.disabled_visible": false,
 									"meta.enabled_visible": true,
@@ -575,7 +575,7 @@
 									"meta.selector": {
 										"selected": false
 									},
-									"target_line": 2,
+									"target_line": 1,
 									"target_page": 0,
 									"text_id_disabled": "1744987729.575--9223372036854775792",
 									"text_id_enabled": "1744987729.575--9223372036854775793"
@@ -610,7 +610,7 @@
 									"jump_address_mode": 0,
 									"loop_address_mode": 0,
 									"loopback": false,
-									"loopback_target_line": 1,
+									"loopback_target_line": 0,
 									"loopback_target_page": 0,
 									"meta.disabled_visible": false,
 									"meta.enabled_visible": true,
@@ -822,13 +822,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.626--9223372036854774735",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 0.0,
 						"meta.selector": {
 							"selected": false
@@ -853,6 +851,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"advance_yield": false,
 							"delay_after": 0.0,
 							"delay_before": 0.0,
 							"meta.has_reverse": false,
@@ -868,13 +867,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.627--9223372036854774732",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 1.0,
 						"meta.selector": {
 							"selected": false
@@ -912,13 +909,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.628--9223372036854774728",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 2.0,
 						"meta.selector": {
 							"selected": false
@@ -943,6 +938,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"advance_yield": false,
 							"delay_after": 5.0,
 							"delay_before": 0.0,
 							"meta.has_reverse": false,
@@ -958,13 +954,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1747205915.630--9223372036854773717",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 3.0,
 						"meta.selector": {
 							"selected": false
@@ -999,13 +993,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.628--9223372036854774724",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 4.0,
 						"meta.selector": {
 							"selected": false
@@ -1030,6 +1022,7 @@
 							"operand_key": "AND"
 						},
 						"content": {
+							"advance_yield": false,
 							"delay_after": 0.0,
 							"delay_before": 0.0,
 							"meta.has_reverse": false,
@@ -1045,13 +1038,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.629--9223372036854774721",
 						"line_type": 2.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 5.0,
 						"meta.selector": {
 							"selected": false
@@ -1086,13 +1077,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.630--9223372036854774717",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 6.0,
 						"meta.selector": {
 							"selected": false
@@ -1130,13 +1119,11 @@
 							},
 							"meta.visible": false
 						},
-						"header": [],
 						"id": "1744999498.630--9223372036854774713",
 						"line_type": 0.0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0.0,
-						"meta.is_head_editable": true,
 						"meta.line_index": 7.0,
 						"meta.selector": {
 							"selected": false
@@ -1145,7 +1132,6 @@
 					}
 				],
 				"meta.address_mode_next": 0.0,
-				"meta.scroll_vertical": 266.0,
 				"meta.selected": false,
 				"next": 2.0,
 				"number": 1.0,
@@ -1418,7 +1404,7 @@
 			"1744987729.626--9223372036854775789": "No actually, robots are scary",
 			"1744987729.749--9223372036854775782": "[]>amber{amber-emotion|sad}: I promise I'm not scary!",
 			"1744987729.798--9223372036854775779": "[]>narrator: And then we only show the appropriate line.\n[]>narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.\n[]>narrator: You can find all of that in the [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Choice]wiki on GitHub[/url].",
-			"1744987741.530--9223372036854775777": "[]>narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
+			"1744987741.530--9223372036854775777": "[]>amber:THIS TOO IS SCRIPT 2\n[]>narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.\n[]>narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",
 			"1744987741.532--9223372036854775772": "[]>narrator: This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.",
 			"1744987741.532--9223372036854775774": "[]>narrator: Like so.\n[]>amber: Or <call:shake_camera(40)>so :3\n[]>narrator: Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.",
 			"1744987741.534--9223372036854775769": "[]>narrator: Loyalty Freak Music is anticapitalist and antifascist. <mp>[b]Those are good things.[/b] <ap>...And the music rocks too.\n[]>narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.",

@@ -77,7 +77,9 @@ func _enter_tree():
 		await get_tree().process_frame
 		toolbar_button.get_parent().move_child(toolbar_button, -2)
 	
-	DiisisEditorEventBus.editor_window_reload_requested.connect(on_editor_window_reload_requested)
+	# usesed=??
+	DiisisEditorEventBus.quit.window_reload.connect(on_editor_window_reload_requested)
+	DiisisEditorEventBus.quit.new_file.connect(on_new_file_requested)
 
 	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
@@ -319,7 +321,6 @@ func open_editor():
 		
 		await get_tree().process_frame
 		dia_editor_window.popup()
-		dia_editor_window.open_new_file.connect(open_new_file)
 		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
 
 
@@ -337,7 +338,6 @@ func add_new_dialog_editor_window():
 		else:
 			embedder.init()
 		_make_visible(false)
-		embedder.open_new_file.connect(open_new_file)
 		embedder.request_template_setup.connect(on_request_setup_template)
 	else:
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
@@ -345,7 +345,10 @@ func add_new_dialog_editor_window():
 		dia_editor_window.wrap_controls = true
 
 
-func open_new_file():
+func on_new_file_requested():
+	if dia_editor_window:
+		dia_editor_window.queue_free()
+		await get_tree().process_frame
 	if FileAccess.file_exists("user://import_override_temp.json") and _embedded:
 		ProjectSettings.set_setting("diisis/project/file/path", "user://import_override_temp.json")
 	else:
@@ -361,7 +364,6 @@ func open_new_file():
 	else:
 		dia_editor_window.file_path = ""
 	dia_editor_window.tree_entered.connect(dia_editor_window.popup)
-	dia_editor_window.open_new_file.connect(open_new_file)
 	dia_editor_window.title = "DIISIS"
 
 

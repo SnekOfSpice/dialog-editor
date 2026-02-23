@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c65bwbdhvxdto"]
+[gd_scene format=3 uid="uid://c65bwbdhvxdto"]
 
 [ext_resource type="Script" uid="uid://cf40np5dm84vv" path="res://addons/diisis/shared/autoload/Diisis.gd" id="1_elk43"]
 
-[node name="Diisis" type="Node"]
+[node name="Diisis" type="Node" unique_id=1469911585]
 script = ExtResource("1_elk43")

@@ -9,7 +9,7 @@ var editor_start_size:Vector2
 var editor_content_scale:=1.0
 
 var file_path := ""
-var last_quit_header := ""
+#var last_quit_header := ""
 
 signal open_new_file()
 signal closing_editor()
@@ -24,6 +24,8 @@ func _on_about_to_popup() -> void:
 	window_factor_window = find_child("WindowFactorWindow")
 	editor_start_size = editor.size
 	editor.init(file_path)
+	
+	editor.close_window_request.connect(close_window)
 	
 	editor_window.visible = true
 	window_factor_window.visible = true
@@ -54,66 +56,7 @@ func _on_about_to_popup() -> void:
 	%UpdateAvailable.check_for_updates()
 	_on_save_path_set(file_path)
 
-func _on_close_requested() -> void:
-	if is_instance_valid(editor):
-		if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
-			close_editor()
-	last_quit_header = "Do you want to close DIISIS?\n"
-	build_quit_dialog(last_quit_header)
 
-func build_quit_dialog(header_text:String, confirm_callable:Callable=close_editor):
-	update_quit_dialog_text(header_text)
-	$QuitDialog.popup()
-	if $QuitDialog.is_connected("confirmed", close_editor):
-		$QuitDialog.disconnect("confirmed", close_editor)
-	if $QuitDialog.is_connected("confirmed", close_editor_and_open_new_file):
-		$QuitDialog.disconnect("confirmed", close_editor_and_open_new_file)
-	$QuitDialog.confirmed.connect(confirm_callable)
-	
-	await get_tree().process_frame
-	$QuitDialog.position = Vector2i(size * 0.5) - Vector2i($QuitDialog.size * 0.5)
-
-func update_quit_dialog_text(header_text:String):
-	if not is_instance_valid(editor):
-		return
-	var text := ""
-	text += header_text
-	if editor.active_path.is_empty() or not editor.has_saved:
-		text += str("You have not saved since opening.")
-	else:
-		var seconds_since_last_save = int(editor.time_since_last_save)
-		var minutes_since_last_save := 0
-		var hours_since_last_save := 0
-		var last_system_save = editor.last_system_save
-		
-		var second_word:String
-		var minute_word:String
-		var hour_word:String
-		
-		
-		if seconds_since_last_save >= 60:
-			minutes_since_last_save = floor(seconds_since_last_save / 60.0)
-			seconds_since_last_save -= 60 * minutes_since_last_save
-			if minutes_since_last_save >= 60:
-				hours_since_last_save = floor(minutes_since_last_save / 60.0)
-				minutes_since_last_save -= 60 * hours_since_last_save
-		
-		second_word = "second" if seconds_since_last_save == 1 else "seconds"
-		minute_word = "minute" if minutes_since_last_save == 1 else "minutes"
-		hour_word = "hour" if hours_since_last_save == 1 else "hours"
-		
-		var system_str := str(str(last_system_save.get("hour")).pad_zeros(2), ":", str(last_system_save.get("minute")).pad_zeros(2), ":", str(last_system_save.get("second")).pad_zeros(2))
-		text += str("You last saved at ", system_str, ".\n")
-		
-		var ago_string:=""
-		if hours_since_last_save > 0:
-			ago_string += str(hours_since_last_save, " ", hour_word, ", ")
-		if minutes_since_last_save > 0:
-			ago_string += str(minutes_since_last_save, " ", minute_word, ", ")
-		
-		ago_string += str(seconds_since_last_save, " ", second_word)
-		text += str("(", ago_string, " ago.)")
-	$QuitDialog.set_text(text)
 
 func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
@@ -132,7 +75,7 @@ func save_preferences():
 	
 	config.save(PREFERENCE_PATH)
 
-func close_editor():
+func close_window():
 	emit_signal("closing_editor")
 	save_preferences()
 	if is_instance_valid(editor):
@@ -146,13 +89,13 @@ func close_editor():
 	
 	queue_free()
 
-func close_editor_and_open_new_file():
-	emit_signal("open_new_file")
-	close_editor()
+func close_window_and_open_new_file():
+	DiisisEditorEventBus.quit.new_file.emit()
+	close_window()
 
 func reload_editor():
-	DiisisEditorEventBus.editor_window_reload_requested.emit()
-	close_editor()
+	DiisisEditorEventBus.quit.window_reload.emit()
+	close_window()
 
 func update_content_scale(scale_factor:float):
 	if not editor_window or not editor:
@@ -231,27 +174,21 @@ func _on_editor_scale_editor_up():
 
 
 func _on_editor_open_new_file() -> void:
-	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
-		close_editor_and_open_new_file()
-	last_quit_header = "Open a new, blank file?\n"
-	build_quit_dialog(last_quit_header, close_editor_and_open_new_file)
-
-func _on_editor_request_reload() -> void:
-	if editor.undo_redo.get_history_count() == 0 or not editor.altered_history:
-		reload_editor()
-	last_quit_header = "Reload DIISIS?\n"
-	build_quit_dialog(last_quit_header, reload_editor)
+	if not editor.has_unsaved_changes:
+		close_window_and_open_new_file()
+	editor.build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW)
 
 
-
-func _on_quit_dialog_request_save() -> void:
-	if editor.active_path.is_empty():
-		$QuitDialog.hide()
-	editor.attempt_save_to_dir()
-	update_quit_dialog_text(last_quit_header)
+func _on_close_requested() -> void:
+	if not editor.has_unsaved_changes:
+		close_window()
+	editor.build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_CLOSE)
 
 
 func _on_save_path_set(path : String) -> void:
+	if path.is_empty():
+		title = DIISIS.UNSAVED_FILE_PATH
+		return
 	var parts := path.split("/")
 	var file_name := parts[parts.size() - 1]
 	title = str(file_name.trim_suffix(".json"), " - DIISIS - (", path, ")")
@@ -288,3 +225,11 @@ func set_windowed():
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED, get_window_id())
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, get_window_id())
+
+
+func _on_editor_close_window_request() -> void:
+	close_window()
+
+
+func _on_editor_reload_window_request() -> void:
+	reload_editor()
