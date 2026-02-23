@@ -9,10 +9,11 @@ add LineReader.clear_past_lines()
 Parser fact payload for debugging
 rename dropdowns to stringkits
 remove headers
-embed option
+option to embed diisis editor like other main screen plugins
 4.6 upgrade
 remove dialog args in text only export
 recent files
+warning on unsaved changes when trying to open another file
 
 -- under the hood --
 diisiseditorEventbus

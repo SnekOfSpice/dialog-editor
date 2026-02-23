@@ -36,7 +36,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
-[node name="DIISISEditor" type="Control" unique_id=816289720]
+[node name="NotificationContainer" type="Control" unique_id=816289720]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -557,6 +557,7 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 
 [node name="NotificationContainer" type="VBoxContainer" parent="." unique_id=2099306740]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -751,6 +752,7 @@ scroll_active = false
 horizontal_alignment = 1
 
 [node name="ImportingCover" type="ColorRect" parent="." unique_id=1961140070]
+unique_name_in_owner = true
 visible = false
 z_index = 10
 layout_mode = 1
