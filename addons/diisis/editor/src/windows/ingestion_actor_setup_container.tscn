@@ -1,53 +1,56 @@
-[gd_scene load_steps=2 format=3 uid="uid://ccmtncv1scrdi"]
+[gd_scene format=3 uid="uid://ccmtncv1scrdi"]
 
 [ext_resource type="Script" uid="uid://cejag0i1tvlj4" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_container.gd" id="1_60wls"]
 
-[node name="PageIngestionActorSetupContainer" type="VBoxContainer"]
+[node name="PageIngestionActorSetupContainer" type="VBoxContainer" unique_id=1633444535]
 custom_minimum_size = Vector2(400, 150)
-offset_right = 400.0
-offset_bottom = 150.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 177.0
+grow_horizontal = 2
+size_flags_vertical = 0
 script = ExtResource("1_60wls")
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="TextEdit" type="TextEdit" parent="." unique_id=1870820816]
 custom_minimum_size = Vector2(400, 115)
 layout_mode = 2
-size_flags_vertical = 3
 
-[node name="NoTitleWarning" type="RichTextLabel" parent="."]
+[node name="NoTitleWarning" type="RichTextLabel" parent="." unique_id=1266693664]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][color=fb40a9]No speaker stringkit has been set. Please set one up in [url=open-StringkitWindow]Setup > Stringkits > Dialog[/url].[/color][/center]"
 fit_content = true
 scroll_active = false
 
-[node name="Buttons" type="VBoxContainer" parent="."]
+[node name="Buttons" type="VBoxContainer" parent="." unique_id=628951876]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Buttons"]
+[node name="VBoxContainer" type="HBoxContainer" parent="Buttons" unique_id=803922445]
 layout_mode = 2
 
-[node name="HelpButton" type="Button" parent="Buttons/VBoxContainer"]
+[node name="HelpButton" type="Button" parent="Buttons/VBoxContainer" unique_id=2076547637]
 layout_mode = 2
 text = "?"
 
-[node name="SaveButton" type="Button" parent="Buttons/VBoxContainer"]
+[node name="SaveButton" type="Button" parent="Buttons/VBoxContainer" unique_id=873838602]
 layout_mode = 2
 text = "save"
 
-[node name="ResetButton" type="Button" parent="Buttons/VBoxContainer"]
+[node name="ResetButton" type="Button" parent="Buttons/VBoxContainer" unique_id=1839878468]
 layout_mode = 2
 text = "reset"
 
-[node name="AutoIngestButton" type="Button" parent="Buttons/VBoxContainer"]
+[node name="AutoIngestButton" type="Button" parent="Buttons/VBoxContainer" unique_id=1190366435]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="HelpLabel" type="RichTextLabel" parent="Buttons"]
+[node name="HelpLabel" type="RichTextLabel" parent="Buttons" unique_id=1726246961]
 visible = false
 layout_mode = 2
+bbcode_enabled = true
 text = "Prepends this to the text to be ingested if it doesn't contain \"LINE\" for Text Lines or \"END ACTORS\\n\" for Page ingestion.
 
-See Ingestion Help menu for more details. tldr is: space-separated [actor shorthand]/[actual name] pairs. colons and []> control sequences will be taken care of, but you can declare them if you want."
+See [url=ingestion_help]Ingestion Help[/url] menu for more details. tldr is: space-separated [actor shorthand]/[actual name] pairs. colons and []> control sequences will be taken care of, but you can declare them if you want."
 fit_content = true
 
 [connection signal="text_changed" from="TextEdit" to="." method="_on_text_edit_text_changed"]
@@ -56,3 +59,4 @@ fit_content = true
 [connection signal="pressed" from="Buttons/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Buttons/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Buttons/VBoxContainer/AutoIngestButton" to="." method="_on_auto_ingest_button_pressed"]
+[connection signal="meta_clicked" from="Buttons/HelpLabel" to="." method="_on_help_label_meta_clicked"]

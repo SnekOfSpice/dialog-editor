@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bhftsn5yhlugv"]
+[gd_scene format=3 uid="uid://bhftsn5yhlugv"]
 
 [ext_resource type="Script" uid="uid://c5iort0nerwih" path="res://addons/diisis/editor/src/windows/facts_popup_content.gd" id="1_x3wnc"]
 [ext_resource type="PackedScene" uid="uid://cigmq5hpy508j" path="res://addons/diisis/editor/src/create_fact_window.tscn" id="2_bhobo"]
+[ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_wjuea"]
 
-[node name="FactsPopupContent" type="VBoxContainer"]
+[node name="FactsPopupContent" type="VBoxContainer" unique_id=1808348633]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,10 +12,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x3wnc")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1725469029]
 layout_mode = 2
 
-[node name="LoveLabel" type="Label" parent="HBoxContainer2"]
+[node name="LoveLabel" type="Label" parent="HBoxContainer2" unique_id=761263008]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
@@ -22,161 +23,162 @@ theme_type_variation = &"WhisperLabel"
 text = "DIISIS loves you X angels love you X lessthanthree"
 vertical_alignment = 1
 
-[node name="CreateButton" type="Button" parent="HBoxContainer2"]
+[node name="CreateButton" type="Button" parent="HBoxContainer2" unique_id=2042694676]
 layout_mode = 2
 size_flags_horizontal = 10
 focus_mode = 0
 text = "CREATE FACT"
+icon = ExtResource("2_wjuea")
 
-[node name="Facts" type="ItemList" parent="."]
+[node name="Facts" type="ItemList" parent="." unique_id=673712171]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1875622302]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=501623220]
 custom_minimum_size = Vector2(0, 93)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="FactInteractionContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="FactInteractionContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=786556108]
 layout_mode = 2
 
-[node name="ChangeDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="ChangeDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=212084402]
 layout_mode = 2
 text = "Change Default"
 
-[node name="CancelChangeDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="CancelChangeDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=1646214371]
 layout_mode = 2
 text = "Cancel"
 
-[node name="RenameFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="RenameFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=1632173645]
 layout_mode = 2
 text = "Rename"
 
-[node name="CancelRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="CancelRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=1122752159]
 layout_mode = 2
 text = "Cancel"
 
-[node name="DeleteFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="DeleteFactButton" type="Button" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=1570425960]
 layout_mode = 2
 text = "Delete"
 
-[node name="FactNameLabel" type="Label" parent="HBoxContainer/VBoxContainer/FactInteractionContainer"]
+[node name="FactNameLabel" type="Label" parent="HBoxContainer/VBoxContainer/FactInteractionContainer" unique_id=2054726633]
 layout_mode = 2
 
-[node name="FactRenameEditContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="FactRenameEditContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=1587054918]
 layout_mode = 2
 
-[node name="ConfirmRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer"]
+[node name="ConfirmRenameButton" type="Button" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer" unique_id=1186377075]
 layout_mode = 2
 text = "Save"
 
-[node name="NewNameEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer"]
+[node name="NewNameEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/FactRenameEditContainer" unique_id=1824392741]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="FactDuplicateLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+[node name="FactDuplicateLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=701633166]
 layout_mode = 2
 text = "Fact is already declared."
 
-[node name="ChangeDefaultEditContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="ChangeDefaultEditContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=675814978]
 visible = false
 layout_mode = 2
 
-[node name="NewDefaultCheckBox" type="CheckBox" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer"]
+[node name="NewDefaultCheckBox" type="CheckBox" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer" unique_id=1053906024]
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 
-[node name="NewDefaultSpinBox" type="SpinBox" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer"]
+[node name="NewDefaultSpinBox" type="SpinBox" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer" unique_id=1764503671]
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 
-[node name="SaveNewDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer"]
+[node name="SaveNewDefaultButton" type="Button" parent="HBoxContainer/VBoxContainer/ChangeDefaultEditContainer" unique_id=486100741]
 layout_mode = 2
 text = "Set Default"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=1782843637]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="GoToAddressLabel" type="Label" parent="HBoxContainer/HBoxContainer"]
+[node name="GoToAddressLabel" type="Label" parent="HBoxContainer/HBoxContainer" unique_id=26701224]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="GoToAddressButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="GoToAddressButton" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=1004637511]
 layout_mode = 2
 size_flags_vertical = 8
 focus_mode = 0
 text = "go to"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=164550784]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="HBoxContainer" type="GridContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="GridContainer" parent="MarginContainer" unique_id=290098537]
 layout_mode = 2
 mouse_filter = 2
 columns = 5
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer" unique_id=601001020]
 layout_mode = 2
 text = "Pages containing fact:"
 text_overrun_behavior = 1
 
-[node name="Label3" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1932803596]
 layout_mode = 2
 text = "Lines declaring fact:"
 text_overrun_behavior = 1
 
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer" unique_id=665284596]
 layout_mode = 2
 text = "Conditionals referencing fact:"
 text_overrun_behavior = 1
 
-[node name="Label4" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="Label4" type="Label" parent="MarginContainer/HBoxContainer" unique_id=533809573]
 layout_mode = 2
 text = "Choice Items declaring fact:"
 text_overrun_behavior = 1
 
-[node name="Label5" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="Label5" type="Label" parent="MarginContainer/HBoxContainer" unique_id=475213898]
 layout_mode = 2
 text = "Choice Items referencing fact as conditional:"
 text_overrun_behavior = 1
 
-[node name="RefPagesFact" type="ItemList" parent="MarginContainer/HBoxContainer"]
+[node name="RefPagesFact" type="ItemList" parent="MarginContainer/HBoxContainer" unique_id=1789277938]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RefLinesFact" type="ItemList" parent="MarginContainer/HBoxContainer"]
+[node name="RefLinesFact" type="ItemList" parent="MarginContainer/HBoxContainer" unique_id=846845447]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RefLinesCondition" type="ItemList" parent="MarginContainer/HBoxContainer"]
+[node name="RefLinesCondition" type="ItemList" parent="MarginContainer/HBoxContainer" unique_id=1739090332]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RefChoicesFact" type="ItemList" parent="MarginContainer/HBoxContainer"]
+[node name="RefChoicesFact" type="ItemList" parent="MarginContainer/HBoxContainer" unique_id=172261804]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RefChoicesCondition" type="ItemList" parent="MarginContainer/HBoxContainer"]
+[node name="RefChoicesCondition" type="ItemList" parent="MarginContainer/HBoxContainer" unique_id=283113735]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ConfirmDelete" type="ConfirmationDialog" parent="."]
+[node name="ConfirmDelete" type="ConfirmationDialog" parent="." unique_id=112131681]
 title = "Delete Fact?"
 initial_position = 4
 always_on_top = true
 popup_window = true
 ok_button_text = "Delete Fact (NO UNDO)"
 
-[node name="CreateFactWindow" parent="." instance=ExtResource("2_bhobo")]
+[node name="CreateFactWindow" parent="." unique_id=971397206 instance=ExtResource("2_bhobo")]
 visible = false
 always_on_top = true
 

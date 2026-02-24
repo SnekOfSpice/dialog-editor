@@ -75,3 +75,14 @@ func _on_auto_ingest_button_pressed() -> void:
 func _on_no_title_warning_meta_clicked(meta: Variant) -> void:
 	Pages.editor.open_window_by_string(str(meta).trim_prefix("open-"))
 	(get_parent() as Window).close_requested.emit()
+
+
+
+func _on_help_label_meta_clicked(meta: Variant) -> void:
+	#(get_parent() as Window).exclusive = false
+	var nested_help_window : RichTextAcceptDialog = DiisisIngestMenu.popup_ingestion_help(false)
+	#nested_help_window.tree_exited.connect(func():
+		#await get_tree().process_frame
+		#await get_tree().process_frame
+		#Pages.editor.open_window_by_string("IngestionActorSetupWindow")
+		#)

@@ -137,10 +137,10 @@ func init(active_file_path:="") -> void:
 	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
-		popup.exclusive = false
+		popup.exclusive = DiisisEditorUtil.embedded
 		popup.always_on_top = not DiisisEditorUtil.embedded
 		popup.wrap_controls = true
-		popup.transient = false
+		popup.transient = DiisisEditorUtil.embedded
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
@@ -628,7 +628,6 @@ func get_recent_files() -> Array:
 	if recent_files.get_length() == 0:
 		return []
 	var recent_data : Array = JSON.parse_string(recent_files.get_as_text()) 
-	print(recent_data)
 	recent_files.close()
 	return recent_data
 

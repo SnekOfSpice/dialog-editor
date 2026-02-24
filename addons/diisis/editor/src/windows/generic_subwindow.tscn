@@ -4,6 +4,7 @@
 
 [node name="GenericSubwindow" type="Window" unique_id=511013998]
 oversampling_override = 1.0
+position = Vector2i(0, 36)
 script = ExtResource("1_utn4q")
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]

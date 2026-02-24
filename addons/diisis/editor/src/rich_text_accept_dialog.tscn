@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://c2hqyph3fb0m1"]
+[gd_scene format=3 uid="uid://c2hqyph3fb0m1"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_12nk8"]
 [ext_resource type="Script" uid="uid://dbl7j7pophty3" path="res://addons/diisis/editor/src/rich_text_accept_dialog.gd" id="2_12nk8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_12nk8"]
 
 [sub_resource type="Gradient" id="Gradient_osost"]
 offsets = PackedFloat32Array(0.442786, 1)
@@ -18,44 +20,44 @@ gradient = SubResource("Gradient_osost")
 height = 20
 fill_to = Vector2(0, 1)
 
-[node name="RichTextAcceptDialog" type="AcceptDialog"]
+[node name="RichTextAcceptDialog" type="AcceptDialog" unique_id=26998460]
+oversampling_override = 1.0
 position = Vector2i(0, 36)
 size = Vector2i(372, 100)
 visible = true
-exclusive = false
-always_on_top = true
 theme = ExtResource("1_12nk8")
 script = ExtResource("2_12nk8")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1525903278]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 364.0
 offset_bottom = 62.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=643339310]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 vertical_scroll_mode = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/ScrollContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/ScrollContainer" unique_id=1111544125]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_12nk8")
 bbcode_enabled = true
 fit_content = true
 selection_enabled = true
 deselect_on_focus_loss_enabled = false
 
-[node name="ScrollHintTop" type="TextureRect" parent="MarginContainer"]
+[node name="ScrollHintTop" type="TextureRect" parent="MarginContainer" unique_id=1372491818]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
 texture = SubResource("GradientTexture2D_2a3dx")
 
-[node name="ScrollHintBottom" type="TextureRect" parent="MarginContainer"]
+[node name="ScrollHintBottom" type="TextureRect" parent="MarginContainer" unique_id=302976604]
 visible = false
 layout_mode = 2
 size_flags_vertical = 8

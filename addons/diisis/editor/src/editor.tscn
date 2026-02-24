@@ -36,7 +36,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m63dd"]
 
-[node name="NotificationContainer" type="Control" unique_id=816289720]
+[node name="DiisisEditor" type="Control" unique_id=816289720]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

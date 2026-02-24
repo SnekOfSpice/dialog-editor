@@ -5,7 +5,7 @@ class_name DIISISArgHint
 func build_str(text:String):
 	content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
-	find_child("TextLabel").text = text
+	%TextLabel.text = text
 
 func build(instruction_name: String, full_text:String, caret_column:int, on_node : Control = null):
 	content_scale_factor = Pages.editor.content_scale
@@ -49,27 +49,39 @@ func build(instruction_name: String, full_text:String, caret_column:int, on_node
 	
 	
 	var hint := ""
+	var hint_without_bbcode := ""
 	
 	i = 0
 	var hit_index := 0
 	var string_before_column := ""
+	var string_before_column_without_bbcode := ""
+	
 	for a in arg_strings:
 		if i == args_before_caret:
 			hit_index = i
 			hint += "[u][bgcolor=05020a][outline_size=1][outline_color=e6c9c4DF]"
 		hint += a
+		hint_without_bbcode += arg_strings_no_bbcode[i]
 		if hit_index == 0 and args_before_caret > 0:
 			string_before_column += arg_strings_no_bbcode[i]
+			string_before_column_without_bbcode += arg_strings_no_bbcode[i]
 		if i == args_before_caret:
 			hint += "[/outline_color][/outline_size][/bgcolor][/u]"
 		if i < arg_strings.size() - 1:
 			hint += " ,  "
+			hint_without_bbcode += " ,  "
 			if hit_index == 0 and args_before_caret > 0:
 				string_before_column += " ,  "
+				string_before_column_without_bbcode += " ,  "
 		i += 1
-	find_child("TextLabel").text = hint
+	%TextLabel.text = hint
 	
-	position.x -= get_theme_font("font").get_string_size(string_before_column).x * Pages.editor.content_scale
+	# tbh idk why this needs 2 different implementations lmao
+	if DiisisEditorUtil.embedded:
+		position.x = get_theme_font("font", "LineEdit").get_string_size(hint_without_bbcode.trim_prefix(string_before_column_without_bbcode)).x * Pages.editor.content_scale
+		position += Vector2i(EditorInterface.get_base_control().get_screen_position())
+	else:
+		position.x -= get_theme_font("font", "LineEdit").get_string_size(string_before_column).x * Pages.editor.content_scale
 	await get_tree().process_frame
 	if hint.is_empty():
 		hide()
@@ -78,10 +90,10 @@ func _on_close_requested() -> void:
 	hide()
 
 func get_hint_line_count() -> int:
-	return find_child("TextLabel").get_line_count()
+	return %TextLabel.get_line_count()
 
 func get_text_in_line(line:int) -> String:
-	var label_text : String = find_child("TextLabel").text
+	var label_text : String = %TextLabel.text
 	if not visible:
 		return ""
 	var segments = label_text.split("\n")
