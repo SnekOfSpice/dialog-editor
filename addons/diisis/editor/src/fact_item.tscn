@@ -111,7 +111,6 @@ size_flags_vertical = 4
 text = "register"
 
 [node name="Hint" parent="." unique_id=872857279 instance=ExtResource("3_i2pc6")]
-oversampling_override = 1.0
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]
 [connection signal="gui_input" from="FactItem/HBoxContainer/FactValueContainer/FactName" to="." method="_on_fact_name_gui_input"]

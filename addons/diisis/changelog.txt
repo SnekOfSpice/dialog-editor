@@ -14,6 +14,7 @@ option to embed diisis editor like other main screen plugins
 remove dialog args in text only export
 recent files
 warning on unsaved changes when trying to open another file
+text_flow property (folds in full_words and the new single_word pattern)
 
 -- under the hood --
 diisiseditorEventbus

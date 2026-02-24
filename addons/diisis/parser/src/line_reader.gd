@@ -23,6 +23,23 @@ enum NameStyle {
 	None,
 }
 
+
+enum TextFlow{
+	## The text will smoothly grow across [member body_label].
+	Smooth,
+	## Each word will be read one word at a time instead of character by character.
+	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be proportional to [member text_speed].
+	FullWords,
+	## The text will be broken up along spaces.
+	## [br]Each word will smoothly grow across [member body_label].
+	## [br][b]Note:[/b] Incompatible with rubies.
+	SmoothSingle,
+	## Each word will be displayed individually and instantly, broken along spaces.
+	## [br][b]Note:[/b] Incompatible with rubies.
+	FullWordsSingle
+}
+
+
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
 ## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/LineReader-&-Parser
 ## @tutorial(Visual Novel Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template
@@ -35,8 +52,14 @@ enum NameStyle {
 ## Complete override of other text speed settings, including [member text_speed] and [code]<ts_*>[/code] tags.[br][br]
 ## Set to [code]-1[/code] (default) to disable.
 @export_range(-1.0, MAX_TEXT_SPEED, 1.0) var custom_text_speed_override := -1.0
-## If true, the text will be read one word at a time instead of character by character.
-@export var full_words := false
+## Determines the text flow of characters when [member text_speed] isn't [member MAX_TEXT_SPEED].
+@export var text_flow : TextFlow = TextFlow.Smooth
+var _full_words := false:
+	get():
+		return text_flow in [TextFlow.FullWords,TextFlow.FullWordsSingle]
+var _single_words := false:
+	get():
+		return text_flow in [TextFlow.SmoothSingle,TextFlow.FullWordsSingle]
 ## The delay that <ap> tags imply, in seconds.
 @export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_pause_duration := 0.2
 ## Disables input-based calls of [method advance].
@@ -499,6 +522,7 @@ func _serialize() -> Dictionary:
 		result["ui_visibilities"] = get_ui_visibilities()
 	if body_label:
 		result["visible_characters"] = body_label.visible_characters
+	result["text_flow"] = text_flow
 	result["_yield_instruction_to_advance"] = _yield_instruction_to_advance
 	
 	return result
@@ -547,6 +571,7 @@ func _deserialize(data: Dictionary):
 	terminated = data.get("terminated")
 	_text_delay = data.get("_text_delay", _text_delay)
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	text_flow = data.get("text_flow", text_flow)
 	_yield_instruction_to_advance = data.get("_yield_instruction_to_advance", false)
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
@@ -1032,10 +1057,61 @@ func _read_new_line(new_line: Dictionary):
 	
 	_reverse_next_instruction = false
 
+
+# returns index, string pair
+func _find_next_speaking_line_index(text : String, from : int) -> Array:
+	var next_break_index : int = -1
+	var next_break_string : String = ""
+	if _single_words:
+		var scan_index := from
+		while scan_index < text.length():
+			if text[scan_index] == " ":
+				next_break_index = scan_index
+				next_break_string = " "
+				break
+			if text[scan_index] == "<":
+				scan_index = text.find(">", scan_index)
+				if scan_index == -1:
+					break
+			if text[scan_index] == "[":
+				scan_index = text.find("]", scan_index)
+				if text.length() >= scan_index + 3:
+					if (
+					text[scan_index + 1] == "i" and
+					text[scan_index + 2] == "m" and
+					text[scan_index + 3] == "g"):
+						scan_index = text.find("[/img]", scan_index) + 4
+					elif (
+						text[scan_index + 1] == "u" and
+						text[scan_index + 2] == "r" and
+						text[scan_index + 3] == "l"):
+							scan_index = text.find("[/url]", scan_index) + 4
+				if scan_index == -1:
+					break
+			scan_index += 1
+		#var space_pos := text.find(" ", from)
+		#if space_pos > -1:
+			#var tag_end := max(text.find(">"), text.find("]"))
+			#if tag_end > space_pos:
+				#space_pos = text.find(" ", tag_end)
+			#if space_pos != -1:
+				#next_break_index = space_pos
+				#next_break_string = " "
+	
+	var lc_position := text.find("<lc>", from)
+	if lc_position < next_break_index and lc_position != -1:
+		next_break_index = lc_position
+		next_break_string = "<lc>"
+	
+	return [next_break_index, next_break_string]
+
 func _replace_lc_tags(full_line_text:String) -> String:
-	var lc_position := full_line_text.find("<lc>")
-	while lc_position != -1:
-		var context_start := full_line_text.rfind("[]>", lc_position)
+	var r := _find_next_speaking_line_index(full_line_text, 0)
+	var next_break_index : int = r[0]
+	var next_break_string : String = r[1]
+	
+	while next_break_index != -1:
+		var context_start := full_line_text.rfind("[]>", next_break_index)
 		var actor : String
 		if full_line_text.find("{", context_start) != -1:
 			var context_end : int = min(
@@ -1045,9 +1121,15 @@ func _replace_lc_tags(full_line_text:String) -> String:
 		else:
 			var context_end : int = full_line_text.find(":", context_start)
 			actor = full_line_text.substr(context_start + 3, context_end - (context_start + 3))
-		full_line_text = full_line_text.erase(lc_position, "<lc>".length())
-		full_line_text = full_line_text.insert(lc_position, "\n[]>%s:" % actor)
-		lc_position = full_line_text.find("<lc>")
+		# handle single words
+		full_line_text = full_line_text.erase(next_break_index, next_break_string.length())
+		full_line_text = full_line_text.insert(next_break_index, "\n[]>%s:" % actor)
+		
+		# handle suingle words again
+		r = _find_next_speaking_line_index(full_line_text, next_break_index)
+		next_break_index = r[0]
+		next_break_string = r[1]
+	
 	return full_line_text
 
 
@@ -1151,7 +1233,7 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 		else:
 			var parsed_text := body_label.get_parsed_text()
 			var old_text_length : int = body_label.visible_characters
-			if full_words:
+			if _full_words:
 				var next_space_position = parsed_text.find(" ", body_label.visible_characters + 1) + 1
 				if next_space_position == 0:
 					next_space_position = -1
@@ -1709,7 +1791,8 @@ func _handle_tags_and_start_reading():
 					_ruby_indices.append(Vector2i(scan_index-tag_buffer, tag_end-tag_buffer)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
 				# for some reason this erasure doesn't register here already so we have to leftshift the end tag erasure manually by the tag length
-				bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
+				if tag_end != -1:
+					bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
 				target_length -= tag_string.length() + end_length
 				tag_buffer += tag_string.length() + end_length
 			
@@ -1830,6 +1913,10 @@ var ruby_containers_by_label := {}
 var ruby_roots_by_label := {}
 func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _ruby_indices, ruby_strings : Array = _ruby_strings) -> void:
 	if not ruby_enabled:
+		return
+	if _single_words:
+		if not ruby_indices.is_empty():
+			push_warning("Selected text_flow (value %s) is not compatible with rubies." % text_flow)
 		return
 	on_label.clip_contents = false
 	_ensure_ruby_container(on_label)
