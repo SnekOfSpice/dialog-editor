@@ -28,13 +28,14 @@ enum TextFlow{
 	## The text will smoothly grow across [member body_label].
 	Smooth,
 	## Each word will be read one word at a time instead of character by character.
-	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be proportional to [member text_speed].
+	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 	FullWords,
 	## The text will be broken up along spaces.
 	## [br]Each word will smoothly grow across [member body_label].
 	## [br][b]Note:[/b] Incompatible with rubies.
 	SmoothSingle,
 	## Each word will be displayed individually and instantly, broken along spaces.
+	## This is equivalent to using [enum TextFlow.SmoothSingle] with [member text_speed] set to [constant MAX_TEXT_SPEED].
 	## [br][b]Note:[/b] Incompatible with rubies.
 	FullWordsSingle
 }
@@ -47,12 +48,11 @@ enum TextFlow{
 @export_group("Text")
 @export_subgroup("Cadence")
 ## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.[br]
-## If [member full_words] is [code]true[/code], will instead pause between words for [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
 ## Complete override of other text speed settings, including [member text_speed] and [code]<ts_*>[/code] tags.[br][br]
 ## Set to [code]-1[/code] (default) to disable.
 @export_range(-1.0, MAX_TEXT_SPEED, 1.0) var custom_text_speed_override := -1.0
-## Determines the text flow of characters when [member text_speed] isn't [member MAX_TEXT_SPEED].
+## Determines the text flow of characters when [member text_speed] isn't [constant MAX_TEXT_SPEED].
 @export var text_flow : TextFlow = TextFlow.Smooth
 var _full_words := false:
 	get():
@@ -245,6 +245,12 @@ enum RubySizeMode {
 @export_range(0.1, 1, 0.01) var ruby_scale := 0.8
 ## [Font] override for rubies. If empty, uses the normal font of [member body_label].
 @export var ruby_font_override : Font
+@export var ruby_offset := Vector2.ZERO:
+	set(value):
+		var diff := value - ruby_offset
+		for ruby in _ruby_labels:
+			ruby.position += diff
+		ruby_offset = value
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -1788,7 +1794,7 @@ func _handle_tags_and_start_reading():
 					push_warning("Empty ruby!")
 				else:
 					_ruby_strings.append(tag_string.trim_prefix("<ruby:").trim_suffix(">"))
-					_ruby_indices.append(Vector2i(scan_index-tag_buffer, tag_end-tag_buffer)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
+					_ruby_indices.append(Vector2i(scan_index, tag_end)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
 				# for some reason this erasure doesn't register here already so we have to leftshift the end tag erasure manually by the tag length
 				if tag_end != -1:
@@ -1930,14 +1936,14 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
 	
 	_body_duplicate.visible_characters = 1
-	_body_duplicate_line_height = _body_duplicate.get_content_height()
+	#_body_duplicate_line_height = _body_duplicate.get_content_height()
 	
 	var ruby_index := 0
 	print(ruby_indices)
 	for ruby_range : Vector2i in ruby_indices:
 		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x, on_label)
 		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y, on_label)
-		printt(start_draw_pos, end_draw_pos)
+		printt("drawing between ", start_draw_pos, " and ", end_draw_pos, " for ", ruby_range)
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
 		var ruby_string : String = ruby_strings[ruby_index]
@@ -2062,7 +2068,8 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	var draw_pos_x := get_body_label_text_draw_pos(indices.x, on_label)
 	var draw_pos_y := get_body_label_text_draw_pos(indices.y, on_label)
 	ruby_label.position = draw_pos_x
-	ruby_label.set_height(_body_duplicate_line_height)
+	print("positioning ruby %s at %s" % [text, draw_pos_x])
+	ruby_label.set_height(draw_pos_x.y)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
 	if _is_ruby_stretch(ruby_label.get_text()):
 		#print("drawing at ", draw_pos_x)
@@ -2073,11 +2080,12 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 		ruby_label.position.x += (base_width - ruby_label_width) * 0.5
 	
 	
-	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale))
-	
+	ruby_label.position.y -= body_label.get_line_height(0) * (1 + (0.4 * ruby_scale))
+	ruby_label.position += ruby_offset
+	print(draw_pos_x.y * (1 + (0.4 * ruby_scale)))
 	if on_label != body_label:
 		ruby_label.set_visible_ratio(1)
-	
+	print("created ruby %s at %s" % [text,ruby_label.position])
 	return ruby_label
 
 func _ensure_terminator_node(on_label:RichTextLabel=body_label):
@@ -2299,8 +2307,10 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 	var current_line := 0
 	var line_sum := 0
 	
+	_body_duplicate.visible = true
+	_body_duplicate.modulate.a = 1
 	_body_duplicate.visible_characters = index
-	var height : int = _body_duplicate.get_content_height()
+	var height : int = _body_duplicate.get_visible_content_rect().size.y
 	
 	# get target line
 	_body_duplicate.visible_characters = index
@@ -2313,17 +2323,26 @@ func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
 			target_line_range = range
 			break
 	
-	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x)
+	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x - ( target_line_range.y - index))
 	_body_duplicate.text = trailing_line
-	var width : int = _body_duplicate.get_content_width()
+	var width : int = _body_duplicate.get_visible_content_rect().size.x
+	print("trailing ", trailing_line, " width ", width)
+	#var r1 := RichTextLabel.new()
+	#r1.text  = "explode"
+	#add_child(r1)
+	#print("aaaaaaaaaaa" , r1.get_visible_content_rect().size.x)
 	
 	var w := label_font.get_multiline_string_size(
 		trailing_line,HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
-		body_label.get_theme_default_font_size()
+		fontsize
 	)
-	printt("wwww ",h, w)
-	
-	return Vector2(h.x, h2.y)##Vector2(w.x, h.y)
+	_body_duplicate.position.x = -99999
+	printt("for ", index, "wwww ",h, w, height, width)
+	return Vector2(w.x, h.y)
+	if target_line == 0:
+		return Vector2(h.x, h2.y)##Vector2(w.x, h.y)
+	else:
+		return Vector2(w.x, h.y)
 
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
@@ -2340,7 +2359,7 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	else:
 		return _get_actor_name(actor_name)
 
-var _body_duplicate_line_height : int
+#var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
 func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previous := false):
 	_ensure_terminator_node()

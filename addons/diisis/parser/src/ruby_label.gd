@@ -67,7 +67,10 @@ func set_stretch(value:bool):
 func get_text() -> String:
 	return %RubyLabel.text
 func get_size() -> Vector2:
-	return %RubyLabel.size
+	return Vector2(
+		%RubyLabel.get_content_width(),
+		%RubyLabel.get_content_height(),
+	)
 
 func set_minimum_width(width:int):
 	%RubyLabel.custom_minimum_size.x = width
