@@ -338,6 +338,12 @@ var terminator_node : Control
 	set(value):
 		terminator_style = value
 		notify_property_list_changed()
+@export var terminator_offset := Vector2.ZERO:
+	set(value):
+		var diff := value - terminator_offset
+		if terminator_node:
+			terminator_node.position += diff
+		terminator_offset = value
 ## Text set into the terminator. See [enum TerminatorStyle] for more info.
 @export var terminator_text := ""
 ## Texture loaded into the terminator. See [enum TerminatorStyle] for more info.
@@ -1255,9 +1261,10 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 			if old_text_length != body_label.visible_characters:
 				ParserEvents.visible_characters_changed.emit(old_text_length, body_label.visible_characters)
 				if terminator_node:
-					terminator_node.position = get_body_label_text_draw_pos(body_label.visible_characters + 1)
-					var font : Font = body_label.get_theme_font("normal_font", "RichTextLabel")
-					terminator_node.position.y -= font.get_height(body_label.get_theme_font_size("normal_font", "RichTextLabel")) * 1.5
+					var vis := body_label.visible_characters
+					if vis == -1:
+						vis = body_label.get_parsed_text().length()
+					terminator_node.position = get_body_label_text_draw_pos(vis) + terminator_offset
 					
 					terminator_node.visible = body_label.visible_ratio != 1
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
@@ -1740,6 +1747,7 @@ func _handle_tags_and_start_reading():
 		var comments_at_index : Array = _comments.get(scan_index, [])
 		var previous_tag_buffer := tag_buffer
 		var tag_buffer_gained := 0
+		#var pause_buffer_gained := 0
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
@@ -1756,9 +1764,21 @@ func _handle_tags_and_start_reading():
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
+				if not _pause_positions.has(scan_index):
+					_pause_positions.append(scan_index)
+					_pause_types.append(_PauseTypes.Manual)
 				tag_buffer += 4
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
+				scan_index = max(scan_index - 4, -1)
+				target_length -= 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
+				if not _pause_positions.has(scan_index):
+					_pause_positions.append(scan_index)
+					_pause_types.append(_PauseTypes.Auto)
 				tag_buffer += 4
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
+				scan_index = max(scan_index - 4, -1)
+				target_length -= 4
 			elif bbcode_removed_text.find("<call:", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
@@ -1808,8 +1828,9 @@ func _handle_tags_and_start_reading():
 			while k < _ruby_indices.size():
 				var indices : Vector2i = _ruby_indices[k]
 				if indices.y > scan_index and tag_buffer_gained > 0:
-					_ruby_indices[k] = Vector2i(indices.x , indices.y - tag_buffer_gained)
+					_ruby_indices[k] = Vector2i(indices.x, indices.y - tag_buffer_gained)
 				k += 1
+		
 		
 		_text_speed_by_character_index.append(text_speed_override)
 		_text_speed_by_character_index[scan_index_calls] = text_speed_override
@@ -1821,19 +1842,7 @@ func _handle_tags_and_start_reading():
 		call_strings_at_index.clear()
 		comments_at_index.clear()
 	_text_speed_by_character_index.resize(target_length)
-	scan_index = 0
-	while scan_index < bbcode_removed_text.length():
-		if bbcode_removed_text[scan_index] == "<":
-			if bbcode_removed_text.find("<mp>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
-					_pause_types.append(_PauseTypes.Manual)
-			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
-					_pause_types.append(_PauseTypes.Auto)
-				
-		scan_index += 1
+
 	
 	_pause_positions.append(bbcode_removed_text.length()-1)
 	_pause_types.append(_PauseTypes.EoL)
@@ -1950,29 +1959,25 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		if start_draw_pos.y == end_draw_pos.y:
 			ruby_segment_indices.append(ruby_range)
 			word_segments.append(ruby_string)
-		else:
-			# split over lines
-			
+		else: # split over lines
+			# find where in the text of on_label the text starts splitting
 			var segment_start_index := ruby_range.x
-			_body_duplicate.text = on_label.text
 			var space_pos := segment_start_index
-			_body_duplicate.visible_characters = segment_start_index
-			var current_segment_draw_height : int = _body_duplicate.get_content_height()
+			var current_segment_draw_height : int = get_body_label_text_draw_pos(space_pos).y
 			var previeous_space_pos := segment_start_index
+			var parsed_text := on_label.get_parsed_text()
 			while space_pos != -1 and space_pos < ruby_range.y:
-				_body_duplicate.visible_characters = space_pos
-				var new_height := _body_duplicate.get_content_height()
+				var new_height := get_body_label_text_draw_pos(space_pos).y
 				if new_height > current_segment_draw_height:
 					ruby_segment_indices.append(Vector2i(segment_start_index, previeous_space_pos))
 					segment_start_index = space_pos
-					# end segment at current_segment_draw_height
 				current_segment_draw_height = new_height
 				previeous_space_pos = space_pos
-				space_pos = _body_duplicate.get_parsed_text().find(" ", space_pos + 1)
+				space_pos = parsed_text.find(" ", space_pos + 1)
 			
-
 			if segment_start_index < ruby_range.y:
 				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y + 1))
+			
 			# weigh the ruby across the segments
 			var ruby_incices_span_length : int = (ruby_range.y - ruby_range.x)
 			
@@ -2271,78 +2276,48 @@ func _set_body_label_text(text: String, is_deserializing := false):
 	
 	_last_raw_name = current_raw_name
 
-func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
-	_body_duplicate.add_theme_font_override("normal_font", on_label.get_theme_font("normal_font", "RichTextLabel"))
-	_body_duplicate.add_theme_font_size_override("normal_font_size", on_label.get_theme_font_size("normal_font_size", "RichTextLabel"))
-	_body_duplicate.add_theme_stylebox_override("normal", on_label.get_theme_stylebox("normal", "RichTextLabel"))
-	_body_duplicate.text = on_label.text
-	_body_duplicate.custom_minimum_size = on_label.custom_minimum_size
-	_body_duplicate.size = on_label.size
-	
-	
-	var hjdfgjdf := body_label.get_parsed_text().substr(0, index)
-	
-	
+func get_body_label_text_draw_pos(index : int, on_label := body_label) -> Vector2:
+	var parsed_text := on_label.get_parsed_text()
 	var label_font : Font = body_label.get_theme_font("normal_font", "RichTextLabel")
 	var fontsize : int = body_label.get_theme_font_size( "normal_font_size", "RichTextLabel",)
-	var h := label_font.get_multiline_string_size(
-		body_label.get_parsed_text().substr(0, index),HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
-		fontsize
-	)
 	
-	var linerange := body_label.get_line_range(body_label.get_character_line(index))
-	
-	var h2 := label_font.get_multiline_string_size(
-		body_label.get_parsed_text().substr(linerange.x, linerange.y - linerange.x),HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
-		fontsize
-	)
+	var single_character_height := label_font.get_multiline_string_size(
+		"a",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
+		fontsize).y
 	
 	if index == 0:
-		_body_duplicate.visible_characters = 1
-		return Vector2(0, _body_duplicate.get_visible_content_rect().size.y)
-	if index > on_label.get_parsed_text().length()+1:
+		return Vector2(0, single_character_height)
+	if index > parsed_text.length()+1:
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
 		return Vector2.ZERO
 	
-	var current_line := 0
-	var line_sum := 0
+	# when ending a line with a </ruby> tag, the resulting index will be 1 over the text length
+	# this can cause errors so we're protecting against that here
+	var end_index : int = index
+	if end_index >= parsed_text.length():
+		end_index = parsed_text.length() - 1
+	var line_range := on_label.get_line_range(on_label.get_character_line(end_index))
 	
-	_body_duplicate.visible = true
-	_body_duplicate.modulate.a = 1
-	_body_duplicate.visible_characters = index
-	var height : int = _body_duplicate.get_visible_content_rect().size.y
+	var trailing_line = parsed_text.substr(line_range.x, line_range.y - line_range.x - (line_range.y - end_index))
 	
-	# get target line
-	_body_duplicate.visible_characters = index
-	var target_line : int = _body_duplicate.get_character_line(index)
-	var target_line_range : Vector2i
-	for i in _body_duplicate.get_line_count() + 1:
-		var range = _body_duplicate.get_line_range(i) # also this returns completely incorrect results and I have no idea why this works
-		if index >= range.x and index <= range.y:
-			target_line = i
-			target_line_range = range
-			break
-	
-	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x - ( target_line_range.y - index))
-	_body_duplicate.text = trailing_line
-	var width : int = _body_duplicate.get_visible_content_rect().size.x
-	print("trailing ", trailing_line, " width ", width)
-	#var r1 := RichTextLabel.new()
-	#r1.text  = "explode"
-	#add_child(r1)
-	#print("aaaaaaaaaaa" , r1.get_visible_content_rect().size.x)
-	
-	var w := label_font.get_multiline_string_size(
-		trailing_line,HORIZONTAL_ALIGNMENT_CENTER,body_label.size.x,
+	var width := label_font.get_multiline_string_size(
+		trailing_line,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
 		fontsize
-	)
-	_body_duplicate.position.x = -99999
-	printt("for ", index, "wwww ",h, w, height, width)
-	return Vector2(w.x, h.y)
-	if target_line == 0:
-		return Vector2(h.x, h2.y)##Vector2(w.x, h.y)
-	else:
-		return Vector2(w.x, h.y)
+	).x
+	
+	var height := label_font.get_multiline_string_size(
+		parsed_text.substr(0, index),
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
+		fontsize
+	).y
+	
+	return Vector2(width, height)
+	
 
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
