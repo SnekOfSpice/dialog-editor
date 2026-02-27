@@ -181,7 +181,7 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	cg_root.visible = true
 	
-	var cg_path := CONST.fetch("CG", cg_name)
+	var cg_path : String = CONST.fetch("CG", cg_name)
 	var cg_node : Control
 	
 	if cg_path.is_empty():
