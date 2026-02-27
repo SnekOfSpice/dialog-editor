@@ -216,8 +216,7 @@ func init(active_file_path:="") -> void:
 	elif active_file_path.is_empty():
 		await get_tree().process_frame
 		opening = false
-		if Pages.evaluator_paths.is_empty():
-			Pages.evaluator_paths = get_line_reader_scripts()
+		Pages.ensure_line_reader_scripts()
 	
 	%EmbedHint.visible = DiisisEditorUtil.embedded
 	if DiisisEditorUtil.embedded:
@@ -229,6 +228,12 @@ func init(active_file_path:="") -> void:
 		# CRITICAL do not touch this camera. i can't remember why we need it but the editor won't be visible without it lmao
 		var cam := Camera2D.new()
 		add_child(cam)
+	
+	var plugin := Engine.get_meta("DIISISPlugin")
+	if not DiisisEditorEventBus.quit.window_reload.is_connected(plugin.on_editor_window_reload_requested):
+		DiisisEditorEventBus.quit.window_reload.connect(plugin.on_editor_window_reload_requested)
+	if not DiisisEditorEventBus.quit.new_file.is_connected(plugin.on_new_file_requested):
+		DiisisEditorEventBus.quit.new_file.connect(plugin.on_new_file_requested)
 	
 	save_to_recent_files(active_file_path)
 
@@ -749,6 +754,7 @@ func try_open_from_path(path:String):
 	open_from_path(path)
 func try_new_file():
 	if not opening and has_unsaved_changes:
+		print("SHJDFG")
 		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW, new_file_request)
 		return
 	new_file_request()
@@ -1466,3 +1472,8 @@ func update_recents_item():
 	for file : String in recent_data:
 		var file_name := file.trim_prefix(file.left(file.rfind("/") + 1))
 		recents_item.add_item("%s%s%s" % [file_name, RECENT_FILE_SEPARATOR, file])
+
+
+func _on_visibility_changed() -> void:
+	if visible and not opening:
+		Pages.ensure_line_reader_scripts()

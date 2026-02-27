@@ -2073,7 +2073,7 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	var draw_pos_x := get_body_label_text_draw_pos(indices.x, on_label)
 	var draw_pos_y := get_body_label_text_draw_pos(indices.y, on_label)
 	ruby_label.position = draw_pos_x
-	print("positioning ruby %s at %s" % [text, draw_pos_x])
+	
 	ruby_label.set_height(draw_pos_x.y)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
 	if _is_ruby_stretch(ruby_label.get_text()):

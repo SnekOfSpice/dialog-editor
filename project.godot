@@ -26,26 +26,26 @@ buses/default_bus_layout="uid://bew35uidf58i5"
 
 [autoload]
 
-DIISIS="*uid://c65bwbdhvxdto"
-Parser="*uid://b4ny85mdnxwoy"
-ParserEvents="*uid://dinb6lf0qoexi"
 CONST="*uid://p3oh1wedya4m"
 EventBus="*uid://bm5vpj7w360i7"
 GoBackHandler="*uid://cx2gvdr4ulr2f"
 Options="*uid://b7rjagd305cd2"
 Sound="*uid://c0in5m4lpc6o3"
 Style="*uid://jos1scb1fwc8"
+SceneLoader="*uid://d3fs4ft445qth"
+Game="*uid://ba05k05ujpqp8"
+DIISIS="*uid://c65bwbdhvxdto"
+DiisisEditorEventBus="*uid://e5fx4v6mprlc"
 Pages="*uid://djgc8of5qiexy"
 DiisisEditorUtil="*uid://dxr1r0c3qd0tr"
 DiisisEditorActions="*uid://dfci2vklbcx15"
 TextToDiisis="*uid://d0pi2gsh3lskp"
-SceneLoader="*uid://d3fs4ft445qth"
-Game="*uid://ba05k05ujpqp8"
-DiisisEditorEventBus="*uid://e5fx4v6mprlc"
+Parser="*uid://b4ny85mdnxwoy"
+ParserEvents="*uid://dinb6lf0qoexi"
 
 [diisis]
 
-project/file/path="res://game/diisis_integration/demo_script.json"
+project/file/path="res://game/diisis_integration/demo_script2.json"
 plugin/updates/check_for_updates=true
 plugin/view/embedded=false
 
@@ -148,6 +148,10 @@ history={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":76,"physical_keycode":76,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://l10n.en_EN.translation")
 
 [rendering]
 

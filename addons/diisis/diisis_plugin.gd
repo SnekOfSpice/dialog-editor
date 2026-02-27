@@ -43,7 +43,6 @@ func _enter_tree():
 		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 		ProjectSettings.save()
-		DiisisEditorEventBus.active_path_set.emit("")
 	ProjectSettings.add_property_info({
 	"name": "diisis/project/file/path",
 	"type": TYPE_STRING,
@@ -77,10 +76,6 @@ func _enter_tree():
 		await get_tree().process_frame
 		toolbar_button.get_parent().move_child(toolbar_button, -2)
 	
-	# usesed=??
-	DiisisEditorEventBus.quit.window_reload.connect(on_editor_window_reload_requested)
-	DiisisEditorEventBus.quit.new_file.connect(on_new_file_requested)
-
 	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
 	print_rich(welcome_message)
@@ -266,10 +261,8 @@ func setup_vn_template():
 		var existing_path : String = ProjectSettings.get_setting("diisis/project/file/path")
 		if not ProjectSettings.has_setting("diisis/project/file/path"):
 			ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
-			DiisisEditorEventBus.active_path_set.emit(source_path_game)
 		elif existing_path.is_empty():
 			ProjectSettings.set_setting("diisis/project/file/path", source_path_game)
-			DiisisEditorEventBus.active_path_set.emit(source_path_game)
 	else:
 		popup_accept_dialogue("Error", str("Couldn't find ", source_path_game, "."))
 		return
@@ -353,7 +346,6 @@ func on_new_file_requested():
 		ProjectSettings.set_setting("diisis/project/file/path", "user://import_override_temp.json")
 	else:
 		ProjectSettings.set_setting("diisis/project/file/path", "")
-		DiisisEditorEventBus.active_path_set.emit("")
 	add_new_dialog_editor_window()
 	if _embedded:
 		await get_tree().process_frame

@@ -17,6 +17,9 @@ warning on unsaved changes when trying to open another file
 text_flow property (folds in full_words and the new single_word pattern)
 fix  / re-implement rubies and get_body_label_text_draw_pos as a whole
 rework the entire vn template to better keep up with my more recent projects (still wip)
+add tutorial on adding bbcode to rubies
+ensure line reader scripts exist when focusing the editor window (window view) or when toggled visible (embedded)
+
 
 -- under the hood --
 diisiseditorEventbus

@@ -95,6 +95,7 @@ var editor:DiisisEditor
 var page_data := {}
 var text_data := {}
 
+## path to scripts to access funcs and vars from. they inherit from line_reader or are autoloads
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
@@ -2468,3 +2469,9 @@ func purge_unused_text_ids():
 	for key in text_data.keys():
 		if not key in used_text_ids:
 			text_data.erase(key)
+
+
+
+func ensure_line_reader_scripts():
+	if evaluator_paths.is_empty() and editor:
+		evaluator_paths = editor.get_line_reader_scripts()
