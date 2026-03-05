@@ -153,6 +153,8 @@ func init(active_file_path:="") -> void:
 	recents_item.index_pressed.connect(func(index:int):
 		var recent_path := recents_item.get_item_text(index)
 		recent_path = recent_path.split(RECENT_FILE_SEPARATOR)[1]
+		if recent_path == active_path:
+			return
 		try_open_from_path(recent_path))
 	file_item.add_submenu_node_item("Recent", recents_item)
 	update_recents_item()

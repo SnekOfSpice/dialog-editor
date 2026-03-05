@@ -1748,16 +1748,16 @@ func _handle_tags_and_start_reading():
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
+				if not _pause_positions.has(scan_index + tag_buffer):
+					_pause_positions.append(scan_index + tag_buffer)
 					_pause_types.append(_PauseTypes.Manual)
 				tag_buffer += 4
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
 				scan_index = max(scan_index - 4, -1)
 				target_length -= 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
+				if not _pause_positions.has(scan_index + tag_buffer):
+					_pause_positions.append(scan_index + tag_buffer)
 					_pause_types.append(_PauseTypes.Auto)
 				tag_buffer += 4
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
