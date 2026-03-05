@@ -3,6 +3,9 @@ extends Control
 
 
 func init() -> void:
+	%HelpLabel.hide()
+	%BakeCheckBox.button_pressed = Pages.region_baking_enabled
+	_on_bake_check_box_toggled(Pages.region_baking_enabled)
 	if Pages.region_delination == Pages.RegionDeliniation.Pages:
 		%PagesCheckBox.button_pressed = true
 	elif Pages.region_delination == Pages.RegionDeliniation.Instructions:
@@ -40,3 +43,13 @@ func _on_deliniator_name_line_edit_text_changed(new_text: String) -> void:
 
 func _on_deliniator_name_line_edit_text_submitted(_new_text: String) -> void:
 	save_deliniator_name()
+
+
+func _on_help_button_toggled(toggled_on: bool) -> void:
+	%HelpLabel.visible = toggled_on
+
+
+func _on_bake_check_box_toggled(toggled_on: bool) -> void:
+	Pages.region_baking_enabled = toggled_on
+	%Contents.visible = toggled_on
+	%DisabledNotice.visible = not toggled_on

@@ -252,6 +252,7 @@ func serialize() -> Dictionary:
 		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"locales_to_export" : locales_to_export,
 		"page_data" : page_data,
+		"region_baking_enabled" : region_baking_enabled,
 		"region_delination" : region_delination,
 		"region_delinator_instruction" : region_delinator_instruction,
 		"text_data" : text_data,
@@ -298,6 +299,7 @@ func deserialize(data:Dictionary):
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
+	region_baking_enabled = data.get("region_baking_enabled", region_baking_enabled)
 	region_delination = data.get("region_delination", region_delination)
 	region_delinator_instruction = data.get("region_delinator_instruction", "")
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
@@ -1646,6 +1648,7 @@ enum RegionDeliniation{
 	Pages,
 	Instructions
 }
+var region_baking_enabled := false
 var region_delinator_instruction := "show_cg"
 var region_delination := RegionDeliniation.Pages
 ## Only useful for linear games.
