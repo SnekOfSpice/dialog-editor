@@ -35,20 +35,7 @@ func _ready() -> void:
 	else:
 		%SaveHintLabel.modulate.a = 0
 	
-	
-	#%SFXDescriptionCheckBox.button_pressed = Options.sfx_description
-	#%MusicDescriptionCheckBox.button_pressed = Options.music_description
-	#%DitherCheckBox.button_pressed = Options.dither_enabled
-	#%BlurCheckBox.button_pressed = Options.blur_enabled
-	#%BloodCheckBox.button_pressed = Options.blood_enabled
-	#%CRTCheckBox.button_pressed = Options.crt_enabled
-	#%GlowCheckBox.button_pressed = Options.glow_enabled
 	%FPSCounterCheckBox.button_pressed = Options.fps_counter_visible
-	
-	#%ShadowOptionButton.select(Options.shadow_quality_index)
-	#%RenderingScaleOptionButton.select(Options.render_scale_index)
-	#%ShowdownBackgroundCheckBox.button_pressed = Options.showdown_background_enabled
-	#%SlideshowCheckBox.button_pressed = Options.slideshow_enabled
 	
 	%DesktopControls.visible = OS.has_feature("pc")
 	%MobileControls.visible = OS.has_feature("mobile")
@@ -56,17 +43,11 @@ func _ready() -> void:
 	
 	set_menu(0)
 	find_child("SaveContainer").visible = SceneLoader.in_game
-	#%SlideshowInfoLabel.visible = not SceneLoader.in_game
-	#%SlideshowPossibilityLabel.visible = SceneLoader.in_game
-	#%SlideshowCheckBox.disabled = SceneLoader.in_game
 	
 	%WindowModeOptionButton.select(Options.window_mode_index)
 	for idx in DisplayServer.get_screen_count():
 		%ScreenOptionButton.add_item("Screen %s" % (idx + 1))
 	%ScreenOptionButton.select(DisplayServer.window_get_current_screen())
-	
-	#EventBus.settings_changed.connect(on_settings_changed)
-	#on_settings_changed()
 
 
 func close():
@@ -155,7 +136,7 @@ func _on_text_speed_slider_value_changed(value: float) -> void:
 		restart_preview_timer = get_restart_preview_timer_duration()
 
 
-func _on_text_speed_slider_drag_ended(value_changed: bool) -> void:
+func _on_text_speed_slider_drag_ended(_value_changed: bool) -> void:
 	var value : float = %TextSpeedSlider.value
 	
 	Options.text_speed = int(value)
@@ -178,7 +159,7 @@ func _on_auto_delay_slider_value_changed(value: float) -> void:
 
 
 
-func _on_auto_delay_slider_drag_ended(value_changed: bool) -> void:
+func _on_auto_delay_slider_drag_ended(_value_changed: bool) -> void:
 	Options.auto_continue_delay = %AutoDelaySlider.value
 
 
@@ -232,7 +213,7 @@ func _on_volume_slider_master_value_changed(value: float) -> void:
 	update_volume_labels()
 
 
-func _on_volume_slider_master_drag_ended(value_changed: bool) -> void:
+func _on_volume_slider_master_drag_ended(_value_changed: bool) -> void:
 	Options.set_volume("Master", %VolumeSliderMaster.value, true)
 
 
@@ -241,7 +222,7 @@ func _on_volume_slider_music_value_changed(value: float) -> void:
 	update_volume_labels()
 
 
-func _on_volume_slider_music_drag_ended(value_changed: bool) -> void:
+func _on_volume_slider_music_drag_ended(_value_changed: bool) -> void:
 	Options.set_volume("Music", %VolumeSliderMusic.value, true)
 
 
@@ -250,11 +231,11 @@ func _on_volume_slider_sfx_value_changed(value: float) -> void:
 	update_volume_labels()
 
 
-func _on_volume_slider_sfx_drag_ended(value_changed: bool) -> void:
+func _on_volume_slider_sfx_drag_ended(_value_changed: bool) -> void:
 	Options.set_volume("SFX", %VolumeSliderSFX.value, true)
 
 
-func _on_volume_slider_ui_drag_ended(value_changed: bool) -> void:
+func _on_volume_slider_ui_drag_ended(_value_changed: bool) -> void:
 	Options.set_volume("UI", %VolumeSliderUI.value, true)
 
 
@@ -269,13 +250,6 @@ func update_volume_labels():
 	%VolumeLabelSFX.text = str(int(Options.get_volume("SFX") * 100))
 	%VolumeLabelUI.text = str(int(Options.get_volume("UI") * 100))
 
-
-
-#func on_settings_changed():
-	#%ShadowOptionButton.disabled = Options.slideshow_enabled
-	#%RenderingScaleOptionButton.disabled = Options.slideshow_enabled
-	#%ShowdownBackgroundCheckBox.disabled = Options.slideshow_enabled
-	#%SlideshowDeactivateLabel.visible = Options.slideshow_enabled
 
 
 func _on_dither_check_box_toggled(toggled_on: bool) -> void:

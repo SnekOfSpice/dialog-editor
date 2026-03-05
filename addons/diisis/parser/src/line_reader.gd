@@ -317,39 +317,20 @@ var prompt_finished: Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 var _remaining_prompt_delay := input_prompt_delay
-@export_subgroup("Terminator")
-enum TerminatorStyle {
-	## No terminator will be added.
-	None,
-	## A floating [Label] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text.
-	Text,
-	## A floating [RichTextLabel] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text, with BBCode enabled.
-	RichText,
-	## A floating [TextureRect] will be added to the end of the text in [member body_label]. [member terminator_texture] will be its texture.
-	Texture,
-	## A floating [Control] will be added to the end of the text in [member body_label]. [member terminator_scene] will be its child.
-	Scene
-}
-var terminator_node : Control
-## A terminator is a visual element denoting the end of the current line in [member body_label]. It will be hidden if the full text is visible, i.e. [member RichTextLabel.visible_ratio] is [code]1.0[/code].
-## [br][br]
-## [b]Note:[/b] Currently the spacing is kinda fucked up if you use bbcode in your [member body_label].
-@export var terminator_style : TerminatorStyle = TerminatorStyle.None:
-	set(value):
-		terminator_style = value
-		notify_property_list_changed()
+@export_subgroup("Terminator", "terminator_")
+var terminator_node_complete : Control
+var terminator_node_incomplete : Control
+@export var terminator_data_complete : TerminatorData
+@export var terminator_data_incomplete : TerminatorData
 @export var terminator_offset := Vector2.ZERO:
 	set(value):
 		var diff := value - terminator_offset
-		if terminator_node:
-			terminator_node.position += diff
+		if terminator_node_incomplete:
+			terminator_node_incomplete.position += diff
+		if terminator_node_complete:
+			terminator_node_complete.position += diff
 		terminator_offset = value
-## Text set into the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_text := ""
-## Texture loaded into the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_texture : Texture
-## Scene instanced as a child of the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_scene : PackedScene
+
 @export_group("Internal Config")
 ## [signal stop_accepting_advance] and [signal start_accepting_advance] will be fired synchronized with the
 ## internal state if true, since that blocks [method request_advance()].
@@ -464,22 +445,6 @@ func _validate_property(property: Dictionary):
 		if property.name in ["input_prompt_delay", "input_prompt_lerp_weight", "prompt_finished", "prompt_unfinished"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	
-	match terminator_style:
-		TerminatorStyle.None:
-			if property.name in ["terminator_text", "terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Text:
-			if property.name in ["terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.RichText:
-			if property.name in ["terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Texture:
-			if property.name in ["terminator_text", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Scene:
-			if property.name in ["terminator_texture", "terminator_text"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
 
 ## Generates a [Dictionary] contained the full state of [LineReader].[br]
 ## Used by [Parser] to call [method deserialize].
@@ -1260,13 +1225,18 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 			body_label.visible_characters = min(body_label.visible_characters, _get_end_of_chunk_position())
 			if old_text_length != body_label.visible_characters:
 				ParserEvents.visible_characters_changed.emit(old_text_length, body_label.visible_characters)
-				if terminator_node:
-					var vis := body_label.visible_characters
-					if vis == -1:
-						vis = body_label.get_parsed_text().length()
-					terminator_node.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					
-					terminator_node.visible = body_label.visible_ratio != 1
+				
+				var vis := body_label.visible_characters
+				if vis == -1:
+					vis = body_label.get_parsed_text().length()
+				
+				if terminator_node_incomplete:
+					terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					terminator_node_incomplete.visible = body_label.visible_ratio != 1
+				if terminator_node_complete:
+					terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					terminator_node_complete.visible = body_label.visible_ratio == 1
+	
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
 		_remaining_auto_pause_duration -= delta
@@ -2087,45 +2057,62 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	
 	ruby_label.position.y -= body_label.get_line_height(0) * (1 + (0.4 * ruby_scale))
 	ruby_label.position += ruby_offset
-	print(draw_pos_x.y * (1 + (0.4 * ruby_scale)))
+	
 	if on_label != body_label:
 		ruby_label.set_visible_ratio(1)
 	print("created ruby %s at %s" % [text,ruby_label.position])
 	return ruby_label
 
-func _ensure_terminator_node(on_label:RichTextLabel=body_label):
-	if terminator_node:
-		terminator_node.queue_free()
+func _ensure_terminator_nodes(on_label:RichTextLabel=body_label):
+	_ensure_terminator_node(true, on_label)
+	_ensure_terminator_node(false, on_label)
 	
-	if terminator_style == TerminatorStyle.None:
+func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_label):
+	var node_property := "terminator_node_%scomplete" % ("" if for_complete else "in")
+	var data_property := "terminator_data_%scomplete" % ("" if for_complete else "in")
+	
+	if get(node_property):
+		get(node_property).queue_free()
+	
+	var terminator_data : TerminatorData = get(data_property)
+	
+	if not terminator_data:
+		return
+	
+	var terminator_node : Node
+	var terminator_style : TerminatorData.TerminatorStyle = get(data_property).get("terminator_style")
+	
+	
+	if terminator_style == TerminatorData.TerminatorStyle.None:
 		return
 	
 	match terminator_style:
-		TerminatorStyle.Text:
+		TerminatorData.TerminatorStyle.Text:
 			terminator_node = Label.new()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.text = terminator_text
-		TerminatorStyle.RichText:
+			terminator_node.text = terminator_data.terminator_text
+		TerminatorData.TerminatorStyle.RichText:
 			terminator_node = RichTextLabel.new()
 			terminator_node.fit_content = true
 			terminator_node.bbcode_enabled = true
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.text = terminator_text
+			terminator_node.text = terminator_data.terminator_text
 			terminator_node.custom_minimum_size = body_label.size
-		TerminatorStyle.Texture:
+		TerminatorData.TerminatorStyle.Texture:
 			terminator_node = TextureRect.new()
-			terminator_node.texture = terminator_texture
+			terminator_node.texture = terminator_data.terminator_texture
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-		TerminatorStyle.Scene:
+		TerminatorData.TerminatorStyle.Scene:
 			terminator_node = Control.new()
-			terminator_node.texture = terminator_texture
+			terminator_node.texture = terminator_data.terminator_texture
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.add_child(terminator_scene.instantiate())
+			terminator_node.add_child(terminator_data.terminator_scene.instantiate())
 	
+	set(node_property, terminator_node)
 	on_label.add_child(terminator_node)
 
 func _trim_trimmables(text:String) -> String:
@@ -2337,7 +2324,7 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 #var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
 func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previous := false):
-	_ensure_terminator_node()
+	_ensure_terminator_nodes()
 	
 	if new_body_label == body_label:
 		return

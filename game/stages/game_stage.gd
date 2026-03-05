@@ -63,9 +63,9 @@ func _ready():
 	
 	for character in find_child("Characters").get_children():
 		character.visible = false
-	
-	
-	
+		EventBus.settings_changed.connect(on_settings_changed)
+	on_settings_changed()
+
 	tree_exiting.connect(on_tree_exit)
 	
 	hide_cg()
@@ -79,6 +79,11 @@ func _ready():
 	await get_tree().process_frame
 	find_child("StartCover").visible = false
 
+
+func on_settings_changed():
+	text_speed = Options.text_speed
+	auto_continue = Options.auto_continue
+	auto_continue_delay = Options.auto_continue_delay
 
 func on_tree_exit():
 	Game.game_stage = null
@@ -94,14 +99,6 @@ func show_start_cover():
 
 func go_to_main_menu(_unused):
 	SceneLoader.request_background_loading(MainMenu.PATH, true)
-
-
-func _physics_process(delta: float) -> void:#(delta: float) -> void:
-	if Engine.is_editor_hint():
-		return
-	super(delta)
-	find_child("VFXLayer").position = -camera.offset * camera.zoom.x
-
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not Game.screen.is_empty():
@@ -533,11 +530,6 @@ func zoom_to(value : float, duration : float) -> bool:
 	camera.zoom_to(value, duration)
 	return false
 
-func splatter_blood(amount) -> bool:
-	for i in int(amount):
-		var sprite := preload("res://game/visuals/vfx/splatter/blood_splatter.tscn").instantiate()
-		find_child("VFXLayer").add_child(sprite)
-	return false
 
 func set_emotion(character_name: String, emotion_name: String) -> bool:
 	for character : Character in get_tree().get_nodes_in_group("character"):

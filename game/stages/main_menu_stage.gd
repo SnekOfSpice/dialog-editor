@@ -53,17 +53,6 @@ func _ready() -> void:
 		#Overlay.play("chapter_out")
 		Game.just_ended = false
 		
-	#if not Options.finished_setup:
-		#Game.set_screen("graphics_setup.tscn")
-		#hide()
-	#
-	#EventBus.settings_changed.connect(on_settings_changed)
-	#on_settings_changed()
-
-
-#func on_settings_changed():
-	#%SlideshowBG.visible = Options.slideshow_enabled
-	#%BackgroundBasement.visible = not Options.slideshow_enabled
 
 
 func update_load_button():

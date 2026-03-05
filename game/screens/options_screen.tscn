@@ -267,7 +267,7 @@ layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 min_value = 1.0
-max_value = 200.0
+max_value = 201.0
 value = 1.0
 
 [node name="TextSpeedValueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OptionMenusContainer/TextMenu/HBoxContainer/VBoxContainer2/VBoxContainer" unique_id=940005152]

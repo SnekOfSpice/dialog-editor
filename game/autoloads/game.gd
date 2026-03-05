@@ -48,13 +48,6 @@ func _ready():
 	
 	EventBus.settings_changed.connect(on_settings_changed)
 	on_settings_changed()
-	#if performance_test:
-		#Parser.page_finished.connect(func(index:int):
-			#if index == 3:
-				#%PreviewLabel.text = "[font_size=200]OK THATS IT BYE[/font_size]"
-				#var t = get_tree().create_timer(5)
-				#t.timeout.connect(get_tree().quit)
-			#)
 
 
 func on_settings_changed():

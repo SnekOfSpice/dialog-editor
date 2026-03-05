@@ -49,10 +49,6 @@ unique_name_in_owner = true
 position = Vector2(576, 324)
 script = ExtResource("9_lbjue")
 
-[node name="VFX" type="CanvasLayer" parent="Camera2D" unique_id=2147184047]
-
-[node name="VFXLayer" type="Node2D" parent="Camera2D/VFX" unique_id=1300976026]
-
 [node name="VNUICanvasLayer" type="CanvasLayer" parent="Camera2D" unique_id=1120749494]
 
 [node name="VNUIRoot" type="Control" parent="Camera2D/VNUICanvasLayer" unique_id=519702352]
