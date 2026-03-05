@@ -161,6 +161,7 @@ func init(active_file_path:="") -> void:
 	file_item.add_separator()
 	file_item.add_item("Import    (Shift+I)", 6)
 	file_item.add_item("Export    (Shift+E)", 5)
+	file_item.add_item("Configure Regions...")
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	
@@ -962,9 +963,8 @@ func _on_file_id_pressed(id: int) -> void:
 			open_window_by_string("TextExportWindow")
 		6:
 			open_window_by_string("TextImportWindow")
-		#8:
-			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
-			#%File.set_item_checked(9, Pages.empty_strings_for_l10n)
+		8:
+			open_window_by_string("RegionConfigWindow")
 		9:
 			try_new_file()
 
@@ -1122,7 +1122,7 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
-	pass
+	print(Pages.get_regions())
 
 func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}

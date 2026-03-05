@@ -48,6 +48,9 @@ const PREFERENCE_PROPS := [
 	"ingest_is_punctuation_checked",
 ]
 
+# TODO
+const PREFERENCE_PROPS_WINDOWED :=[]
+
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 	"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -249,6 +252,8 @@ func serialize() -> Dictionary:
 		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"locales_to_export" : locales_to_export,
 		"page_data" : page_data,
+		"region_delination" : region_delination,
+		"region_delinator_instruction" : region_delinator_instruction,
 		"text_data" : text_data,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
@@ -293,6 +298,8 @@ func deserialize(data:Dictionary):
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
+	region_delination = data.get("region_delination", region_delination)
+	region_delinator_instruction = data.get("region_delinator_instruction", "")
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
@@ -1633,6 +1640,90 @@ func remove_tags(t:String) -> String:
 				text = text.erase(scan_index, control_to_replace.length())
 			scan_index += 1
 	return text
+
+
+enum RegionDeliniation{
+	Pages,
+	Instructions
+}
+var region_delinator_instruction := "show_cg"
+var region_delination := RegionDeliniation.Pages
+## Only useful for linear games.
+func get_regions(deliniation := region_delination) -> Dictionary:
+	var trail := get_cascading_trail(0)
+	
+	var result := {}
+	
+	var last_page_index : int = trail.front()
+	var last_line_index : int = 0
+	var region_start_page_index : int = trail.front()
+	var region_start_line_index : int = 0
+	
+	var region_name : String = ""
+	var region_text : String = ""
+	
+	var actors_this_region := []
+	
+	for page_index : int in trail:
+		for line_index in get_line_count(page_index):
+			if deliniation == RegionDeliniation.Instructions:
+				if get_line_type(page_index, line_index) == DIISIS.LineType.Instruction:
+					var line := get_line_data(page_index, line_index)
+					var instruction_name : String = line.get("content").get("name")
+					var instruction_text : String = line.get("content").get("meta.text")
+					if instruction_name == region_delinator_instruction:
+						result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
+							"actors" : actors_this_region.duplicate(),
+							"text" : region_text,
+							"region_name" : region_name
+						}
+						region_name = instruction_name
+						region_text = instruction_text
+						region_start_line_index = line_index
+						region_start_page_index = page_index
+						actors_this_region.clear()
+					
+			var actors_here := get_actors_at_line(page_index, line_index)
+			for actor in actors_here:
+				if not actors_this_region.has(actor):
+					actors_this_region.append(actor)
+			last_line_index = line_index
+		last_page_index = page_index
+		if deliniation == RegionDeliniation.Pages:
+			# put into region
+			result["%s.%s" % [page_index, 0]] = {
+							"actors" : actors_this_region.duplicate()
+						}
+			region_start_page_index = page_index
+			region_start_line_index = 0
+			actors_this_region.clear()
+	
+	if deliniation == RegionDeliniation.Instructions:
+		result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
+			"actors" : actors_this_region.duplicate(),
+			"text" : region_text,
+			"region_name" : region_name
+		}
+	
+	return result
+	
+
+func get_actors_at_line(page_index : int, line_index : int) -> Array:
+	var line := get_line_data(page_index, line_index)
+	
+	if line.get("line_type") != DIISIS.LineType.Text:
+		return []
+		
+	var result := []
+	var text = get_text(line.get("content").get("text_id"))
+
+	for speaker : String in get_speakers():
+		if text.contains("[]>%s" % speaker):
+			if not result.has(speaker):
+				result.append(speaker)
+	
+	return result
+
 
 func update_all_compliances():
 	# check modified because updating all compliances makes diisis stutter a bit

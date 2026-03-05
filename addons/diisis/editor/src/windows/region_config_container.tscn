@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://rqflj6uhel4l"]
+
+[ext_resource type="Script" uid="uid://n73xhqxfr4e4" path="res://addons/diisis/editor/src/windows/region_config_container.gd" id="1_itces"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_dlbgb"]
+
+[node name="RegionConfigContainer" type="Control" unique_id=1770031738]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_itces")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=16121138]
+layout_mode = 0
+offset_right = 113.0
+offset_bottom = 66.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1705127419]
+layout_mode = 2
+
+[node name="PagesCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=368842692]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_dlbgb")
+text = "Pages"
+
+[node name="InstructionCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=1078612809]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_dlbgb")
+text = "Instruction"
+
+[node name="InstructionContainer" type="Control" parent="VBoxContainer" unique_id=1288427186]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/InstructionContainer" unique_id=1427356038]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/InstructionContainer/VBoxContainer" unique_id=383110709]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/InstructionContainer/VBoxContainer/HBoxContainer" unique_id=1322617849]
+layout_mode = 2
+text = "instruction to split regions"
+
+[node name="SaveDeliniatorNameButton" type="Button" parent="VBoxContainer/InstructionContainer/VBoxContainer/HBoxContainer" unique_id=1323892393]
+unique_name_in_owner = true
+layout_mode = 2
+text = "save"
+
+[node name="DeliniatorNameLineEdit" type="LineEdit" parent="VBoxContainer/InstructionContainer/VBoxContainer" unique_id=1458430002]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PagesCheckBox" to="." method="_on_pages_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/InstructionCheckBox" to="." method="_on_instruction_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/InstructionContainer/VBoxContainer/HBoxContainer/SaveDeliniatorNameButton" to="." method="_on_save_deliniator_name_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/InstructionContainer/VBoxContainer/DeliniatorNameLineEdit" to="." method="_on_deliniator_name_line_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/InstructionContainer/VBoxContainer/DeliniatorNameLineEdit" to="." method="_on_deliniator_name_line_edit_text_submitted"]

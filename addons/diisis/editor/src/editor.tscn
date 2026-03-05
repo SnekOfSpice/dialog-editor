@@ -74,7 +74,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core" unique_id=1687821056]
-visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "any test functionality"
@@ -706,6 +705,11 @@ title = "Dialog Config"
 visible = false
 theme_override_font_sizes/title_font_size = 16
 container_path = "uid://cqfaywphjr2k2"
+
+[node name="RegionConfigWindow" parent="Popups" unique_id=511013998 instance=ExtResource("34_ajvyk")]
+title = "Configure Regions"
+visible = false
+container_path = "uid://rqflj6uhel4l"
 
 [node name="ArgHint" parent="." unique_id=2017472624 instance=ExtResource("28_g0iye")]
 size = Vector2i(12, 10)
