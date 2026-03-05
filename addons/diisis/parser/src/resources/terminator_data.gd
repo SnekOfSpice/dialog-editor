@@ -1,5 +1,9 @@
 extends Resource
 class_name TerminatorData
+## Container for defining the appearance of a terminator.
+##
+## A terminator is a UI element that gets placed at the end of a line of text
+## while it is being read by a [LineReader]. For more information, see [member LineReader.terminator_data_complete].
 
 
 enum TerminatorStyle {

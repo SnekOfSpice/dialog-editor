@@ -10,7 +10,7 @@ class_name LineReader
 
 ## Text speed at which text will be shown instantly instead of gradually revealed.
 const MAX_TEXT_SPEED := 201
-const UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label", "prompt_finished", "prompt_unfinished"]
+const _UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label", "prompt_finished", "prompt_unfinished"]
 
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member color_map].
@@ -62,7 +62,7 @@ var _single_words := false:
 		return text_flow in [TextFlow.SmoothSingle,TextFlow.FullWordsSingle]
 ## The delay that <ap> tags imply, in seconds.
 @export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_pause_duration := 0.2
-## Disables input-based calls of [method advance].
+## Disables user-based calls of [method request_advance].
 ## Instead, when hitting the end of a line or <mp> tag, LineReader
 ## will wait [param auto_continue_delay] seconds until continuing automatically.
 @export var auto_continue := false:
@@ -151,9 +151,8 @@ var name_container: Control:
 		choice_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-@export
 ## Container to which all choices get parented.
-var choice_list:Container:
+@export var choice_list:Container:
 	get:
 		return choice_list
 	set(value):
@@ -184,6 +183,7 @@ var choice_list:Container:
 @export var body_label_word_wrappers : Dictionary[String, String]
 ## Prefix before the name.
 @export var name_prefix : String
+## Suffix after the name.
 @export var name_suffix : String
 ## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
 ## Each call will replace the text as it gets passed along the array.
@@ -198,6 +198,7 @@ var choice_list:Container:
 ##     return text
 ## [/codeblock]
 @export var body_label_function_funnel : Array[String]
+## When [member chatlog_enabled] is [code]false[/code], this property colors the text of [member body_label] according to the respective actor color.
 @export var body_label_tint_lines := false
 @export_subgroup("Past Lines")
 ## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.[br]
@@ -240,11 +241,14 @@ enum RubySizeMode {
 	## Stretches the ruby across the entire base line, left-adjusted.
 	Stretch,
 }
+## Determines the growth and positioning behavior of generated rubies.
 @export var ruby_size_mode : RubySizeMode = RubySizeMode.Center
 ## Font size factor for rubies, relative to the normal font size of [member body_label].
+## This property also lightly affects the vertical positioning of rubies. Note that [member ruby_offset] also affects the vertical positioning of rubies.
 @export_range(0.1, 1, 0.01) var ruby_scale := 0.8
 ## [Font] override for rubies. If empty, uses the normal font of [member body_label].
 @export var ruby_font_override : Font
+## Offset for all generated rubies. Note that [member ruby_scale] also affects the vertical positioning of rubies.
 @export var ruby_offset := Vector2.ZERO:
 	set(value):
 		var diff := value - ruby_offset
@@ -265,7 +269,9 @@ enum RubySizeMode {
 @export var chatlog_include_body_label_actor_prefix := false
 ## If set, the actor's suffix from [member body_label_suffix_by_actor] will also be suffixed to the chatlog.
 @export var chatlog_include_body_label_actor_suffix := false
+## Prefix string when [member chatlog_enabled] is true.
 @export var chatlog_line_prefix := "[code]"
+## Suffix string when [member chatlog_enabled] is true.
 @export var chatlog_line_suffix := "[/code]"
 
 @export_group("Advanced UX")
@@ -318,17 +324,24 @@ var prompt_finished: Control:
 			update_configuration_warnings()
 var _remaining_prompt_delay := input_prompt_delay
 @export_subgroup("Terminator", "terminator_")
-var terminator_node_complete : Control
-var terminator_node_incomplete : Control
+var _terminator_node_complete : Control
+var _terminator_node_incomplete : Control
+## Terminator that is visible when all characters of [member body_label] are visible.
+## [br][br]
+## See [TerminatorData] for more information.
 @export var terminator_data_complete : TerminatorData
+## Terminator that is visible when [i]not[/i] all characters of [member body_label] are visible.
+## [br][br]
+## See [TerminatorData] for more information.
 @export var terminator_data_incomplete : TerminatorData
+## Offset for the terminators generated from [terminator_data_complete] and [terminator_data_incomplete].
 @export var terminator_offset := Vector2.ZERO:
 	set(value):
 		var diff := value - terminator_offset
-		if terminator_node_incomplete:
-			terminator_node_incomplete.position += diff
-		if terminator_node_complete:
-			terminator_node_complete.position += diff
+		if _terminator_node_incomplete:
+			_terminator_node_incomplete.position += diff
+		if _terminator_node_complete:
+			_terminator_node_complete.position += diff
 		terminator_offset = value
 
 @export_group("Internal Config")
@@ -367,10 +380,11 @@ var terminator_node_incomplete : Control
 @export var warn_advance_on_terminated := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param auto_continue] is true.
 @export var warn_advance_on_auto_continue := true
-## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param awaiting_inline_call] is true.
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param _awaiting_inline_call] is true.
 @export var warn_advance_on_awaiting_inline_call := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param custom_blockers] is greater than 0.
 @export var warn_advance_on_custom_blockers := true
 @export_subgroup("Misc")
 ## Serializes and deserializes the [member visibility] property of all UI nodes [LineReader] references.
@@ -691,7 +705,7 @@ func apply_preferences(prefs:Dictionary):
 
 ## While [member custom_blockers] is [i]greater than[/i] 0, calls to [method request_advance] will fail. This property is intended to be used by parts of the game outside of the players control, such as forcing voicelines to play out.
 ## If an [code]<advance>[/code] tag was hit while [member custom_blockers] was more than 0, once the last blocker is removed, LineReader will advance on its own. [member auto_continue] will also be paused while there are more than 0 blockers.
-## [br]See [method add_custom_blocker] [method clear_custom_blockers] [method remove_custom_blocker]
+## [br]See [method add_custom_blocker], [method clear_custom_blockers], and [method remove_custom_blocker].
 var custom_blockers := 0
 ## Adds 1 to [member custom_blockers].
 func add_custom_blocker():
@@ -735,7 +749,7 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 		return true
 	if awaiting_inline_call:
 		if warn_advance_on_awaiting_inline_call and include_warnings:
-			push_warning("Cannot advance because awaiting_inline_call is true.")
+			push_warning("Cannot advance because _awaiting_inline_call is true.")
 		return true
 	if _is_choice_presented() and block_advance_during_choices:
 		if warn_advance_on_choices_presented and include_warnings:
@@ -813,7 +827,7 @@ func interrupt(hide_controls := true):
 	ParserEvents.line_reader_interrupted.emit(self)
 	Parser.set_paused(true)
 	if hide_controls:
-		for key in UI_PROPERTIES:
+		for key in _UI_PROPERTIES:
 			visibilities_before_interrupt[key] = get(key).visible
 			get(key).visible = false
 
@@ -821,7 +835,7 @@ func interrupt(hide_controls := true):
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 ## @experimental
 func continue_after_interrupt(read_page := -1, read_line := 0):
-	for key in UI_PROPERTIES:
+	for key in _UI_PROPERTIES:
 		if not visibilities_before_interrupt.has(key):
 			push_warning("Visibilities after interrupt have not been set")
 		else:
@@ -834,7 +848,7 @@ func continue_after_interrupt(read_page := -1, read_line := 0):
 
 func get_ui_visibilities() -> Dictionary:
 	var result := {}
-	for property in UI_PROPERTIES:
+	for property in _UI_PROPERTIES:
 		if not get(property): continue
 		result[property] = get(property).visible
 	return result
@@ -903,7 +917,7 @@ func _read_new_line(new_line: Dictionary):
 				content = full_body_replacement
 	var content_name = _line_data.get("content").get("name")
 	
-	#for key in UI_PROPERTIES:
+	#for key in _UI_PROPERTIES:
 		#get(key).visible = get
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
@@ -1007,8 +1021,8 @@ func _read_new_line(new_line: Dictionary):
 			
 			if not _reverse_next_instruction:
 				text = instruction_content.get("meta.text")
-				has_received_execute_callback = new_line.get("content").get("advance_yield", false)
-				_yield_instruction_to_advance = has_received_execute_callback
+				_has_received_execute_callback = new_line.get("content").get("advance_yield", false)
+				_yield_instruction_to_advance = _has_received_execute_callback
 			else:
 				text = instruction_content.get("meta.reverse_text", "")
 			
@@ -1158,31 +1172,31 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 	_update_input_prompt(delta)
 	
 	if is_executing:
-		if delay_before > 0:
-			delay_before -= delta
+		if _delay_before > 0:
+			_delay_before -= delta
 			return
 		
-		if not has_executed:
-			ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
-			has_executed = true
-			has_received_execute_callback = not _execute(execution_text)
+		if not _has_executed:
+			ParserEvents.instruction_started_after_delay.emit(_execution_text, _delay_before)
+			_has_executed = true
+			_has_received_execute_callback = not _execute(_execution_text)
 		
-		if not has_received_execute_callback:
+		if not _has_received_execute_callback:
 			return
 		
-		if delay_after > 0:
-			if _delay_after_max == delay_after:
-				ParserEvents.instruction_completed.emit(execution_text, _delay_after_max)
-			delay_after -= delta
-			if delay_after <= 0:
-				ParserEvents.instruction_completed_after_delay.emit(execution_text, _delay_after_max)
-				emitted_complete = true
+		if _delay_after > 0:
+			if _delay_after_max == _delay_after:
+				ParserEvents.instruction_completed.emit(_execution_text, _delay_after_max)
+			_delay_after -= delta
+			if _delay_after <= 0:
+				ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after_max)
+				_emitted_complete = true
 			return
-		elif not emitted_complete:
-			ParserEvents.instruction_completed.emit(execution_text, _delay_after_max)
+		elif not _emitted_complete:
+			ParserEvents.instruction_completed.emit(_execution_text, _delay_after_max)
 		
 		_on_instruction_wrapped_completed()
-		ParserEvents.instruction_completed_after_delay.emit(execution_text, _delay_after_max)
+		ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after_max)
 		
 		is_executing = false
 		return
@@ -1230,12 +1244,12 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 				if vis == -1:
 					vis = body_label.get_parsed_text().length()
 				
-				if terminator_node_incomplete:
-					terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					terminator_node_incomplete.visible = body_label.visible_ratio != 1
-				if terminator_node_complete:
-					terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					terminator_node_complete.visible = body_label.visible_ratio == 1
+				if _terminator_node_incomplete:
+					_terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					_terminator_node_incomplete.visible = body_label.visible_ratio != 1
+				if _terminator_node_complete:
+					_terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					_terminator_node_complete.visible = body_label.visible_ratio == 1
 	
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
@@ -1861,14 +1875,14 @@ func _handle_tags_and_start_reading():
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
 func _ensure_ruby_container(on_label:=body_label):
-	if not ruby_containers_by_label.get(on_label):
+	if not _ruby_containers_by_label.get(on_label):
 		var ruby_root = ScrollContainer.new()
 		ruby_root.clip_contents = false
 		ruby_root.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 		ruby_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_root.focus_mode = Control.FOCUS_NONE
 		ruby_root.custom_minimum_size = on_label.size
-		ruby_roots_by_label[on_label] = ruby_root
+		_ruby_roots_by_label[on_label] = ruby_root
 		#var vbox = VBoxContainer.new()
 		#vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		#vbox.focus_mode = Control.FOCUS_NONE
@@ -1878,7 +1892,7 @@ func _ensure_ruby_container(on_label:=body_label):
 		ruby_container.focus_mode = Control.FOCUS_NONE
 		#ruby_container.clip_contents = on_label.scroll_active
 		ruby_container.custom_minimum_size = on_label.size
-		ruby_containers_by_label[on_label] = ruby_container
+		_ruby_containers_by_label[on_label] = ruby_container
 		
 		ruby_root.add_child(ruby_container)
 		#vbox.add_child(ruby_container)
@@ -1894,8 +1908,8 @@ func set_ruby_enabled(value:bool):
 func _update_ruby_root_scroll(value:float, root:ScrollContainer):
 	root.set_v_scroll(value)
 
-var ruby_containers_by_label := {}
-var ruby_roots_by_label := {}
+var _ruby_containers_by_label := {}
+var _ruby_roots_by_label := {}
 func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _ruby_indices, ruby_strings : Array = _ruby_strings) -> void:
 	if not ruby_enabled:
 		return
@@ -1905,24 +1919,23 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		return
 	on_label.clip_contents = false
 	_ensure_ruby_container(on_label)
-	ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
+	_ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
 	if on_label == body_label:
 		for label : RubyLabel in _ruby_labels:
 			label.queue_free()
 		_ruby_labels.clear()
 	
 	if not on_label.get_v_scroll_bar().value_changed.is_connected(_update_ruby_root_scroll):
-		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
+		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(_ruby_roots_by_label.get(on_label)))
 	
 	_body_duplicate.visible_characters = 1
 	#_body_duplicate_line_height = _body_duplicate.get_content_height()
 	
 	var ruby_index := 0
-	print(ruby_indices)
 	for ruby_range : Vector2i in ruby_indices:
 		var start_draw_pos = get_body_label_text_draw_pos(ruby_range.x, on_label)
 		var end_draw_pos = get_body_label_text_draw_pos(ruby_range.y, on_label)
-		printt("drawing between ", start_draw_pos, " and ", end_draw_pos, " for ", ruby_range)
+		
 		var ruby_segment_indices := [] # extra step needed for multiline
 		var word_segments := []
 		var ruby_string : String = ruby_strings[ruby_index]
@@ -1995,12 +2008,12 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		
 		# actually draw
 		var segment_index := 0
-		ruby_containers_by_label.get(on_label).global_position = on_label.global_position
+		_ruby_containers_by_label.get(on_label).global_position = on_label.global_position
 		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			if indices.x == last_index_end + 1:
-				print(word_segments[segment_index])
+			#if indices.x == last_index_end + 1:
+				#print(word_segments[segment_index])
 			var ruby = _build_ruby(on_label, indices, word_segments[segment_index])
 			ruby.segment_index = segment_index
 			segment_index += 1
@@ -2035,8 +2048,8 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	if ruby_font_override:
 		ruby_label.set_font(ruby_font_override)
 	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
-	ruby_containers_by_label.get(on_label).size = Vector2.ZERO
-	ruby_containers_by_label.get(on_label).add_child(ruby_label)
+	_ruby_containers_by_label.get(on_label).size = Vector2.ZERO
+	_ruby_containers_by_label.get(on_label).add_child(ruby_label)
 	if on_label == body_label:
 		_ruby_labels.append(ruby_label)
 	
@@ -2060,7 +2073,7 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	
 	if on_label != body_label:
 		ruby_label.set_visible_ratio(1)
-	print("created ruby %s at %s" % [text,ruby_label.position])
+	
 	return ruby_label
 
 func _ensure_terminator_nodes(on_label:RichTextLabel=body_label):
@@ -2068,7 +2081,7 @@ func _ensure_terminator_nodes(on_label:RichTextLabel=body_label):
 	_ensure_terminator_node(false, on_label)
 	
 func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_label):
-	var node_property := "terminator_node_%scomplete" % ("" if for_complete else "in")
+	var node_property := "_terminator_node_%scomplete" % ("" if for_complete else "in")
 	var data_property := "terminator_data_%scomplete" % ("" if for_complete else "in")
 	
 	if get(node_property):
@@ -2141,7 +2154,7 @@ func _ends_with_trimmable(text:String) -> bool:
 			return true
 	return false
 
-
+## Property to figure out if reading of lines is currently suspended because a function called by the [LineReader] returned [code]true[/code].
 var awaiting_inline_call := ""
 
 func _call_from_position(call_position: int):
@@ -2340,6 +2353,8 @@ func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previ
 	if clear_previous:
 		old_label.text = ""
 
+
+## Helper function for setting [member name_container] and [member name_label].
 func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container
 	var old_text = name_label.text
@@ -2463,6 +2478,8 @@ func set_name_suffix(suffix : String, update := true):
 	if name_suffix != old_suffix and update:
 		update_body_label()
 
+# this is some esoteric shit and im drunk
+# im glad this exists
 func update_body_label():
 	var visible_characters = body_label.visible_characters
 	_set_dialog_line_index(_dialog_line_index)
@@ -2859,29 +2876,29 @@ enum CallMode {
 	Func
 }
 
-var delay_before := 0.0
-var delay_after := 0.0:
+var _delay_before := 0.0
+var _delay_after := 0.0:
 	set(value):
-		delay_after = value
-		_delay_after_max = delay_after
+		_delay_after = value
+		_delay_after_max = _delay_after
 var _delay_after_max : float
-var execution_text := ""
+var _execution_text := ""
 ## This variable determines if [LineReader] is currently awaiting the callback of [method Parser.function_acceded].
 ## [br][b]Do not write to it.[/b]
 var is_executing := false
-var has_executed := false
-var has_received_execute_callback := false
-var emitted_complete := false
+var _has_executed := false
+var _has_received_execute_callback := false
+var _emitted_complete := false
 
 func _serialize_instruction_handler_data() -> Dictionary:
 	return {
-		"delay_before" : delay_before,
-		"delay_after" : delay_after,
-		"execution_text" : execution_text,
+		"delay_before" : _delay_before,
+		"delay_after" : _delay_after,
+		"_execution_text" : _execution_text,
 		"is_executing" : is_executing,
-		"has_executed" : has_executed,
-		"has_received_execute_callback" : has_received_execute_callback,
-		"emitted_complete" : emitted_complete,
+		"_has_executed" : _has_executed,
+		"_has_received_execute_callback" : _has_received_execute_callback,
+		"_emitted_complete" : _emitted_complete,
 	}
 
 func _deserialize_instruction_handler_data(data: Dictionary):
@@ -2889,25 +2906,25 @@ func _deserialize_instruction_handler_data(data: Dictionary):
 		set(key, data.get(key))
 
 func finish_waiting_for_instruction():
-	has_received_execute_callback = true
+	_has_received_execute_callback = true
 	
-	if not emitted_complete and delay_after <= 0:
-		ParserEvents.instruction_completed.emit(execution_text, delay_after)
+	if not _emitted_complete and _delay_after <= 0:
+		ParserEvents.instruction_completed.emit(_execution_text, _delay_after)
 		_on_instruction_wrapped_completed()
-		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after)
 		is_executing = false
-		emitted_complete = true
+		_emitted_complete = true
 
 func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	await get_tree().process_frame
-	delay_after = delay_after_seconds
-	delay_before = delay_before_seconds
-	execution_text = text
-	has_executed = false
+	_delay_after = delay_after_seconds
+	_delay_before = delay_before_seconds
+	_execution_text = text
+	_has_executed = false
 	is_executing = true
-	has_received_execute_callback = true
-	ParserEvents.instruction_started.emit(execution_text, delay_before)
-	emitted_complete = false
+	_has_received_execute_callback = true
+	ParserEvents.instruction_started.emit(_execution_text, _delay_before)
+	_emitted_complete = false
 
 func _get_property_from_self_or_autoload(property:String):
 	var autoload : String
