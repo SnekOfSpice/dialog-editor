@@ -31,7 +31,7 @@ const PREFERENCE_PROPS := [
 	"first_index_as_page_reference_only",
 	"fix_apostrophes",
 	"page_scroll_by_idx_by_file_name",
-	"preferences_import",
+	"preferences_export",
 	"preferences_import",
 	"replacement_rules",
 	"require_colons_on_actor_ingestion",
@@ -47,9 +47,6 @@ const PREFERENCE_PROPS := [
 	"ingest_is_whitespace_checked",
 	"ingest_is_punctuation_checked",
 ]
-
-# TODO
-const PREFERENCE_PROPS_WINDOWED :=[]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",

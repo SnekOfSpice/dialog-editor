@@ -8,6 +8,9 @@ var toolbar_button : Control
 var confirmation_window : Window
 var accept_dialogue : AcceptDialog
 
+
+const PREFERENCE_PATH := "user://editor_preferences.cfg"
+
 var _embedded : bool:
 	get():
 		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
@@ -303,6 +306,9 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 
 
 func open_editor():
+	
+		
+	
 	if _embedded:
 		return
 	if is_instance_valid(dia_editor_window):
@@ -316,10 +322,39 @@ func open_editor():
 		
 		await get_tree().process_frame
 		dia_editor_window.popup()
-		dia_editor_window.closing_editor.connect(set.bind("dia_editor_window", null))
+		dia_editor_window.closing_editor.connect(func():
+			save_preferences()
+			set("dia_editor_window", null)
+			)
+	
+	
+	
+	
+
+func save_preferences():
+	var config = ConfigFile.new()
+	
+	if not _embedded:
+		if is_instance_valid(dia_editor_window.editor_window):
+			config.set_value("editor", "content_scale", dia_editor_window.editor_window.content_scale_factor)
+		config.set_value("editor", "size", dia_editor_window.size)
+		config.set_value("editor", "position", dia_editor_window.position)
+		config.set_value("editor", "mode", dia_editor_window.mode)
+	
+	for prop : String in Pages.PREFERENCE_PROPS:
+		config.set_value("editor", prop, Pages.get(prop))
+		printt(prop, Pages.get(prop))
+	
+	config.save(PREFERENCE_PATH)
 
 
 func add_new_dialog_editor_window():
+	var config = ConfigFile.new()
+	var err = config.load(PREFERENCE_PATH)
+	if err == OK:
+		for prop : String in Pages.PREFERENCE_PROPS:
+			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+	
 	if _embedded:
 		if embedder:
 			embedder.queue_free()
@@ -338,6 +373,16 @@ func add_new_dialog_editor_window():
 		dia_editor_window = preload("res://addons/diisis/editor/dialog_editor_window.tscn").instantiate()
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		dia_editor_window.wrap_controls = true
+		
+		if err == OK:
+			var scale : float = config.get_value("editor", "content_scale", 1.0)
+			#find_child("WindowFactorScale").set_value(scale)
+			dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
+			dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
+			dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
+			
+			await get_tree().process_frame
+			dia_editor_window.update_content_scale(scale)
 
 
 func on_new_file_requested():

@@ -14,8 +14,6 @@ var file_path := ""
 signal open_new_file()
 signal closing_editor()
 
-const PREFERENCE_PATH := "user://editor_preferences.cfg"
-
 
 func _on_about_to_popup() -> void:
 	await get_tree().process_frame
@@ -36,22 +34,6 @@ func _on_about_to_popup() -> void:
 	await get_tree().process_frame
 	update_content_scale(1.0)
 	
-	var config = ConfigFile.new()
-	var err = config.load(PREFERENCE_PATH)
-	if err == OK:
-		var scale : float = config.get_value("editor", "content_scale", 1.0)
-		find_child("WindowFactorScale").set_value(scale)
-		size = config.get_value("editor", "size", size)
-		position = config.get_value("editor", "position", position)
-		mode = config.get_value("editor", "mode", mode)
-		
-		for prop : String in Pages.PREFERENCE_PROPS:
-			config.set_value("editor", prop, Pages.get(prop))
-			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
-		
-	
-		await get_tree().process_frame
-		update_content_scale(scale)
 	await get_tree().process_frame
 	%UpdateAvailable.check_for_updates()
 	_on_save_path_set(file_path)
@@ -61,23 +43,9 @@ func _on_about_to_popup() -> void:
 func _on_quit_dialog_canceled() -> void:
 	$QuitDialog.hide()
 
-func save_preferences():
-	var config = ConfigFile.new()
-	
-	if is_instance_valid(editor_window):
-		config.set_value("editor", "content_scale", editor_window.content_scale_factor)
-	config.set_value("editor", "size", size)
-	config.set_value("editor", "position", position)
-	config.set_value("editor", "mode", mode)
-	
-	for prop : String in Pages.PREFERENCE_PROPS:
-		config.set_value("editor", prop, Pages.get(prop))
-	
-	config.save(PREFERENCE_PATH)
 
 func close_window():
 	emit_signal("closing_editor")
-	save_preferences()
 	if is_instance_valid(editor):
 		editor.is_open = false
 	hide()

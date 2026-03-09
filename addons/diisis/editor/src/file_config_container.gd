@@ -5,7 +5,7 @@ extends Control
 func init():
 	find_child("AddressModeButtonPage").set_mode(Pages.default_address_mode_pages)
 	
-	for child in find_child("ToggleSettings").get_children():
+	for child in %ToggleSettings.get_children():
 		child.queue_free()
 	for child in find_child("StringSettings").get_children():
 		child.queue_free()
@@ -22,7 +22,7 @@ func init():
 		button.mouse_entered.connect(request_hint.bind(button, Pages.TOGGLE_SETTINGS.get(setting)))
 		button.mouse_exited.connect(%Hint.set.bind("text", ""))
 		#label.visible = false
-		find_child("ToggleSettings").add_child(container)
+		%ToggleSettings.add_child(container)
 		button.button_pressed = Pages.get(setting)
 		button.text = setting.capitalize()
 	

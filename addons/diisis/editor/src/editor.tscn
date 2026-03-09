@@ -74,6 +74,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core" unique_id=1687821056]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "any test functionality"

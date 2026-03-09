@@ -144,6 +144,7 @@ func init(active_file_path:="") -> void:
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
+		popup.close_requested.connect(Engine.get_meta("DIISISPlugin").save_preferences)
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false

@@ -404,7 +404,7 @@
 
 			}
 		},
-		"id_counter": -9223372036854761423,
+		"id_counter": -9223372036854761453,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -1368,6 +1368,7 @@
 				"terminate": true
 			}
 		},
+		"region_baking_enabled": false,
 		"region_delination": 1,
 		"region_delinator_instruction": "chapter_break",
 		"stringkit_dialog_arguments": [
