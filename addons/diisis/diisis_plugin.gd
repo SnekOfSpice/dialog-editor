@@ -306,9 +306,6 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 
 
 func open_editor():
-	
-		
-	
 	if _embedded:
 		return
 	if is_instance_valid(dia_editor_window):

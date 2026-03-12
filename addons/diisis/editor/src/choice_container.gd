@@ -12,6 +12,8 @@ var choice_order := []
 func init():
 	find_child("AddButton").grab_focus()
 	choice_list = find_child("ChoiceList")
+	if not title_id:
+		title_id = Pages.get_new_id()
 
 func serialize() -> Dictionary:
 	if not title_id:

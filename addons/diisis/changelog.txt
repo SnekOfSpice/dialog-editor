@@ -26,6 +26,7 @@ template cleanip
 
 -- under the hood --
 diisiseditorEventbus
+implement DiisisEditor.refresh_text() to make it run a bit smoother and make stringkit renaming more reliable ( choice lines fucked things up lmao)
 
 -------------------------------------------------
 DIISIS 0.6.5 2025-12-16

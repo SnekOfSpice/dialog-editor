@@ -17,7 +17,8 @@ func _on_about_to_popup() -> void:
 		Pages.apply_font_size_overrides(container)
 		
 		await get_tree().process_frame
-		size = max(size, container.size)
+		size.x = max(size.x, container.size.x)
+		size.y = max(size.y, container.size.y)
 
 
 func _on_close_requested() -> void:

@@ -1112,6 +1112,18 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
+				#if line.get("line_type") == DIISIS.LineType.Instruction:
+					##print(line)
+					#var instruction_name : String = line.get("content", {}).get("name")
+					#var args_normal : Dictionary = custom_method_stringkit_limiters.get(instruction_name)
+					#for arg in args_normal.keys():
+						#if stringkit_title in (args_normal.get(arg) as Array):
+							## TODO replace
+							#pass
+							#print("aaaa", get_custom_method_arg_names(instruction_name))
+					### same for reverse
+					#var args_reverse : Array = custom_method_stringkit_limiters.get(line.get("content", {}).get("reverse_name"))
+					
 				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
 				

@@ -81,6 +81,26 @@ func get_current_page() -> Page:
 			return page_container.get_child(0)
 	return null
 
+
+func refresh_text():
+	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
+	
+	var page := get_current_page()
+	if not page:
+		return
+	
+	for line : Line in page.lines.get_children():
+		if line.line_type in [
+				DIISIS.LineType.Text,
+			]:
+			line.refresh_text()
+	
+	
+	await get_tree().process_frame
+	if goto_has_focus:
+		find_child("GoTo")._address_bar_grab_focus()
+
+
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
 	var cpn:int
@@ -1123,7 +1143,7 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
-	print(Pages.get_regions())
+	print(Pages.custom_method_stringkit_limiters)
 
 func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}

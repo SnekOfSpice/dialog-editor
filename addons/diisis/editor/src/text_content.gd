@@ -761,3 +761,7 @@ func on_actor_prepend_index_pressed(index:int):
 		var line : String = text_box.get_line(i)
 		if not line.begins_with("[]>"):
 			text_box.set_line(i, str("[]>", Pages.get_speakers()[index], ": ", line))
+
+
+func refresh_text():
+	text_box.text = Pages.get_text(text_id)

@@ -46,6 +46,7 @@ func _on_quit_dialog_canceled() -> void:
 
 func close_window():
 	emit_signal("closing_editor")
+	await get_tree().process_frame
 	if is_instance_valid(editor):
 		editor.is_open = false
 	hide()

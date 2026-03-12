@@ -335,3 +335,8 @@ func _on_delete_button_mouse_exited() -> void:
 
 func flash_highlight():
 	DiisisEditorUtil.flash_highlight(%GoToHighlight)
+
+
+func refresh_text():
+	if line_type == DIISIS.LineType.Text:
+		%TextContent.refresh_text()

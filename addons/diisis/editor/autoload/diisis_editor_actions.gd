@@ -149,13 +149,13 @@ func rename_stringkit_title(from:String, to:String):
 	Pages.rename_stringkit_title(from, to)
 	await get_tree().process_frame
 	
-	Pages.editor.refresh(false)
+	Pages.editor.refresh_text()
 
 func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:bool, replace_speaker:bool):
 	Pages.set_stringkit_options(stringkit_title, options, replace_in_text, replace_speaker)
 	await get_tree().process_frame
 	
-	Pages.editor.refresh(false)
+	Pages.editor.refresh_text()
 
 func rename_fact(from:String, to:String):
 	Pages.rename_fact(from, to)
