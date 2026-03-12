@@ -15,6 +15,9 @@ func _on_about_to_popup() -> void:
 		else:
 			push_warning("LMAO")
 		Pages.apply_font_size_overrides(container)
+		
+		await get_tree().process_frame
+		size = max(size, container.size)
 
 
 func _on_close_requested() -> void:

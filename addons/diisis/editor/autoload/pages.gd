@@ -33,6 +33,9 @@ const PREFERENCE_PROPS := [
 	"page_scroll_by_idx_by_file_name",
 	"preferences_export",
 	"preferences_import",
+	"region_baking_enabled",
+	"region_delination",
+	"region_delinator_instruction",
 	"replacement_rules",
 	"require_colons_on_actor_ingestion",
 	"save_on_play",
@@ -249,14 +252,14 @@ func serialize() -> Dictionary:
 		"ingestion_actor_declaration": ingestion_actor_declaration,
 		"locales_to_export" : locales_to_export,
 		"page_data" : page_data,
-		"region_baking_enabled" : region_baking_enabled,
-		"region_delination" : region_delination,
-		"region_delinator_instruction" : region_delinator_instruction,
 		"text_data" : text_data,
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"use_dialog_syntax": use_dialog_syntax,
 	}
+	
+	if region_baking_enabled:
+		data["regions"] = get_regions()
 	#for setting in TOGGLE_SETTINGS.keys():
 		#data[setting] = get(setting)
 	#for setting in STRING_SETTINGS.keys():
@@ -296,9 +299,6 @@ func deserialize(data:Dictionary):
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
-	region_baking_enabled = data.get("region_baking_enabled", region_baking_enabled)
-	region_delination = data.get("region_delination", region_delination)
-	region_delinator_instruction = data.get("region_delinator_instruction", "")
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
@@ -1646,7 +1646,7 @@ enum RegionDeliniation{
 	Instructions
 }
 var region_baking_enabled := false
-var region_delinator_instruction := "show_cg"
+var region_delinator_instruction := ""
 var region_delination := RegionDeliniation.Pages
 ## Only useful for linear games.
 func get_regions(deliniation := region_delination) -> Dictionary:
@@ -1662,9 +1662,14 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 	var region_name : String = ""
 	var region_text : String = ""
 	
+	var last_region : String
+	
 	var actors_this_region := []
 	
-	for page_index : int in trail:
+	var i := 0
+	
+	while i < trail.size():
+		var page_index = trail[i]
 		for line_index in get_line_count(page_index):
 			if deliniation == RegionDeliniation.Instructions:
 				if get_line_type(page_index, line_index) == DIISIS.LineType.Instruction:
@@ -1675,7 +1680,8 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 						result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
 							"actors" : actors_this_region.duplicate(),
 							"text" : region_text,
-							"region_name" : region_name
+							"region_name" : region_name,
+							"region_end" : "%s.%s" % [page_index, line_index],
 						}
 						region_name = instruction_name
 						region_text = instruction_text
@@ -1691,18 +1697,26 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 		last_page_index = page_index
 		if deliniation == RegionDeliniation.Pages:
 			# put into region
+			var end : String
+			if i < trail.size() - 1:
+				end = "%s.%s" % [trail[i + 1], 0]
+			else:
+				end = "%s.%s" % [page_index, get_line_count(page_index)]
 			result["%s.%s" % [page_index, 0]] = {
-							"actors" : actors_this_region.duplicate()
+							"actors" : actors_this_region.duplicate(),
+							"region_end" : end,
 						}
 			region_start_page_index = page_index
 			region_start_line_index = 0
 			actors_this_region.clear()
+		i += 1
 	
 	if deliniation == RegionDeliniation.Instructions:
 		result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
 			"actors" : actors_this_region.duplicate(),
 			"text" : region_text,
-			"region_name" : region_name
+			"region_name" : region_name,
+			"region_end" : "%s.%s" % [region_start_page_index, get_line_count(region_start_page_index)],
 		}
 	
 	return result

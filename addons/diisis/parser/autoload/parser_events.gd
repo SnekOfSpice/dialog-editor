@@ -225,3 +225,7 @@ signal rubies_built(
 	ruby_indices:Array,
 	ruby_strings:Array
 )
+
+
+
+signal region_changed()

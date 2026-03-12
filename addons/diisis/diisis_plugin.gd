@@ -335,11 +335,12 @@ func save_preferences():
 	var config = ConfigFile.new()
 	
 	if not _embedded:
-		if is_instance_valid(dia_editor_window.editor_window):
-			config.set_value("editor", "content_scale", dia_editor_window.editor_window.content_scale_factor)
-		config.set_value("editor", "size", dia_editor_window.size)
-		config.set_value("editor", "position", dia_editor_window.position)
-		config.set_value("editor", "mode", dia_editor_window.mode)
+		if is_instance_valid(dia_editor_window):
+			if is_instance_valid(dia_editor_window.editor_window):
+				config.set_value("editor", "content_scale", dia_editor_window.editor_window.content_scale_factor)
+			config.set_value("editor", "size", dia_editor_window.size)
+			config.set_value("editor", "position", dia_editor_window.position)
+			config.set_value("editor", "mode", dia_editor_window.mode)
 	
 	for prop : String in Pages.PREFERENCE_PROPS:
 		config.set_value("editor", prop, Pages.get(prop))

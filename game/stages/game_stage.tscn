@@ -19,6 +19,8 @@ bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.756863)
 
 [node name="GameStage" type="Node" unique_id=1546877733 node_paths=PackedStringArray("name_label", "body_label", "text_container", "name_container", "choice_title_label", "choice_container", "choice_list")]
 script = ExtResource("1_a36me")
+stylebox_regular = null
+stylebox_cg = null
 actor_config = Dictionary[String, ExtResource("2_e6caa")]({
 "amber": SubResource("Resource_8g0u3")
 })
@@ -39,6 +41,7 @@ position = Vector2(76, -51)
 position = Vector2(493, 334)
 
 [node name="Characters" type="Node2D" parent="." unique_id=1507909817]
+unique_name_in_owner = true
 
 [node name="Amber" parent="Characters" unique_id=988320869 instance=ExtResource("5_aqeli")]
 position = Vector2(574, 366)
@@ -52,6 +55,7 @@ script = ExtResource("9_lbjue")
 [node name="VNUICanvasLayer" type="CanvasLayer" parent="Camera2D" unique_id=1120749494]
 
 [node name="VNUIRoot" type="Control" parent="Camera2D/VNUICanvasLayer" unique_id=519702352]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -71,6 +75,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="CGBottomContainer" type="ColorRect" parent="Camera2D/VNUICanvasLayer/VNUIRoot/Control" unique_id=106014108]
+unique_name_in_owner = true
 auto_translate_mode = 1
 visible = false
 layout_mode = 1
@@ -83,6 +88,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="VNUI" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=2022715054]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
@@ -165,6 +171,7 @@ fit_content = true
 scroll_active = false
 
 [node name="ControlsContainer" type="VBoxContainer" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI" unique_id=132631297]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -212,16 +219,7 @@ horizontal_alignment = 1
 layout_mode = 2
 
 [node name="CGTopContainer" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=1985015109]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="ScreenContainer" type="Control" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=1094123769]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -243,6 +241,7 @@ grow_horizontal = 2
 text = "DEV MODE ENABLED"
 
 [node name="StartCover" type="ColorRect" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=2082067561]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -255,6 +254,7 @@ color = Color(0, 0, 0, 1)
 script = ExtResource("13_qfsh6")
 
 [node name="RollingCredits" parent="Camera2D/VNUICanvasLayer/VNUIRoot" unique_id=500386310 instance=ExtResource("11_o4gqq")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 

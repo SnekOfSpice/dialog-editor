@@ -86,20 +86,25 @@ func get_node_at_address(address:String, suppress_off_page_warning := false):
 		
 
 func sort_addresses(addresses:Array) -> Array:
-	addresses.sort_custom(_sort_addresses)
+	addresses.sort_custom(is_address_before)
 	return addresses
 
-func _sort_addresses(a1:String, a2: String) -> bool:
-	var depth1 = get_address_depth(a1)
-	var depth2 = get_address_depth(a2)
-	
-	if depth1 < depth2:
+## assumes same address depth for both addresses
+func is_address_before(a1:String, a2: String) -> bool:
+	if get_address_depth(a1) != get_address_depth(a2):
 		return true
-	elif depth1 > depth2:
-		return false
+	var splits1 := get_split_address(a1)
+	var splits2 := get_split_address(a2)
 	
-	var last1 = get_split_address(a1).back()
-	var last2 = get_split_address(a2).back()
+	var depth := 0
+	while depth < splits1.size():
+		if splits1[depth] == splits2[depth]:
+			depth += 1
+			continue
+		return splits1[depth] < splits2[depth]
+		depth += 1
+	var last1 = splits1.back()
+	var last2 = splits2.back()
 	return last1 < last2
 
 func humanize_address(address:String) -> String:

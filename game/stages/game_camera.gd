@@ -85,17 +85,17 @@ func apply_shake(strength:float):
 	shake_strength = strength
 	sway_intensity_lerp_strength = 1.0
 
+
 func get_random_offset() -> Vector2:
 	return Vector2(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength))
 
-func get_screen_container() -> Control:
-	return find_child("ScreenContainer")
 
 func zoom_to(value:float, duration:float):
 	if zoom_tween:
 		zoom_tween.kill()
 	zoom_tween = create_tween()
 	zoom_tween.tween_property(self, "zoom", Vector2(value, value), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
 
 func move_to(x:float, y:float, duration:float):
 	if move_tween:

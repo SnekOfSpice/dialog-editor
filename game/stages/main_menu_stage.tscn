@@ -19,9 +19,8 @@ unique_name_in_owner = true
 texture = ExtResource("4_o4dm7")
 centered = false
 
-[node name="UILayer" type="CanvasLayer" parent="." unique_id=2083288469]
-
-[node name="MarginContainer" type="MarginContainer" parent="UILayer" unique_id=1112475798]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1112475798]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 248.0
 offset_right = 687.0
@@ -29,19 +28,19 @@ offset_bottom = 476.0
 theme = ExtResource("3_fjoxk")
 theme_override_constants/margin_left = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/MarginContainer" unique_id=1688914296]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1688914296]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="StartButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer" unique_id=1492642986]
+[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1492642986]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "New Game"
 alignment = 2
 
-[node name="LoadButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer" unique_id=1768369941]
+[node name="LoadButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1768369941]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
@@ -49,116 +48,63 @@ theme_override_font_sizes/font_size = 30
 text = "Load"
 alignment = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/MarginContainer/VBoxContainer" unique_id=515929281]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=515929281]
 layout_mode = 2
 
-[node name="SaveContainer" type="MarginContainer" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer" unique_id=62598293]
+[node name="SaveContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=62598293]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 6
 theme_override_constants/margin_right = 10
 
-[node name="Vbox" type="HBoxContainer" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer" unique_id=90828956]
+[node name="Vbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer" unique_id=90828956]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="SaveSlotLabel" type="Label" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=464343739]
+[node name="SaveSlotLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=464343739]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save Slot: 1"
 
-[node name="SaveSlotButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=247121626]
+[node name="SaveSlotButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=247121626]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 text = "Change"
 
-[node name="Control" type="Control" parent="UILayer/MarginContainer/VBoxContainer" unique_id=2071560947]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=2071560947]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="AuxButtons" type="VBoxContainer" parent="UILayer/MarginContainer/VBoxContainer" unique_id=598840762]
+[node name="AuxButtons" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=598840762]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="OptionsButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/AuxButtons" unique_id=1349256813]
+[node name="OptionsButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=1349256813]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Options"
 alignment = 2
 
-[node name="CWButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/AuxButtons" unique_id=1840968826]
+[node name="CWButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=1840968826]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Content Warning"
 alignment = 2
 
-[node name="CreditsButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/AuxButtons" unique_id=74720576]
+[node name="CreditsButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=74720576]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Credits"
 alignment = 2
 
-[node name="QuitButton" type="Button" parent="UILayer/MarginContainer/VBoxContainer/AuxButtons" unique_id=2003033487]
+[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=2003033487]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Quit"
 alignment = 2
-
-[node name="CanvasLayer3" type="CanvasLayer" parent="." unique_id=1332251141]
-
-[node name="UnlockedEpilogueOverlay" type="ColorRect" parent="CanvasLayer3" unique_id=870753662]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("3_fjoxk")
-color = Color(0, 0, 0, 0.635294)
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer3/UnlockedEpilogueOverlay" unique_id=1703108228]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer" unique_id=592244161]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer" unique_id=1862751949]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-bbcode_enabled = true
-text = "[center][b]Epilogue unlocked.[/b][/center]"
-fit_content = true
-
-[node name="UnlockedEpilogueButton" type="Button" parent="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer" unique_id=792491128]
-layout_mode = 2
-text = "Got it"
-
-[node name="BlackLayer" type="CanvasLayer" parent="." unique_id=1750936563]
-layer = 7
-visible = false
-
-[node name="Black" type="ColorRect" parent="BlackLayer" unique_id=1845593541]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1479602195]
 layout_mode = 0
@@ -173,13 +119,12 @@ text = "FILE 1"
 layout_mode = 2
 text = "FILE 2"
 
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/StartButton" to="." method="start_new_game"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/CWButton" to="." method="_on_cw_button_pressed"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="UILayer/MarginContainer/VBoxContainer/AuxButtons/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="CanvasLayer3/UnlockedEpilogueOverlay/CenterContainer/VBoxContainer/UnlockedEpilogueButton" to="." method="_on_unlocked_epilogue_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/StartButton" to="." method="start_new_game"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/CWButton" to="." method="_on_cw_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/path1" to="." method="_on_path_1_pressed"]
 [connection signal="pressed" from="VBoxContainer/path2" to="." method="_on_path_2_pressed"]

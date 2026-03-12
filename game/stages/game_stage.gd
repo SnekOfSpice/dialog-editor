@@ -12,10 +12,7 @@ var background : String = ""
 @export var devmode_enabled := false
 @export var devmode_start_page := 0
 @export var devmode_start_line := 0
-@export var stylebox_regular : StyleBox
-@export var stylebox_cg : StyleBox
 
-#@onready var line_reader : LineReader = find_child("LineReader")
 
 var dialog_box_tween : Tween
 var dialog_box_offset := Vector2.ZERO
@@ -25,7 +22,10 @@ var cg_position := ""
 var base_cg_offset : Vector2
 var is_name_container_visible := false
 
-@onready var cg_roots := [find_child("CGBottomContainer"), find_child("CGTopContainer")]
+@onready var cg_roots := [
+	%CGBottomContainer,
+	%CGTopContainer
+]
 
 var callable_upon_blocker_clear:Callable
 var meta_blocker := false
@@ -50,7 +50,7 @@ func _ready():
 		set_background("void")
 	find_child("DevModeLabel").visible = devmode_enabled
 	#GoBackHandler.store_into_subaddress(get_default_targets(), targets_by_subaddress, "0.0.0")
-	find_child("StartCover").visible = true
+	%StartCover.visible = true
 	ParserEvents.actor_name_changed.connect(on_actor_name_changed)
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
@@ -61,7 +61,7 @@ func _ready():
 	text_speed = Options.text_speed
 	auto_continue_delay = Options.auto_continue_delay
 	
-	for character in find_child("Characters").get_children():
+	for character in %Characters.get_children():
 		character.visible = false
 		EventBus.settings_changed.connect(on_settings_changed)
 	on_settings_changed()
@@ -77,7 +77,7 @@ func _ready():
 		push_error("No start data defined!")
 	
 	await get_tree().process_frame
-	find_child("StartCover").visible = false
+	%StartCover.visible = false
 
 
 func on_settings_changed():
@@ -92,10 +92,10 @@ func on_instruction_started(
 	_instruction_text : String,
 	_delay : float,
 ):
-	find_child("StartCover").visible = false
+	%StartCover.visible = false
 
 func show_start_cover():
-	find_child("StartCover").visible = true
+	%StartCover.visible = true
 
 func go_to_main_menu(_unused):
 	SceneLoader.request_background_loading(MainMenu.PATH, true)
@@ -117,19 +117,17 @@ func _unhandled_input(event: InputEvent) -> void:
 				var notification_popup = preload("res://game/systems/notification.tscn").instantiate()
 				var global_path := ProjectSettings.globalize_path(path)
 				var global_dir := global_path.substr(0, global_path.rfind("/"))
-				find_child("VNUIRoot").add_child(notification_popup)
+				%VNUIRoot.add_child(notification_popup)
 				notification_popup.init(str("Saved to [url=", global_dir, "]", global_path, "[/url]"))
 			if InputMap.action_has_event("toggle_auto_continue", event):
 				auto_continue = not auto_continue
 				Options.auto_continue = auto_continue
 				Options.save_prefs()
 			if InputMap.action_has_event("toggle_ui", event):
-				if find_child("VNUI").visible:
+				if %VNUI.visible:
 					hide_ui()
 				else:
 					show_ui()
-			if InputMap.action_has_event("cheats", event) and OS.has_feature("editor"):
-				find_child("Cheats").visible = not find_child("Cheats").visible
 				
 	if event is InputEventMouse:
 		if event.is_released() and InputMap.action_has_event("ui_cancel", event):
@@ -159,22 +157,18 @@ func attempt_advance(event:InputEvent):
 		if root.visible and emit_insutrction_complete_on_cg_hide:
 			hide_cg()
 			return
-	if not find_child("VNUI").visible:
+	if not %VNUI.visible:
 		return
 	request_advance()
 
 func show_ui():
-	if is_instance_valid(find_child("VNUI")):
-		find_child("VNUI").visible = true
+	if is_instance_valid(%VNUI):
+		%VNUI.visible = true
 
 func hide_ui():
-	find_child("VNUI").visible = false
+	%VNUI.visible = false
 
 func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
-	#if stylebox_cg:
-		#var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-		#ui1panel.add_theme_stylebox_override("panel", stylebox_cg)
-	
 	cg_root.modulate.a = 0.0 if cg_root.get_child_count() == 0 else 1.0
 	cg_root.visible = true
 	
@@ -234,15 +228,15 @@ func set_cg(cg_name:String, fade_in_duration:float, cg_root:Control):
 
 func set_cg_top(cg_name:String, fade_in_duration:float):
 	cg_position = "top"
-	set_cg(cg_name, fade_in_duration, find_child("CGTopContainer"))
+	set_cg(cg_name, fade_in_duration, %CGTopContainer)
 
 func set_cg_bottom(cg_name:String, fade_in_duration:float):
 	cg_position = "bottom"
-	set_cg(cg_name, fade_in_duration, find_child("CGBottomContainer"))
+	set_cg(cg_name, fade_in_duration, %CGBottomContainer)
 
 func set_cg_offset(offset:Vector2):
-	find_child("CGTopContainer").position = offset + base_cg_offset
-	find_child("CGBottomContainer").position = offset + base_cg_offset
+	%CGTopContainer.position = offset + base_cg_offset
+	%CGBottomContainer.position = offset + base_cg_offset
 
 
 func hide_cg(fade_out := 0.0):
@@ -262,16 +256,9 @@ func _clear_cg():
 		cg_root.visible = false
 		for c in cg_root.get_children():
 			c.queue_free()
-		#cg_root.modulate.a = 0.0
 		if emit_insutrction_complete_on_cg_hide:
 			Parser.function_acceded()
 			emit_insutrction_complete_on_cg_hide = false
-	
-	#if stylebox_regular:
-		#var ui1panel : PanelContainer = find_child("TextContainer1").find_child("Panel")
-		#ui1panel.add_theme_stylebox_override("panel", stylebox_regular)
-	
-
 
 
 
@@ -283,7 +270,7 @@ func serialize() -> Dictionary:
 	var result := {}
 	
 	var character_data := {}
-	for character : Character in find_child("Characters").get_children():
+	for character : Character in %Characters.get_children():
 		character_data[character.character_name] = character.serialize()
 	
 	result["character_data"] = character_data
@@ -292,7 +279,7 @@ func serialize() -> Dictionary:
 	result["base_cg_offset"] = base_cg_offset
 	result["background"] = background
 	
-	result["start_cover_visible"] = find_child("StartCover").visible
+	result["start_cover_visible"] = %StartCover.visible
 
 	result["camera"] = %Camera2D.serialize()
 
@@ -315,7 +302,7 @@ func deserialize_text_content(root:Control, data:Dictionary) -> void:
 
 func deserialize(data:Dictionary):
 	var character_data : Dictionary = data.get("character_data", {})
-	for character : Character in find_child("Characters").get_children():
+	for character : Character in %Characters.get_children():
 		character.deserialize(character_data.get(character.character_name, {}))
 	
 	%Camera2D.deserialize(data.get("camera", {}))
@@ -332,7 +319,7 @@ func deserialize(data:Dictionary):
 			push_warning("cg_position isn't top or bottom")
 			hide_cg()
 	
-	find_child("StartCover").visible = data.get("start_cover_visible", false)
+	%StartCover.visible = data.get("start_cover_visible", false)
 	
 	target_lod = data.get("fade_out_lod", 0.0)
 	target_mix = data.get("fade_out_mix_percentage", 0.0)
@@ -438,7 +425,7 @@ var control_tween
 func _on_line_reader_start_accepting_advance() -> void:
 	if control_tween:
 		control_tween.kill()
-	var controls : Control = find_child("ControlsContainer")
+	var controls : Control = %ControlsContainer
 	control_tween = create_tween()
 	control_tween.tween_property(controls, "modulate:a", 1, 1)
 	
@@ -448,12 +435,10 @@ func _on_line_reader_start_accepting_advance() -> void:
 func _on_line_reader_stop_accepting_advance() -> void:
 	if control_tween:
 		control_tween.kill()
-	var controls : Control = find_child("ControlsContainer")
+	var controls : Control = %ControlsContainer
 	control_tween = create_tween()
 	control_tween.tween_property(controls, "modulate:a", 0, 1)
 
-func get_screen_container() -> Control:
-	return find_child("ScreenContainer")
 
 
 func _on_android_hack_button_pressed() -> void:
@@ -574,7 +559,7 @@ func control_camera(zoom : float, x : float, y : float, duration : float) -> boo
 	return false
 
 func roll_credits() -> bool:
-	find_child("RollingCredits").start()
+	%RollingCredits.start()
 	return true
 
 func set_character_name(character: String, new_name: String) -> bool:

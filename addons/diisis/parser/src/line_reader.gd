@@ -1093,6 +1093,9 @@ func _find_next_speaking_line_index(text : String, from : int) -> Array:
 	if lc_position < next_break_index and lc_position != -1:
 		next_break_index = lc_position
 		next_break_string = "<lc>"
+	if next_break_index == -1 and lc_position != -1:
+		next_break_index = lc_position
+		next_break_string = "<lc>"
 	
 	return [next_break_index, next_break_string]
 

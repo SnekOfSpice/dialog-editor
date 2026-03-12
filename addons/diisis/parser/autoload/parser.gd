@@ -39,6 +39,7 @@ var l10n := {}
 var stringkit_titles := []
 var stringkits := {}
 var file_config := {}
+var regions := {}
 
 var line_reader : LineReader = null
 var paused := true
@@ -146,6 +147,7 @@ func _initialize(data:Dictionary):
 	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
+	regions = data.get("regions", regions)
 	#locale = _default_locale
 	
 	page_keys.clear()
@@ -408,6 +410,10 @@ func get_line_type(address:String) -> DIISIS.LineType:
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
+
+
+
+
 func get_line_content(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var prev_page = parts[0]
@@ -434,6 +440,35 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	var prev_line = parts[1]
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+
+
+var region_end : String
+
+## Returns a dictionary with the following keys:
+## [br] - [code]actors[/code]: An [Array] containing the keys of all speakers within this region.
+## [br] - [code]region_end[/code]: An [String] of the address where this region ends. Is usually the exclusive end / start of the next region, except on the last region.
+## [br][b]Note:[/b] Region baking needs to be enabled in the DIISIS editor for this to work. (File > Configure Regions)
+func get_region() -> Dictionary:
+	var address := get_address()
+	for region_address in regions.keys():
+		if not DiisisEditorUtil.is_address_before(address, region_address):
+			var end_address : String = regions.get(region_address).get("region_end")
+			if DiisisEditorUtil.is_address_before(address, end_address):
+				return regions.get(region_address)
+	return {}
+
+
+## Returns all actors in the current region.
+## See also [method get_region].
+func get_region_actors() -> Array:
+	return get_region().get("actors", [])
+
+
+## Returns the end address of the current region.
+## See also [method get_region].
+func get_region_end() -> String:
+	return get_region().get("region_end", [])
+
 
 func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -545,7 +580,12 @@ func read_line(index: int):
 		
 	var new_address := str(page_index, ".", line_index)
 
-	address_trail.append(str(page_index, ".", line_index))
+	address_trail.append(new_address)
+	
+	var new_region_end = get_region_end()
+	if new_region_end != region_end:
+		ParserEvents.region_changed.emit()
+	region_end = new_region_end
 	
 	var line_data : Dictionary = lines[index]
 	line_id = line_data.get("id", "")
