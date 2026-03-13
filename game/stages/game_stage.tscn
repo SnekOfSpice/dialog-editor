@@ -19,8 +19,6 @@ bg_color = Color(0.0509804, 0.0509804, 0.0509804, 0.756863)
 
 [node name="GameStage" type="Node" unique_id=1546877733 node_paths=PackedStringArray("name_label", "body_label", "text_container", "name_container", "choice_title_label", "choice_container", "choice_list")]
 script = ExtResource("1_a36me")
-stylebox_regular = null
-stylebox_cg = null
 actor_config = Dictionary[String, ExtResource("2_e6caa")]({
 "amber": SubResource("Resource_8g0u3")
 })
