@@ -300,3 +300,12 @@ visual novel template
 under the hood
 - add a few utility functions to Pages regarding Facts
 - make a custom option button
+
+
+#####
+REGION ORDER
+General
+Editor
+Runtime
+VN Template
+Under the Hood
