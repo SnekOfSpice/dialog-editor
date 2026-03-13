@@ -55,9 +55,13 @@ func _enter_tree():
 }
 
 )
-	if not ProjectSettings.has_setting("diisis/plugin/updates/check_for_updates"):
+	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_updates"):
 		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
-		ProjectSettings.set_setting("diisis/plugin/updates/check_for_updates", true)
+		ProjectSettings.set_setting("diisis/plugin/checks/check_for_updates", true)
+		ProjectSettings.save()
+	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_linux_input"):
+		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
+		ProjectSettings.set_setting("diisis/plugin/checks/check_for_linux_input", true)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
@@ -80,6 +84,20 @@ func _enter_tree():
 	
 		await get_tree().process_frame
 		toolbar_button.get_parent().move_child(toolbar_button, -2)
+	
+	if (
+		OS.get_name() == "linux" and
+		not ProjectSettings.get_setting("diisis/plugin/view/embedded") and
+		ProjectSettings.get_setting("diisis/plugin/checks/check_for_linux_input")):
+		popup_accept_dialogue(
+			"Possible DIISIS/Linux incompatibility",
+			str("Using windowed mode on some Linux systems may create false inputs. ",
+			"Specifically, keyboard shortcuts while inside a textbox can insert ",
+			"the hotkey into the textbox. For example, inserting an \"s\" when using Ctrl+S to save. ",
+			"You can change from windowed to embedded view in Project Settings > DIISIS > View > Embedded. ",
+			"You can disable this hint in Project Settings > DIISIS > Checks > Check For Linux Input."
+			)
+		)
 	
 	var welcome_message := "[font=res://addons/diisis/editor/visuals/theme/fonts/text_main_base-medium.tres]"
 	welcome_message += "Thank you for using [hint=Dialog Interface Sister System]DIISIS[/hint]! Feel free to reach out on GitHub with any bugs you encounter and features you yearn for :3"
@@ -295,10 +313,11 @@ func popup_accept_dialogue(dia_title:String, dia_text:String, dia_ok_button_text
 	accept_dialogue = AcceptDialog.new()
 	get_editor_interface().get_base_control().add_child.call_deferred(accept_dialogue)
 	accept_dialogue.dialog_autowrap = true
+	accept_dialogue.popup_window = true
 	accept_dialogue.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 	accept_dialogue.size = Vector2(499, 236)
-	accept_dialogue.confirmed.connect(confirmation_window.queue_free)
-	accept_dialogue.canceled.connect(confirmation_window.queue_free)
+	accept_dialogue.confirmed.connect(accept_dialogue.hide)
+	accept_dialogue.canceled.connect(accept_dialogue.hide)
 	accept_dialogue.title = dia_title
 	accept_dialogue.dialog_text = dia_text
 	accept_dialogue.ok_button_text = dia_ok_button_text

@@ -194,6 +194,42 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(0.121569, 0.0980392, 0.129412, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcrxo"]
+bg_color = Color(0.42, 0.2646, 0.39928, 1)
+border_width_left = 4
+border_width_top = 3
+border_width_right = 4
+border_width_bottom = 3
+border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 4.0
+expand_margin_top = 3.0
+expand_margin_right = 4.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2ov1"]
+bg_color = Color(0.68, 0.4012, 0.59636, 1)
+border_width_left = 4
+border_width_top = 3
+border_width_right = 4
+border_width_bottom = 3
+border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 4.0
+expand_margin_top = 3.0
+expand_margin_right = 4.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajats"]
+bg_color = Color(0.74538, 0.6478, 0.82, 0.811765)
+border_width_left = 4
+border_width_top = 3
+border_width_right = 4
+border_width_bottom = 3
+border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 4.0
+expand_margin_top = 3.0
+expand_margin_right = 4.0
+expand_margin_bottom = 3.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_didyh"]
 bg_color = Color(0.611739, 0.408186, 0.451644, 1)
 
@@ -440,6 +476,10 @@ border_width_top = 4
 border_width_right = 3
 border_width_bottom = 4
 border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 3.0
+expand_margin_top = 4.0
+expand_margin_right = 3.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_afpci"]
 bg_color = Color(0.68, 0.4012, 0.59636, 1)
@@ -448,6 +488,10 @@ border_width_top = 4
 border_width_right = 3
 border_width_bottom = 4
 border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 3.0
+expand_margin_top = 4.0
+expand_margin_right = 3.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2wpir"]
 bg_color = Color(0.74538, 0.6478, 0.82, 0.811765)
@@ -456,6 +500,10 @@ border_width_top = 4
 border_width_right = 3
 border_width_bottom = 4
 border_color = Color(0.8, 0.8, 0.8, 0)
+expand_margin_left = 3.0
+expand_margin_top = 4.0
+expand_margin_right = 3.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="FontVariation" id="FontVariation_da0q8"]
 base_font = ExtResource("9_iln6p")
@@ -512,6 +560,9 @@ FileDialog/icons/toggle_hidden = SubResource("ImageTexture_t885g")
 FileDialog/styles/embedded_border = ExtResource("14_a66xj")
 FileDialog/styles/embedded_unfocused_border = ExtResource("15_sadi4")
 FileDialog/styles/panel = SubResource("StyleBoxFlat_qem8e")
+HScrollBar/styles/grabber = SubResource("StyleBoxFlat_jcrxo")
+HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_s2ov1")
+HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_ajats")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_didyh")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_8xmla")
 HSlider/styles/slider = SubResource("StyleBoxLine_fww33")

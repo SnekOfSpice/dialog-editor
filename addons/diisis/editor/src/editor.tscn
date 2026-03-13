@@ -57,70 +57,74 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.129412, 0.129412, 0.129412, 1)
 
-[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1680567462]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1946999896]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-horizontal_scroll_mode = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1680567462]
+layout_mode = 2
+size_flags_vertical = 3
 vertical_scroll_mode = 0
 
-[node name="Core" type="VBoxContainer" parent="ScrollContainer" unique_id=1211561382]
+[node name="Core" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1211561382]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="FunnyDebugButton" type="Button" parent="ScrollContainer/Core" unique_id=1687821056]
+[node name="FunnyDebugButton" type="Button" parent="VBoxContainer/ScrollContainer/Core" unique_id=1687821056]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "any test functionality"
 
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core" unique_id=1941519239]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/Core" unique_id=1941519239]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="ScrollContainer/Core/MarginContainer" unique_id=210181449]
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/ScrollContainer/Core/MarginContainer" unique_id=210181449]
 layout_mode = 2
 color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer" unique_id=1339352738]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer" unique_id=1339352738]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2" unique_id=157855958]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=149542617]
-layout_mode = 2
-
-[node name="FileControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=841344403]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2" unique_id=157855958]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl" unique_id=2113570841]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=149542617]
+layout_mode = 2
+
+[node name="FileControl" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=841344403]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer" unique_id=183509625]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl" unique_id=2113570841]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer" unique_id=183509625]
 layout_mode = 2
 
-[node name="ToolbarContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=1342078311]
+[node name="ToolbarContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=1342078311]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=1072692679]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=1072692679]
 custom_minimum_size = Vector2(295, 0)
 layout_mode = 2
 
-[node name="RefreshButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1059368916]
+[node name="RefreshButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1059368916]
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Refresh"
 
-[node name="UndoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=859003155]
+[node name="UndoButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=859003155]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Undo (Ctrl+Z when not focued on a text label.)"
@@ -128,7 +132,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 icon = ExtResource("3_mqy67")
 
-[node name="RedoButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1463127554]
+[node name="RedoButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=1463127554]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Redo (Ctrl+Y when not focued on a text label.)"
@@ -136,13 +140,13 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 icon = ExtResource("4_eueb5")
 
-[node name="MenuBar" type="MenuBar" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=585253380]
+[node name="MenuBar" type="MenuBar" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer" unique_id=585253380]
 layout_mode = 2
 theme = ExtResource("1_nb6ej")
 theme_override_font_sizes/font_size = 16
 prefer_global_menu = false
 
-[node name="File" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1021917216]
+[node name="File" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1021917216]
 unique_name_in_owner = true
 size = Vector2i(159, 228)
 content_scale_aspect = 4
@@ -158,7 +162,7 @@ item_2/id = 1
 item_3/text = "Open    (O)"
 item_3/id = 2
 
-[node name="L10NMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" unique_id=1686074836]
+[node name="L10NMenu" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" unique_id=1686074836]
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
 item_count = 3
@@ -169,7 +173,7 @@ item_1/id = 1
 item_2/text = "Update existing l10n file..."
 item_2/id = 2
 
-[node name="Editor" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=5012722]
+[node name="Editor" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=5012722]
 unique_name_in_owner = true
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
@@ -187,7 +191,7 @@ item_4/id = 4
 item_5/text = "Open wiki (opens browser)"
 item_5/id = 5
 
-[node name="Utility" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=747755189]
+[node name="Utility" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=747755189]
 unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(209, 100)
@@ -211,7 +215,7 @@ item_5/id = 2
 item_6/text = "Step through pages"
 item_6/id = 3
 
-[node name="LibraryOfBabel" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" unique_id=549865233]
+[node name="LibraryOfBabel" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" unique_id=549865233]
 unique_name_in_owner = true
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
@@ -221,7 +225,7 @@ item_0/id = 0
 item_1/text = "Current Page"
 item_1/id = 1
 
-[node name="Setup" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1569031650]
+[node name="Setup" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar" unique_id=1569031650]
 unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(113, 197)
@@ -245,7 +249,7 @@ item_5/id = 5
 item_6/text = "Pages    (T)"
 item_6/id = 6
 
-[node name="TemplatesMenu" type="PopupMenu" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
+[node name="TemplatesMenu" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
 unique_name_in_owner = true
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
@@ -253,30 +257,30 @@ item_count = 1
 item_0/text = "Visual Novel"
 item_0/id = 0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=799838949]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer" unique_id=799838949]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label2" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=1384151561]
+[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=1384151561]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 14
 text = "<"
 
-[node name="LastUndoStepLabel" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=147750605]
+[node name="LastUndoStepLabel" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer2" unique_id=147750605]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 14
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=19488174]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer" unique_id=19488174]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=179777342]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=179777342]
 layout_mode = 2
 
-[node name="ShowErrorsButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=764905863]
+[node name="ShowErrorsButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=764905863]
 layout_mode = 2
 size_flags_vertical = 0
 focus_mode = 0
@@ -284,7 +288,7 @@ theme_override_font_sizes/font_size = 14
 toggle_mode = true
 text = "err"
 
-[node name="ErrorTextBox" type="RichTextLabel" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1748562948]
+[node name="ErrorTextBox" type="RichTextLabel" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1748562948]
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -297,21 +301,21 @@ theme_override_font_sizes/italics_font_size = 14
 theme_override_font_sizes/mono_font_size = 14
 bbcode_enabled = true
 
-[node name="PageControl" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=1009905370]
+[node name="PageControl" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer" unique_id=1009905370]
 layout_mode = 2
 
-[node name="PageNav" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl" unique_id=842539140]
+[node name="PageNav" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl" unique_id=842539140]
 layout_mode = 2
 theme_override_constants/separation = 13
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1018657318]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1018657318]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=1226394107]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=1226394107]
 layout_mode = 2
 
-[node name="First" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1445829962]
+[node name="First" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1445829962]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
@@ -321,7 +325,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 text = "|<"
 
-[node name="Prev" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=361981923]
+[node name="Prev" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=361981923]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
@@ -331,10 +335,10 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 text = "<"
 
-[node name="GoTo" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1604811142 instance=ExtResource("4_m6c15")]
+[node name="GoTo" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1604811142 instance=ExtResource("4_m6c15")]
 layout_mode = 2
 
-[node name="Next" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=721865512]
+[node name="Next" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=721865512]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Go to next page
@@ -343,7 +347,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 text = ">"
 
-[node name="Last" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1630940154]
+[node name="Last" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer" unique_id=1630940154]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Go to last page
@@ -352,24 +356,24 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 text = ">|"
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=2069447735]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2" unique_id=2069447735]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "navigation"
 horizontal_alignment = 1
 
-[node name="VSeparator3" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=2055973850]
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=2055973850]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="JumpContainer2" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1791176452]
+[node name="JumpContainer2" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=1791176452]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=1974523925]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=1974523925]
 layout_mode = 2
 
-[node name="AddAfter" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=1035722366]
+[node name="AddAfter" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=1035722366]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 8
@@ -380,7 +384,7 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 icon = ExtResource("7_m63dd")
 
-[node name="AddLast" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=700582887]
+[node name="AddLast" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer" unique_id=700582887]
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Add page to end
@@ -389,25 +393,25 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 icon = ExtResource("8_ajvyk")
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=960116116]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2" unique_id=960116116]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "pages"
 horizontal_alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=457017119]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=457017119]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=544449934]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=544449934]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=310554456]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=310554456]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="AddLineButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=854519008]
+[node name="AddLineButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=854519008]
 layout_mode = 2
 tooltip_text = "Add Line (Ctrl+A)
 Adds a line to the end of the current page."
@@ -416,10 +420,10 @@ theme_override_font_sizes/font_size = 14
 icon = ExtResource("7_67kpi")
 icon_alignment = 1
 
-[node name="LineTypes" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=38698071]
+[node name="LineTypes" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer" unique_id=38698071]
 layout_mode = 2
 
-[node name="TypeText" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=914226950]
+[node name="TypeText" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=914226950]
 layout_mode = 2
 tooltip_text = "Text (Ctrl+1)"
 focus_mode = 0
@@ -431,7 +435,7 @@ icon = ExtResource("5_cfai3")
 icon_alignment = 1
 script = ExtResource("3_2h0gj")
 
-[node name="TypeChoice" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=697695636]
+[node name="TypeChoice" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=697695636]
 layout_mode = 2
 tooltip_text = "Choice (Ctrl+2)"
 focus_mode = 0
@@ -443,7 +447,7 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 1
 
-[node name="TypeInstruction" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=586829818]
+[node name="TypeInstruction" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=586829818]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Instruction (Ctrl+3)"
@@ -457,7 +461,7 @@ expand_icon = true
 script = ExtResource("3_2h0gj")
 line_type = 2
 
-[node name="TypeFolder" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=1014220156]
+[node name="TypeFolder" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/LineTypes" unique_id=1014220156]
 layout_mode = 2
 tooltip_text = "Folder (Ctrl+4)"
 focus_mode = 0
@@ -469,29 +473,29 @@ icon_alignment = 1
 script = ExtResource("3_2h0gj")
 line_type = 3
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=1617129894]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer" unique_id=1617129894]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "lines"
 horizontal_alignment = 1
 
-[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=377776600]
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=377776600]
 auto_translate_mode = 1
 layout_mode = 2
 
-[node name="ViewTypes" type="VBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=90708840]
+[node name="ViewTypes" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav" unique_id=90708840]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=1856850894]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=1856850894]
 layout_mode = 2
 
-[node name="ViewTypesButtonContainer" type="HBoxContainer" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1862183397]
+[node name="ViewTypesButtonContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1862183397]
 layout_mode = 2
 
-[node name="ViewFullButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2056397444]
+[node name="ViewFullButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2056397444]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 tooltip_text = "Page view: Full"
@@ -504,7 +508,7 @@ icon = ExtResource("7_32dog")
 icon_alignment = 1
 script = ExtResource("7_7syci")
 
-[node name="ViewTruncatedButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=1839089254]
+[node name="ViewTruncatedButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=1839089254]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -518,7 +522,7 @@ icon_alignment = 1
 script = ExtResource("7_7syci")
 page_view = 1
 
-[node name="ViewMinimalButton" type="Button" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2120840586]
+[node name="ViewMinimalButton" type="Button" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/ViewTypesButtonContainer" unique_id=2120840586]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -532,7 +536,7 @@ icon_alignment = 1
 script = ExtResource("7_7syci")
 page_view = 2
 
-[node name="TextSizeButton" type="OptionButton" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1515539244]
+[node name="TextSizeButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1515539244]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Font Size"
@@ -540,20 +544,58 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 14
 allow_reselect = true
 
-[node name="Label" type="Label" parent="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=2127840181]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=2127840181]
 auto_translate_mode = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "view"
 horizontal_alignment = 1
 
-[node name="PageContainer" type="MarginContainer" parent="ScrollContainer/Core" unique_id=18877755]
+[node name="PageContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/Core" unique_id=18877755]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 0
 metadata/_edit_use_anchors_ = true
 
-[node name="Page" parent="ScrollContainer/Core/PageContainer" unique_id=1868324178 instance=ExtResource("2_kbraj")]
+[node name="Page" parent="VBoxContainer/ScrollContainer/Core/PageContainer" unique_id=1868324178 instance=ExtResource("2_kbraj")]
 layout_mode = 2
+
+[node name="EmbedHint" type="ColorRect" parent="VBoxContainer" unique_id=296431943]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22.58)
+layout_mode = 2
+color = Color(0.12941177, 0.12941177, 0.12941177, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/EmbedHint" unique_id=1366185523]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 20.0
+grow_horizontal = 2
+
+[node name="FilePathLabel" type="Label" parent="VBoxContainer/EmbedHint/HBoxContainer" unique_id=1291232123]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "vbghvb"
+
+[node name="UpdateAvailable" parent="VBoxContainer/EmbedHint/HBoxContainer" unique_id=1361638744 instance=ExtResource("34_378lj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+
+[node name="SillyCompanionEmbedLabel" type="Label" parent="VBoxContainer/EmbedHint/HBoxContainer" unique_id=1307989342]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 14
 
 [node name="NotificationContainer" type="VBoxContainer" parent="." unique_id=2099306740]
 unique_name_in_owner = true
@@ -804,72 +846,30 @@ theme_override_font_sizes/font_size = 14
 text = "Booting up import..."
 horizontal_alignment = 1
 
-[node name="EmbedHint" type="ColorRect" parent="." unique_id=296431943]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 22.58)
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-color = Color(0.12941177, 0.12941177, 0.12941177, 1)
-
-[node name="HBoxContainer" type="HBoxContainer" parent="EmbedHint" unique_id=1366185523]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 20.0
-grow_horizontal = 2
-
-[node name="FilePathLabel" type="Label" parent="EmbedHint/HBoxContainer" unique_id=1291232123]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
-text = "vbghvb"
-
-[node name="UpdateAvailable" parent="EmbedHint/HBoxContainer" unique_id=1361638744 instance=ExtResource("34_378lj")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 10
-theme_override_font_sizes/normal_font_size = 14
-theme_override_font_sizes/bold_font_size = 14
-theme_override_font_sizes/bold_italics_font_size = 14
-theme_override_font_sizes/italics_font_size = 14
-theme_override_font_sizes/mono_font_size = 14
-
-[node name="SillyCompanionEmbedLabel" type="Label" parent="EmbedHint/HBoxContainer" unique_id=1307989342]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 14
-
-[connection signal="pressed" from="ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
-[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File/L10NMenu" to="." method="_on_l_10n_menu_id_pressed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Editor" to="." method="_on_editor_id_pressed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_id_pressed"]
-[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
-[connection signal="index_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility/LibraryOfBabel" to="." method="_on_library_of_babel_index_pressed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_id_pressed"]
-[connection signal="visibility_changed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
-[connection signal="id_pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup/TemplatesMenu" to="." method="_on_templates_menu_id_pressed"]
-[connection signal="toggled" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2/ShowErrorsButton" to="." method="_on_show_errors_button_toggled"]
-[connection signal="meta_clicked" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Next" to="." method="_on_next_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Last" to="." method="_on_last_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
-[connection signal="pressed" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
-[connection signal="item_selected" from="ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
+[connection signal="visibility_changed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File" to="." method="_on_file_visibility_changed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/File/L10NMenu" to="." method="_on_l_10n_menu_id_pressed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Editor" to="." method="_on_editor_id_pressed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_id_pressed"]
+[connection signal="visibility_changed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" to="." method="_on_utility_visibility_changed"]
+[connection signal="index_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility/LibraryOfBabel" to="." method="_on_library_of_babel_index_pressed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_id_pressed"]
+[connection signal="visibility_changed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" to="." method="_on_setup_visibility_changed"]
+[connection signal="id_pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup/TemplatesMenu" to="." method="_on_templates_menu_id_pressed"]
+[connection signal="toggled" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2/ShowErrorsButton" to="." method="_on_show_errors_button_toggled"]
+[connection signal="meta_clicked" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Last" to="." method="_on_last_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]

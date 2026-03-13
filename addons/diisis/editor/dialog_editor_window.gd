@@ -91,7 +91,8 @@ func update_content_scale(scale_factor:float):
 
 
 func _on_size_changed() -> void:
-	await get_tree().process_frame
+	if is_inside_tree():
+		await get_tree().process_frame
 	update_content_scale(editor_content_scale)
 
 func _on_window_factor_scale_value_changed(value):

@@ -24,9 +24,9 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=1999651831]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/HBoxContainer" unique_id=672678736]
-custom_minimum_size = Vector2(485.105, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -57,7 +57,6 @@ size_flags_vertical = 0
 reverse = true
 
 [node name="InputLockContainer" type="VBoxContainer" parent="HBoxContainer/HBoxContainer" unique_id=1357604357]
-custom_minimum_size = Vector2(291, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 
@@ -75,7 +74,6 @@ layout_mode = 2
 
 [node name="DelayContainer" type="GridContainer" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer" unique_id=825565245]
 layout_mode = 2
-size_flags_horizontal = 3
 columns = 3
 
 [node name="DelayBeforeSpinBox" type="SpinBox" parent="HBoxContainer/HBoxContainer/InputLockContainer/PanelContainer/VBoxContainer/DelayContainer" unique_id=2057301499]

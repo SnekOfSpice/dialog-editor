@@ -49,7 +49,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_m6srl")
 layout_mode = 2
 
 [node name="Info" type="HBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=851636733]
-custom_minimum_size = Vector2(550, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -230,6 +229,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=172265541]
+visible = false
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 mouse_filter = 2

@@ -20,6 +20,8 @@ rework the entire vn template to better keep up with my more recent projects (st
 add tutorial on adding bbcode to rubies
 ensure line reader scripts exist when focusing the editor window (window view) or when toggled visible (embedded)
 regions
+check for linux input
+some layout / editor sizing improvemnts
 
 update vn template script
 template cleanip

@@ -4,7 +4,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_dlbgb"]
 
-[node name="RegionConfigContainer" type="Control" unique_id=1770031738]
+[node name="RegionConfigContainer" type="Control" unique_id=701763459]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 3
 anchors_preset = 15
@@ -15,12 +15,9 @@ grow_vertical = 2
 script = ExtResource("1_itces")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=16121138]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=262200414]
 layout_mode = 2
@@ -67,16 +64,12 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_dlbgb")
 text = "Instruction"
 
-[node name="InstructionContainer" type="Control" parent="VBoxContainer/Contents" unique_id=1288427186]
+[node name="InstructionContainer" type="PanelContainer" parent="VBoxContainer/Contents" unique_id=1415684456]
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Contents/InstructionContainer" unique_id=1427356038]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 74.0
-grow_horizontal = 2
+layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer" unique_id=289124610]
 layout_mode = 2
