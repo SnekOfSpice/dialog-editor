@@ -11,7 +11,7 @@ const PATH := "res://game/stages/main_menu_stage.tscn"
 func _ready() -> void:
 	Game.hook_up_button_sfx(self)
 	set_save_slot(Options.save_slot)
-	find_child("QuitButton").visible = not OS.has_feature("web")
+	%QuitButton.visible = not OS.has_feature("web")
 	Sound.switch_to("main_menu")
 	update_load_button()
 	
@@ -41,24 +41,12 @@ func _ready() -> void:
 	else:
 		%StartButton.focus_neighbor_bottom = %AuxButtons.get_child(0).get_path()
 		%AuxButtons.get_child(0).focus_neighbor_top = %StartButton.get_path()
-	
-	if Game.just_ended:
-		if not Options.photomode_unlocked and not OS.has_feature("mobile"):
-			Options.photomode_unlocked = true
-			Game.set_screen(CONST.SCREEN_NOTICE, {
-				"title" : "Photomode Unlocked",
-				"text" : "Photomode has been unlocked. You can open it my pressing [P] while in-game."
-			})
-			Options.save_prefs()
-		#Overlay.play("chapter_out")
-		Game.just_ended = false
-		
+
 
 
 func update_load_button():
-	find_child("LoadButton").visible = Options.has_savedata()
-	#find_child("LoadButton").text = str("Load (", int(Parser.get_game_progress(Options.get_savedata_dir_name()) * 100), "%)")
-	
+	%LoadButton.visible = Options.has_savedata()	
+
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -66,6 +54,7 @@ func _gui_input(event: InputEvent) -> void:
 			Game.set_screen("")
 		else:
 			Game.set_screen(CONST.SCREEN_OPTIONS)
+
 
 func set_save_slot(slot:int):
 	%SaveSlotLabel.text = str("Save Slot: ", slot + 1)
@@ -92,25 +81,16 @@ func _on_save_slot_button_pressed() -> void:
 	Game.set_screen(CONST.SCREEN_SAVE)
 
 
-
 func start_new_game():
 	EventBus.new_game_started.emit()
 	Game.start_data = GameStartData.new()
 	Game.start_data.game_start_callable = Parser.reset_and_start
 	
 	SceneLoader.request_background_loading(GameStage.PATH, true)
-	
+
 
 func _on_load_button_pressed() -> void:
 	Game.start_data = GameStartData.new()
 	Game.start_data.game_start_callable = Options.load_gamestate
 	
 	SceneLoader.request_background_loading(GameStage.PATH, true)
-
-
-func _on_path_1_pressed() -> void:
-	Parser.full_initialize("res://game/diisis_integration/demo_script.json")
-
-
-func _on_path_2_pressed() -> void:
-	Parser.full_initialize("res://game/diisis_integration/demo_script2.json")

@@ -11,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_fjoxk")
 script = ExtResource("1_wqqgh")
 menu_music = "main_menu"
 
@@ -19,28 +20,23 @@ unique_name_in_owner = true
 texture = ExtResource("4_o4dm7")
 centered = false
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1112475798]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1688914296]
 layout_mode = 0
-offset_left = 16.0
+offset_left = 23.0
 offset_top = 248.0
-offset_right = 687.0
-offset_bottom = 476.0
-theme = ExtResource("3_fjoxk")
-theme_override_constants/margin_left = 7
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1688914296]
-layout_mode = 2
+offset_right = 237.0
+offset_bottom = 466.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1492642986]
+[node name="StartButton" type="Button" parent="VBoxContainer" unique_id=1492642986]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "New Game"
 alignment = 2
 
-[node name="LoadButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1768369941]
+[node name="LoadButton" type="Button" parent="VBoxContainer" unique_id=1768369941]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
@@ -48,83 +44,68 @@ theme_override_font_sizes/font_size = 30
 text = "Load"
 alignment = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=515929281]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=515929281]
 layout_mode = 2
 
-[node name="SaveContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=62598293]
+[node name="SaveContainer" type="MarginContainer" parent="VBoxContainer/VBoxContainer" unique_id=62598293]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 6
 theme_override_constants/margin_right = 10
 
-[node name="Vbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer" unique_id=90828956]
+[node name="Slot" type="HBoxContainer" parent="VBoxContainer/VBoxContainer/SaveContainer" unique_id=90828956]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="SaveSlotLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=464343739]
+[node name="SaveSlotLabel" type="Label" parent="VBoxContainer/VBoxContainer/SaveContainer/Slot" unique_id=464343739]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save Slot: 1"
 
-[node name="SaveSlotButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox" unique_id=247121626]
+[node name="SaveSlotButton" type="Button" parent="VBoxContainer/VBoxContainer/SaveContainer/Slot" unique_id=247121626]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 text = "Change"
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=2071560947]
+[node name="Control" type="Control" parent="VBoxContainer" unique_id=2071560947]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="AuxButtons" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=598840762]
-unique_name_in_owner = true
+[node name="AuxButtons" type="VBoxContainer" parent="VBoxContainer" unique_id=598840762]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="OptionsButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=1349256813]
+[node name="OptionsButton" type="Button" parent="VBoxContainer/AuxButtons" unique_id=1349256813]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Options"
 alignment = 2
 
-[node name="CWButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=1840968826]
+[node name="CWButton" type="Button" parent="VBoxContainer/AuxButtons" unique_id=1840968826]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Content Warning"
 alignment = 2
 
-[node name="CreditsButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=74720576]
+[node name="CreditsButton" type="Button" parent="VBoxContainer/AuxButtons" unique_id=74720576]
 auto_translate_mode = 1
 layout_mode = 2
 text = "Credits"
 alignment = 2
 
-[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer/AuxButtons" unique_id=2003033487]
+[node name="QuitButton" type="Button" parent="VBoxContainer/AuxButtons" unique_id=2003033487]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 text = "Quit"
 alignment = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1479602195]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="path1" type="Button" parent="VBoxContainer" unique_id=516877994]
-layout_mode = 2
-text = "FILE 1"
-
-[node name="path2" type="Button" parent="VBoxContainer" unique_id=60952630]
-layout_mode = 2
-text = "FILE 2"
-
-[connection signal="pressed" from="MarginContainer/VBoxContainer/StartButton" to="." method="start_new_game"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/SaveContainer/Vbox/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/CWButton" to="." method="_on_cw_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/AuxButtons/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/path1" to="." method="_on_path_1_pressed"]
-[connection signal="pressed" from="VBoxContainer/path2" to="." method="_on_path_2_pressed"]
+[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="start_new_game"]
+[connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/SaveContainer/Slot/SaveSlotButton" to="." method="_on_save_slot_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/AuxButtons/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/AuxButtons/CWButton" to="." method="_on_cw_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/AuxButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/AuxButtons/QuitButton" to="." method="_on_quit_button_pressed"]

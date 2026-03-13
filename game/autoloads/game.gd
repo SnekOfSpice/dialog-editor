@@ -15,7 +15,6 @@ var game_stage : GameStage
 @export var creating_slideshow := false
 @export var performance_test := false
 
-var just_ended := false
 
 
 var release:bool:
@@ -31,10 +30,6 @@ func _ready():
 	set_screen("")
 	
 	Game.hook_up_button_sfx(self)
-	ParserEvents.page_terminated.connect(func(number : int):
-		if number == Parser.get_page_count() -1:
-			just_ended = true
-		)
 	
 	# mobile back button
 	get_tree().get_root().connect("go_back_requested", func():

@@ -82,14 +82,7 @@ var fps_counter_visible := false:
 	set(value):
 		fps_counter_visible = value
 		EventBus.settings_changed.emit()
-#var glow_enabled := true:
-	#set(value):
-		#glow_enabled = value
-		#EventBus.settings_changed.emit()
 
-var photomode_unlocked:=false:
-	set(value):
-		photomode_unlocked = value
 
 func _ready() -> void:
 	var config = ConfigFile.new()
@@ -106,27 +99,10 @@ func _ready() -> void:
 	auto_continue = config.get_value("preferences", "auto_continue", auto_continue)
 	set_window_mode(config.get_value("preferences", "window_mode_index", WindowMode.Windowed))
 	save_slot = config.get_value("preferences", "save_slot", 0)
-	#apply_font_prefs(config.get_value("preferences", "font_prefs", {}))
-	
-	
-	#sfx_description = config.get_value("accessibility", "sfx_description", false)
-	#music_description = config.get_value("accessibility", "music_description", false)
-	#
-	#dither_enabled = config.get_value("graphics", "dither_enabled", false)
-	#blur_enabled = config.get_value("graphics", "blur_enabled", false)
-	#blood_enabled = config.get_value("graphics", "blood_enabled", false)
-	#crt_enabled = config.get_value("graphics", "crt_enabled", false)
+
 	fps_counter_visible = config.get_value("graphics", "fps_counter_visible", false)
-	#glow_enabled = config.get_value("graphics", "glow_enabled", false)
-	
-	photomode_unlocked = config.get_value("progress", "photomode_unlocked", false)
 	finished_setup = config.get_value("progress", "finished_setup", false)
 	
-	
-	#set_render_scale_by_index(config.get_value("graphics", "render_scale_index", render_scale_index))
-	#set_shadow_quality_by_index(config.get_value("graphics", "shadow_quality_index", shadow_quality_index))
-	#showdown_background_enabled = config.get_value("graphics", "showdown_background_enabled", showdown_background_enabled)
-	#slideshow_enabled = config.get_value("graphics", "slideshow_enabled", false)
 	
 	# 0.8 for better ux
 	set_volume("Master", config.get_value("preferences", "master_volume", 0.8), false)
@@ -187,25 +163,7 @@ func save_prefs():
 	config.set_value("preferences", "window_mode_index", window_mode_index)
 	config.set_value("preferences", "current_screen", DisplayServer.window_get_current_screen())
 	config.set_value("preferences", "save_slot", save_slot)
-	
-	#config.set_value("graphics", "shadow_quality_index", shadow_quality_index)
-	#config.set_value("graphics", "render_scale_index", render_scale_index)
-	#config.set_value("graphics", "slideshow_enabled", slideshow_enabled)
-	
-	
-	#config.set_value("preferences", "font_prefs", font_prefs)
-	#config.set_value("graphics", "dither_enabled", dither_enabled)
-	#config.set_value("graphics", "blur_enabled", blur_enabled)
-	#config.set_value("graphics", "blood_enabled", blood_enabled)
-	#config.set_value("graphics", "crt_enabled", crt_enabled)
-	#config.set_value("graphics", "fps_counter_visible", fps_counter_visible)
-	#config.set_value("graphics", "showdown_background_enabled", showdown_background_enabled)
-	#config.set_value("graphics", "glow_enabled", glow_enabled)
-	#
-	#config.set_value("accessibility", "sfx_description", sfx_description)
-	#config.set_value("accessibility", "music_description", music_description)
-	
-	config.set_value("progress", "photomode_unlocked", photomode_unlocked)
+
 	config.set_value("progress", "finished_setup", finished_setup)
 
 	# Save it to a file (overwrite if already exists).

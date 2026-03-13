@@ -1493,6 +1493,8 @@ func update_recents_item():
 	recents_item.clear()
 	var recent_data := get_recent_files()
 	for file : String in recent_data:
+		if not ResourceLoader.exists(file):
+			continue
 		var file_name := file.trim_prefix(file.left(file.rfind("/") + 1))
 		recents_item.add_item("%s%s%s" % [file_name, RECENT_FILE_SEPARATOR, file])
 

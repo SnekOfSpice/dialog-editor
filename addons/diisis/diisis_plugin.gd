@@ -230,8 +230,8 @@ func setup_vn_template():
 	)
 	
 	var e8 = InputEventKey.new()
-	e8.keycode = KEY_S
-	e8.physical_keycode = KEY_S
+	e8.keycode = KEY_T
+	e8.physical_keycode = KEY_T
 	ProjectSettings.set_setting("input/screenshot",
 		{
 		"deadzone": 0.5,
