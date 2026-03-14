@@ -28,30 +28,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "More Knowledge/Dropdowns.md",
+                "file": "quartz/content/index.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "Dropdowns"
-            }
-          },
-          {
-            "id": "ac3bfd54f79a519e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Interactivity/Facts & Conditionals.md",
-                "mode": "preview",
-                "source": true
-              },
-              "icon": "lucide-file",
-              "title": "Facts & Conditionals"
+              "title": "index"
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       },
       {
         "id": "26563639c7d0bc11",
@@ -62,14 +48,10 @@
             "id": "b35bf64bdf2cab77",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_Sidebar.md",
-                "mode": "preview",
-                "source": true
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "_Sidebar"
+              "title": "New tab"
             }
           }
         ]
@@ -104,7 +86,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "welcome to diisis",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -235,47 +217,53 @@
       "bases:Create new base": false
     }
   },
-  "active": "ac3bfd54f79a519e",
+  "active": "e9b704d365150fd1",
   "lastOpenFiles": [
-    "Pasted image 20260227082724.png.import",
-    "Pasted image 20260227082724.png",
-    "Pasted image 20260227082632.png.import",
-    "Pasted image 20260227082632.png",
-    "Pasted image 20260227082552.png.import",
-    "Pasted image 20260227082552.png",
-    "More Knowledge/Adding BBCode to Rubies.md",
-    "Interactivity/Facts & Conditionals.md",
-    "More Knowledge/Dropdowns.md",
-    "VN Template Guide/Creating New Characters.md",
-    "other.md",
-    "_Sidebar.md",
-    "Home.md",
-    "VN Template Guide/General Knowledge.md",
-    "Get the Plugin.md",
-    "Getting Started/Editor Overview.md",
-    "More Knowledge/Adding argument restrictions to functions.md",
-    "More Knowledge/Ingesting Raw Text.md",
-    "More Knowledge/Shortcuts.md",
-    "More Knowledge/Header.md",
-    "More Knowledge/Upgrading to a new version.md",
-    "More Knowledge",
-    "Getting Started/Line Types/Folder.md",
-    "Interactivity/Accessing functions and variables in DIISIS.md",
-    "Interactivity/Using Event Signals.md",
-    "Interactivity",
-    "Getting Started/Line Types/Instruction.md",
-    "Getting Started/Line Types/Choice.md",
-    "Getting Started/Line Types/Text.md",
-    "Getting Started/Line Types",
-    "Getting Started/LineReader & Parser.md",
-    "Getting Started/High-Level Overview.md",
-    "Getting Started",
-    "VN Template Guide/Adding Assets.md",
-    "VN Template Guide/Getting Started.md",
-    "Assets/let me fester under your skin.gif",
-    "Assets/blinkiesCafe-bQ.gif",
-    "Assets/0269-sickashell.gif",
-    "Assets",
-    "Assets/blinkiesCafe-3f.gif"
+    "New Textdokument.txt",
+    "quartz/docs/images/giscus-example.png.import",
+    "quartz/docs/images/quartz transform pipeline.png.import",
+    "quartz/public/Getting-Started/High-Level-Overview-og-image.webp.import",
+    "quartz/public/Getting-Started/LineReader--and--Parser-og-image.webp.import",
+    "quartz/public/Getting-Started/Editor-Overview-og-image.webp.import",
+    "quartz/public/Getting-Started/Line-Types/Text-og-image.webp.import",
+    "quartz/docs/images/quartz-layout-tablet.png.import",
+    "quartz/docs/images/quartz-layout-desktop.png.import",
+    "quartz/docs/images/quartz-layout-mobile.png.import",
+    "quartz/public/Getting-Started/Line-Types/Instruction-og-image.webp.import",
+    "quartz/content/Home.md",
+    "quartz/content/_Sidebar.md",
+    "quartz/content/VN Template Guide/General Knowledge.md",
+    "quartz/content/VN Template Guide/Getting Started.md",
+    "quartz/content/VN Template Guide/Creating New Characters.md",
+    "quartz/content/VN Template Guide/Adding Assets.md",
+    "quartz/content/Getting Started/Line Types/Text.md",
+    "quartz/content/Getting Started/Line Types/Instruction.md",
+    "quartz/content/Getting Started/Line Types/Folder.md",
+    "quartz/content/Getting Started/Line Types/Choice.md",
+    "quartz/content/More Knowledge/Upgrading to a new version.md",
+    "quartz/content/More Knowledge/Shortcuts.md",
+    "quartz/content/More Knowledge/Ingesting Raw Text.md",
+    "quartz/content/More Knowledge/Dropdowns.md",
+    "quartz/content/More Knowledge/Adding BBCode to Rubies.md",
+    "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
+    "quartz/content/Interactivity/Using Event Signals.md",
+    "quartz/content/Interactivity/Facts & Conditionals.md",
+    "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
+    "quartz/content/Getting Started/LineReader & Parser.md",
+    "quartz/content/Getting Started/Editor Overview.md",
+    "quartz/content/Getting Started/High-Level Overview.md",
+    "quartz/content/Assets/let me fester under your skin.gif",
+    "quartz/content/Assets/blinkiesCafe-bQ.gif",
+    "quartz/content/Assets/blinkiesCafe-3f.gif",
+    "quartz/content/Assets/0269-sickashell.gif",
+    "quartz/content/index.md",
+    "quartz/content/Get the Plugin.md",
+    "quartz/public/index-og-image.webp",
+    "quartz/public/_Sidebar-og-image.webp",
+    "quartz/public/VN-Template-Guide/Getting-Started-og-image.webp",
+    "quartz/public/VN-Template-Guide/General-Knowledge-og-image.webp",
+    "quartz/public/VN-Template-Guide/Creating-New-Characters-og-image.webp",
+    "quartz/public/VN-Template-Guide/Adding-Assets-og-image.webp",
+    "quartz/node_modules/@citation-js/plugin-bibjson/README.md"
   ]
 }
