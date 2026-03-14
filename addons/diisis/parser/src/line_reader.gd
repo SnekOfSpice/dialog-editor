@@ -42,8 +42,8 @@ enum TextFlow{
 
 
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
-## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/LineReader-&-Parser
-## @tutorial(Visual Novel Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template
+## @tutorial(Quick Start Guide): https://snekofspice.github.io/diisis-docs/Getting-Started/LineReader--and--Parser
+## @tutorial(Visual Novel Guide): https://snekofspice.github.io/diisis-docs/VN-Template-Guide/
 
 @export_group("Text")
 @export_subgroup("Cadence")

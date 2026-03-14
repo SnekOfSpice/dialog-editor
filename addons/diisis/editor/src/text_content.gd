@@ -727,7 +727,7 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 			elif tag.begins_with("<fact:"):
 				Pages.editor.open_facts_window(tag.trim_prefix("<fact:").trim_suffix(">"))
 			elif not tag.is_empty():
-				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Text#other")
+				OS.shell_open("https://snekofspice.github.io/diisis-docs/Getting-Started/Line-Types/Text#other")
 			elif word_under_caret in Pages.stringkit_titles:
 				Pages.editor.open_window_by_string("StringkitWindow")
 				return

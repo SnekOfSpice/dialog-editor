@@ -169,7 +169,7 @@ func _on_reset_scale_button_pressed() -> void:
 
 
 func _on_help_button_pressed() -> void:
-	OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+	OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 
 
 func _on_editor_history_altered(is_altered: bool) -> void:

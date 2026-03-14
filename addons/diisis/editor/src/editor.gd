@@ -418,7 +418,7 @@ func _shortcut_input(event):
 		
 		match event.key_label:
 			KEY_F1:
-				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+				OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 			KEY_F5:
 				EditorInterface.play_main_scene()
 			KEY_F6:
@@ -1024,7 +1024,7 @@ func _on_editor_id_pressed(id: int) -> void:
 				"About DIISIS"
 			)
 		5:
-			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki")
+			OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:

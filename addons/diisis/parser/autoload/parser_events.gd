@@ -4,7 +4,7 @@ class_name DiisisParserEvents
 ##
 ## Connect your custom stuff to these events to react when DIISIS reaches new states, encounters issues, or generally does anything.
 ##
-## @tutorial(GitHub wiki tutorial): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-Event-Signals
+## @tutorial(GitHub wiki tutorial): https://snekofspice.github.io/diisis-docs/Interactivity/Using-Event-Signals
 
 
 ## Emitted when a choice button has been pressed.

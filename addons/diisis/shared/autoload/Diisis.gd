@@ -4,7 +4,7 @@ class_name DIISISGlobal
 
 ## Welcome to DIISIS!
 ## Tutorial on the entire plugin on GitHub:
-## @tutorial(Wiki): https://github.com/SnekOfSpice/dialog-editor/wiki/
+## @tutorial(Wiki): https://snekofspice.github.io/diisis-docs/
 
 enum LineType {
 	Text, Choice, Instruction, Folder

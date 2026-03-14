@@ -39,6 +39,7 @@ Under the Hood
 Documentation
 - Move documentation into the project
 - add tutorial on adding bbcode to rubies
+- Move documentation to be built with Quartz and Github Pages. You can find it at https://snekofspice.github.io/diisis-docs/
 
 
 
