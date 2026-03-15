@@ -15,4 +15,4 @@ data_*/
 mono_crash.*.json
 
 
-addons/diisis/documentation/*
+/addons/diisis/documentation/*

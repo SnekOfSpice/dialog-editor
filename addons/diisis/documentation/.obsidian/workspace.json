@@ -28,6 +28,20 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "quartz/content/More Knowledge/Configuring Runtime Method Providers.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Configuring Runtime Method Providers"
+            }
+          },
+          {
+            "id": "b7591abf5d42b371",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "quartz/content/index.md",
                 "mode": "source",
                 "source": false
@@ -35,9 +49,37 @@
               "icon": "lucide-file",
               "title": "index"
             }
+          },
+          {
+            "id": "8149aa1ccafb8882",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/VN Template Guide/Creating New Characters.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Creating New Characters"
+            }
+          },
+          {
+            "id": "d36e7e5a4bf3af12",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/VN Template Guide/Getting Started.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Getting Started"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       },
       {
         "id": "26563639c7d0bc11",
@@ -86,7 +128,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "welcome to diisis",
+                "query": "path:quartz/content github.com/snek",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -217,8 +259,39 @@
       "bases:Create new base": false
     }
   },
-  "active": "e9b704d365150fd1",
+  "active": "b7591abf5d42b371",
   "lastOpenFiles": [
+    "quartz/content/Assets/Pasted image 20260314131110.png",
+    "quartz/content/Assets/Pasted image 20260227082552.png",
+    "quartz/content/index.md",
+    "quartz/content/Home.md",
+    "quartz/content/Get the Plugin.md",
+    "quartz/content/VN Template Guide/Getting Started.md",
+    "quartz/content/VN Template Guide/General Knowledge.md",
+    "quartz/content/VN Template Guide/Creating New Characters.md",
+    "quartz/content/VN Template Guide/Adding Assets.md",
+    "quartz/content/More Knowledge/Upgrading to a new version.md",
+    "quartz/content/More Knowledge/Stringkit.md",
+    "quartz/content/More Knowledge/Shortcuts.md",
+    "quartz/content/More Knowledge/Ingesting Raw Text.md",
+    "quartz/content/More Knowledge/Configuring Runtime Method Providers.md",
+    "quartz/content/More Knowledge/Adding BBCode to Rubies.md",
+    "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
+    "quartz/content/Interactivity/Using Event Signals.md",
+    "quartz/content/Interactivity/Facts & Conditionals.md",
+    "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
+    "quartz/content/Getting Started/LineReader & Parser.md",
+    "quartz/content/Getting Started/High-Level Overview.md",
+    "quartz/content/Getting Started/Editor Overview.md",
+    "quartz/content/Getting Started/Line Types/Text.md",
+    "quartz/content/Getting Started/Line Types/Instruction.md",
+    "quartz/content/Getting Started/Line Types/Folder.md",
+    "quartz/content/Getting Started/Line Types/Choice.md",
+    "quartz/content/_Sidebar.md",
+    "quartz/content/Assets/Pasted image 20260314131924.png",
+    "quartz/content/Assets/Pasted image 20260314131629.png",
+    "quartz/content/Assets/Pasted image 20260314131223.png",
+    "quartz/docs/tags",
     "New Textdokument.txt",
     "quartz/docs/images/giscus-example.png.import",
     "quartz/docs/images/quartz transform pipeline.png.import",
@@ -228,42 +301,11 @@
     "quartz/public/Getting-Started/Line-Types/Text-og-image.webp.import",
     "quartz/docs/images/quartz-layout-tablet.png.import",
     "quartz/docs/images/quartz-layout-desktop.png.import",
-    "quartz/docs/images/quartz-layout-mobile.png.import",
-    "quartz/public/Getting-Started/Line-Types/Instruction-og-image.webp.import",
-    "quartz/content/Home.md",
-    "quartz/content/_Sidebar.md",
-    "quartz/content/VN Template Guide/General Knowledge.md",
-    "quartz/content/VN Template Guide/Getting Started.md",
-    "quartz/content/VN Template Guide/Creating New Characters.md",
-    "quartz/content/VN Template Guide/Adding Assets.md",
-    "quartz/content/Getting Started/Line Types/Text.md",
-    "quartz/content/Getting Started/Line Types/Instruction.md",
-    "quartz/content/Getting Started/Line Types/Folder.md",
-    "quartz/content/Getting Started/Line Types/Choice.md",
-    "quartz/content/More Knowledge/Upgrading to a new version.md",
-    "quartz/content/More Knowledge/Shortcuts.md",
-    "quartz/content/More Knowledge/Ingesting Raw Text.md",
-    "quartz/content/More Knowledge/Dropdowns.md",
-    "quartz/content/More Knowledge/Adding BBCode to Rubies.md",
-    "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
-    "quartz/content/Interactivity/Using Event Signals.md",
-    "quartz/content/Interactivity/Facts & Conditionals.md",
-    "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
-    "quartz/content/Getting Started/LineReader & Parser.md",
-    "quartz/content/Getting Started/Editor Overview.md",
-    "quartz/content/Getting Started/High-Level Overview.md",
     "quartz/content/Assets/let me fester under your skin.gif",
     "quartz/content/Assets/blinkiesCafe-bQ.gif",
     "quartz/content/Assets/blinkiesCafe-3f.gif",
     "quartz/content/Assets/0269-sickashell.gif",
-    "quartz/content/index.md",
-    "quartz/content/Get the Plugin.md",
     "quartz/public/index-og-image.webp",
-    "quartz/public/_Sidebar-og-image.webp",
-    "quartz/public/VN-Template-Guide/Getting-Started-og-image.webp",
-    "quartz/public/VN-Template-Guide/General-Knowledge-og-image.webp",
-    "quartz/public/VN-Template-Guide/Creating-New-Characters-og-image.webp",
-    "quartz/public/VN-Template-Guide/Adding-Assets-og-image.webp",
-    "quartz/node_modules/@citation-js/plugin-bibjson/README.md"
+    "quartz/public/_Sidebar-og-image.webp"
   ]
 }
