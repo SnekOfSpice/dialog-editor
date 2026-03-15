@@ -4,7 +4,7 @@ class_name DiisisParserEvents
 ##
 ## Connect your custom stuff to these events to react when DIISIS reaches new states, encounters issues, or generally does anything.
 ##
-## @tutorial(GitHub wiki tutorial): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-Event-Signals
+## @tutorial(GitHub wiki tutorial): https://snekofspice.github.io/diisis-docs/Interactivity/Using-Event-Signals
 
 
 ## Emitted when a choice button has been pressed.
@@ -64,11 +64,6 @@ signal actor_name_changed(
 	is_name_visible: bool
 )
 
-
-## [param header] has keys that are the property name of a header property. For values: Strings and booleans are passed as values. Dropdowns are passed as arrays of size 2 with the dropdown title in first position and the value in the second (both are strings).
-signal new_header(
-	header:Dictionary
-)
 
 ## Emitted when a page is finished. Is emitted before [signal page_terminated].
 signal page_finished(
@@ -230,3 +225,7 @@ signal rubies_built(
 	ruby_indices:Array,
 	ruby_strings:Array
 )
+
+
+
+signal region_changed()

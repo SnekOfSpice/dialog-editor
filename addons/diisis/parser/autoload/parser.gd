@@ -25,6 +25,9 @@ extends Node
 ## Mostly useful for visual novels and other linear stories that have few end points.
 @export var full_progress_on_last_page := true
 
+@export_group("Debug")
+@export var startup_fact_payload : Array[ParserFactChange]
+
 var page_data := {}
 var text_data := {}
 var use_dialog_syntax := true
@@ -33,9 +36,10 @@ var text_lead_time_other_actor := 0.0
 var _default_locale := "en_US"
 var locale := "en_US"
 var l10n := {}
-var dropdown_titles := []
-var dropdowns := {}
+var stringkit_titles := []
+var stringkits := {}
 var file_config := {}
+var regions := {}
 
 var line_reader : LineReader = null
 var paused := true
@@ -52,7 +56,6 @@ var max_line_index_on_page := 0
 
 const MAX_LINE_LENGTH := 10
 
-enum DataTypes {_String, _DropDown, _Boolean}
 
 signal read_new_line(line)
 signal page_terminated(page_index: int)
@@ -69,43 +72,58 @@ var last_modified_time = 0
 ## dynamically built helper array to speed up some function calls
 var page_keys := []
 
-func _get_live_source_path(suppress_error:=false) -> String:
-	var source_path:String
-	if not source_file_override.is_empty():
-		source_path = source_file_override
-	else:
-		source_path = DiisisEditorUtil.get_project_source_file_path()
-		if source_path.is_empty():
-			if not suppress_error:
-				push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
-			return ""
-	# where did that \n come from???
-	return source_path.trim_suffix("\n")
 
-func _get_data() -> Dictionary:
-	var file := FileAccess.open(ProjectSettings.get_setting("diisis/project/file/path"), FileAccess.READ)
+func _get_current_path(suppress_error := false) -> String:
+	if source_file_override:
+		return source_file_override
+	if not last_data_fetch_path.is_empty():
+		return last_data_fetch_path
+	var project_path := String(ProjectSettings.get_setting("diisis/project/file/path"))
+	if project_path.is_empty():
+		if not suppress_error:
+			push_error("Parser could not find project source file. Either set Parser.source_file_override manually, or make sure that the DIISIS file has been saved at least once.")
+		return ""
+	# where did that \n come from???
+	return project_path.trim_suffix("\n")
+
+
+
+var last_data_fetch_path := ""
+func _get_data(path:String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if not file:
 		return {}
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
+	last_data_fetch_path = path
 	file.close()
 	return data.get("pages")
 	
 
 func _ready() -> void:
-	var data = _get_data()
+	full_initialize(ProjectSettings.get_setting("diisis/project/file/path"))
 	
-	last_modified_time = FileAccess.get_modified_time(_get_live_source_path())
+	ParserEvents.choice_pressed.connect(on_choice_pressed)
+
+
+## Function that gets called automatically once when you run the game,
+## using the [code]diisis/project/file/path[/code] property set in
+## [ProjectSettings], which DIISIS handles automatically when you save a file.
+## [br]Call this function with a path to a file at runtime to manually load a file.
+## This is useful if your game is split across files.
+func full_initialize(path : String):
+	var data = _get_data(path)
 	
-	init(data)
+	last_modified_time = FileAccess.get_modified_time(_get_current_path())
+	
+	_initialize(data)
 	
 	if localization_file:
 		var file := FileAccess.open(localization_file, FileAccess.READ)
 		l10n = JSON.parse_string(file.get_as_text())
 		file.close()
-	
-	ParserEvents.choice_pressed.connect(on_choice_pressed)
 
-func init(data:Dictionary):
+
+func _initialize(data:Dictionary):
 	# all keys are now strings instead of ints
 	var int_data := {}
 	var loaded_data = data.get("page_data", {})
@@ -120,15 +138,16 @@ func init(data:Dictionary):
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	starting_facts = facts.duplicate(true)
-	dropdown_titles = data.get("dropdown_titles", [])
-	dropdowns = data.get("dropdowns", {})
+	stringkit_titles = data.get("stringkit_titles", [])
+	stringkits = data.get("stringkits", {})
 	file_config = data.get("file_config", {})
 	Pages.evaluator_paths = file_config.get("evaluator_paths", [])
 	Pages.custom_method_defaults = file_config.get("custom_method_defaults", {})
-	Pages.custom_method_dropdown_limiters = file_config.get("custom_method_dropdown_limiters", {})
+	Pages.custom_method_stringkit_limiters = file_config.get("custom_method_stringkit_limiters", {})
 	full_custom_method_defaults = data.get("full_custom_method_defaults", {})
 	text_data = data.get("text_data", {})
 	_default_locale = data.get("default_locale", "en_US")
+	regions = data.get("regions", regions)
 	#locale = _default_locale
 	
 	page_keys.clear()
@@ -141,12 +160,14 @@ func get_custom_method_defaults(method_name:String) -> Dictionary:
 func _process(delta: float) -> void:
 	if not OS.has_feature("editor"):
 		return
-	var source_path := _get_live_source_path(true)
+	
+	# hot reload support
+	var source_path := _get_current_path(true)
 	var modified_time = FileAccess.get_modified_time(source_path)
 	if modified_time != last_modified_time:
 		while not FileAccess.file_exists(source_path):
 			await get_tree().process_frame
-		init(_get_data())
+		_initialize(_get_data(last_data_fetch_path))
 		read_page(page_index, line_index)
 	last_modified_time = FileAccess.get_modified_time(source_path)
 
@@ -155,6 +176,15 @@ func reset_and_start(start_page_index := 0, start_line_index := 0):
 	line_reader.terminated = false
 	set_paused(false)
 	reset_facts()
+	
+	# ok so this is a horrible artifact from xxu
+	# i couldnt get gradle to run without a debug export
+	# but i dont want this to do shit on the android distributable
+	# so here we are
+	if OS.has_feature("debug") and (OS.has_feature("editor_hint") or OS.has_feature("editor_runtime")):
+		for change : ParserFactChange in startup_fact_payload:
+			change_fact_through_res(change)
+	
 	read_page(start_page_index, start_line_index)
 	history = []
 	selected_choices = []
@@ -265,13 +295,6 @@ func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 	
 	return result
 
-func get_dropdown_strings_from_header_values(values:=[0,0]) -> Array:
-	var result = ["", ""]
-	var title = dropdown_titles[values[0]]
-	var value = dropdowns.get(title)[values[1]]
-	result[0] = title
-	result[1] = value
-	return result
 
 func get_page_number(key:String) -> int:
 	return page_keys.find(key)
@@ -322,6 +345,9 @@ func get_game_progress(dir:String) -> float:
 	data = data.get("Parser", {})
 	return data.get("Parser.game_progress", 0.0)
 
+
+## Best used for kinetic VNs in combination with DIISIS' linearize option.
+## [br]Nonlinear VNs get kinda nonsense values
 func _get_game_progress() -> float:
 	var index_trails := []
 	var handled_page_indices := []
@@ -349,6 +375,9 @@ func _get_game_progress() -> float:
 		if page_index in t:
 			trail = t
 			break
+	
+	if trail.is_empty() and not current_trail.is_empty():
+		trail = current_trail
 	
 	if not trail:
 		return 0.0
@@ -381,6 +410,10 @@ func get_line_type(address:String) -> DIISIS.LineType:
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
+
+
+
+
 func get_line_content(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var prev_page = parts[0]
@@ -407,6 +440,35 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	var prev_line = parts[1]
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+
+
+var region_end : String
+
+## Returns a dictionary with the following keys:
+## [br] - [code]actors[/code]: An [Array] containing the keys of all speakers within this region.
+## [br] - [code]region_end[/code]: An [String] of the address where this region ends. Is usually the exclusive end / start of the next region, except on the last region.
+## [br][b]Note:[/b] Region baking needs to be enabled in the DIISIS editor for this to work. (File > Configure Regions)
+func get_region() -> Dictionary:
+	var address := get_address()
+	for region_address in regions.keys():
+		if not DiisisEditorUtil.is_address_before(address, region_address):
+			var end_address : String = regions.get(region_address).get("region_end")
+			if DiisisEditorUtil.is_address_before(address, end_address):
+				return regions.get(region_address)
+	return {}
+
+
+## Returns all actors in the current region.
+## See also [method get_region].
+func get_region_actors() -> Array:
+	return get_region().get("actors", [])
+
+
+## Returns the end address of the current region.
+## See also [method get_region].
+func get_region_end() -> String:
+	return get_region().get("region_end", [])
+
 
 func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	var parts = DiisisEditorUtil.get_split_address(address)
@@ -518,7 +580,12 @@ func read_line(index: int):
 		
 	var new_address := str(page_index, ".", line_index)
 
-	address_trail.append(str(page_index, ".", line_index))
+	address_trail.append(new_address)
+	
+	var new_region_end = get_region_end()
+	if new_region_end != region_end:
+		ParserEvents.region_changed.emit()
+	region_end = new_region_end
 	
 	var line_data : Dictionary = lines[index]
 	line_id = line_data.get("id", "")

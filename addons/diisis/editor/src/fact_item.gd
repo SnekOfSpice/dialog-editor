@@ -24,7 +24,7 @@ enum Operator{
 var fact_name := ""
 var entered_text := ""
 var is_conditional := false
-var data_type : DataType = DataType.Bool
+#var data_type : DataType = DataType.Bool
 var int_comparator : Comparator = Comparator.EQ
 var int_operator : Operator = Operator.Set
 
@@ -42,7 +42,7 @@ func serialize() -> Dictionary:
 	result["fact_name"] = get_fact_name()
 	result["fact_value"] = get_fact_value()
 	result["is_conditional"] = is_conditional
-	result["data_type"] = data_type
+	result["data_type"] = %DataTypeButton.get_selected_id()
 	result["int_comparator"] = int_comparator
 	result["int_operator"] = int_operator
 	
@@ -62,26 +62,26 @@ func set_fact(new_fact_name: String, default_value):
 	if default_value is bool:
 		find_child("FactBoolValue").button_pressed = default_value
 	else:
-		if str(default_value).contains("."):
-			pass # floats don't exist
-		else:
-			find_child("IntValueSpinBox").value = int(default_value)
+		#if str(default_value).contains("."):
+			#pass # floats don't exist
+		#else:
+		find_child("IntValueSpinBox").value = int(default_value)
 	fact_name = new_fact_name
 	find_child("FactName").text = fact_name
 	find_child("FactName")._on_text_changed(fact_name)
 	_on_fact_name_text_changed(fact_name)
 
 func set_data_type(value:DataType):
-	data_type = value
-	find_child("FactBoolValue").visible = data_type == DataType.Bool
-	find_child("FactIntValueContainer").visible = data_type == DataType.Int
-	find_child("DataTypeButton").select(data_type)
+	#var data_type = %DataTypeButton.get_selected_id()
+	find_child("FactBoolValue").visible = value == DataType.Bool
+	find_child("FactIntValueContainer").visible = value == DataType.Int
+	find_child("DataTypeButton").select(int(value))
 	var entered_fact_name :String= find_child("FactName").text
 	if Pages.facts.has(entered_fact_name):
 		var is_registered_as_bool = Pages.facts.get(entered_fact_name) is bool
 		var mismatch: bool
-		if ((data_type == DataType.Int and is_registered_as_bool) or
-		(data_type == DataType.Bool and not is_registered_as_bool)):
+		if ((value == DataType.Int and is_registered_as_bool) or
+		(value == DataType.Bool and not is_registered_as_bool)):
 			mismatch = true
 		else:
 			mismatch = false
@@ -109,10 +109,12 @@ func set_int_operator(value:Operator):
 		button.text = "+"
 
 func get_fact_value():
-	if data_type == DataType.Bool:
+	if %DataTypeButton.get_selected_id() == DataType.Bool:
+		#print("bool ", find_child("FactBoolValue").button_pressed)
 		return find_child("FactBoolValue").button_pressed
-	elif data_type == DataType.Int:
-		return find_child("IntValueSpinBox").value
+	elif %DataTypeButton.get_selected_id() == DataType.Int:
+		#print("int ", int(find_child("IntValueSpinBox").value))
+		return int(find_child("IntValueSpinBox").value)
 
 func get_fact_name() -> String:
 	return find_child("FactName").text
@@ -191,9 +193,9 @@ func update_hint(new_text: String):
 
 func _on_register_button_pressed() -> void:
 	var value
-	if data_type == DataType.Bool:
+	if %DataTypeButton.get_selected_id() == DataType.Bool:
 		value = not(find_child("FactBoolValue").button_pressed)
-	elif data_type == DataType.Int:
+	elif %DataTypeButton.get_selected_id() == DataType.Int:
 		value = 0
 	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false

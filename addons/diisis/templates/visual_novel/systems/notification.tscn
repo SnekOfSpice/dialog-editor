@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://qpj1n42rdukw"]
+[gd_scene format=3 uid="uid://qpj1n42rdukw"]
 
 [ext_resource type="Script" uid="uid://dcrxju21ducfd" path="res://addons/diisis/templates/visual_novel/systems/notification.gd" id="1_tadhj"]
 

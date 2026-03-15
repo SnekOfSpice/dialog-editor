@@ -26,6 +26,7 @@ func serialize():
 	
 	result["delay_before"] = %DelayBeforeSpinBox.value
 	result["delay_after"] = %DelayAfterSpinBox.value
+	result["advance_yield"] = %YieldForAdvanceCheckBox.button_pressed
 	
 	result["meta.validation_status"] = Pages.get_method_validity(instruction_text)
 	result["meta.text"] = instruction_text
@@ -41,6 +42,7 @@ func deserialize(data: Dictionary):
 	
 	%DelayBeforeSpinBox.value = float(data.get("delay_before", data.get("delay.before", data.get("delay", 0.0))))
 	%DelayAfterSpinBox.value = float(data.get("delay_after", data.get("delay.after", 0.0)))
+	%YieldForAdvanceCheckBox.button_pressed = data.get("advance_yield", false)
 	
 	find_child("HasReverseCheckBox").button_pressed = data.get("meta.has_reverse", false)
 	_on_has_reverse_check_box_toggled(data.get("meta.has_reverse", false))

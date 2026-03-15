@@ -31,5 +31,5 @@ func set_tab(tab:int) -> void:
 	$HandlerSetupContainer.set_tab(tab)
 
 func _on_close_dialog_confirmed() -> void:
-	always_on_top = true
+	always_on_top = not DiisisEditorUtil.embedded
 	hide()

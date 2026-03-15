@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://djiaiay3ntvfy"]
+
+[ext_resource type="Script" uid="uid://b6vbfbxjoogr8" path="res://addons/diisis/editor/src/windows/stringkits_container.gd" id="1_6xnc2"]
+[ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_81ktr"]
+
+[node name="StringkitsContainer" type="MarginContainer" unique_id=310820167]
+auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6xnc2")
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=220532465]
+auto_translate_mode = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+current_tab = 0
+
+[node name="Definitions" type="VBoxContainer" parent="TabContainer" unique_id=1551112561]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Controls" type="VBoxContainer" parent="TabContainer/Definitions" unique_id=1718440743]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="SearchContainer" type="HBoxContainer" parent="TabContainer/Definitions/Controls" unique_id=807773158]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Definitions/Controls/SearchContainer" unique_id=86261182]
+auto_translate_mode = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Search:"
+
+[node name="SearchLineEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/SearchContainer" unique_id=1108623163]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+placeholder_text = "t: for titles, o: for options. other queries search both"
+
+[node name="ClearSearchButton" type="Button" parent="TabContainer/Definitions/Controls/SearchContainer" unique_id=543126061]
+auto_translate_mode = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Clear Search"
+
+[node name="CreateStringkitContainer" type="HBoxContainer" parent="TabContainer/Definitions/Controls" unique_id=880493058]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="TabContainer/Definitions/Controls/CreateStringkitContainer" unique_id=1628495852]
+auto_translate_mode = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add:"
+
+[node name="StringkitNameEdit" type="LineEdit" parent="TabContainer/Definitions/Controls/CreateStringkitContainer" unique_id=94028448]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+
+[node name="AddButton" type="Button" parent="TabContainer/Definitions/Controls/CreateStringkitContainer" unique_id=907846011]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+icon = ExtResource("2_81ktr")
+
+[node name="NoStringkitsNotice" type="RichTextLabel" parent="TabContainer/Definitions" unique_id=1016440532]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 16
+theme_override_font_sizes/bold_italics_font_size = 16
+theme_override_font_sizes/italics_font_size = 16
+theme_override_font_sizes/mono_font_size = 16
+bbcode_enabled = true
+text = "Add a stringkit using the [img]uid://bvgegkc6o5k18[/img] button. Stringkits are explicitly-named groups of strings under a certain title. This can be used to declare characters to speak during dialogue, which can be set up in the [code]Dialog[/code] tab of this window."
+fit_content = true
+
+[node name="StringkitsContainer" type="VBoxContainer" parent="TabContainer/Definitions" unique_id=1769476632]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Dialog" type="VBoxContainer" parent="TabContainer" unique_id=1178205797]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
+[connection signal="visibility_changed" from="TabContainer/Definitions" to="." method="_on_definitions_visibility_changed"]
+[connection signal="text_changed" from="TabContainer/Definitions/Controls/SearchContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
+[connection signal="pressed" from="TabContainer/Definitions/Controls/SearchContainer/ClearSearchButton" to="." method="_on_clear_search_button_pressed"]
+[connection signal="text_changed" from="TabContainer/Definitions/Controls/CreateStringkitContainer/StringkitNameEdit" to="." method="_on_stringkit_name_edit_text_changed"]
+[connection signal="text_submitted" from="TabContainer/Definitions/Controls/CreateStringkitContainer/StringkitNameEdit" to="." method="_on_stringkit_name_edit_text_submitted"]
+[connection signal="pressed" from="TabContainer/Definitions/Controls/CreateStringkitContainer/AddButton" to="." method="create_new_stringkit"]
+[connection signal="resized" from="TabContainer/Definitions/StringkitsContainer" to="." method="_on_stringkits_container_resized"]
+[connection signal="visibility_changed" from="TabContainer/Dialog" to="." method="_on_dialog_syntax_visibility_changed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://btcdvjuk2ku18"]
+[gd_scene format=3 uid="uid://btcdvjuk2ku18"]
 
 [ext_resource type="Script" uid="uid://dcf48jp7s5mo6" path="res://addons/diisis/editor/src/choice_container.gd" id="1_22qh4"]
 [ext_resource type="Texture2D" uid="uid://bfj2h1pk5gj5j" path="res://addons/diisis/editor/visuals/theme/buttons_ui/helpZeichenfläche 8.png" id="2_6u1sp"]
@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://hve0bgnfaxmq" path="res://addons/diisis/editor/visuals/theme/buttons_ui/halfchoice.png" id="6_iqpwk"]
 [ext_resource type="Script" uid="uid://b1jpwk3skthlu" path="res://addons/diisis/editor/src/tooltip_maker.gd" id="9_l3i3t"]
 
-[node name="ChoiceContainer" type="VBoxContainer" groups=["diisis_choice_container", "diisis_page_view_sensitive"]]
+[node name="ChoiceContainer" type="VBoxContainer" unique_id=537446402 groups=["diisis_choice_container", "diisis_page_view_sensitive"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,34 +18,34 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_22qh4")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=567670651]
 layout_mode = 2
 theme_override_constants/separation = 13
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=580347734]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="TitleContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+[node name="TitleContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer" unique_id=418891492]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="ChoiceTitleLineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer/TitleContainer"]
+[node name="ChoiceTitleLineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer/TitleContainer" unique_id=2122590757]
 layout_mode = 2
 size_flags_vertical = 4
 placeholder_text = "Choice Title (optional)"
 expand_to_text_length = true
 
-[node name="EditIDButton" parent="HBoxContainer/PanelContainer/TitleContainer" instance=ExtResource("2_bjmim")]
+[node name="EditIDButton" parent="HBoxContainer/PanelContainer/TitleContainer" unique_id=887298359 instance=ExtResource("2_bjmim")]
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=1219516648]
 layout_mode = 2
 
-[node name="Controls" type="HBoxContainer" parent="HBoxContainer"]
+[node name="Controls" type="HBoxContainer" parent="HBoxContainer" unique_id=2010414488]
 layout_mode = 2
 
-[node name="AddButton" type="Button" parent="HBoxContainer/Controls"]
+[node name="AddButton" type="Button" parent="HBoxContainer/Controls" unique_id=1833184427]
 custom_minimum_size = Vector2(31, 0)
 layout_mode = 2
 tooltip_text = "Add option"
@@ -53,13 +53,13 @@ theme_override_font_sizes/font_size = 23
 icon = ExtResource("3_bjmim")
 icon_alignment = 1
 
-[node name="MenuBar" type="MenuBar" parent="HBoxContainer/Controls"]
+[node name="MenuBar" type="MenuBar" parent="HBoxContainer/Controls" unique_id=202745487]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 prefer_global_menu = false
 
-[node name="Select" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar"]
+[node name="Select" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar" unique_id=815802221]
 item_count = 7
 item_0/text = "Select all items in this choice and..."
 item_0/id = 0
@@ -83,7 +83,7 @@ item_6/text = "Other Choices"
 item_6/icon = ExtResource("6_iqpwk")
 item_6/id = 6
 
-[node name="View" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar"]
+[node name="View" type="PopupMenu" parent="HBoxContainer/Controls/MenuBar" unique_id=599437256]
 auto_translate_mode = 1
 item_count = 3
 item_0/text = "Editable"
@@ -93,7 +93,7 @@ item_1/id = 1
 item_2/text = "Hide"
 item_2/id = 2
 
-[node name="AutoSwitchButton" type="CheckBox" parent="HBoxContainer/Controls"]
+[node name="AutoSwitchButton" type="CheckBox" parent="HBoxContainer/Controls" unique_id=1828539592]
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "When enabled, the line reader will go to the specified page of a choice item if its conditionals are empty or evaluate to true, in ascending order of indices."
@@ -101,7 +101,7 @@ focus_mode = 0
 text = "auto switch"
 script = ExtResource("9_l3i3t")
 
-[node name="ChoiceList" type="VBoxContainer" parent="."]
+[node name="ChoiceList" type="VBoxContainer" parent="." unique_id=1285320820]
 layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/PanelContainer/TitleContainer/EditIDButton" to="." method="_on_edit_id_button_pressed"]

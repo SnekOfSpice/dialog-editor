@@ -54,3 +54,7 @@ func _on_save_rules_button_pressed() -> void:
 func _on_add_defaults_button_pressed() -> void:
 	for rule in Pages.DEFAULT_REPLACEMENT_RULES:
 		add_rule(rule)
+
+
+func _on_replacement_rules_item_rect_changed() -> void:
+	update_save_button()

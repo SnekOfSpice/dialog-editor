@@ -15,16 +15,17 @@ func set_slot(slot:int):
 	else:
 		find_child("TextureRect").texture = ImageTexture.create_from_image(image)
 	
-	find_child("Slot").text = str("Slot ", slot + 1)
+	%Slot.text = str("Slot ", slot + 1)
 	
-	var data_path : String = Options.get_savedata_dir_name(save_slot)
-	if ResourceLoader.exists(data_path):
-		var time = FileAccess.get_modified_time(data_path)
+	#var data_path : String = Options.get_savedata_dir_name(save_slot)
+	if error:
+		%Data.text = "No Data"
+	else:
+		var time = FileAccess.get_modified_time(thumb_path)
 		var label = Time.get_datetime_string_from_unix_time(time, true)
 		label = label.replace(" ", "\n")
-		find_child("Data").text = label
-	else:
-		find_child("Data").text = "No Data"
+		%Data.text = label
+	#else:
 	
 	await get_tree().process_frame
 	

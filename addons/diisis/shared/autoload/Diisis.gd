@@ -4,7 +4,7 @@ class_name DIISISGlobal
 
 ## Welcome to DIISIS!
 ## Tutorial on the entire plugin on GitHub:
-## @tutorial(Wiki): https://github.com/SnekOfSpice/dialog-editor/wiki/
+## @tutorial(Wiki): https://snekofspice.github.io/diisis-docs/
 
 enum LineType {
 	Text, Choice, Instruction, Folder
@@ -51,6 +51,12 @@ const HTML_ENTITIES := {
 	"&reg;" : "®",
 	"&trade;" : "™",
 }
+
+const QUIT_DIALOG_TITLE_CLOSE := "Do you want to close DIISIS?"
+const QUIT_DIALOG_TITLE_NEW := "Open a new, blank file?"
+const QUIT_DIALOG_TITLE_RELOAD := "Reload DIISIS?"
+const QUIT_DIALOG_TITLE_OPEN := "Open existing file at [code]%s[/code]?"
+const UNSAVED_FILE_PATH := "DIISIS~unsaved~"
 
 func type_to_str(type:int) -> String:
 	match type:

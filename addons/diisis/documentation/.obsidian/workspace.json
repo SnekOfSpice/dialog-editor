@@ -1,0 +1,311 @@
+{
+  "main": {
+    "id": "86a9542a9f38b82c",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b4f43e358e72f12",
+        "type": "tabs",
+        "dimension": 80.32994923857868,
+        "children": [
+          {
+            "id": "a7abcf867a07b692",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "VN Template Guide/Creating New Characters.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Creating New Characters"
+            }
+          },
+          {
+            "id": "e9b704d365150fd1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/More Knowledge/Configuring Runtime Method Providers.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Configuring Runtime Method Providers"
+            }
+          },
+          {
+            "id": "b7591abf5d42b371",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/index.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "index"
+            }
+          },
+          {
+            "id": "8149aa1ccafb8882",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/VN Template Guide/Creating New Characters.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Creating New Characters"
+            }
+          },
+          {
+            "id": "d36e7e5a4bf3af12",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "quartz/content/VN Template Guide/Getting Started.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Getting Started"
+            }
+          }
+        ],
+        "currentTab": 2
+      },
+      {
+        "id": "26563639c7d0bc11",
+        "type": "tabs",
+        "dimension": 19.670050761421322,
+        "children": [
+          {
+            "id": "b35bf64bdf2cab77",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1a91283527ed9b12",
+    "type": "split",
+    "children": [
+      {
+        "id": "a05d5e376ff46efd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "082204a3ee987e39",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2c22fa43a6643fa1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "path:quartz/content github.com/snek",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "048a1d4df4800a04",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "7f1668909d40f7eb",
+    "type": "split",
+    "children": [
+      {
+        "id": "cb9616f7aa332a00",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "46f7daeb6359ec36",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Facts & Conditionals"
+            }
+          },
+          {
+            "id": "7cad65435515f6b9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Facts & Conditionals"
+            }
+          },
+          {
+            "id": "7a49b83533d5a45e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b70e53a8c0c4b779",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "fac6b33d984f29df",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Interactivity/Facts & Conditionals.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Facts & Conditionals"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 297.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "b7591abf5d42b371",
+  "lastOpenFiles": [
+    "quartz/content/Assets/Pasted image 20260314131110.png",
+    "quartz/content/Assets/Pasted image 20260227082552.png",
+    "quartz/content/index.md",
+    "quartz/content/Home.md",
+    "quartz/content/Get the Plugin.md",
+    "quartz/content/VN Template Guide/Getting Started.md",
+    "quartz/content/VN Template Guide/General Knowledge.md",
+    "quartz/content/VN Template Guide/Creating New Characters.md",
+    "quartz/content/VN Template Guide/Adding Assets.md",
+    "quartz/content/More Knowledge/Upgrading to a new version.md",
+    "quartz/content/More Knowledge/Stringkit.md",
+    "quartz/content/More Knowledge/Shortcuts.md",
+    "quartz/content/More Knowledge/Ingesting Raw Text.md",
+    "quartz/content/More Knowledge/Configuring Runtime Method Providers.md",
+    "quartz/content/More Knowledge/Adding BBCode to Rubies.md",
+    "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
+    "quartz/content/Interactivity/Using Event Signals.md",
+    "quartz/content/Interactivity/Facts & Conditionals.md",
+    "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
+    "quartz/content/Getting Started/LineReader & Parser.md",
+    "quartz/content/Getting Started/High-Level Overview.md",
+    "quartz/content/Getting Started/Editor Overview.md",
+    "quartz/content/Getting Started/Line Types/Text.md",
+    "quartz/content/Getting Started/Line Types/Instruction.md",
+    "quartz/content/Getting Started/Line Types/Folder.md",
+    "quartz/content/Getting Started/Line Types/Choice.md",
+    "quartz/content/_Sidebar.md",
+    "quartz/content/Assets/Pasted image 20260314131924.png",
+    "quartz/content/Assets/Pasted image 20260314131629.png",
+    "quartz/content/Assets/Pasted image 20260314131223.png",
+    "quartz/docs/tags",
+    "New Textdokument.txt",
+    "quartz/docs/images/giscus-example.png.import",
+    "quartz/docs/images/quartz transform pipeline.png.import",
+    "quartz/public/Getting-Started/High-Level-Overview-og-image.webp.import",
+    "quartz/public/Getting-Started/LineReader--and--Parser-og-image.webp.import",
+    "quartz/public/Getting-Started/Editor-Overview-og-image.webp.import",
+    "quartz/public/Getting-Started/Line-Types/Text-og-image.webp.import",
+    "quartz/docs/images/quartz-layout-tablet.png.import",
+    "quartz/docs/images/quartz-layout-desktop.png.import",
+    "quartz/content/Assets/let me fester under your skin.gif",
+    "quartz/content/Assets/blinkiesCafe-bQ.gif",
+    "quartz/content/Assets/blinkiesCafe-3f.gif",
+    "quartz/content/Assets/0269-sickashell.gif",
+    "quartz/public/index-og-image.webp",
+    "quartz/public/_Sidebar-og-image.webp"
+  ]
+}

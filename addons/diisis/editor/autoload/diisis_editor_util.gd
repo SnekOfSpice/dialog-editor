@@ -9,7 +9,13 @@ var block_next_flash_highlight := true
 
 const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
-const BBCODE_LINE_READER := "[img]uid://dgf242nwi7c37[/img]"
+const BBCODE_LINE_READER := "[img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]"
+
+
+var embedded: bool:
+	get():
+		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
+
 
 func get_address(object:Node, address_depth:AddressDepth) -> String:
 	var address := ""
@@ -80,20 +86,25 @@ func get_node_at_address(address:String, suppress_off_page_warning := false):
 		
 
 func sort_addresses(addresses:Array) -> Array:
-	addresses.sort_custom(_sort_addresses)
+	addresses.sort_custom(is_address_before)
 	return addresses
 
-func _sort_addresses(a1:String, a2: String) -> bool:
-	var depth1 = get_address_depth(a1)
-	var depth2 = get_address_depth(a2)
-	
-	if depth1 < depth2:
+## assumes same address depth for both addresses
+func is_address_before(a1:String, a2: String) -> bool:
+	if get_address_depth(a1) != get_address_depth(a2):
 		return true
-	elif depth1 > depth2:
-		return false
+	var splits1 := get_split_address(a1)
+	var splits2 := get_split_address(a2)
 	
-	var last1 = get_split_address(a1).back()
-	var last2 = get_split_address(a2).back()
+	var depth := 0
+	while depth < splits1.size():
+		if splits1[depth] == splits2[depth]:
+			depth += 1
+			continue
+		return splits1[depth] < splits2[depth]
+		depth += 1
+	var last1 = splits1.back()
+	var last2 = splits2.back()
 	return last1 < last2
 
 func humanize_address(address:String) -> String:
@@ -110,12 +121,6 @@ func humanize_address(address:String) -> String:
 		address_string += str(" / ", Pages.get_choice_text(parts[0], parts[1], parts[2], 25))
 	return address_string
 
-func get_project_source_file_path() -> String:
-	return String(ProjectSettings.get_setting("diisis/project/file/path"))
-
-func set_project_file_path(active_dir:String, active_file_name:String):
-	ProjectSettings.set_setting("diisis/project/file/path", str(active_dir, active_file_name))
-	ProjectSettings.save()
 
 ## max height is a multiple of the editor size
 func limit_scroll_container_height(

@@ -2,27 +2,6 @@
 extends Control
 class_name DiisisEditor
 
-const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
-const BACKUP_PATH := "user://DIISIS_autosave/"
-var auto_save_timer := AUTO_SAVE_INTERVAL
-var is_open := false
-var opening := true # spaghetti yum
-var undo_redo_count_at_last_save := 0
-
-var undo_redo = UndoRedo.new()
-var core:Control
-var page_container:Control
-
-var content_scale := 1.0
-
-var active_dir := ""
-var active_file_name := ""
-var time_since_last_save := 0.0
-var error_update_countdown := 0.0
-var last_system_save := {}
-var has_saved := false
-var altered_history := false
-var was_playing_scene := false
 
 enum PageView {
 	Full,
@@ -30,21 +9,97 @@ enum PageView {
 	Minimal
 }
 
+signal request_template_setup(template_id : int)
 
 signal scale_editor_up()
 signal scale_editor_down()
 signal open_new_file()
-signal request_reload()
-signal save_path_set(active_dir:String, active_file_name:String)
+#signal save_path_set(active_dir:String, active_file_name:String)
+signal save_path_set(path:String)
 signal history_altered(is_altered:bool)
 
+
+const AUTO_SAVE_INTERVAL := 900.0 # 15 mins
+const BACKUP_PATH := "user://DIISIS_autosave/"
+const RECENT_FILES_PATH := "user://recents.json"
+const RECENT_FILE_SEPARATOR := "  ||  "
 const DELETE_MODULATE := "#cfa2bfb3"
+var auto_save_timer := AUTO_SAVE_INTERVAL
+var recents_item : PopupMenu
+var is_open := false
+var opening := true # spaghetti yum
+var undo_redo_count_at_last_save := 0
+## needed for [method try_open_from_path]
+var no_refresh_after_save := false
+
+var undo_redo = UndoRedo.new()
+var core:Control
+var page_container:Control
+
+var content_scale := 1.0
+
+var active_path := "":
+	set(path):
+		active_path = path
+		ProjectSettings.set_setting("diisis/project/file/path", path)
+		ProjectSettings.save()
+		DiisisEditorEventBus.active_path_set.emit(path)
+var active_dir : String:
+	get():
+		if active_path.is_empty():
+			return ""
+		var parts = active_path.split("/")
+		var file_name : String = parts[parts.size() - 1]
+		return active_path.trim_suffix(file_name)
+var active_file : String:
+	get():
+		if active_path.is_empty():
+			return ""
+		var parts = active_path.split("/")
+		return parts[parts.size() - 1]
+var time_since_last_save := 0.0
+var error_update_countdown := 0.0
+var last_system_save := {}
+var has_saved := false
+var altered_history := false:
+	set(value):
+		altered_history = value
+		history_altered.emit(altered_history)
+	
+		if altered_history:
+			if not %FilePathLabel.text.begins_with("(*) "):
+				%FilePathLabel.text = str("(*) ", %FilePathLabel.text)
+		else:
+			%FilePathLabel.text = %FilePathLabel.text.trim_prefix("(*) ")
+var was_playing_scene := false
+
+
 
 func get_current_page() -> Page:
 	if page_container.get_child_count() > 0:
 		if page_container.get_child(0) is Page:
 			return page_container.get_child(0)
 	return null
+
+
+func refresh_text():
+	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
+	
+	var page := get_current_page()
+	if not page:
+		return
+	
+	for line : Line in page.lines.get_children():
+		if line.line_type in [
+				DIISIS.LineType.Text,
+			]:
+			line.refresh_text()
+	
+	
+	await get_tree().process_frame
+	if goto_has_focus:
+		find_child("GoTo")._address_bar_grab_focus()
+
 
 func refresh(serialize_before_load:=true, fragile:=false):
 	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
@@ -66,6 +121,8 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	if goto_has_focus:
 		find_child("GoTo")._address_bar_grab_focus()
 
+
+
 func init(active_file_path:="") -> void:
 	Pages.editor = self
 	set_opening_cover_visible(true)
@@ -78,13 +135,15 @@ func init(active_file_path:="") -> void:
 	page_container = core.find_child("PageContainer")
 	
 	Pages.connect("pages_modified", update_controls)
+	
 	is_open = true
 	
 	request_add_page(0, 0)
+	DiisisEditorEventBus.active_path_set.connect(_on_active_path_set)
 	
 	update_controls()
 	
-	var text_size_button : OptionButton = find_child("TextSizeButton")
+	var text_size_button : OptionButton = %TextSizeButton
 	text_size_button.clear()
 	
 	for s in Pages.FONT_SIZES:
@@ -94,28 +153,36 @@ func init(active_file_path:="") -> void:
 	tree_entered.connect(on_tree_entered)
 	
 	core.visible = true
-	undo_redo.clear_history()
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
-	update_undo_redo_buttons()
-	
-	#find_child("File").set_item_checked(8, Pages.empty_strings_for_l10n)
 	
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
-		popup.exclusive = false
-		popup.always_on_top = true
+		popup.exclusive = DiisisEditorUtil.embedded
+		popup.always_on_top = not DiisisEditorUtil.embedded
 		popup.wrap_controls = true
-		popup.transient = false
+		popup.transient = DiisisEditorUtil.embedded
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
+		popup.close_requested.connect(Engine.get_meta("DIISISPlugin").save_preferences)
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
-	var file_item : PopupMenu = find_child("File")
+	var file_item : PopupMenu = %File
+	recents_item = PopupMenu.new()
+	%File.add_child(recents_item)
+	recents_item.index_pressed.connect(func(index:int):
+		var recent_path := recents_item.get_item_text(index)
+		recent_path = recent_path.split(RECENT_FILE_SEPARATOR)[1]
+		if recent_path == active_path:
+			return
+		try_open_from_path(recent_path))
+	file_item.add_submenu_node_item("Recent", recents_item)
+	update_recents_item()
 	file_item.add_separator()
 	file_item.add_item("Import    (Shift+I)", 6)
 	file_item.add_item("Export    (Shift+E)", 5)
+	file_item.add_item("Configure Regions...")
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	
@@ -123,16 +190,24 @@ func init(active_file_path:="") -> void:
 	file_item.add_item("Open with Ctrl + ...")
 	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
-	var utility_item : PopupMenu = find_child("Utility")
+	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
+	
+	var utility_item : PopupMenu = %Utility
 	if Pages.silly:
 		utility_item.add_separator("Silly")
-		utility_item.add_submenu_node_item("Find in Library of Babel", utility_item.get_node("LibraryOfBabel"))
+		utility_item.add_submenu_node_item("Find in Library of Babel", %LibraryOfBabel)
 	utility_item.add_item("Open with Ctrl + ...")
 	utility_item.set_item_disabled(utility_item.item_count - 1, true)
 	
+	if DiisisEditorUtil.embedded:
+		%Setup.add_separator("Project")
+		%Setup.add_submenu_node_item("Templates", %TemplatesMenu)
+	%Setup.add_item("Open with Ctrl + ...")
+	%Setup.set_item_disabled(%Setup.item_count - 1, true)
+	
 	open_from_path(active_file_path)
 	
-	undo_redo.version_changed.connect(set_altered_history.bind(true))
+	undo_redo.version_changed.connect(set.bind("altered_history", true))
 	
 	if not Pages.shader.is_empty():
 		var layer = CanvasLayer.new()
@@ -165,14 +240,32 @@ func init(active_file_path:="") -> void:
 	elif active_file_path.is_empty():
 		await get_tree().process_frame
 		opening = false
+		Pages.ensure_line_reader_scripts()
+	
+	%EmbedHint.visible = DiisisEditorUtil.embedded
+	if DiisisEditorUtil.embedded:
+		%UpdateAvailable.check_for_updates()
+		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+		if active_file_path.is_empty():
+			%FilePathLabel.text = DIISIS.UNSAVED_FILE_PATH
+	if not DiisisEditorUtil.embedded:
+		# CRITICAL do not touch this camera. i can't remember why we need it but the editor won't be visible without it lmao
+		var cam := Camera2D.new()
+		add_child(cam)
+	
+	var plugin := Engine.get_meta("DIISISPlugin")
+	if not DiisisEditorEventBus.quit.window_reload.is_connected(plugin.on_editor_window_reload_requested):
+		DiisisEditorEventBus.quit.window_reload.connect(plugin.on_editor_window_reload_requested)
+	if not DiisisEditorEventBus.quit.new_file.is_connected(plugin.on_new_file_requested):
+		DiisisEditorEventBus.quit.new_file.connect(plugin.on_new_file_requested)
+	
+	save_to_recent_files(active_file_path)
+
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
 
-func set_altered_history(value:bool):
-	altered_history = value
-	emit_signal("history_altered", altered_history)
 
 func set_content_scale(factor:float):
 	content_scale = factor
@@ -216,8 +309,6 @@ func load_page(number: int, discard_without_saving:=false):
 	if not get_save_path().is_empty():
 		Pages.current_page_number_by_file_name.set(get_save_path(), number)
 
-func get_line_data(index:int):
-	return 
 
 func get_selected_line_type() -> int:
 	var line_type:=DIISIS.LineType.Text
@@ -231,12 +322,14 @@ func get_selected_line_type() -> int:
 	
 	return line_type
 
+
 func select_line_type(line_type:int):
 	for button in find_child("LineTypes").get_children():
 		if not button is LineTypeButton:
 			continue
 		if button.line_type == line_type:
 			button.button_pressed = true
+
 
 func get_selected_page_view() -> PageView:
 	var view:=PageView.Full
@@ -248,19 +341,16 @@ func get_selected_page_view() -> PageView:
 	
 	return view
 
-func get_save_path() -> String:
-	return str(active_dir, active_file_name)
 
-func set_save_path(value:String):
-	var parts = value.split("/")
-	var new_file_name : String = parts[parts.size() - 1]
-	var new_dir : String = value.trim_suffix(new_file_name)
-	if new_dir == active_dir and new_file_name == active_file_name:
+func get_save_path() -> String:
+	return active_path
+
+
+func set_save_path(path:String):
+	if path == active_path:
 		return
-	active_file_name = new_file_name
-	active_dir = value.trim_suffix(active_file_name)
-	emit_signal("save_path_set", active_dir, active_file_name)
-	DiisisEditorUtil.set_project_file_path(active_dir, active_file_name)
+	active_path = path
+
 
 func _process(delta: float) -> void:
 	if not is_open:
@@ -271,7 +361,7 @@ func _process(delta: float) -> void:
 			save_to_dir_if_active_dir()
 	was_playing_scene = EditorInterface.is_playing_scene()
 	
-	if not active_dir.is_empty() and has_saved:
+	if not active_path.is_empty() and has_saved:
 		time_since_last_save += delta
 	
 	if undo_redo_count_at_last_save != undo_redo.get_history_count():
@@ -288,6 +378,8 @@ func _process(delta: float) -> void:
 var ctrl_down := false
 var focused_control_before_ctrl:Control
 func _shortcut_input(event):
+	if not visible:
+		return
 	if event is InputEventKey:
 		# on linux (or at least my steam deck), there's a bug where ctrl shortcuts still send their key inputs
 		# so e.g. ctrl+s to save also inserts an s in a text edit if it's currently focused
@@ -326,7 +418,7 @@ func _shortcut_input(event):
 		
 		match event.key_label:
 			KEY_F1:
-				OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki/")
+				OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 			KEY_F5:
 				EditorInterface.play_main_scene()
 			KEY_F6:
@@ -344,7 +436,7 @@ func _shortcut_input(event):
 				KEY_G:
 					find_child("GoTo").toggle_active()
 				KEY_N:
-					emit_signal("open_new_file")
+					try_new_file()
 				KEY_S:
 					attempt_save_to_dir()
 				KEY_I:
@@ -360,9 +452,9 @@ func _shortcut_input(event):
 				KEY_T:
 					open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
-					open_popup($Popups.get_node("DropdownWindow"))
+					open_popup($Popups.get_node("StringkitWindow"))
 				KEY_H:
-					open_popup($Popups.get_node("HeaderPopup"))
+					open_popup($Popups.get_node("DialogConfigWindow"))
 				KEY_R:
 					open_popup($Popups.get_node("HandlerWindow"), true)
 				KEY_Z:
@@ -544,26 +636,181 @@ func save_to_file(path:String, is_autosave:=false):
 		time_since_last_save = 0.0
 		last_system_save = Time.get_time_dict_from_system()
 		has_saved = true
-		set_altered_history(false)
+		altered_history = false
 	
-		notify(str("Saved to ", active_file_name, "!"))
-	
+		notify(str("Saved to ", active_file, "!"))
+		
+		save_to_recent_files(active_path)
+		
 	undo_redo_count_at_last_save = undo_redo.get_history_count()
 	
-	await get_tree().process_frame
-	refresh()
+	if not no_refresh_after_save:
+		await get_tree().process_frame
+		refresh()
+	no_refresh_after_save = false
+
+
+func get_recent_files() -> Array:
+	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
+	if not recent_files:
+		return []
+	if recent_files.get_length() == 0:
+		return []
+	var recent_data : Array = JSON.parse_string(recent_files.get_as_text()) 
+	recent_files.close()
+	return recent_data
+
+
+func save_to_recent_files(path : String) -> void:
+	if path.is_empty():
+		return
+	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
+	if not recent_files:
+		#recent_files.close()
+		recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+		recent_files.store_string(JSON.stringify([path], "\t"))
+		recent_files.close()
+		return
+	var recent_data : Array
+	if recent_files.get_length() > 0:
+		recent_data = JSON.parse_string(recent_files.get_as_text())
+	else:
+		recent_data = []
+	
+	recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+	if recent_data.has(path):
+		recent_data.erase(path)
+	recent_data.insert(0, path)
+	if recent_data.size() > 10:
+		recent_data.resize(10)
+	
+	recent_files.store_string(JSON.stringify(recent_data, "\t"))
+	recent_files.close()
+	
+	update_recents_item()
+
 
 func _on_fd_save_file_selected(path: String) -> void:
 	save_to_file(path)
 
 func set_opening_cover_visible(value:bool):
-	$OpeningCover.visible = value
+	%OpeningCover.visible = value
 func set_importing_cover_visible(value:bool):
-	$ImportingCover.visible = value
+	%ImportingCover.visible = value
+
+
+#region quit dialogs
+signal close_window_request()
+signal reload_window_request()
+
+
+var last_quit_header : String
+var quit_dialog : DiisisQuitDialog
+
+
+func build_quit_dialog(header_text:String, confirm_callable:Callable=close_editor_if_window):
+	quit_dialog = preload("res://addons/diisis/editor/quit_dialog.tscn").instantiate()
+	add_child(quit_dialog)
+	last_quit_header = header_text
+	update_quit_dialog_text(header_text)
+	quit_dialog.popup()
+	quit_dialog.confirmed.connect(func(save : bool):
+		if save:
+			if not active_path.is_empty():
+				attempt_save_to_dir()
+				update_quit_dialog_text(last_quit_header)
+		await get_tree().process_frame
+		confirm_callable.call())
+	
+	await get_tree().process_frame
+
+
+func update_quit_dialog_text(header_text:String):
+	if not is_instance_valid(quit_dialog):
+		return
+	var text := ""
+	text += header_text
+	text += "\n"
+	if active_path.is_empty() or not has_saved:
+		text += str("You have not saved since opening.")
+	else:
+		var seconds_since_last_save = int(time_since_last_save)
+		var minutes_since_last_save := 0
+		var hours_since_last_save := 0
+		var last_system_save = last_system_save
+		
+		var second_word:String
+		var minute_word:String
+		var hour_word:String
+		
+		
+		if seconds_since_last_save >= 60:
+			minutes_since_last_save = floor(seconds_since_last_save / 60.0)
+			seconds_since_last_save -= 60 * minutes_since_last_save
+			if minutes_since_last_save >= 60:
+				hours_since_last_save = floor(minutes_since_last_save / 60.0)
+				minutes_since_last_save -= 60 * hours_since_last_save
+		
+		second_word = "second" if seconds_since_last_save == 1 else "seconds"
+		minute_word = "minute" if minutes_since_last_save == 1 else "minutes"
+		hour_word = "hour" if hours_since_last_save == 1 else "hours"
+		
+		var system_str := str(str(last_system_save.get("hour")).pad_zeros(2), ":", str(last_system_save.get("minute")).pad_zeros(2), ":", str(last_system_save.get("second")).pad_zeros(2))
+		text += str("You last saved at ", system_str, ".\n")
+		
+		var ago_string:=""
+		if hours_since_last_save > 0:
+			ago_string += str(hours_since_last_save, " ", hour_word, ", ")
+		if minutes_since_last_save > 0:
+			ago_string += str(minutes_since_last_save, " ", minute_word, ", ")
+		
+		ago_string += str(seconds_since_last_save, " ", second_word)
+		text += str("(", ago_string, " ago.)")
+	quit_dialog.set_text(text)
+
+
+func try_open_from_path(path:String):
+	no_refresh_after_save = false
+	if not opening and has_unsaved_changes:
+		no_refresh_after_save = true
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_OPEN % path, open_from_path.bind(path))
+		return
+	open_from_path(path)
+func try_new_file():
+	if not opening and has_unsaved_changes:
+		print("SHJDFG")
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW, new_file_request)
+		return
+	new_file_request()
+func try_close_editor_window():
+	if not opening and has_unsaved_changes:
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_CLOSE, close_editor_if_window)
+		return
+	close_editor_if_window()
+func try_reload_editor_window():
+	if not opening and has_unsaved_changes:
+		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_RELOAD, reload_editor_if_window)
+		return
+	reload_editor_if_window()
+
+
+## only relevant if not embedded
+func close_editor_if_window():
+	close_window_request.emit()
+func reload_editor_if_window():
+	reload_window_request.emit()
+func new_file_request():
+	DiisisEditorEventBus.quit.new_file.emit()
+
+#endregion
 
 func open_from_path(path:String):
-	var file = FileAccess.open(path, FileAccess.READ)
+	altered_history = false
+	undo_redo.clear_history()
+	update_undo_redo_buttons()
 	
+	var file = FileAccess.open(path, FileAccess.READ)
+	%OpeningCover.show()
 	if not file:
 		set_opening_cover_visible(false)
 		return
@@ -571,6 +818,7 @@ func open_from_path(path:String):
 	var data : Dictionary = JSON.parse_string(file.get_as_text())
 	file.close()
 	
+	save_to_recent_files(path)
 	set_save_path(path)
 	Pages.deserialize(data.get("pages"))
 	
@@ -587,10 +835,11 @@ func open_from_path(path:String):
 	
 	await get_tree().process_frame
 	opening = false
-	load_page(Pages.current_page_number_by_file_name.get(get_save_path(), 0), true)
+	load_page(Pages.current_page_number_by_file_name.get(path, 0), true)
+	
 
 func _on_fd_open_file_selected(path: String) -> void:
-	open_from_path(path)
+	try_open_from_path(path)
 
 func request_go_to_address(address:String, action_message:=""):
 	if action_message.is_empty():
@@ -608,8 +857,8 @@ func request_load_page(number:int, action_message:=""):
 
 func notify(message:String, duration:=5.0):
 	var notification = load("res://addons/diisis/editor/src/editor_notification.tscn").instantiate()
-	$NotificationContainer.add_child(notification)
-	$NotificationContainer.move_child(notification, 0)
+	%NotificationContainer.add_child(notification)
+	%NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
 	Pages.apply_font_size_overrides(notification)
 
@@ -624,10 +873,6 @@ func add_line_to_end_of_page(data:={}):
 	undo_redo.add_undo_method(DiisisEditorActions.delete_line.bind(line_count))
 	undo_redo.commit_action()
 
-
-func _on_header_popup_update() -> void:
-	await get_tree().process_frame
-	get_current_page().update()
 
 func _on_instruction_definition_timer_timeout() -> void:
 	update_error_text_box()
@@ -684,10 +929,12 @@ func open_popup(popup:Window, fit_to_size:=false):
 	popup.content_scale_factor = content_scale
 	popup.size *= content_scale
 
+
 func hide_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)
 	window.close_requested.emit()
 	return window
+
 
 func open_window_by_string(window_name:String) -> Window:
 	var window : Window = $Popups.get_node(window_name)
@@ -708,16 +955,16 @@ func open_facts_window(fact_to_select:=""):
 	var window := open_window_by_string("FactsPopup")
 	window.get_child(0).select_fact(fact_to_select)
 
-# opens opoup if active_dir isn't set, otherwise saves to file
+# opens popup if active_dir isn't set, otherwise saves to file
 func attempt_save_to_dir():
-	if active_dir.is_empty():
+	if active_path.is_empty():
 		open_save_popup()
 		return
-	save_to_file(str(active_dir, active_file_name))
+	save_to_file(active_path)
 
 func save_to_dir_if_active_dir():
-	if not active_dir.is_empty():
-		save_to_file(str(active_dir, active_file_name))
+	if not active_path.is_empty():
+		save_to_file(active_path)
 
 #region MenuBar
 
@@ -737,11 +984,10 @@ func _on_file_id_pressed(id: int) -> void:
 			open_window_by_string("TextExportWindow")
 		6:
 			open_window_by_string("TextImportWindow")
-		#8:
-			#Pages.empty_strings_for_l10n = not Pages.empty_strings_for_l10n
-			#find_child("File").set_item_checked(9, Pages.empty_strings_for_l10n)
+		8:
+			open_window_by_string("RegionConfigWindow")
 		9:
-			emit_signal("open_new_file")
+			try_new_file()
 
 func _on_l_10n_menu_id_pressed(id: int) -> void:
 	match id:
@@ -752,10 +998,17 @@ func _on_l_10n_menu_id_pressed(id: int) -> void:
 		2: #merge
 			open_popup($Popups.get_node("FDMergeL10N"), true)
 
+
+var has_unsaved_changes:bool:
+	get():
+		return not (undo_redo.get_history_count() == 0 or not altered_history)
+
+
 func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
-			emit_signal("request_reload")
+			
+			try_reload_editor_window()
 		1:
 			open_window_by_string("PunctuationRulesWindow")
 		3:
@@ -771,7 +1024,7 @@ func _on_editor_id_pressed(id: int) -> void:
 				"About DIISIS"
 			)
 		5:
-			OS.shell_open("https://github.com/SnekOfSpice/dialog-editor/wiki")
+			OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 
 func _on_utility_id_pressed(id: int) -> void:
 	match id:
@@ -817,10 +1070,10 @@ func _on_utility_id_pressed(id: int) -> void:
 
 func _on_setup_id_pressed(id: int) -> void:
 	match id:
-		1: # header
-			open_popup($Popups.get_node("HeaderPopup"))
-		2: # dd
-			open_popup($Popups.get_node("DropdownWindow"))
+		1:
+			open_popup($Popups.get_node("DialogConfigWindow"))
+		2:
+			open_popup($Popups.get_node("StringkitWindow"))
 		3: # instr
 			open_popup($Popups.get_node("HandlerWindow"), true)
 		5: # facts
@@ -890,164 +1143,7 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
-	for id in Pages.text_data.keys():
-		var id_count := 0
-		for number in Pages.page_data.keys():
-			var page_data = Pages.page_data.get(number)
-			for line in page_data.get("lines"):
-				#if line.get("id") == id:
-					#id_count += 1
-				if line.get("line_type") == DIISIS.LineType.Text:
-					var tid = line.get("content").get("text_id")
-					if tid == id:
-						id_count += 1
-		if id_count > 1:
-			printt(id_count, id)
-	return
-	emit_signal("request_reload")
-	return
-	step_through_pages()
-	return
-	var doms := ["af_ZA",
-"sq_AL",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"ar_SA",
-"hy_AM",
-"az_AZ",
-"eu_ES",
-"be_BY",
-"bn_IN",
-"bs_BA",
-"bg_BG",
-"ca_ES",
-"zh_CN",
-"zh_TW",
-"zh_TW",
-"zh_CN",
-"zh_TW",
-"hr_HR",
-"cs_CZ",
-"da_DK",
-"nl_NL",
-"nl_NL",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"en_US",
-"et_EE",
-"fo_FO",
-"fi_FI",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"fr_FR",
-"gl_ES",
-"ka_GE",
-"de_DE",
-"de_DE",
-"de_DE",
-"de_DE",
-"de_DE",
-"el_GR",
-"gu_IN",
-"he_IL",
-"hi_IN",
-"hu_HU",
-"is_IS",
-"id_ID",
-"it_IT",
-"it_IT",
-"ja_JP",
-"kn_IN",
-"kk_KZ",
-"kok_IN",
-"ko_KR",
-"lv_LV",
-"lt_LT",
-"mk_MK",
-"ms_MY",
-"ms_MY",
-"ml_IN",
-"mt_MT",
-"mr_IN",
-"mn_MN",
-"se_NO",
-"nb_NO",
-"nn_NO",
-"fa_IR",
-"pl_PL",
-"pt_BR",
-"pt_BR",
-"pa_IN",
-"ro_RO",
-"ru_RU",
-"sr_BA",
-"sr_BA",
-"sk_SK",
-"sk_SK",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"es_ES",
-"sw_KE",
-"sv_SE",
-"sv_SE",
-"syr_SY",
-"ta_IN",
-"te_IN",
-"th_TH",
-"tn_ZA",
-"tr_TR",
-"uk_UA",
-"uz_UZ",
-"vi_VN",
-"cy_GB",
-"xh_ZA",
-"zu_ZA"]
-	var uniques := []
-	for d in doms:
-		if not uniques.has(d):
-			uniques.append(d)
+	print(Pages.custom_method_stringkit_limiters)
 
 func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}
@@ -1151,15 +1247,15 @@ func align_menu_item(menu_item:PopupMenu):
 	menu_item.size *= content_scale * 1.01
 
 func _on_file_visibility_changed() -> void:
-	align_menu_item(find_child("File"))
+	align_menu_item(%File)
 
 
 func _on_setup_visibility_changed() -> void:
-	align_menu_item(find_child("Setup"))
+	align_menu_item(%Setup)
 
 
 func _on_utility_visibility_changed() -> void:
-	align_menu_item(find_child("Utility"))
+	align_menu_item(%Utility)
 
 
 func _on_show_errors_button_toggled(toggled_on: bool) -> void:
@@ -1342,4 +1438,67 @@ func _on_library_of_babel_index_pressed(index: int) -> void:
 
 
 func is_importing() -> bool:
-	return $ImportingCover.visible
+	return %ImportingCover.visible
+
+
+
+var found_handlers := []
+func get_line_reader_scripts() -> Array:
+	found_handlers.clear()
+	_get_line_reader_scripts_r("res://")
+	return found_handlers
+func _get_line_reader_scripts_r(path: String) -> void:
+	var directories = DirAccess.get_directories_at(path)
+	for d in directories:
+		if d == "addons":
+			continue
+		if path == "res://":
+			_get_line_reader_scripts_r(path + d)
+		else:
+			_get_line_reader_scripts_r(path + "/" + d)
+		
+	var files = DirAccess.get_files_at(path)
+	
+	for f in files:
+		if not f.get_extension() == "gd":
+			continue
+		var script : Script = load(path + "/" + f)
+		var file := FileAccess.open(path + "/" + f, FileAccess.READ)
+		var lines = file.get_as_text()
+		
+		var has_expression : = false
+		for expression in [
+			"extends LineReader",
+			"extends\nLineReader",
+			"extends \nLineReader",
+			]:
+			if expression in lines:
+				has_expression = true
+		if has_expression:
+			var local_path : String = path + "/" + f
+			local_path = local_path.replace("///", "//") # this happens with scripts in the project root
+			found_handlers.append(local_path)
+			
+
+
+func _on_templates_menu_id_pressed(id: int) -> void:
+	request_template_setup.emit(id)
+
+func _on_active_path_set(path : String):
+	%FilePathLabel.text = path
+	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+
+
+func update_recents_item():
+	recents_item.clear()
+	var recent_data := get_recent_files()
+	for file : String in recent_data:
+		if not ResourceLoader.exists(file):
+			continue
+		var file_name := file.trim_prefix(file.left(file.rfind("/") + 1))
+		recents_item.add_item("%s%s%s" % [file_name, RECENT_FILE_SEPARATOR, file])
+
+
+func _on_visibility_changed() -> void:
+	if visible and not opening:
+		Pages.ensure_line_reader_scripts()

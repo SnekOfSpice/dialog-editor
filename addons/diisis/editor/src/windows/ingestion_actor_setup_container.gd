@@ -8,9 +8,9 @@ func init():
 	text_edit.text = Pages.ingestion_actor_declaration
 	find_child("SaveButton").text = "save"
 	find_child("HelpLabel").visible = false
-	find_child("AutoIngestButton").text = "populate from %s" % Pages.dropdown_title_for_dialog_syntax
+	find_child("AutoIngestButton").text = "populate from %s" % Pages.stringkit_title_for_dialog_syntax
 	
-	var speakers_exist := not Pages.dropdown_title_for_dialog_syntax.is_empty()
+	var speakers_exist := not Pages.stringkit_title_for_dialog_syntax.is_empty()
 	text_edit.visible = speakers_exist
 	find_child("NoTitleWarning").visible = not speakers_exist
 	find_child("Buttons").visible = speakers_exist
@@ -60,7 +60,7 @@ func _on_auto_ingest_button_pressed() -> void:
 			last_initial_count = 0
 		
 		last_initial_count += 1
-		var suffix : String = str(last_initial_count) if count_by_initial.get(initial) > 0 else ""
+		var suffix : String = str(last_initial_count) if count_by_initial.get(initial) > 1 else ""
 		
 		initials_by_actor[actor] = initial + suffix
 	
@@ -75,3 +75,14 @@ func _on_auto_ingest_button_pressed() -> void:
 func _on_no_title_warning_meta_clicked(meta: Variant) -> void:
 	Pages.editor.open_window_by_string(str(meta).trim_prefix("open-"))
 	(get_parent() as Window).close_requested.emit()
+
+
+
+func _on_help_label_meta_clicked(meta: Variant) -> void:
+	#(get_parent() as Window).exclusive = false
+	var nested_help_window : RichTextAcceptDialog = DiisisIngestMenu.popup_ingestion_help(false)
+	#nested_help_window.tree_exited.connect(func():
+		#await get_tree().process_frame
+		#await get_tree().process_frame
+		#Pages.editor.open_window_by_string("IngestionActorSetupWindow")
+		#)

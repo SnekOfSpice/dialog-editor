@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://rqflj6uhel4l"]
+
+[ext_resource type="Script" uid="uid://n73xhqxfr4e4" path="res://addons/diisis/editor/src/windows/region_config_container.gd" id="1_itces"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_dlbgb"]
+
+[node name="RegionConfigContainer" type="Control" unique_id=701763459]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_itces")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=16121138]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=262200414]
+layout_mode = 2
+
+[node name="BakeCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer2" unique_id=156079913]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Bake regions"
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer2" unique_id=402802827]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="HelpButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1608933226]
+layout_mode = 2
+toggle_mode = true
+text = "?"
+
+[node name="HelpLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=1487160820]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "Here you can enable region baking. Regions are baked when saving the file. At runtime, you can use functions like [code]get_current_region()[/code] to see which region you're in. A region can either be configured to be equivalent with a page, or deliniated by an instruction. If set to instruction mode, the regions will be split.
+
+Regions only work for linear scripts, or choice-based scripts in which all pages within a region are clustered together. Whenever an instruction line calls the specified function, a new region will start."
+fit_content = true
+
+[node name="Contents" type="VBoxContainer" parent="VBoxContainer" unique_id=1866142768]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Contents" unique_id=1705127419]
+layout_mode = 2
+
+[node name="PagesCheckBox" type="CheckBox" parent="VBoxContainer/Contents/HBoxContainer" unique_id=368842692]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_dlbgb")
+text = "Pages"
+
+[node name="InstructionCheckBox" type="CheckBox" parent="VBoxContainer/Contents/HBoxContainer" unique_id=1078612809]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_dlbgb")
+text = "Instruction"
+
+[node name="InstructionContainer" type="PanelContainer" parent="VBoxContainer/Contents" unique_id=1415684456]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Contents/InstructionContainer" unique_id=1427356038]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer" unique_id=289124610]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer" unique_id=383110709]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer/HBoxContainer" unique_id=1322617849]
+layout_mode = 2
+text = "instruction to split regions"
+
+[node name="SaveDeliniatorNameButton" type="Button" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer/HBoxContainer" unique_id=1323892393]
+unique_name_in_owner = true
+layout_mode = 2
+text = "save"
+
+[node name="DeliniatorNameLineEdit" type="LineEdit" parent="VBoxContainer/Contents/InstructionContainer/VBoxContainer" unique_id=1458430002]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="DisabledNotice" type="RichTextLabel" parent="VBoxContainer" unique_id=969163409]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Region baking is currently disabled. Enable it to see options."
+fit_content = true
+
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/BakeCheckBox" to="." method="_on_bake_check_box_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/HelpButton" to="." method="_on_help_button_toggled"]
+[connection signal="pressed" from="VBoxContainer/Contents/HBoxContainer/PagesCheckBox" to="." method="_on_pages_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/Contents/HBoxContainer/InstructionCheckBox" to="." method="_on_instruction_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/Contents/InstructionContainer/VBoxContainer/HBoxContainer/SaveDeliniatorNameButton" to="." method="_on_save_deliniator_name_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/Contents/InstructionContainer/VBoxContainer/DeliniatorNameLineEdit" to="." method="_on_deliniator_name_line_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/Contents/InstructionContainer/VBoxContainer/DeliniatorNameLineEdit" to="." method="_on_deliniator_name_line_edit_text_submitted"]

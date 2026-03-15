@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4ny85mdnxwoy"]
+[gd_scene format=3 uid="uid://b4ny85mdnxwoy"]
 
 [ext_resource type="Script" uid="uid://dkhkfmmwbp53i" path="res://addons/diisis/parser/autoload/parser.gd" id="1_0uufo"]
+[ext_resource type="Script" uid="uid://jkkqramv26mk" path="res://addons/diisis/parser/src/resources/parser_fact_change.gd" id="2_w1ejb"]
 
-[node name="Parser" type="Node"]
+[sub_resource type="Resource" id="Resource_pnedy"]
+script = ExtResource("2_w1ejb")
+fact_name = "showdown_choice"
+data_type = 1
+value = 0
+metadata/_custom_type_script = "uid://jkkqramv26mk"
+
+[sub_resource type="Resource" id="Resource_w1ejb"]
+script = ExtResource("2_w1ejb")
+fact_name = "ending"
+data_type = 1
+value = 1
+metadata/_custom_type_script = "uid://jkkqramv26mk"
+
+[node name="Parser" type="Node" unique_id=2059796798]
 script = ExtResource("1_0uufo")
+startup_fact_payload = Array[ExtResource("2_w1ejb")]([SubResource("Resource_pnedy"), SubResource("Resource_w1ejb")])

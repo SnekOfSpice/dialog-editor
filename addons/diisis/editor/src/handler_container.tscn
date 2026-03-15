@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4o7jt8031ant"]
+[gd_scene format=3 uid="uid://c4o7jt8031ant"]
 
 [ext_resource type="Script" uid="uid://bh5hvgvfscaqb" path="res://addons/diisis/editor/src/handler_container.gd" id="1_n4i0n"]
 [ext_resource type="Texture2D" uid="uid://dgf242nwi7c37" path="res://addons/diisis/parser/style/icon_line_reader.svg" id="2_cg5g2"]
 
-[node name="EvaluatorContainer" type="PanelContainer"]
+[node name="EvaluatorContainer" type="PanelContainer" unique_id=1571416201]
 custom_minimum_size = Vector2(0, 200)
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,47 +12,47 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_n4i0n")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1023529386]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="VBoxContainer" unique_id=431884050]
 layout_mode = 2
 text = "- file paths to scripts that inherit from LineReader
 - ending in .gd & formatted like \"res://line_reader.gd\""
 fit_content = true
 scroll_active = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=839830018]
 layout_mode = 2
 
-[node name="EvaluatorSortButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="EvaluatorSortButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=824158118]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 text = "sort A-Z"
 
-[node name="FindHandlersButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="FindHandlersButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1433233420]
 layout_mode = 2
 text = "Auto Search"
 icon = ExtResource("2_cg5g2")
 
-[node name="FoundHandlersLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="FoundHandlersLabel" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=728096336]
 layout_mode = 2
 
-[node name="EvaluatorLabel" type="TextEdit" parent="VBoxContainer"]
+[node name="EvaluatorLabel" type="TextEdit" parent="VBoxContainer" unique_id=1007728964]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2120682775]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="SaveEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="SaveEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1293869783]
 layout_mode = 2
 focus_mode = 0
 text = "save changes"
 
-[node name="ResetEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="ResetEvaluatorChangesButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1152836527]
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 0

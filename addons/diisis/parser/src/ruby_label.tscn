@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dp3d4mw1vddnq"]
+[gd_scene format=3 uid="uid://dp3d4mw1vddnq"]
 
 [ext_resource type="Script" uid="uid://b862d44xfsc3g" path="res://addons/diisis/parser/src/ruby_label.gd" id="1_yg2co"]
 
@@ -6,19 +6,18 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ipyg5"]
 
-[node name="RubyLabelRoot" type="PanelContainer"]
+[node name="RubyLabelRoot" type="PanelContainer" unique_id=393993422]
 clip_children = 1
-clip_contents = true
 theme_override_styles/panel = SubResource("StyleBoxEmpty_yg2co")
 script = ExtResource("1_yg2co")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1077162244]
 layout_mode = 2
 
-[node name="RubyLabel" type="RichTextLabel" parent="Control"]
+[node name="RubyLabel" type="RichTextLabel" parent="Control" unique_id=438920572]
 unique_name_in_owner = true
 clip_contents = false
-layout_mode = 2
+layout_mode = 0
 offset_right = 71.0
 offset_bottom = 23.0
 size_flags_horizontal = 3

@@ -4,13 +4,12 @@ extends Node
 func clear():
 	deserialize({})
 
-var head_defaults := []
 var auto_complete_context := ""
 
-var dropdowns := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
-var dropdown_titles := ["character", "amber-emotion"]
-var dropdown_dialog_arguments := ["amber-emotion"]
-var dropdown_title_for_dialog_syntax := "character"
+var stringkits := {"character": ["narrator", "amber"], "amber-emotion" : ["neutral", "happy"]}
+var stringkit_titles := ["character", "amber-emotion"]
+var stringkit_dialog_arguments := ["amber-emotion"]
+var stringkit_title_for_dialog_syntax := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
@@ -32,8 +31,11 @@ const PREFERENCE_PROPS := [
 	"first_index_as_page_reference_only",
 	"fix_apostrophes",
 	"page_scroll_by_idx_by_file_name",
+	"preferences_export",
 	"preferences_import",
-	"preferences_import",
+	"region_baking_enabled",
+	"region_delination",
+	"region_delinator_instruction",
 	"replacement_rules",
 	"require_colons_on_actor_ingestion",
 	"save_on_play",
@@ -68,7 +70,7 @@ var facts := {}
 var local_line_insert_offset:int
 
 var custom_method_defaults := {}
-var custom_method_dropdown_limiters := {}
+var custom_method_stringkit_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
@@ -79,27 +81,24 @@ var page_scroll_by_idx_by_file_name := {}
 # i couldnt figure out why the choice labels would just refuse to get updated on import
 var text_hacks_by_id := {}
 
-enum DataTypes {_String, _DropDown, _Boolean}
+enum DataTypes {_String, _Stringkit, _Boolean}
 const DATA_TYPE_STRINGS := {
 	DataTypes._String : "String",
 	#DataTypes._Integer : "Integer",
 	#DataTypes._Float : "Float",
 	#DataTypes._Array : "Array",
 	#DataTypes._Dictionary : "Dictionary",
-	DataTypes._DropDown : "Drop Down",
+	DataTypes._Stringkit : "Stringkit",
 	DataTypes._Boolean : "Boolean",
 }
 
-var head_data_types := {
-	"speaker": DataTypes._DropDown,
-	"emotion": DataTypes._String,
-}
 
 var editor:DiisisEditor
 
 var page_data := {}
 var text_data := {}
 
+## path to scripts to access funcs and vars from. they inherit from line_reader or are autoloads
 var evaluator_paths := []
 var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
@@ -231,26 +230,23 @@ func sync_line_references():
 		
 			line_index += 1
 
-func is_header_schema_empty():
-	return head_defaults.is_empty()
 
 func serialize() -> Dictionary:
 	var data := {
 		"callable_autoloads": callable_autoloads,
-		"custom_method_dropdown_limiters": custom_method_dropdown_limiters,
+		"custom_method_stringkit_limiters": custom_method_stringkit_limiters,
 		"custom_method_defaults": custom_method_defaults,
 		#"default_address_mode_pages": default_address_mode_pages,
 		"default_locale" : default_locale,
-		"dropdowns": dropdowns,
-		"dropdown_titles": dropdown_titles,
-		"dropdown_dialog_arguments": dropdown_dialog_arguments,
-		"dropdown_title_for_dialog_syntax": dropdown_title_for_dialog_syntax,
+		"stringkits": stringkits,
+		"stringkit_titles": stringkit_titles,
+		"stringkit_dialog_arguments": stringkit_dialog_arguments,
+		"stringkit_title_for_dialog_syntax": stringkit_title_for_dialog_syntax,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
 		"evaluator_modified_times": evaluator_modified_times,
 		"facts": facts,
 		"file_config": get_file_config(),
 		"full_custom_method_defaults": _get_custom_method_full_defaults(),
-		"head_defaults" : head_defaults,
 		"id_counter" : id_counter,
 		"import_modified_times_by_path" : import_modified_times_by_path,
 		"ingestion_actor_declaration": ingestion_actor_declaration,
@@ -261,6 +257,9 @@ func serialize() -> Dictionary:
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"use_dialog_syntax": use_dialog_syntax,
 	}
+	
+	if region_baking_enabled:
+		data["regions"] = get_regions()
 	#for setting in TOGGLE_SETTINGS.keys():
 		#data[setting] = get(setting)
 	#for setting in STRING_SETTINGS.keys():
@@ -277,9 +276,8 @@ func deserialize(data:Dictionary):
 	
 	page_data.clear()
 	page_data = int_data.duplicate()
-	head_defaults = data.get("head_defaults", [])
 	custom_method_defaults = data.get("custom_method_defaults", {})
-	custom_method_dropdown_limiters = data.get("custom_method_dropdown_limiters", {})
+	custom_method_stringkit_limiters = data.get("custom_method_stringkit_limiters", {})
 	callable_autoloads = data.get("callable_autoloads", [])
 	ingestion_actor_declaration = data.get("ingestion_actor_declaration", "")
 	evaluator_modified_times = data.get("evaluator_modified_times", {})
@@ -293,10 +291,11 @@ func deserialize(data:Dictionary):
 		else:
 			fact_fix[fact_name] = int(fact_data.get(fact_name))
 	facts = fact_fix
-	dropdowns = data.get("dropdowns", {})
-	dropdown_titles = data.get("dropdown_titles", [])
-	dropdown_dialog_arguments = data.get("dropdown_dialog_arguments", [])
-	dropdown_title_for_dialog_syntax = data.get("dropdown_title_for_dialog_syntax", "")
+	# backwards compatibility with files below 0.7 where stringkits where called dropdowns
+	stringkits = data.get("stringkits", data.get("dropdowns", {}))
+	stringkit_titles = data.get("stringkit_titles", data.get("dropdown_titles", []))
+	stringkit_dialog_arguments = data.get("stringkit_dialog_arguments", data.get("dropdown_dialog_arguments", []))
+	stringkit_title_for_dialog_syntax = data.get("stringkit_title_for_dialog_syntax", data.get("dropdown_title_for_dialog_syntax", ""))
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
@@ -319,7 +318,7 @@ func deserialize(data:Dictionary):
 	# init limiters
 	await get_tree().process_frame
 	for method in get_all_instruction_names():
-		if custom_method_dropdown_limiters.has(method):
+		if custom_method_stringkit_limiters.has(method):
 			continue
 		var arg_data := {}
 		for arg in get_custom_method_arg_names(method):
@@ -327,7 +326,7 @@ func deserialize(data:Dictionary):
 			if type == TYPE_STRING:# or type == TYPE_NIL:
 				arg_data.set(arg, [])
 		if not arg_data.is_empty():
-			custom_method_dropdown_limiters.set(method, arg_data)
+			custom_method_stringkit_limiters.set(method, arg_data)
 
 func get_page_count() -> int:
 	return page_data.size()
@@ -760,6 +759,8 @@ func get_all_instruction_names() -> Array:
 
 func get_autoload_script(autoload:String) -> Script:
 	var path : String = ProjectSettings.get_setting(str("autoload/", autoload)).trim_prefix("*")
+	if path.begins_with("uid://"):
+		path = ResourceUID.uid_to_path(path)
 	var autoload_script : Script
 	if path.ends_with(".gd"):
 		autoload_script = load(path).instantiate()
@@ -770,7 +771,7 @@ func get_autoload_script(autoload:String) -> Script:
 		autoload_copy.queue_free()
 		return autoload_script
 	else:
-		push_warning("Encountered fucky autoload")
+		push_warning("Encountered fucked autoload at %s" % path)
 		return null
 
 func get_custom_method(instruction_name:String) -> Dictionary:
@@ -918,59 +919,6 @@ func get_all_invalid_address_pointers() -> String:
 		warning = str("Warning: invalid addresses at: ", ", ".join(invalid_addresses))
 	return warning
 
-# new schema with keys and values
-func apply_new_header_schema(new_schema: Array):
-	for i in page_data:
-		var lines = page_data.get(i).get("lines")
-		
-		for line in lines:
-			line["header"] = transform_header(line.get("header"), new_schema, head_defaults)
-	
-	editor.refresh(false)
-	head_defaults = new_schema
-
-
-func transform_header(header_to_transform: Array, new_schema: Array, old_schema):
-	# TODO: use sort_custom and add an index to each head property to make this flexible when changing head defaults
-	var transformed = []
-	transformed.resize(new_schema.size())
-	
-	
-	for i in min(old_schema.size(), new_schema.size()):
-		var old_name = header_to_transform[i].get("property_name")
-		var old_value = header_to_transform[i].get("values", [header_to_transform[i].get("value", null), null])
-		var old_type = header_to_transform[i].get("data_type")
-		var old_default = old_schema[i].get("values")
-		
-		var new_name = new_schema[i].get("property_name")
-		var new_value = new_schema[i].get("values", [header_to_transform[i].get("value", null), null])
-		var new_type = new_schema[i].get("data_type")
-		
-		# if the header was the default value here, just apply the new default schema
-		if old_value[0] == old_default[0] and old_value[1] == old_default[1]:
-			transformed[i] = new_schema[i]
-		# the old value wasn't the default...
-		else:
-			
-			var a = new_value
-			if new_value[0] != old_value[0] or new_value[1] != old_value[1]:
-				a = old_value
-			
-			var converted_value = {
-				"property_name": new_name,
-				"values": a,
-				"data_type": new_type,
-			}
-			transformed[i] = converted_value
-			
-			
-	
-	# idk this seems bad
-	for j in transformed.size():
-		if transformed[j] == null:
-			transformed[j] = new_schema[j]
-	
-	return transformed
 
 func lines_referencing_fact(fact_name: String):
 	var ref_pages := []
@@ -1130,19 +1078,19 @@ func get_count_total(include_skipped:=false) -> Vector2i:
 func rename_fact(from:String, to:String):
 	alter_fact(from, to)
 
-func rename_dropdown_title(from:String, to:String):
-	var dd_values = dropdowns.get(from).duplicate(true)
-	dropdowns[to] = dd_values
+func rename_stringkit_title(from:String, to:String):
+	var dd_values = stringkits.get(from).duplicate(true)
+	stringkits[to] = dd_values
 	if from != to:
-		dropdowns.erase(from)
-		dropdown_titles.insert(dropdown_titles.find(from), to)
-		dropdown_titles.erase(from)
-		if dropdown_dialog_arguments.has(from):
-			var where = dropdown_dialog_arguments.find(from)
-			dropdown_dialog_arguments.insert(where, to)
-			dropdown_dialog_arguments.erase(from)
-		if dropdown_title_for_dialog_syntax == from:
-			dropdown_title_for_dialog_syntax = to
+		stringkits.erase(from)
+		stringkit_titles.insert(stringkit_titles.find(from), to)
+		stringkit_titles.erase(from)
+		if stringkit_dialog_arguments.has(from):
+			var where = stringkit_dialog_arguments.find(from)
+			stringkit_dialog_arguments.insert(where, to)
+			stringkit_dialog_arguments.erase(from)
+		if stringkit_title_for_dialog_syntax == from:
+			stringkit_title_for_dialog_syntax = to
 	
 	# change in line data
 	for page in page_data.values():
@@ -1156,14 +1104,26 @@ func rename_dropdown_title(from:String, to:String):
 			content = content.replace(str("[]>", from), str("[]>", to))
 			Pages.save_text(text_id, content)
 
-func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
+func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
-		var old_options : Array = dropdowns.get(dropdown_title, [])
-		var is_speaker := dropdown_title == dropdown_title_for_dialog_syntax
+		var old_options : Array = stringkits.get(stringkit_title, [])
+		var is_speaker := stringkit_title == stringkit_title_for_dialog_syntax
 		
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
+				#if line.get("line_type") == DIISIS.LineType.Instruction:
+					##print(line)
+					#var instruction_name : String = line.get("content", {}).get("name")
+					#var args_normal : Dictionary = custom_method_stringkit_limiters.get(instruction_name)
+					#for arg in args_normal.keys():
+						#if stringkit_title in (args_normal.get(arg) as Array):
+							## TODO replace
+							#pass
+							#print("aaaa", get_custom_method_arg_names(instruction_name))
+					### same for reverse
+					#var args_reverse : Array = custom_method_stringkit_limiters.get(line.get("content", {}).get("reverse_name"))
+					
 				if line.get("line_type") != DIISIS.LineType.Text:
 					continue
 				
@@ -1174,8 +1134,8 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 					if old_option == new_option:
 						i += 1
 						continue
-					var old_arg := str(dropdown_title, "|", old_option)
-					var new_arg := str(dropdown_title, "|", new_option)
+					var old_arg := str(stringkit_title, "|", old_option)
+					var new_arg := str(stringkit_title, "|", new_option)
 					
 					var text_id : String = line.get("content", {}).get("text_id")
 					var content : String = Pages.get_text(text_id)
@@ -1189,14 +1149,14 @@ func set_dropdown_options(dropdown_title:String, options:Array, replace_in_text:
 					
 					i += 1
 	
-	dropdowns[dropdown_title] = options
+	stringkits[stringkit_title] = options
 
-func is_new_dropdown_title_invalid(title:String, previous_title := "") -> bool:
-	return (title in dropdown_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
+func is_new_stringkit_title_invalid(title:String, previous_title := "") -> bool:
+	return (title in stringkit_titles and previous_title != title) or title.to_lower() in ["string", "bool", "float"] or title.is_empty()
 
-func delete_dropdown(title:String, erase_from_text:=true):
-	if erase_from_text and dropdown_dialog_arguments.has(title):
-		var options : Array = dropdowns.get(title, [])
+func delete_stringkit(title:String, erase_from_text:=true):
+	if erase_from_text and stringkit_dialog_arguments.has(title):
+		var options : Array = stringkits.get(title, [])
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
@@ -1215,9 +1175,9 @@ func delete_dropdown(title:String, erase_from_text:=true):
 				content = content.replace("{}", "")
 				Pages.save_text(text_id, content)
 	
-	dropdown_titles.erase(title)
-	dropdown_dialog_arguments.erase(title)
-	dropdowns.erase(title)
+	stringkit_titles.erase(title)
+	stringkit_dialog_arguments.erase(title)
+	stringkits.erase(title)
 	
 	await get_tree().process_frame
 	Pages.editor.refresh(false)
@@ -1473,6 +1433,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 	var syntax_detail : int = modifiers.get("syntax_detail", 0)
 	var line_types_to_include : Array = modifiers.get("line_types_to_include",[0,1,2,3])
 	var include_ids := syntax_detail == 0
+	var exclude_args := syntax_detail == 2
 	var include_file_outline := syntax_detail != 2
 	var result := ""
 	if include_file_outline:
@@ -1507,6 +1468,17 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 			DIISIS.LineType.Text:
 				var text : String = get_text(content.get("text_id"))
 				text = text.replace("[]>", "")
+				
+				if exclude_args:
+					var has_args := text.contains("{") and text.contains("}:")
+					while has_args:
+						var next_arg_end := text.find("}:")
+						var next_arg_begin := text.rfind("{", next_arg_end)
+						if next_arg_begin != -1 and next_arg_end != -1:
+							text = text.erase(next_arg_begin, next_arg_end - next_arg_begin + 1)
+						
+						has_args = text.contains("{") and text.contains("}:")
+				
 				result += text
 			DIISIS.LineType.Instruction:
 				result += content.get("meta.text")
@@ -1679,6 +1651,105 @@ func remove_tags(t:String) -> String:
 				text = text.erase(scan_index, control_to_replace.length())
 			scan_index += 1
 	return text
+
+
+enum RegionDeliniation{
+	Pages,
+	Instructions
+}
+var region_baking_enabled := false
+var region_delinator_instruction := ""
+var region_delination := RegionDeliniation.Pages
+## Only useful for linear games.
+func get_regions(deliniation := region_delination) -> Dictionary:
+	var trail := get_cascading_trail(0)
+	
+	var result := {}
+	
+	var last_page_index : int = trail.front()
+	var last_line_index : int = 0
+	var region_start_page_index : int = trail.front()
+	var region_start_line_index : int = 0
+	
+	var region_name : String = ""
+	var region_text : String = ""
+	
+	var last_region : String
+	
+	var actors_this_region := []
+	
+	var i := 0
+	
+	while i < trail.size():
+		var page_index = trail[i]
+		for line_index in get_line_count(page_index):
+			if deliniation == RegionDeliniation.Instructions:
+				if get_line_type(page_index, line_index) == DIISIS.LineType.Instruction:
+					var line := get_line_data(page_index, line_index)
+					var instruction_name : String = line.get("content").get("name")
+					var instruction_text : String = line.get("content").get("meta.text")
+					if instruction_name == region_delinator_instruction:
+						result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
+							"actors" : actors_this_region.duplicate(),
+							"text" : region_text,
+							"region_name" : region_name,
+							"region_end" : "%s.%s" % [page_index, line_index],
+						}
+						region_name = instruction_name
+						region_text = instruction_text
+						region_start_line_index = line_index
+						region_start_page_index = page_index
+						actors_this_region.clear()
+					
+			var actors_here := get_actors_at_line(page_index, line_index)
+			for actor in actors_here:
+				if not actors_this_region.has(actor):
+					actors_this_region.append(actor)
+			last_line_index = line_index
+		last_page_index = page_index
+		if deliniation == RegionDeliniation.Pages:
+			# put into region
+			var end : String
+			if i < trail.size() - 1:
+				end = "%s.%s" % [trail[i + 1], 0]
+			else:
+				end = "%s.%s" % [page_index, get_line_count(page_index)]
+			result["%s.%s" % [page_index, 0]] = {
+							"actors" : actors_this_region.duplicate(),
+							"region_end" : end,
+						}
+			region_start_page_index = page_index
+			region_start_line_index = 0
+			actors_this_region.clear()
+		i += 1
+	
+	if deliniation == RegionDeliniation.Instructions:
+		result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
+			"actors" : actors_this_region.duplicate(),
+			"text" : region_text,
+			"region_name" : region_name,
+			"region_end" : "%s.%s" % [region_start_page_index, get_line_count(region_start_page_index)],
+		}
+	
+	return result
+	
+
+func get_actors_at_line(page_index : int, line_index : int) -> Array:
+	var line := get_line_data(page_index, line_index)
+	
+	if line.get("line_type") != DIISIS.LineType.Text:
+		return []
+		
+	var result := []
+	var text = get_text(line.get("content").get("text_id"))
+
+	for speaker : String in get_speakers():
+		if text.contains("[]>%s" % speaker):
+			if not result.has(speaker):
+				result.append(speaker)
+	
+	return result
+
 
 func update_all_compliances():
 	# check modified because updating all compliances makes diisis stutter a bit
@@ -1860,21 +1931,21 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 			if not char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
 				return str("Int argument ", arg_index + 1, " contains non-int character.\n(Valid characters are 0 - 9)")
 	
-	var selected_limiters : Array = custom_method_dropdown_limiters.get(method, {}).get(arg, [])
+	var selected_limiters : Array = custom_method_stringkit_limiters.get(method, {}).get(arg, [])
 	if selected_limiters.size() > 0:
 		# build list of all options
 		var valid_strings := []
 		for dd_name in selected_limiters:
-			valid_strings.append_array(dropdowns.get(dd_name))
+			valid_strings.append_array(stringkits.get(dd_name))
 		
 		if not value in valid_strings:
-			return str("Dropdown argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
+			return str("Stringkit argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
 
-func are_all_of_these_dropdown_titles(names:Array) -> bool:
+func are_all_of_these_stringkit_titles(names:Array) -> bool:
 	var result := true
 	for dd_name in names:
-		if not dd_name in dropdown_titles:
+		if not dd_name in stringkit_titles:
 			result = false
 			break
 	return result
@@ -2170,7 +2241,7 @@ func get_text_id_address_and_type(id:String) -> Array:
 	return ["0.0", "Not Found"]
 
 func get_speakers() -> Array:
-	return dropdowns.get(dropdown_title_for_dialog_syntax, []).duplicate()
+	return stringkits.get(stringkit_title_for_dialog_syntax, []).duplicate()
 
 ## exact means only the passed speakers can be entered
 func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearchContainer.SearchMode.All) -> Array:
@@ -2515,3 +2586,9 @@ func purge_unused_text_ids():
 	for key in text_data.keys():
 		if not key in used_text_ids:
 			text_data.erase(key)
+
+
+
+func ensure_line_reader_scripts():
+	if evaluator_paths.is_empty() and editor:
+		evaluator_paths = editor.get_line_reader_scripts()

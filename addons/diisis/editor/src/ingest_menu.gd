@@ -70,44 +70,47 @@ func _on_index_pressed(index: int) -> void:
 	if index == 7:
 		Pages.editor.open_window_by_string("IngestionActorSetupWindow")
 	if index == 8:
-		var line_content := str(
-			"[color=#fd99f9]",
-			"a: amber",
-			"\nn: narrator\n",
-			"[/color]",
-			"\nLINE",
-			"\na: this line will be ingested and inserted into the text box!",
-			"\nn: with different speaking parts",
-			"\nn: uwu")
-		var page_content := str(
-			"[color=#fd99f9]",
-			"a: amber",
-			"\nn: narrator",
-			"\nEND ACTORS[/color]\n",
-			"\nLINE",
-			"\na: this first line will be ingested",
-			"\nn: with different speaking parts",
-			"\nn: uwu\n",
-			"\nLINE",
-			"\nn: This is a second line",
-			"\nh: wow im not defined",
-			"\na: uuuuuuuuu",
-			"\n\nPAGE\n",
-			"\nLINE",
-			"\nn: a second page",
-			"\nn: waow",
-		)
-		Pages.editor.popup_accept_dialogue(str(
-			"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space. (If you omit the actors, [url=open-IngestionActorSetupWindow]Utility > Ingestion Actors[/url] will be used.)\n",
-			"Colors are for emphasis.\n\n",
-			"[b]Example For ", "Pages" if page else "Lines", ":[/b]",
-			"\n\n",
-			"[code][font_size=12]",
-			page_content if page else line_content,
-			"[/font_size][/code]",
-		),
-		"Ingestion Help",
-		canvas_transform.get_origin())
+		popup_ingestion_help(page, canvas_transform.get_origin())
+
+static func popup_ingestion_help(p_page:bool, at := Vector2.ZERO) -> RichTextAcceptDialog:
+	var line_content := str(
+		"[color=#fd99f9]",
+		"a: amber",
+		"\nn: narrator\n",
+		"[/color]",
+		"\nLINE",
+		"\na: this line will be ingested and inserted into the text box!",
+		"\nn: with different speaking parts",
+		"\nn: uwu")
+	var page_content := str(
+		"[color=#fd99f9]",
+		"a: amber",
+		"\nn: narrator",
+		"\nEND ACTORS[/color]\n",
+		"\nLINE",
+		"\na: this first line will be ingested",
+		"\nn: with different speaking parts",
+		"\nn: uwu\n",
+		"\nLINE",
+		"\nn: This is a second line",
+		"\nh: wow im not defined",
+		"\na: uuuuuuuuu",
+		"\n\nPAGE\n",
+		"\nLINE",
+		"\nn: a second page",
+		"\nn: waow",
+	)
+	return Pages.editor.popup_accept_dialogue(str(
+		"At the top, declare the legend of [color=#fd99f9]actors[/color]. Separated by space. (If you omit the actors, [url=open-IngestionActorSetupWindow]Utility > Ingestion Actors[/url] will be used.)\n",
+		"Colors are for emphasis.\n\n",
+		"[b]Example For ", "Pages" if p_page else "Lines", ":[/b]",
+		"\n\n",
+		"[code][font_size=12]",
+		page_content if p_page else line_content,
+		"[/font_size][/code]",
+	),
+	"Ingestion Help",
+	at)
 
 
 func _on_visibility_changed() -> void:

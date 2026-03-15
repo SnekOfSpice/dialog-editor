@@ -58,6 +58,10 @@ func update_hint(new_text: String):
 		just_submitted = false
 	
 	var caret_pos = Vector2i(global_position)
+	
+	if DiisisEditorUtil.embedded:
+		caret_pos += Vector2i(EditorInterface.get_base_control().get_screen_position())
+	
 	caret_pos.x += int(get_caret_draw_pos().x)
 	caret_pos *= Pages.editor.content_scale
 	caret_pos.y += size.y
@@ -65,14 +69,17 @@ func update_hint(new_text: String):
 	$ArgHint.position = caret_pos
 
 func _on_gui_input(event: InputEvent) -> void:
-	if Input.is_key_pressed(KEY_DOWN):
-		virtual_hint_line += 1
-		if virtual_hint_line >= $ArgHint.get_hint_line_count():
-			virtual_hint_line = 0
-	if Input.is_key_pressed(KEY_UP):
-		virtual_hint_line -= 1
-		if virtual_hint_line < 0:
-			virtual_hint_line = $ArgHint.get_hint_line_count() - 1
+	if event is InputEventKey:
+		if not event.is_echo() and event.is_pressed():
+			if event.keycode == KEY_DOWN:
+				virtual_hint_line += 1
+				if virtual_hint_line >= $ArgHint.get_hint_line_count():
+					virtual_hint_line = 0
+		
+			if event.keycode == KEY_UP:
+					virtual_hint_line -= 1
+					if virtual_hint_line < 0:
+						virtual_hint_line = $ArgHint.get_hint_line_count() - 1
 	just_submitted = false
 	
 	update_hint(text)

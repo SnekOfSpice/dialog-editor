@@ -5,6 +5,7 @@ extends Screen
 
 func _ready() -> void:
 	super()
+	%CloseWidget.find_child("Button").grab_focus()
 
 func _input(event: InputEvent) -> void:
 	super(event)
@@ -18,12 +19,10 @@ func handle_payload(payload:Dictionary):
 	find_child("QuitContainer").visible = payload.get("allow_quit", false)
 	
 
-func _on_button_pressed() -> void:
-	close()
 
 
 func _on_quit_button_pressed() -> void:
-	if GameWorld.stage_root.stage == CONST.STAGE_GAME:
+	if SceneLoader.in_game:
 		Options.save_gamestate()
 	Options.save_prefs()
 	get_tree().quit()

@@ -10,7 +10,7 @@ class_name LineReader
 
 ## Text speed at which text will be shown instantly instead of gradually revealed.
 const MAX_TEXT_SPEED := 201
-const UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label", "prompt_finished", "prompt_unfinished"]
+const _UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_container", "name_container", "name_label", "prompt_finished", "prompt_unfinished"]
 
 ## Determines how the name of the currently speaking actor is displayed. All options
 ## respect [member name_map] and [member color_map].
@@ -23,23 +23,46 @@ enum NameStyle {
 	None,
 }
 
+
+enum TextFlow{
+	## The text will smoothly grow across [member body_label].
+	Smooth,
+	## Each word will be read one word at a time instead of character by character.
+	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
+	FullWords,
+	## The text will be broken up along spaces.
+	## [br]Each word will smoothly grow across [member body_label].
+	## [br][b]Note:[/b] Incompatible with rubies.
+	SmoothSingle,
+	## Each word will be displayed individually and instantly, broken along spaces.
+	## This is equivalent to using [enum TextFlow.SmoothSingle] with [member text_speed] set to [constant MAX_TEXT_SPEED].
+	## [br][b]Note:[/b] Incompatible with rubies.
+	FullWordsSingle
+}
+
+
 ## Find an extensive tutorial on how to set up your [LineReader] on GitHub!
-## @tutorial(Quick Start Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/LineReader-&-Parser
-## @tutorial(Visual Novel Guide): https://github.com/SnekOfSpice/dialog-editor/wiki/Using-the-visual-novel-template
+## @tutorial(Quick Start Guide): https://snekofspice.github.io/diisis-docs/Getting-Started/LineReader--and--Parser
+## @tutorial(Visual Novel Guide): https://snekofspice.github.io/diisis-docs/VN-Template-Guide/
 
 @export_group("Text")
 @export_subgroup("Cadence")
 ## Speed at which characters are shown, in characters/second. Set to [constant MAX_TEXT_SPEED] for instant text instead.[br]
-## If [member full_words] is [code]true[/code], will instead pause between words for [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 @export_range(1.0, MAX_TEXT_SPEED, 1.0) var text_speed := 60.0
 ## Complete override of other text speed settings, including [member text_speed] and [code]<ts_*>[/code] tags.[br][br]
 ## Set to [code]-1[/code] (default) to disable.
 @export_range(-1.0, MAX_TEXT_SPEED, 1.0) var custom_text_speed_override := -1.0
-## If true, the text will be read one word at a time instead of character by character.
-@export var full_words := false
+## Determines the text flow of characters when [member text_speed] isn't [constant MAX_TEXT_SPEED].
+@export var text_flow : TextFlow = TextFlow.Smooth
+var _full_words := false:
+	get():
+		return text_flow in [TextFlow.FullWords,TextFlow.FullWordsSingle]
+var _single_words := false:
+	get():
+		return text_flow in [TextFlow.SmoothSingle,TextFlow.FullWordsSingle]
 ## The delay that <ap> tags imply, in seconds.
 @export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_pause_duration := 0.2
-## Disables input-based calls of [method advance].
+## Disables user-based calls of [method request_advance].
 ## Instead, when hitting the end of a line or <mp> tag, LineReader
 ## will wait [param auto_continue_delay] seconds until continuing automatically.
 @export var auto_continue := false:
@@ -47,7 +70,10 @@ enum NameStyle {
 		auto_continue = value
 		notify_property_list_changed()
 ## If [member auto_continue] is [code]true[/code], this is the time before the line reader automatically continues, in seconds.
-@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_continue_delay := 0.2
+@export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_continue_delay := 0.2:
+	set(value):
+		auto_continue_delay = value
+		_auto_continue_duration = value
 var _auto_continue_duration:= auto_continue_delay
 ## If [code]true[/code], shows [param text_container] when choices are presented.
 @export_subgroup("Show Text During", "show_text_during")
@@ -61,13 +87,14 @@ var _auto_continue_duration:= auto_continue_delay
 @export var allow_mid_line_advance := true
 
 @export_group("Name Display")
+## Maps display styles to a [LineReaderActorConfig], keyed by the values set in the Speaker Stringset in DIISIS.
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
-## If the newly speaking actor name is in this array, the name label will be hidden alltogether.
+## If the newly speaking actor name is in this array, the name label will be hidden altogether.
 @export var blank_names : Array[String] = []
-## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
+## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
 ## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
 #@export var name_map : Dictionary[String, String] = {}
-## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Dropdown in DIISIS.
+## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
 #@export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
@@ -124,9 +151,8 @@ var name_container: Control:
 		choice_container = value
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
-@export
 ## Container to which all choices get parented.
-var choice_list:Container:
+@export var choice_list:Container:
 	get:
 		return choice_list
 	set(value):
@@ -157,6 +183,7 @@ var choice_list:Container:
 @export var body_label_word_wrappers : Dictionary[String, String]
 ## Prefix before the name.
 @export var name_prefix : String
+## Suffix after the name.
 @export var name_suffix : String
 ## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
 ## Each call will replace the text as it gets passed along the array.
@@ -171,6 +198,7 @@ var choice_list:Container:
 ##     return text
 ## [/codeblock]
 @export var body_label_function_funnel : Array[String]
+## When [member chatlog_enabled] is [code]false[/code], this property colors the text of [member body_label] according to the respective actor color.
 @export var body_label_tint_lines := false
 @export_subgroup("Past Lines")
 ## If [code]true[/code], the LineReader will add a copy of its text to [member past_lines_container] whenever the text of [member body_label] is reset.[br]
@@ -203,7 +231,7 @@ var _last_raw_name := ""
 ## Since rubies are commonly used by learners of a language and/or for uncommon words, disabling this setting
 ## can be used for a more challenging reading experience without removing the tags
 ## from the DIISIS script. [br]
-## [b]Note: [signal ParserEvents.rubies_built] will not be called. The robues will not be hidden, will not exist alltogether.
+## [b]Note: [signal ParserEvents.rubies_built] will not be called. The robues will not be hidden, will not exist altogether.
 @export var ruby_enabled := true
 enum RubySizeMode {
 	## Centers the ruby above its base line.
@@ -213,11 +241,20 @@ enum RubySizeMode {
 	## Stretches the ruby across the entire base line, left-adjusted.
 	Stretch,
 }
+## Determines the growth and positioning behavior of generated rubies.
 @export var ruby_size_mode : RubySizeMode = RubySizeMode.Center
 ## Font size factor for rubies, relative to the normal font size of [member body_label].
+## This property also lightly affects the vertical positioning of rubies. Note that [member ruby_offset] also affects the vertical positioning of rubies.
 @export_range(0.1, 1, 0.01) var ruby_scale := 0.8
 ## [Font] override for rubies. If empty, uses the normal font of [member body_label].
 @export var ruby_font_override : Font
+## Offset for all generated rubies. Note that [member ruby_scale] also affects the vertical positioning of rubies.
+@export var ruby_offset := Vector2.ZERO:
+	set(value):
+		var diff := value - ruby_offset
+		for ruby in _ruby_labels:
+			ruby.position += diff
+		ruby_offset = value
 @export_subgroup("Chatlog", "chatlog")
 ## If true, and dialog syntax is used (default in DIISIS), the text inside a Text Line will instead
 ## be formatted like a chatlog, where all speaking parts are concatonated and speaking names are tinted in the colors set in [member chatlog_color_map].[br]
@@ -232,7 +269,9 @@ enum RubySizeMode {
 @export var chatlog_include_body_label_actor_prefix := false
 ## If set, the actor's suffix from [member body_label_suffix_by_actor] will also be suffixed to the chatlog.
 @export var chatlog_include_body_label_actor_suffix := false
+## Prefix string when [member chatlog_enabled] is true.
 @export var chatlog_line_prefix := "[code]"
+## Suffix string when [member chatlog_enabled] is true.
 @export var chatlog_line_suffix := "[/code]"
 
 @export_group("Advanced UX")
@@ -284,33 +323,27 @@ var prompt_finished: Control:
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 var _remaining_prompt_delay := input_prompt_delay
-@export_subgroup("Terminator")
-enum TerminatorStyle {
-	## No terminator will be added.
-	None,
-	## A floating [Label] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text.
-	Text,
-	## A floating [RichTextLabel] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text, with BBCode enabled.
-	RichText,
-	## A floating [TextureRect] will be added to the end of the text in [member body_label]. [member terminator_texture] will be its texture.
-	Texture,
-	## A floating [Control] will be added to the end of the text in [member body_label]. [member terminator_scene] will be its child.
-	Scene
-}
-var terminator_node : Control
-## A terminator is a visual element denoting the end of the current line in [member body_label]. It will be hidden if the full text is visible, i.e. [member RichTextLabel.visible_ratio] is [code]1.0[/code].
+@export_subgroup("Terminator", "terminator_")
+var _terminator_node_complete : Control
+var _terminator_node_incomplete : Control
+## Terminator that is visible when all characters of [member body_label] are visible.
 ## [br][br]
-## [b]Note:[/b] Currently the spacing is kinda fucked up if you use bbcode in your [member body_label].
-@export var terminator_style : TerminatorStyle = TerminatorStyle.None:
+## See [TerminatorData] for more information.
+@export var terminator_data_complete : TerminatorData
+## Terminator that is visible when [i]not[/i] all characters of [member body_label] are visible.
+## [br][br]
+## See [TerminatorData] for more information.
+@export var terminator_data_incomplete : TerminatorData
+## Offset for the terminators generated from [terminator_data_complete] and [terminator_data_incomplete].
+@export var terminator_offset := Vector2.ZERO:
 	set(value):
-		terminator_style = value
-		notify_property_list_changed()
-## Text set into the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_text := ""
-## Texture loaded into the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_texture : Texture
-## Scene instanced as a child of the terminator. See [enum TerminatorStyle] for more info.
-@export var terminator_scene : PackedScene
+		var diff := value - terminator_offset
+		if _terminator_node_incomplete:
+			_terminator_node_incomplete.position += diff
+		if _terminator_node_complete:
+			_terminator_node_complete.position += diff
+		terminator_offset = value
+
 @export_group("Internal Config")
 ## [signal stop_accepting_advance] and [signal start_accepting_advance] will be fired synchronized with the
 ## internal state if true, since that blocks [method request_advance()].
@@ -347,10 +380,11 @@ var terminator_node : Control
 @export var warn_advance_on_terminated := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param auto_continue] is true.
 @export var warn_advance_on_auto_continue := true
-## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param awaiting_inline_call] is true.
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param _awaiting_inline_call] is true.
 @export var warn_advance_on_awaiting_inline_call := true
 ## Emits a warning when the LineReader didn't advance after [method request_advance] was called because choices are being presented and [param block_advance_during_choices] is true.
 @export var warn_advance_on_choices_presented := true
+## Emits a warning when the LineReader didn't advance after [method request_advance] was called because [param custom_blockers] is greater than 0.
 @export var warn_advance_on_custom_blockers := true
 @export_subgroup("Misc")
 ## Serializes and deserializes the [member visibility] property of all UI nodes [LineReader] references.
@@ -425,22 +459,6 @@ func _validate_property(property: Dictionary):
 		if property.name in ["input_prompt_delay", "input_prompt_lerp_weight", "prompt_finished", "prompt_unfinished"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	
-	match terminator_style:
-		TerminatorStyle.None:
-			if property.name in ["terminator_text", "terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Text:
-			if property.name in ["terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.RichText:
-			if property.name in ["terminator_texture", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Texture:
-			if property.name in ["terminator_text", "terminator_scene"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Scene:
-			if property.name in ["terminator_texture", "terminator_text"]:
-				property.usage = PROPERTY_USAGE_NO_EDITOR
 
 ## Generates a [Dictionary] contained the full state of [LineReader].[br]
 ## Used by [Parser] to call [method deserialize].
@@ -495,6 +513,8 @@ func _serialize() -> Dictionary:
 		result["ui_visibilities"] = get_ui_visibilities()
 	if body_label:
 		result["visible_characters"] = body_label.visible_characters
+	result["text_flow"] = text_flow
+	result["_yield_instruction_to_advance"] = _yield_instruction_to_advance
 	
 	return result
 
@@ -542,6 +562,8 @@ func _deserialize(data: Dictionary):
 	terminated = data.get("terminated")
 	_text_delay = data.get("_text_delay", _text_delay)
 	_text_speed_by_character_index = data.get("text_speed_by_character_index", [])
+	text_flow = data.get("text_flow", text_flow)
+	_yield_instruction_to_advance = data.get("_yield_instruction_to_advance", false)
 	
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
 	
@@ -649,8 +671,8 @@ func _ready() -> void:
 	
 	if body_label:
 		body_label.visible_ratio = 0
-		body_label.bbcode_enabled = true
 		body_label.text = ""
+		body_label.bbcode_enabled = true
 		set_body_label(body_label)
 	if name_label:
 		name_label.text = ""
@@ -683,7 +705,7 @@ func apply_preferences(prefs:Dictionary):
 
 ## While [member custom_blockers] is [i]greater than[/i] 0, calls to [method request_advance] will fail. This property is intended to be used by parts of the game outside of the players control, such as forcing voicelines to play out.
 ## If an [code]<advance>[/code] tag was hit while [member custom_blockers] was more than 0, once the last blocker is removed, LineReader will advance on its own. [member auto_continue] will also be paused while there are more than 0 blockers.
-## [br]See [method add_custom_blocker] [method clear_custom_blockers] [method remove_custom_blocker]
+## [br]See [method add_custom_blocker], [method clear_custom_blockers], and [method remove_custom_blocker].
 var custom_blockers := 0
 ## Adds 1 to [member custom_blockers].
 func add_custom_blocker():
@@ -700,7 +722,7 @@ func _set_custom_blockers(new_value:int):
 	_is_advance_blocked = is_advance_blocked(false, false)
 	_update_input_prompt(0)
 
-
+var _yield_instruction_to_advance := false
 ## you can use this to poll the internal state
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
 	if Engine.is_editor_hint():
@@ -714,7 +736,7 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 			push_warning("Cannot advance because Parser.paused is true.")
 		return true
 	if is_executing:
-		if warn_advance_on_executing and include_warnings:
+		if warn_advance_on_executing and include_warnings and not _yield_instruction_to_advance:
 			push_warning("Cannot advance because is_executing is true.")
 		return true
 	if terminated:
@@ -727,7 +749,7 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 		return true
 	if awaiting_inline_call:
 		if warn_advance_on_awaiting_inline_call and include_warnings:
-			push_warning("Cannot advance because awaiting_inline_call is true.")
+			push_warning("Cannot advance because _awaiting_inline_call is true.")
 		return true
 	if _is_choice_presented() and block_advance_during_choices:
 		if warn_advance_on_choices_presented and include_warnings:
@@ -752,11 +774,10 @@ func advance():
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
+	_yield_instruction_to_advance = false
 	if auto_continue:
 		_auto_continue_duration = auto_continue_delay
 	if _showing_text:
-		_lead_time = 0.0
-		_full_word_timer = 0
 		if body_label.visible_ratio >= 1.0:
 			if _dialog_line_index >= _dialog_lines.size() - 1:
 				_remaining_prompt_delay = input_prompt_delay
@@ -782,6 +803,8 @@ func advance():
 	else:
 		emit_signal("line_finished", line_index)
 	
+	_lead_time = 0.0
+	_full_word_timer = 0.0
 	ParserEvents.advanced.emit()
 
 ## Go back up the dialogue tree, if possible. Pushes an appropriate warning if it fails.
@@ -804,7 +827,7 @@ func interrupt(hide_controls := true):
 	ParserEvents.line_reader_interrupted.emit(self)
 	Parser.set_paused(true)
 	if hide_controls:
-		for key in UI_PROPERTIES:
+		for key in _UI_PROPERTIES:
 			visibilities_before_interrupt[key] = get(key).visible
 			get(key).visible = false
 
@@ -812,7 +835,7 @@ func interrupt(hide_controls := true):
 ## Takes in optional arguments to be passed to [Parser] upon continuing. If [param read_page] is [code]-1[/code] (default), the Parser will read exactly where it left off.
 ## @experimental
 func continue_after_interrupt(read_page := -1, read_line := 0):
-	for key in UI_PROPERTIES:
+	for key in _UI_PROPERTIES:
 		if not visibilities_before_interrupt.has(key):
 			push_warning("Visibilities after interrupt have not been set")
 		else:
@@ -825,7 +848,7 @@ func continue_after_interrupt(read_page := -1, read_line := 0):
 
 func get_ui_visibilities() -> Dictionary:
 	var result := {}
-	for property in UI_PROPERTIES:
+	for property in _UI_PROPERTIES:
 		if not get(property): continue
 		result[property] = get(property).visible
 	return result
@@ -837,6 +860,8 @@ func apply_ui_visibilities(data:Dictionary):
 		prop.set("visible", data.get(property))
 
 func _on_instruction_wrapped_completed():
+	if _yield_instruction_to_advance:
+		return
 	emit_signal("line_finished", line_index)
 
 func _close(_terminating_page):
@@ -876,8 +901,6 @@ func _read_new_line(new_line: Dictionary):
 			emit_signal("line_finished", last_line_index)
 			return
 	
-	_handle_header(_line_data.get("header"))
-	
 	var raw_content = _line_data.get("content")
 	var content = _line_data.get("content").get("content")
 	var content_address
@@ -894,7 +917,7 @@ func _read_new_line(new_line: Dictionary):
 				content = full_body_replacement
 	var content_name = _line_data.get("content").get("name")
 	
-	#for key in UI_PROPERTIES:
+	#for key in _UI_PROPERTIES:
 		#get(key).visible = get
 	text_container.visible = _can_text_container_be_visible()
 	_showing_text = line_type == DIISIS.LineType.Text
@@ -998,6 +1021,8 @@ func _read_new_line(new_line: Dictionary):
 			
 			if not _reverse_next_instruction:
 				text = instruction_content.get("meta.text")
+				_has_received_execute_callback = new_line.get("content").get("advance_yield", false)
+				_yield_instruction_to_advance = _has_received_execute_callback
 			else:
 				text = instruction_content.get("meta.reverse_text", "")
 			
@@ -1012,6 +1037,7 @@ func _read_new_line(new_line: Dictionary):
 				_remaining_prompt_delay = input_prompt_delay
 				
 				return
+			
 			_wrapper_execute(text, delay_before, delay_after)
 		DIISIS.LineType.Folder:
 			if not _line_data.get("content", {}).get("meta.contents_visible", true):
@@ -1022,10 +1048,64 @@ func _read_new_line(new_line: Dictionary):
 	
 	_reverse_next_instruction = false
 
+
+# returns index, string pair
+func _find_next_speaking_line_index(text : String, from : int) -> Array:
+	var next_break_index : int = -1
+	var next_break_string : String = ""
+	if _single_words:
+		var scan_index := from
+		while scan_index < text.length():
+			if text[scan_index] == " ":
+				next_break_index = scan_index
+				next_break_string = " "
+				break
+			if text[scan_index] == "<":
+				scan_index = text.find(">", scan_index)
+				if scan_index == -1:
+					break
+			if text[scan_index] == "[":
+				scan_index = text.find("]", scan_index)
+				if text.length() >= scan_index + 3:
+					if (
+					text[scan_index + 1] == "i" and
+					text[scan_index + 2] == "m" and
+					text[scan_index + 3] == "g"):
+						scan_index = text.find("[/img]", scan_index) + 4
+					elif (
+						text[scan_index + 1] == "u" and
+						text[scan_index + 2] == "r" and
+						text[scan_index + 3] == "l"):
+							scan_index = text.find("[/url]", scan_index) + 4
+				if scan_index == -1:
+					break
+			scan_index += 1
+		#var space_pos := text.find(" ", from)
+		#if space_pos > -1:
+			#var tag_end := max(text.find(">"), text.find("]"))
+			#if tag_end > space_pos:
+				#space_pos = text.find(" ", tag_end)
+			#if space_pos != -1:
+				#next_break_index = space_pos
+				#next_break_string = " "
+	
+	var lc_position := text.find("<lc>", from)
+	if lc_position < next_break_index and lc_position != -1:
+		next_break_index = lc_position
+		next_break_string = "<lc>"
+	if next_break_index == -1 and lc_position != -1:
+		next_break_index = lc_position
+		next_break_string = "<lc>"
+	
+	return [next_break_index, next_break_string]
+
 func _replace_lc_tags(full_line_text:String) -> String:
-	var lc_position := full_line_text.find("<lc>")
-	while lc_position != -1:
-		var context_start := full_line_text.rfind("[]>", lc_position)
+	var r := _find_next_speaking_line_index(full_line_text, 0)
+	var next_break_index : int = r[0]
+	var next_break_string : String = r[1]
+	
+	while next_break_index != -1:
+		var context_start := full_line_text.rfind("[]>", next_break_index)
 		var actor : String
 		if full_line_text.find("{", context_start) != -1:
 			var context_end : int = min(
@@ -1035,14 +1115,26 @@ func _replace_lc_tags(full_line_text:String) -> String:
 		else:
 			var context_end : int = full_line_text.find(":", context_start)
 			actor = full_line_text.substr(context_start + 3, context_end - (context_start + 3))
-		full_line_text = full_line_text.erase(lc_position, "<lc>".length())
-		full_line_text = full_line_text.insert(lc_position, "\n[]>%s:" % actor)
-		lc_position = full_line_text.find("<lc>")
+		# handle single words
+		full_line_text = full_line_text.erase(next_break_index, next_break_string.length())
+		full_line_text = full_line_text.insert(next_break_index, "\n[]>%s:" % actor)
+		
+		# handle suingle words again
+		r = _find_next_speaking_line_index(full_line_text, next_break_index)
+		next_break_index = r[0]
+		next_break_string = r[1]
+	
 	return full_line_text
 
 
 func _get_prepend_separator_sequence() -> String:
-	return str(" " if inline_name_space_prefix else "", inline_name_separator, " " if inline_name_space_suffix else "")
+	var sep : String
+	if inline_name_separator == "\\n":
+		sep = "\n"
+	else:
+		sep = inline_name_separator
+	
+	return str(" " if inline_name_space_prefix else "", sep, " " if inline_name_space_suffix else "")
 
 func _get_end_of_chunk_position() -> int:
 	if _pause_positions.size() == 0:
@@ -1063,7 +1155,9 @@ func _get_current_text_speed() -> float:
 	
 	return current_text_speed
 
-func _process(delta: float) -> void:
+# we use physics process because there's a delta spike on startup and that can mess with _full_word_timer
+# and afaik there's no other reason to use either process or physics process
+func _physics_process(delta: float) -> void:#(delta: float) -> void:
 	# this is a @tool script so this prevents the console from getting flooded
 	if Engine.is_editor_hint():
 		return
@@ -1081,29 +1175,31 @@ func _process(delta: float) -> void:
 	_update_input_prompt(delta)
 	
 	if is_executing:
-		if delay_before > 0:
-			delay_before -= delta
+		if _delay_before > 0:
+			_delay_before -= delta
 			return
 		
-		if not has_executed:
-			ParserEvents.instruction_started_after_delay.emit(execution_text, delay_before)
-			has_executed = true
-			has_received_execute_callback = not _execute(execution_text)
+		if not _has_executed:
+			ParserEvents.instruction_started_after_delay.emit(_execution_text, _delay_before)
+			_has_executed = true
+			_has_received_execute_callback = not _execute(_execution_text)
 		
-		if not has_received_execute_callback:
+		if not _has_received_execute_callback:
 			return
 		
-		if delay_after > 0:
-			delay_after -= delta
-			if delay_after <= 0:
-				ParserEvents.instruction_completed.emit(execution_text, delay_after)
-				emitted_complete = true
+		if _delay_after > 0:
+			if _delay_after_max == _delay_after:
+				ParserEvents.instruction_completed.emit(_execution_text, _delay_after_max)
+			_delay_after -= delta
+			if _delay_after <= 0:
+				ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after_max)
+				_emitted_complete = true
 			return
-		elif not emitted_complete:
-			ParserEvents.instruction_completed.emit(execution_text, delay_after)
+		elif not _emitted_complete:
+			ParserEvents.instruction_completed.emit(_execution_text, _delay_after_max)
 		
 		_on_instruction_wrapped_completed()
-		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after_max)
 		
 		is_executing = false
 		return
@@ -1123,33 +1219,41 @@ func _process(delta: float) -> void:
 		return
 	
 	var current_text_speed := _get_current_text_speed()
-	
 	if _next_pause_position_index < _pause_positions.size() and _next_pause_position_index != -1:
 		_find_next_pause()
 	if body_label.visible_characters < _get_end_of_chunk_position():
 		if current_text_speed == MAX_TEXT_SPEED:
 			body_label.visible_characters = _get_end_of_chunk_position()
 		else:
+			var parsed_text := body_label.get_parsed_text()
 			var old_text_length : int = body_label.visible_characters
-			if full_words:
-				var next_space_position = body_label.get_parsed_text().find(" ", body_label.visible_characters + 1)
+			if _full_words:
+				var next_space_position = parsed_text.find(" ", body_label.visible_characters + 1) + 1
+				if next_space_position == 0:
+					next_space_position = -1
 				if body_label.visible_ratio != 1:
 					_full_word_timer -= delta
 				if _full_word_timer <= 0 or old_text_length == 0:
 					body_label.visible_characters = min(next_space_position, _get_end_of_chunk_position())
 					_full_word_timer = (MAX_TEXT_SPEED / current_text_speed) * delta * 5.0 # avg word length whatever
 			else:
-				body_label.visible_ratio += (float(current_text_speed) / body_label.get_parsed_text().length()) * delta
+				body_label.visible_ratio += get_body_label_progress_step(float(current_text_speed), parsed_text, delta)
 			# fast text speed can make it go over the end  of the chunk
 			body_label.visible_characters = min(body_label.visible_characters, _get_end_of_chunk_position())
 			if old_text_length != body_label.visible_characters:
 				ParserEvents.visible_characters_changed.emit(old_text_length, body_label.visible_characters)
-				if terminator_node:
-					terminator_node.position = get_body_label_text_draw_pos(body_label.visible_characters + 1)
-					var font : Font = body_label.get_theme_font("normal_font", "RichTextLabel")
-					terminator_node.position.y -= font.get_height(body_label.get_theme_font_size("normal_font", "RichTextLabel")) * 1.5
-					
-					terminator_node.visible = body_label.visible_ratio != 1
+				
+				var vis := body_label.visible_characters
+				if vis == -1:
+					vis = body_label.get_parsed_text().length()
+				
+				if _terminator_node_incomplete:
+					_terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					_terminator_node_incomplete.visible = body_label.visible_ratio != 1
+				if _terminator_node_complete:
+					_terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
+					_terminator_node_complete.visible = body_label.visible_ratio == 1
+	
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
 		_remaining_auto_pause_duration -= delta
@@ -1161,7 +1265,7 @@ func _process(delta: float) -> void:
 	for label : RubyLabel in _ruby_labels:
 		label.handle_parent_visible_characters(body_label.visible_characters)
 	
-	var new_characters_visible_so_far = body_label.text.substr(0, body_label.visible_characters)
+	var new_characters_visible_so_far = body_label.get_parsed_text().substr(0, body_label.visible_characters)
 	var new_characters : String = new_characters_visible_so_far.trim_prefix(_characters_visible_so_far)
 	if " " in new_characters:
 		var split_new_characters : Array = new_characters.split(" ")
@@ -1181,6 +1285,12 @@ func _process(delta: float) -> void:
 				_remove_spaces_and_send_word_read_event(_remove_symbols(_started_word_buffer))
 				_started_word_buffer = ""
 	_characters_visible_so_far = new_characters_visible_so_far
+	if _characters_visible_so_far.length() == body_label.get_parsed_text().length() and not _started_word_buffer.is_empty():
+		var split_rest : Array = _started_word_buffer.split(" ")
+		for word : String in split_rest:
+			_remove_spaces_and_send_word_read_event(_remove_symbols(word))
+		_started_word_buffer = ""
+			
 	
 	if current_text_speed < MAX_TEXT_SPEED:
 		if _last_visible_ratio < 1.0 and body_label.visible_ratio >= 1.0:
@@ -1514,6 +1624,7 @@ func _insert_strings_in_current_dialine():
 	for entity in DIISIS.HTML_ENTITIES.keys():
 		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	
+	_prepend_length = 0
 	# prepend name
 	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
 		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
@@ -1525,7 +1636,12 @@ func _insert_strings_in_current_dialine():
 			new_text
 			)
 		
-		_prepend_length = _full_prefix.length()
+		var label := RichTextLabel.new()
+		label.bbcode_enabled = true
+		add_child(label)
+		label.text = _full_prefix
+		_prepend_length = label.get_parsed_text().length()
+		label.queue_free()
 	
 	
 	new_text = str(
@@ -1618,6 +1734,7 @@ func _handle_tags_and_start_reading():
 		var comments_at_index : Array = _comments.get(scan_index, [])
 		var previous_tag_buffer := tag_buffer
 		var tag_buffer_gained := 0
+		#var pause_buffer_gained := 0
 		if bbcode_removed_text[scan_index] == "<":
 			if bbcode_removed_text.find("<strpos>", scan_index) == scan_index:
 				notify_positions.append(scan_index - tag_buffer)
@@ -1634,9 +1751,21 @@ func _handle_tags_and_start_reading():
 				target_length -= tag_string.length()
 				tag_buffer += tag_string.length()
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
+				if not _pause_positions.has(scan_index + tag_buffer):
+					_pause_positions.append(scan_index + tag_buffer)
+					_pause_types.append(_PauseTypes.Manual)
 				tag_buffer += 4
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
+				scan_index = max(scan_index - 4, -1)
+				target_length -= 4
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
+				if not _pause_positions.has(scan_index + tag_buffer):
+					_pause_positions.append(scan_index + tag_buffer)
+					_pause_types.append(_PauseTypes.Auto)
 				tag_buffer += 4
+				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
+				scan_index = max(scan_index - 4, -1)
+				target_length -= 4
 			elif bbcode_removed_text.find("<call:", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
@@ -1675,7 +1804,8 @@ func _handle_tags_and_start_reading():
 					_ruby_indices.append(Vector2i(scan_index, tag_end)) # we dont compensate for tag length because we do that on a universal level later on each loop iteration further down
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, tag_length)
 				# for some reason this erasure doesn't register here already so we have to leftshift the end tag erasure manually by the tag length
-				bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
+				if tag_end != -1:
+					bbcode_removed_text = bbcode_removed_text.erase(tag_end - tag_length, end_length)
 				target_length -= tag_string.length() + end_length
 				tag_buffer += tag_string.length() + end_length
 			
@@ -1688,6 +1818,7 @@ func _handle_tags_and_start_reading():
 					_ruby_indices[k] = Vector2i(indices.x, indices.y - tag_buffer_gained)
 				k += 1
 		
+		
 		_text_speed_by_character_index.append(text_speed_override)
 		_text_speed_by_character_index[scan_index_calls] = text_speed_override
 		if not call_strings_at_index.is_empty():
@@ -1698,19 +1829,7 @@ func _handle_tags_and_start_reading():
 		call_strings_at_index.clear()
 		comments_at_index.clear()
 	_text_speed_by_character_index.resize(target_length)
-	scan_index = 0
-	while scan_index < bbcode_removed_text.length():
-		if bbcode_removed_text[scan_index] == "<":
-			if bbcode_removed_text.find("<mp>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
-					_pause_types.append(_PauseTypes.Manual)
-			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
-				if not _pause_positions.has(scan_index):
-					_pause_positions.append(scan_index)
-					_pause_types.append(_PauseTypes.Auto)
-				
-		scan_index += 1
+
 	
 	_pause_positions.append(bbcode_removed_text.length()-1)
 	_pause_types.append(_PauseTypes.EoL)
@@ -1742,11 +1861,11 @@ func _handle_tags_and_start_reading():
 	if _raw_name_was_empty:
 		_lead_time = Parser.text_lead_time_same_actor
 	
-	_prepend_length = 0
-	if name_style == NameStyle.None and name_container:
-		name_container.modulate.a = 0.0
-	elif name_style == NameStyle.Prepend:
-		name_container.modulate.a = 0.0
+	if name_container:
+		if name_style == NameStyle.None:
+			name_container.modulate.a = 0.0
+		elif name_style == NameStyle.Prepend:
+			name_container.modulate.a = 0.0
 		
 	
 	if body_label_tint_lines and not chatlog_enabled:
@@ -1759,26 +1878,29 @@ func _handle_tags_and_start_reading():
 	ParserEvents.notify_string_positions.emit(notify_positions)
 
 func _ensure_ruby_container(on_label:=body_label):
-	if not ruby_containers_by_label.get(on_label):
+	if not _ruby_containers_by_label.get(on_label):
 		var ruby_root = ScrollContainer.new()
+		ruby_root.clip_contents = false
 		ruby_root.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 		ruby_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_root.focus_mode = Control.FOCUS_NONE
 		ruby_root.custom_minimum_size = on_label.size
-		ruby_roots_by_label[on_label] = ruby_root
-		var vbox = VBoxContainer.new()
-		vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_ruby_roots_by_label[on_label] = ruby_root
+		#var vbox = VBoxContainer.new()
+		#vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		#vbox.focus_mode = Control.FOCUS_NONE
+		#vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var ruby_container = Control.new()
 		ruby_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ruby_container.focus_mode = Control.FOCUS_NONE
 		#ruby_container.clip_contents = on_label.scroll_active
 		ruby_container.custom_minimum_size = on_label.size
-		ruby_containers_by_label[on_label] = ruby_container
+		_ruby_containers_by_label[on_label] = ruby_container
 		
-		ruby_root.add_child(vbox)
-		vbox.add_child(ruby_container)
-		var spacer := vbox.add_spacer(false)
-		spacer.custom_minimum_size.y = 1000
+		ruby_root.add_child(ruby_container)
+		#vbox.add_child(ruby_container)
+		#var spacer := vbox.add_spacer(false)
+		#spacer.custom_minimum_size.y = 1000
 		
 		on_label.add_child(ruby_root)
 
@@ -1789,24 +1911,28 @@ func set_ruby_enabled(value:bool):
 func _update_ruby_root_scroll(value:float, root:ScrollContainer):
 	root.set_v_scroll(value)
 
-var ruby_containers_by_label := {}
-var ruby_roots_by_label := {}
+var _ruby_containers_by_label := {}
+var _ruby_roots_by_label := {}
 func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _ruby_indices, ruby_strings : Array = _ruby_strings) -> void:
 	if not ruby_enabled:
 		return
+	if _single_words:
+		if not ruby_indices.is_empty():
+			push_warning("Selected text_flow (value %s) is not compatible with rubies." % text_flow)
+		return
 	on_label.clip_contents = false
 	_ensure_ruby_container(on_label)
-	ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
+	_ruby_containers_by_label[on_label].name = "RubyContainer" # oh god this is bad
 	if on_label == body_label:
 		for label : RubyLabel in _ruby_labels:
 			label.queue_free()
 		_ruby_labels.clear()
 	
 	if not on_label.get_v_scroll_bar().value_changed.is_connected(_update_ruby_root_scroll):
-		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(ruby_roots_by_label.get(on_label)))
+		on_label.get_v_scroll_bar().value_changed.connect(_update_ruby_root_scroll.bind(_ruby_roots_by_label.get(on_label)))
 	
 	_body_duplicate.visible_characters = 1
-	_body_duplicate_line_height = _body_duplicate.get_content_height()
+	#_body_duplicate_line_height = _body_duplicate.get_content_height()
 	
 	var ruby_index := 0
 	for ruby_range : Vector2i in ruby_indices:
@@ -1819,29 +1945,25 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		if start_draw_pos.y == end_draw_pos.y:
 			ruby_segment_indices.append(ruby_range)
 			word_segments.append(ruby_string)
-		else:
-			# split over lines
-			
+		else: # split over lines
+			# find where in the text of on_label the text starts splitting
 			var segment_start_index := ruby_range.x
-			_body_duplicate.text = on_label.text
 			var space_pos := segment_start_index
-			_body_duplicate.visible_characters = segment_start_index
-			var current_segment_draw_height : int = _body_duplicate.get_content_height()
+			var current_segment_draw_height : int = get_body_label_text_draw_pos(space_pos).y
 			var previeous_space_pos := segment_start_index
+			var parsed_text := on_label.get_parsed_text()
 			while space_pos != -1 and space_pos < ruby_range.y:
-				_body_duplicate.visible_characters = space_pos
-				var new_height := _body_duplicate.get_content_height()
+				var new_height := get_body_label_text_draw_pos(space_pos).y
 				if new_height > current_segment_draw_height:
 					ruby_segment_indices.append(Vector2i(segment_start_index, previeous_space_pos))
 					segment_start_index = space_pos
-					# end segment at current_segment_draw_height
 				current_segment_draw_height = new_height
 				previeous_space_pos = space_pos
-				space_pos = _body_duplicate.get_parsed_text().find(" ", space_pos + 1)
+				space_pos = parsed_text.find(" ", space_pos + 1)
 			
-
 			if segment_start_index < ruby_range.y:
 				ruby_segment_indices.append(Vector2i(segment_start_index, ruby_range.y + 1))
+			
 			# weigh the ruby across the segments
 			var ruby_incices_span_length : int = (ruby_range.y - ruby_range.x)
 			
@@ -1889,12 +2011,12 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		
 		# actually draw
 		var segment_index := 0
-		ruby_containers_by_label.get(on_label).global_position = on_label.global_position
+		_ruby_containers_by_label.get(on_label).global_position = on_label.global_position
 		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			if indices.x == last_index_end + 1:
-				print(word_segments[segment_index])
+			#if indices.x == last_index_end + 1:
+				#print(word_segments[segment_index])
 			var ruby = _build_ruby(on_label, indices, word_segments[segment_index])
 			ruby.segment_index = segment_index
 			segment_index += 1
@@ -1929,14 +2051,16 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	if ruby_font_override:
 		ruby_label.set_font(ruby_font_override)
 	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
-	ruby_containers_by_label.get(on_label).add_child(ruby_label)
+	_ruby_containers_by_label.get(on_label).size = Vector2.ZERO
+	_ruby_containers_by_label.get(on_label).add_child(ruby_label)
 	if on_label == body_label:
 		_ruby_labels.append(ruby_label)
 	
 	var draw_pos_x := get_body_label_text_draw_pos(indices.x, on_label)
 	var draw_pos_y := get_body_label_text_draw_pos(indices.y, on_label)
 	ruby_label.position = draw_pos_x
-	ruby_label.set_height(_body_duplicate_line_height)
+	
+	ruby_label.set_height(draw_pos_x.y)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
 	if _is_ruby_stretch(ruby_label.get_text()):
 		#print("drawing at ", draw_pos_x)
@@ -1947,46 +2071,64 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 		ruby_label.position.x += (base_width - ruby_label_width) * 0.5
 	
 	
-	ruby_label.position.y -= _body_duplicate_line_height * (1 + (0.4 * ruby_scale))
+	ruby_label.position.y -= body_label.get_line_height(0) * (1 + (0.4 * ruby_scale))
+	ruby_label.position += ruby_offset
 	
 	if on_label != body_label:
 		ruby_label.set_visible_ratio(1)
 	
 	return ruby_label
 
-func _ensure_terminator_node(on_label:RichTextLabel=body_label):
-	if terminator_node:
-		terminator_node.queue_free()
+func _ensure_terminator_nodes(on_label:RichTextLabel=body_label):
+	_ensure_terminator_node(true, on_label)
+	_ensure_terminator_node(false, on_label)
 	
-	if terminator_style == TerminatorStyle.None:
+func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_label):
+	var node_property := "_terminator_node_%scomplete" % ("" if for_complete else "in")
+	var data_property := "terminator_data_%scomplete" % ("" if for_complete else "in")
+	
+	if get(node_property):
+		get(node_property).queue_free()
+	
+	var terminator_data : TerminatorData = get(data_property)
+	
+	if not terminator_data:
+		return
+	
+	var terminator_node : Node
+	var terminator_style : TerminatorData.TerminatorStyle = get(data_property).get("terminator_style")
+	
+	
+	if terminator_style == TerminatorData.TerminatorStyle.None:
 		return
 	
 	match terminator_style:
-		TerminatorStyle.Text:
+		TerminatorData.TerminatorStyle.Text:
 			terminator_node = Label.new()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.text = terminator_text
-		TerminatorStyle.RichText:
+			terminator_node.text = terminator_data.terminator_text
+		TerminatorData.TerminatorStyle.RichText:
 			terminator_node = RichTextLabel.new()
 			terminator_node.fit_content = true
 			terminator_node.bbcode_enabled = true
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.text = terminator_text
+			terminator_node.text = terminator_data.terminator_text
 			terminator_node.custom_minimum_size = body_label.size
-		TerminatorStyle.Texture:
+		TerminatorData.TerminatorStyle.Texture:
 			terminator_node = TextureRect.new()
-			terminator_node.texture = terminator_texture
+			terminator_node.texture = terminator_data.terminator_texture
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-		TerminatorStyle.Scene:
+		TerminatorData.TerminatorStyle.Scene:
 			terminator_node = Control.new()
-			terminator_node.texture = terminator_texture
+			terminator_node.texture = terminator_data.terminator_texture
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.add_child(terminator_scene.instantiate())
+			terminator_node.add_child(terminator_data.terminator_scene.instantiate())
 	
+	set(node_property, terminator_node)
 	on_label.add_child(terminator_node)
 
 func _trim_trimmables(text:String) -> String:
@@ -2015,7 +2157,7 @@ func _ends_with_trimmable(text:String) -> bool:
 			return true
 	return false
 
-
+## Property to figure out if reading of lines is currently suspended because a function called by the [LineReader] returned [code]true[/code].
 var awaiting_inline_call := ""
 
 func _call_from_position(call_position: int):
@@ -2052,6 +2194,16 @@ func _emit_comment(comment_position:int):
 	_handled_comments.append(comment_position)
 	_comments.erase(comment_position)
 
+## [param for_label] is the body label you want the RichTextLabel for
+static func get_past_line_rich_text_label(for_label : RichTextLabel, text := "", ) -> RichTextLabel:
+	var past_line = RichTextLabel.new()
+	past_line.custom_minimum_size.x = for_label.custom_minimum_size.x
+	past_line.fit_content = true
+	past_line.bbcode_enabled = true
+	past_line.mouse_filter = Control.MOUSE_FILTER_PASS
+	past_line.text = text
+	return past_line
+
 
 func _preserve_into_past_line_container():
 	if not keep_past_lines:
@@ -2075,11 +2227,14 @@ func _preserve_into_past_line_container():
 			push_warning("past_line_label is not a RichTextLabel. Using default RichTextLabel.")
 
 	if not past_line:
-		past_line = RichTextLabel.new()
-		past_line.custom_minimum_size.x = body_label.custom_minimum_size.x
-		past_line.fit_content = true
-		past_line.bbcode_enabled = true
-		past_line.mouse_filter = Control.MOUSE_FILTER_PASS
+		past_line = get_past_line_rich_text_label(body_label)
+	
+	past_line.add_theme_font_size_override("normal_font_size", body_label.get_theme_font_size("normal_font_size"))
+	past_line.add_theme_font_size_override("bold_font_size", body_label.get_theme_font_size("bold_font_size"))
+	past_line.add_theme_font_size_override("bold_italics_font_size", body_label.get_theme_font_size("bold_italics_font_size"))
+	past_line.add_theme_font_size_override("italics_font_size", body_label.get_theme_font_size("italics_font_size"))
+	past_line.add_theme_font_size_override("mono_font_size", body_label.get_theme_font_size("mono_font_size"))
+	past_line.set_theme_type_variation(body_label.get_theme_type_variation())
 	
 	var past_text := ""
 	if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NameLabel and preserve_name_in_past_lines):
@@ -2124,43 +2279,48 @@ func _set_body_label_text(text: String, is_deserializing := false):
 	
 	_last_raw_name = current_raw_name
 
-func get_body_label_text_draw_pos(index:int, on_label:=body_label) -> Vector2:
-	_body_duplicate.add_theme_font_override("normal_font", on_label.get_theme_font("normal_font", "RichTextLabel"))
-	_body_duplicate.add_theme_font_size_override("normal_font_size", on_label.get_theme_font_size("normal_font_size", "RichTextLabel"))
-	_body_duplicate.add_theme_stylebox_override("normal", on_label.get_theme_stylebox("normal", "RichTextLabel"))
-	_body_duplicate.text = on_label.text
-	_body_duplicate.custom_minimum_size = on_label.custom_minimum_size
-	_body_duplicate.size = on_label.size
+func get_body_label_text_draw_pos(index : int, on_label := body_label) -> Vector2:
+	var parsed_text := on_label.get_parsed_text()
+	var label_font : Font = body_label.get_theme_font("normal_font", "RichTextLabel")
+	var fontsize : int = body_label.get_theme_font_size( "normal_font_size", "RichTextLabel",)
+	
+	var single_character_height := label_font.get_multiline_string_size(
+		"a",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
+		fontsize).y
 	
 	if index == 0:
-		_body_duplicate.visible_characters = 1
-		return Vector2(0, _body_duplicate.get_content_height())
-	if index > on_label.get_parsed_text().length():
+		return Vector2(0, single_character_height)
+	if index > parsed_text.length()+1:
 		push_warning("Index %s for get_body_label_text_draw_rect is out of bounds (%s)" % [index, _body_duplicate.text.length()])
 		return Vector2.ZERO
 	
-	var current_line := 0
-	var line_sum := 0
+	# when ending a line with a </ruby> tag, the resulting index will be 1 over the text length
+	# this can cause errors so we're protecting against that here
+	var end_index : int = index
+	if end_index >= parsed_text.length():
+		end_index = parsed_text.length() - 1
+	var line_range := on_label.get_line_range(on_label.get_character_line(end_index))
 	
-	_body_duplicate.visible_characters = index
-	var height : int = _body_duplicate.get_content_height() 
+	var trailing_line = parsed_text.substr(line_range.x, line_range.y - line_range.x - (line_range.y - end_index))
 	
-	# get target line
-	_body_duplicate.visible_characters = index
-	var target_line : int = _body_duplicate.get_character_line(index)
-	var target_line_range : Vector2i
-	for i in _body_duplicate.get_line_count() + 1:
-		var range = _body_duplicate.get_line_range(i) # also this returns completely incorrect results and I have no idea why this works
-		if index >= range.x and index <= range.y:
-			target_line = i
-			target_line_range = range
-			break
+	var width := label_font.get_multiline_string_size(
+		trailing_line,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
+		fontsize
+	).x
 	
-	var trailing_line = _body_duplicate.get_parsed_text().substr(target_line_range.x, target_line_range.y - target_line_range.x)
-	_body_duplicate.text = trailing_line
-	var width : int = _body_duplicate.get_content_width()
+	var height := label_font.get_multiline_string_size(
+		parsed_text.substr(0, index),
+		HORIZONTAL_ALIGNMENT_CENTER,
+		on_label.size.x,
+		fontsize
+	).y
 	
 	return Vector2(width, height)
+	
 
 ## If showing text. Resets on successful [method request_advance] call.
 func add_text_display_delay(duration:float):
@@ -2177,21 +2337,27 @@ func _wrap_in_color_tags_if_present(actor_name:String) -> String:
 	else:
 		return _get_actor_name(actor_name)
 
-var _body_duplicate_line_height : int
+#var _body_duplicate_line_height : int
 ## Sets [param body_label]. If [param keep_text] is [code]true[/code], the text from the previous [param body_label] will be transferred to the passed argument.
-func set_body_label(new_body_label:RichTextLabel, keep_text := true):
-	_ensure_terminator_node()
+func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previous := false):
+	_ensure_terminator_nodes()
 	
 	if new_body_label == body_label:
 		return
 	var switch_text:bool = body_label != new_body_label
 	var old_text : String
+	var old_label := body_label
 	if switch_text and keep_text and body_label:
 		old_text = body_label.text
 	body_label = new_body_label
+	body_label.bbcode_enabled = true
 	if switch_text and keep_text:
 		body_label.text = old_text
+	if clear_previous:
+		old_label.text = ""
 
+
+## Helper function for setting [member name_container] and [member name_label].
 func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container
 	var old_text = name_label.text
@@ -2208,6 +2374,15 @@ func enable_keep_past_lines(container: VBoxContainer, keep_text := false, new_la
 	self.past_lines_container = container
 	name_style = new_name_style
 	set_body_label(new_label, keep_text)
+
+
+func clear_past_lines(clear_body_label:=false) -> void:
+	if past_lines_container:
+		for c in past_lines_container.get_children():
+			c.queue_free()
+	if clear_body_label:
+		body_label.text = ""
+
 
 func _find_next_pause():
 	if _pause_types.size() > 0 and _next_pause_position_index < _pause_types.size():
@@ -2306,6 +2481,8 @@ func set_name_suffix(suffix : String, update := true):
 	if name_suffix != old_suffix and update:
 		update_body_label()
 
+# this is some esoteric shit and im drunk
+# im glad this exists
 func update_body_label():
 	var visible_characters = body_label.visible_characters
 	_set_dialog_line_index(_dialog_line_index)
@@ -2317,15 +2494,16 @@ func get_actor_config_property(config_property:String, actor_key:String, default
 	return (actor_config.get(actor_key) as LineReaderActorConfig).get(config_property)
 
 func _build_choices(choices, auto_switch:bool):
-	if not choice_container:
-		push_error("Tried to build choices when choice_container is null")
-		return
-	if not choice_list:
-		push_error("Tried to build choices when choice_list is null")
-		return
-	
-	for c in choice_list.get_children():
-		c.queue_free()
+	if not auto_switch:
+		if not choice_container:
+			push_error("Tried to build choices when choice_container is null")
+			return
+		if not choice_list:
+			push_error("Tried to build choices when choice_list is null")
+			return
+	if choice_list:
+		for c in choice_list.get_children():
+			c.queue_free()
 	
 	var built_choices : Array = []
 	for option in choices:
@@ -2409,7 +2587,8 @@ func _build_choices(choices, auto_switch:bool):
 		
 		new_option.connect("choice_pressed", _choice_pressed)
 		
-		choice_list.add_child(new_option)
+		if choice_list:
+			choice_list.add_child(new_option)
 		built_choices.append({
 			"button": new_option,
 			"disabled": not enable_option,
@@ -2426,15 +2605,17 @@ func _build_choices(choices, auto_switch:bool):
 		if choice_button_keyboard_focus:
 			new_option.focus_mode = Control.FOCUS_ALL
 	
-	if choice_list.get_child_count() > 0 and choice_button_keyboard_focus:
-		choice_list.get_child(0).call_deferred("grab_focus")
+	if choice_list:
+		if choice_list.get_child_count() > 0 and choice_button_keyboard_focus:
+			choice_list.get_child(0).call_deferred("grab_focus")
 	
 	ParserEvents.choices_presented.emit(built_choices)
 	
 	if virtual_choices:
 		_built_virtual_choices = built_choices
-		for c in choice_list.get_children():
-			c.visible = false
+		if choice_list:
+			for c in choice_list.get_children():
+				c.visible = false
 	
 	if built_choices.is_empty() and not auto_switch:
 		emit_signal("line_finished", line_index)
@@ -2463,8 +2644,9 @@ func choice_pressed_virtual(index:int):
 
 func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 	_built_virtual_choices.clear()
-	for c in choice_list.get_children():
-		c.queue_free()
+	if choice_list:
+		for c in choice_list.get_children():
+			c.queue_free()
 	if do_jump_page:
 		emit_signal("jump_to_page", target_page, target_line)
 		return
@@ -2532,32 +2714,13 @@ func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	return [conditional_is_true, behavior]
 
 
-func _handle_header(header: Array):
-	var header_data := {}
-	for prop in header:
-		var data_type = prop.get("data_type")
-		var property_name = prop.get("property_name")
-		var values : Array = prop.get("values")
-		
-		var actual_value
-		match int(data_type):
-			Pages.DataTypes._String:
-				actual_value = str(values[0])
-			Pages.DataTypes._DropDown:
-				actual_value = Parser.get_dropdown_strings_from_header_values(values)
-			Pages.DataTypes._Boolean:
-				actual_value = bool(values[0])
-		
-		header_data[property_name] = actual_value
-	
-	ParserEvents.new_header.emit(header_data)
-
-
 func _set_dialog_line_index(value: int):
 	_dialog_line_index = value
 	
 	_preserve_into_past_line_container()
 	
+	if _dialog_actors.is_empty():
+		return
 	if Parser.use_dialog_syntax:
 		var raw_name : String = _dialog_actors[_dialog_line_index]
 		var actor_name: String = _trim_syntax_and_emit_dialog_line_args(raw_name)
@@ -2716,25 +2879,29 @@ enum CallMode {
 	Func
 }
 
-var delay_before := 0.0
-var delay_after := 0.0
-var execution_text := ""
+var _delay_before := 0.0
+var _delay_after := 0.0:
+	set(value):
+		_delay_after = value
+		_delay_after_max = _delay_after
+var _delay_after_max : float
+var _execution_text := ""
 ## This variable determines if [LineReader] is currently awaiting the callback of [method Parser.function_acceded].
 ## [br][b]Do not write to it.[/b]
 var is_executing := false
-var has_executed := false
-var has_received_execute_callback := false
-var emitted_complete := false
+var _has_executed := false
+var _has_received_execute_callback := false
+var _emitted_complete := false
 
 func _serialize_instruction_handler_data() -> Dictionary:
 	return {
-		"delay_before" : delay_before,
-		"delay_after" : delay_after,
-		"execution_text" : execution_text,
+		"delay_before" : _delay_before,
+		"delay_after" : _delay_after,
+		"_execution_text" : _execution_text,
 		"is_executing" : is_executing,
-		"has_executed" : has_executed,
-		"has_received_execute_callback" : has_received_execute_callback,
-		"emitted_complete" : emitted_complete,
+		"_has_executed" : _has_executed,
+		"_has_received_execute_callback" : _has_received_execute_callback,
+		"_emitted_complete" : _emitted_complete,
 	}
 
 func _deserialize_instruction_handler_data(data: Dictionary):
@@ -2742,25 +2909,25 @@ func _deserialize_instruction_handler_data(data: Dictionary):
 		set(key, data.get(key))
 
 func finish_waiting_for_instruction():
-	has_received_execute_callback = true
+	_has_received_execute_callback = true
 	
-	if not emitted_complete and delay_after <= 0:
-		ParserEvents.instruction_completed.emit(execution_text, delay_after)
+	if not _emitted_complete and _delay_after <= 0:
+		ParserEvents.instruction_completed.emit(_execution_text, _delay_after)
 		_on_instruction_wrapped_completed()
-		ParserEvents.instruction_completed_after_delay.emit(execution_text, delay_after)
+		ParserEvents.instruction_completed_after_delay.emit(_execution_text, _delay_after)
 		is_executing = false
-		emitted_complete = true
+		_emitted_complete = true
 
 func _wrapper_execute(text : String, delay_before_seconds := 0.0, delay_after_seconds := 0.0):
 	await get_tree().process_frame
-	delay_after = delay_after_seconds
-	delay_before = delay_before_seconds
-	execution_text = text
-	has_executed = false
+	_delay_after = delay_after_seconds
+	_delay_before = delay_before_seconds
+	_execution_text = text
+	_has_executed = false
 	is_executing = true
-	has_received_execute_callback = true
-	ParserEvents.instruction_started.emit(execution_text, delay_before)
-	emitted_complete = false
+	_has_received_execute_callback = true
+	ParserEvents.instruction_started.emit(_execution_text, _delay_before)
+	_emitted_complete = false
 
 func _get_property_from_self_or_autoload(property:String):
 	var autoload : String
@@ -2961,3 +3128,9 @@ func is_at_end_of_line(non_text_return_value:=true) -> bool:
 	if line_type != DIISIS.LineType.Text:
 		return non_text_return_value
 	return body_label.visible_ratio == 1 and _dialog_line_index == _dialog_lines.size() - 1
+
+
+## Gives the amount of progress to make with a body label for any given text.
+## [br]Useful for text speed previews in options menus
+static func get_body_label_progress_step(text_speed : float, parsed_text : String, delta) -> float:
+	return (text_speed / parsed_text.length()) * delta

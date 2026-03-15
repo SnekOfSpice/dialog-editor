@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvek8s1fxdfmt"]
+[gd_scene format=3 uid="uid://cvek8s1fxdfmt"]
 
 [ext_resource type="Script" uid="uid://c0ckdqsxtffs0" path="res://addons/diisis/editor/src/file_config_container.gd" id="1_yn2ca"]
 [ext_resource type="PackedScene" uid="uid://dybsbden6coq5" path="res://addons/diisis/editor/src/address_mode_button.tscn" id="2_t4wj7"]
 
-[node name="FileConfigContainer" type="Control"]
+[node name="FileConfigContainer" type="Control" unique_id=2055275142]
 auto_translate_mode = 1
 layout_mode = 3
 anchors_preset = 15
@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yn2ca")
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="." unique_id=2108747915]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,32 +22,51 @@ grow_horizontal = 2
 grow_vertical = 2
 current_tab = 0
 
-[node name="Editor" type="PanelContainer" parent="TabContainer"]
+[node name="Editor" type="PanelContainer" parent="TabContainer" unique_id=1740825619]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Editor"]
+[node name="VBoxContainer2" type="HBoxContainer" parent="TabContainer/Editor" unique_id=254224323]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Editor/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Editor/VBoxContainer2" unique_id=706700562]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Editor/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer" unique_id=1821444696]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=30361354]
 layout_mode = 2
 text = "Default Page Address Mode"
 
-[node name="AddressModeButtonPage" parent="TabContainer/Editor/VBoxContainer/HBoxContainer" instance=ExtResource("2_t4wj7")]
+[node name="AddressModeButtonPage" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1474192460 instance=ExtResource("2_t4wj7")]
 layout_mode = 2
 
-[node name="ToggleSettings" type="VBoxContainer" parent="TabContainer/Editor/VBoxContainer"]
+[node name="ToggleSettings" type="VBoxContainer" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer" unique_id=1814337928]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Editor/VBoxContainer2" unique_id=1529989528]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HintSpacer" type="Control" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer2" unique_id=1019657460]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Appearance" type="PanelContainer" parent="TabContainer"]
+[node name="Hint" type="RichTextLabel" parent="TabContainer/Editor/VBoxContainer2/VBoxContainer2" unique_id=543517223]
+unique_name_in_owner = true
+layout_mode = 2
+text = "fdsdf"
+fit_content = true
+
+[node name="Appearance" type="PanelContainer" parent="TabContainer" unique_id=1935651559]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="StringSettings" type="VBoxContainer" parent="TabContainer/Appearance"]
+[node name="StringSettings" type="VBoxContainer" parent="TabContainer/Appearance" unique_id=1258569316]
 layout_mode = 2
 
-[connection signal="mode_set" from="TabContainer/Editor/VBoxContainer/HBoxContainer/AddressModeButtonPage" to="." method="_on_address_mode_button_page_mode_set"]
+[connection signal="mode_set" from="TabContainer/Editor/VBoxContainer2/VBoxContainer/HBoxContainer/AddressModeButtonPage" to="." method="_on_address_mode_button_page_mode_set"]
