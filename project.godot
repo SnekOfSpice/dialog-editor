@@ -150,10 +150,6 @@ history={
 ]
 }
 
-[internationalization]
-
-locale/translations=PackedStringArray("res://l10n.en_EN.translation")
-
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
