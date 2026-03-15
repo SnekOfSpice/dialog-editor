@@ -5,3 +5,5 @@
 /**        export-ignore
 /addons    !export-ignore
 /addons/** !export-ignore
+/addons/diisis/documentation export-ignore
+/addons/diisis/documentation/** export-ignore
