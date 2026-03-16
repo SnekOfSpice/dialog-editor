@@ -1,3 +1,5 @@
+![icon](res://addons/diisis/logos/icon_buttonbw smooth.png)
+# DIISIS
 ![banner2](https://github.com/user-attachments/assets/6c0cb035-8390-4c7a-9ca6-61ea9ba6a279)
 
 Homebrew dialog tool. Find the source code and license and demos on [GitHub](https://github.com/SnekOfSpice/dialog-editor).
