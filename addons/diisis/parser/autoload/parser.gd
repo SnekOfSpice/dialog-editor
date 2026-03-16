@@ -467,7 +467,7 @@ func get_region_actors() -> Array:
 ## Returns the end address of the current region.
 ## See also [method get_region].
 func get_region_end() -> String:
-	return get_region().get("region_end", [])
+	return get_region().get("region_end", "")
 
 
 func get_line_type_by_address(address:String) -> DIISIS.LineType:

@@ -339,38 +339,52 @@ func open_editor():
 		await get_tree().process_frame
 		dia_editor_window.popup()
 		dia_editor_window.closing_editor.connect(func():
-			save_preferences()
+			#save_preferences()
 			set("dia_editor_window", null)
 			)
 	
 	
 	
-	
 
-func save_preferences():
-	var config = ConfigFile.new()
-	
-	if not _embedded:
-		if is_instance_valid(dia_editor_window):
-			if is_instance_valid(dia_editor_window.editor_window):
-				config.set_value("editor", "content_scale", dia_editor_window.editor_window.content_scale_factor)
-			config.set_value("editor", "size", dia_editor_window.size)
-			config.set_value("editor", "position", dia_editor_window.position)
-			config.set_value("editor", "mode", dia_editor_window.mode)
-	
-	for prop : String in Pages.PREFERENCE_PROPS:
-		config.set_value("editor", prop, Pages.get(prop))
-		printt(prop, Pages.get(prop))
-	
-	config.save(PREFERENCE_PATH)
+
+const PREFERENCE_PROPS := [
+	"append_periods",
+	"collapse_conditional_controls_by_default",
+	"confirm_linearize",
+	"current_page_number_by_file_name",
+	"default_address_mode_pages",
+	"first_index_as_page_reference_only",
+	"fix_apostrophes",
+	"page_scroll_by_idx_by_file_name",
+	"preferences_export",
+	"preferences_import",
+	"region_baking_enabled",
+	"region_delination",
+	"region_delinator_instruction",
+	"replacement_rules",
+	"require_colons_on_actor_ingestion",
+	"save_on_play",
+	"shader",
+	"show_facts_buttons",
+	"silly",
+	"validate_function_calls_on_focus",
+	"warn_on_fact_deletion",
+	"editor_page_view",
+	"editor_text_size_id",
+	"ingest_is_capitalize_checked",
+	"ingest_is_whitespace_checked",
+	"ingest_is_punctuation_checked",
+]
+
+
 
 
 func add_new_dialog_editor_window():
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
-	if err == OK:
-		for prop : String in Pages.PREFERENCE_PROPS:
-			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+	#if err == OK:
+		#for prop : String in PREFERENCE_PROPS:
+			#Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
 	
 	if _embedded:
 		if embedder:

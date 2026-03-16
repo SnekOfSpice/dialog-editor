@@ -164,7 +164,7 @@ func init(active_file_path:="") -> void:
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
-		popup.close_requested.connect(Engine.get_meta("DIISISPlugin").save_preferences)
+		popup.close_requested.connect(save_preferences)
 		popup.add_to_group("diisis_scalable_popup")
 	
 	find_child("ShowErrorsButton").button_pressed = false
@@ -1502,3 +1502,21 @@ func update_recents_item():
 func _on_visibility_changed() -> void:
 	if visible and not opening:
 		Pages.ensure_line_reader_scripts()
+
+
+func save_preferences():
+	var config = ConfigFile.new()
+	
+	var plugin := Engine.get_meta("DIISISPlugin")
+	if not plugin._embedded:
+		if is_instance_valid(plugin.dia_editor_window):
+			if is_instance_valid(plugin.dia_editor_window.editor_window):
+				config.set_value("editor", "content_scale", plugin.dia_editor_window.editor_window.content_scale_factor)
+			config.set_value("editor", "size", plugin.dia_editor_window.size)
+			config.set_value("editor", "position", plugin.dia_editor_window.position)
+			config.set_value("editor", "mode", plugin.dia_editor_window.mode)
+	
+	for prop : String in Pages.PREFERENCE_PROPS:
+		config.set_value("editor", prop, Pages.get(prop))
+	
+	config.save(plugin.PREFERENCE_PATH)
