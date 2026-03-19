@@ -2475,8 +2475,11 @@ func linearize_pages():
 	await get_tree().process_frame
 	editor.refresh(false)
 
-func get_editor_window() -> DiisisEditorWindow:
-	return editor.get_parent().get_parent()
+func get_editor_window() -> Node:
+	if DiisisEditorUtil.embedded:
+		return editor.get_parent().get_parent()
+	else:
+		return editor
 
 func apply_font_size_overrides(from:Node):
 	set_size_override(from, FONT_SIZES[editor_text_size_id])

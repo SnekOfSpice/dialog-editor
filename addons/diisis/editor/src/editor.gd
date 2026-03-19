@@ -191,6 +191,7 @@ func init(active_file_path:="") -> void:
 	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
+	%TextSizeButton.visible = not DiisisEditorUtil.embedded
 	
 	var utility_item : PopupMenu = %Utility
 	if Pages.silly:
