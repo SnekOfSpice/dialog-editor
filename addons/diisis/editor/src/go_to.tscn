@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxsq5rsj1i12f"]
+[gd_scene format=3 uid="uid://bxsq5rsj1i12f"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_0ya0s"]
 [ext_resource type="Script" uid="uid://dqohb1ron33q3" path="res://addons/diisis/editor/src/go_to.gd" id="1_mfnyd"]
 
-[node name="GoTo" type="VBoxContainer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_45hgb"]
+bg_color = Color(0.34301865, 0.024061622, 0.10812404, 1)
+
+[node name="GoTo" type="VBoxContainer" unique_id=792363371]
 custom_minimum_size = Vector2(239, 0)
 offset_right = 219.0
 offset_bottom = 27.0
@@ -11,59 +14,54 @@ size_flags_vertical = 0
 theme = ExtResource("1_0ya0s")
 script = ExtResource("1_mfnyd")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1566348151]
 custom_minimum_size = Vector2(219, 0)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=472844686]
 layout_mode = 2
 
-[node name="GoToButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="GoToButton" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=319661791]
 layout_mode = 2
 focus_mode = 0
 text = "Go"
 
-[node name="CancelGoTo" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="CancelGoTo" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=936314482]
 visible = false
 layout_mode = 2
 focus_mode = 0
 text = "X"
 
-[node name="AddressBar" type="LineEdit" parent="HBoxContainer"]
+[node name="AddressBar" type="LineEdit" parent="HBoxContainer" unique_id=1429399489]
 visible = false
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 
-[node name="CurrentPageLabel" type="Label" parent="HBoxContainer"]
+[node name="CurrentPageLabel" type="Label" parent="HBoxContainer" unique_id=1493503288]
 layout_mode = 2
 size_flags_horizontal = 10
 text = "40"
 
-[node name="Slash" type="Label" parent="HBoxContainer"]
+[node name="Slash" type="Label" parent="HBoxContainer" unique_id=955429740]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "/"
 
-[node name="PageCountLabel" type="Label" parent="HBoxContainer"]
+[node name="PageCountLabel" type="Label" parent="HBoxContainer" unique_id=676764419]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "200"
 
-[node name="ErrorLabelWindow" type="Window" parent="."]
-position = Vector2i(50, -30)
-size = Vector2i(42, 23)
-visible = false
-wrap_controls = true
-transient = true
-borderless = true
-unfocusable = true
-popup_window = true
-mouse_passthrough = true
+[node name="ErrorLabelWindow" type="Control" parent="." unique_id=1873729644]
+unique_name_in_owner = true
+layout_mode = 2
 
-[node name="ErrorLabel" type="Label" parent="ErrorLabelWindow"]
-offset_right = 40.0
+[node name="ErrorLabel" type="Label" parent="ErrorLabelWindow" unique_id=164009689]
+layout_mode = 0
+offset_left = 19.0
+offset_right = 59.0
 offset_bottom = 23.0
-text = "sdgfg"
+theme_override_styles/normal = SubResource("StyleBoxFlat_45hgb")
 
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/GoToButton" to="." method="_on_go_to_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/HBoxContainer/CancelGoTo" to="." method="_on_cancel_go_to_pressed"]
@@ -72,4 +70,3 @@ text = "sdgfg"
 [connection signal="gui_input" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_gui_input"]
 [connection signal="text_changed" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_changed"]
 [connection signal="text_submitted" from="HBoxContainer/AddressBar" to="." method="_on_address_bar_text_submitted"]
-[connection signal="about_to_popup" from="ErrorLabelWindow" to="." method="_on_error_label_window_about_to_popup"]

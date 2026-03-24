@@ -38,7 +38,7 @@ const TEMPLATE_VN_AUTOLOAD_SCENE_LOADER = "SceneLoader"
 func _enter_tree():
 	Engine.set_meta("DIISISPlugin", self)
 	if not ProjectSettings.has_setting("diisis/plugin/view/embedded"):
-		ProjectSettings.set_setting("diisis/plugin/view/embedded", true)
+		ProjectSettings.set_setting("diisis/plugin/view/embedded", false)
 		ProjectSettings.save()
 	ProjectSettings.set_restart_if_changed("diisis/plugin/view/embedded", true)
 	ProjectSettings.save()

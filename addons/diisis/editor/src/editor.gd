@@ -143,6 +143,8 @@ func init(active_file_path:="") -> void:
 	
 	update_controls()
 	
+	%GoTo.init()
+	
 	var text_size_button : OptionButton = %TextSizeButton
 	text_size_button.clear()
 	
