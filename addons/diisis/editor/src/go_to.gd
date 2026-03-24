@@ -22,15 +22,19 @@ func update(address:String):
 	var address_exists:bool = Pages.does_address_exist(address)
 	if address_exists:
 		if find_child("AddressBar").visible:
-			find_child("ErrorLabelWindow").popup()
+			find_child("ErrorLabelWindow").show()
 			find_child("ErrorLabel").text = DiisisEditorUtil.humanize_address(address)
 		else:
 			find_child("ErrorLabelWindow").hide()
 	else:
 		find_child("ErrorLabel").text = "Address does not exist."
-		find_child("ErrorLabelWindow").popup()
+		find_child("ErrorLabelWindow").show()
 	find_child("GoToButton").disabled = not address_exists
 
+
+func init():
+	find_child("ErrorLabelWindow").hide()
+	
 
 func _on_address_bar_text_submitted(new_text: String) -> void:
 	if not Pages.does_address_exist(new_text):
@@ -81,11 +85,7 @@ func _on_address_bar_focus_exited() -> void:
 
 
 func _on_address_bar_focus_entered() -> void:
-	find_child("ErrorLabelWindow").popup()
-
-
-func _on_error_label_window_about_to_popup() -> void:
-	find_child("ErrorLabelWindow").position = global_position + error_window_offset
+	find_child("ErrorLabelWindow").show()
 
 
 func _on_address_bar_gui_input(event: InputEvent) -> void:

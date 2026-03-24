@@ -42,6 +42,20 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "quartz/content/Getting Started/High-Level Overview.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "High-Level Overview"
+            }
+          },
+          {
+            "id": "8149aa1ccafb8882",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "quartz/content/index.md",
                 "mode": "source",
                 "source": false
@@ -51,35 +65,21 @@
             }
           },
           {
-            "id": "8149aa1ccafb8882",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "quartz/content/VN Template Guide/Creating New Characters.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Creating New Characters"
-            }
-          },
-          {
             "id": "d36e7e5a4bf3af12",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "quartz/content/VN Template Guide/Getting Started.md",
+                "file": "quartz/content/Getting Started/LineReader & Parser.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Getting Started"
+              "title": "LineReader & Parser"
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       },
       {
         "id": "26563639c7d0bc11",
@@ -128,7 +128,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "path:quartz/content github.com/snek",
+                "query": "index.md",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -149,7 +149,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -259,16 +260,29 @@
       "bases:Create new base": false
     }
   },
-  "active": "b7591abf5d42b371",
+  "active": "8149aa1ccafb8882",
   "lastOpenFiles": [
+    "quartz/docs/advanced/index.md",
+    "quartz/docs/features/index.md",
+    "quartz/docs/plugins/index.md",
+    "quartz/docs/index.md",
+    "quartz/content/index.md",
+    "quartz/content/icon_buttonbw smooth.png",
+    "quartz/docs/layout-components.md",
+    "quartz/content/VN Template Guide/Creating New Characters.md",
+    "quartz/content/Getting Started/LineReader & Parser.md",
+    "Pasted image 20260316205320.png",
+    "Pasted image 20260316205138.png",
+    "quartz/content/Getting Started/Editor Overview.md",
+    "Pasted image 20260316204636.png",
+    "Pasted image 20260316204402.png",
+    "quartz/content/VN Template Guide/Getting Started.md",
+    "quartz/content/Getting Started/High-Level Overview.md",
     "quartz/content/Assets/Pasted image 20260314131110.png",
     "quartz/content/Assets/Pasted image 20260227082552.png",
-    "quartz/content/index.md",
     "quartz/content/Home.md",
     "quartz/content/Get the Plugin.md",
-    "quartz/content/VN Template Guide/Getting Started.md",
     "quartz/content/VN Template Guide/General Knowledge.md",
-    "quartz/content/VN Template Guide/Creating New Characters.md",
     "quartz/content/VN Template Guide/Adding Assets.md",
     "quartz/content/More Knowledge/Upgrading to a new version.md",
     "quartz/content/More Knowledge/Stringkit.md",
@@ -280,14 +294,6 @@
     "quartz/content/Interactivity/Using Event Signals.md",
     "quartz/content/Interactivity/Facts & Conditionals.md",
     "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
-    "quartz/content/Getting Started/LineReader & Parser.md",
-    "quartz/content/Getting Started/High-Level Overview.md",
-    "quartz/content/Getting Started/Editor Overview.md",
-    "quartz/content/Getting Started/Line Types/Text.md",
-    "quartz/content/Getting Started/Line Types/Instruction.md",
-    "quartz/content/Getting Started/Line Types/Folder.md",
-    "quartz/content/Getting Started/Line Types/Choice.md",
-    "quartz/content/_Sidebar.md",
     "quartz/content/Assets/Pasted image 20260314131924.png",
     "quartz/content/Assets/Pasted image 20260314131629.png",
     "quartz/content/Assets/Pasted image 20260314131223.png",
@@ -300,12 +306,6 @@
     "quartz/public/Getting-Started/Editor-Overview-og-image.webp.import",
     "quartz/public/Getting-Started/Line-Types/Text-og-image.webp.import",
     "quartz/docs/images/quartz-layout-tablet.png.import",
-    "quartz/docs/images/quartz-layout-desktop.png.import",
-    "quartz/content/Assets/let me fester under your skin.gif",
-    "quartz/content/Assets/blinkiesCafe-bQ.gif",
-    "quartz/content/Assets/blinkiesCafe-3f.gif",
-    "quartz/content/Assets/0269-sickashell.gif",
-    "quartz/public/index-og-image.webp",
-    "quartz/public/_Sidebar-og-image.webp"
+    "quartz/docs/images/quartz-layout-desktop.png.import"
   ]
 }

@@ -115,7 +115,11 @@ layout_mode = 2
 text = "After Call"
 text_overrun_behavior = 1
 
-[node name="YieldForAdvanceCheckBox" type="CheckBox" parent="HBoxContainer/HBoxContainer" unique_id=1912433134]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/HBoxContainer" unique_id=706191194]
+layout_mode = 2
+theme_override_constants/margin_right = 83
+
+[node name="YieldForAdvanceCheckBox" type="CheckBox" parent="HBoxContainer/HBoxContainer/MarginContainer" unique_id=1912433134]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0

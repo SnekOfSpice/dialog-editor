@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://beiod4cxn6kp4"]
+[gd_scene format=3 uid="uid://beiod4cxn6kp4"]
 
 [ext_resource type="Script" uid="uid://dry24pj458ff2" path="res://addons/diisis/editor/src/move_page_item.gd" id="1_ks3sh"]
 [ext_resource type="Texture2D" uid="uid://dj7eh2g6srt4v" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_up.png" id="2_5k4sn"]
@@ -6,77 +6,77 @@
 [ext_resource type="Texture2D" uid="uid://bvfeiavga4a2q" path="res://addons/diisis/editor/visuals/theme/buttons_ui/skip_enabled.png" id="3_2ukc8"]
 [ext_resource type="Texture2D" uid="uid://blqrtjgc0d8f4" path="res://addons/diisis/editor/visuals/theme/buttons_ui/move_down.png" id="3_8tuqg"]
 
-[node name="MovePageItem" type="HBoxContainer"]
+[node name="MovePageItem" type="HBoxContainer" unique_id=508745898]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 31.0
 grow_horizontal = 2
 script = ExtResource("1_ks3sh")
 
-[node name="GoToButton" type="Button" parent="."]
+[node name="GoToButton" type="Button" parent="." unique_id=1129008958]
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 text = "Go"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1682245587]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=825262438]
 layout_mode = 2
 
-[node name="NumberLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="NumberLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=778639449]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "0"
 
-[node name="AddressModeButton" parent="MarginContainer/HBoxContainer" node_paths=PackedStringArray("address_source") instance=ExtResource("2_bqh0w")]
+[node name="AddressModeButton" parent="MarginContainer/HBoxContainer" unique_id=1920200227 node_paths=PackedStringArray("address_source") instance=ExtResource("2_bqh0w")]
 layout_mode = 2
 address_source = NodePath("../../..")
 address_function = "get_next"
 
-[node name="KeyLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="KeyLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1030834102]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "0"
 clip_text = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="MarginContainer2" type="MarginContainer" parent="." unique_id=361655750]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2" unique_id=2114620685]
 layout_mode = 2
 
-[node name="WordCountLabel" type="Label" parent="MarginContainer2/HBoxContainer"]
+[node name="WordCountLabel" type="Label" parent="MarginContainer2/HBoxContainer" unique_id=204406918]
 modulate = Color(1, 1, 1, 0.713726)
 layout_mode = 2
 tooltip_text = "Word Count"
 mouse_filter = 1
 
-[node name="SkipTexture" type="TextureRect" parent="MarginContainer2/HBoxContainer"]
+[node name="SkipTexture" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=1434674574]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("3_2ukc8")
 
-[node name="DownButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+[node name="DownButton" type="Button" parent="MarginContainer2/HBoxContainer" unique_id=943280569]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("2_5k4sn")
 
-[node name="UpButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+[node name="UpButton" type="Button" parent="MarginContainer2/HBoxContainer" unique_id=976822258]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_8tuqg")
 
-[node name="DirectSwapButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+[node name="DirectSwapButton" type="Button" parent="MarginContainer2/HBoxContainer" unique_id=311672193]
 layout_mode = 2
 text = "o"
 
-[node name="DirectStartedLabel" type="Label" parent="MarginContainer2/HBoxContainer"]
+[node name="DirectStartedLabel" type="Label" parent="MarginContainer2/HBoxContainer" unique_id=318705579]
 custom_minimum_size = Vector2(24.635, 0)
 layout_mode = 2
 

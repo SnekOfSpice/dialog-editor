@@ -46,7 +46,7 @@ ParserEvents="*uid://dinb6lf0qoexi"
 [diisis]
 
 project/file/path="res://game/diisis_integration/demo_script.json"
-plugin/view/embedded=false
+plugin/view/embedded=true
 plugin/checks/check_for_updates=true
 plugin/checks/check_for_linux_input=true
 
@@ -149,10 +149,6 @@ history={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":76,"physical_keycode":76,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
-
-[internationalization]
-
-locale/translations=PackedStringArray("res://l10n.en_EN.translation")
 
 [rendering]
 

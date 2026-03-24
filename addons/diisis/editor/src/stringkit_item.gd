@@ -33,6 +33,10 @@ func init(title:String):
 	find_child("DeleteParameters").visible = false
 	find_child("DeleteParametersButton").visible = Pages.stringkit_dialog_arguments.has(title)
 	stringkit_options = Pages.stringkits.get(title)
+	
+	DiisisEditorUtil.limit_scroll_container_height(
+		%ScrollContainer, 200
+	)
 
 
 func _on_edit_button_pressed() -> void:

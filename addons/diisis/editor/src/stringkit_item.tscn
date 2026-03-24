@@ -122,15 +122,16 @@ text = "Erase from Text"
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="OptionsContainer" unique_id=1973889424]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, -80)
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="StringkitOptionsText" type="TextEdit" parent="OptionsContainer/ScrollContainer" unique_id=400674602]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 2
 scroll_fit_content_height = true
 
 [node name="DuplicateOptionsLabel" type="RichTextLabel" parent="OptionsContainer" unique_id=486243745]
