@@ -2411,6 +2411,10 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 		var color : Color = (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
 		if color == Color.TRANSPARENT:
 			color = (actor_config.get(actor_key) as LineReaderActorConfig).get(base_property)
+		
+		if base_property == "outline_color":
+			return color
+		
 		if color != Color.TRANSPARENT:
 			return color
 		
@@ -2428,11 +2432,14 @@ func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
 	var outline_color : Color = _get_actor_color_config("outline_color", actor)
 	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor, 0)
 	
-	var prefix := str(
-		"[color=", color.to_html(), "]",
-		"[outline_color=", outline_color.to_html(), "]",
-	)
-	var suffix := "[/outline_color][/color]"
+	var prefix := str("[color=", color.to_html(), "]")
+	if outline_size > 0:
+		prefix += str("[outline_color=", outline_color.to_html(), "]")
+	
+	var suffix := ""
+	if outline_size > 0:
+		suffix += "[/outline_color]"
+	suffix += "[/color]"
 	
 	# there's a bug where outline size 0 will throw an error that doesn't do anything
 	if outline_size > 0:
