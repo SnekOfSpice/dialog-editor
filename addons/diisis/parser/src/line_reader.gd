@@ -2464,13 +2464,12 @@ func set_actor_config_property_color(config_property:String, actor_key:String, r
 ## [b]Note:[/b] Updating this mid-dialog line will have no effect if [member chatlog_enabled] is true.
 func set_actor_config_property(config_property:String, actor_key:String, value):
 	var previous_value
-	if actor_config.keys().has(actor_key):
-		previous_value = get_actor_config_property(config_property, actor_key)
-		(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
-	else:
-		var new_config = LineReaderActorConfig.new()
-		new_config.set(config_property, value)
-		actor_config[actor_key] = new_config
+	if not actor_config.keys().has(actor_key):
+		push_warning("No config exists for actor %s. Nothing has been changed. Maybe create one first?" % actor_key)
+		return
+	
+	previous_value = get_actor_config_property(config_property, actor_key)
+	(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
 	
 	# update display string
 	if previous_value != value:
