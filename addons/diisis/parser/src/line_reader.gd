@@ -2360,7 +2360,11 @@ func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previ
 ## Helper function for setting [member name_container] and [member name_label].
 func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container
-	var old_text = name_label.text
+	var old_text : String
+	if name_label:
+		old_text = name_label.text
+	else:
+		old_text = ""
 	name_label = label
 	if keep_text:
 		name_label.text = old_text
