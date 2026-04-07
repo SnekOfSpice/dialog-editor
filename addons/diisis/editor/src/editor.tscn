@@ -865,6 +865,8 @@ horizontal_alignment = 1
 [connection signal="meta_clicked" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/HBoxContainer/ErrorTextBox" to="." method="_on_error_text_box_meta_clicked"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/First" to="." method="_on_first_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
+[connection signal="go_to" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/GoTo" to="." method="request_go_to_address"]
+[connection signal="request_refresh" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/GoTo" to="." method="refresh"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Next" to="." method="_on_next_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer2/HBoxContainer/Last" to="." method="_on_last_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
