@@ -1773,7 +1773,7 @@ func _handle_tags_and_start_reading():
 				call_strings_at_index.append(tag_string)
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
-				tag_buffer += tag_string.length()
+				#tag_buffer += tag_string.length() # ngl this breaks offsets but I forgor why. so we just don't do it!
 			elif bbcode_removed_text.find("<ts_", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
