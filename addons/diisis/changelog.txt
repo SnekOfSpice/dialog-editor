@@ -1,10 +1,19 @@
-0.7.3
-- include word & character count
+DIISIS 0.7.2
 
-0.7.2
-[i forgor, put this here somewhere]
+Editor
+- fix goto not working
+- fix some minor things when not using dialog syntax: make capitlization work
+Runtime
+- include word & character count in the parser
+- fix scene terminators
+- fix terminator visibility
 
-0.7.1 2026-03-24
+VN Template
+- Fix save UI in main menu to prevent softlocks (dddd 1.1 fix)
+
+
+----------
+DIISIS 0.7.1 2026-03-24
 
 Editor
 - fix some UI bugs
