@@ -996,9 +996,10 @@ func _read_new_line(new_line: Dictionary):
 					_dialog_actors.clear()
 					_dialog_actors = [""]
 			else:
-				_dialog_lines = [content]
+				_dialog_lines = content.split("<lc>")
 				_dialog_actors.clear()
-				_dialog_actors = [""]
+				for i in _dialog_lines.size():
+					_dialog_actors.append("")
 			
 			_dialog_lines = _replace_tags(_dialog_lines)
 			_dialog_lines = _replace_control_sequences(_dialog_lines)
@@ -1247,12 +1248,14 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 				if vis == -1:
 					vis = body_label.get_parsed_text().length()
 				
+				
+				var can_get_input : bool = (_next_pause_type in [_PauseTypes.Manual, _PauseTypes.EoL] and body_label.visible_characters == _get_end_of_chunk_position()) or body_label.visible_characters == -1
 				if _terminator_node_incomplete:
 					_terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					_terminator_node_incomplete.visible = body_label.visible_ratio != 1
+					_terminator_node_incomplete.visible = not can_get_input
 				if _terminator_node_complete:
 					_terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					_terminator_node_complete.visible = body_label.visible_ratio == 1
+					_terminator_node_complete.visible = can_get_input
 	
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
@@ -2123,10 +2126,10 @@ func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_la
 			terminator_node.focus_mode = Control.FOCUS_NONE
 		TerminatorData.TerminatorStyle.Scene:
 			terminator_node = Control.new()
-			terminator_node.texture = terminator_data.terminator_texture
+			terminator_node = terminator_data.terminator_scene.instantiate()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.add_child(terminator_data.terminator_scene.instantiate())
+			#terminator_node.add_child(terminator_data.terminator_scene.instantiate())
 	
 	set(node_property, terminator_node)
 	on_label.add_child(terminator_node)

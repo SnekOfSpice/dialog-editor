@@ -232,8 +232,10 @@ func sync_line_references():
 
 
 func serialize() -> Dictionary:
+	var counts := get_count_total()
 	var data := {
 		"callable_autoloads": callable_autoloads,
+		"character_count" : counts.y,
 		"custom_method_stringkit_limiters": custom_method_stringkit_limiters,
 		"custom_method_defaults": custom_method_defaults,
 		#"default_address_mode_pages": default_address_mode_pages,
@@ -256,6 +258,7 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"use_dialog_syntax": use_dialog_syntax,
+		"word_count" : counts.x,
 	}
 	
 	if region_baking_enabled:
@@ -1951,10 +1954,8 @@ func are_all_of_these_stringkit_titles(names:Array) -> bool:
 	return result
 
 func capitalize_sentence_beginnings(text:String) -> String:
-	
-
 	var c12n_prefixes := [
-		".", ":", ";", "?", "!", "~"
+		".", ":", ";", "?", "!", "~", "\n"
 	]
 	
 	var letter_indices_after_elipses := {}
@@ -2044,6 +2045,9 @@ func capitalize_sentence_beginnings(text:String) -> String:
 		text[index] = letter
 	
 	text = text.replace(" i ", " I ")
+	
+	if not text.is_empty(): # useful for when not using dialogue syntax
+		text[0] = text[0].capitalize()
 	
 	return text
 

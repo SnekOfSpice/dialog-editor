@@ -31,6 +31,8 @@ extends Node
 var page_data := {}
 var text_data := {}
 var use_dialog_syntax := true
+var word_count := 0
+var character_count := 0
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
 var _default_locale := "en_US"
@@ -134,6 +136,8 @@ func _initialize(data:Dictionary):
 	page_data = int_data.duplicate()
 	
 	facts = data.get("facts", {})
+	word_count = data.get("word_count", -1)
+	character_count = data.get("character_count", -1)
 	use_dialog_syntax = data.get("use_dialog_syntax", true)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
