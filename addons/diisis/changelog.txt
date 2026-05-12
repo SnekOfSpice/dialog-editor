@@ -1,5 +1,10 @@
 DIISIS 0.7.2
 
+in neaten whitespace: make some tags insert a space after their insertion
+function to handle locale change
+changing a speaker name in the stringkit hsould also chaange it in the actor ingestion declaration
+l10n csv
+
 Editor
 - fix goto not working
 - fix some minor things when not using dialog syntax: make capitlization work

@@ -2116,7 +2116,23 @@ func neaten_whitespace(text:String) -> String:
 		while sequence_pos != -1:
 			text = text.erase(sequence_pos + full_sequence.length() - 1)
 			sequence_pos = text.find(full_sequence, sequence_pos)
-		
+	
+	for space_trailer in ["name", "fact", "clname", "func", "var"]:
+		if not text.contains("<%s:" % space_trailer):
+			continue
+		var scan_index := 0
+		var text_length := text.length()
+		while scan_index < text_length:
+			if text.find("<%s:" % space_trailer, scan_index) == scan_index:
+				var tag_end := text.find(">", scan_index)
+				if tag_end < text.length() - 1:
+					if not text[tag_end + 1] in [" ", "\n"]:
+						text = text.insert(tag_end + 1, " ")
+						text_length += 1
+						scan_index += 1
+			scan_index += 1
+			
+	
 	text = text.replace("] .", "].")
 	text = text.replace("> .", ">.")
 	text = text.replace(": //", "://")
