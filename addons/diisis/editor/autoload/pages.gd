@@ -1111,8 +1111,29 @@ func rename_stringkit_title(from:String, to:String):
 
 func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
+		
 		var old_options : Array = stringkits.get(stringkit_title, [])
 		var is_speaker := stringkit_title == stringkit_title_for_dialog_syntax
+		
+		var map := {}
+		var index := 0
+		while index < min(old_options.size(), options.size()):
+			map[old_options[index]] = options[index]
+			index += 1
+		if is_speaker:
+			var new_ingestions := []
+			var ingestions := ingestion_actor_declaration.split("\n")
+			for ingestion in ingestions:
+				print("fixing ", ingestion)
+				var fixed := false
+				for old_speaker in map.keys():
+					if ingestion.ends_with(" %s" % old_speaker):
+						new_ingestions.append(ingestion.replace(old_speaker, map.get(old_speaker)))
+						fixed = true
+				if not fixed:
+					new_ingestions.append(ingestion)
+			ingestion_actor_declaration = "\n".join(new_ingestions)
+		
 		
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
@@ -1154,6 +1175,7 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 					
 					i += 1
 	
+	# this has to be at the end so that we can compare to old values in the replace_in_text block
 	stringkits[stringkit_title] = options
 
 func is_new_stringkit_title_invalid(title:String, previous_title := "") -> bool:
