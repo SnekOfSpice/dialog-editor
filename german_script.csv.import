@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bb12vxh6o24me"
+
+[deps]
+
+files=["res://german_script.en.translation", "res://german_script.de.translation"]
+
+source_file="res://german_script.csv"
+dest_files=["res://german_script.en.translation", "res://german_script.de.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

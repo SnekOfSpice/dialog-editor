@@ -358,6 +358,7 @@ const PREFERENCE_PROPS := [
 	"page_scroll_by_idx_by_file_name",
 	"preferences_export",
 	"preferences_import",
+	"preferences_l10n",
 	"region_baking_enabled",
 	"region_delination",
 	"region_delinator_instruction",
@@ -382,9 +383,9 @@ const PREFERENCE_PROPS := [
 func add_new_dialog_editor_window():
 	var config = ConfigFile.new()
 	var err = config.load(PREFERENCE_PATH)
-	#if err == OK:
-		#for prop : String in PREFERENCE_PROPS:
-			#Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+	if err == OK:
+		for prop : String in PREFERENCE_PROPS:
+			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
 	
 	if _embedded:
 		if embedder:

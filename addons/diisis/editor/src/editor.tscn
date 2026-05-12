@@ -30,6 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://c8vph2ifmury7" path="res://addons/diisis/editor/src/windows/handler_window.tscn" id="32_24jcx"]
 [ext_resource type="PackedScene" uid="uid://dgxh31xj7a6ei" path="res://addons/diisis/editor/src/facts_popup.tscn" id="32_378lj"]
 [ext_resource type="PackedScene" uid="uid://c4vp1rjlk3jn7" path="res://addons/diisis/editor/src/windows/ingestion_actor_setup_window.tscn" id="33_378lj"]
+[ext_resource type="PackedScene" uid="uid://hpvhhqm4pwne" path="res://addons/diisis/editor/src/windows/localization_window.tscn" id="33_m63dd"]
 [ext_resource type="PackedScene" uid="uid://dsytvj51tyel4" path="res://addons/diisis/editor/src/update_available.tscn" id="34_378lj"]
 [ext_resource type="PackedScene" uid="uid://dy0ea1htdu04v" path="res://addons/diisis/editor/src/windows/generic_subwindow.tscn" id="34_ajvyk"]
 [ext_resource type="PackedScene" uid="uid://b81gsltqnausa" path="res://addons/diisis/editor/src/windows/text_export_window.tscn" id="34_m63dd"]
@@ -753,6 +754,9 @@ container_path = "uid://cqfaywphjr2k2"
 title = "Configure Regions"
 visible = false
 container_path = "uid://rqflj6uhel4l"
+
+[node name="LocalizationWindow" parent="Popups" unique_id=1380706662 instance=ExtResource("33_m63dd")]
+visible = false
 
 [node name="ArgHint" parent="." unique_id=2017472624 instance=ExtResource("28_g0iye")]
 size = Vector2i(12, 10)

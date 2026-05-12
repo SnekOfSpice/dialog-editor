@@ -33,6 +33,7 @@ const PREFERENCE_PROPS := [
 	"page_scroll_by_idx_by_file_name",
 	"preferences_export",
 	"preferences_import",
+	"preferences_l10n",
 	"region_baking_enabled",
 	"region_delination",
 	"region_delinator_instruction",
@@ -149,6 +150,7 @@ var fix_apostrophes := true
 var replacement_rules := []
 var preferences_import := {}
 var preferences_export := {}
+var preferences_l10n := {}
 var import_modified_times_by_path := {}
 const DEFAULT_REPLACEMENT_RULES := [
 	{
@@ -2599,3 +2601,28 @@ func purge_unused_text_ids():
 func ensure_line_reader_scripts():
 	if evaluator_paths.is_empty() and editor:
 		evaluator_paths = editor.get_line_reader_scripts()
+
+
+
+func save_csv(path : String, locales := []):
+	locales.push_front(ProjectSettings.get_setting("internationalization/locale/fallback"))
+	
+	var file:FileAccess
+	
+	file = FileAccess.open(path, FileAccess.WRITE)
+	var keys := ["key"]
+	keys.append_array(locales)
+	file.store_csv_line(keys)
+	
+	file.seek_end()
+	
+	var extra_locales := []
+	for i in locales.size() - 1:
+		extra_locales.append("")
+	
+	for key in text_data.keys():
+		var line := [key, text_data.get(key)]
+		line.append_array(extra_locales)
+		file.store_csv_line(line)
+	
+	file.close()

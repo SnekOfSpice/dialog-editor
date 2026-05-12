@@ -415,9 +415,6 @@ func get_line_type(address:String) -> DIISIS.LineType:
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
 
-
-
-
 func get_line_content(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var prev_page = parts[0]
@@ -425,14 +422,13 @@ func get_line_content(address:String) -> Dictionary:
 	
 	return page_data.get(prev_page).get("lines")[prev_line].get("content")
 
+
 func get_text(id:String) -> String:
-	if locale == _default_locale:
+	var translated := tr(id)
+	if translated == id: # means we don't have a translation set up
 		return text_data.get(id, "")
-	if l10n.has(id):
-		var text : String = l10n.get(id, {}).get(locale, "")
-		if not text.is_empty():
-			return text
-	return text_data.get(id, "")
+	return translated
+
 
 func get_previous_address_line_type() -> DIISIS.LineType:
 	if address_trail_index <= 0 or address_trail.is_empty():

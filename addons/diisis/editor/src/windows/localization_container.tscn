@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://dsxsfioyfeltm"]
+
+[ext_resource type="Script" uid="uid://d2umixc73xu7e" path="res://addons/diisis/editor/src/windows/localization_container.gd" id="1_58vy7"]
+
+[node name="LocalizationContainer" type="Control" unique_id=354396957]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_58vy7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=995039303]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=619149412]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1625533172]
+layout_mode = 2
+text = "Locales"
+
+[node name="LocalesLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1495079707]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1782586296]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1734813262]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="ExportButton" type="Button" parent="HBoxContainer" unique_id=2039167074]
+layout_mode = 2
+text = "Export CSV..."
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=343745287]
+title = "Export l10n CSV"
+access = 2
+filters = PackedStringArray("*.csv")
+
+[connection signal="pressed" from="HBoxContainer/ExportButton" to="." method="_on_export_button_pressed"]
+[connection signal="close_requested" from="FileDialog" to="." method="_on_file_dialog_close_requested"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
