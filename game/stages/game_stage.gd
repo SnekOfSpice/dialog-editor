@@ -570,3 +570,13 @@ func set_character_name(character: String, new_name: String) -> bool:
 func use_ui(id: float) -> bool:
 	Game.game_stage.use_ui(int(id))
 	return false
+
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		TranslationServer.set_locale("de")
+	else:
+		TranslationServer.set_locale("en")
+	var visible_ratio : float = %BodyLabel.visible_ratio
+	reparse_text(get_dialine())
+	%BodyLabel.visible_ratio = visible_ratio

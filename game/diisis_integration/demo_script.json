@@ -227,6 +227,9 @@
 			"get_default_targets": {
 
 			},
+			"get_dialine": {
+
+			},
 			"get_past_line_rich_text_label": {
 				"text": ""
 			},
@@ -284,6 +287,9 @@
 			},
 			"remove_custom_blocker": {
 
+			},
+			"reparse_text": {
+				"dialine": 0
 			},
 			"request_advance": {
 
@@ -402,7 +408,7 @@
 
 			}
 		},
-		"id_counter": -9223372036854761387,
+		"id_counter": -9223372036854761117,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0

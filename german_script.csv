@@ -8,11 +8,11 @@ key,en,de
 []>narrator: [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called ""liked amber"". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.
 []>narrator: Isn't she cool?","[]>narrator: Danke dass du DIISIS runtergeladen hast
 []>narrator: Aufs maul lol"
-1744987729.539--9223372036854775796,Opinion on Amber?,
+1744987729.539--9223372036854775796,Opinion on Amber?,Meinung zu Amber?
 1744987729.575--9223372036854775792,,
-1744987729.575--9223372036854775793,Yes I love her,
+1744987729.575--9223372036854775793,Yes I love her,Ja ich liebe sie
 1744987729.626--9223372036854775788,,
-1744987729.626--9223372036854775789,"No actually, robots are scary",
+1744987729.626--9223372036854775789,"No actually, robots are scary","Nein, Roboter sind gruselig"
 1744987729.749--9223372036854775782,[]>amber{amber-emotion|sad}: I promise I'm not scary!,
 1744987729.798--9223372036854775779,"[]>narrator: And then we only show the appropriate line.
 []>narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.

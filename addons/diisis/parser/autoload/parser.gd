@@ -423,10 +423,12 @@ func get_line_content(address:String) -> Dictionary:
 	return page_data.get(prev_page).get("lines")[prev_line].get("content")
 
 
-func get_text(id:String) -> String:
+func get_text(id:String, keep_as_l10n_key := false) -> String:
 	var translated := tr(id)
 	if translated == id: # means we don't have a translation set up
 		return text_data.get(id, "")
+	if keep_as_l10n_key: # useful for choice labels etc
+		return id
 	return translated
 
 
