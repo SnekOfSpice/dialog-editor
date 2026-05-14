@@ -30,7 +30,6 @@ name_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextCon
 choice_title_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceLabel")
 choice_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel")
 choice_list = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/ChoicePanel/VBoxContainer/ChoiceList")
-keep_names_as_keys = null
 
 [node name="Background" type="Node2D" parent="." unique_id=1256561869]
 unique_name_in_owner = true
@@ -258,16 +257,9 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="CheckBox" type="CheckBox" parent="Camera2D/VNUICanvasLayer" unique_id=1008901296]
-z_index = 3
-offset_right = 74.0
-offset_bottom = 31.0
-text = "locale"
-
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/AndroidHackButton" to="." method="_on_android_hack_button_pressed"]
 [connection signal="meta_clicked" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel" to="." method="_on_body_label_meta_hover_started"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/HistoryButton" to="." method="_on_history_button_pressed"]
 [connection signal="pressed" from="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/ControlsContainer/MenuButton" to="." method="_on_menu_button_pressed"]
-[connection signal="toggled" from="Camera2D/VNUICanvasLayer/CheckBox" to="." method="_on_check_box_toggled"]

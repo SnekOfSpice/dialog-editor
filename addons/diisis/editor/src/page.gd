@@ -31,7 +31,7 @@ func init(n : int = number):
 	find_child("Facts").init()
 	deserialize(data)
 	page_key_line_edit.placeholder_text = "Page " + str(n)
-	
+	%BottomMargin.visible = not DiisisEditorUtil.embedded
 	if n > 0:
 		DiisisEditorUtil.set_up_delete_modulate(find_child("Lines"), find_child("DeleteButton"))
 		DiisisEditorUtil.set_up_delete_modulate(find_child("Info"), find_child("DeleteButton"))
