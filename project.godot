@@ -152,7 +152,6 @@ history={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://german_script.de.translation", "res://german_script.en.translation")
 locale/test="de"
 
 [rendering]
