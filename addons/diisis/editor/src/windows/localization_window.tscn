@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://hpvhhqm4pwne"]
+
+[ext_resource type="Script" uid="uid://cveghdv7ap0k6" path="res://addons/diisis/editor/src/windows/localization_window.gd" id="1_x4fqt"]
+[ext_resource type="PackedScene" uid="uid://dsxsfioyfeltm" path="res://addons/diisis/editor/src/windows/localization_container.tscn" id="2_s363p"]
+
+[node name="LocalizationWindow" type="Window" unique_id=1380706662]
+oversampling_override = 1.0
+mode = 2
+title = "Localization"
+position = Vector2i(0, 36)
+script = ExtResource("1_x4fqt")
+
+[node name="LocalizationContainer" parent="." unique_id=354396957 instance=ExtResource("2_s363p")]
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="fd_closed" from="LocalizationContainer" to="." method="_on_localization_container_fd_closed"]
+[connection signal="fd_opened" from="LocalizationContainer" to="." method="_on_localization_container_fd_opened"]

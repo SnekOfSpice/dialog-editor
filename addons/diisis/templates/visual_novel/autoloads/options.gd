@@ -173,19 +173,30 @@ func save_prefs():
 func get_save_thumbnail_path(slot := save_slot) -> String:
 	return str("user://thumbnail", slot, ".png")
 
+
 func get_save_thumbnail_size() -> Vector2:
 	return Vector2(
 	ProjectSettings.get_setting("display/window/size/viewport_width") * 0.15,
 	ProjectSettings.get_setting("display/window/size/viewport_height") * 0.15)
 
+
 func get_savedata_dir_name(slot := save_slot) -> String:
 	return str("slot", slot)
+
 
 func has_savedata(slot := save_slot) -> bool:
 	var err = DirAccess.open(str("user://", get_savedata_dir_name(slot)))
 	if not err:
 		return false
 	return true
+
+
+func has_any_savedata() -> bool:
+	for i in MAX_SAVE_SLOTS:
+		if has_savedata(i):
+			return true
+	return false
+
 
 func set_save_slot(slot : int):
 	save_slot = slot

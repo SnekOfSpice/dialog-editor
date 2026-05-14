@@ -5,14 +5,15 @@ class_name LineReaderActorConfig
 ## [b]Note:[/b] For outlines across all actors, consider using a [Theme] instead.
 
 @export_group("Name", "name_")
+## The proper name of the character you want to show to the player. Localization doesn't cover all use cases yet.
 @export var name_display := ""
 @export var name_prefix := ""
 @export var name_suffix := ""
 
 @export_group("Color")
 ## Use [const Color.TRANSPARENT] to use the default theme color.
-## Will use color of [Label] if [LineReader.name_style] is [LineReader.NameStyle.NameLabel]
-## or the normal text color of [RichTextLabel] if [LineReader.name_style] is [LineReader.NameStyle.Prepend].
+## Will use color of [Label] if [LineReader.name_style] is [enum LineReader.NameStyle.NameLabel]
+## or the normal text color of [RichTextLabel] if [LineReader.name_style] is [enum LineReader.NameStyle.Prepend].
 @export var color := Color.TRANSPARENT
 @export var outline_color := Color.WHITE
 @export var outline_size := 0

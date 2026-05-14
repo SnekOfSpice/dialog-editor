@@ -1,7 +1,6 @@
 @tool
 extends Window
 
-signal go_to(page_number:int)
 var direct_swap_start := -1
 
 func set_items_visible_name(search:String, override:=false):
@@ -52,7 +51,7 @@ func direct_swap(page_clicked: int):
 	direct_swap_start = -1
 
 func on_item_go_to(number:int):
-	emit_signal("go_to", number)
+	Pages.editor.request_go_to_address(str(number))
 	hide()
 
 func _on_about_to_popup() -> void:

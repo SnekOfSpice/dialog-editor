@@ -273,6 +273,12 @@ enum RubySizeMode {
 @export var chatlog_line_prefix := "[code]"
 ## Suffix string when [member chatlog_enabled] is true.
 @export var chatlog_line_suffix := "[/code]"
+@export_subgroup("Localization") 
+## By default, DIISIS will call [code]tr()[/code] on all names it fetches.
+## [br][br]If [member keep_names_as_keys] is true, DIISIS will return whatever it finds in
+## [member actor_config] without calling [code]tr()[/code]. Useful if you use [Label]s for
+## your name display and want to have those localize in sync with [TranslationServer]'s locale.
+@export var keep_names_as_keys := false
 
 @export_group("Advanced UX")
 @export_subgroup("Choices")
@@ -580,7 +586,7 @@ func _deserialize(data: Dictionary):
 		var content = _line_data.get("content").get("content")
 		var choices = _line_data.get("content").get("choices")
 		var auto_switch : bool = raw_content.get("auto_switch")
-		_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id", "")))
+		_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id", ""), true))
 
 		_build_choices(choices, auto_switch)
 	
@@ -867,6 +873,7 @@ func _on_instruction_wrapped_completed():
 func _close(_terminating_page):
 	terminated = true
 
+var _last_text_line_id : String
 func _read_new_line(new_line: Dictionary):
 	_line_data = new_line
 	var skip : bool = _line_data.get("skip", false)
@@ -908,7 +915,8 @@ func _read_new_line(new_line: Dictionary):
 	if line_type == DIISIS.LineType.Choice:
 		choices = _line_data.get("content").get("choices")
 	if line_type == DIISIS.LineType.Text:
-		content = Parser.get_text(raw_content.get("text_id"))
+		_last_text_line_id = raw_content.get("text_id")
+		content = Parser.get_text(_last_text_line_id)
 		if content.begins_with("<fbrf:"):
 			var tag : String = content.substr(0, content.find(">") + 1)
 			if content.trim_prefix(tag).is_empty():
@@ -937,76 +945,10 @@ func _read_new_line(new_line: Dictionary):
 	
 	match line_type:
 		DIISIS.LineType.Text:
-			if str(content).is_empty():
-				emit_signal("line_finished", line_index)
-				return
-			
-			if Parser.use_dialog_syntax:
-				content = _replace_lc_tags(content)
-			
-			if Parser.use_dialog_syntax or chatlog_enabled:
-				var lines = content.split("[]>")
-				_dialog_actors.clear()
-				_dialog_lines.clear()
-				for l : String in lines:
-					if l.is_empty():
-						continue
-					
-					var actor_name = l.split(":")[0]
-					_dialog_actors.append(actor_name)
-					var line : String = l.trim_prefix(str(actor_name, ":"))
-					line = _trim_trimmables(line)
-					if chatlog_enabled:
-						actor_name = _trim_syntax_and_emit_dialog_line_args(actor_name)
-						
-						var actor_prefix := ""
-						if not actor_name in blank_names:
-							actor_prefix = _get_actor_name(actor_name) + ": "
-						
-						var body_prefix : String = get_actor_config_property("body_label_prefix", actor_name, "")
-						var body_suffix : String = get_actor_config_property("body_label_suffix", actor_name, "")
-						if chatlog_enabled and not chatlog_include_body_label_actor_prefix:
-							body_prefix = ""
-						if chatlog_enabled and not chatlog_include_body_label_actor_suffix:
-							body_suffix = ""
-						
-						var pair = _get_actor_color_prepend_tag_pair(actor_name)
-						line = str(
-							pair[0],
-							actor_prefix,
-							pair[1] if not chatlog_tint_full_line else "",
-							body_prefix,
-							line,
-							body_suffix,
-							pair[1] if chatlog_tint_full_line else "",
-							)
-						
-						line = str(
-							chatlog_line_prefix,
-							line,
-							chatlog_line_suffix,
-						)
-					_dialog_lines.append(line)
-				
-				
-				if chatlog_enabled and chatlog_fuse_lines:
-					var chat_text := "\n".join(PackedStringArray(_dialog_lines))
-					_dialog_lines.clear()
-					_dialog_lines = [chat_text]
-					_dialog_actors.clear()
-					_dialog_actors = [""]
-			else:
-				_dialog_lines = [content]
-				_dialog_actors.clear()
-				_dialog_actors = [""]
-			
-			_dialog_lines = _replace_tags(_dialog_lines)
-			_dialog_lines = _replace_control_sequences(_dialog_lines)
-			_dialog_lines = _dialog_lines.duplicate(true)
-			_set_dialog_line_index(0)
+			reparse_text()
 		DIISIS.LineType.Choice:
 			var auto_switch : bool = raw_content.get("auto_switch")
-			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id")))
+			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id"), true))
 			_build_choices(choices, auto_switch)
 		DIISIS.LineType.Instruction:
 			var text : String
@@ -1047,6 +989,91 @@ func _read_new_line(new_line: Dictionary):
 	_remaining_prompt_delay = input_prompt_delay
 	
 	_reverse_next_instruction = false
+
+
+## Returns the current dialog line index. See [method reparse_text].
+func get_dialine() -> int:
+	return _dialog_line_index
+
+
+## @experimental
+## Fetches the full text data for this Text Line. Can be used in conjunction with [method get_dialine] to make dynamic localization (l10n) work.
+## [br][b]Note:[/b] Currently unsure if switching this while not currently being inside a Text Line breaks things. But seems to be stable?
+func reparse_text(dialine := 0):
+	#if line_type != DIISIS.LineType.Text:
+		#push_warning("Can only reparse text while the current line type is Text. if you want to switch locales, consider (read: try out idk this shit) storing the new locale and then reparse on the next time the linetype switches to Text")
+		#return
+	
+	var content : String = Parser.get_text(_last_text_line_id)
+	
+	if str(content).is_empty():
+		emit_signal("line_finished", line_index)
+		return
+	
+	if Parser.use_dialog_syntax:
+		content = _replace_lc_tags(content)
+	
+	if Parser.use_dialog_syntax or chatlog_enabled:
+		var lines = content.split("[]>")
+		_dialog_actors.clear()
+		_dialog_lines.clear()
+		for l : String in lines:
+			if l.is_empty():
+				continue
+			
+			var actor_name = l.split(":")[0]
+			_dialog_actors.append(actor_name)
+			var line : String = l.trim_prefix(str(actor_name, ":"))
+			line = _trim_trimmables(line)
+			if chatlog_enabled:
+				actor_name = _trim_syntax_and_emit_dialog_line_args(actor_name)
+				
+				var actor_prefix := ""
+				if not actor_name in blank_names:
+					actor_prefix = _get_actor_name(actor_name) + ": "
+				
+				var body_prefix : String = get_actor_config_property("body_label_prefix", actor_name, "")
+				var body_suffix : String = get_actor_config_property("body_label_suffix", actor_name, "")
+				if chatlog_enabled and not chatlog_include_body_label_actor_prefix:
+					body_prefix = ""
+				if chatlog_enabled and not chatlog_include_body_label_actor_suffix:
+					body_suffix = ""
+				
+				var pair = _get_actor_color_prepend_tag_pair(actor_name)
+				line = str(
+					pair[0],
+					actor_prefix,
+					pair[1] if not chatlog_tint_full_line else "",
+					body_prefix,
+					line,
+					body_suffix,
+					pair[1] if chatlog_tint_full_line else "",
+					)
+				
+				line = str(
+					chatlog_line_prefix,
+					line,
+					chatlog_line_suffix,
+				)
+			_dialog_lines.append(line)
+		
+		
+		if chatlog_enabled and chatlog_fuse_lines:
+			var chat_text := "\n".join(PackedStringArray(_dialog_lines))
+			_dialog_lines.clear()
+			_dialog_lines = [chat_text]
+			_dialog_actors.clear()
+			_dialog_actors = [""]
+	else:
+		_dialog_lines = content.split("<lc>")
+		_dialog_actors.clear()
+		for i in _dialog_lines.size():
+			_dialog_actors.append("")
+	
+	_dialog_lines = _replace_tags(_dialog_lines)
+	_dialog_lines = _replace_control_sequences(_dialog_lines)
+	_dialog_lines = _dialog_lines.duplicate(true)
+	_set_dialog_line_index(dialine)
 
 
 # returns index, string pair
@@ -1247,12 +1274,14 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 				if vis == -1:
 					vis = body_label.get_parsed_text().length()
 				
+				
+				var can_get_input : bool = (_next_pause_type in [_PauseTypes.Manual, _PauseTypes.EoL] and body_label.visible_characters == _get_end_of_chunk_position()) or body_label.visible_characters == -1
 				if _terminator_node_incomplete:
 					_terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					_terminator_node_incomplete.visible = body_label.visible_ratio != 1
+					_terminator_node_incomplete.visible = not can_get_input
 				if _terminator_node_complete:
 					_terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
-					_terminator_node_complete.visible = body_label.visible_ratio == 1
+					_terminator_node_complete.visible = can_get_input
 	
 	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
 		var last_dur = _remaining_auto_pause_duration
@@ -1773,7 +1802,7 @@ func _handle_tags_and_start_reading():
 				call_strings_at_index.append(tag_string)
 				scan_index = max(scan_index - tag_string.length(), -1) # -1 because at the end we add 1
 				target_length -= tag_string.length()
-				tag_buffer += tag_string.length()
+				#tag_buffer += tag_string.length() # ngl this breaks offsets but I forgor why. so we just don't do it!
 			elif bbcode_removed_text.find("<ts_", scan_index) == scan_index:
 				var tag_length := bbcode_removed_text.find(">", scan_index) - scan_index + 1
 				var tag_string := bbcode_removed_text.substr(scan_index, tag_length)
@@ -2123,10 +2152,10 @@ func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_la
 			terminator_node.focus_mode = Control.FOCUS_NONE
 		TerminatorData.TerminatorStyle.Scene:
 			terminator_node = Control.new()
-			terminator_node.texture = terminator_data.terminator_texture
+			terminator_node = terminator_data.terminator_scene.instantiate()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			terminator_node.add_child(terminator_data.terminator_scene.instantiate())
+			#terminator_node.add_child(terminator_data.terminator_scene.instantiate())
 	
 	set(node_property, terminator_node)
 	on_label.add_child(terminator_node)
@@ -2360,7 +2389,11 @@ func set_body_label(new_body_label:RichTextLabel, keep_text := true, clear_previ
 ## Helper function for setting [member name_container] and [member name_label].
 func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container
-	var old_text = name_label.text
+	var old_text : String
+	if name_label:
+		old_text = name_label.text
+	else:
+		old_text = ""
 	name_label = label
 	if keep_text:
 		name_label.text = old_text
@@ -2395,7 +2428,10 @@ func _get_actor_name(actor_key:String) -> String:
 	var display_name : String = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "name_display"), actor_key)
 	if display_name.is_empty():
 		display_name = get_actor_config_property("name_display", actor_key, actor_key)
-	return display_name
+	if keep_names_as_keys:
+		return display_name
+	return tr(display_name)
+
 
 func _get_actor_color(actor:String) -> Color:
 	return _get_actor_color_config("color", actor)
@@ -2411,6 +2447,10 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 		var color : Color = (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
 		if color == Color.TRANSPARENT:
 			color = (actor_config.get(actor_key) as LineReaderActorConfig).get(base_property)
+		
+		if base_property == "outline_color":
+			return color
+		
 		if color != Color.TRANSPARENT:
 			return color
 		
@@ -2428,11 +2468,14 @@ func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
 	var outline_color : Color = _get_actor_color_config("outline_color", actor)
 	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor, 0)
 	
-	var prefix := str(
-		"[color=", color.to_html(), "]",
-		"[outline_color=", outline_color.to_html(), "]",
-	)
-	var suffix := "[/outline_color][/color]"
+	var prefix := str("[color=", color.to_html(), "]")
+	if outline_size > 0:
+		prefix += str("[outline_color=", outline_color.to_html(), "]")
+	
+	var suffix := ""
+	if outline_size > 0:
+		suffix += "[/outline_color]"
+	suffix += "[/color]"
 	
 	# there's a bug where outline size 0 will throw an error that doesn't do anything
 	if outline_size > 0:
@@ -2457,13 +2500,12 @@ func set_actor_config_property_color(config_property:String, actor_key:String, r
 ## [b]Note:[/b] Updating this mid-dialog line will have no effect if [member chatlog_enabled] is true.
 func set_actor_config_property(config_property:String, actor_key:String, value):
 	var previous_value
-	if actor_config.keys().has(actor_key):
-		previous_value = get_actor_config_property(config_property, actor_key)
-		(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
-	else:
-		var new_config = LineReaderActorConfig.new()
-		new_config.set(config_property, value)
-		actor_config[actor_key] = new_config
+	if not actor_config.keys().has(actor_key):
+		push_warning("No config exists for actor %s. Nothing has been changed. Maybe create one first?" % actor_key)
+		return
+	
+	previous_value = get_actor_config_property(config_property, actor_key)
+	(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
 	
 	# update display string
 	if previous_value != value:
@@ -2550,9 +2592,9 @@ func _build_choices(choices, auto_switch:bool):
 					continue
 		
 		if enable_option:
-			option_text = Parser.get_text(option.get("text_id_enabled"))
+			option_text = Parser.get_text(option.get("text_id_enabled"), not virtual_choices)
 		else:
-			option_text = Parser.get_text(option.get("text_id_disabled"))
+			option_text = Parser.get_text(option.get("text_id_disabled"), not virtual_choices)
 		
 		# give to option to signal
 		var do_jump_page = option.get("do_jump_page", false)

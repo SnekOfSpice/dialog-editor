@@ -188,7 +188,8 @@ func init(active_file_path:="") -> void:
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	
-	file_item.add_submenu_node_item("Localization", file_item.get_node("L10NMenu"))
+	
+	file_item.add_item("Localization")
 	file_item.add_item("Open with Ctrl + ...")
 	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
@@ -947,6 +948,7 @@ func open_window_by_string(window_name:String) -> Window:
 		"TextExportWindow",
 		"TextImportWindow",
 		"FileConfigPopup",
+		"LocalizationWindow"
 	])
 	return window
 
@@ -991,6 +993,8 @@ func _on_file_id_pressed(id: int) -> void:
 			open_window_by_string("RegionConfigWindow")
 		9:
 			try_new_file()
+		10:
+			open_window_by_string("LocalizationWindow")
 
 func _on_l_10n_menu_id_pressed(id: int) -> void:
 	match id:

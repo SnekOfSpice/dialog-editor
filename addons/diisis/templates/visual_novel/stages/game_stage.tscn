@@ -156,6 +156,7 @@ theme_type_variation = &"DefaultText"
 layout_mode = 2
 
 [node name="BodyLabel" type="RichTextLabel" parent="Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=4970062]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(670, 121)
 layout_mode = 2
 size_flags_horizontal = 0

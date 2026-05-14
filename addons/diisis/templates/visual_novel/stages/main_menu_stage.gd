@@ -34,7 +34,7 @@ func _ready() -> void:
 	
 	
 	EventBus.save_slot_set.connect(set_save_slot)
-	%SaveContainer.visible = Options.has_savedata(0)
+	%SaveContainer.visible = Options.has_any_savedata()
 	if %SaveContainer.visible:
 		%StartButton.focus_neighbor_bottom = %SaveSlotButton.get_path()
 		%AuxButtons.get_child(0).focus_neighbor_top = %SaveSlotButton.get_path()

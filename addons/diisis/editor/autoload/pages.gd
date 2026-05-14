@@ -33,6 +33,7 @@ const PREFERENCE_PROPS := [
 	"page_scroll_by_idx_by_file_name",
 	"preferences_export",
 	"preferences_import",
+	"preferences_l10n",
 	"region_baking_enabled",
 	"region_delination",
 	"region_delinator_instruction",
@@ -149,6 +150,7 @@ var fix_apostrophes := true
 var replacement_rules := []
 var preferences_import := {}
 var preferences_export := {}
+var preferences_l10n := {}
 var import_modified_times_by_path := {}
 const DEFAULT_REPLACEMENT_RULES := [
 	{
@@ -232,8 +234,10 @@ func sync_line_references():
 
 
 func serialize() -> Dictionary:
+	var counts := get_count_total()
 	var data := {
 		"callable_autoloads": callable_autoloads,
+		"character_count" : counts.y,
 		"custom_method_stringkit_limiters": custom_method_stringkit_limiters,
 		"custom_method_defaults": custom_method_defaults,
 		#"default_address_mode_pages": default_address_mode_pages,
@@ -256,6 +260,7 @@ func serialize() -> Dictionary:
 		"text_lead_time_other_actor": text_lead_time_other_actor,
 		"text_lead_time_same_actor": text_lead_time_same_actor,
 		"use_dialog_syntax": use_dialog_syntax,
+		"word_count" : counts.x,
 	}
 	
 	if region_baking_enabled:
@@ -1106,8 +1111,29 @@ func rename_stringkit_title(from:String, to:String):
 
 func set_stringkit_options(stringkit_title:String, options:Array, replace_in_text:=true, replace_speaker:=true):
 	if replace_in_text:
+		
 		var old_options : Array = stringkits.get(stringkit_title, [])
 		var is_speaker := stringkit_title == stringkit_title_for_dialog_syntax
+		
+		var map := {}
+		var index := 0
+		while index < min(old_options.size(), options.size()):
+			map[old_options[index]] = options[index]
+			index += 1
+		if is_speaker:
+			var new_ingestions := []
+			var ingestions := ingestion_actor_declaration.split("\n")
+			for ingestion in ingestions:
+				print("fixing ", ingestion)
+				var fixed := false
+				for old_speaker in map.keys():
+					if ingestion.ends_with(" %s" % old_speaker):
+						new_ingestions.append(ingestion.replace(old_speaker, map.get(old_speaker)))
+						fixed = true
+				if not fixed:
+					new_ingestions.append(ingestion)
+			ingestion_actor_declaration = "\n".join(new_ingestions)
+		
 		
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
@@ -1149,6 +1175,7 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 					
 					i += 1
 	
+	# this has to be at the end so that we can compare to old values in the replace_in_text block
 	stringkits[stringkit_title] = options
 
 func is_new_stringkit_title_invalid(title:String, previous_title := "") -> bool:
@@ -1951,10 +1978,8 @@ func are_all_of_these_stringkit_titles(names:Array) -> bool:
 	return result
 
 func capitalize_sentence_beginnings(text:String) -> String:
-	
-
 	var c12n_prefixes := [
-		".", ":", ";", "?", "!", "~"
+		".", ":", ";", "?", "!", "~", "\n"
 	]
 	
 	var letter_indices_after_elipses := {}
@@ -2045,6 +2070,9 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	
 	text = text.replace(" i ", " I ")
 	
+	if not text.is_empty(): # useful for when not using dialogue syntax
+		text[0] = text[0].capitalize()
+	
 	return text
 
 func neaten_whitespace(text:String) -> String:
@@ -2088,7 +2116,23 @@ func neaten_whitespace(text:String) -> String:
 		while sequence_pos != -1:
 			text = text.erase(sequence_pos + full_sequence.length() - 1)
 			sequence_pos = text.find(full_sequence, sequence_pos)
-		
+	
+	for space_trailer in ["name", "fact", "clname", "func", "var"]:
+		if not text.contains("<%s:" % space_trailer):
+			continue
+		var scan_index := 0
+		var text_length := text.length()
+		while scan_index < text_length:
+			if text.find("<%s:" % space_trailer, scan_index) == scan_index:
+				var tag_end := text.find(">", scan_index)
+				if tag_end < text.length() - 1:
+					if not text[tag_end + 1] in [" ", "\n"]:
+						text = text.insert(tag_end + 1, " ")
+						text_length += 1
+						scan_index += 1
+			scan_index += 1
+			
+	
 	text = text.replace("] .", "].")
 	text = text.replace("> .", ">.")
 	text = text.replace(": //", "://")
@@ -2595,3 +2639,28 @@ func purge_unused_text_ids():
 func ensure_line_reader_scripts():
 	if evaluator_paths.is_empty() and editor:
 		evaluator_paths = editor.get_line_reader_scripts()
+
+
+
+func save_csv(path : String, locales := []):
+	locales.push_front(ProjectSettings.get_setting("internationalization/locale/fallback"))
+	
+	var file:FileAccess
+	
+	file = FileAccess.open(path, FileAccess.WRITE)
+	var keys := ["key"]
+	keys.append_array(locales)
+	file.store_csv_line(keys)
+	
+	file.seek_end()
+	
+	var extra_locales := []
+	for i in locales.size() - 1:
+		extra_locales.append("")
+	
+	for key in text_data.keys():
+		var line := [key, text_data.get(key)]
+		line.append_array(extra_locales)
+		file.store_csv_line(line)
+	
+	file.close()
