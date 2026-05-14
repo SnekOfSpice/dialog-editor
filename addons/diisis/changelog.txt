@@ -1,20 +1,23 @@
-DIISIS 0.7.2
+DIISIS 0.8 2026-05-14
 
-in neaten whitespace: make some tags insert a space after their insertion
-function to handle locale change
-changing a speaker name in the stringkit hsould also chaange it in the actor ingestion declaration
-l10n csv
+*localization update*
+
 
 Editor
-- fix goto not working
-- fix some minor things when not using dialog syntax: make capitlization work
+- Fix goto not working
+- Fix some minor things when not using dialog syntax: make capitlization work
+- In neaten whitespace: make string-inserting tags insert a space after their insertion
+- Add option to generate l10n csv / refactor the l10n system
+- Changing a speaker name in the speaker stringkit also changes that name in the actor ingestion declaration
+
 Runtime
-- include word & character count in the parser
-- fix scene terminators
-- fix terminator visibility
+- Include word & character count in the parser
+- Fix scene terminators
+- Fix terminator visibility
+- Add function to handle locale change
 
 VN Template
-- Fix save UI in main menu to prevent softlocks (dddd 1.1 fix)
+- Fix save UI in main menu to prevent softlocks (ported from Dog Days Dog Daze 1.1)
 
 
 ----------
