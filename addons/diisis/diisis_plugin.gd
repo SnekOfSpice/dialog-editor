@@ -385,7 +385,9 @@ func add_new_dialog_editor_window():
 	var err = config.load(PREFERENCE_PATH)
 	if err == OK:
 		for prop : String in PREFERENCE_PROPS:
-			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+			var pages = Engine.get_singleton("Pages")
+			if pages:
+				pages.set(prop, config.get_value("editor", prop, pages.get(prop)))
 	
 	if _embedded:
 		if embedder:
