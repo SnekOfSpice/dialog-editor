@@ -671,9 +671,9 @@ func save_to_recent_files(path : String) -> void:
 	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
 	if not recent_files:
 		#recent_files.close()
-		recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
-		recent_files.store_string(JSON.stringify([path], "\t"))
-		recent_files.close()
+		var rf = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+		rf.store_string(JSON.stringify([path], "\t"))
+		rf.close()
 		return
 	var recent_data : Array
 	if recent_files.get_length() > 0:

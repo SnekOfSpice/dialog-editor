@@ -171,7 +171,9 @@ func _process(delta: float) -> void:
 	if modified_time != last_modified_time:
 		while not FileAccess.file_exists(source_path):
 			await get_tree().process_frame
+		var prev_vacts := facts.duplicate()
 		_initialize(_get_data(last_data_fetch_path))
+		apply_facts(prev_vacts)
 		read_page(page_index, line_index)
 	last_modified_time = FileAccess.get_modified_time(source_path)
 
