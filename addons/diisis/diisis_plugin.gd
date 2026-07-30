@@ -381,13 +381,13 @@ const PREFERENCE_PROPS := [
 
 
 func add_new_dialog_editor_window():
-	var config = ConfigFile.new()
-	var err = config.load(PREFERENCE_PATH)
-	if err == OK:
-		for prop : String in PREFERENCE_PROPS:
-			var pages = Engine.get_singleton("Pages")
-			if pages:
-				pages.set(prop, config.get_value("editor", prop, pages.get(prop)))
+	#var config = ConfigFile.new()
+	#var err = config.load(PREFERENCE_PATH)
+	#if err == OK:
+		#for prop : String in PREFERENCE_PROPS:
+			#var pages = Engine.get_singleton("Pages")
+			#if pages:
+				#pages.set(prop, config.get_value("editor", prop, pages.get(prop)))
 	
 	if _embedded:
 		if embedder:
@@ -408,15 +408,15 @@ func add_new_dialog_editor_window():
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		dia_editor_window.wrap_controls = true
 		
-		if err == OK:
-			var scale : float = config.get_value("editor", "content_scale", 1.0)
-			#find_child("WindowFactorScale").set_value(scale)
-			dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
-			dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
-			dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
-			
-			await get_tree().process_frame
-			dia_editor_window.update_content_scale(scale)
+		#if err == OK:
+			#var scale : float = config.get_value("editor", "content_scale", 1.0)
+			##find_child("WindowFactorScale").set_value(scale)
+			#dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
+			#dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
+			#dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
+			#
+			#await get_tree().process_frame
+			#dia_editor_window.update_content_scale(scale)
 
 
 func on_new_file_requested():

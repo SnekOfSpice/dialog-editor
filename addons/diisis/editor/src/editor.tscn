@@ -688,7 +688,7 @@ visible = false
 theme_override_font_sizes/title_font_size = 30
 
 [node name="IngestionActorSetupWindow" parent="Popups" unique_id=642674317 instance=ExtResource("33_378lj")]
-size = Vector2i(400, 1741)
+size = Vector2i(400, 1764)
 visible = false
 theme_override_font_sizes/title_font_size = 16
 
@@ -840,6 +840,21 @@ theme_override_font_sizes/font_size = 14
 text = "Booting up import..."
 horizontal_alignment = 1
 
+[node name="PagesRefactorHelp" type="VBoxContainer" parent="." unique_id=809347728]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 278.0
+offset_right = 58.0
+offset_bottom = 318.0
+
+[node name="PagesRefactorButton" type="Button" parent="PagesRefactorHelp" unique_id=386200446]
+layout_mode = 2
+text = "awawa"
+
+[node name="PagesRefactorLabel" type="Label" parent="PagesRefactorHelp" unique_id=1653177495]
+unique_name_in_owner = true
+layout_mode = 2
+
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
@@ -873,3 +888,4 @@ horizontal_alignment = 1
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="close_requested" from="Popups/FileConfigPopup" to="." method="_on_file_config_popup_close_requested"]
 [connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]
+[connection signal="pressed" from="PagesRefactorHelp/PagesRefactorButton" to="." method="_on_pages_refactor_button_pressed"]

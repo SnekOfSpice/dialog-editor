@@ -17,7 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="DIISIS"
 config/tags=PackedStringArray("diisis_made")
 run/main_scene="uid://b3u3nrek114bl"
-config/features=PackedStringArray("4.6", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="uid://cakx4eotyolmx"
 
 [audio]
@@ -46,7 +46,7 @@ ParserEvents="*uid://dinb6lf0qoexi"
 [diisis]
 
 project/file/path="res://game/diisis_integration/demo_script.json"
-plugin/view/embedded=false
+plugin/view/embedded=true
 plugin/checks/check_for_updates=true
 plugin/checks/check_for_linux_input=true
 
