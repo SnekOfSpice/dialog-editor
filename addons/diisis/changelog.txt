@@ -16,6 +16,10 @@ Runtime
 - add rollback for folders and choices
 - add option to block rollback on folders and choices
 
+VN Template
+- Give RollbackHandler serialization for Parser.facts
+
+
 
 DIISIS 0.8 2026-05-14
 

@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://c0tbfls2mgdg6" path="res://game/autoloads/rollback_handler.gd" id="1_6kqm3"]
 
-[node name="GoBackHandler" type="Node"]
+[node name="GoBackHandler" type="Node" unique_id=44723381]
 script = ExtResource("1_6kqm3")

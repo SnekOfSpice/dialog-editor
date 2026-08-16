@@ -13,6 +13,7 @@ func on_read_new_line(line:int):
 	# save the state
 	var state := {}
 	
+	state["facts"] = Parser.facts.duplicate(true)
 	state["Sound"] = Sound.serialize()
 	if is_instance_valid(Game.game_stage):
 		state["game_stage"] = Game.game_stage.serialize()
@@ -37,7 +38,8 @@ func on_rollback_accepted(page:int, line:int, _a):
 	
 	if is_instance_valid(Game.game_stage):
 		Game.game_stage.deserialize(state.get("game_stage", {}))
-
+	
+	Parser.facts = state.get("facts", Parser.facts)
 	Sound.deserialize(state.get("Sound", {}))
 
 func serialize() -> Dictionary:
