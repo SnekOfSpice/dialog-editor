@@ -4,7 +4,7 @@ extends Node
 var states_by_page := {}
 
 func _ready() -> void:
-	ParserEvents.go_back_accepted.connect(on_go_back_accepted)
+	ParserEvents.rollback_accepted.connect(on_rollback_accepted)
 	ParserEvents.read_new_line.connect(on_read_new_line)
 
 func on_read_new_line(line:int):
@@ -22,7 +22,7 @@ func on_read_new_line(line:int):
 	else:
 		states_by_page[Parser.page_index] = {line : state}
 
-func on_go_back_accepted(page:int, line:int, _a):
+func on_rollback_accepted(page:int, line:int, _a):
 	if not states_by_page.has(page):
 		return
 	if not states_by_page[page].has(line):

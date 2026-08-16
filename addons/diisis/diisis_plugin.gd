@@ -26,7 +26,7 @@ const AUTOLOAD_EDITOR_EVENT_BUS = "DiisisEditorEventBus"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 const TEMPLATE_VN_AUTOLOAD_CONST = "CONST"
-const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
+const TEMPLATE_VN_AUTOLOAD_ROLLBACK_HANDLER = "RollbackHandler"
 const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
 const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
@@ -209,7 +209,7 @@ func setup_vn_template():
 	var e6 = InputEventKey.new()
 	e6.keycode = KEY_RIGHT
 	e6.physical_keycode = KEY_RIGHT
-	ProjectSettings.set_setting("input/go_back",
+	ProjectSettings.set_setting("input/rollback",
 		{
 		"deadzone": 0.5,
 		"events": [e5,e6]
@@ -263,7 +263,7 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name :String in ["scene_loader","event_bus", "const", "go_back_handler", "options", "sound", "style", "game"]:
+	for file_name :String in ["scene_loader","event_bus", "const", "rollback_handler", "options", "sound", "style", "game"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
 		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))

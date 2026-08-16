@@ -114,10 +114,10 @@ func _ready() -> void:
 	full_initialize(ProjectSettings.get_setting("diisis/project/file/path"))
 	
 	ParserEvents.choice_pressed.connect(_on_choice_pressed)
-	ParserEvents.go_back_declined.connect(_on_go_back_declined)
+	ParserEvents.rollback_declined.connect(_on_rollback_declined)
 
 
-func _on_go_back_declined(reason : RollbackDeclineReason):
+func _on_rollback_declined(reason : RollbackDeclineReason):
 	match reason:
 		RollbackDeclineReason.HIT_CHOICE:
 			push_warning("Attempted rollback while block_rollback_on_choices was true.")
@@ -578,10 +578,10 @@ func _get_rollback() -> int:
 		var line_type : DIISIS.LineType = get_line_type(address_trail[address_trail_index - lookback])
 		
 		if line_type == DIISIS.LineType.Choice and block_rollback_on_choices:
-			ParserEvents.go_back_declined.emit(RollbackDeclineReason.HIT_CHOICE)
+			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_CHOICE)
 			return 0
 		if line_type == DIISIS.LineType.Folder and block_rollback_on_folders:
-			ParserEvents.go_back_declined.emit(RollbackDeclineReason.HIT_FOLDER)
+			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_FOLDER)
 			return 0
 		if line_type == DIISIS.LineType.Text:
 			return -lookback
@@ -591,16 +591,16 @@ func _get_rollback() -> int:
 	return 0
 	
 
-func go_back():
+func rollback():
 	var trail_shift = _get_rollback()
 	
 	if address_trail_index < 0 or address_trail.is_empty():
-		ParserEvents.go_back_declined.emit(RollbackDeclineReason.BEGINNING)
+		ParserEvents.rollback_declined.emit(RollbackDeclineReason.BEGINNING)
 		trail_shift = 0
 	
 	if line_reader._attempt_read_previous_dialine() and line_reader.line_type == DIISIS.LineType.Text:
 		var subaddr = line_reader.get_subaddress_arr()
-		ParserEvents.go_back_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
+		ParserEvents.rollback_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
 		return
 	
 	var instruction_stack := []
@@ -639,7 +639,7 @@ func go_back():
 		var content := get_text(raw_content.get("text_id"))
 		dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
 		
-		ParserEvents.go_back_accepted.emit(prev_page, prev_line, dialine_about_to_read)
+		ParserEvents.rollback_accepted.emit(prev_page, prev_line, dialine_about_to_read)
 	if not address_trail.is_empty():
 		address_trail.resize(address_trail_index)
 	if prev_page == page_index:

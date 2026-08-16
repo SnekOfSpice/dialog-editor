@@ -179,10 +179,10 @@ signal body_label_visible_ratio_changed(
 	visible_ratio:float
 )
 
-## Emitted when [method LineReader.request_go_back] fails. Emits [enum Parser.RollbackDeclineReason]
-signal go_back_declined(reason:Parser.RollbackDeclineReason)
+## Emitted when [method LineReader.request_rollback] fails. Emits [enum Parser.RollbackDeclineReason]
+signal rollback_declined(reason:Parser.RollbackDeclineReason)
 
-## Emitted when a new line is read because of a successful [method LineReader.request_go_back] call. [param page] and [param line] are the indices of the new line.[br]
+## Emitted when a new line is read because of a successful [method LineReader.request_rollback] call. [param page] and [param line] are the indices of the new line.[br]
 ## Note: Is not emitted when going back through chunks, such as when going back through individual lines inside of a single Text Line with dialog syntax.[br]
 ## 
 ## Going from displaying "More text!" to "Text!", this will emit:
@@ -200,7 +200,7 @@ signal go_back_declined(reason:Parser.RollbackDeclineReason)
 ## []>narrator: Text!
 ## []>narrator: More text!
 ## [/codeblock]
-signal go_back_accepted(page:int, line:int, dialine_about_to_read:int)
+signal rollback_accepted(page:int, line:int, dialine_about_to_read:int)
 
 signal read_new_line(line_index:int)
 
