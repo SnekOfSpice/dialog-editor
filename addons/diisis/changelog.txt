@@ -3,6 +3,7 @@ post TDOHN update
 - change default on require_colons_on_actor_ingestion to true
 - fix preference loading generating errors in 4.7
 - add elipse-trailing letter capitalization option support
+- implement lookaround for hot reload
 
 DIISIS 0.8 2026-05-14
 

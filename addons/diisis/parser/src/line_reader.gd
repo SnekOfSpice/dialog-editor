@@ -2044,8 +2044,6 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			#if indices.x == last_index_end + 1:
-				#print(word_segments[segment_index])
 			var ruby = _build_ruby(on_label, indices, word_segments[segment_index])
 			ruby.segment_index = segment_index
 			segment_index += 1
@@ -2092,7 +2090,6 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	ruby_label.set_height(draw_pos_x.y)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
 	if _is_ruby_stretch(ruby_label.get_text()):
-		#print("drawing at ", draw_pos_x)
 		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
 	else:
 		var base_width : float = (draw_pos_y - draw_pos_x).x

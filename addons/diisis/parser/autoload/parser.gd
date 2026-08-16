@@ -169,13 +169,61 @@ func _process(delta: float) -> void:
 	var source_path := _get_current_path(true)
 	var modified_time = FileAccess.get_modified_time(source_path)
 	if modified_time != last_modified_time:
+		var current_address : String = address_trail[address_trail_index]
+		var current_id : String = get_line_data(current_address).get("id")
 		while not FileAccess.file_exists(source_path):
 			await get_tree().process_frame
 		var prev_vacts := facts.duplicate()
 		_initialize(_get_data(last_data_fetch_path))
 		apply_facts(prev_vacts)
-		read_page(page_index, line_index)
+		await get_tree().process_frame
+		var target_indices := _get_hot_reload_position(current_id)
+		
+		read_page(target_indices.x, target_indices.y)
 	last_modified_time = FileAccess.get_modified_time(source_path)
+
+# This is an internal function that implements project lookback
+# returns the target page in x and target line in y
+# set it to 0 in the project settings to reload in position
+func _get_hot_reload_position(current_id : String) -> Vector2:
+	var default := Vector2(page_index, line_index)
+	if address_trail.is_empty():
+		return default
+	if address_trail_index < 0:
+		return default
+	var lookaround : int = abs(ProjectSettings.get_setting("diisis/runtime/hot_reload/lookaround", 0))
+	if lookaround == 0:
+		return default
+	
+	var sweep := 1
+	var located_address := "%s.%s" % [page_index, line_index]
+	while sweep <= lookaround:
+		# look back
+		var back_index := address_trail_index - sweep
+		if back_index >= 0:
+			var back_address : String = address_trail[back_index]
+			var this_id : String = get_line_data(back_address).get("id")
+			if this_id == current_id:
+				located_address = back_address
+				break
+		
+		# look ahead
+		# this doesnÄt look ahead
+		var front_address := "%s.%s" % [page_index, line_index + sweep]
+		if has_address(front_address):
+			var this_id : String = get_line_data(front_address).get("id")
+			if this_id == current_id:
+				located_address = front_address
+				break
+		
+		
+		sweep += 1
+	
+	var parts = DiisisEditorUtil.get_split_address(located_address)
+	var page = parts[0]
+	var line = parts[1]
+	
+	return Vector2(page, line)
 
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index := 0, start_line_index := 0):
@@ -409,20 +457,36 @@ func _get_game_progress() -> float:
 	
 	return page_progress + (line_progress / float(trail_size)) + ((dialine_progress / float(line_count_on_page)) / float(trail_size))
 
+
 func get_line_type(address:String) -> DIISIS.LineType:
-	var parts = DiisisEditorUtil.get_split_address(address)
-	var prev_page = parts[0]
-	var prev_line = parts[1]
-	
-	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+	return int(get_line_data(address).get("line_type")) as DIISIS.LineType
 
 
 func get_line_content(address:String) -> Dictionary:
+	return get_line_data(address).get("content")
+
+
+func has_address(address : String) -> bool:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var page = parts[0]
+	var line = parts[1]
+	return has_data(page, line)
+
+
+func has_data(page : int, line : int) -> bool:
+	if not page_data.has(page):
+		return false
+	
+	var lines_on_page : Array = page_data.get(page).get("lines")
+	return line >= 0 and line < lines_on_page.size()
+
+
+func get_line_data(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	
-	return page_data.get(prev_page).get("lines")[prev_line].get("content")
+	return page_data.get(prev_page).get("lines")[prev_line]
 
 
 func get_text(id:String, keep_as_l10n_key := false) -> String:

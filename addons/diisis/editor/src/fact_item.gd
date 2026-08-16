@@ -110,10 +110,8 @@ func set_int_operator(value:Operator):
 
 func get_fact_value():
 	if %DataTypeButton.get_selected_id() == DataType.Bool:
-		#print("bool ", find_child("FactBoolValue").button_pressed)
 		return find_child("FactBoolValue").button_pressed
 	elif %DataTypeButton.get_selected_id() == DataType.Int:
-		#print("int ", int(find_child("IntValueSpinBox").value))
 		return int(find_child("IntValueSpinBox").value)
 
 func get_fact_name() -> String:

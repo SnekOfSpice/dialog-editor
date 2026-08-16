@@ -784,7 +784,6 @@ func try_open_from_path(path:String):
 	open_from_path(path)
 func try_new_file():
 	if not opening and has_unsaved_changes:
-		print("SHJDFG")
 		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW, new_file_request)
 		return
 	new_file_request()

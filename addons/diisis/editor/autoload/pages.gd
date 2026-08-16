@@ -1126,7 +1126,6 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 			var new_ingestions := []
 			var ingestions := ingestion_actor_declaration.split("\n")
 			for ingestion in ingestions:
-				print("fixing ", ingestion)
 				var fixed := false
 				for old_speaker in map.keys():
 					if ingestion.ends_with(" %s" % old_speaker):

@@ -48,20 +48,17 @@ func _enter_tree():
 		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 		ProjectSettings.save()
-	ProjectSettings.add_property_info({
-	"name": "diisis/project/file/path",
-	"type": TYPE_STRING,
-	"hint_string": "one,two,three"
-}
-
-)
+		
+	
 	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_updates"):
 		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 		ProjectSettings.set_setting("diisis/plugin/checks/check_for_updates", true)
 		ProjectSettings.save()
 	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_linux_input"):
-		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 		ProjectSettings.set_setting("diisis/plugin/checks/check_for_linux_input", true)
+		ProjectSettings.save()
+	if not ProjectSettings.has_setting("diisis/runtime/hot_reload/lookaround"):
+		ProjectSettings.set_setting("diisis/runtime/hot_reload/lookaround", 0)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
