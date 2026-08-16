@@ -14,6 +14,14 @@ func init():
 	
 	for rule : Dictionary in rules:
 		add_rule(rule)
+	
+	match Pages.capitalization_rule_after_elipse:
+		Pages.ElipseC12NMode.REMAIN:
+			%ElipseC12NRemain.button_pressed = true
+		Pages.ElipseC12NMode.UPPER:
+			%ElipseC12NUpper.button_pressed = true
+		Pages.ElipseC12NMode.LOWER:
+			%ElipseC12NLower.button_pressed = true
 
 func add_rule(rule_definition:Dictionary):
 	var rule_item = preload("res://addons/diisis/editor/src/replacement_rule.tscn").instantiate()
@@ -58,3 +66,15 @@ func _on_add_defaults_button_pressed() -> void:
 
 func _on_replacement_rules_item_rect_changed() -> void:
 	update_save_button()
+
+
+func _on_elipse_c_12n_remain_pressed() -> void:
+	Pages.capitalization_rule_after_elipse = Pages.ElipseC12NMode.REMAIN
+
+
+func _on_elipse_c_12n_upper_pressed() -> void:
+	Pages.capitalization_rule_after_elipse = Pages.ElipseC12NMode.UPPER
+
+
+func _on_elipse_c_12n_lower_pressed() -> void:
+	Pages.capitalization_rule_after_elipse = Pages.ElipseC12NMode.LOWER

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cn0rmafav1qh5"]
 
 [ext_resource type="Script" uid="uid://d37r3puwhy6fr" path="res://addons/diisis/editor/src/windows/punctuation_rules.gd" id="1_pcvla"]
+[ext_resource type="ButtonGroup" uid="uid://cm3ewe7mqa0jd" path="res://addons/diisis/editor/src/elipse_c12n_button_group.tres" id="2_7j6lv"]
 [ext_resource type="Texture2D" uid="uid://bvgegkc6o5k18" path="res://addons/diisis/editor/visuals/theme/buttons_ui/add_generic2.png" id="2_looju"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_looju"]
@@ -26,7 +27,7 @@ grow_vertical = 2
 layout_mode = 2
 text = "General punctuation rules"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1142819985]
+[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=553274651]
 layout_mode = 2
 
 [node name="PeriodCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=1173837787]
@@ -41,6 +42,31 @@ layout_mode = 2
 size_flags_horizontal = 0
 button_pressed = true
 text = "Fix common apostrophes"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1602620696]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=592559707]
+layout_mode = 2
+text = "TODO capitalization_rule_after_elipse"
+
+[node name="ElipseC12NRemain" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=237958378]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = ExtResource("2_7j6lv")
+text = "No Change"
+
+[node name="ElipseC12NUpper" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1426768193]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = ExtResource("2_7j6lv")
+text = "Always Uppercase"
+
+[node name="ElipseC12NLower" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1566866728]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = ExtResource("2_7j6lv")
+text = "Always Lowercase "
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1194883807]
 layout_mode = 2
@@ -108,6 +134,9 @@ icon = ExtResource("2_looju")
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/PeriodCheckBox" to="." method="_on_period_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ApostropheCheckBox" to="." method="_on_period_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/ElipseC12NRemain" to="." method="_on_elipse_c_12n_remain_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/ElipseC12NUpper" to="." method="_on_elipse_c_12n_upper_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/ElipseC12NLower" to="." method="_on_elipse_c_12n_lower_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/AddRuleButton" to="." method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/SaveRulesButton" to="." method="_on_save_rules_button_pressed"]
 [connection signal="item_rect_changed" from="VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer/ReplacementRules" to="." method="_on_replacement_rules_item_rect_changed"]

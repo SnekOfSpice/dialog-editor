@@ -50,6 +50,7 @@ const PREFERENCE_PROPS := [
 	"ingest_is_capitalize_checked",
 	"ingest_is_whitespace_checked",
 	"ingest_is_punctuation_checked",
+	"capitalization_rule_after_elipse",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -1976,6 +1977,14 @@ func are_all_of_these_stringkit_titles(names:Array) -> bool:
 			break
 	return result
 
+
+enum ElipseC12NMode {
+	REMAIN,
+	UPPER,
+	LOWER,
+}
+var capitalization_rule_after_elipse : ElipseC12NMode = ElipseC12NMode.REMAIN
+
 func capitalize_sentence_beginnings(text:String) -> String:
 	var c12n_prefixes := [
 		".", ":", ";", "?", "!", "~", "\n"
@@ -1986,16 +1995,17 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_length := 3
 	while elipse_position != -1:
 		if elipse_position < text.length() - elipse_length:
-			if text[elipse_position + elipse_length + 1] in LETTERS:
+			if text[elipse_position + elipse_length + 1] in ALLOWED_INSTRUCTION_NAME_CHARACTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
 				continue
 			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
-				if text[elipse_position + 2] in LETTERS:
+				if text[elipse_position + 2] in ALLOWED_INSTRUCTION_NAME_CHARACTERS:
 					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
 					elipse_position = text.find("...", elipse_position + elipse_length + 1)
 					continue
 		elipse_position = text.find("...", elipse_position + elipse_length + 1)
+		print(elipse_position)
 
 	var tags_in_text := []
 	var scan_index := 0
@@ -2063,9 +2073,16 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	
-	for index in letter_indices_after_elipses.keys():
-		var letter : String = letter_indices_after_elipses.get(index)
-		text[index] = letter
+	if capitalization_rule_after_elipse != ElipseC12NMode.REMAIN: # small optimization because this will mean we don't have to do anything with the elipses
+		for index in letter_indices_after_elipses.keys():
+			var letter : String = letter_indices_after_elipses.get(index)
+			
+			if capitalization_rule_after_elipse == ElipseC12NMode.LOWER:
+				letter = letter.to_lower()
+			elif capitalization_rule_after_elipse == ElipseC12NMode.UPPER:
+				letter = letter.to_upper()
+			
+			text[index] = letter
 	
 	text = text.replace(" i ", " I ")
 	
@@ -2209,6 +2226,7 @@ func fix_punctuation(text:String) -> String:
 		["whove", "who've"],
 		["wont", "won't"],
 		["wouldnt", "wouldn't"],
+		["wouldve", "would've"],
 		["youd", "you'd"],
 		["youll", "you'll"],
 		["youre", "you're"],
@@ -2241,11 +2259,12 @@ func fix_punctuation(text:String) -> String:
 		var enabled : bool = rule.get("enabled")
 		if not enabled:
 			continue
-		var what = rule.get("symbol", "")
-		var forwhat = rule.get("replacement", "")
+		var what : String = rule.get("symbol", "")
+		var forwhat : String = rule.get("replacement", "")
 		for i in result.size():
 			var line : String = result[i]
 			result[i] = line.replace(what, forwhat)
+	
 	
 	return "\n".join(result)
 
