@@ -1,8 +1,14 @@
 0.9
-post TDOHN update
+post TDOHN update (Or: The hot reload fixes update, apparently)
+
+Editor
 - change default on require_colons_on_actor_ingestion to true
+- change require_colons_on_actor_ingestion so that when it's disabled, you need a trailing space (otherwise you end up with situations where if a sentence begins with the letter of one of the ingestion actors, that already triggers the parsing, which is stupid and annoying)
 - fix preference loading generating errors in 4.7
 - add elipse-trailing letter capitalization option support
+
+Runtime
+- fix facts not getting preserved across hot reload
 - implement lookaround for hot reload
 
 DIISIS 0.8 2026-05-14

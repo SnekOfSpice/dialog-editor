@@ -59,7 +59,7 @@ func format_text(text:String, head_replacer_overrides := []) -> String:
 			var alt_key := ""
 			var can_use_space_suffix := not Pages.require_colons_on_actor_ingestion
 			if can_use_space_suffix:
-				alt_key = key.replace(":", "")
+				alt_key = key.replace(":", " ")
 			var value : String = replacer[1]
 			if not (line.begins_with(key) or (line.begins_with(alt_key) and can_use_space_suffix)):
 				var raw_value : = value.trim_prefix("[]>")

@@ -58,7 +58,7 @@ func _enter_tree():
 		ProjectSettings.set_setting("diisis/plugin/checks/check_for_linux_input", true)
 		ProjectSettings.save()
 	if not ProjectSettings.has_setting("diisis/runtime/hot_reload/lookaround"):
-		ProjectSettings.set_setting("diisis/runtime/hot_reload/lookaround", 0)
+		ProjectSettings.set_setting("diisis/runtime/hot_reload/lookaround", 3)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
