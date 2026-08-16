@@ -507,7 +507,7 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	
-	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+	return get_line_type(previous_address)
 
 
 var region_end : String
@@ -551,14 +551,29 @@ enum RollbackDeclineReason {
 	BEGINNING = 0,
 }
 
+
+func _find_previous_text_line() -> int:
+	var lookback := 1
+	var max_lookback := address_trail_index
+	while lookback <= max_lookback:
+		var line_type : DIISIS.LineType = get_line_type(address_trail[address_trail_index - lookback])
+		if line_type == DIISIS.LineType.Text:
+			return -lookback
+		lookback += 1
+	
+	return 0
+	
+
 func go_back():
-	var trail_shift = -1
-	var previous_line_type = get_previous_address_line_type()
-	if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		ParserEvents.go_back_declined.emit(previous_line_type)
-		push_warning("You cannot go further back.")
-		#return
-		trail_shift = 0
+	
+	var trail_shift = _find_previous_text_line()
+	#var previous_line_type = get_previous_address_line_type()
+	#var last_text_line := 
+	#if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
+		#ParserEvents.go_back_declined.emit(previous_line_type)
+		#push_warning("You cannot go further back.")
+		##return
+		#trail_shift = 0
 	
 	if address_trail_index < 0 or address_trail.is_empty():
 		ParserEvents.go_back_declined.emit(RollbackDeclineReason.BEGINNING)
@@ -574,20 +589,24 @@ func go_back():
 	
 	var instruction_stack := []
 	var a := false
-	while previous_line_type == DIISIS.LineType.Instruction:
+	var instruction_finder := 0
+	while instruction_finder > trail_shift:
 		a = true
 		# build instruction stack
-		var address_content = get_line_content(address_trail[address_trail_index + trail_shift])
-		instruction_stack.append(address_content)
-		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
-		trail_shift -= 1
-		if address_trail_index + trail_shift < 0:
-			a = false
-			trail_shift = 0
-			break
-	if a: # cant remember what this fixed
-		trail_shift += 1
-	instruction_stack.pop_back()
+		var address_type = get_line_type_by_address(address_trail[address_trail_index + instruction_finder])
+		if address_type == DIISIS.LineType.Instruction:
+			var address_content = get_line_content(address_trail[address_trail_index + instruction_finder])
+			instruction_stack.append(address_content)
+		#previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
+			#trail_shift -= 1
+			#if address_trail_index - instruction_finder < 0:
+				#a = false
+				#trail_shift = 0
+				#break
+		instruction_finder -= 1
+	#if a: # cant remember what this fixed
+		#trail_shift += 1
+	instruction_stack.reverse()
 	
 	for instruction in instruction_stack:
 		if not instruction.get("meta.has_reverse", false):
@@ -605,29 +624,30 @@ func go_back():
 	var parts = DiisisEditorUtil.get_split_address(previous_address)
 	var prev_page = parts[0]
 	var prev_line = parts[1]
-	if not get_line_type_by_address(previous_address) in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
+	#if not get_line_type_by_address(previous_address) in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
 		# we need to preempt which dialine the linereader will be reading
-		var dialine_about_to_read : int
-		if trail_shift == 0:
-			dialine_about_to_read = 0
-		elif trail_shift != 0:
-			var line_data : Array = page_data.get(prev_page).get("lines")
-			var raw_content : Dictionary = line_data[prev_line].get("content")
-			var content := get_text(raw_content.get("text_id"))
-			dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
-			
-		ParserEvents.go_back_accepted.emit(prev_page, prev_line, dialine_about_to_read)
-		if not address_trail.is_empty():
-			address_trail.resize(address_trail_index)
-		if prev_page == page_index:
-			read_line(prev_line)
-		else:
-			read_page(prev_page, prev_line)
-		if trail_shift == 0:
-			line_reader._go_to_start_of_dialog_line()
-		elif trail_shift != 0:
-			line_reader._go_to_end_of_dialog_line()
-		address_trail_index = address_trail.size() - 1
+	var dialine_about_to_read : int
+	if trail_shift == 0:
+		dialine_about_to_read = 0
+	elif trail_shift != 0:
+		var line_data : Array = page_data.get(prev_page).get("lines")
+		var raw_content : Dictionary = line_data[prev_line].get("content")
+		var content := get_text(raw_content.get("text_id"))
+		dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
+		
+	ParserEvents.go_back_accepted.emit(prev_page, prev_line, dialine_about_to_read)
+	if not address_trail.is_empty():
+		address_trail.resize(address_trail_index)
+	if prev_page == page_index:
+		read_line(prev_line)
+	else:
+		read_page(prev_page, prev_line)
+	if trail_shift == 0:
+		line_reader._go_to_start_of_dialog_line()
+	elif trail_shift != 0:
+		line_reader._go_to_end_of_dialog_line()
+	address_trail_index = address_trail.size() - 1
+	address_trail.resize(address_trail_index + 1)
 
 var page_id : String
 var line_id : String

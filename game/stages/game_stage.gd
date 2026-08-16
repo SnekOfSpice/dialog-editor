@@ -370,6 +370,9 @@ func set_fade_out(lod:float, mix:float):
 	target_mix = mix
 
 
+func printttt(a):
+	print(a)
+
 
 func set_background(new_bg_key:String, fade_time:=0.0):
 	if new_bg_key == "none" or new_bg_key == "null" or new_bg_key.is_empty():

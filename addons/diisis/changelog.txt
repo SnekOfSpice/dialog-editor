@@ -10,6 +10,7 @@ Editor
 Runtime
 - fix facts not getting preserved across hot reload
 - implement lookaround for hot reload
+- add rollback for folders and choices
 
 DIISIS 0.8 2026-05-14
 

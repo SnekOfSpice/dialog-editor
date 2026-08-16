@@ -3,10 +3,8 @@
 		"callable_autoloads": [
 			"Sound"
 		],
-		"character_count": 4123,
-		"custom_method_defaults": {
-
-		},
+		"character_count": 4160,
+		"custom_method_defaults": {},
 		"custom_method_stringkit_limiters": {
 			"Sound.play_sfx": {
 				"bus": [],
@@ -109,6 +107,7 @@
 			"res://game/stages/line_reader_custom.gd": 1747815894
 		},
 		"facts": {
+			"hreeo": false,
 			"liked amber": false
 		},
 		"file_config": {
@@ -117,74 +116,38 @@
 			]
 		},
 		"full_custom_method_defaults": {
-			"Sound.@clip_index_getter": {
-
-			},
-			"Sound.@playback_getter": {
-
-			},
-			"Sound.@player_getter": {
-
-			},
-			"Sound.@stream_getter": {
-
-			},
-			"Sound._ready": {
-
-			},
-			"Sound.deserialize": {
-
-			},
-			"Sound.get_current_clip_name": {
-
-			},
+			"Sound.@clip_index_getter": {},
+			"Sound.@playback_getter": {},
+			"Sound.@player_getter": {},
+			"Sound.@stream_getter": {},
+			"Sound._ready": {},
+			"Sound.deserialize": {},
+			"Sound.get_current_clip_name": {},
 			"Sound.play_sfx": {
 				"bus": "SFX",
 				"random_pitch": true
 			},
-			"Sound.serialize": {
-
-			},
+			"Sound.serialize": {},
 			"Sound.set_music_volume_linear": {
 				"delay": 0.0
 			},
-			"Sound.switch_to": {
-
-			},
-			"add_custom_blocker": {
-
-			},
-			"add_text_display_delay": {
-
-			},
-			"advance": {
-
-			},
-			"apply_preferences": {
-
-			},
-			"apply_ui_visibilities": {
-
-			},
-			"attempt_advance": {
-
-			},
+			"Sound.switch_to": {},
+			"add_custom_blocker": {},
+			"add_text_display_delay": {},
+			"advance": {},
+			"apply_preferences": {},
+			"apply_ui_visibilities": {},
+			"attempt_advance": {},
 			"call_from_string": {
 				"call_mode": 0,
 				"call_position": -1
 			},
-			"callv_custom": {
-
-			},
+			"callv_custom": {},
 			"chapter_break": {
 				"transition_time": 0.0
 			},
-			"choice_pressed_virtual": {
-
-			},
-			"clear_custom_blockers": {
-
-			},
+			"choice_pressed_virtual": {},
+			"clear_custom_blockers": {},
 			"clear_past_lines": {
 				"clear_body_label": false
 			},
@@ -192,71 +155,43 @@
 				"read_line": 0,
 				"read_page": -1
 			},
-			"control_camera": {
-
-			},
-			"deserialize": {
-
-			},
-			"deserialize_text_content": {
-
-			},
+			"control_camera": {},
+			"deserialize": {},
+			"deserialize_text_content": {},
 			"enable_keep_past_lines": {
 				"keep_text": false,
 				"new_label": null,
 				"new_name_style": null
 			},
-			"finish_waiting_for_instruction": {
-
-			},
+			"finish_waiting_for_instruction": {},
 			"get_actor_config_property": {
 				"default": null
 			},
 			"get_actor_names_in_line": {
 				"empty_if_not_text": true
 			},
-			"get_body_label_progress_step": {
-
-			},
+			"get_body_label_progress_step": {},
 			"get_body_label_text_draw_pos": {
 				"on_label": null
 			},
-			"get_character": {
-
-			},
-			"get_default_targets": {
-
-			},
-			"get_dialine": {
-
-			},
+			"get_character": {},
+			"get_default_targets": {},
+			"get_dialine": {},
 			"get_past_line_rich_text_label": {
 				"text": ""
 			},
-			"get_preferences": {
-
-			},
-			"get_subaddress": {
-
-			},
+			"get_preferences": {},
+			"get_subaddress": {},
 			"get_subaddress_arr": {
 				"fill_with_zero": true
 			},
-			"get_ui_visibilities": {
-
-			},
-			"go_to_main_menu": {
-
-			},
-			"hide_all_characters": {
-
-			},
+			"get_ui_visibilities": {},
+			"go_to_main_menu": {},
+			"hide_all_characters": {},
 			"hide_cg": {
 				"fade_out": 0.0
 			},
-			"hide_ui": {
-
-			},
+			"hide_ui": {},
 			"interrupt": {
 				"hide_controls": true
 			},
@@ -267,97 +202,44 @@
 			"is_at_end_of_line": {
 				"non_text_return_value": true
 			},
-			"move_camera_to": {
-
-			},
-			"on_actor_name_changed": {
-
-			},
-			"on_instruction_started": {
-
-			},
-			"on_settings_changed": {
-
-			},
-			"on_tree_exit": {
-
-			},
-			"play_sfx": {
-
-			},
-			"remove_custom_blocker": {
-
-			},
+			"move_camera_to": {},
+			"on_actor_name_changed": {},
+			"on_instruction_started": {},
+			"on_settings_changed": {},
+			"on_tree_exit": {},
+			"play_sfx": {},
+			"printttt": {},
+			"remove_custom_blocker": {},
 			"reparse_text": {
 				"dialine": 0
 			},
-			"request_advance": {
-
-			},
-			"request_go_back": {
-
-			},
-			"roll_credits": {
-
-			},
-			"serialize": {
-
-			},
-			"serialize_text_content": {
-
-			},
-			"set_actor_color": {
-
-			},
-			"set_actor_config_property": {
-
-			},
-			"set_actor_config_property_color": {
-
-			},
-			"set_actor_name": {
-
-			},
+			"request_advance": {},
+			"request_go_back": {},
+			"roll_credits": {},
+			"serialize": {},
+			"serialize_text_content": {},
+			"set_actor_color": {},
+			"set_actor_config_property": {},
+			"set_actor_config_property_color": {},
+			"set_actor_name": {},
 			"set_background": {
 				"fade_time": 0.0
 			},
-			"set_bgm": {
-
-			},
+			"set_bgm": {},
 			"set_body_label": {
 				"clear_previous": false,
 				"keep_text": true
 			},
-			"set_callable_upon_blocker_clear": {
-
-			},
-			"set_cg": {
-
-			},
-			"set_cg_bottom": {
-
-			},
-			"set_cg_offset": {
-
-			},
-			"set_cg_top": {
-
-			},
-			"set_character_name": {
-
-			},
-			"set_chatlog_enabled": {
-
-			},
-			"set_custom_text_speed_override": {
-
-			},
-			"set_emotion": {
-
-			},
-			"set_fade_out": {
-
-			},
+			"set_callable_upon_blocker_clear": {},
+			"set_cg": {},
+			"set_cg_bottom": {},
+			"set_cg_offset": {},
+			"set_cg_top": {},
+			"set_character_name": {},
+			"set_chatlog_enabled": {},
+			"set_custom_text_speed_override": {},
+			"set_emotion": {},
+			"set_fade_out": {},
 			"set_name_controls": {
 				"container": null,
 				"keep_text": true
@@ -368,47 +250,21 @@
 			"set_name_suffix": {
 				"update": true
 			},
-			"set_ruby_enabled": {
-
-			},
-			"set_text_display_delay": {
-
-			},
-			"set_x_position": {
-
-			},
-			"shake_camera": {
-
-			},
-			"show_cg": {
-
-			},
-			"show_character": {
-
-			},
-			"show_start_cover": {
-
-			},
-			"show_ui": {
-
-			},
-			"sway_camera": {
-
-			},
-			"update_body_label": {
-
-			},
-			"update_name_label": {
-
-			},
-			"use_ui": {
-
-			},
-			"zoom_to": {
-
-			}
+			"set_ruby_enabled": {},
+			"set_text_display_delay": {},
+			"set_x_position": {},
+			"shake_camera": {},
+			"show_cg": {},
+			"show_character": {},
+			"show_start_cover": {},
+			"show_ui": {},
+			"sway_camera": {},
+			"update_body_label": {},
+			"update_name_label": {},
+			"use_ui": {},
+			"zoom_to": {}
 		},
-		"id_counter": -9223372036854761117,
+		"id_counter": -9223372036854761264,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -422,9 +278,7 @@
 		"page_data": {
 			"0": {
 				"facts": {
-					"fact_data_by_name": {
-
-					},
+					"fact_data_by_name": {},
 					"meta.visible": false
 				},
 				"id": "1755245262.944--9223372036854761454",
@@ -435,9 +289,7 @@
 							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -458,9 +310,7 @@
 							"reverse_name": ""
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999497.520--9223372036854774776",
@@ -480,9 +330,7 @@
 							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -494,15 +342,13 @@
 						"content": {
 							"meta.locked": false,
 							"meta.validation_status": "OK",
-							"text_id": "1744987729.490--9223372036854775799"
+							"text_id": "1786875812.901--9223372036854761391"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
-						"id": "1744999497.621--9223372036854774767",
+						"id": "1786875812.901--9223372036854761392",
 						"line_type": 0,
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
@@ -520,8 +366,230 @@
 							"behavior_key": "Show",
 							"facts": {
 								"fact_data_by_name": {
-
+									"hreeo": {
+										"data_type": 0,
+										"fact_name": "hreeo",
+										"fact_value": true,
+										"int_comparator": 0,
+										"int_operator": 0,
+										"is_conditional": true
+									}
 								},
+								"meta.visible": true
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": true,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.contents_visible": true,
+							"range": 2.0
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1786876410.452--9223372036854761273",
+						"line_type": 3,
+						"meta.conditionals_visible": true,
+						"meta.facts_visible": false,
+						"meta.indent_level": 1,
+						"meta.line_index": 2,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.3",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1786876414.474--9223372036854761267"
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1786876414.474--9223372036854761268",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 1,
+						"meta.line_index": 3,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.4",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1786876413.154--9223372036854761270"
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1786876413.154--9223372036854761271",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 1,
+						"meta.line_index": 4,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.5",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1786876422.345--9223372036854761264"
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1786876422.345--9223372036854761265",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.line_index": 5,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.6",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"advance_yield": false,
+							"delay_after": 0.0,
+							"delay_before": 0.0,
+							"meta.has_reverse": true,
+							"meta.reverse_text": "printttt(f)",
+							"meta.text": "printttt(aa)",
+							"meta.validation_status": "OK",
+							"name": "printttt",
+							"reverse_name": "printttt"
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1786875787.579--9223372036854761394",
+						"line_type": 2,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.line_index": 6,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.7",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
+								"meta.visible": false
+							},
+							"meta.controls_collapsed": true,
+							"meta.visible": false,
+							"operand": 0,
+							"operand_args": [],
+							"operand_key": "AND"
+						},
+						"content": {
+							"meta.locked": false,
+							"meta.validation_status": "OK",
+							"text_id": "1744987729.490--9223372036854775799"
+						},
+						"facts": {
+							"fact_data_by_name": {},
+							"meta.visible": false
+						},
+						"id": "1744999497.621--9223372036854774767",
+						"line_type": 0,
+						"meta.conditionals_visible": false,
+						"meta.facts_visible": false,
+						"meta.indent_level": 0,
+						"meta.line_index": 7,
+						"meta.selector": {
+							"selected": false
+						},
+						"skip": false
+					},
+					{
+						"address": "0.8",
+						"conditionals": {
+							"behavior": 0,
+							"behavior_key": "Show",
+							"facts": {
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -535,16 +603,14 @@
 							"choice_order": [],
 							"choices": [
 								{
-									"address": "0.2.0",
+									"address": "0.8.0",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
 										"behavior": 0,
 										"behavior_key": "Show",
 										"facts": {
-											"fact_data_by_name": {
-
-											},
+											"fact_data_by_name": {},
 											"meta.visible": false
 										},
 										"meta.controls_collapsed": true,
@@ -585,16 +651,14 @@
 									"text_id_enabled": "1744987729.575--9223372036854775793"
 								},
 								{
-									"address": "0.2.1",
+									"address": "0.8.1",
 									"behavior_after_first_selection": 0,
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
 										"behavior": 0,
 										"behavior_key": "Show",
 										"facts": {
-											"fact_data_by_name": {
-
-											},
+											"fact_data_by_name": {},
 											"meta.visible": false
 										},
 										"meta.controls_collapsed": true,
@@ -605,9 +669,7 @@
 									},
 									"do_jump_page": false,
 									"facts": {
-										"fact_data_by_name": {
-
-										},
+										"fact_data_by_name": {},
 										"meta.visible": false
 									},
 									"id": "1755512416.338--9223372036854761461",
@@ -633,9 +695,7 @@
 							"title_id": "1744987729.539--9223372036854775796"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999497.763--9223372036854774754",
@@ -643,14 +703,14 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.line_index": 2,
+						"meta.line_index": 8,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.3",
+						"address": "0.9",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -679,9 +739,7 @@
 							"text_id": "amber-is-happy"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999497.822--9223372036854774749",
@@ -689,14 +747,14 @@
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.line_index": 3,
+						"meta.line_index": 9,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.4",
+						"address": "0.10",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
@@ -725,9 +783,7 @@
 							"text_id": "1744987729.749--9223372036854775782"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999497.881--9223372036854774744",
@@ -735,21 +791,19 @@
 						"meta.conditionals_visible": true,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.line_index": 4,
+						"meta.line_index": 10,
 						"meta.selector": {
 							"selected": false
 						},
 						"skip": false
 					},
 					{
-						"address": "0.5",
+						"address": "0.11",
 						"conditionals": {
 							"behavior": 0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -764,9 +818,7 @@
 							"text_id": "1744987729.798--9223372036854775779"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999497.931--9223372036854774739",
@@ -774,7 +826,7 @@
 						"meta.conditionals_visible": false,
 						"meta.facts_visible": false,
 						"meta.indent_level": 0,
-						"meta.line_index": 5,
+						"meta.line_index": 11,
 						"meta.selector": {
 							"selected": false
 						},
@@ -791,9 +843,7 @@
 			},
 			"1": {
 				"facts": {
-					"fact_data_by_name": {
-
-					},
+					"fact_data_by_name": {},
 					"meta.visible": false
 				},
 				"id": "1755250697.136--9223372036854761389",
@@ -804,9 +854,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -821,9 +869,7 @@
 							"text_id": "1744987741.530--9223372036854775777"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.626--9223372036854774735",
@@ -843,9 +889,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -866,9 +910,7 @@
 							"reverse_name": "shake_camera"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.627--9223372036854774732",
@@ -888,9 +930,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -908,9 +948,7 @@
 							"text_id": "1744987741.532--9223372036854775774"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.628--9223372036854774728",
@@ -930,9 +968,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -953,9 +989,7 @@
 							"reverse_name": ""
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1747205915.630--9223372036854773717",
@@ -975,9 +1009,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -992,9 +1024,7 @@
 							"text_id": "1744987741.532--9223372036854775772"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.628--9223372036854774724",
@@ -1014,9 +1044,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1037,9 +1065,7 @@
 							"reverse_name": ""
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.629--9223372036854774721",
@@ -1059,9 +1085,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1076,9 +1100,7 @@
 							"text_id": "1744987741.534--9223372036854775769"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.630--9223372036854774717",
@@ -1098,9 +1120,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1118,9 +1138,7 @@
 							"text_id": "1744987741.535--9223372036854775767"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999498.630--9223372036854774713",
@@ -1145,9 +1163,7 @@
 			},
 			"2": {
 				"facts": {
-					"fact_data_by_name": {
-
-					},
+					"fact_data_by_name": {},
 					"meta.visible": false
 				},
 				"id": "1755250697.380--9223372036854761373",
@@ -1158,9 +1174,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1175,9 +1189,7 @@
 							"text_id": "1744987742.696--9223372036854775765"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999499.058--9223372036854774709",
@@ -1197,9 +1209,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1220,9 +1230,7 @@
 							"reverse_name": ""
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999499.059--9223372036854774706",
@@ -1242,9 +1250,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1259,9 +1265,7 @@
 							"text_id": "1744987742.697--9223372036854775762"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999499.060--9223372036854774702",
@@ -1281,9 +1285,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1301,9 +1303,7 @@
 							"text_id": "1744987742.697--9223372036854775760"
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1744999499.060--9223372036854774698",
@@ -1323,9 +1323,7 @@
 							"behavior": 0.0,
 							"behavior_key": "Show",
 							"facts": {
-								"fact_data_by_name": {
-
-								},
+								"fact_data_by_name": {},
 								"meta.visible": false
 							},
 							"meta.controls_collapsed": true,
@@ -1346,9 +1344,7 @@
 							"reverse_name": ""
 						},
 						"facts": {
-							"fact_data_by_name": {
-
-							},
+							"fact_data_by_name": {},
 							"meta.visible": false
 						},
 						"id": "1756801270.874--9223372036854761435",
@@ -1408,11 +1404,15 @@
 			"1744987742.696--9223372036854775765": "[]>narrator: With that, we can start to wrap up.\n[]>amber: Change of scenery please!",
 			"1744987742.697--9223372036854775760": "[]>narrator: How can you leave this place again? Well, you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS).\n[]>narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].\n[]>narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].\n[]>narrator: <call:control_camera(1, 0, 0, 4)>Amber art by [url=https://x.com/_10qi]10qi[/url].\n[]>narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow]",
 			"1744987742.697--9223372036854775762": "[]>narrator: There you go <3\n[]>narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://snekofspice.github.io/diisis-docs/VN-Template-Guide/Getting-Started]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",
+			"1786875812.901--9223372036854761391": "[]>amber:bla",
+			"1786876413.154--9223372036854761270": "[]>narrator:fdgdfgdf",
+			"1786876414.474--9223372036854761267": "[]>amber:sdsdf",
+			"1786876422.345--9223372036854761264": "[]>amber:text after folder",
 			"amber-is-happy": "[]>amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!"
 		},
 		"text_lead_time_other_actor": 0.0,
 		"text_lead_time_same_actor": 0.0,
 		"use_dialog_syntax": true,
-		"word_count": 639
+		"word_count": 645
 	}
 }
