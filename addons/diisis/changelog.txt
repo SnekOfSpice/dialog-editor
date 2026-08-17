@@ -9,6 +9,7 @@ Editor
 - change require_colons_on_actor_ingestion so that when it's disabled, you need a trailing space (otherwise you end up with situations where if a sentence begins with the letter of one of the ingestion actors, that already triggers the parsing, which is stupid and annoying)
 - fix preference loading generating errors in 4.7
 - add elipse-trailing letter capitalization option support
+- add feature to update the prepend options in Text lines automatically when changing the speaking actors in stringkits
 
 Runtime
 - fix facts not getting preserved across hot reload

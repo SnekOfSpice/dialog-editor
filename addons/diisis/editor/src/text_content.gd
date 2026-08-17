@@ -39,6 +39,9 @@ func get_text_after_caret(length:int):
 		return line.substr(text_box.get_caret_column())
 	return line.substr(text_box.get_caret_column(), length)
 
+
+var actor_prepend_popup_menu : PopupMenu
+
 func init() -> void:
 	text_box = find_child("TextBox")
 	await get_tree().process_frame
@@ -65,11 +68,12 @@ func init() -> void:
 	text_actions.add_item("Use Ctrl+Shift+V to ingest")
 	text_actions.set_item_disabled(text_actions.item_count - 1, true)
 	
-	var actor_prepend = PopupMenu.new()
-	for actor in Pages.get_speakers():
-		actor_prepend.add_item(actor)
-	text_actions.add_submenu_node_item("Prepend actor in empty lines", actor_prepend)
-	actor_prepend.index_pressed.connect(on_actor_prepend_index_pressed)
+	actor_prepend_popup_menu = PopupMenu.new()
+	_populate_prepend_actors()
+	if not DiisisEditorEventBus.stringkits_changed.is_connected(_populate_prepend_actors):
+		DiisisEditorEventBus.stringkits_changed.connect(_populate_prepend_actors)
+	actor_prepend_popup_menu.index_pressed.connect(on_actor_prepend_index_pressed)
+	text_actions.add_submenu_node_item("Prepend actor in empty lines", actor_prepend_popup_menu)
 	
 	submenu_offset = text_actions.item_count
 	
@@ -87,7 +91,13 @@ func init() -> void:
 	text_actions.set_item_checked(ID_LOCK+submenu_offset, false)
 	
 	find_child("ScrollContainer").init()
-	
+
+
+func _populate_prepend_actors():
+	actor_prepend_popup_menu.clear()
+	for actor in Pages.get_speakers():
+		actor_prepend_popup_menu.add_item(actor)
+
 const ID_CAPITALIZE := 0
 const ID_WHITESPACE := 1
 const ID_PUNCTUATION := 2

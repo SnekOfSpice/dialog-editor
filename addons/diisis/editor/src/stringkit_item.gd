@@ -144,6 +144,8 @@ func _on_save_options_button_pressed() -> void:
 	
 	find_child("OptionsContainer").visible = false
 	find_child("ExpandButton").disabled = false
+	
+	DiisisEditorEventBus.stringkits_changed.emit()
 
 
 func _on_edit_container_visibility_changed() -> void:
