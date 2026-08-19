@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://ba05k05ujpqp8"]
+
+[ext_resource type="Script" uid="uid://3ca21qlq5dla" path="res://game/autoloads/game.gd" id="1_sam7p"]
+[ext_resource type="Theme" uid="uid://drk5fhsdjoewf" path="res://game/visuals/theme/diisis_theme.tres" id="2_707js"]
+
+[node name="Game" type="Node" unique_id=9223702]
+script = ExtResource("1_sam7p")
+screen_fade_in = 1e-05
+screen_fade_out = 1e-05
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1308991078]
+layer = 10
+
+[node name="ScreenContainer" type="Control" parent="CanvasLayer" unique_id=674772115]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_707js")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1271090029]
+layer = 100
+
+[node name="PreviewLabel" type="RichTextLabel" parent="CanvasLayer2" unique_id=32720878]
+unique_name_in_owner = true
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 38
+bbcode_enabled = true
+text = "PREVIEW - DO NOT SHARE"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="FPSLabel" type="Label" parent="CanvasLayer2" unique_id=2001261681]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.8491977, 0.89318556, 0.8426325, 0.6509804)

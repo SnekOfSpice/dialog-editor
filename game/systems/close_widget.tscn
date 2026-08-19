@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dgeujc7ht7bpl"]
+
+[ext_resource type="Script" uid="uid://4llyfl0phidn" path="res://game/systems/close_widget.gd" id="1_8di0j"]
+[ext_resource type="Texture2D" uid="uid://wqidrdoj5lwm" path="res://game/visuals/ui/quit.png" id="2_8di0j"]
+
+[node name="CloseWidget" type="MarginContainer" unique_id=544278775]
+offset_right = 144.0
+offset_bottom = 92.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 34
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 26
+script = ExtResource("1_8di0j")
+
+[node name="Button" type="Button" parent="." unique_id=757384333]
+layout_mode = 2
+text = "Close"
+icon = ExtResource("2_8di0j")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
