@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c7k2h1p5qalaa"]
+[gd_scene format=3 uid="uid://c7k2h1p5qalaa"]
 
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="1_6al0s"]
 [ext_resource type="Script" uid="uid://bfbq7sdndv6fb" path="res://addons/diisis/editor/src/text_content.gd" id="1_uudox"]
@@ -33,31 +33,31 @@ gradient = SubResource("Gradient_wtkdm")
 height = 20
 fill_to = Vector2(0, 1)
 
-[node name="TextContent" type="VBoxContainer" groups=["diisis_method_validator", "diisis_page_view_sensitive"]]
+[node name="TextContent" type="VBoxContainer" unique_id=847352772 groups=["diisis_method_validator", "diisis_page_view_sensitive"]]
 offset_right = 174.7
 offset_bottom = 103.0
 size_flags_horizontal = 3
 theme = ExtResource("1_6al0s")
 script = ExtResource("1_uudox")
 
-[node name="DialogSyntaxContainer" type="HBoxContainer" parent="."]
+[node name="DialogSyntaxContainer" type="HBoxContainer" parent="." unique_id=735462353]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="DialogSyntaxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="DialogSyntaxContainer" unique_id=886917329]
 layout_mode = 2
 
-[node name="MenuBar" type="MenuBar" parent="DialogSyntaxContainer/PanelContainer"]
+[node name="MenuBar" type="MenuBar" parent="DialogSyntaxContainer/PanelContainer" unique_id=1954548052]
 layout_mode = 2
 prefer_global_menu = false
 
-[node name="Text Actions" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar"]
+[node name="Text Actions" type="PopupMenu" parent="DialogSyntaxContainer/PanelContainer/MenuBar" unique_id=318098410]
 size = Vector2i(167, 100)
 
-[node name="Ingest" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" instance=ExtResource("3_wtkdm")]
+[node name="Ingest" parent="DialogSyntaxContainer/PanelContainer/MenuBar/Text Actions" unique_id=1709666215 instance=ExtResource("3_wtkdm")]
 visible = false
 unfocusable = false
 
-[node name="CompliancesLabel" type="RichTextLabel" parent="DialogSyntaxContainer"]
+[node name="CompliancesLabel" type="RichTextLabel" parent="DialogSyntaxContainer" unique_id=1931898399]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -66,21 +66,21 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1326030820]
 layout_mode = 2
 theme_override_constants/margin_left = -1
 theme_override_constants/margin_top = -1
 theme_override_constants/margin_right = -1
 theme_override_constants/margin_bottom = -1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" node_paths=PackedStringArray("code_edit")]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=2042001577 node_paths=PackedStringArray("code_edit")]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 vertical_scroll_mode = 0
 script = ExtResource("3_osost")
 code_edit = NodePath("TextBox")
 
-[node name="TextBox" type="CodeEdit" parent="MarginContainer/ScrollContainer"]
+[node name="TextBox" type="CodeEdit" parent="MarginContainer/ScrollContainer" unique_id=994779120]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -97,13 +97,13 @@ delimiter_strings = Array[String]([])
 code_completion_enabled = true
 indent_automatic_prefixes = Array[String]([])
 
-[node name="ScrollHintTop" type="TextureRect" parent="MarginContainer"]
+[node name="ScrollHintTop" type="TextureRect" parent="MarginContainer" unique_id=521395764]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
 texture = SubResource("GradientTexture2D_osost")
 
-[node name="ScrollHintBottom" type="TextureRect" parent="MarginContainer"]
+[node name="ScrollHintBottom" type="TextureRect" parent="MarginContainer" unique_id=1568124497]
 visible = false
 layout_mode = 2
 size_flags_vertical = 8

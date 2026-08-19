@@ -24,6 +24,9 @@ extends Node
 ## When calling [method _get_game_progress], the Parser will assume that any terminating page means full progress (1.0).
 ## Mostly useful for visual novels and other linear stories that have few end points.
 @export var full_progress_on_last_page := true
+@export_subgroup("Block Rollback", "block_rollback_on_")
+@export var block_rollback_on_choices := true
+@export var block_rollback_on_folders := false
 
 @export_group("Debug")
 @export var startup_fact_payload : Array[ParserFactChange]
@@ -75,6 +78,12 @@ var last_modified_time = 0
 var page_keys := []
 
 
+enum RollbackDeclineReason {
+	HIT_CHOICE = 1,
+	HIT_FOLDER = 3,
+	BEGINNING = 0,
+}
+
 func _get_current_path(suppress_error := false) -> String:
 	if source_file_override:
 		return source_file_override
@@ -104,7 +113,18 @@ func _get_data(path:String) -> Dictionary:
 func _ready() -> void:
 	full_initialize(ProjectSettings.get_setting("diisis/project/file/path"))
 	
-	ParserEvents.choice_pressed.connect(on_choice_pressed)
+	ParserEvents.choice_pressed.connect(_on_choice_pressed)
+	ParserEvents.rollback_declined.connect(_on_rollback_declined)
+
+
+func _on_rollback_declined(reason : RollbackDeclineReason):
+	match reason:
+		RollbackDeclineReason.HIT_CHOICE:
+			push_warning("Attempted rollback while block_rollback_on_choices was true.")
+		RollbackDeclineReason.HIT_FOLDER:
+			push_warning("Attempted rollback while block_rollback_on_folders was true.")
+		RollbackDeclineReason.BEGINNING:
+			push_warning("You're at the beginning.")
 
 
 ## Function that gets called automatically once when you run the game,
@@ -169,11 +189,61 @@ func _process(delta: float) -> void:
 	var source_path := _get_current_path(true)
 	var modified_time = FileAccess.get_modified_time(source_path)
 	if modified_time != last_modified_time:
+		var current_address : String = address_trail[address_trail_index]
+		var current_id : String = get_line_data(current_address).get("id")
 		while not FileAccess.file_exists(source_path):
 			await get_tree().process_frame
+		var prev_vacts := facts.duplicate()
 		_initialize(_get_data(last_data_fetch_path))
-		read_page(page_index, line_index)
+		apply_facts(prev_vacts)
+		await get_tree().process_frame
+		var target_indices := _get_hot_reload_position(current_id)
+		
+		read_page(target_indices.x, target_indices.y)
 	last_modified_time = FileAccess.get_modified_time(source_path)
+
+# This is an internal function that implements project lookback
+# returns the target page in x and target line in y
+# set it to 0 in the project settings to reload in position
+func _get_hot_reload_position(current_id : String) -> Vector2:
+	var default := Vector2(page_index, line_index)
+	if address_trail.is_empty():
+		return default
+	if address_trail_index < 0:
+		return default
+	var lookaround : int = abs(ProjectSettings.get_setting("diisis/runtime/hot_reload/lookaround", 0))
+	if lookaround == 0:
+		return default
+	
+	var sweep := 1
+	var located_address := "%s.%s" % [page_index, line_index]
+	while sweep <= lookaround:
+		# look back
+		var back_index := address_trail_index - sweep
+		if back_index >= 0:
+			var back_address : String = address_trail[back_index]
+			var this_id : String = get_line_data(back_address).get("id")
+			if this_id == current_id:
+				located_address = back_address
+				break
+		
+		# look ahead
+		# this doesnÄt look ahead
+		var front_address := "%s.%s" % [page_index, line_index + sweep]
+		if has_address(front_address):
+			var this_id : String = get_line_data(front_address).get("id")
+			if this_id == current_id:
+				located_address = front_address
+				break
+		
+		
+		sweep += 1
+	
+	var parts = DiisisEditorUtil.get_split_address(located_address)
+	var page = parts[0]
+	var line = parts[1]
+	
+	return Vector2(page, line)
 
 ## Call this one for a blank, new game.
 func reset_and_start(start_page_index := 0, start_line_index := 0):
@@ -261,7 +331,7 @@ var loopback_trigger_line:=-1
 
 var selected_choices := []
 
-func on_choice_pressed(
+func _on_choice_pressed(
 	do_jump_page:bool,
 	target_page:int,
 	target_line:int,
@@ -407,20 +477,36 @@ func _get_game_progress() -> float:
 	
 	return page_progress + (line_progress / float(trail_size)) + ((dialine_progress / float(line_count_on_page)) / float(trail_size))
 
+
 func get_line_type(address:String) -> DIISIS.LineType:
-	var parts = DiisisEditorUtil.get_split_address(address)
-	var prev_page = parts[0]
-	var prev_line = parts[1]
-	
-	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+	return int(get_line_data(address).get("line_type")) as DIISIS.LineType
 
 
 func get_line_content(address:String) -> Dictionary:
+	return get_line_data(address).get("content")
+
+
+func has_address(address : String) -> bool:
+	var parts = DiisisEditorUtil.get_split_address(address)
+	var page = parts[0]
+	var line = parts[1]
+	return has_data(page, line)
+
+
+func has_data(page : int, line : int) -> bool:
+	if not page_data.has(page):
+		return false
+	
+	var lines_on_page : Array = page_data.get(page).get("lines")
+	return line >= 0 and line < lines_on_page.size()
+
+
+func get_line_data(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	
-	return page_data.get(prev_page).get("lines")[prev_line].get("content")
+	return page_data.get(prev_page).get("lines")[prev_line]
 
 
 func get_text(id:String, keep_as_l10n_key := false) -> String:
@@ -441,7 +527,7 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	
-	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
+	return get_line_type(previous_address)
 
 
 var region_end : String
@@ -479,49 +565,53 @@ func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	
 	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
 
-enum RollbackDeclineReason {
-	HIT_CHOICE = 1,
-	HIT_FOLDER = 3,
-	BEGINNING = 0,
-}
 
-func go_back():
-	var trail_shift = -1
-	var previous_line_type = get_previous_address_line_type()
-	if previous_line_type in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		ParserEvents.go_back_declined.emit(previous_line_type)
-		push_warning("You cannot go further back.")
-		#return
-		trail_shift = 0
+
+
+## returns the number of line indices to go back inside page_trail
+## to reach the last text
+## with blocking if we run into choices or folders if those flags are set
+func _get_rollback() -> int:
+	var lookback := 1
+	var max_lookback := address_trail_index
+	while lookback <= max_lookback:
+		var line_type : DIISIS.LineType = get_line_type(address_trail[address_trail_index - lookback])
+		
+		if line_type == DIISIS.LineType.Choice and block_rollback_on_choices:
+			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_CHOICE)
+			return 0
+		if line_type == DIISIS.LineType.Folder and block_rollback_on_folders:
+			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_FOLDER)
+			return 0
+		if line_type == DIISIS.LineType.Text:
+			return -lookback
+		
+		lookback += 1
+	
+	return 0
+	
+
+func rollback():
+	var trail_shift = _get_rollback()
 	
 	if address_trail_index < 0 or address_trail.is_empty():
-		ParserEvents.go_back_declined.emit(RollbackDeclineReason.BEGINNING)
-		push_warning("You're at the beginning.")
-		#return
+		ParserEvents.rollback_declined.emit(RollbackDeclineReason.BEGINNING)
 		trail_shift = 0
-	
 	
 	if line_reader._attempt_read_previous_dialine() and line_reader.line_type == DIISIS.LineType.Text:
 		var subaddr = line_reader.get_subaddress_arr()
-		ParserEvents.go_back_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
+		ParserEvents.rollback_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
 		return
 	
 	var instruction_stack := []
-	var a := false
-	while previous_line_type == DIISIS.LineType.Instruction:
-		a = true
+	var instruction_finder := 0
+	while instruction_finder > trail_shift:
 		# build instruction stack
-		var address_content = get_line_content(address_trail[address_trail_index + trail_shift])
-		instruction_stack.append(address_content)
-		previous_line_type = get_line_type(address_trail[address_trail_index + trail_shift])
-		trail_shift -= 1
-		if address_trail_index + trail_shift < 0:
-			a = false
-			trail_shift = 0
-			break
-	if a: # cant remember what this fixed
-		trail_shift += 1
-	instruction_stack.pop_back()
+		var address_type = get_line_type_by_address(address_trail[address_trail_index + instruction_finder])
+		if address_type == DIISIS.LineType.Instruction:
+			var address_content = get_line_content(address_trail[address_trail_index + instruction_finder])
+			instruction_stack.append(address_content)
+		instruction_finder -= 1
 	
 	for instruction in instruction_stack:
 		if not instruction.get("meta.has_reverse", false):
@@ -539,29 +629,29 @@ func go_back():
 	var parts = DiisisEditorUtil.get_split_address(previous_address)
 	var prev_page = parts[0]
 	var prev_line = parts[1]
-	if not get_line_type_by_address(previous_address) in [DIISIS.LineType.Choice, DIISIS.LineType.Folder]:
-		# we need to preempt which dialine the linereader will be reading
-		var dialine_about_to_read : int
-		if trail_shift == 0:
-			dialine_about_to_read = 0
-		elif trail_shift != 0:
-			var line_data : Array = page_data.get(prev_page).get("lines")
-			var raw_content : Dictionary = line_data[prev_line].get("content")
-			var content := get_text(raw_content.get("text_id"))
-			dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
-			
-		ParserEvents.go_back_accepted.emit(prev_page, prev_line, dialine_about_to_read)
-		if not address_trail.is_empty():
-			address_trail.resize(address_trail_index)
-		if prev_page == page_index:
-			read_line(prev_line)
-		else:
-			read_page(prev_page, prev_line)
-		if trail_shift == 0:
-			line_reader._go_to_start_of_dialog_line()
-		elif trail_shift != 0:
-			line_reader._go_to_end_of_dialog_line()
-		address_trail_index = address_trail.size() - 1
+	
+	var dialine_about_to_read : int
+	if trail_shift == 0:
+		dialine_about_to_read = 0
+	elif trail_shift != 0:
+		var line_data : Array = page_data.get(prev_page).get("lines")
+		var raw_content : Dictionary = line_data[prev_line].get("content")
+		var content := get_text(raw_content.get("text_id"))
+		dialine_about_to_read = content.count("[]>") + content.count("<lc>") -1
+		
+		ParserEvents.rollback_accepted.emit(prev_page, prev_line, dialine_about_to_read)
+	if not address_trail.is_empty():
+		address_trail.resize(address_trail_index)
+	if prev_page == page_index:
+		read_line(prev_line)
+	else:
+		read_page(prev_page, prev_line)
+	if trail_shift == 0:
+		line_reader._go_to_start_of_dialog_line()
+	elif trail_shift != 0:
+		line_reader._go_to_end_of_dialog_line()
+	address_trail_index = address_trail.size() - 1
+	address_trail.resize(address_trail_index + 1)
 
 var page_id : String
 var line_id : String

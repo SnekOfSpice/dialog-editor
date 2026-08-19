@@ -187,7 +187,7 @@ func deserialize(data: Dictionary):
 			find_child("FolderContainer").deserialize(data.get("content", {}))
 			set_indent_level(data.get("meta.indent_level", 0))
 	
-	id = data.get("id", Pages.get_new_id())
+	id = data.get("id", "")
 	set_skip(data.get("skip", false))
 
 func get_choice_item_count() -> int:

@@ -19,4 +19,5 @@ metadata/_custom_type_script = "uid://jkkqramv26mk"
 
 [node name="Parser" type="Node" unique_id=2059796798]
 script = ExtResource("1_0uufo")
+block_rollback_on_choices = false
 startup_fact_payload = Array[ExtResource("2_w1ejb")]([SubResource("Resource_pnedy"), SubResource("Resource_w1ejb")])

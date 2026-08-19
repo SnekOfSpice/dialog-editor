@@ -417,7 +417,7 @@ func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
 	else:
 		text_lines.move_child(text_lines.find_child("TextLinesDisabled"), 0)
 
-func get_default_line_container() -> VBoxContainer:
+func get_default_line_container() -> Control:
 	if find_child("DefaultApparenceSelectionButton").button_pressed:
 		return find_child("TextLinesEnabled")
 	else:

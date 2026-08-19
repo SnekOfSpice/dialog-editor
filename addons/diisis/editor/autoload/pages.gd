@@ -50,6 +50,7 @@ const PREFERENCE_PROPS := [
 	"ingest_is_capitalize_checked",
 	"ingest_is_whitespace_checked",
 	"ingest_is_punctuation_checked",
+	"capitalization_rule_after_elipse",
 ]
 
 const ALLOWED_INSTRUCTION_NAME_CHARACTERS := [
@@ -75,8 +76,6 @@ var custom_method_stringkit_limiters := {}
 var callable_autoloads := []
 var ingestion_actor_declaration := ""
 var evaluator_modified_times := {}
-var current_page_number_by_file_name := {}
-var page_scroll_by_idx_by_file_name := {}
 # oh god have mercy on me
 # im sorry diisis this is an actual sti I just gave you jfc
 # i couldnt figure out why the choice labels would just refuse to get updated on import
@@ -101,7 +100,6 @@ var text_data := {}
 
 ## path to scripts to access funcs and vars from. they inherit from line_reader or are autoloads
 var evaluator_paths := []
-var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
 
 const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
 const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
@@ -119,14 +117,7 @@ const TOGGLE_SETTINGS := {
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
 	"require_colons_on_actor_ingestion" : "If enabled, requires ingested dialogue to start with key + \":\". If disabled, a trailing space is fine too but might lead to unintended syntax if you have a dialog line starting with \"a \" (article) or \"n \"(shortform of &)."
 }
-var save_on_play := true
-var warn_on_fact_deletion := true
-var silly := true
-var show_facts_buttons := true
-var collapse_conditional_controls_by_default := true
-var first_index_as_page_reference_only := true
-var validate_function_calls_on_focus := false
-var require_colons_on_actor_ingestion := false
+
 
 var loopback_references_by_page := {}
 var jump_page_references_by_page := {}
@@ -135,22 +126,39 @@ var jump_page_references_by_page := {}
 const STRING_SETTINGS := {
 	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
 }
-var shader := ""
 
-var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
-var editor_text_size_id : int = 3
 
-var ingest_is_capitalize_checked := false
-var ingest_is_whitespace_checked := true
-var ingest_is_punctuation_checked := false
 
+#region prefs
 var append_periods := true
+var collapse_conditional_controls_by_default := true
 var confirm_linearize := true
+var current_page_number_by_file_name := {}
+var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
+var first_index_as_page_reference_only := true
 var fix_apostrophes := true
-var replacement_rules := []
+var page_scroll_by_idx_by_file_name := {}
 var preferences_import := {}
 var preferences_export := {}
 var preferences_l10n := {}
+var region_baking_enabled := false
+var region_delination := RegionDeliniation.Pages
+var region_delinator_instruction := ""
+var replacement_rules := []
+var require_colons_on_actor_ingestion := true
+var save_on_play := true
+var shader := ""
+var show_facts_buttons := true
+var silly := true
+var validate_function_calls_on_focus := false
+var warn_on_fact_deletion := true
+var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
+var editor_text_size_id : int = 3
+var ingest_is_capitalize_checked := false
+var ingest_is_whitespace_checked := true
+var ingest_is_punctuation_checked := false
+#endregion
+
 var import_modified_times_by_path := {}
 const DEFAULT_REPLACEMENT_RULES := [
 	{
@@ -240,7 +248,6 @@ func serialize() -> Dictionary:
 		"character_count" : counts.y,
 		"custom_method_stringkit_limiters": custom_method_stringkit_limiters,
 		"custom_method_defaults": custom_method_defaults,
-		#"default_address_mode_pages": default_address_mode_pages,
 		"default_locale" : default_locale,
 		"stringkits": stringkits,
 		"stringkit_titles": stringkit_titles,
@@ -308,12 +315,7 @@ func deserialize(data:Dictionary):
 	text_data = data.get("text_data", {})
 	text_lead_time_other_actor = data.get("text_lead_time_other_actor", 0.0)
 	text_lead_time_same_actor = data.get("text_lead_time_same_actor", 0.0)
-	#default_address_mode_pages = data.get("default_address_mode_pages", AddressModeButton.Mode.Objectt)
 	
-	#for setting in TOGGLE_SETTINGS.keys():
-		#set(setting, data.get(setting, get(setting)))
-	#for setting in STRING_SETTINGS.keys():
-		#set(setting, data.get(setting, get(setting)))
 		
 	id_counter = data.get("id_counter", NEGATIVE_INF)
 	import_modified_times_by_path = data.get("import_modified_times_by_path", {})
@@ -1124,7 +1126,6 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 			var new_ingestions := []
 			var ingestions := ingestion_actor_declaration.split("\n")
 			for ingestion in ingestions:
-				print("fixing ", ingestion)
 				var fixed := false
 				for old_speaker in map.keys():
 					if ingestion.ends_with(" %s" % old_speaker):
@@ -1684,9 +1685,7 @@ enum RegionDeliniation{
 	Pages,
 	Instructions
 }
-var region_baking_enabled := false
-var region_delinator_instruction := ""
-var region_delination := RegionDeliniation.Pages
+
 ## Only useful for linear games.
 func get_regions(deliniation := region_delination) -> Dictionary:
 	var trail := get_cascading_trail(0)
@@ -1977,6 +1976,14 @@ func are_all_of_these_stringkit_titles(names:Array) -> bool:
 			break
 	return result
 
+
+enum ElipseC12NMode {
+	REMAIN,
+	UPPER,
+	LOWER,
+}
+var capitalization_rule_after_elipse : ElipseC12NMode = ElipseC12NMode.REMAIN
+
 func capitalize_sentence_beginnings(text:String) -> String:
 	var c12n_prefixes := [
 		".", ":", ";", "?", "!", "~", "\n"
@@ -1987,16 +1994,17 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	var elipse_length := 3
 	while elipse_position != -1:
 		if elipse_position < text.length() - elipse_length:
-			if text[elipse_position + elipse_length + 1] in LETTERS:
+			if text[elipse_position + elipse_length + 1] in ALLOWED_INSTRUCTION_NAME_CHARACTERS:
 				letter_indices_after_elipses[elipse_position + elipse_length + 1] = text[elipse_position + elipse_length + 1]
 				elipse_position = text.find("...", elipse_position + elipse_length + 1)
 				continue
 			elif text[elipse_position + 1] == " " and elipse_position < text.length() - 1:
-				if text[elipse_position + 2] in LETTERS:
+				if text[elipse_position + 2] in ALLOWED_INSTRUCTION_NAME_CHARACTERS:
 					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
 					elipse_position = text.find("...", elipse_position + elipse_length + 1)
 					continue
 		elipse_position = text.find("...", elipse_position + elipse_length + 1)
+		print(elipse_position)
 
 	var tags_in_text := []
 	var scan_index := 0
@@ -2064,9 +2072,16 @@ func capitalize_sentence_beginnings(text:String) -> String:
 	for tag in tags_in_text:
 		text = text.replacen(tag, tag)
 	
-	for index in letter_indices_after_elipses.keys():
-		var letter : String = letter_indices_after_elipses.get(index)
-		text[index] = letter
+	if capitalization_rule_after_elipse != ElipseC12NMode.REMAIN: # small optimization because this will mean we don't have to do anything with the elipses
+		for index in letter_indices_after_elipses.keys():
+			var letter : String = letter_indices_after_elipses.get(index)
+			
+			if capitalization_rule_after_elipse == ElipseC12NMode.LOWER:
+				letter = letter.to_lower()
+			elif capitalization_rule_after_elipse == ElipseC12NMode.UPPER:
+				letter = letter.to_upper()
+			
+			text[index] = letter
 	
 	text = text.replace(" i ", " I ")
 	
@@ -2210,6 +2225,7 @@ func fix_punctuation(text:String) -> String:
 		["whove", "who've"],
 		["wont", "won't"],
 		["wouldnt", "wouldn't"],
+		["wouldve", "would've"],
 		["youd", "you'd"],
 		["youll", "you'll"],
 		["youre", "you're"],
@@ -2242,11 +2258,12 @@ func fix_punctuation(text:String) -> String:
 		var enabled : bool = rule.get("enabled")
 		if not enabled:
 			continue
-		var what = rule.get("symbol", "")
-		var forwhat = rule.get("replacement", "")
+		var what : String = rule.get("symbol", "")
+		var forwhat : String = rule.get("replacement", "")
 		for i in result.size():
 			var line : String = result[i]
 			result[i] = line.replace(what, forwhat)
+	
 	
 	return "\n".join(result)
 

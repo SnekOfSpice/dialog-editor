@@ -141,8 +141,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			Game.set_screen(CONST.SCREEN_HISTORY)
 		
-	elif event.is_action_pressed("go_back"):
-		request_go_back()
+	elif event.is_action_pressed("rollback"):
+		request_rollback()
 
 func attempt_advance(event:InputEvent):
 	if event.is_shift_pressed() and event is InputEventKey:
@@ -369,6 +369,9 @@ func set_fade_out(lod:float, mix:float):
 	target_lod = lod
 	target_mix = mix
 
+
+func printttt(a):
+	print(a)
 
 
 func set_background(new_bg_key:String, fade_time:=0.0):

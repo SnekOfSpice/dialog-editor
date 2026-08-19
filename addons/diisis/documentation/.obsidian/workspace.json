@@ -56,12 +56,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "quartz/content/index.md",
+                "file": "quartz/content/Getting Started/Line Types/Instruction.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "Instruction"
             }
           },
           {
@@ -70,16 +70,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "quartz/content/Getting Started/LineReader & Parser.md",
+                "file": "quartz/content/Interactivity/Rollback.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "LineReader & Parser"
+              "title": "Rollback"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       },
       {
         "id": "26563639c7d0bc11",
@@ -116,7 +116,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -128,7 +130,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "index.md",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -149,8 +151,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -260,17 +261,19 @@
       "bases:Create new base": false
     }
   },
-  "active": "8149aa1ccafb8882",
+  "active": "d36e7e5a4bf3af12",
   "lastOpenFiles": [
+    "quartz/content/Getting Started/LineReader & Parser.md",
+    "quartz/content/Getting Started/Line Types/Instruction.md",
+    "quartz/content/Interactivity/Rollback.md",
+    "quartz/content/index.md",
     "quartz/docs/advanced/index.md",
     "quartz/docs/features/index.md",
     "quartz/docs/plugins/index.md",
     "quartz/docs/index.md",
-    "quartz/content/index.md",
     "quartz/content/icon_buttonbw smooth.png",
     "quartz/docs/layout-components.md",
     "quartz/content/VN Template Guide/Creating New Characters.md",
-    "quartz/content/Getting Started/LineReader & Parser.md",
     "Pasted image 20260316205320.png",
     "Pasted image 20260316205138.png",
     "quartz/content/Getting Started/Editor Overview.md",
@@ -293,7 +296,6 @@
     "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
     "quartz/content/Interactivity/Using Event Signals.md",
     "quartz/content/Interactivity/Facts & Conditionals.md",
-    "quartz/content/Interactivity/Accessing functions and variables in DIISIS.md",
     "quartz/content/Assets/Pasted image 20260314131924.png",
     "quartz/content/Assets/Pasted image 20260314131629.png",
     "quartz/content/Assets/Pasted image 20260314131223.png",

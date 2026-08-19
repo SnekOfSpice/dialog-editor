@@ -5,7 +5,7 @@ class_name LineReader
 ## The moist endoskeleton-wrapping articulations of runtime-side DIISIS <3
 ##
 ## Add it to your scene and hook up your own UI nodes to it. 
-## Then handle input to call [method request_advance] and method [method request_go_back] to navigate
+## Then handle input to call [method request_advance] and method [method request_rollback] to navigate
 ## through the dialog written in DIISIS!
 
 ## Text speed at which text will be shown instantly instead of gradually revealed.
@@ -657,7 +657,7 @@ func _ready() -> void:
 	Parser.connect("read_new_line", _read_new_line)
 	Parser.connect("page_terminated", _close)
 	ParserEvents.comment.connect(_on_comment)
-	ParserEvents.go_back_accepted.connect(_on_go_back_accepted)
+	ParserEvents.rollback_accepted.connect(_on_rollback_accepted)
 	
 	ParserEvents.body_label_text_changed.connect(_on_body_label_text_changed)
 	ParserEvents.display_name_changed.connect(_on_name_label_updated)
@@ -690,7 +690,7 @@ func _ready() -> void:
 	
 	emit_signal("line_reader_ready")
 
-func _on_go_back_accepted(_page_index:int, _line_index:int, _dialine:int):
+func _on_rollback_accepted(_page_index:int, _line_index:int, _dialine:int):
 	_reverse_next_instruction = true
 
 ## Gets the prefrences that are usually set by the user. Save this to disk and apply it again with [code]apply_preferences()[/code].
@@ -814,7 +814,7 @@ func advance():
 	ParserEvents.advanced.emit()
 
 ## Go back up the dialogue tree, if possible. Pushes an appropriate warning if it fails.
-func request_go_back() -> void:
+func request_rollback() -> void:
 	if Parser.paused:
 		push_warning("Cannot go back because Parser.paused is true.")
 		return
@@ -824,7 +824,7 @@ func request_go_back() -> void:
 	if terminated:
 		push_warning("Cannot go back because terminated is true.")
 		return
-	Parser.go_back()
+	Parser.rollback()
 
 ## Pauses the Parser and hides all controls uif [param hide_controls] is [code]true[/code] (default). Useful for reacting to game events outside the line reader. [br]
 ## [b]Call [method continue_after_interrupt] afterwards to cleanly resume.[/b]
@@ -2044,8 +2044,6 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 		var last_index_end : = -1
 		while segment_index < ruby_segment_indices.size():
 			var indices : Vector2i = ruby_segment_indices[segment_index]
-			#if indices.x == last_index_end + 1:
-				#print(word_segments[segment_index])
 			var ruby = _build_ruby(on_label, indices, word_segments[segment_index])
 			ruby.segment_index = segment_index
 			segment_index += 1
@@ -2092,7 +2090,6 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 	ruby_label.set_height(draw_pos_x.y)
 	ruby_label.set_stretch(_is_ruby_stretch(ruby_label.get_text()))
 	if _is_ruby_stretch(ruby_label.get_text()):
-		#print("drawing at ", draw_pos_x)
 		ruby_label.set_minimum_width(draw_pos_y.x - draw_pos_x.x)
 	else:
 		var base_width : float = (draw_pos_y - draw_pos_x).x

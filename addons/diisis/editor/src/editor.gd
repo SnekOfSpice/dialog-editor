@@ -125,6 +125,8 @@ func refresh(serialize_before_load:=true, fragile:=false):
 
 func init(active_file_path:="") -> void:
 	Pages.editor = self
+	_load_preferences()
+	
 	set_opening_cover_visible(true)
 	set_importing_cover_visible(false)
 	was_playing_scene = EditorInterface.is_playing_scene()
@@ -671,9 +673,9 @@ func save_to_recent_files(path : String) -> void:
 	var recent_files := FileAccess.open(RECENT_FILES_PATH, FileAccess.READ)
 	if not recent_files:
 		#recent_files.close()
-		recent_files = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
-		recent_files.store_string(JSON.stringify([path], "\t"))
-		recent_files.close()
+		var rf = FileAccess.open(RECENT_FILES_PATH, FileAccess.WRITE)
+		rf.store_string(JSON.stringify([path], "\t"))
+		rf.close()
 		return
 	var recent_data : Array
 	if recent_files.get_length() > 0:
@@ -782,7 +784,6 @@ func try_open_from_path(path:String):
 	open_from_path(path)
 func try_new_file():
 	if not opening and has_unsaved_changes:
-		print("SHJDFG")
 		build_quit_dialog(DIISIS.QUIT_DIALOG_TITLE_NEW, new_file_request)
 		return
 	new_file_request()
@@ -1527,3 +1528,24 @@ func save_preferences():
 		config.set_value("editor", prop, Pages.get(prop))
 	
 	config.save(plugin.PREFERENCE_PATH)
+
+
+const PREFERENCE_PATH := "user://editor_preferences.cfg"
+func _load_preferences():
+	var config = ConfigFile.new()
+	var err = config.load(PREFERENCE_PATH)
+	if err == OK:
+		for prop : String in Pages.PREFERENCE_PROPS:
+			Pages.set(prop, config.get_value("editor", prop, Pages.get(prop)))
+	
+	if not DiisisEditorUtil.embedded and err == OK:
+		var scale : float = config.get_value("editor", "content_scale", 1.0)
+		
+		var dia_editor_window = Engine.get_meta("DIISISPlugin").dia_editor_window
+		
+		dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
+		dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
+		dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
+		
+		await get_tree().process_frame
+		dia_editor_window.update_content_scale(scale)

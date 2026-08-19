@@ -688,7 +688,7 @@ visible = false
 theme_override_font_sizes/title_font_size = 30
 
 [node name="IngestionActorSetupWindow" parent="Popups" unique_id=642674317 instance=ExtResource("33_378lj")]
-size = Vector2i(400, 1741)
+size = Vector2i(400, 1764)
 visible = false
 theme_override_font_sizes/title_font_size = 16
 

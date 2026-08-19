@@ -26,7 +26,7 @@ const AUTOLOAD_EDITOR_EVENT_BUS = "DiisisEditorEventBus"
 const AUTOLOAD_SHARED_DIISIS = "DIISIS"
 
 const TEMPLATE_VN_AUTOLOAD_CONST = "CONST"
-const TEMPLATE_VN_AUTOLOAD_GO_BACK_HANDLER = "GoBackHandler"
+const TEMPLATE_VN_AUTOLOAD_ROLLBACK_HANDLER = "RollbackHandler"
 const TEMPLATE_VN_AUTOLOAD_OPTIONS = "Options"
 const TEMPLATE_VN_AUTOLOAD_SOUND = "Sound"
 const TEMPLATE_VN_AUTOLOAD_STYLE = "Style"
@@ -48,20 +48,17 @@ func _enter_tree():
 		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
 		ProjectSettings.set_setting("diisis/project/file/path", "")
 		ProjectSettings.save()
-	ProjectSettings.add_property_info({
-	"name": "diisis/project/file/path",
-	"type": TYPE_STRING,
-	"hint_string": "one,two,three"
-}
-
-)
+		
+	
 	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_updates"):
 		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 		ProjectSettings.set_setting("diisis/plugin/checks/check_for_updates", true)
 		ProjectSettings.save()
 	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_linux_input"):
-		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 		ProjectSettings.set_setting("diisis/plugin/checks/check_for_linux_input", true)
+		ProjectSettings.save()
+	if not ProjectSettings.has_setting("diisis/runtime/hot_reload/lookaround"):
+		ProjectSettings.set_setting("diisis/runtime/hot_reload/lookaround", 3)
 		ProjectSettings.save()
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
@@ -212,7 +209,7 @@ func setup_vn_template():
 	var e6 = InputEventKey.new()
 	e6.keycode = KEY_RIGHT
 	e6.physical_keycode = KEY_RIGHT
-	ProjectSettings.set_setting("input/go_back",
+	ProjectSettings.set_setting("input/rollback",
 		{
 		"deadzone": 0.5,
 		"events": [e5,e6]
@@ -266,7 +263,7 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name :String in ["scene_loader","event_bus", "const", "go_back_handler", "options", "sound", "style", "game"]:
+	for file_name :String in ["scene_loader","event_bus", "const", "rollback_handler", "options", "sound", "style", "game"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
 		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
@@ -347,48 +344,9 @@ func open_editor():
 	
 
 
-const PREFERENCE_PROPS := [
-	"append_periods",
-	"collapse_conditional_controls_by_default",
-	"confirm_linearize",
-	"current_page_number_by_file_name",
-	"default_address_mode_pages",
-	"first_index_as_page_reference_only",
-	"fix_apostrophes",
-	"page_scroll_by_idx_by_file_name",
-	"preferences_export",
-	"preferences_import",
-	"preferences_l10n",
-	"region_baking_enabled",
-	"region_delination",
-	"region_delinator_instruction",
-	"replacement_rules",
-	"require_colons_on_actor_ingestion",
-	"save_on_play",
-	"shader",
-	"show_facts_buttons",
-	"silly",
-	"validate_function_calls_on_focus",
-	"warn_on_fact_deletion",
-	"editor_page_view",
-	"editor_text_size_id",
-	"ingest_is_capitalize_checked",
-	"ingest_is_whitespace_checked",
-	"ingest_is_punctuation_checked",
-]
-
-
 
 
 func add_new_dialog_editor_window():
-	var config = ConfigFile.new()
-	var err = config.load(PREFERENCE_PATH)
-	if err == OK:
-		for prop : String in PREFERENCE_PROPS:
-			var pages = Engine.get_singleton("Pages")
-			if pages:
-				pages.set(prop, config.get_value("editor", prop, pages.get(prop)))
-	
 	if _embedded:
 		if embedder:
 			embedder.queue_free()
@@ -408,15 +366,15 @@ func add_new_dialog_editor_window():
 		get_editor_interface().get_base_control().add_child.call_deferred(dia_editor_window)
 		dia_editor_window.wrap_controls = true
 		
-		if err == OK:
-			var scale : float = config.get_value("editor", "content_scale", 1.0)
-			#find_child("WindowFactorScale").set_value(scale)
-			dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
-			dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
-			dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
-			
-			await get_tree().process_frame
-			dia_editor_window.update_content_scale(scale)
+		#if err == OK:
+			#var scale : float = config.get_value("editor", "content_scale", 1.0)
+			##find_child("WindowFactorScale").set_value(scale)
+			#dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
+			#dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
+			#dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
+			#
+			#await get_tree().process_frame
+			#dia_editor_window.update_content_scale(scale)
 
 
 func on_new_file_requested():

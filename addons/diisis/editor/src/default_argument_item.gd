@@ -43,13 +43,11 @@ func init(method_name:String, arg_name:String):
 	
 	is_string = type == TYPE_STRING
 	
-	#prints("---------- initttttttttt", method_name, arg_name)
 	var override = Pages.custom_method_defaults.get(method_name, {}).get(arg_name)
 	set_use_custom_default(override != null)
 	set_stringkit_error(false)
 
 func deserialize(value):
-	#print("got ", value)
 	set_custom_default(value)
 	set_use_custom_default(value != null)
 

@@ -3,7 +3,7 @@ extends Node
 
 
 signal active_path_set(path : String)
-
+signal stringkits_changed()
 
 @onready var last_active_path := ProjectSettings.get_setting("diisis/project/file/path", "")
 

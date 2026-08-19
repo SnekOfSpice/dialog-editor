@@ -20,7 +20,7 @@ func init():
 		container.add_child(button)
 		#container.add_child(label)
 		button.mouse_entered.connect(request_hint.bind(button, Pages.TOGGLE_SETTINGS.get(setting)))
-		button.mouse_exited.connect(%Hint.set.bind("text", ""))
+		button.mouse_exited.connect(%Hint.hide)
 		#label.visible = false
 		%ToggleSettings.add_child(container)
 		button.button_pressed = Pages.get(setting)
@@ -51,9 +51,9 @@ func request_hint(on:Button, with_text : String):
 	var target :float= on.global_position.y - %ToggleSettings.position.y - on.size.y
 	var t = create_tween()
 	t.tween_property(%HintSpacer, "custom_minimum_size:y", target, 0.04).set_trans(Tween.TRANS_CUBIC)
-	#%HintSpacer.custom_minimum_size.y = 
-	print(on.global_position)
+	
 	%Hint.text = with_text
+	%Hint.show()
 
 func _on_address_mode_button_page_mode_set(mode: AddressModeButton.Mode) -> void:
 	Pages.default_address_mode_pages = mode
