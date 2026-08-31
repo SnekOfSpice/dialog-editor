@@ -143,10 +143,6 @@ func init(active_file_path:="") -> void:
 	
 	update_controls()
 	
-	#var settings = EditorInterface.get_editor_settings()
-	#print("scale is", settings.get_setting("interface/editor/appearance/display_scale"))
-	#set_content_scale(settings.get_setting("interface/editor/appearance/display_scale"))
-	
 	%GoTo.init()
 	
 	arg_hint = %ArgHint
@@ -1147,7 +1143,6 @@ func request_arg_hint(text_box:Control):
 	
 	
 	if text_box is TextEdit:
-		#print(text_box.get_caret_draw_pos())
 		caret_pos += Vector2(text_box.get_caret_draw_pos())# - caret_pos
 	#
 	#
@@ -1156,16 +1151,10 @@ func request_arg_hint(text_box:Control):
 		caret_pos.x -= 50
 		caret_pos.x += text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
 		caret_pos.y += text_box.size.y
-		#caret_pos.y += Vector2i(text_box.global_position).y
-	#elif text_box is TextEdit:
-		#caret_pos += Vector2i(text_box.global_position)
-	#caret_pos *= content_scale
-	#caret_pos += Vector2(0, 10) * content_scale
 	
 	
 	
 	_place_arg_hint(caret_pos)
-	#print(caret_pos)
 	
 	text_box.set_caret_column(text_box.get_caret_column())
 	text_box.call_deferred("grab_focus")
@@ -1175,7 +1164,6 @@ var arg_hint_window : Window
 func _place_arg_hint(at:Vector2):
 	if DiisisEditorUtil.embedded:
 		arg_hint_window.popup()
-		print(arg_hint_window.visible)
 		arg_hint_window.position = Vector2i(at)
 	else:
 		arg_hint.global_position = Vector2i(at)
