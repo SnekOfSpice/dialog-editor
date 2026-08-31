@@ -77,11 +77,11 @@ func build(instruction_name: String, full_text:String, caret_column:int, on_node
 	%TextLabel.text = hint
 	
 	# tbh idk why this needs 2 different implementations lmao
-	if DiisisEditorUtil.embedded:
-		position.x = get_theme_font("font", "LineEdit").get_string_size(hint_without_bbcode.trim_prefix(string_before_column_without_bbcode)).x * Pages.editor.content_scale
-		position += Vector2(EditorInterface.get_base_control().get_screen_position())
-	else:
-		position.x -= get_theme_font("font", "LineEdit").get_string_size(string_before_column).x * Pages.editor.content_scale
+	#if DiisisEditorUtil.embedded:
+		#position.x = get_theme_font("font", "LineEdit").get_string_size(hint_without_bbcode.trim_prefix(string_before_column_without_bbcode)).x * Pages.editor.content_scale
+		#position += Vector2(EditorInterface.get_base_control().get_screen_position())
+	#if not DiisisEditorUtil.embedded:
+	position.x -= get_theme_font("font", "LineEdit").get_string_size(string_before_column).x * Pages.editor.content_scale
 	await get_tree().process_frame
 	if hint.is_empty():
 		hide()

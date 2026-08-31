@@ -39,8 +39,15 @@ func init():
 		container.add_child(edit)
 		var button = Button.new()
 		button.text = "Reset"
-		button.pressed.connect(edit.set.bind("text", ""))
-		button.pressed.connect(Pages.set_setting.bind("", setting))
+		button.pressed.connect(func():
+			var default : String
+			if setting == "theme":
+				default = DiisisEditor.DEFAULT_THEME
+			else:
+				default = ""
+			edit.set("text", default)
+			Pages.set_setting(default, setting)
+		)
 		container.add_child(button)
 		find_child("StringSettings").add_child(container)
 	

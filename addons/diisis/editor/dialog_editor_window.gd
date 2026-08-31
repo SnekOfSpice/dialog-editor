@@ -107,7 +107,6 @@ func set_windowed():
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, get_window_id())
 
-	print("awa")
 
 func _on_editor_close_window_request() -> void:
 	close_window()
@@ -118,7 +117,6 @@ func _on_editor_reload_window_request() -> void:
 
 
 func _on_size_changed() -> void:
-	print("awa")
 	await get_tree().process_frame
 	var a : Vector2= %Editor.position + (%Editor.size * 0.5)
 	$Camera2D.set_deferred("position", a)

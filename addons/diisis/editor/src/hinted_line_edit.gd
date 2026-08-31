@@ -59,8 +59,8 @@ func update_hint(new_text: String):
 	
 	var caret_pos = Vector2.ZERO#(global_position)
 	
-	if DiisisEditorUtil.embedded:
-		caret_pos += Vector2i(EditorInterface.get_base_control().get_screen_position())
+	#if DiisisEditorUtil.embedded:
+		#caret_pos += Vector2(EditorInterface.get_base_control().get_screen_position())
 	
 	caret_pos.x += int(get_caret_draw_pos().x)
 	#caret_pos *= Pages.editor.content_scale

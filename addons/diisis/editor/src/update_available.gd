@@ -13,6 +13,7 @@ func check_for_updates() -> void:
 	visible = false
 	text = ""
 	if ProjectSettings.get_setting("diisis/plugin/checks/check_for_updates"):
+		http_request.cancel_request()
 		http_request.request(REMOTE_RELEASES_URL)
 
 func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
