@@ -1,3 +1,11 @@
+0.10
+
+- Add disco elysium-style inline choices
+- It searches from the back of the Text Line and displays a fail if it is present
+- a closing tag is mandatory
+- there are several functions you can or should override to properly make it work in your specific game
+
+
 0.9
 post TDOHN update (Or: The hot reload fixes update, apparently)
 

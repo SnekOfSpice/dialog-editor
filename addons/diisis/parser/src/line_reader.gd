@@ -297,6 +297,13 @@ var _built_virtual_choices := []
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:PackedScene
+@export_subgroup("Skill Rolls")
+enum SkillRollResultStyle {
+	HIDE,
+	PREPEND,
+	EXTRA_LINE,
+}
+@export var skill_roll_result_style := SkillRollResultStyle.PREPEND
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -491,6 +498,8 @@ func _serialize() -> Dictionary:
 	result["instruction_handler"] = _serialize_instruction_handler_data() 
 	result["is_last_actor_name_different"] = _is_last_actor_name_different
 	result["_last_raw_name"] = _last_raw_name
+	result["_last_skill"] = _last_skill
+	result["_last_skill_success"] = _last_skill_success
 	result["line_data"] = _line_data 
 	result["line_index"] = line_index 
 	result["line_type"] = line_type 
@@ -511,6 +520,7 @@ func _serialize() -> Dictionary:
 	result["_ruby_strings"] = _ruby_strings
 	result["_ruby_indices"] = _ruby_indices
 	result["showing_text"] = _showing_text 
+	result["skill_roll_result_style"] = skill_roll_result_style 
 	result["_subaddresses_in_history"] = _subaddresses_in_history 
 	result["terminated"] = terminated
 	result["_text_delay"] = _text_delay
@@ -548,6 +558,8 @@ func _deserialize(data: Dictionary):
 	_deserialize_instruction_handler_data(data.get("instruction_handler", {}))
 	_is_last_actor_name_different = data.get("is_last_actor_name_different", true)
 	_last_raw_name = data.get("_last_raw_name", "")
+	_last_skill = data.get("_last_skill", _last_skill)
+	_last_skill_success = data.get("_last_skill_success", _last_skill_success)
 	_line_data = data.get("line_data", {})
 	line_index = int(data.get("line_index", 0))
 	line_type = int(data.get("line_type", DIISIS.LineType.Text))
@@ -564,6 +576,7 @@ func _deserialize(data: Dictionary):
 	_ruby_strings = data.get("_ruby_strings")
 	_ruby_indices = _strarr_to_vec2iarr(data.get("_ruby_indices"))
 	_showing_text = data.get("showing_text")
+	skill_roll_result_style = data.get("skill_roll_result_style", skill_roll_result_style)
 	_subaddresses_in_history = data.get("_subaddresses_in_history")
 	terminated = data.get("terminated")
 	_text_delay = data.get("_text_delay", _text_delay)
@@ -1698,24 +1711,21 @@ func _insert_strings_in_current_dialine():
 ## skillchecks in fail blocks.
 func _skill_roll(skill : String, threshold : int) -> bool:
 	push_warning("function _skill_roll was called but not overwritten. Please implement your own in a LineReader-derived script, as the default implementation always returns true.")
-	var success := 3 > threshold
+	var success := true
 	_last_skill = skill
-	_last_success = success
+	_last_skill_success = success
 	return success
 
 var _last_skill : String
-var _last_success : bool
+var _last_skill_success : bool
 
 func _get_last_skill_roll_result_string() -> String:
-	return str(_last_skill, " : ", "success" if _last_success else "failed")
+	return str(_last_skill, " : ", "success" if _last_skill_success else "failed")
 
 
-enum SkillRollResultStyle {
-	HIDE,
-	PREPEND,
-	EXTRA_LINE,
-}
-@export var skill_roll_result_style := SkillRollResultStyle.EXTRA_LINE
+func _get_skill_roll_prepend_separator_string() -> String:
+	return " - "
+
 
 var _ruby_strings := []
 var _ruby_indices := []
@@ -1769,7 +1779,7 @@ func _handle_tags_and_start_reading():
 				break
 			fail_searcher_index -= 1
 		
-		printt("we are doing a skillcheck, ", found_closing, found_fail, closing_searcher_index, fail_searcher_index)
+		#printt("we are doing a skillcheck, ", found_closing, found_fail, closing_searcher_index, fail_searcher_index)
 		
 		if found_closing:
 			_erase_dialog_line(closing_searcher_index)
@@ -1792,13 +1802,10 @@ func _handle_tags_and_start_reading():
 				SkillRollResultStyle.PREPEND:
 					_erase_dialog_line(_dialog_line_index)
 					var next_text : String = _dialog_lines[_dialog_line_index]
-					next_text = "%s - %s" % [_get_last_skill_roll_result_string(), next_text]
+					next_text = "%s%s%s" % [_get_last_skill_roll_result_string(), _get_skill_roll_prepend_separator_string(), next_text]
 					_dialog_lines[_dialog_line_index] = next_text
 				SkillRollResultStyle.EXTRA_LINE:
-			#if show_skill_roll_result_string:
 					_dialog_lines[_dialog_line_index] = _get_last_skill_roll_result_string()
-			#else:
-				
 			_set_dialog_line_index(_dialog_line_index)
 			return
 		else:
