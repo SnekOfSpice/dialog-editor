@@ -63,7 +63,7 @@ func update_hint(new_text: String):
 		caret_pos += Vector2i(EditorInterface.get_base_control().get_screen_position())
 	
 	caret_pos.x += int(get_caret_draw_pos().x)
-	caret_pos *= Pages.editor.content_scale
+	#caret_pos *= Pages.editor.content_scale
 	caret_pos.y += size.y
 	$ArgHint.build_str(option_list_string)
 	$ArgHint.position = caret_pos

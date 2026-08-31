@@ -228,12 +228,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BottomMargin" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=172265541]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-mouse_filter = 2
-
 [connection signal="toggled" from="PanelContainer/HBoxContainer/Info/SkipCheckBox" to="." method="set_skip"]
 [connection signal="meta_clicked" from="PanelContainer/HBoxContainer/Info/IncomingReferences" to="." method="_on_incoming_references_meta_clicked"]
 [connection signal="toggled" from="PanelContainer/HBoxContainer/Info/MarginContainer/LineSelector" to="." method="_on_line_selector_toggled"]

@@ -11,8 +11,6 @@ enum PageView {
 
 signal request_template_setup(template_id : int)
 
-signal scale_editor_up()
-signal scale_editor_down()
 signal open_new_file()
 #signal save_path_set(active_dir:String, active_file_name:String)
 signal save_path_set(path:String)
@@ -162,9 +160,10 @@ func init(active_file_path:="") -> void:
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
 		popup.exclusive = DiisisEditorUtil.embedded
-		popup.always_on_top = not DiisisEditorUtil.embedded
+		popup.always_on_top = false#not DiisisEditorUtil.embedded
 		popup.wrap_controls = true
-		popup.transient = DiisisEditorUtil.embedded
+		popup.minimize_disabled = true
+		popup.transient = true#DiisisEditorUtil.embedded
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
@@ -248,7 +247,7 @@ func init(active_file_path:="") -> void:
 		opening = false
 		Pages.ensure_line_reader_scripts()
 	
-	%EmbedHint.visible = DiisisEditorUtil.embedded
+	%FilePathLabel.visible = DiisisEditorUtil.embedded
 	if DiisisEditorUtil.embedded:
 		%UpdateAvailable.check_for_updates()
 		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
@@ -266,6 +265,9 @@ func init(active_file_path:="") -> void:
 		DiisisEditorEventBus.quit.new_file.connect(plugin.on_new_file_requested)
 	
 	save_to_recent_files(active_file_path)
+	
+	await get_tree().process_frame
+	%UpdateAvailable.check_for_updates()
 
 
 func on_tree_entered():
@@ -487,10 +489,6 @@ func _shortcut_input(event):
 					select_line_type(DIISIS.LineType.Instruction)
 				KEY_4:
 					select_line_type(DIISIS.LineType.Folder)
-				KEY_MINUS:
-					emit_signal("scale_editor_down")
-				KEY_PLUS:
-					emit_signal("scale_editor_up")
 		if event.is_alt_pressed():
 			match event.key_label:
 				KEY_LEFT, KEY_A:
@@ -1518,8 +1516,8 @@ func save_preferences():
 	var plugin := Engine.get_meta("DIISISPlugin")
 	if not plugin._embedded:
 		if is_instance_valid(plugin.dia_editor_window):
-			if is_instance_valid(plugin.dia_editor_window.editor_window):
-				config.set_value("editor", "content_scale", plugin.dia_editor_window.editor_window.content_scale_factor)
+			#if is_instance_valid(plugin.dia_editor_window.editor_window):
+				#config.set_value("editor", "content_scale", plugin.dia_editor_window.editor_window.content_scale_factor)
 			config.set_value("editor", "size", plugin.dia_editor_window.size)
 			config.set_value("editor", "position", plugin.dia_editor_window.position)
 			config.set_value("editor", "mode", plugin.dia_editor_window.mode)
@@ -1547,5 +1545,5 @@ func _load_preferences():
 		dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
 		dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
 		
-		await get_tree().process_frame
-		dia_editor_window.update_content_scale(scale)
+		#await get_tree().process_frame
+		#dia_editor_window.update_content_scale(scale)
