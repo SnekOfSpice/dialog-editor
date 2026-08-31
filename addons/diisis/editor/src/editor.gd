@@ -150,6 +150,20 @@ func init(active_file_path:="") -> void:
 	%GoTo.init()
 	
 	arg_hint = %ArgHint
+	if DiisisEditorUtil.embedded:
+		arg_hint_window = Window.new()
+		arg_hint_window.visible = false
+		arg_hint_window.wrap_controls = true
+		arg_hint_window.borderless = true
+		#arg_hint_window.transient = false
+		arg_hint_window.always_on_top = false
+		arg_hint_window.unfocusable = true
+		#arg_hint_window.transparent = true
+		add_child(arg_hint_window)
+		
+		arg_hint.reparent(arg_hint_window, false)
+		
+		
 	
 	#var text_size_button : OptionButton = %TextSizeButton
 	#text_size_button.clear()
@@ -1124,7 +1138,8 @@ func request_arg_hint(text_box:Control):
 	var caret_pos : Vector2 = text_box.global_position
 	
 	if DiisisEditorUtil.embedded:
-		caret_pos = global_position.direction_to(text_box.global_position)
+		caret_pos += EditorInterface.get_base_control().get_screen_position()
+		#caret_pos = global_position.direction_to(text_box.global_position)
 		#caret_pos += get_current_page().get_scroll_value()
 		#caret_pos -= text_box.position
 		#caret_pos += text_box.position
@@ -1155,20 +1170,30 @@ func request_arg_hint(text_box:Control):
 	text_box.set_caret_column(text_box.get_caret_column())
 	text_box.call_deferred("grab_focus")
 
+var arg_hint_window : Window
+
 func _place_arg_hint(at:Vector2):
 	if DiisisEditorUtil.embedded:
-		%ArgHint.position = Vector2i(at)
+		arg_hint_window.popup()
+		print(arg_hint_window.visible)
+		arg_hint_window.position = Vector2i(at)
 	else:
 		arg_hint.global_position = Vector2i(at)
 
 
 func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int, on_node : Control = null):
-	var hint : DIISISArgHint = arg_hint
-	hint.build(instruction_name, full_arg_text, caret_column, on_node)
-	hint.show()
+	arg_hint.build(instruction_name, full_arg_text, caret_column, on_node)
+	arg_hint.show()
+	if DiisisEditorUtil.embedded:
+		arg_hint_window.size = arg_hint.size
+		arg_hint.position = Vector2.ZERO
+		arg_hint_window.popup()
 
 func hide_arg_hint():
-	arg_hint.hide()
+	if DiisisEditorUtil.embedded:
+		arg_hint_window.hide()
+	else:
+		arg_hint.hide()
 
 func step_through_pages():
 	var next_page = get_current_page_number() + 1

@@ -614,15 +614,6 @@ anchor_bottom = 0.0
 offset_right = 12.0
 offset_bottom = 10.0
 
-[node name="ArgHintWindow" type="Window" parent="." unique_id=302392125]
-unique_name_in_owner = true
-oversampling_override = 1.0
-visible = false
-wrap_controls = true
-borderless = true
-always_on_top = true
-unfocusable = true
-
 [node name="Popups" type="Node" parent="." unique_id=864969664]
 
 [node name="FDSave" type="FileDialog" parent="Popups" unique_id=719783803]
