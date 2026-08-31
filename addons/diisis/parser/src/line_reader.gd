@@ -1693,9 +1693,14 @@ func _insert_strings_in_current_dialine():
 	
 	_dialog_lines[_dialog_line_index] = new_text
 
+func _skill_roll(skill : String, threshold : int) -> bool:
+	return 3 > threshold
+
 var _ruby_strings := []
 var _ruby_indices := []
 var _ruby_labels := []
+#var _skillchecks_closing_handled := []
+#var _skillchecks_fails_handled := []
 func _handle_tags_and_start_reading():
 	_remaining_prompt_delay = input_prompt_delay
 	if text_speed == MAX_TEXT_SPEED:
@@ -1711,10 +1716,62 @@ func _handle_tags_and_start_reading():
 	_handled_comments.clear()
 	_ruby_strings.clear()
 	_ruby_indices.clear()
+	#_skillchecks_fails_handled.clear()
+	#_skillchecks_closing_handled.clear()
 	var text_speed_override := -1.0
 	_text_speed_by_character_index.clear()
 	
 	var new_text : String = _dialog_lines[_dialog_line_index]
+	
+	var skillcheck_regex := RegEx.create_from_string("<skillcheck:\\w+,\\d+>")
+	if skillcheck_regex.search(new_text) != null: # we have a skillcheck, time to recompile the dialines
+		var raw_name_threshold_pair := new_text.trim_prefix("<skillcheck:").trim_suffix(">")
+		var split := raw_name_threshold_pair.split(",")
+		var skill_name : String = split[0]
+		var skill_threshold : int = int(split[1])
+		
+		var skillcheck_closing_regex := RegEx.create_from_string("</skillcheck>")
+		var closing_searcher_index := _dialog_lines.size() - 1
+		var found_closing := false
+		while closing_searcher_index > _dialog_line_index:
+			var subline_text : String = _dialog_lines[closing_searcher_index]
+			if skillcheck_closing_regex.search(subline_text):
+				found_closing = true
+				break
+			closing_searcher_index -= 1
+		
+		var fail_searcher_index := _dialog_lines.size() - 1
+		var found_fail := false
+		while fail_searcher_index > _dialog_line_index:
+			if _dialog_lines[fail_searcher_index] == "<fail>":
+				found_fail = true
+				break
+			fail_searcher_index -= 1
+		
+		printt("we are doing a skillcheck, ", found_closing, found_fail, closing_searcher_index, fail_searcher_index)
+		
+		if found_closing:
+			_erase_dialog_line(closing_searcher_index)
+			var skill_roll_successful := _skill_roll(skill_name, skill_threshold)
+			if skill_roll_successful:
+				if found_fail: # erase all at and after fail
+					var i := fail_searcher_index
+					while i < closing_searcher_index:
+						_erase_dialog_line(fail_searcher_index)
+						i += 1
+			else:
+				var erase_bound := mini(fail_searcher_index, closing_searcher_index)
+				var i := _dialog_line_index + 1
+				while i <= erase_bound:
+					_erase_dialog_line(_dialog_line_index + 1)
+					i += 1
+			_erase_dialog_line(_dialog_line_index)
+			_set_dialog_line_index(_dialog_line_index)
+			return
+		else:
+			push_warning("Skillcheck doesn't have a closing counterpart.")
+		
+		
 	new_text = _trim_trimmables(new_text)
 	
 	if new_text.contains("<advance>") and not new_text.ends_with("<advance>"):
@@ -2846,6 +2903,14 @@ func _go_to_end_of_dialog_line():
 	_set_dialog_line_index(_dialog_lines.size() - 1)
 func _go_to_start_of_dialog_line():
 	_set_dialog_line_index(0)
+
+
+func _erase_dialog_line(index : int) -> void:
+	_dialog_actors.remove_at(index)
+	_dialog_lines.remove_at(index)
+	
+	if _dialog_line_index > index:
+		_dialog_line_index -= 1
 
 
 var _currently_speaking_name := ""

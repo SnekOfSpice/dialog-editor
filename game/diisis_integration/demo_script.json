@@ -3,7 +3,7 @@
 		"callable_autoloads": [
 			"Sound"
 		],
-		"character_count": 4123,
+		"character_count": 4231,
 		"custom_method_defaults": {},
 		"custom_method_stringkit_limiters": {
 			"Sound.play_sfx": {
@@ -264,7 +264,7 @@
 			"use_ui": {},
 			"zoom_to": {}
 		},
-		"id_counter": -9223372036854761443,
+		"id_counter": -9223372036854761358,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -341,7 +341,7 @@
 						},
 						"content": {
 							"meta.locked": false,
-							"meta.validation_status": "OK",
+							"meta.validation_status": "Invalid tag",
 							"text_id": "1744987729.490--9223372036854775799"
 						},
 						"facts": {
@@ -1164,7 +1164,7 @@
 			]
 		},
 		"text_data": {
-			"1744987729.490--9223372036854775799": "[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>Read along by opening the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] DIISIS tab in Godot! (or the button in the top right corner of Godot if you aren't embedding DIISIS)! <mp>Click there now to follow along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]\"Facts\" to the option.\n[]>narrator: [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
+			"1744987729.490--9223372036854775799": "[]>narrator:<skillcheck:awa,2>\n[]>narrator: success text\n[]>narrator:<skillcheck:awa,5>\n[]>narrator: a second success text\n[]>narrator:<fail>\n[]>narrator: a second fail text\n[]>narrator:</skillcheck>\n[]>narrator:<fail>\n[]>narrator: fail text, you dont get cool lore\n[]>narrator:</skillcheck>\n[]>narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!\n[]>narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]\"demo_script.json\"[/b] so you can get accustomed to how things work. <mp>Read along by opening the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] DIISIS tab in Godot! (or the button in the top right corner of Godot if you aren't embedding DIISIS)! <mp>Click there now to follow along to the tour :3\n[]>amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.\n[]>narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.\n[]>amber: That I am!\n[]>narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]\"Facts\" to the option.\n[]>narrator: [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called \"liked amber\". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.\n[]>narrator: Isn't she cool?",
 			"1744987729.539--9223372036854775796": "Opinion on Amber?",
 			"1744987729.575--9223372036854775792": "",
 			"1744987729.575--9223372036854775793": "Yes I love her",
@@ -1185,6 +1185,6 @@
 		"text_lead_time_other_actor": 0.0,
 		"text_lead_time_same_actor": 0.0,
 		"use_dialog_syntax": true,
-		"word_count": 639
+		"word_count": 656
 	}
 }

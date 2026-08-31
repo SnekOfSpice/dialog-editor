@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bb8yvsx0g14vl"]
+[gd_scene format=3 uid="uid://bb8yvsx0g14vl"]
 
 [ext_resource type="Script" uid="uid://rq52trv32gab" path="res://addons/diisis/parser/src/line_reader.gd" id="1_f2s5m"]
 
-[node name="LineReader" type="Control"]
+[node name="LineReader" type="Control" unique_id=267445833]
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
