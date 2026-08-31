@@ -748,9 +748,14 @@ container_path = "uid://rqflj6uhel4l"
 visible = false
 
 [node name="ArgHint" parent="." unique_id=2017472624 instance=ExtResource("28_g0iye")]
-size = Vector2i(12, 10)
+unique_name_in_owner = true
 visible = false
-theme_override_font_sizes/title_font_size = 30
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 0.0
+offset_bottom = 10.0
 
 [node name="OpeningCover" type="ColorRect" parent="." unique_id=1500427879]
 unique_name_in_owner = true

@@ -196,6 +196,7 @@ func init(active_file_path:="") -> void:
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
 	%TextSizeButton.visible = not DiisisEditorUtil.embedded
+	hide_arg_hint()
 	
 	var utility_item : PopupMenu = %Utility
 	if Pages.silly:
@@ -1100,35 +1101,41 @@ func request_arg_hint(text_box:Control):
 		push_error(str("Tried calling request_arg_hint with object of type ", text_box.get_class()))
 		return
 	
-	var caret_pos = Vector2i.ZERO
-	#if text_box is TextEdit:
-	caret_pos += Vector2i(text_box.get_caret_draw_pos())
+	var caret_pos : Vector2= text_box.global_position
+	# - get_current_page().get_scroll_value()
 	
-	
+	if text_box is TextEdit:
+		#print(text_box.get_caret_draw_pos())
+		caret_pos+= Vector2(text_box.get_caret_draw_pos())# - caret_pos
+	#
+	#
 	if text_box is LineEdit:
+		#caret_pos = get_current_page().get_scroll_value()
 		caret_pos.x -= 50
-		caret_pos.x = text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
-		#caret_pos.y += text_box.size.y
-		caret_pos.y += Vector2i(text_box.global_position).y
-	elif text_box is TextEdit:
-		caret_pos += Vector2i(text_box.global_position)
-	caret_pos *= content_scale
-	caret_pos += Vector2(0, 10) * content_scale
+		caret_pos.x += text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
+		caret_pos.y += text_box.size.y
+		#caret_pos.y += Vector2i(text_box.global_position).y
+	#elif text_box is TextEdit:
+		#caret_pos += Vector2i(text_box.global_position)
+	#caret_pos *= content_scale
+	#caret_pos += Vector2(0, 10) * content_scale
 	
 	_place_arg_hint(caret_pos)
+	#print(caret_pos)
 	
 	text_box.set_caret_column(text_box.get_caret_column())
 	text_box.call_deferred("grab_focus")
 
 func _place_arg_hint(at:Vector2):
-	(find_child("ArgHint") as DIISISArgHint).position = Vector2i(at)
+	%ArgHint.global_position = Vector2i(at)
 
 func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int, on_node : Control = null):
-	(find_child("ArgHint") as DIISISArgHint).build(instruction_name, full_arg_text, caret_column, on_node)
-	(find_child("ArgHint") as DIISISArgHint).popup()
+	var hint : DIISISArgHint = %ArgHint
+	hint.build(instruction_name, full_arg_text, caret_column, on_node)
+	hint.show()
 
 func hide_arg_hint():
-	find_child("ArgHint").hide()
+	%ArgHint.hide()
 
 func step_through_pages():
 	var next_page = get_current_page_number() + 1

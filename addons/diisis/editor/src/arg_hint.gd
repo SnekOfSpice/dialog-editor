@@ -1,14 +1,14 @@
 @tool
-extends Window
+extends Control
 class_name DIISISArgHint
 
 func build_str(text:String):
-	content_scale_factor = Pages.editor.content_scale
+	#content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	%TextLabel.text = text
 
 func build(instruction_name: String, full_text:String, caret_column:int, on_node : Control = null):
-	content_scale_factor = Pages.editor.content_scale
+	#content_scale_factor = Pages.editor.content_scale
 	size = Vector2.ONE
 	var arg_names = Pages.get_custom_method_arg_names(instruction_name)
 	var arg_types = Pages.get_custom_method_types(instruction_name)
@@ -79,15 +79,13 @@ func build(instruction_name: String, full_text:String, caret_column:int, on_node
 	# tbh idk why this needs 2 different implementations lmao
 	if DiisisEditorUtil.embedded:
 		position.x = get_theme_font("font", "LineEdit").get_string_size(hint_without_bbcode.trim_prefix(string_before_column_without_bbcode)).x * Pages.editor.content_scale
-		position += Vector2i(EditorInterface.get_base_control().get_screen_position())
+		position += Vector2(EditorInterface.get_base_control().get_screen_position())
 	else:
 		position.x -= get_theme_font("font", "LineEdit").get_string_size(string_before_column).x * Pages.editor.content_scale
 	await get_tree().process_frame
 	if hint.is_empty():
 		hide()
 
-func _on_close_requested() -> void:
-	hide()
 
 func get_hint_line_count() -> int:
 	return %TextLabel.get_line_count()

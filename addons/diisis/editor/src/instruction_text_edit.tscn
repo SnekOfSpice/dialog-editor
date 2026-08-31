@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dtmrdrq7nyrh0"]
+[gd_scene format=3 uid="uid://dtmrdrq7nyrh0"]
 
 [ext_resource type="Texture2D" uid="uid://b8jl3084itnxs" path="res://addons/diisis/editor/src/instruction_container.tres" id="1_nbbrw"]
 [ext_resource type="Script" uid="uid://drc2jy0i4v4la" path="res://addons/diisis/editor/src/instruction_text_edit.gd" id="2_2ingb"]
@@ -20,7 +20,7 @@ content_margin_right = 4.0
 content_margin_bottom = 2.0
 bg_color = Color(0.154876, 0.154876, 0.154876, 0.823529)
 
-[node name="InstructionTextEdit" type="MarginContainer" groups=["diisis_method_validator"]]
+[node name="InstructionTextEdit" type="MarginContainer" unique_id=487645721 groups=["diisis_method_validator"]]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 64.0
@@ -29,28 +29,28 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_2ingb")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1309593675]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=344697956]
 layout_mode = 2
 
-[node name="InstructionTextBox" parent="VBoxContainer/HBoxContainer" instance=ExtResource("3_1si4p")]
+[node name="InstructionTextBox" parent="VBoxContainer/HBoxContainer" unique_id=412050004 instance=ExtResource("3_1si4p")]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "enter function here"
 submission_append = "()"
 submission_offset = -1
 
-[node name="GoToScriptButton" parent="VBoxContainer/HBoxContainer" instance=ExtResource("3_83uww")]
+[node name="GoToScriptButton" parent="VBoxContainer/HBoxContainer" unique_id=1369525960 instance=ExtResource("3_83uww")]
 layout_mode = 2
 
-[node name="ComplianceContainer" type="Control" parent="."]
+[node name="ComplianceContainer" type="Control" parent="." unique_id=1607973955]
 z_index = 2
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="PanelContainer" type="PanelContainer" parent="ComplianceContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="ComplianceContainer" unique_id=825431354]
 layout_mode = 1
 anchors_preset = -1
 offset_left = -117.0
@@ -60,9 +60,9 @@ offset_bottom = 32.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_83uww")
 
-[node name="ComplianceLabel" type="RichTextLabel" parent="ComplianceContainer/PanelContainer"]
-clip_contents = false
+[node name="ComplianceLabel" type="RichTextLabel" parent="ComplianceContainer/PanelContainer" unique_id=1247312632]
 custom_minimum_size = Vector2(400, 0)
+clip_contents = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mmgt")
 text = "Function is empty."
