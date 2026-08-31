@@ -1693,8 +1693,29 @@ func _insert_strings_in_current_dialine():
 	
 	_dialog_lines[_dialog_line_index] = new_text
 
+## Returns true if successful and the success block is to be read. If this returns false,
+## the <fail> fallback block is used. Note that you cannot implement additional
+## skillchecks in fail blocks.
 func _skill_roll(skill : String, threshold : int) -> bool:
-	return 3 > threshold
+	push_warning("function _skill_roll was called but not overwritten. Please implement your own in a LineReader-derived script, as the default implementation always returns true.")
+	var success := 3 > threshold
+	_last_skill = skill
+	_last_success = success
+	return success
+
+var _last_skill : String
+var _last_success : bool
+
+func _get_last_skill_roll_result_string() -> String:
+	return str(_last_skill, " : ", "success" if _last_success else "failed")
+
+
+enum SkillRollResultStyle {
+	HIDE,
+	PREPEND,
+	EXTRA_LINE,
+}
+@export var skill_roll_result_style := SkillRollResultStyle.EXTRA_LINE
 
 var _ruby_strings := []
 var _ruby_indices := []
@@ -1765,7 +1786,19 @@ func _handle_tags_and_start_reading():
 				while i <= erase_bound:
 					_erase_dialog_line(_dialog_line_index + 1)
 					i += 1
-			_erase_dialog_line(_dialog_line_index)
+			match skill_roll_result_style:
+				SkillRollResultStyle.HIDE:
+					_erase_dialog_line(_dialog_line_index)
+				SkillRollResultStyle.PREPEND:
+					_erase_dialog_line(_dialog_line_index)
+					var next_text : String = _dialog_lines[_dialog_line_index]
+					next_text = "%s - %s" % [_get_last_skill_roll_result_string(), next_text]
+					_dialog_lines[_dialog_line_index] = next_text
+				SkillRollResultStyle.EXTRA_LINE:
+			#if show_skill_roll_result_string:
+					_dialog_lines[_dialog_line_index] = _get_last_skill_roll_result_string()
+			#else:
+				
 			_set_dialog_line_index(_dialog_line_index)
 			return
 		else:
