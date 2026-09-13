@@ -1248,6 +1248,9 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 		if _text_delay > 0:
 			_text_delay -= delta
 			return
+		if skillcheck_delay > 0:
+			skillcheck_delay -= delta
+			return
 	
 	
 	var visible_characters_before_inline_call = body_label.visible_characters
@@ -1714,6 +1717,7 @@ func _skill_roll(skill : String, threshold : int) -> bool:
 	var success := true
 	_last_skill = skill
 	_last_skill_success = success
+	skillcheck_delay = 1.0
 	return success
 
 var _last_skill : String
@@ -1726,6 +1730,9 @@ func _get_last_skill_roll_result_string() -> String:
 func _get_skill_roll_prepend_separator_string() -> String:
 	return " - "
 
+
+
+var skillcheck_delay := 0.0
 
 var _ruby_strings := []
 var _ruby_indices := []
@@ -2553,7 +2560,7 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 	else:
 		if name_style == NameStyle.None and not name_label:
 			return body_label.get_theme_color("default_color", "RichTextLabel")
-		return name_label.get_theme_color("font_color", "Label")
+		return name_label.get_theme_color("font_%s" % base_property, "Label")
 	
 
 ## returns array of size 2: prefix and suffix
@@ -2909,8 +2916,8 @@ func update_name_label(actor_name: String):
 			name_suffix
 		)
 		name_label.add_theme_color_override("font_color", name_color)
-		name_label.add_theme_color_override("font_outline_color", name_color)
-		name_label.add_theme_color_override("outline_size", name_color)
+		name_label.add_theme_color_override("font_outline_color", name_outline_color)
+		name_label.add_theme_color_override("outline_size", name_outline_size)
 		
 		if actor_name in blank_names or chatlog_enabled:
 			name_container.modulate.a = 0.0
