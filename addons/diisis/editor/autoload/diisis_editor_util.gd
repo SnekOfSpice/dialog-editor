@@ -1,17 +1,21 @@
 @tool
 extends Node
 
+
 enum AddressDepth {
-	Page, Line, ChoiceItem
+	PAGE,
+	LINE,
+	CHOICE_ITEM,
 }
 
-var block_next_flash_highlight := true
 
 const BBCODE_TRUE := "[img]uid://nakfxqdgr4pg[/img]"
 const BBCODE_FALSE := "[img]uid://cyiecfr2eyp2o[/img]"
 const BBCODE_LINE_READER := "[img]res://addons/diisis/parser/style/icon_line_reader.svg[/img]"
 
 
+
+var block_next_flash_highlight := true
 var embedded: bool:
 	get():
 		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
@@ -20,12 +24,12 @@ var embedded: bool:
 func get_address(object:Node, address_depth:AddressDepth) -> String:
 	var address := ""
 	
-	if address_depth == AddressDepth.Page:
+	if address_depth == AddressDepth.PAGE:
 		var parent_page = object
 		while not parent_page is Page:
 			parent_page = parent_page.get_parent()
 		address = str(parent_page.get("number"))
-	elif address_depth == AddressDepth.Line:
+	elif address_depth == AddressDepth.LINE:
 		var parent_line = object
 		while not parent_line is Line:
 			parent_line = parent_line.get_parent()
@@ -33,7 +37,7 @@ func get_address(object:Node, address_depth:AddressDepth) -> String:
 		while not parent_page is Page:
 			parent_page = parent_page.get_parent()
 		address = str(parent_page.get("number"), ".", parent_line.get_index())
-	elif address_depth == AddressDepth.ChoiceItem:
+	elif address_depth == AddressDepth.CHOICE_ITEM:
 		var parent_choice = object
 		while not parent_choice is ChoiceEdit:
 			parent_choice = parent_choice.get_parent()
@@ -77,11 +81,11 @@ func get_node_at_address(address:String, suppress_off_page_warning := false):
 			push_warning("Current page is not within scope of address")
 		return null
 	
-	if level == AddressDepth.Page:
+	if level == AddressDepth.PAGE:
 		return Pages.editor.get_current_page()
-	elif level == AddressDepth.Line:
+	elif level == AddressDepth.LINE:
 		return Pages.editor.get_current_page().get_line(address_parts[1])
-	elif level == AddressDepth.ChoiceItem:
+	elif level == AddressDepth.CHOICE_ITEM:
 		return Pages.editor.get_current_page().get_line(address_parts[1]).get_choice_item(address_parts[2])
 		
 

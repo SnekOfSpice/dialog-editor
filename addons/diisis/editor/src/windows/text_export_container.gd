@@ -43,10 +43,10 @@ func init():
 	for i in line_types_to_include.size():
 		line_types_to_include[i] = int(line_types_to_include[i])
 	
-	%IncludeText.button_pressed = DIISISGlobal.LineType.Text in line_types_to_include
-	%IncludeChoice.button_pressed = DIISISGlobal.LineType.Choice in line_types_to_include
-	%IncludeInstruction.button_pressed = DIISISGlobal.LineType.Instruction in line_types_to_include
-	%IncludeFolder.button_pressed = DIISISGlobal.LineType.Folder in line_types_to_include
+	%IncludeText.button_pressed = DIISISGlobal.LineType.TEXT in line_types_to_include
+	%IncludeChoice.button_pressed = DIISISGlobal.LineType.CHOICE in line_types_to_include
+	%IncludeInstruction.button_pressed = DIISISGlobal.LineType.INSTRUCTION in line_types_to_include
+	%IncludeFolder.button_pressed = DIISISGlobal.LineType.FOLDER in line_types_to_include
 	
 	%FileButton.grab_focus()
 	update_warnings()
@@ -151,13 +151,13 @@ func update_warnings() -> void:
 func get_line_types_to_include() -> Array:
 	var line_types_to_include := []
 	if %IncludeText.button_pressed:
-		line_types_to_include.append(DIISISGlobal.LineType.Text)
+		line_types_to_include.append(DIISISGlobal.LineType.TEXT)
 	if %IncludeChoice.button_pressed:
-		line_types_to_include.append(DIISISGlobal.LineType.Choice)
+		line_types_to_include.append(DIISISGlobal.LineType.CHOICE)
 	if %IncludeInstruction.button_pressed:
-		line_types_to_include.append(DIISISGlobal.LineType.Instruction)
+		line_types_to_include.append(DIISISGlobal.LineType.INSTRUCTION)
 	if %IncludeFolder.button_pressed:
-		line_types_to_include.append(DIISISGlobal.LineType.Folder)
+		line_types_to_include.append(DIISISGlobal.LineType.FOLDER)
 	return line_types_to_include
 
 func get_preferences() -> Dictionary:

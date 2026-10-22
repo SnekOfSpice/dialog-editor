@@ -65,13 +65,13 @@ func add_label_to_container(address:String, container:Control):
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.meta_clicked.connect(Pages.editor.goto_with_meta)
 	
-	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.ChoiceItem:
+	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		label.text = str(
 			"[url=goto-", address, "]",
 			address, " - ", Pages.get_choice_text_adr(address),
 			"[/url]"
 		)
-	elif DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.Page:
+	elif DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.PAGE:
 		label.text = str(
 			"[url=goto-", address, "]",
 			address, " - ", Pages.get_page_key(int(address)),

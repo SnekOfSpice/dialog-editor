@@ -5,13 +5,13 @@ enum ImportMode {
 	## build a map of all IDs in the import.
 	## plap it on top of page_data where those IDs exist.
 	## assumes all lines and pages in the DTF file have an ID
-	UpdateExistingData,
+	UPDATE_EXISTING_DATA,
 	## take all the existing data. if an ID is present there, it gets ingested 
 	## on import.
 	## new lines will be created when no ID is present. existing lines whose ID
 	## is not in the ingested file are deleted.
 	## [b]the entire thing is rebuilt[/b]
-	OverrideFile
+	OVERRIDE_FILE,
 }
 
 func format_text_from_file(path:String) -> String:
@@ -116,7 +116,7 @@ func ingest_pages_from_file(path:String, payload:={}) -> void:
 ## TODO make this ingest different line types
 ## and either take in or override the existing data
 func ingest_pages(text:String, payload:={}) -> void:
-	var import_mode : ImportMode = payload.get("import_mode", ImportMode.UpdateExistingData)
+	var import_mode : ImportMode = payload.get("import_mode", ImportMode.UPDATE_EXISTING_DATA)
 	
 	text = text.replace("\r", "\n")
 	
@@ -131,9 +131,9 @@ func ingest_pages(text:String, payload:={}) -> void:
 	
 	var constructed_page := ""
 	
-	if import_mode == ImportMode.UpdateExistingData:
+	if import_mode == ImportMode.UPDATE_EXISTING_DATA:
 		update_existing_data(text_lines, payload, actors)
-	elif import_mode == ImportMode.OverrideFile:
+	elif import_mode == ImportMode.OVERRIDE_FILE:
 		override_existing_data(text_lines, payload, actors)
 		
 	return
@@ -203,10 +203,10 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 			
 			var line_type : DIISISGlobal.LineType
 			if line_declaration.begins_with("LINE i"):
-				line_type = DIISISGlobal.LineType.Instruction
+				line_type = DIISISGlobal.LineType.INSTRUCTION
 				line_data["content"] = make_instruction_data(lines)
 			elif line_declaration.begins_with("LINE c"):
-				line_type = DIISISGlobal.LineType.Choice
+				line_type = DIISISGlobal.LineType.CHOICE
 				var texts : Array = make_choice_data(lines).get("choice_texts")
 				var content := line_data.get("content", {})
 				var choices := []
@@ -247,10 +247,10 @@ func override_existing_data(imported_lines:Array, payload:={}, actor_ingestion_o
 				content["choices"] = choices
 				line_data["content"] = content
 			elif line_declaration.begins_with("LINE f"):
-				line_type = DIISISGlobal.LineType.Folder
+				line_type = DIISISGlobal.LineType.FOLDER
 				line_data["content"] = make_folder_data(lines)
 			else:
-				line_type = DIISISGlobal.LineType.Text
+				line_type = DIISISGlobal.LineType.TEXT
 				var text_data = make_text_data(lines, payload, actor_ingestion_override)
 				var id = line_data.get("content", {}).get("text_id", Pages.get_new_id())
 				line_data["content"] = {"text_id" : id}

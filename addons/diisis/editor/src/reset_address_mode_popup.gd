@@ -9,17 +9,17 @@ func _ready() -> void:
 
 
 func on_about_to_popup():
-	var s : String = "OBJ" if Pages.default_address_mode_pages == AddressModeButton.Mode.Objectt else "ADR"
+	var s : String = "OBJ" if Pages.default_address_mode_pages == AddressModeButton.Mode.OBJECT else "ADR"
 	find_child("DefaultButton").text = str("Set to default (", s, ")")
 
 
 func _on_object_button_pressed() -> void:
-	emit_signal("change_to_mode", AddressModeButton.Mode.Objectt)
+	emit_signal("change_to_mode", AddressModeButton.Mode.OBJECT)
 	visible = false
 
 
 func _on_address_button_pressed() -> void:
-	emit_signal("change_to_mode", AddressModeButton.Mode.Address)
+	emit_signal("change_to_mode", AddressModeButton.Mode.ADDRESS)
 	visible = false
 
 

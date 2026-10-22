@@ -12,8 +12,8 @@ class_name LineReaderActorConfig
 
 @export_group("Color")
 ## Use [const Color.TRANSPARENT] to use the default theme color.
-## Will use color of [Label] if [LineReader.name_style] is [enum LineReader.NameStyle.NameLabel]
-## or the normal text color of [RichTextLabel] if [LineReader.name_style] is [enum LineReader.NameStyle.Prepend].
+## Will use color of [Label] if [LineReader.name_style] is [enum LineReader.NameStyle.NAME_LABEL]
+## or the normal text color of [RichTextLabel] if [LineReader.name_style] is [enum LineReader.NameStyle.PREPEND].
 @export var color := Color.TRANSPARENT
 @export var outline_color := Color.WHITE
 @export var outline_size := 0

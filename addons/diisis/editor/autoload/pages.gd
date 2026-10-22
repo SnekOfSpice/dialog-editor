@@ -1,8 +1,19 @@
 @tool
 extends Node
 
-func clear():
-	deserialize({})
+
+enum RegionDeliniation {
+	PAGES,
+	INSTRUCTIONS,
+}
+
+enum ElipseC12NMode {
+	REMAIN,
+	UPPER,
+	LOWER,
+}
+var capitalization_rule_after_elipse : ElipseC12NMode = ElipseC12NMode.REMAIN
+
 
 var auto_complete_context := ""
 
@@ -82,17 +93,6 @@ var evaluator_modified_times := {}
 # i couldnt figure out why the choice labels would just refuse to get updated on import
 var text_hacks_by_id := {}
 
-enum DataTypes {_String, _Stringkit, _Boolean}
-const DATA_TYPE_STRINGS := {
-	DataTypes._String : "String",
-	#DataTypes._Integer : "Integer",
-	#DataTypes._Float : "Float",
-	#DataTypes._Array : "Array",
-	#DataTypes._Dictionary : "Dictionary",
-	DataTypes._Stringkit : "Stringkit",
-	DataTypes._Boolean : "Boolean",
-}
-
 
 var editor:DiisisEditor
 
@@ -137,7 +137,7 @@ var append_periods := true
 var collapse_conditional_controls_by_default := true
 var confirm_linearize := true
 var current_page_number_by_file_name := {}
-var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.Objectt
+var default_address_mode_pages : AddressModeButton.Mode = AddressModeButton.Mode.OBJECT
 var first_index_as_page_reference_only := true
 var fix_apostrophes := true
 var page_scroll_by_idx_by_file_name := {}
@@ -145,7 +145,7 @@ var preferences_import := {}
 var preferences_export := {}
 var preferences_l10n := {}
 var region_baking_enabled := false
-var region_delination := RegionDeliniation.Pages
+var region_delination := RegionDeliniation.PAGES
 var region_delinator_instruction := ""
 var replacement_rules := []
 var require_colons_on_actor_ingestion := true
@@ -156,7 +156,7 @@ var show_facts_buttons := true
 var silly := true
 var validate_function_calls_on_focus := false
 var warn_on_fact_deletion := true
-var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.Full
+var editor_page_view : DiisisEditor.PageView = DiisisEditor.PageView.FULL
 var editor_text_size_id : int = 3
 var ingest_is_capitalize_checked := false
 var ingest_is_whitespace_checked := true
@@ -212,7 +212,7 @@ func sync_line_references():
 		var page := get_page_data(page_index)
 		var line_index := 0
 		for line in page.get("lines", []):
-			if line.get("line_type") != DIISISGlobal.LineType.Choice:
+			if line.get("line_type") != DIISISGlobal.LineType.CHOICE:
 				line_index += 1
 				continue
 			
@@ -339,13 +339,21 @@ func deserialize(data:Dictionary):
 		if not arg_data.is_empty():
 			custom_method_stringkit_limiters.set(method, arg_data)
 
+
+
+func clear() -> void:
+	deserialize({})
+
+
 func get_page_count() -> int:
 	return page_data.size()
 
-func get_line_count(page:int) -> int:
+
+func get_line_count(page : int) -> int:
 	return get_page_data(page).get("lines", []).size()
 
-func create_page_data(number:int, overwrite_existing := false, overwrite_data:={}):
+
+func create_page_data(number : int, overwrite_existing := false, overwrite_data := {}):
 	if page_data.keys().has(number) and not overwrite_existing:
 		push_warning(str("page_data already has page with number ", number))
 		return
@@ -385,27 +393,27 @@ func swap_line_references(on_page:int, from:int, to:int):
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
 		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var content = line.get("content")
 				for choice in content.get("choices"):
 					var page_number : int = page.get("number")
 					if choice.get("target_page") == on_page:
 					
-						if choice.get("target_line") == from and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("target_line") == from and choice.get("jump_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 							choice["target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("target_line") == to and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						elif choice.get("target_line") == to and choice.get("jump_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 							choice["target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
 					
 					if choice.get("loopback_target_page") == on_page:
-						if choice.get("loopback_target_line") == from and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						if choice.get("loopback_target_line") == from and choice.get("loop_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 							choice["loopback_target_line"] = to
 							if page_number == current_page_number:
 								edited_current_page = true
-						elif choice.get("loopback_target_line") == to and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+						elif choice.get("loopback_target_line") == to and choice.get("loop_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 							choice["loopback_target_line"] = from
 							if page_number == current_page_number:
 								edited_current_page = true
@@ -420,7 +428,7 @@ func get_lines(page_number: int):
 
 func swap_page_references(from: int, to: int):
 	for page in page_data.values():
-		if page.get("meta.address_mode_next", default_address_mode_pages) == AddressModeButton.Mode.Objectt:
+		if page.get("meta.address_mode_next", default_address_mode_pages) == AddressModeButton.Mode.OBJECT:
 			var next = page.get("next")
 			if next == from:
 				page["next"] = to
@@ -428,15 +436,15 @@ func swap_page_references(from: int, to: int):
 				page["next"] = from
 		
 		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var content = line.get("content")
 				for choice in content.get("choices"):
-					if choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("jump_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 						if choice.get("target_page") == from:
 							choice["target_page"] = to
 						elif choice.get("target_page") == to:
 							choice["target_page"] = from
-					if choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("loop_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 						if choice.get("loopback_target_page") == from:
 							choice["loopback_target_page"] = to
 						elif choice.get("loopback_target_page") == to:
@@ -449,18 +457,18 @@ func change_line_references_directional(on_page:int, starting_index_of_change:in
 	var current_page_number := editor.get_current_page_number()
 	for page in page_data.values():
 		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var content = line.get("content")
 				for choice : Dictionary in content.get("choices"):
 					var page_number : int = page.get("number")
-					if choice.get("target_page") == on_page and choice.get("jump_address_mode") == AddressModeButton.Mode.Objectt:
+					if choice.get("target_page") == on_page and choice.get("jump_address_mode") == AddressModeButton.Mode.OBJECT:
 						var target_line : int = choice.get("target_line")
 						if target_line >= starting_index_of_change and target_line <= end_index_of_change:
 							choice["target_line"] = target_line + operation
 							if page_number == current_page_number:
 								edited_current_page = true
 					
-					if choice.get("loopback_target_page") == on_page and choice.get("loop_address_mode") == AddressModeButton.Mode.Objectt:
+					if choice.get("loopback_target_page") == on_page and choice.get("loop_address_mode") == AddressModeButton.Mode.OBJECT:
 						var loopback_target_line : int = choice.get("loopback_target_line")
 						if loopback_target_line >= starting_index_of_change and loopback_target_line <= end_index_of_change:
 							choice["loopback_target_line"] = loopback_target_line + operation
@@ -478,18 +486,18 @@ func change_page_references_dir(changed_page: int, operation:int):
 		return
 	for page in page_data.values():
 		var next : int = page.get("next", page.get("number") + 1)
-		if next >= changed_page and page.get("meta.address_mode_next", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+		if next >= changed_page and page.get("meta.address_mode_next", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 			page["next"] = next + operation
 		
 		
 		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var content = line.get("content")
 				var choices = content.get("choices")
 				for choice : Dictionary in choices:
-					if choice.get("target_page", 0) >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("target_page", 0) >= changed_page and choice.get("jump_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 						choice["target_page"] = choice.get("target_page", 0) + operation
-					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.Objectt) == AddressModeButton.Mode.Objectt:
+					if choice.get("loopback_target_page", 0) >= changed_page and choice.get("loop_address_mode", AddressModeButton.Mode.OBJECT) == AddressModeButton.Mode.OBJECT:
 						choice["loopback_target_page"] = choice.get("loopback_target_page", 0) + operation
 	
 		write_to_user(page, "changed%s" % int(page.get("number")))
@@ -558,13 +566,13 @@ func get_file_config() -> Dictionary:
 func get_line_type_str(page_index:int, line_index:int) -> String:
 	var line_type = get_line_type(page_index, line_index)
 	match line_type:
-		DIISIS.LineType.Text:
+		DIISIS.LineType.TEXT:
 			return "Text"
-		DIISIS.LineType.Choice:
+		DIISIS.LineType.CHOICE:
 			return "Choice"
-		DIISIS.LineType.Instruction:
+		DIISIS.LineType.INSTRUCTION:
 			return "Instruction"
-		DIISIS.LineType.Folder:
+		DIISIS.LineType.FOLDER:
 			return "Folder"
 	return "undefined"
 
@@ -597,7 +605,7 @@ func get_page_references(page_index:int) -> Array:
 	
 	for line in page.get("lines"):
 		var line_type = line.get("line_type")
-		if not line_type == DIISIS.LineType.Choice:
+		if not line_type == DIISIS.LineType.CHOICE:
 			continue
 		var content = line.get("content")
 		
@@ -658,12 +666,12 @@ func get_data_from_address(address:String) -> Dictionary:
 	var depth = DiisisEditorUtil.get_address_depth(address)
 	var parts = DiisisEditorUtil.get_split_address(address)
 	
-	if depth == DiisisEditorUtil.AddressDepth.Page:
+	if depth == DiisisEditorUtil.AddressDepth.PAGE:
 		return page_data.get(address_page)
-	elif depth == DiisisEditorUtil.AddressDepth.Line:
+	elif depth == DiisisEditorUtil.AddressDepth.LINE:
 		var lines : Array = page_data.get(address_page).get("lines")
 		return lines[parts[1]]
-	elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+	elif depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		var lines : Array = page_data.get(address_page).get("lines")
 		var line : Dictionary = lines[parts[1]]
 		return line.get("content", {}).get("choices", [])[parts[2]]
@@ -678,23 +686,23 @@ func delete_data_from_address(address:String):
 	# if current page is address
 	if cpn == address_page:
 		var target = DiisisEditorUtil.get_node_at_address(address)
-		if depth == DiisisEditorUtil.AddressDepth.Line:
+		if depth == DiisisEditorUtil.AddressDepth.LINE:
 			target.request_delete()
 			return
-		elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+		elif depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			target.request_delete()
 			return
 	
 	# get from internal data
 	
 	
-	if depth == DiisisEditorUtil.AddressDepth.Page:
+	if depth == DiisisEditorUtil.AddressDepth.PAGE:
 		delete_page_data(parts[0])
-	elif depth == DiisisEditorUtil.AddressDepth.Line:
+	elif depth == DiisisEditorUtil.AddressDepth.LINE:
 		var lines : Array = page_data.get(address_page).get("lines")
 		lines.remove_at(parts[1])
 		page_data[address_page]["lines"] = lines
-	elif depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+	elif depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		var lines : Array = page_data.get(address_page).get("lines")
 		var line : Dictionary = lines[parts[1]]
 		var choices : Array = line.get("content", {}).get("choices", [])
@@ -879,7 +887,7 @@ func get_all_invalid_instructions() -> String:
 		var lines : Array = get_page_data(page.get("number")).get("lines", [])
 		var line_index := 0
 		for line in lines:
-			if line.get("line_type") in [DIISIS.LineType.Instruction, DIISIS.LineType.Text]:
+			if line.get("line_type") in [DIISIS.LineType.INSTRUCTION, DIISIS.LineType.TEXT]:
 				var compliance : String = line.get("content").get("meta.validation_status")
 				if compliance != "OK":
 					malformed_instructions.append(str("[url=goto-",str(page_index, ".", line_index),"]", page_index, ".", line_index, "[/url]"))
@@ -905,7 +913,7 @@ func get_all_invalid_address_pointers() -> String:
 			lines = editor.get_current_page().serialize().get("lines", [])
 		var line_index := 0
 		for line in lines:
-			if line.get("line_type") != DIISIS.LineType.Choice:
+			if line.get("line_type") != DIISIS.LineType.CHOICE:
 				continue
 			if not does_address_exist(str(page_index, ".", line_index)):
 				continue
@@ -976,7 +984,7 @@ func lines_referencing_fact(fact_name: String):
 						ref_pages.append(page.get("number"))
 					ref_lines_condition.append(str(page.get("number"), ".", i))
 			
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var options = line.get("content")
 				var choice_index := 0
 				for option in options.get("choices", {}):
@@ -1026,11 +1034,11 @@ func get_text_on_page(page_number:int) -> String:
 	for line in data.get("lines", []):
 		var line_type = line.get("line_type")
 		var content = line.get("content")
-		if line_type == DIISIS.LineType.Choice:
+		if line_type == DIISIS.LineType.CHOICE:
 			for choice in content.get("choices"):
 				result +=  Pages.get_text(choice.get("text_id_enabled", ""))
 				result +=  Pages.get_text(choice.get("text_id_disabled", ""))
-		elif line_type == DIISIS.LineType.Text:
+		elif line_type == DIISIS.LineType.TEXT:
 			var text : String = Pages.get_text(content.get("text_id", ""))
 			if use_dialog_syntax:
 				var actor_tag_index := text.find("[]>")
@@ -1055,13 +1063,13 @@ func get_count_on_page(page_number:int, include_skipped:=false) -> Vector2i:
 			continue
 		var line_type = line.get("line_type")
 		var content = line.get("content")
-		if line_type == DIISIS.LineType.Choice:
+		if line_type == DIISIS.LineType.CHOICE:
 			for choice in content.get("choices"):
 				character_count +=  Pages.get_text(choice.get("text_id_enabled", "")).length()
 				character_count +=  Pages.get_text(choice.get("text_id_disabled", "")).length()
 				word_count += Pages.get_text(choice.get("text_id_enabled", "")).count(" ") + 1
 				word_count += Pages.get_text(choice.get("text_id_disabled", "")).count(" ") + 1
-		elif line_type == DIISIS.LineType.Text:
+		elif line_type == DIISIS.LineType.TEXT:
 			var text : String = Pages.get_text(content.get("text_id", ""))
 			if use_dialog_syntax:
 				var actor_tag_index := text.find("[]>")
@@ -1107,7 +1115,7 @@ func rename_stringkit_title(from:String, to:String):
 	for page in page_data.values():
 		var lines : Array = page.get("lines")
 		for line : Dictionary in lines:
-			if line.get("line_type") != DIISIS.LineType.Text:
+			if line.get("line_type") != DIISIS.LineType.TEXT:
 				continue
 			var text_id : String = line.get("content", {}).get("text_id")
 			var content : String = Pages.get_text(text_id)
@@ -1143,7 +1151,7 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
-				#if line.get("line_type") == DIISIS.LineType.Instruction:
+				#if line.get("line_type") == DIISIS.LineType.INSTRUCTION:
 					##print(line)
 					#var instruction_name : String = line.get("content", {}).get("name")
 					#var args_normal : Dictionary = custom_method_stringkit_limiters.get(instruction_name)
@@ -1155,7 +1163,7 @@ func set_stringkit_options(stringkit_title:String, options:Array, replace_in_tex
 					### same for reverse
 					#var args_reverse : Array = custom_method_stringkit_limiters.get(line.get("content", {}).get("reverse_name"))
 					
-				if line.get("line_type") != DIISIS.LineType.Text:
+				if line.get("line_type") != DIISIS.LineType.TEXT:
 					continue
 				
 				var i := 0
@@ -1192,7 +1200,7 @@ func delete_stringkit(title:String, erase_from_text:=true):
 		for page in page_data.values():
 			var lines : Array = page.get("lines")
 			for line : Dictionary in lines:
-				if line.get("line_type") != DIISIS.LineType.Text:
+				if line.get("line_type") != DIISIS.LineType.TEXT:
 					continue
 				
 				var text_id : String = line.get("content", {}).get("text_id")
@@ -1253,7 +1261,7 @@ func alter_fact(from:String, to=null):
 						fact_data["fact_name"] = to
 						line_conditionals[to] = fact_data
 					line_conditionals.erase(from)
-			if line.get("line_type") == DIISIS.LineType.Text:
+			if line.get("line_type") == DIISIS.LineType.TEXT:
 				var text_id =  line.get("content").get("text_id")
 				var text := get_text(text_id)
 				text = text.replace(
@@ -1261,7 +1269,7 @@ func alter_fact(from:String, to=null):
 					str("<fact:", to, ">")
 				)
 				save_text(text_id, text)
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var options = line.get("content")
 				var choice_index := 0
 				for option in options.get("choices", {}):
@@ -1312,7 +1320,7 @@ func does_address_exist(address:String) -> bool:
 		if page_data.get(parts[0], {}).get("lines", []).size() <= parts[1]:
 			return false
 		var line = page_data.get(parts[0], {}).get("lines", [])[parts[1]]
-		if line.get("line_type") != DIISIS.LineType.Choice:
+		if line.get("line_type") != DIISIS.LineType.CHOICE:
 			return false
 		return line.get("content", {}).get("choices", []).size() > parts[2]
 	
@@ -1410,7 +1418,7 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 	for page in page_data.values():
 		var line_index := 0
 		for line in page.get("lines"):
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var choice_index := 0
 				for choice in line.get("content", {}).get("choices", []):
 					var text_enabled : String = Pages.get_text(choice.get("text_id_enabled"))
@@ -1420,14 +1428,14 @@ func search_string(substr:String, case_insensitive:=false, include_tags:=false) 
 					if (case_insensitive and text_disabled.findn(substr) != -1) or (not case_insensitive and text_disabled.find(substr) != -1):
 						found_choices[str(page_index, ".", line_index, ".", choice_index, " - disabled")] = text_disabled
 					choice_index += 1
-			elif line.get("line_type") == DIISIS.LineType.Text:
+			elif line.get("line_type") == DIISIS.LineType.TEXT:
 				var text : String = Pages.get_text(line.get("content", {}).get("text_id", ""))
 				if not include_tags:
 					text = remove_tags(text)
 				
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
 					found_text[str(page_index, ".", line_index)] = text
-			elif line.get("line_type") == DIISIS.LineType.Instruction:
+			elif line.get("line_type") == DIISIS.LineType.INSTRUCTION:
 				var text : String = line.get("content", {}).get("meta.text", "")
 				var reverse_text : String = line.get("content", {}).get("meta.reverse_text", "")
 				if (case_insensitive and text.findn(substr) != -1) or (not case_insensitive and text.find(substr) != -1):
@@ -1482,13 +1490,13 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 		result += "\n"
 		var line_type_letter : String
 		match line_type:
-			DIISIS.LineType.Text:
+			DIISIS.LineType.TEXT:
 				line_type_letter = "t"
-			DIISIS.LineType.Instruction:
+			DIISIS.LineType.INSTRUCTION:
 				line_type_letter = "i"
-			DIISIS.LineType.Choice:
+			DIISIS.LineType.CHOICE:
 				line_type_letter = "c"
-			DIISIS.LineType.Folder:
+			DIISIS.LineType.FOLDER:
 				line_type_letter = "f"
 		if include_file_outline:
 			result += "\nLINE %s %s" % [line_type_letter ,str(page_index, ".", line_index)]
@@ -1497,7 +1505,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 		result += "\n"
 		var content : Dictionary = line.get("content")
 		match line_type:
-			DIISIS.LineType.Text:
+			DIISIS.LineType.TEXT:
 				var text : String = get_text(content.get("text_id"))
 				text = text.replace("[]>", "")
 				
@@ -1512,7 +1520,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 						has_args = text.contains("{") and text.contains("}:")
 				
 				result += text
-			DIISIS.LineType.Instruction:
+			DIISIS.LineType.INSTRUCTION:
 				result += content.get("meta.text")
 				var reverse_text : String = content.get("meta.reverse_text")
 				var has_reverse : bool = content.get("meta.has_reverse", false)
@@ -1523,7 +1531,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 					else:
 						prefix += "x<"
 					result += prefix + content.get("meta.reverse_text")
-			DIISIS.LineType.Choice:
+			DIISIS.LineType.CHOICE:
 				var choices : Array = content.get("choices")
 				var first_choice := true # just for visual \n placement
 				for choice : Dictionary in choices:
@@ -1540,7 +1548,7 @@ func stringify_page(page_index:int, modifiers := {}) -> String:
 					
 					if include_ids:
 						result += "ID:"+choice.get("id")
-			DIISIS.LineType.Folder:
+			DIISIS.LineType.FOLDER:
 				if not include_file_outline:
 					line_index += 1
 					continue
@@ -1566,11 +1574,11 @@ func update_line_content(new_content_by_line_id:Dictionary):
 				var new_content : Dictionary = new_content_by_line_id.get(line_id)
 				var line_content : Dictionary = line.get("content")
 				match line_type:
-					DIISISGlobal.LineType.Text:
+					DIISISGlobal.LineType.TEXT:
 						var new_text : String = new_content.get("text")
 						var text_id : String = line_content.get("text_id")
 						save_text(text_id, new_text)
-					DIISISGlobal.LineType.Choice:
+					DIISISGlobal.LineType.CHOICE:
 						var choice_texts : Array = new_content.get("choice_texts")
 						var existing_choices : Array = line_content.get("choices", [])
 						var choice_index := 0
@@ -1615,11 +1623,11 @@ func update_line_content(new_content_by_line_id:Dictionary):
 						line["content"]["choice_order"] = id_order.duplicate(true)
 						existing_choices = sort_choices(id_order, existing_choices)
 						line["content"]["choices"] = existing_choices
-					DIISISGlobal.LineType.Instruction:
+					DIISISGlobal.LineType.INSTRUCTION:
 						line["content"]["meta.text"] = new_content.get("meta.text")
 						line["content"]["meta.has_reverse"] = new_content.get("meta.has_reverse", line.get("content").get("meta.has_reverse"))
 						line["content"]["meta.reverse_text"] = new_content.get("meta.reverse_text", line.get("content").get("meta.reverse_text"))
-					DIISISGlobal.LineType.Folder:
+					DIISISGlobal.LineType.FOLDER:
 						line["content"]["range"] = new_content.get("range")
 		
 		page_data[page_index] = data
@@ -1685,11 +1693,6 @@ func remove_tags(t:String) -> String:
 	return text
 
 
-enum RegionDeliniation{
-	Pages,
-	Instructions
-}
-
 ## Only useful for linear games.
 func get_regions(deliniation := region_delination) -> Dictionary:
 	var trail := get_cascading_trail(0)
@@ -1713,8 +1716,8 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 	while i < trail.size():
 		var page_index = trail[i]
 		for line_index in get_line_count(page_index):
-			if deliniation == RegionDeliniation.Instructions:
-				if get_line_type(page_index, line_index) == DIISIS.LineType.Instruction:
+			if deliniation == RegionDeliniation.INSTRUCTIONS:
+				if get_line_type(page_index, line_index) == DIISIS.LineType.INSTRUCTION:
 					var line := get_line_data(page_index, line_index)
 					var instruction_name : String = line.get("content").get("name")
 					var instruction_text : String = line.get("content").get("meta.text")
@@ -1737,7 +1740,7 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 					actors_this_region.append(actor)
 			last_line_index = line_index
 		last_page_index = page_index
-		if deliniation == RegionDeliniation.Pages:
+		if deliniation == RegionDeliniation.PAGES:
 			# put into region
 			var end : String
 			if i < trail.size() - 1:
@@ -1753,7 +1756,7 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 			actors_this_region.clear()
 		i += 1
 	
-	if deliniation == RegionDeliniation.Instructions:
+	if deliniation == RegionDeliniation.INSTRUCTIONS:
 		result["%s.%s" % [region_start_page_index, region_start_line_index]] = {
 			"actors" : actors_this_region.duplicate(),
 			"text" : region_text,
@@ -1767,7 +1770,7 @@ func get_regions(deliniation := region_delination) -> Dictionary:
 func get_actors_at_line(page_index : int, line_index : int) -> Array:
 	var line := get_line_data(page_index, line_index)
 	
-	if line.get("line_type") != DIISIS.LineType.Text:
+	if line.get("line_type") != DIISIS.LineType.TEXT:
 		return []
 		
 	var result := []
@@ -1822,7 +1825,7 @@ func update_compliances(instruction_name:String):
 		var lines : Array = page.get("lines", [])
 		for line in lines:
 			var content : Dictionary = line.get("content", {})
-			if line.get("line_type") == DIISIS.LineType.Instruction:
+			if line.get("line_type") == DIISIS.LineType.INSTRUCTION:
 				if content.get("name", "") == instruction_name:
 					var text : String = content.get("meta.text", "")
 					var text_reverse : String = content.get("meta.reverse_text", "")
@@ -1835,7 +1838,7 @@ func update_compliances(instruction_name:String):
 						line["content"]["meta.validation_status"] = status
 						continue
 					line["content"]["meta.validation_status"] = "OK"
-			elif line.get("line_type") == DIISIS.LineType.Text:
+			elif line.get("line_type") == DIISIS.LineType.TEXT:
 				var functions : Array = content.get("meta.function_calls", [])
 				var compliance : String = "OK"
 				for function in functions:
@@ -1972,6 +1975,7 @@ func get_type_compliance(method:String, arg:String, value:String, type:int, arg_
 			return str("Stringkit argument \"", value, "\" (", arg_index + 1, ") is not an option for ", ", ".join(selected_limiters), ".", default_notice, "\nValid strings are: ", ", ".join(valid_strings))
 	return ""
 
+
 func are_all_of_these_stringkit_titles(names:Array) -> bool:
 	var result := true
 	for dd_name in names:
@@ -1980,13 +1984,6 @@ func are_all_of_these_stringkit_titles(names:Array) -> bool:
 			break
 	return result
 
-
-enum ElipseC12NMode {
-	REMAIN,
-	UPPER,
-	LOWER,
-}
-var capitalization_rule_after_elipse : ElipseC12NMode = ElipseC12NMode.REMAIN
 
 func capitalize_sentence_beginnings(text:String) -> String:
 	var c12n_prefixes := [
@@ -2374,7 +2371,7 @@ func get_text_id_address_and_type(id:String) -> Array:
 		var line_index := 0
 		for line in page.get("lines"):
 			var content = line.get("content")
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				if content.get("title_id") == id:
 					var address := str(page_index, ".", line_index)
 					return [address, "Choice Title"]
@@ -2386,7 +2383,7 @@ func get_text_id_address_and_type(id:String) -> Array:
 					elif choice.get("text_id_disabled") == id:
 						return [address, "Choice Disabled"]
 					choice_index += 1
-			elif line.get("line_type") == DIISIS.LineType.Text:
+			elif line.get("line_type") == DIISIS.LineType.TEXT:
 				if content.get("text_id") == id:
 					var address := str(page_index, ".", line_index)
 					return [address, "Text Line"]
@@ -2397,7 +2394,7 @@ func get_speakers() -> Array:
 	return stringkits.get(stringkit_title_for_dialog_syntax, []).duplicate()
 
 ## exact means only the passed speakers can be entered
-func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearchContainer.SearchMode.All) -> Array:
+func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearchContainer.SearchMode.ALL) -> Array:
 	if speakers.is_empty():
 		#push_warning("Speakers is empty. Returning empty results.")
 		return []
@@ -2405,22 +2402,22 @@ func get_text_line_adrs_with_speakers(speakers:Array, search_mode := ActorSearch
 	for i in page_data.size():
 		var pdata = get_page_data(i)
 		for line : Dictionary in pdata.get("lines", []):
-			if line.get("line_type") != DIISIS.LineType.Text:
+			if line.get("line_type") != DIISIS.LineType.TEXT:
 				continue
 			var text = get_text(line.get("content").get("text_id"))
 			var contains_all := true
-			if search_mode == ActorSearchContainer.SearchMode.Any:
+			if search_mode == ActorSearchContainer.SearchMode.ANY:
 				contains_all = false
 				for speaker : String in speakers:
 					if text.contains("[]>%s" % speaker):
 						contains_all = true
 						break
-			if search_mode == ActorSearchContainer.SearchMode.All:
+			if search_mode == ActorSearchContainer.SearchMode.ALL:
 				for speaker : String in speakers:
 					if not text.contains("[]>%s" % speaker):
 						contains_all = false
 						break
-			if search_mode == ActorSearchContainer.SearchMode.Exact:
+			if search_mode == ActorSearchContainer.SearchMode.EXACT:
 				for speaker : String in speakers:
 					if not text.contains("[]>%s" % speaker):
 						contains_all = false
@@ -2442,7 +2439,7 @@ func change_text_id(old_id:String, new_id:String) -> void:
 		var broken:=false
 		for line in page.get("lines"):
 			var content = line.get("content")
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				if content.get("title_id") == old_id:
 					content["title_id"] = new_id
 					broken = true
@@ -2456,7 +2453,7 @@ func change_text_id(old_id:String, new_id:String) -> void:
 						choice["text_id_disabled"] = new_id
 						broken = true
 						break
-			elif line.get("line_type") == DIISIS.LineType.Text:
+			elif line.get("line_type") == DIISIS.LineType.TEXT:
 				if content.get("text_id") == old_id:
 					content["text_id"] = new_id
 					broken = true
@@ -2505,13 +2502,13 @@ func get_facts_data(address:String) -> Dictionary:
 	var parts = DiisisEditorUtil.get_split_address(address)
 	var cpn : int = editor.get_current_page_number()
 	match DiisisEditorUtil.get_address_depth(address):
-		DiisisEditorUtil.AddressDepth.Page:
+		DiisisEditorUtil.AddressDepth.PAGE:
 			var data : Dictionary = editor.get_current_page().serialize()
 			return data.get("facts", {}).get("fact_data_by_name", {})
-		DiisisEditorUtil.AddressDepth.Line:
+		DiisisEditorUtil.AddressDepth.LINE:
 			var data := get_line_data(parts[0], parts[1])
 			return data.get("facts", {}).get("fact_data_by_name", {})
-		DiisisEditorUtil.AddressDepth.ChoiceItem:
+		DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			var data : Dictionary = get_line_data(parts[0], parts[1]).get("content").get("choices")[parts[2]]
 			return data.get("facts", {}).get("fact_data_by_name", {})
 	
@@ -2529,7 +2526,7 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 	var facts_by_address := {}
 	var parts = DiisisEditorUtil.get_split_address(address)
 	match DiisisEditorUtil.get_address_depth(address):
-		DiisisEditorUtil.AddressDepth.Page:
+		DiisisEditorUtil.AddressDepth.PAGE:
 			var facts_data : Dictionary = get_facts_data(address)
 			if not facts_data.is_empty():
 				facts_by_address[address] = facts_data
@@ -2539,20 +2536,20 @@ func get_fact_data_payload_before_deletion(address:String) -> Dictionary:
 				if not line_payload.is_empty():
 					for key : String in line_payload.keys():
 						facts_by_address[key] = line_payload.get(key)#.get(line_address)
-		DiisisEditorUtil.AddressDepth.Line:
+		DiisisEditorUtil.AddressDepth.LINE:
 			var line_type := get_line_type(parts[0], parts[1])
 			var line_data = get_line_data(parts[0], parts[1])
 			var line_facts_data = get_facts_data(address)
 			if not line_facts_data.is_empty():
 				facts_by_address[address] = line_facts_data
-			if line_type == DIISIS.LineType.Choice:
+			if line_type == DIISIS.LineType.CHOICE:
 				var choices : Array = line_data.get("content", {}).get("choices", [])
 				for i in choices.size():
 					var choice_address := str(address, ".", i)
 					var choice_payload = get_fact_data_payload_before_deletion(choice_address)
 					if not choice_payload.is_empty():
 						facts_by_address[choice_address] = choice_payload.get(choice_address)
-		DiisisEditorUtil.AddressDepth.ChoiceItem:
+		DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			var facts_data = get_facts_data(address)
 			if not facts_data.is_empty():
 				facts_by_address[address] = facts_data
@@ -2730,9 +2727,9 @@ func purge_unused_text_ids():
 			var line_type : DIISIS.LineType = line.get("line_type")
 			var content : Dictionary = line.get("content")
 			match line_type:
-				DIISIS.LineType.Text:
+				DIISIS.LineType.TEXT:
 					used_text_ids.append(content.get("text_id"))
-				DIISIS.LineType.Choice:
+				DIISIS.LineType.CHOICE:
 					used_text_ids.append(content.get("title_id"))
 					var choices : Array = content.get("choices")
 					for choice : Dictionary in choices:

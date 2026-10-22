@@ -7,16 +7,24 @@ class_name DIISISGlobal
 ## @tutorial(Wiki): https://snekofspice.github.io/diisis-docs/
 
 enum LineType {
-	Text, Choice, Instruction, Folder
+	TEXT,
+	CHOICE,
+	INSTRUCTION,
+	FOLDER,
+}
+
+enum FactDataType{
+	BOOL,
+	INT,
 }
 
 
 enum ChoiceBehaviorAfterSelection {
-	Default,
-	Show,
-	Enabled,
-	Disabled,
-	Hidden
+	DEFAULT,
+	SHOW,
+	ENABLED,
+	DISABLED,
+	HIDDEN,
 }
 
 

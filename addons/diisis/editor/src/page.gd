@@ -219,7 +219,7 @@ func get_lines_to_delete(at_index) -> Array[Line]:
 	var lines_to_delete : Array[Line] = [line_to_delete]
 	
 	
-	if Input.is_key_pressed(KEY_SHIFT) and line_to_delete.line_type == DIISIS.LineType.Folder:
+	if Input.is_key_pressed(KEY_SHIFT) and line_to_delete.line_type == DIISIS.LineType.FOLDER:
 		var folder_range : Vector2 = line_to_delete.get_folder_range_v()
 		for i in range(at_index + 1, folder_range.y + 2): # I wish I knew why +2
 			lines_to_delete.append(lines.get_child(i))
@@ -264,7 +264,7 @@ func delete_lines(indices:Array):
 	for i in indices:
 		# handle folder shrinking
 		for l in lines.get_children():
-			if l.line_type == DIISIS.LineType.Folder:
+			if l.line_type == DIISIS.LineType.FOLDER:
 				var range : Vector2 = l.get_folder_range_v()
 				if i >= range.x and i <= range.y:
 					l.change_folder_range(-1)
@@ -278,7 +278,7 @@ func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 	var result := []
 	var line_to_delete : Line = lines.get_child(start_index)
 	
-	if line_to_delete.line_type == DIISIS.LineType.Folder:
+	if line_to_delete.line_type == DIISIS.LineType.FOLDER:
 		var folder_range : Vector2 = line_to_delete.get_folder_range_v()
 		for i in range(start_index, folder_range.y + 1): # I wish I knew why +2
 			result.append(i)
@@ -330,13 +330,13 @@ func add_lines(indices:Array, data_by_index:={}, force_new_line_object:=false, c
 		if line_data != {}:
 			line.deserialize(line_data)
 		
-		if line.line_type == DIISIS.LineType.Choice and line.get_choice_item_count() == 0:
+		if line.line_type == DIISIS.LineType.CHOICE and line.get_choice_item_count() == 0:
 			line.add_choice_item(0)
 			line.add_choice_item(1)
 		
 		if instanced_new_line:
 			for l : Line in lines.get_children():
-				if l.line_type == DIISIS.LineType.Folder:
+				if l.line_type == DIISIS.LineType.FOLDER:
 					var range : Vector2 = l.get_folder_range_v()
 					if at_index > range.x and at_index <= range.y:
 						l.change_folder_range(1)
@@ -396,11 +396,11 @@ func move_line(line: Line, dir:int):
 			var prev_indent_level = get_line(idx - 1).indent_level
 			while i > 0 and prev_indent_level > 0:
 				var prev_line := get_line(i - 1)
-				if prev_line.line_type == DIISIS.LineType.Folder:
+				if prev_line.line_type == DIISIS.LineType.FOLDER:
 					prev_line.change_folder_range(-1)
 				i -= 1
 				prev_indent_level = get_line(idx-1).indent_level
-		elif jumped_line.line_type == DIISIS.LineType.Folder:
+		elif jumped_line.line_type == DIISIS.LineType.FOLDER:
 			jumped_line.change_folder_range(dir)
 			#update()
 			lines.move_child(line, idx+dir)
@@ -416,7 +416,7 @@ func move_line(line: Line, dir:int):
 			var prev_indent_level = get_line(idx - 1).indent_level
 			while i > 0 and prev_indent_level > 0:
 				var prev_line := get_line(i - 1)
-				if prev_line.line_type == DIISIS.LineType.Folder:
+				if prev_line.line_type == DIISIS.LineType.FOLDER:
 					prev_line.change_folder_range(folder_operation)
 				i -= 1
 				prev_indent_level = get_line(idx-1).indent_level
@@ -427,7 +427,7 @@ func move_line(line: Line, dir:int):
 		update()
 		return
 	
-	if line.line_type == DIISIS.LineType.Folder:
+	if line.line_type == DIISIS.LineType.FOLDER:
 		if dir == -1:
 			move_folder_up(line)
 		elif dir == 1:
@@ -438,7 +438,7 @@ func move_line(line: Line, dir:int):
 	if dir == -1:
 		var previous_line:Line = lines.get_child(idx - 1)
 		
-		if previous_line.line_type == DIISIS.LineType.Folder and previous_line.indent_level == line.indent_level and line.indent_level > 0:
+		if previous_line.line_type == DIISIS.LineType.FOLDER and previous_line.indent_level == line.indent_level and line.indent_level > 0:
 			update()
 			Pages.editor.notify("Use Shift to move outside of folder boundaries.")
 			return
@@ -462,7 +462,7 @@ func move_line(line: Line, dir:int):
 			Pages.editor.notify("Use Shift to move outside of folder boundaries.")
 			return
 		
-		if next_line.line_type == DIISIS.LineType.Folder:
+		if next_line.line_type == DIISIS.LineType.FOLDER:
 			bump = next_line.get_next_index() - 1
 		else:
 			bump = line.get_next_index()
@@ -477,7 +477,7 @@ func move_folder_up(line:Line):
 	var idx = line.get_index()
 	var lines = lines
 	var previous_line:Line = lines.get_child(idx - 1)
-	if previous_line.line_type != DIISIS.LineType.Folder and previous_line.indent_level <= line.indent_level:
+	if previous_line.line_type != DIISIS.LineType.FOLDER and previous_line.indent_level <= line.indent_level:
 		lines.move_child(previous_line, idx + max(1, line.get_folder_range_i()))
 		Pages.swap_line_references(number, idx, idx + max(1, line.get_folder_range_i()))
 	else:
@@ -571,7 +571,7 @@ func update():
 	
 	var i = 0
 	for l : Line in lines.get_children():
-		if l.line_type == DIISIS.LineType.Folder:
+		if l.line_type == DIISIS.LineType.FOLDER:
 			l.update_folder(get_max_reach_after_indented_index(i))
 		i += 1
 	
@@ -579,7 +579,7 @@ func update():
 	for l : Line in lines.get_children():
 		l.update()
 		var idx = l.get_index()
-		if l.line_type == DIISIS.LineType.Folder:
+		if l.line_type == DIISIS.LineType.FOLDER:
 			var is_folder_content_visible := l.get_folder_contents_visible() and l.visible
 			# all after that in range of the folder line get indented l.indent_level + 1
 			var folder_range_i : int = l.get_folder_range_i()

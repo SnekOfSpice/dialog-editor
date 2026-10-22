@@ -38,7 +38,7 @@ func close_window():
 		editor.is_open = false
 	hide()
 	if is_instance_valid(editor):
-		editor.update_page_view(DiisisEditor.PageView.Full)
+		editor.update_page_view(DiisisEditor.PageView.FULL)
 	
 	for i in Pages.page_data.size():
 		Pages.consume_from_user("changed%s" % i, true)

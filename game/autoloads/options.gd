@@ -19,65 +19,22 @@ const OPTIONS_PATH := "user://preferences.cfg"
 var save_slot := 0
 const MAX_SAVE_SLOTS := 6
 
-#enum ShadowQuality {
-	#Good,
-	#Bad,
-	#None
-#}
+
 enum WindowMode {
-	Windowed,
-	Borderless,
-	Fullscreen
+	WINDOWED,
+	BORDERLESS,
+	FULLSCREEN,
 }
-#var shadow_quality_index : ShadowQuality = ShadowQuality.Good:
-	#set(value):
-		#shadow_quality_index = value
-		#EventBus.settings_changed.emit()
-var window_mode_index : WindowMode = WindowMode.Fullscreen:
+var window_mode_index : WindowMode = WindowMode.FULLSCREEN:
 	set(value):
 		window_mode_index = value
 		EventBus.settings_changed.emit()
-#var showdown_background_enabled := false:
-	#set(value):
-		#showdown_background_enabled = value
-		#EventBus.settings_changed.emit()
-#var render_scale_index := 1:
-	#set(value):
-		#render_scale_index = value
-		#EventBus.settings_changed.emit()
-#var slideshow_enabled := true:
-	#set(value):
-		#slideshow_enabled = value
-		#EventBus.settings_changed.emit()
+
 
 var finished_setup := false:
 	set(value):
 		finished_setup = value
 
-#var sfx_description := false:
-	#set(value):
-		#sfx_description = value
-		#EventBus.settings_changed.emit()
-#var music_description := false:
-	#set(value):
-		#music_description = value
-		#EventBus.settings_changed.emit()
-#var dither_enabled := true:
-	#set(value):
-		#dither_enabled = value
-		#EventBus.settings_changed.emit()
-#var blur_enabled := true:
-	#set(value):
-		#blur_enabled = value
-		#EventBus.settings_changed.emit()
-#var blood_enabled := true:
-	#set(value):
-		#blood_enabled = value
-		#EventBus.settings_changed.emit()
-#var crt_enabled := true:
-	#set(value):
-		#crt_enabled = value
-		#EventBus.settings_changed.emit()
 var fps_counter_visible := false:
 	set(value):
 		fps_counter_visible = value
@@ -97,7 +54,7 @@ func _ready() -> void:
 	text_speed = config.get_value("preferences", "text_speed", text_speed)
 	auto_continue_delay = config.get_value("preferences", "auto_continue_delay", auto_continue_delay)
 	auto_continue = config.get_value("preferences", "auto_continue", auto_continue)
-	set_window_mode(config.get_value("preferences", "window_mode_index", WindowMode.Windowed))
+	set_window_mode(config.get_value("preferences", "window_mode_index", WindowMode.WINDOWED))
 	save_slot = config.get_value("preferences", "save_slot", 0)
 
 	fps_counter_visible = config.get_value("graphics", "fps_counter_visible", false)
@@ -125,13 +82,13 @@ func set_volume(bus : String, volume : float, save : bool):
 func set_window_mode(mode : WindowMode):
 	window_mode_index = mode
 	match mode:
-		WindowMode.Fullscreen:
+		WindowMode.FULLSCREEN:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		WindowMode.Borderless:
+		WindowMode.BORDERLESS:
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 			await RenderingServer.frame_post_draw
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
-		WindowMode.Windowed:
+		WindowMode.WINDOWED:
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 			await RenderingServer.frame_post_draw
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)

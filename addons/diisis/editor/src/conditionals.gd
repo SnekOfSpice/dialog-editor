@@ -3,25 +3,29 @@ extends Facts
 class_name Conditionals
 
 enum ConditionalOperand {
-	AND, OR, nOrMore, nOrLess, betweenNMincl
+	AND,
+	OR,
+	N_OR_MORE,
+	N_OR_LESS,
+	BETWEEN_INCL,
 }
 
 const OPERAND_NAMES := {
 	ConditionalOperand.AND : "All",
 	ConditionalOperand.OR : "Any",
-	ConditionalOperand.nOrMore : "At Least",
-	ConditionalOperand.nOrLess : "At Most",
-	ConditionalOperand.betweenNMincl : "Between",
+	ConditionalOperand.N_OR_MORE : "At Least",
+	ConditionalOperand.N_OR_LESS : "At Most",
+	ConditionalOperand.BETWEEN_INCL : "Between",
 }
 enum Behavior {
-	Show,
-	Hide,
-	Disable,
-	Enable,
+	SHOW,
+	HIDE,
+	DISABLE,
+	ENABLE,
 }
 
 var operand:= ConditionalOperand.AND
-var selected_behavior := Behavior.Show
+var selected_behavior := Behavior.SHOW
 
 func init() -> void:
 	super.init()
@@ -34,9 +38,9 @@ func init() -> void:
 	
 	for a in Behavior:
 		# depth 2 is choice item. only choice item has a meaningful difference between hide/show and enable/disable
-		if (a == "Enable" or a == "Disable") and address_depth != 2:
+		if (a == "ENABLE" or a == "DISABLE") and address_depth != 2:
 			continue
-		find_child("BehaviorButton").add_item(a)
+		find_child("BehaviorButton").add_item(a.capitalize())
 	
 	set_operand(ConditionalOperand.AND)
 	set_controls_collapsed(Pages.collapse_conditional_controls_by_default)
@@ -96,12 +100,12 @@ func set_operand(value: int):
 	operand = value
 	find_child("OperandOptionButton").select(operand)
 	find_child("OperandArg1").visible = (
-		operand == ConditionalOperand.nOrLess or 
-		operand == ConditionalOperand.nOrMore or 
-		operand == ConditionalOperand.betweenNMincl 
+		operand == ConditionalOperand.N_OR_LESS or 
+		operand == ConditionalOperand.N_OR_MORE or 
+		operand == ConditionalOperand.BETWEEN_INCL 
 		)
 	find_child("OperandArg2").visible = (
-		operand == ConditionalOperand.betweenNMincl 
+		operand == ConditionalOperand.BETWEEN_INCL 
 		)
 
 
@@ -117,9 +121,9 @@ func get_controls_collapsed() -> bool:
 
 func _get_operand_string() -> String:
 	var result : String = find_child("OperandOptionButton").text
-	if operand in [ConditionalOperand.nOrMore, ConditionalOperand.nOrLess, ConditionalOperand.betweenNMincl]:
+	if operand in [ConditionalOperand.N_OR_MORE, ConditionalOperand.N_OR_LESS, ConditionalOperand.BETWEEN_INCL]:
 		result += str(" ", int(find_child("OperandArg1").value))
-	if operand in [ConditionalOperand.betweenNMincl]:
+	if operand in [ConditionalOperand.BETWEEN_INCL]:
 		result += str(" - ", int(find_child("OperandArg2").value))
 	
 	return result

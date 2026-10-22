@@ -6,16 +6,16 @@ func init() -> void:
 	%HelpLabel.hide()
 	%BakeCheckBox.button_pressed = Pages.region_baking_enabled
 	_on_bake_check_box_toggled(Pages.region_baking_enabled)
-	if Pages.region_delination == Pages.RegionDeliniation.Pages:
+	if Pages.region_delination == Pages.RegionDeliniation.PAGES:
 		%PagesCheckBox.button_pressed = true
-	elif Pages.region_delination == Pages.RegionDeliniation.Instructions:
+	elif Pages.region_delination == Pages.RegionDeliniation.INSTRUCTIONS:
 		%InstructionCheckBox.button_pressed = true
 	set_view(Pages.region_delination)
 	%DeliniatorNameLineEdit.text = Pages.region_delinator_instruction
 
 
 func set_view(deliniation : Pages.RegionDeliniation):
-	%InstructionContainer.visible = deliniation == Pages.RegionDeliniation.Instructions
+	%InstructionContainer.visible = deliniation == Pages.RegionDeliniation.INSTRUCTIONS
 	Pages.region_delination = deliniation
 
 func save_deliniator_name():
@@ -28,11 +28,11 @@ func _on_save_deliniator_name_button_pressed() -> void:
 
 
 func _on_pages_check_box_pressed() -> void:
-	set_view(Pages.RegionDeliniation.Pages)
+	set_view(Pages.RegionDeliniation.PAGES)
 
 
 func _on_instruction_check_box_pressed() -> void:
-	set_view(Pages.RegionDeliniation.Instructions)
+	set_view(Pages.RegionDeliniation.INSTRUCTIONS)
 
 
 func _on_deliniator_name_line_edit_text_changed(new_text: String) -> void:

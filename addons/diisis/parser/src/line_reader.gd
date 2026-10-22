@@ -16,28 +16,28 @@ const _UI_PROPERTIES := ["choice_container", "choice_list", "body_label", "text_
 ## respect [member name_map] and [member color_map].
 enum NameStyle {
 	## The actor's name will be displayed in [member name_label].
-	NameLabel,
+	NAME_LABEL,
 	## The actor's name will be inserted in front of the text with a sequence of optional spaces and characters (See [member inline_name_space_prefix] [member prefix_space] [member inline_name_space_suffix]). [member name_label] will be hidden.
-	Prepend,
+	PREPEND,
 	## Actor name will not be shown. [member name_label] will be hidden.
-	None,
+	NONE,
 }
 
 
 enum TextFlow{
 	## The text will smoothly grow across [member body_label].
-	Smooth,
+	SMOOTH,
 	## Each word will be read one word at a time instead of character by character.
 	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
-	FullWords,
+	FULL_WORDS,
 	## The text will be broken up along spaces.
 	## [br]Each word will smoothly grow across [member body_label].
 	## [br][b]Note:[/b] Incompatible with rubies.
-	SmoothSingle,
+	SMOOTH_SINGLE,
 	## Each word will be displayed individually and instantly, broken along spaces.
-	## This is equivalent to using [enum TextFlow.SmoothSingle] with [member text_speed] set to [constant MAX_TEXT_SPEED].
+	## This is equivalent to using [enum TextFlow.SMOOTH_SINGLE] with [member text_speed] set to [constant MAX_TEXT_SPEED].
 	## [br][b]Note:[/b] Incompatible with rubies.
-	FullWordsSingle
+	FULL_WORDS_SINGLE,
 }
 
 
@@ -53,13 +53,13 @@ enum TextFlow{
 ## Set to [code]-1[/code] (default) to disable.
 @export_range(-1.0, MAX_TEXT_SPEED, 1.0) var custom_text_speed_override := -1.0
 ## Determines the text flow of characters when [member text_speed] isn't [constant MAX_TEXT_SPEED].
-@export var text_flow : TextFlow = TextFlow.Smooth
+@export var text_flow : TextFlow = TextFlow.SMOOTH
 var _full_words := false:
 	get():
-		return text_flow in [TextFlow.FullWords,TextFlow.FullWordsSingle]
+		return text_flow in [TextFlow.FULL_WORDS,TextFlow.FULL_WORDS_SINGLE]
 var _single_words := false:
 	get():
-		return text_flow in [TextFlow.SmoothSingle,TextFlow.FullWordsSingle]
+		return text_flow in [TextFlow.SMOOTH_SINGLE,TextFlow.FULL_WORDS_SINGLE]
 ## The delay that <ap> tags imply, in seconds.
 @export_range(0, 1, 0.01, "or_greater","hide_slider") var auto_pause_duration := 0.2
 ## Disables user-based calls of [method request_advance].
@@ -98,7 +98,7 @@ var _auto_continue_duration:= auto_continue_delay
 ## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
 #@export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
-@export var name_style : NameStyle = NameStyle.NameLabel
+@export var name_style : NameStyle = NameStyle.NAME_LABEL
 var _prepend_length := 0
 
 @export_group("Text Nodes")
@@ -166,7 +166,7 @@ var name_container: Control:
 ## If [code]0[/code], [param body_label] will be filled as far as possible.
 ## Breaks will be caused by <lc> tags, 
 ## a file with [param Pages.use_dialog_syntax] enabled, and a
-## new [Line] of type [member DIISIS.LineType.Text] being read.[br]
+## new [Line] of type [member DIISIS.LineType.TEXT] being read.[br]
 ## If set to more than [code]0[/code], the text will additionally be split to
 ## ensure it never runs more than that amount of lines. [br]
 ## [b]Note:[/b] Resizing the [param body_label] after a Line has started to be read will
@@ -241,14 +241,14 @@ var _last_raw_name := ""
 @export var ruby_enabled := true
 enum RubySizeMode {
 	## Centers the ruby above its base line.
-	Center,
+	CENTER,
 	## Centers the ruby above its base line if it contains no spaces. Otherwise, stretches it across the entire base line.
-	SingleWordCenter,
+	SINGLE_WORD_CENTER,
 	## Stretches the ruby across the entire base line, left-adjusted.
-	Stretch,
+	STRETCH,
 }
 ## Determines the growth and positioning behavior of generated rubies.
-@export var ruby_size_mode : RubySizeMode = RubySizeMode.Center
+@export var ruby_size_mode : RubySizeMode = RubySizeMode.CENTER
 ## Font size factor for rubies, relative to the normal font size of [member body_label].
 ## This property also lightly affects the vertical positioning of rubies. Note that [member ruby_offset] also affects the vertical positioning of rubies.
 @export_range(0.1, 1, 0.01) var ruby_scale := 0.8
@@ -389,7 +389,7 @@ var _terminator_node_incomplete : Control
 ## So this is the option for that.
 @export var include_auto_continue_in_accept_advance_signal := false
 @export_subgroup("Inline Name Separator Sequence", "inline_name_")
-## [enum NameStyle.Prepend] and [param preserve_name_in_past_lines] use this.
+## [enum NameStyle.PREPEND] and [param preserve_name_in_past_lines] use this.
 @export var inline_name_separator := "-"
 ## Adds a space before [member inline_name_separator].
 @export var inline_name_space_prefix := true
@@ -456,7 +456,11 @@ var _comments := {}
 var _called_positions := []
 var _handled_comments := []
 var _next_pause_type := 0
-enum _PauseTypes {Manual, Auto, EoL}
+enum _PauseTypes {
+	MANUAL,
+	AUTO,
+	END_OF_LINE,
+}
 var _dialog_lines := []
 #var _dialog_base_lines := [] # unchanged thing needed to rebuild on setting new config
 var _full_prefix := ""
@@ -587,7 +591,7 @@ func _deserialize(data: Dictionary):
 	_last_skill_success = data.get("_last_skill_success", _last_skill_success)
 	_line_data = data.get("line_data", {})
 	line_index = int(data.get("line_index", 0))
-	line_type = int(data.get("line_type", DIISIS.LineType.Text))
+	line_type = int(data.get("line_type", DIISIS.LineType.TEXT))
 	max_past_lines = data.get("max_past_lines", -1)
 	_next_pause_position_index = int(data.get("next_pause_position_index"))
 	_next_pause_type = int(data.get("next_pause_type"))
@@ -612,14 +616,14 @@ func _deserialize(data: Dictionary):
 	_set_choice_title_or_warn(data.get("current_choice_title", ""))
 	
 	text_container.visible = _can_text_container_be_visible()
-	_showing_text = line_type == DIISIS.LineType.Text
+	_showing_text = line_type == DIISIS.LineType.TEXT
 	if choice_container:
-		choice_container.visible = line_type == DIISIS.LineType.Choice
+		choice_container.visible = line_type == DIISIS.LineType.CHOICE
 	
 	if persist_ui_visibilities:
 		apply_ui_visibilities(data.get("ui_visibilities", {}))
 	
-	if line_type == DIISIS.LineType.Choice:
+	if line_type == DIISIS.LineType.CHOICE:
 		var raw_content = _line_data.get("content")
 		var content = _line_data.get("content").get("content")
 		var choices = _line_data.get("content").get("choices")
@@ -666,14 +670,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Body Label is null")
 	if not text_container:
 		warnings.append("Text Container is null")
-	if not name_label and name_style == NameStyle.NameLabel:
+	if not name_label and name_style == NameStyle.NAME_LABEL:
 		warnings.append("Name Label is null")
-	elif name_style == NameStyle.NameLabel and not (
+	elif name_style == NameStyle.NAME_LABEL and not (
 			name_label is Label or  
 			name_label is RichTextLabel
 			):
 			warnings.append("Name Label is not Label, or RichTextLabel")
-	if not name_container and name_style == NameStyle.NameLabel:
+	if not name_container and name_style == NameStyle.NAME_LABEL:
 		warnings.append("Name Container is null")
 	if show_input_prompt and not prompt_unfinished:
 		warnings.append("Prompt Unfinished is null")
@@ -840,7 +844,7 @@ func advance():
 					return false
 			if _next_pause_position_index < _pause_positions.size():
 				body_label.visible_characters = _get_end_of_chunk_position() 
-				if _next_pause_type != _PauseTypes.EoL:
+				if _next_pause_type != _PauseTypes.END_OF_LINE:
 					if _next_pause_position_index < _pause_positions.size() - 1:
 						_next_pause_position_index += 1
 					_find_next_pause()
@@ -926,11 +930,11 @@ func _read_new_line(new_line: Dictionary):
 		ParserEvents.read_new_line.emit(line_index)
 	
 	var eval = _evaluate_conditionals(_line_data.get("conditionals"))
-	var conditional_is_true = eval[0]
-	var behavior = eval[1]
+	var conditional_is_true : bool = eval[0]
+	var behavior : Conditionals.Behavior = eval[1]
 	
 	var last_line_index:int
-	if line_type == DIISIS.LineType.Folder:
+	if line_type == DIISIS.LineType.FOLDER:
 		var range = _line_data.get("content", {}).get("range", 0)
 		last_line_index = line_index + range
 	else:
@@ -941,11 +945,11 @@ func _read_new_line(new_line: Dictionary):
 		ParserEvents.line_skipped.emit()
 		return
 	
-	if behavior == "Show" or behavior == "Enable":
+	if behavior == Conditionals.Behavior.SHOW or behavior == Conditionals.Behavior.ENABLE:
 		if not conditional_is_true:
 			emit_signal("line_finished", last_line_index)
 			return
-	if behavior == "Hide" or behavior == "Disable":
+	if behavior == Conditionals.Behavior.HIDE or behavior == Conditionals.Behavior.DISABLE:
 		if conditional_is_true:
 			emit_signal("line_finished", last_line_index)
 			return
@@ -954,25 +958,25 @@ func _read_new_line(new_line: Dictionary):
 	var content = _line_data.get("content").get("content")
 	var content_address
 	var choices
-	if line_type == DIISIS.LineType.Choice:
+	if line_type == DIISIS.LineType.CHOICE:
 		choices = _line_data.get("content").get("choices")
-	if line_type == DIISIS.LineType.Text:
+	if line_type == DIISIS.LineType.TEXT:
 		_last_text_line_id = raw_content.get("text_id")
 		content = Parser.get_text(_last_text_line_id)
 		if content.begins_with("<fbrf:"):
 			var tag : String = content.substr(0, content.find(">") + 1)
 			if content.trim_prefix(tag).is_empty():
 				var func_name : String = content.trim_prefix("<fbrf:").trim_suffix(">")
-				var full_body_replacement : String = call_from_string(func_name, CallMode.Func)
+				var full_body_replacement : String = call_from_string(func_name, CallMode.FUNC)
 				content = full_body_replacement
 	var content_name = _line_data.get("content").get("name")
 	
 	#for key in _UI_PROPERTIES:
 		#get(key).visible = get
 	text_container.visible = _can_text_container_be_visible()
-	_showing_text = line_type == DIISIS.LineType.Text
+	_showing_text = line_type == DIISIS.LineType.TEXT
 	if choice_container:
-		choice_container.visible = line_type == DIISIS.LineType.Choice
+		choice_container.visible = line_type == DIISIS.LineType.CHOICE
 	
 	# register facts
 	var facts = _line_data.get("facts", {}).get("fact_data_by_name", {})
@@ -986,13 +990,13 @@ func _read_new_line(new_line: Dictionary):
 		prompt_finished.modulate.a = 0
 	
 	match line_type:
-		DIISIS.LineType.Text:
+		DIISIS.LineType.TEXT:
 			reparse_text()
-		DIISIS.LineType.Choice:
+		DIISIS.LineType.CHOICE:
 			var auto_switch : bool = raw_content.get("auto_switch")
 			_set_choice_title_or_warn(Parser.get_text(raw_content.get("title_id"), true))
 			_build_choices(choices, auto_switch)
-		DIISIS.LineType.Instruction:
+		DIISIS.LineType.INSTRUCTION:
 			var text : String
 			var delay_before: float
 			var delay_after: float
@@ -1023,7 +1027,7 @@ func _read_new_line(new_line: Dictionary):
 				return
 			
 			_wrapper_execute(text, delay_before, delay_after)
-		DIISIS.LineType.Folder:
+		DIISIS.LineType.FOLDER:
 			if not _line_data.get("content", {}).get("meta.contents_visible", true):
 				push_warning(str("Line ", line_index, " was an invisible folder. It will get read regardless."))
 			emit_signal("line_finished", line_index)
@@ -1042,7 +1046,7 @@ func get_dialine() -> int:
 ## Fetches the full text data for this Text Line. Can be used in conjunction with [method get_dialine] to make dynamic localization (l10n) work.
 ## [br][b]Note:[/b] Currently unsure if switching this while not currently being inside a Text Line breaks things. But seems to be stable?
 func reparse_text(dialine := 0):
-	#if line_type != DIISIS.LineType.Text:
+	#if line_type != DIISIS.LineType.TEXT:
 		#push_warning("Can only reparse text while the current line type is Text. if you want to switch locales, consider (read: try out idk this shit) storing the new locale and then reparse on the next time the linetype switches to Text")
 		#return
 	
@@ -1216,7 +1220,7 @@ func _get_prepend_separator_sequence() -> String:
 func _get_end_of_chunk_position() -> int:
 	if _pause_positions.size() == 0:
 		return body_label.get_parsed_text().length()
-	elif _pause_types[_next_pause_position_index] == _PauseTypes.EoL:
+	elif _pause_types[_next_pause_position_index] == _PauseTypes.END_OF_LINE:
 		return body_label.get_parsed_text().length()
 	else:
 		return _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index# - prepend_offset
@@ -1328,7 +1332,7 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 					vis = body_label.get_parsed_text().length()
 				
 				
-				var can_get_input : bool = (_next_pause_type in [_PauseTypes.Manual, _PauseTypes.EoL] and body_label.visible_characters == _get_end_of_chunk_position()) or body_label.visible_characters == -1
+				var can_get_input : bool = (_next_pause_type in [_PauseTypes.MANUAL, _PauseTypes.END_OF_LINE] and body_label.visible_characters == _get_end_of_chunk_position()) or body_label.visible_characters == -1
 				if _terminator_node_incomplete:
 					_terminator_node_incomplete.position = get_body_label_text_draw_pos(vis) + terminator_offset
 					_terminator_node_incomplete.visible = not can_get_input
@@ -1336,7 +1340,7 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 					_terminator_node_complete.position = get_body_label_text_draw_pos(vis) + terminator_offset
 					_terminator_node_complete.visible = can_get_input
 	
-	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.Auto:
+	elif _remaining_auto_pause_duration > 0 and _next_pause_type == _PauseTypes.AUTO:
 		var last_dur = _remaining_auto_pause_duration
 		_remaining_auto_pause_duration -= delta
 		if last_dur > 0 and _remaining_auto_pause_duration <= 0:
@@ -1406,11 +1410,11 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 		return
 	
 	if auto_continue:
-		if not line_type == DIISIS.LineType.Text:
+		if not line_type == DIISIS.LineType.TEXT:
 			return
 		if _pause_types.is_empty() or _next_pause_position_index < 0:
 			return
-		if _pause_types[_next_pause_position_index] == _PauseTypes.Auto:
+		if _pause_types[_next_pause_position_index] == _PauseTypes.AUTO:
 			return
 		if body_label.visible_characters >= _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index or body_label.visible_characters == -1:
 			_auto_continue_duration -= delta
@@ -1458,7 +1462,7 @@ func _update_input_prompt(delta:float):
 		prompt_visible = true
 	elif _next_pause_position_index > _pause_positions.size() and _next_pause_position_index != -1:
 		prompt_visible = true
-	elif _pause_positions.size() > 0 and _next_pause_type == _PauseTypes.Manual:
+	elif _pause_positions.size() > 0 and _next_pause_type == _PauseTypes.MANUAL:
 		if body_label.visible_characters == _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index:
 			prompt_visible = true
 		else:
@@ -1608,7 +1612,7 @@ func _replace_tags(lines:Array) -> Array:
 					while new_text[local_scan_index] != ">":
 						func_text += new_text[local_scan_index]
 						local_scan_index += 1
-					new_text = new_text.replace(str("<func:", func_text, ">"), call_from_string(func_text, CallMode.Func))
+					new_text = new_text.replace(str("<func:", func_text, ">"), call_from_string(func_text, CallMode.FUNC))
 				elif name_tag or clname_tag:
 					var local_scan_index := scan_index
 					var control_to_replace := ""
@@ -1715,7 +1719,7 @@ func _insert_strings_in_current_dialine():
 	
 	_prepend_length = 0
 	# prepend name
-	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and (not chatlog_enabled) and (not _is_skillcheck_line(new_text)):
+	if name_style == NameStyle.PREPEND and (not current_raw_name in blank_names) and (not chatlog_enabled) and (not _is_skillcheck_line(new_text)):
 		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
 		
 		_full_prefix = _get_full_prefix(current_raw_name)
@@ -1887,7 +1891,7 @@ func _handle_tags_and_start_reading():
 					next_text = next_text.trim_prefix(contextual_prefix)
 					# holy shit
 					var name_thing : String = ""
-					if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
+					if name_style == NameStyle.PREPEND and not current_raw_name in blank_names:
 						name_thing = _get_full_prefix(current_raw_name, true)
 					if put_prefixes_after_prepends:
 						next_text = str(
@@ -1983,7 +1987,7 @@ func _handle_tags_and_start_reading():
 			elif bbcode_removed_text.find("<mp>", scan_index) == scan_index:
 				if not _pause_positions.has(scan_index + tag_buffer):
 					_pause_positions.append(scan_index + tag_buffer)
-					_pause_types.append(_PauseTypes.Manual)
+					_pause_types.append(_PauseTypes.MANUAL)
 				tag_buffer += 4
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
 				scan_index = max(scan_index - 4, -1)
@@ -1991,7 +1995,7 @@ func _handle_tags_and_start_reading():
 			elif bbcode_removed_text.find("<ap>", scan_index) == scan_index:
 				if not _pause_positions.has(scan_index + tag_buffer):
 					_pause_positions.append(scan_index + tag_buffer)
-					_pause_types.append(_PauseTypes.Auto)
+					_pause_types.append(_PauseTypes.AUTO)
 				tag_buffer += 4
 				bbcode_removed_text = bbcode_removed_text.erase(scan_index, 4)
 				scan_index = max(scan_index - 4, -1)
@@ -2062,7 +2066,7 @@ func _handle_tags_and_start_reading():
 
 	
 	_pause_positions.append(bbcode_removed_text.length()-1)
-	_pause_types.append(_PauseTypes.EoL)
+	_pause_types.append(_PauseTypes.END_OF_LINE)
 	
 	_next_pause_position_index = 0
 	_find_next_pause()
@@ -2092,9 +2096,9 @@ func _handle_tags_and_start_reading():
 		_lead_time = Parser.text_lead_time_same_actor
 	
 	if name_container:
-		if name_style == NameStyle.None:
+		if name_style == NameStyle.NONE:
 			name_container.modulate.a = 0.0
-		elif name_style == NameStyle.Prepend:
+		elif name_style == NameStyle.PREPEND:
 			name_container.modulate.a = 0.0
 		
 	
@@ -2265,11 +2269,11 @@ func _build_rubies(on_label:RichTextLabel=body_label, ruby_indices: Array = _rub
 
 func _is_ruby_stretch(ruby_text:String) -> bool:
 	match ruby_size_mode:
-		RubySizeMode.Center:
+		RubySizeMode.CENTER:
 			return false
-		RubySizeMode.SingleWordCenter:
+		RubySizeMode.SINGLE_WORD_CENTER:
 			return " " in ruby_text
-		RubySizeMode.Stretch:
+		RubySizeMode.STRETCH:
 			return true
 	return true
 
@@ -2326,16 +2330,16 @@ func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_la
 	var terminator_style : TerminatorData.TerminatorStyle = get(data_property).get("terminator_style")
 	
 	
-	if terminator_style == TerminatorData.TerminatorStyle.None:
+	if terminator_style == TerminatorData.TerminatorStyle.NONE:
 		return
 	
 	match terminator_style:
-		TerminatorData.TerminatorStyle.Text:
+		TerminatorData.TerminatorStyle.LABEL:
 			terminator_node = Label.new()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
 			terminator_node.text = terminator_data.terminator_text
-		TerminatorData.TerminatorStyle.RichText:
+		TerminatorData.TerminatorStyle.RICH_TEXT_LABEL:
 			terminator_node = RichTextLabel.new()
 			terminator_node.fit_content = true
 			terminator_node.bbcode_enabled = true
@@ -2343,12 +2347,12 @@ func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_la
 			terminator_node.focus_mode = Control.FOCUS_NONE
 			terminator_node.text = terminator_data.terminator_text
 			terminator_node.custom_minimum_size = body_label.size
-		TerminatorData.TerminatorStyle.Texture:
+		TerminatorData.TerminatorStyle.TEXTURE_RECT:
 			terminator_node = TextureRect.new()
 			terminator_node.texture = terminator_data.terminator_texture
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-		TerminatorData.TerminatorStyle.Scene:
+		TerminatorData.TerminatorStyle.SCENE:
 			terminator_node = Control.new()
 			terminator_node = terminator_data.terminator_scene.instantiate()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2394,7 +2398,7 @@ func _call_from_position(call_position: int):
 	for text : String in strings:
 		text = text.trim_prefix("<call:")
 		text = text.trim_suffix(">")
-		var result = call_from_string(text, CallMode.Call, call_position)
+		var result = call_from_string(text, CallMode.CALL, call_position)
 		if result is bool:
 			if result:
 				last_call = text
@@ -2464,11 +2468,11 @@ func _preserve_into_past_line_container():
 	past_line.set_theme_type_variation(body_label.get_theme_type_variation())
 	
 	var past_text := ""
-	if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NameLabel and preserve_name_in_past_lines):
+	if not _last_raw_name in blank_names and not body_label.text.is_empty() and not chatlog_enabled and (name_style == NameStyle.NAME_LABEL and preserve_name_in_past_lines):
 		var actor_prefix := _wrap_in_color_tags_if_present(_last_raw_name)
 		past_text = str(actor_prefix, _get_prepend_separator_sequence())
 	
-	if not preserve_name_in_past_lines and name_style == NameStyle.Prepend:
+	if not preserve_name_in_past_lines and name_style == NameStyle.PREPEND:
 		push_warning("preserve_name_in_past_lines is false but name_style is set to Prepend. There will be a name in past lines.")
 	
 	var body_label_to_save = body_label.text
@@ -2483,7 +2487,7 @@ func _preserve_into_past_line_container():
 	past_lines_container.add_child(past_line)
 	
 	var indices := _ruby_indices
-	if name_style == NameStyle.NameLabel and preserve_name_in_past_lines and not _last_raw_name in blank_names:
+	if name_style == NameStyle.NAME_LABEL and preserve_name_in_past_lines and not _last_raw_name in blank_names:
 		var prefix = str(_get_actor_name(_last_raw_name), _get_prepend_separator_sequence())
 		var length := prefix.length()
 		var a := []
@@ -2656,10 +2660,10 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 		if color != Color.TRANSPARENT:
 			return color
 		
-	if name_style == NameStyle.Prepend or chatlog_enabled: # prepend goes in body_label
+	if name_style == NameStyle.PREPEND or chatlog_enabled: # prepend goes in body_label
 		return body_label.get_theme_color("default_color", "RichTextLabel")
 	else:
-		if name_style == NameStyle.None and not name_label:
+		if name_style == NameStyle.NONE and not name_label:
 			return body_label.get_theme_color("default_color", "RichTextLabel")
 		
 		if name_label:
@@ -2760,8 +2764,8 @@ func _build_choices(choices, auto_switch:bool):
 	var built_choices : Array = []
 	for option in choices:
 		var conditional_eval = _evaluate_conditionals(option.get("conditionals"), option.get("choice_text.enabled_as_default"))
-		var cond_true = conditional_eval[0]
-		var cond_behavior = conditional_eval[1]
+		var cond_true : bool = conditional_eval[0]
+		var cond_behavior : Conditionals.Behavior = conditional_eval[1]
 		var facts = option.get("facts").get("fact_data_by_name", {})
 		
 		if cond_true and auto_switch:
@@ -2774,32 +2778,44 @@ func _build_choices(choices, auto_switch:bool):
 		var option_text := ""
 		var option_address : String = option.get("address", "")
 		
-		if (cond_true and cond_behavior == "Hide") or (not cond_true and cond_behavior == "Show"):
+		if (
+			(cond_true and cond_behavior == Conditionals.Behavior.HIDE) or
+			(not cond_true and cond_behavior == Conditionals.Behavior.SHOW)
+		):
 			if Parser.selected_choices.has(option_address):
-				if option.get("behavior_after_first_selection") == DIISIS.ChoiceBehaviorAfterSelection.Default:
+				if option.get("behavior_after_first_selection") == DIISIS.ChoiceBehaviorAfterSelection.DEFAULT:
 					continue
 			else:
 				continue
 		
-		if (cond_true and cond_behavior == "Show") or (not cond_true and cond_behavior == "Hide"):
+		if (
+			(cond_true and cond_behavior == Conditionals.Behavior.SHOW) or
+			(not cond_true and cond_behavior == Conditionals.Behavior.HIDE)
+		):
 			enable_option = option.get("choice_text.enabled_as_default")
 		
-		if (cond_true and cond_behavior == "Enable") or (not cond_true and cond_behavior == "Disable"):
+		if (
+			(cond_true and cond_behavior == Conditionals.Behavior.ENABLE) or
+			(not cond_true and cond_behavior == Conditionals.Behavior.DISABLE)
+		):
 			enable_option = true
 			
-		if (cond_true and cond_behavior == "Disable") or (not cond_true and cond_behavior == "Enable"):
+		if (
+			(cond_true and cond_behavior == Conditionals.Behavior.DISABLE) or
+			(not cond_true and cond_behavior == Conditionals.Behavior.ENABLE)
+		):
 			enable_option = false
 		
 		if (
-			option.get("behavior_after_first_selection") != DIISIS.ChoiceBehaviorAfterSelection.Default and
+			option.get("behavior_after_first_selection") != DIISIS.ChoiceBehaviorAfterSelection.DEFAULT and
 			Parser.selected_choices.has(option_address)
 			):
 			match int(option.get("behavior_after_first_selection")):
-				DIISIS.ChoiceBehaviorAfterSelection.Enabled:
+				DIISIS.ChoiceBehaviorAfterSelection.ENABLED:
 					enable_option = true
-				DIISIS.ChoiceBehaviorAfterSelection.Disabled:
+				DIISIS.ChoiceBehaviorAfterSelection.DISABLED:
 					enable_option = false
-				DIISIS.ChoiceBehaviorAfterSelection.Hidden:
+				DIISIS.ChoiceBehaviorAfterSelection.HIDDEN:
 					continue
 		
 		if not Parser.presented_choices.has(option_address):
@@ -2846,7 +2862,7 @@ func _build_choices(choices, auto_switch:bool):
 			var raw_content = line_data.get("content")
 			#var content = _line_data.get("content").get("content")
 			var content_address
-			if int(float(line_data.get("line_type"))) as DIISIS.LineType == DIISIS.LineType.Text:
+			if int(float(line_data.get("line_type"))) as DIISIS.LineType == DIISIS.LineType.TEXT:
 				var text_id = raw_content.get("text_id")
 				var content : String = Parser.get_text(text_id)
 				
@@ -2945,18 +2961,18 @@ func _choice_pressed(do_jump_page: bool, target_page : int, target_line : int):
 	emit_signal("line_finished", line_index)
 	
 
-## returns an array of size 2. index 0 is if the conditionals are satisfied. index 1 is the behavior if it's true
+## returns an array of size 2. index 0 is if the conditionals are satisfied.
+## index 1 is the behavior if it's true, typed as Conditionals.Behavior
 func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	var conditional_is_true := true
-	var behavior = conditionals.get("behavior_key")
+	var behavior := conditionals.get("behavior") as Conditionals.Behavior
 	var args : Array = conditionals.get("operand_args")
 	var facts_to_check : Dictionary = conditionals.get("facts", {}).get("fact_data_by_name", {})
 	if facts_to_check.is_empty():
-		var default_key = "Enable" if enabled_as_default else "Disable"
+		var default_key = Conditionals.Behavior.ENABLE if enabled_as_default else Conditionals.Behavior.DISABLE
 		return [true, default_key]
 	
-	
-	var operand_key = conditionals.get("operand_key")
+	var operand = conditionals.get("operand") as Conditionals.ConditionalOperand
 	var true_facts := []
 	for fact in facts_to_check.values():
 		var fact_name : String = fact.get("fact_name")
@@ -2987,18 +3003,17 @@ func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 				5: # gte
 					if new_fact_value <= current_fact_value:
 						true_facts.append(fact_name)
-				
-		
-	match operand_key:
-		"AND":
+	
+	match operand:
+		Conditionals.ConditionalOperand.AND:
 			conditional_is_true = true_facts.size() == facts_to_check.size()
-		"OR":
+		Conditionals.ConditionalOperand.OR:
 			conditional_is_true = true_facts.size() > 0
-		"nOrMore":
+		Conditionals.ConditionalOperand.N_OR_MORE:
 			conditional_is_true = true_facts.size() >= args[0]
-		"nOrLess":
+		Conditionals.ConditionalOperand.N_OR_LESS:
 			conditional_is_true = true_facts.size() <= args[0]
-		"betweenNMincl":
+		Conditionals.ConditionalOperand.BETWEEN_INCL:
 			if args[0] > args[1]:
 				args.reverse()
 			conditional_is_true = true_facts.size() >= args[0] and true_facts.size() <= args[1]
@@ -3048,7 +3063,7 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 ## Controls if properties from any given actor config apply to [member name_label]. 
 ## (This uses theme overrides.)
 ## [br][br]
-## Only works when [member name_style] is [enum NameStyle.NameLabel].
+## Only works when [member name_style] is [enum NameStyle.NAME_LABEL].
 ## [br][br]
 ## For more granular control over text display, see [method _set_name_label_text].
 @export var name_label_use_default_overrides := true
@@ -3082,10 +3097,10 @@ func update_name_label(actor_name: String):
 	var name_outline_color : Color = _get_actor_outline_color(actor_name)
 	var name_outline_size : int = _get_actor_outline_size(actor_name)
 	
-	if name_style == NameStyle.NameLabel:
+	if name_style == NameStyle.NAME_LABEL:
 		_set_name_label_text(
-			name_prefix,
 			display_name,
+			name_prefix,
 			name_suffix
 		)
 		
@@ -3100,11 +3115,11 @@ func update_name_label(actor_name: String):
 			name_container.modulate.a = 1.0
 	
 	var name_visible:bool
-	if name_style == NameStyle.NameLabel:
+	if name_style == NameStyle.NAME_LABEL:
 		name_visible = name_container.modulate.a > 0.0
-	elif name_style == NameStyle.Prepend:
+	elif name_style == NameStyle.PREPEND:
 		name_visible = not blank_names.has(current_raw_name)
-	elif name_style == NameStyle.None:
+	elif name_style == NameStyle.NONE:
 		name_visible = false
 	
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
@@ -3112,11 +3127,11 @@ func update_name_label(actor_name: String):
 
 
 func _can_text_container_be_visible() -> bool:
-	if line_type == DIISIS.LineType.Text:
+	if line_type == DIISIS.LineType.TEXT:
 		return show_text_during_text or text_container.visible
-	if line_type == DIISIS.LineType.Choice:
+	if line_type == DIISIS.LineType.CHOICE:
 		return show_text_during_choices
-	if line_type == DIISIS.LineType.Instruction:
+	if line_type == DIISIS.LineType.INSTRUCTION:
 		return show_text_during_instructions
 	return false
 
@@ -3143,7 +3158,7 @@ func _on_name_label_updated(
 	is_name_container_visible: bool
 ):
 	_currently_speaking_name = actor_name
-	_currently_speaking_visible = is_name_container_visible and name_style == NameStyle.NameLabel
+	_currently_speaking_visible = is_name_container_visible and name_style == NameStyle.NAME_LABEL
 
 func get_subaddress() -> String:
 	return str(Parser.page_index, ".", line_index, ".", _dialog_line_index)
@@ -3151,7 +3166,7 @@ func get_subaddress() -> String:
 ## returns length 3 if text or length 2 if not text
 func get_subaddress_arr(fill_with_zero := true) -> Array:
 	var result := [Parser.page_index, line_index]
-	if line_type == DIISIS.LineType.Text and Pages.use_dialog_syntax:
+	if line_type == DIISIS.LineType.TEXT and Pages.use_dialog_syntax:
 		result.append(_dialog_line_index)
 	elif fill_with_zero:
 		result.append(0)
@@ -3176,9 +3191,9 @@ func _on_body_label_text_changed(old_text: String,
 
 
 func _get_full_prefix(actor_key : String, include_separator := true) -> String:
-	if name_style == NameStyle.None:
+	if name_style == NameStyle.NONE:
 		return ""
-	elif name_style == NameStyle.NameLabel and not _currently_speaking_visible:
+	elif name_style == NameStyle.NAME_LABEL and not _currently_speaking_visible:
 		return ""
 	var display_name: String = _get_actor_name(current_raw_name)
 	var wrappers := _get_actor_color_prepend_tag_pair(current_raw_name)
@@ -3201,8 +3216,8 @@ func _on_comment(comment: String, pos : int):
 
 #region InstructionHandler
 enum CallMode {
-	Call,
-	Func
+	CALL,
+	FUNC,
 }
 
 var _delay_before := 0.0
@@ -3272,7 +3287,7 @@ func _get_property_from_self_or_autoload(property:String):
 ## Calls a function in itself with the signalute of [param text].[br]
 ## If [param call_mode] is Call, [signal ParserEvents.function_called] will be emitted. A [param call_position] of -1 means it was called by an instruction line. Positive integers are the text indices for inline calls using the [code]<call:>[/code] tag.[br][br]
 ## CallMode Func returns the string representation of the return value. This is used internally for [code]<func:>[/code] tags.
-func call_from_string(text:String, call_mode := CallMode.Call, call_position := -1):
+func call_from_string(text:String, call_mode := CallMode.CALL, call_position := -1):
 	var func_name = text.split("(")[0]
 	var autoload : String
 	if "." in func_name:
@@ -3311,9 +3326,9 @@ func call_from_string(text:String, call_mode := CallMode.Call, call_position := 
 	else:
 		result = callv(func_name, args)
 	match call_mode:
-		CallMode.Func:
+		CallMode.FUNC:
 			return str(result)
-		CallMode.Call:
+		CallMode.CALL:
 			ParserEvents.function_called.emit(func_name, args, call_position, result)
 			return result
 
@@ -3343,10 +3358,10 @@ func _execute(instruction_text: String) -> bool:
 
 #endregion
 
-## Returns an array of all actors that speak in this line. If [param empty_if_not_text] is true (default), the array will be empty if the current line isn't of type [enum DIISIS.LineType.Text].
+## Returns an array of all actors that speak in this line. If [param empty_if_not_text] is true (default), the array will be empty if the current line isn't of type [enum DIISIS.LineType.TEXT].
 func get_actor_names_in_line(empty_if_not_text:=true) -> Array:
 	if empty_if_not_text:
-		if line_type != DIISIS.LineType.Text:
+		if line_type != DIISIS.LineType.TEXT:
 			return []
 	var result := []
 	for actor in _dialog_actors:
@@ -3379,13 +3394,13 @@ func set_custom_text_speed_override(value:int):
 		#
 		#var name_prefix:String
 		#var name_length:int
-		#if name_style == NameStyle.Prepend:
+		#if name_style == NameStyle.PREPEND:
 			#var actor_name = _dialog_actors[_dialog_line_index]
 			#var display_name: String = name_map.get(_dialog_actors[_dialog_line_index], _dialog_actors[_dialog_line_index])
 			#display_name = display_name.substr(0, display_name.find("{"))
 			#name_prefix = str(_wrap_in_color_tags_if_present(actor_name), _get_prepend_separator_sequence())
 			#name_length = display_name.length() + _get_prepend_separator_sequence().length()
-		#elif name_style == NameStyle.NameLabel:
+		#elif name_style == NameStyle.NAME_LABEL:
 			#name_prefix = ""
 			#name_length = 0
 		#
@@ -3451,7 +3466,7 @@ func set_custom_text_speed_override(value:int):
 	#label.queue_free()
 
 func is_at_end_of_line(non_text_return_value:=true) -> bool:
-	if line_type != DIISIS.LineType.Text:
+	if line_type != DIISIS.LineType.TEXT:
 		return non_text_return_value
 	return body_label.visible_ratio == 1 and _dialog_line_index == _dialog_lines.size() - 1
 

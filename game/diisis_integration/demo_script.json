@@ -264,7 +264,7 @@
 			"use_ui": {},
 			"zoom_to": {}
 		},
-		"id_counter": -9223372036854761415,
+		"id_counter": -9223372036854761434,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -287,7 +287,7 @@
 						"address": "0.0",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {},
 								"meta.visible": false
@@ -328,7 +328,7 @@
 						"address": "0.1",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {},
 								"meta.visible": false
@@ -363,7 +363,7 @@
 						"address": "0.2",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {},
 								"meta.visible": false
@@ -384,7 +384,7 @@
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
 										"behavior": 0,
-										"behavior_key": "Show",
+										"behavior_key": "SHOW",
 										"facts": {
 											"fact_data_by_name": {},
 											"meta.visible": false
@@ -432,7 +432,7 @@
 									"choice_text.enabled_as_default": true,
 									"conditionals": {
 										"behavior": 0,
-										"behavior_key": "Show",
+										"behavior_key": "SHOW",
 										"facts": {
 											"fact_data_by_name": {},
 											"meta.visible": false
@@ -489,7 +489,7 @@
 						"address": "0.3",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {
 									"liked amber": {
@@ -533,7 +533,7 @@
 						"address": "0.4",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {
 									"liked amber": {
@@ -577,7 +577,7 @@
 						"address": "0.5",
 						"conditionals": {
 							"behavior": 0,
-							"behavior_key": "Show",
+							"behavior_key": "SHOW",
 							"facts": {
 								"fact_data_by_name": {},
 								"meta.visible": false

@@ -1,7 +1,21 @@
 @tool
 extends Window
 
+
+enum WordCountOperand {
+	GREATER,
+	LESSER,
+	EQUALS,
+}
+enum ItemSortKind {
+	PAGE_NUMBER,
+	ASCENDING,
+	DESCENDING,
+}
+
+
 var direct_swap_start := -1
+
 
 func set_items_visible_name(search:String, override:=false):
 	if search.is_empty():
@@ -12,6 +26,7 @@ func set_items_visible_name(search:String, override:=false):
 			if i.visible or override:
 				i.visible = Pages.get_page_key(i.number).containsn(search)
 
+
 func swap_pages(page_a: int, page_b: int):
 	var undo_redo = Pages.editor.undo_redo
 	undo_redo.create_action("Move Pages")
@@ -19,10 +34,10 @@ func swap_pages(page_a: int, page_b: int):
 	undo_redo.add_undo_method(DiisisEditorActions.swap_pages.bind(page_b, page_a))
 	undo_redo.commit_action()
 	
-	fill()
+	_fill()
 
 
-func fill():
+func _fill():
 	direct_swap_start = -1
 	for i in find_child("Items").get_children():
 		i.queue_free()
@@ -42,6 +57,7 @@ func fill():
 	set_items_visible_name("")
 	Pages.apply_font_size_overrides(self)
 
+
 func direct_swap(page_clicked: int):
 	if direct_swap_start == -1:
 		direct_swap_start = page_clicked
@@ -50,18 +66,18 @@ func direct_swap(page_clicked: int):
 	swap_pages(direct_swap_start, page_clicked)
 	direct_swap_start = -1
 
+
 func on_item_go_to(number:int):
 	Pages.editor.request_go_to_address(str(number))
 	hide()
 
+
 func _on_about_to_popup() -> void:
-	fill()
+	_fill()
 
 
 func _on_close_requested() -> void:
 	hide()
-
-
 
 
 func _on_reset_address_mode_popup_change_to_mode(mode: AddressModeButton.Mode) -> void:
@@ -78,12 +94,12 @@ func _on_v_id_pressed(id: int) -> void:
 					"Confirm Linearize",
 					(func():
 						Pages.linearize_pages()
-						fill())
+						_fill())
 					)
 				popup.ok_button_text = "Linearize!"
 			else:
 				Pages.linearize_pages()
-				fill()
+				_fill()
 		1:
 			Pages.editor.popup_accept_dialogue(
 				str("◌ Any filters that do not fall within the parameters below are treated like page key searches\n",
@@ -118,35 +134,23 @@ func set_items_movable(value : bool) -> void:
 	for item : MovePageItem in %Items.get_children():
 		item.set_movable(value)
 
-func set_items_visible_wordcount(cutoff := -1, operand := WordCountOperand.Greater) -> void:
+func set_items_visible_wordcount(cutoff := -1, operand := WordCountOperand.GREATER) -> void:
 	for item : MovePageItem in %Items.get_children():
 		match operand:
-			WordCountOperand.Greater:
+			WordCountOperand.GREATER:
 				if item.visible: item.visible = item.get_word_count() > cutoff
-			WordCountOperand.Lesser:
+			WordCountOperand.LESSER:
 				if item.visible: item.visible = item.get_word_count() < cutoff
-			WordCountOperand.Equals:
+			WordCountOperand.EQUALS:
 				if item.visible: item.visible = item.get_word_count() == cutoff
 
 
-enum WordCountOperand {
-	Greater,
-	Lesser,
-	Equals
-}
-enum ItemSortKind {
-	PageNumber,
-	Ascending,
-	Descending
-}
-
-
-func sort_items(sort_kind := ItemSortKind.PageNumber) -> void:
+func sort_items(sort_kind := ItemSortKind.PAGE_NUMBER) -> void:
 	var items : Array = %Items.get_children()
 	items.sort_custom(func(item1 : MovePageItem, item2 : MovePageItem):
-		if sort_kind == ItemSortKind.Ascending:
+		if sort_kind == ItemSortKind.ASCENDING:
 			return item1.get_word_count() < item2.get_word_count()
-		if sort_kind == ItemSortKind.Descending:
+		if sort_kind == ItemSortKind.DESCENDING:
 			return item1.get_word_count() > item2.get_word_count()
 		else:
 			return item1.get_number() < item2.get_number()
@@ -165,11 +169,11 @@ func _on_filter_line_edit_text_submitted(new_text: String) -> void:
 	for filter : String in filters:
 		if filter.begins_with("order:"):
 			if filter.trim_prefix("order:") == "asc":
-				sort_items(ItemSortKind.Ascending)
+				sort_items(ItemSortKind.ASCENDING)
 			elif filter.trim_prefix("order:") == "desc":
-				sort_items(ItemSortKind.Descending)
+				sort_items(ItemSortKind.DESCENDING)
 			else:
-				sort_items(ItemSortKind.PageNumber)
+				sort_items(ItemSortKind.PAGE_NUMBER)
 		elif filter.begins_with("wc:"):
 			var cutoff : int
 			var operand : String
@@ -190,11 +194,11 @@ func _on_filter_line_edit_text_submitted(new_text: String) -> void:
 			
 			var operand_type : WordCountOperand
 			if operand.contains(">"):
-				operand_type = WordCountOperand.Greater
+				operand_type = WordCountOperand.GREATER
 			elif operand.contains("<"):
-				operand_type = WordCountOperand.Lesser
+				operand_type = WordCountOperand.LESSER
 			else:
-				operand_type = WordCountOperand.Equals
+				operand_type = WordCountOperand.EQUALS
 			
 			set_items_visible_wordcount(cutoff, operand_type)
 		else:

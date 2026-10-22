@@ -4,9 +4,9 @@ class_name DiisisEditor
 
 
 enum PageView {
-	Full,
-	Truncated,
-	Minimal
+	FULL,
+	TRUNCATED,
+	MINIMAL,
 }
 
 signal request_template_setup(template_id : int)
@@ -90,7 +90,7 @@ func refresh_text():
 	
 	for line : Line in page.lines.get_children():
 		if line.line_type in [
-				DIISIS.LineType.Text,
+				DIISIS.LineType.TEXT,
 			]:
 			line.refresh_text()
 	
@@ -345,7 +345,7 @@ func load_page(number: int, discard_without_saving:=false):
 
 
 func get_selected_line_type() -> int:
-	var line_type:=DIISIS.LineType.Text
+	var line_type:=DIISIS.LineType.TEXT
 	
 	for button in find_child("LineTypes").get_children():
 		if not button is LineTypeButton:
@@ -366,7 +366,7 @@ func select_line_type(line_type:int):
 
 
 func get_selected_page_view() -> PageView:
-	var view:=PageView.Full
+	var view:=PageView.FULL
 	
 	for button : PageViewButton in find_child("ViewTypesButtonContainer").get_children():
 		if button.button_pressed:
@@ -509,13 +509,13 @@ func _shortcut_input(event):
 				#KEY_A:
 					#add_line_to_end_of_page()
 				KEY_1:
-					select_line_type(DIISIS.LineType.Text)
+					select_line_type(DIISIS.LineType.TEXT)
 				KEY_2:
-					select_line_type(DIISIS.LineType.Choice)
+					select_line_type(DIISIS.LineType.CHOICE)
 				KEY_3:
-					select_line_type(DIISIS.LineType.Instruction)
+					select_line_type(DIISIS.LineType.INSTRUCTION)
 				KEY_4:
-					select_line_type(DIISIS.LineType.Folder)
+					select_line_type(DIISIS.LineType.FOLDER)
 		if event.is_alt_pressed():
 			match event.key_label:
 				KEY_LEFT, KEY_A:
@@ -1406,11 +1406,11 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 	var text := ""
 	var object_type_str : String
 	match DiisisEditorUtil.get_address_depth(address):
-		DiisisEditorUtil.AddressDepth.Page:
+		DiisisEditorUtil.AddressDepth.PAGE:
 			object_type_str = "Page"
-		DiisisEditorUtil.AddressDepth.Line:
+		DiisisEditorUtil.AddressDepth.LINE:
 			object_type_str = "Line"
-		DiisisEditorUtil.AddressDepth.ChoiceItem:
+		DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			object_type_str = "Choice"
 	
 	var page_text := ""
@@ -1418,11 +1418,11 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 	var choice_text := ""
 	for address_in_payload in fact_data.keys():
 		for fact : Dictionary in fact_data.get(address_in_payload).values():
-			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.Page:
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.PAGE:
 				page_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
-			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.Line:
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.LINE:
 				line_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
-			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.ChoiceItem:
+			if DiisisEditorUtil.get_address_depth(address_in_payload) == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 				choice_text += str("    ", address_in_payload, ": ", fact.get("fact_name"), ": ", fact.get("fact_value"), "\n")
 	
 	if not page_text.is_empty(): page_text = "  = In Page:\n" + page_text

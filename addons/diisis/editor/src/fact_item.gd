@@ -2,31 +2,29 @@
 extends Control
 class_name FactItem
 
+
 signal request_delete_fact(fact_name:String)
 
-enum DataType{
-	Bool,
-	Int,
-}
-enum Comparator{
+
+enum Comparator {
 	EQ,
 	UNEQ,
 	LT,
 	LTE,
 	GT,
-	GTE
+	GTE,
 }
-enum Operator{
-	Set,
-	Add,
+enum Operator {
+	SET,
+	ADD,
 }
+
 
 var fact_name := ""
 var entered_text := ""
 var is_conditional := false
-#var data_type : DataType = DataType.Bool
 var int_comparator : Comparator = Comparator.EQ
-var int_operator : Operator = Operator.Set
+var int_operator : Operator = Operator.SET
 
 var virtual_hint_line := 0
 
@@ -51,16 +49,16 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary) -> void:
 	set_fact(data.get("fact_name", ""), data.get("fact_value", true))
 	set_is_conditional(data.get("is_conditional", false))
-	set_data_type(data.get("data_type", DataType.Bool))
+	set_data_type(data.get("data_type", DIISISGlobal.FactDataType.BOOL))
 	set_int_comparator(data.get("int_comparator", Comparator.EQ))
-	set_int_operator(data.get("int_operator", Operator.Set))
+	set_int_operator(data.get("int_operator", Operator.SET))
 	find_child("RegisterButton").visible = Pages.is_fact_new_and_not_empty(data.get("fact_name", ""))
 	find_child("FactName").completion_options = Pages.facts.keys()
 
 
 func set_fact(new_fact_name: String, default_value):
 	if default_value is bool:
-		find_child("FactBoolValue").button_pressed = default_value
+		%FactBoolValue.button_pressed = default_value
 	else:
 		#if str(default_value).contains("."):
 			#pass # floats don't exist
@@ -71,23 +69,23 @@ func set_fact(new_fact_name: String, default_value):
 	find_child("FactName")._on_text_changed(fact_name)
 	_on_fact_name_text_changed(fact_name)
 
-func set_data_type(value:DataType):
+func set_data_type(value:DIISISGlobal.FactDataType):
 	#var data_type = %DataTypeButton.get_selected_id()
-	find_child("FactBoolValue").visible = value == DataType.Bool
-	find_child("FactIntValueContainer").visible = value == DataType.Int
-	find_child("DataTypeButton").select(int(value))
+	%FactBoolValue.visible = value == DIISISGlobal.FactDataType.BOOL
+	%FactIntValueContainer.visible = value == DIISISGlobal.FactDataType.INT
+	%DataTypeButton.select(int(value))
 	var entered_fact_name :String= find_child("FactName").text
 	if Pages.facts.has(entered_fact_name):
 		var is_registered_as_bool = Pages.facts.get(entered_fact_name) is bool
 		var mismatch: bool
-		if ((value == DataType.Int and is_registered_as_bool) or
-		(value == DataType.Bool and not is_registered_as_bool)):
+		if ((value == DIISISGlobal.FactDataType.INT and is_registered_as_bool) or
+		(value == DIISISGlobal.FactDataType.BOOL and not is_registered_as_bool)):
 			mismatch = true
 		else:
 			mismatch = false
-		find_child("TypeMismatchLabel").visible = mismatch
+		%TypeMismatchLabel.visible = mismatch
 	else:
-		find_child("TypeMismatchLabel").visible = false
+		%TypeMismatchLabel.visible = false
 	
 
 func set_is_conditional(value:bool):
@@ -100,22 +98,26 @@ func set_int_comparator(value:Comparator):
 	int_comparator = value
 	find_child("IntComparatorButton").select(int_comparator)
 
+
 func set_int_operator(value:Operator):
 	int_operator = value
 	var button : Button = find_child("IntOperandButton")
-	if int_operator == Operator.Set:
+	if int_operator == Operator.SET:
 		button.text = "="
-	elif int_operator == Operator.Add:
+	elif int_operator == Operator.ADD:
 		button.text = "+"
 
+
 func get_fact_value():
-	if %DataTypeButton.get_selected_id() == DataType.Bool:
-		return find_child("FactBoolValue").button_pressed
-	elif %DataTypeButton.get_selected_id() == DataType.Int:
+	if %DataTypeButton.get_selected_id() == DIISISGlobal.FactDataType.BOOL:
+		return %FactBoolValue.button_pressed
+	elif %DataTypeButton.get_selected_id() == DIISISGlobal.FactDataType.INT:
 		return int(find_child("IntValueSpinBox").value)
+
 
 func get_fact_name() -> String:
 	return find_child("FactName").text
+
 
 func update_unregsitered_prompt() -> void:
 	var new_text = entered_text
@@ -135,9 +137,9 @@ func update_unregsitered_prompt() -> void:
 				Pages.facts.get(new_text)
 			)
 			if Pages.facts.get(new_text) is bool:
-				set_data_type(DataType.Bool)
+				set_data_type(DIISISGlobal.FactDataType.BOOL)
 			else:
-				set_data_type(DataType.Int)
+				set_data_type(DIISISGlobal.FactDataType.INT)
 		
 	find_child("RegisterContainer").visible = not find_child("RegisterLabel").text.is_empty()
 
@@ -191,9 +193,9 @@ func update_hint(new_text: String):
 
 func _on_register_button_pressed() -> void:
 	var value
-	if %DataTypeButton.get_selected_id() == DataType.Bool:
-		value = not(find_child("FactBoolValue").button_pressed)
-	elif %DataTypeButton.get_selected_id() == DataType.Int:
+	if %DataTypeButton.get_selected_id() == DIISISGlobal.FactDataType.BOOL:
+		value = not(%FactBoolValue.button_pressed)
+	elif %DataTypeButton.get_selected_id() == DIISISGlobal.FactDataType.INT:
 		value = 0
 	Pages.register_fact(entered_text, value)
 	find_child("RegisterContainer").visible = false
@@ -220,9 +222,9 @@ func _on_fact_value_toggled(button_pressed: bool) -> void:
 func _on_int_operand_button_pressed() -> void:
 	var button : Button = find_child("IntOperandButton")
 	if button.text == "=":
-		set_int_operator(Operator.Add)
+		set_int_operator(Operator.ADD)
 	elif button.text == "+":
-		set_int_operator(Operator.Set)
+		set_int_operator(Operator.SET)
 
 
 func _on_fact_name_text_entered(new_text: String) -> void:
@@ -239,7 +241,7 @@ func _on_fact_name_text_submitted(new_text: String) -> void:
 
 
 func _on_fact_name_text_changed(new_text: String) -> void:
-	find_child("DataTypeButton").disabled = Pages.has_fact(new_text)
+	%DataTypeButton.disabled = Pages.has_fact(new_text)
 
 
 func _on_fact_name_gui_input(event: InputEvent) -> void:

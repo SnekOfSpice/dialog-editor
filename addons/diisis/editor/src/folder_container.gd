@@ -19,8 +19,8 @@ func update(line_index:int, max_reach):
 		)
 
 func set_page_view(view:DiisisEditor.PageView):
-	find_child("Label").visible = view == DiisisEditor.PageView.Full
-	find_child("PanelContainer").visible = not view == DiisisEditor.PageView.Minimal
+	find_child("Label").visible = view == DiisisEditor.PageView.FULL
+	find_child("PanelContainer").visible = not view == DiisisEditor.PageView.MINIMAL
 
 func change_folder_range(by:int):
 	find_child("FolderRangeSpinContainer").value += by

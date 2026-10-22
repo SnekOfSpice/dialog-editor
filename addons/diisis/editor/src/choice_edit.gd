@@ -14,9 +14,9 @@ var text_id_disabled : String
 signal move_choice_edit(choice_edit, direction)
 
 enum EditingView{
-	Editable,
-	TextLabel,
-	Invisible
+	EDITABLE,
+	TEXT_LABEL,
+	INVISIBLE,
 }
 
 func init() -> void:
@@ -27,8 +27,8 @@ func init() -> void:
 	find_child("PageSelect").max_value = Pages.get_page_count() - 1
 	
 	var behavior_options_button : OptionButton = find_child("BehaviorAfterFirstSelectionButton")
-	for option in DIISIS.ChoiceBehaviorAfterSelection:
-		behavior_options_button.add_item(option)
+	for option : String in DIISIS.ChoiceBehaviorAfterSelection.keys():
+		behavior_options_button.add_item(option.capitalize())
 	
 	set_do_jump_page(false)
 	set_loopback(false)
@@ -47,8 +47,8 @@ func deserialize(data:Dictionary):
 	var loopback_target_page : int = data.get("loopback_target_page", 0)
 	var loopback_target_line : int = data.get("loopback_target_line", 0)
 	
-	var jump_address_mode := data.get("jump_address_mode", AddressModeButton.Mode.Objectt)
-	var loop_address_mode := data.get("loop_address_mode", AddressModeButton.Mode.Objectt)
+	var jump_address_mode := data.get("jump_address_mode", AddressModeButton.Mode.OBJECT)
+	var loop_address_mode := data.get("loop_address_mode", AddressModeButton.Mode.OBJECT)
 	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(jump_address_mode)
 	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(loop_address_mode)
 	find_child("TextLinesDisabled").visible = data.get("meta.disabled_visible", false)
@@ -68,7 +68,7 @@ func deserialize(data:Dictionary):
 	
 	
 
-	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem))[1]
+	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.CHOICE_ITEM))[1]
 	deserialized_loopback_page = loopback_target_page
 	deserialized_loopback_line = loopback_target_line
 	find_child("PageSelect").value = jump_target_page
@@ -144,7 +144,7 @@ func update_fragile():
 			return
 		line_parent = line_parent.get_parent()
 	var actual_line_type = line_parent.line_type
-	if actual_line_type != DIISIS.LineType.Choice:
+	if actual_line_type != DIISIS.LineType.CHOICE:
 		# since lines never delete the different line type containers, there can be remnants of choice items at this line index from other pages during page loading
 		# this ensures that we actually only get choices if the current line is actually still a choice
 		return
@@ -152,7 +152,7 @@ func update_fragile():
 	var parts : Array = DiisisEditorUtil.get_split_address(address)
 	var line : Dictionary = line_parent.serialize() #Pages.page_data.get(parts[0]).get("lines")[parts[1]]
 	var line_type : int= line.get("line_type")
-	if line_type != DIISIS.LineType.Choice:
+	if line_type != DIISIS.LineType.CHOICE:
 		return
 	
 	await get_tree().process_frame
@@ -168,19 +168,19 @@ func update_fragile():
 	deserialize(data)
 
 func get_address() -> String:
-	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.ChoiceItem)
+	return DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.CHOICE_ITEM)
 
 func set_page_view(view:DiisisEditor.PageView):
 	var default_container : Control = get_default_line_container()
 	var default_stringkit : CheckBox = find_child("DefaultApparenceSelectionButton")
 	var buttons : GridContainer = find_child("ItemMoveButtons")
 	
-	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.Minimal
-	find_child("BehaviorAfterFirstLabel").visible = view == DiisisEditor.PageView.Full
-	find_child("BehaviorAfterFirstSelectionButton").visible = view == DiisisEditor.PageView.Full
-	find_child("LoopbackPanelContainer").visible = view != DiisisEditor.PageView.Minimal
+	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.MINIMAL
+	find_child("BehaviorAfterFirstLabel").visible = view == DiisisEditor.PageView.FULL
+	find_child("BehaviorAfterFirstSelectionButton").visible = view == DiisisEditor.PageView.FULL
+	find_child("LoopbackPanelContainer").visible = view != DiisisEditor.PageView.MINIMAL
 	
-	if view == DiisisEditor.PageView.Full:
+	if view == DiisisEditor.PageView.FULL:
 		default_stringkit.visible = true
 		buttons.columns = 1
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
@@ -192,7 +192,7 @@ func set_page_view(view:DiisisEditor.PageView):
 		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
 		find_child("Movement").reparent(find_child("BehaviorContainer"))
-	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.Minimal
+	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.MINIMAL
 	update_default_appearance()
 	
 
@@ -201,8 +201,8 @@ func _on_target_value_changed(value:float) -> void:
 	update()
 
 func update():
-	var is_loop_obj : bool = find_child("LoopbackContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
-	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
+	var is_loop_obj : bool = find_child("LoopbackContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.OBJECT
+	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.OBJECT
 	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
 	var target_page := int(find_child("PageSelect").value)
 	#if is_jump_obj:
@@ -426,10 +426,10 @@ func get_default_line_container() -> Control:
 # called by choice container
 func set_editing_view(value:int):
 	match value:
-		EditingView.Editable:
+		EditingView.EDITABLE:
 			find_child("ChoiceEdit").visible = true
 			find_child("ChoiceLabel").visible = false
-		EditingView.TextLabel:
+		EditingView.TEXT_LABEL:
 			find_child("ChoiceEdit").visible = false
 			var label : RichTextLabel = find_child("ChoiceLabel")
 			label.visible = true
@@ -446,7 +446,7 @@ func set_editing_view(value:int):
 				label.text += text_disabled if not text_disabled.is_empty() else "EMPTY DEFAULT"
 				if not text_enabled.is_empty():
 					label.text += str("\n[color=#ffffffbb]", DiisisEditorUtil.BBCODE_TRUE, text_enabled, "[/color]")
-		EditingView.Invisible:
+		EditingView.INVISIBLE:
 			find_child("ChoiceEdit").visible = false
 			find_child("ChoiceLabel").visible = false
 

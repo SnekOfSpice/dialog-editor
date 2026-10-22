@@ -3,6 +3,13 @@ extends Node
 ##
 ## uwu
 
+
+enum RollbackDeclineReason {
+	HIT_CHOICE = 1,
+	HIT_FOLDER = 3,
+	BEGINNING = 0,
+}
+
 ## Set this to manually set any DIISIS-generated file to be used as source, irregardless of project.
 @export_file("*.json") var source_file_override: String
 ## Number of entries the history will save. If set to [code]-1[/code] (default),
@@ -81,12 +88,6 @@ var last_modified_time = 0
 ## dynamically built helper array to speed up some function calls
 var page_keys := []
 
-
-enum RollbackDeclineReason {
-	HIT_CHOICE = 1,
-	HIT_FOLDER = 3,
-	BEGINNING = 0,
-}
 
 func _get_current_path(suppress_error := false) -> String:
 	if source_file_override:
@@ -318,14 +319,14 @@ func get_facts_of_value(b: Variant) -> Array:
 func set_factb(fact_name : String, value : bool, suppress_event := false) -> void:
 	var change := ParserFactChange.new(
 		fact_name,
-		ParserFactChange.DataType.Bool,
+		DIISISGlobal.FactDataType.BOOL,
 		value
 	)
 	change_fact_through_res(change, suppress_event)
 func set_facti(fact_name : String, value : int, suppress_event := false) -> void:
 	var change := ParserFactChange.new(
 		fact_name,
-		ParserFactChange.DataType.Int,
+		DIISISGlobal.FactDataType.INT,
 		value
 	)
 	change_fact_through_res(change, suppress_event)
@@ -495,7 +496,7 @@ func _get_game_progress() -> float:
 	
 	var dialine_progress := 0.0
 	if line_reader:
-		if line_reader.line_type == DIISIS.LineType.Text and line_reader._dialog_lines.size() > 0:
+		if line_reader.line_type == DIISIS.LineType.TEXT and line_reader._dialog_lines.size() > 0:
 			dialine_progress = float(line_reader._dialog_line_index) / float(line_reader._dialog_lines.size())
 	
 	return page_progress + (line_progress / float(trail_size)) + ((dialine_progress / float(line_count_on_page)) / float(trail_size))
@@ -600,13 +601,13 @@ func _get_rollback() -> int:
 	while lookback <= max_lookback:
 		var line_type : DIISIS.LineType = get_line_type(address_trail[address_trail_index - lookback])
 		
-		if line_type == DIISIS.LineType.Choice and block_rollback_on_choices:
+		if line_type == DIISIS.LineType.CHOICE and block_rollback_on_choices:
 			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_CHOICE)
 			return 0
-		if line_type == DIISIS.LineType.Folder and block_rollback_on_folders:
+		if line_type == DIISIS.LineType.FOLDER and block_rollback_on_folders:
 			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_FOLDER)
 			return 0
-		if line_type == DIISIS.LineType.Text:
+		if line_type == DIISIS.LineType.TEXT:
 			return -lookback
 		
 		lookback += 1
@@ -621,7 +622,7 @@ func rollback():
 		ParserEvents.rollback_declined.emit(RollbackDeclineReason.BEGINNING)
 		trail_shift = 0
 	
-	if line_reader._attempt_read_previous_dialine() and line_reader.line_type == DIISIS.LineType.Text:
+	if line_reader._attempt_read_previous_dialine() and line_reader.line_type == DIISIS.LineType.TEXT:
 		var subaddr = line_reader.get_subaddress_arr()
 		ParserEvents.rollback_accepted.emit(subaddr[0], subaddr[1], subaddr[2])
 		return
@@ -631,7 +632,7 @@ func rollback():
 	while instruction_finder > trail_shift:
 		# build instruction stack
 		var address_type = get_line_type_by_address(address_trail[address_trail_index + instruction_finder])
-		if address_type == DIISIS.LineType.Instruction:
+		if address_type == DIISIS.LineType.INSTRUCTION:
 			var address_content = get_line_content(address_trail[address_trail_index + instruction_finder])
 			instruction_stack.append(address_content)
 		instruction_finder -= 1

@@ -3,9 +3,9 @@ extends Control
 class_name ActorSearchContainer
 
 enum SearchMode {
-	Any,
-	All,
-	Exact
+	ANY,
+	ALL,
+	EXACT,
 }
 
 func init():
@@ -32,11 +32,11 @@ func fetch_results() -> void:
 	
 	var mode : SearchMode
 	if %AnyCheckBox.button_pressed:
-		mode = SearchMode.Any
+		mode = SearchMode.ANY
 	if %AllCheckBox.button_pressed:
-		mode = SearchMode.All
+		mode = SearchMode.ALL
 	if %ExactCheckBox.button_pressed:
-		mode = SearchMode.Exact
+		mode = SearchMode.EXACT
 	var adrs : Array = Pages.get_text_line_adrs_with_speakers(actors, mode)
 	for address in adrs:
 		%ResultsList.add_item(address)

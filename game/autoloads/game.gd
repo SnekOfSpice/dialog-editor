@@ -95,7 +95,7 @@ func set_screen(screen_path:String, payload := {}) -> Screen:
 	match screen_path:
 		CONST.SCREEN_SAVE:
 			if payload.get("save", false):
-				new_screen.button_mode = SaveScreen.ButtonMode.Save
+				new_screen.button_mode = SaveScreen.ButtonMode.SAVE
 		CONST.SCREEN_NOTICE:
 			new_screen.handle_payload(payload)
 	

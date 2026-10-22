@@ -136,19 +136,19 @@ func deserialize(data: Dictionary):
 		text_actions.set_item_checked(ID_LOCK+submenu_offset, data.get("meta.locked", false))
 
 func set_page_view(view:DiisisEditor.PageView):
-	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.Full
+	find_child("DialogSyntaxContainer").visible = view == DiisisEditor.PageView.FULL
 	if not text_box:
 		return
 	match view:
-		DiisisEditor.PageView.Full:
+		DiisisEditor.PageView.FULL:
 			text_box.custom_minimum_size.y = 100
 			text_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			text_box.scroll_fit_content_height = true
-		DiisisEditor.PageView.Truncated:
+		DiisisEditor.PageView.TRUNCATED:
 			text_box.custom_minimum_size.y = 25
 			text_box.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 			text_box.scroll_fit_content_height = true
-		DiisisEditor.PageView.Minimal:
+		DiisisEditor.PageView.MINIMAL:
 			text_box.custom_minimum_size.y = 25
 			text_box.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 			text_box.scroll_fit_content_height = false
@@ -793,7 +793,7 @@ func _on_import_ingest_from_clipboard() -> void:
 
 
 func _on_import_ingest_from_file() -> void:
-	var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.Line)
+	var address = DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.LINE)
 	Pages.editor.popup_ingest_file_dialog([
 		address,
 		find_child("Ingest").build_payload()])

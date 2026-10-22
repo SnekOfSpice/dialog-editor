@@ -2,10 +2,10 @@ extends Screen
 class_name SaveScreen
 
 enum ButtonMode {
-	SelectSlot,
-	Save
+	SELECT_SLOT,
+	SAVE,
 }
-var button_mode :  ButtonMode = ButtonMode.SelectSlot
+var button_mode :  ButtonMode = ButtonMode.SELECT_SLOT
 
 func _ready() -> void:
 	super()
@@ -18,10 +18,10 @@ func build_buttons():
 		var item = preload("res://game/screens/save_item.tscn").instantiate()
 		find_child("Slots").add_child(item)
 		item.set_slot(i)
-		if button_mode == ButtonMode.SelectSlot:
+		if button_mode == ButtonMode.SELECT_SLOT:
 			item.pressed.connect(select_slot.bind(i))
 			%TitleLabel.text = "Select Save Slot"
-		elif button_mode == ButtonMode.Save:
+		elif button_mode == ButtonMode.SAVE:
 			item.pressed.connect(save.bind(i))
 			%TitleLabel.text = "Save To Slot"
 		%TitleLabel.text += "\nCurrent Slot: %s" % (Options.save_slot + 1)

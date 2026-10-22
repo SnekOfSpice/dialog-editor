@@ -8,11 +8,11 @@ class_name AddressModeButton
 signal mode_set(mode:Mode)
 
 enum Mode {
-	Objectt,
-	Address
+	OBJECT,
+	ADDRESS,
 }
 
-var mode : Mode = Mode.Objectt
+var mode : Mode = Mode.OBJECT
 
 func _make_custom_tooltip(for_text:String) -> Object:
 	var tt = preload("res://addons/diisis/editor/src/address_mode_button_tooltip.tscn").instantiate()
@@ -30,9 +30,9 @@ func get_mode() -> Mode:
 func set_mode(value:int):
 	mode = value
 	match mode:
-		Mode.Objectt:
+		Mode.OBJECT:
 			texture_normal = load("res://addons/diisis/editor/visuals/address_mode_obj.png")
-		Mode.Address:
+		Mode.ADDRESS:
 			texture_normal = load("res://addons/diisis/editor/visuals/address_mode_adr.png")
 
 func _get_target_address() -> String:
@@ -51,7 +51,7 @@ func _on_pressed() -> void:
 func set_page_view(view:DiisisEditor.PageView):
 	if not address_source:
 		return
-	visible = view == DiisisEditor.PageView.Full
+	visible = view == DiisisEditor.PageView.FULL
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

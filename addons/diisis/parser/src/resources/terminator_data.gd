@@ -8,21 +8,21 @@ class_name TerminatorData
 
 enum TerminatorStyle {
 	## No terminator will be added.
-	None,
+	NONE,
 	## A floating [Label] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text.
-	Text,
+	LABEL,
 	## A floating [RichTextLabel] will be added to the end of the text in [member body_label]. [member terminator_text] will be its text, with BBCode enabled.
-	RichText,
+	RICH_TEXT_LABEL,
 	## A floating [TextureRect] will be added to the end of the text in [member body_label]. [member terminator_texture] will be its texture.
-	Texture,
+	TEXTURE_RECT,
 	## A floating [Control] will be added to the end of the text in [member body_label]. [member terminator_scene] will be its child.
-	Scene
+	SCENE,
 }
 
 ## A terminator is a visual element denoting the end of the current line in [member body_label]. It will be hidden if the full text is visible, i.e. [member RichTextLabel.visible_ratio] is [code]1.0[/code].
 ## [br][br]
 ## [b]Note:[/b] Currently the spacing is kinda fucked up if you use bbcode in your [member body_label].
-@export var terminator_style : TerminatorStyle = TerminatorStyle.None:
+@export var terminator_style : TerminatorStyle = TerminatorStyle.NONE:
 	set(value):
 		terminator_style = value
 		notify_property_list_changed()
@@ -35,18 +35,18 @@ enum TerminatorStyle {
 
 func _validate_property(property: Dictionary):
 	match terminator_style:
-		TerminatorStyle.None:
+		TerminatorStyle.NONE:
 			if property.name in ["terminator_text", "terminator_texture", "terminator_scene"]:
 				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Text:
+		TerminatorStyle.LABEL:
 			if property.name in ["terminator_texture", "terminator_scene"]:
 				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.RichText:
+		TerminatorStyle.RICH_TEXT_LABEL:
 			if property.name in ["terminator_texture", "terminator_scene"]:
 				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Texture:
+		TerminatorStyle.TEXTURE_RECT:
 			if property.name in ["terminator_text", "terminator_scene"]:
 				property.usage = PROPERTY_USAGE_NO_EDITOR
-		TerminatorStyle.Scene:
+		TerminatorStyle.SCENE:
 			if property.name in ["terminator_texture", "terminator_text"]:
 				property.usage = PROPERTY_USAGE_NO_EDITOR

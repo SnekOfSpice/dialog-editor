@@ -2,7 +2,7 @@
 extends CenterContainer
 class_name AddressSelectActionContainer
 
-@export var address_depth : int = DiisisEditorUtil.AddressDepth.Line
+@export var address_depth : int = DiisisEditorUtil.AddressDepth.LINE
 @export var status_panels : Array[PanelContainer] = []
 
 func serialize() -> Dictionary:
@@ -46,9 +46,9 @@ func _on_a_index_pressed(index: int) -> void:
 			request_insert_items(false)
 		6:
 			request_insert_items(false)
-			if address_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+			if address_depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 				DiisisEditorActions.delete_choice_item(address)
-			elif address_depth == DiisisEditorUtil.AddressDepth.Line:
+			elif address_depth == DiisisEditorUtil.AddressDepth.LINE:
 				DiisisEditorActions.delete_line(DiisisEditorUtil.get_split_address(address)[1])
 
 

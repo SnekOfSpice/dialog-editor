@@ -96,12 +96,12 @@ func request_replace_local():
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	var undo_redo = Pages.editor.undo_redo
 	match DiisisEditorUtil.get_address_depth(address):
-		DiisisEditorUtil.AddressDepth.Line:
+		DiisisEditorUtil.AddressDepth.LINE:
 			undo_redo.create_action("Replace Text Local")
 			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_text.bind(address, last_search_query, replace_str, case_insensitive))
 			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_text.bind(address, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
-		DiisisEditorUtil.AddressDepth.ChoiceItem:
+		DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			undo_redo.create_action("Replace Text Local")
 			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_text.bind(address, last_search_query, replace_str, case_insensitive))
 			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_text.bind(address, replace_str, last_search_query, case_insensitive))
@@ -129,12 +129,12 @@ func request_replace_all_in_type():
 	var case_insensitive = not find_child("CaseSensitiveButton").button_pressed
 	var start_address : String = addresses_in_type.front()
 	match DiisisEditorUtil.get_address_depth(start_address):
-		DiisisEditorUtil.AddressDepth.Line:
+		DiisisEditorUtil.AddressDepth.LINE:
 			undo_redo.create_action("Replace Text In Type")
 			undo_redo.add_do_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, last_search_query, replace_str, case_insensitive))
 			undo_redo.add_undo_method(DiisisEditorActions.replace_line_content_texts.bind(addresses_in_type, replace_str, last_search_query, case_insensitive))
 			undo_redo.commit_action()
-		DiisisEditorUtil.AddressDepth.ChoiceItem:
+		DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 			undo_redo.create_action("Replace Text In Type")
 			undo_redo.add_do_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, last_search_query, replace_str, case_insensitive))
 			undo_redo.add_undo_method(DiisisEditorActions.replace_choice_content_texts.bind(addresses_in_type, replace_str, last_search_query, case_insensitive))
@@ -185,10 +185,10 @@ func _on_item_list_item_selected(index: int) -> void:
 	
 	find_child("GoToButton").text = str("Go To ", address)
 	find_child("ReplaceContainer").visible = false
-	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.Line:
+	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.LINE:
 		find_child("ReplaceContainer").visible = true
 		find_child("ReplaceAllInTypeButton").text = "Replace all in Text"
-	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.ChoiceItem:
+	if DiisisEditorUtil.get_address_depth(address) == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		find_child("ReplaceContainer").visible = true
 		find_child("ReplaceAllInTypeButton").text = "Replace all in Choices"
 	

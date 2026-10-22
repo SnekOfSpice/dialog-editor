@@ -41,6 +41,7 @@ layout_mode = 2
 placeholder_text = "fact name"
 
 [node name="FactIntValueContainer" type="HBoxContainer" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=956119493]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="IntOperandButton" type="Button" parent="FactItem/HBoxContainer/FactValueContainer/FactIntValueContainer" unique_id=1684246683]
@@ -78,6 +79,7 @@ min_value = -1000000000000.0
 max_value = 1000000000000.0
 
 [node name="FactBoolValue" type="CheckBox" parent="FactItem/HBoxContainer/FactValueContainer" unique_id=278945707]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 8
@@ -92,6 +94,7 @@ tooltip_text = "Delete"
 icon = ExtResource("5_02amc")
 
 [node name="TypeMismatchLabel" type="Label" parent="." unique_id=1096141794]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Type mismatch!"
 

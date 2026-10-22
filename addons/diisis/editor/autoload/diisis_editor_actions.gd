@@ -175,7 +175,7 @@ func operate_local_fact(address:String, target:int, action:String, fact_name:Str
 		push_warning("Current page is not the page of the address")
 		return
 	
-	if conditional and level == DiisisEditorUtil.AddressDepth.Page:
+	if conditional and level == DiisisEditorUtil.AddressDepth.PAGE:
 			push_warning("Pages do not have conditionals")
 			return
 	if action == "add":
@@ -192,7 +192,7 @@ func delete_fact_local(address:String, target:int, fact_name:String):
 func add_choice_items(item_addresses:Array, choice_data_by_address:={}):
 	item_addresses = DiisisEditorUtil.sort_addresses(item_addresses)
 	for item_address in item_addresses:
-		var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
+		var target_line_address : String = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.LINE)
 		var target_line : Line = DiisisEditorUtil.get_node_at_address(target_line_address)
 		var parts := DiisisEditorUtil.get_split_address(item_address)
 		var cache:Array=cached_choice_items.get(target_line_address, [])
@@ -213,7 +213,7 @@ func delete_choice_items(item_addresses:Array):
 	item_addresses.reverse()
 	for item_address in item_addresses:
 		blank_override_choice_item_addresses.erase(item_address)
-		var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.Line)
+		var line_address = DiisisEditorUtil.truncate_address(item_address, DiisisEditorUtil.AddressDepth.LINE)
 		var item = DiisisEditorUtil.get_node_at_address(item_address)
 		var data = item.serialize()
 		var cache :Array= cached_choice_items.get(line_address, [])
@@ -234,7 +234,7 @@ func move_choice_item(item_address:String, direction:int):
 	if Pages.editor.get_current_page().number != address_parts[0]:
 		push_warning("Current page is not the page of the address")
 		return
-	if level != DiisisEditorUtil.AddressDepth.ChoiceItem:
+	if level != DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		push_warning("Trying to move choice item with incorrect address depth")
 		push_warning(str(level))
 		return
@@ -289,18 +289,18 @@ func insert_from_clipboard(start_address:String):
 	var start_address_parts = DiisisEditorUtil.get_split_address(start_address)
 	
 	# create new ids to avoid linking disconnectedlines to the same text ids etc
-	if insert_depth == DiisisEditorUtil.AddressDepth.Line:
+	if insert_depth == DiisisEditorUtil.AddressDepth.LINE:
 		for key in data_at_depth.keys():
 			var data : Dictionary = data_at_depth.get(key)
 			data["id"] = Pages.get_new_id()
 			var content : Dictionary = data.get("content")
-			if data.get("line_type") == DIISIS.LineType.Text:
+			if data.get("line_type") == DIISIS.LineType.TEXT:
 				var text : String = Pages.get_text(content.get("text_id"))
 				var new_tid : String = Pages.get_new_id()
 				content["text_id"] = new_tid
 				Pages.save_text(new_tid, text)
 				data["content"] = content
-			elif data.get("line_type") == DIISIS.LineType.Choice:
+			elif data.get("line_type") == DIISIS.LineType.CHOICE:
 				var title_text : String = Pages.get_text(content.get("title_id"))
 				var new_tid : String = Pages.get_new_id()
 				content["title_id"] = new_tid
@@ -346,7 +346,7 @@ func insert_from_clipboard(start_address:String):
 			var object : Line = DiisisEditorUtil.get_node_at_address(address)
 			object.set_selected(false)
 		
-	elif insert_depth == DiisisEditorUtil.AddressDepth.ChoiceItem:
+	elif insert_depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
 		var i := 0
 		var addresses := []
 		var data_by_address := {}
@@ -402,7 +402,7 @@ func replace_line_content_texts(line_addresses:Array, what:String, with:String, 
 				i += 1
 				continue
 			var line = lines[i]
-			if line.get("line_type") == DIISIS.LineType.Text:
+			if line.get("line_type") == DIISIS.LineType.TEXT:
 				var text_id : String = line.get("content").get("text_id")
 				var content : String = Pages.get_text(text_id)
 				if case_insensitive:
@@ -437,7 +437,7 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 		var lines : Array = page.get("lines", [])
 		for line_index in pages_to_operate_on.get(n).keys():
 			var line = lines[line_index]
-			if line.get("line_type") == DIISIS.LineType.Choice:
+			if line.get("line_type") == DIISIS.LineType.CHOICE:
 				var choices : Array = line.get("content").get("choices", [])
 				var choice_indices_to_operate_on : Array = pages_to_operate_on.get(n).get(line_index)
 				for index in choice_indices_to_operate_on:
