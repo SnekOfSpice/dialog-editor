@@ -14,6 +14,7 @@
 - add mass prettification window
 - Add tooltips to the checkboxes in the stringkit save options
 - put "ctrl+" next to all the shortcut texts
+- bring enum names in line with godot conventions
 
 0.9
 post TDOHN update (Or: The hot reload fixes update, apparently)
