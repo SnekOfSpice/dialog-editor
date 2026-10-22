@@ -47,9 +47,6 @@ ParserEvents="*uid://dinb6lf0qoexi"
 
 project/file/path="res://game/diisis_integration/demo_script.json"
 plugin/view/embedded=true
-plugin/checks/check_for_updates=true
-plugin/checks/check_for_linux_input=true
-runtime/hot_reload/lookaround=3
 
 [display]
 

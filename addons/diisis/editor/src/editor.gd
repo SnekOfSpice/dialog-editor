@@ -33,6 +33,7 @@ var no_refresh_after_save := false
 var undo_redo = UndoRedo.new()
 var core:Control
 var page_container:Control
+var arg_hint : DIISISArgHint
 
 var content_scale := 1.0
 
@@ -304,6 +305,7 @@ func _update_silly_companion() -> void:
 	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
 	%SillyCompanionEmbedLabel.visible = Pages.silly
 
+
 func set_content_scale(factor:float):
 	content_scale = factor
 	var bar : MenuBar = find_child("MenuBar")
@@ -314,8 +316,6 @@ func set_content_scale(factor:float):
 	for window : Window in $Popups.get_children():
 		window.content_scale_factor = content_scale
 
-
-var arg_hint : DIISISArgHint
 
 func update_page_view(view:PageView):
 	Pages.editor_page_view = view
@@ -490,7 +490,8 @@ func _shortcut_input(event):
 					else:
 						open_window_by_string("TextSearchPopup")
 				KEY_T:
-					open_popup($Popups.get_node("MovePagePopup"))
+					if not event.shift_pressed:
+						open_popup($Popups.get_node("MovePagePopup"))
 				KEY_D:
 					open_popup($Popups.get_node("StringkitWindow"))
 				KEY_H:
@@ -1104,6 +1105,8 @@ func _on_utility_id_pressed(id: int) -> void:
 			step_through_pages()
 		4:
 			open_window_by_string("ActorSearchWindow")
+		7:
+			open_window_by_string("MassTextPrettificationWindow")
 
 
 func _on_setup_id_pressed(id: int) -> void:
@@ -1449,7 +1452,7 @@ func try_prompt_fact_deletion_confirmation(address:String, delete_callable:Calla
 
 func _on_handler_window_close_requested() -> void:
 	await get_tree().process_frame
-	Pages.update_all_compliances()
+	#Pages.update_all_compliances()
 	await get_tree().process_frame
 	refresh()
 

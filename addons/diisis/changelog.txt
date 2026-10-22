@@ -4,6 +4,14 @@
 - It searches from the back of the Text Line and displays a fail if it is present
 - a closing tag is mandatory
 - there are several functions you can or should override to properly make it work in your specific game
+- add option to prepend upcoming skillchecks to option buttons
+- Add skillcheck indentation support
+- Change editor scale to live in the editor settings
+- Add ParserEvents.option_button_was_prepended_skillcheck for when prepend_upcoming_skillchecks adds a prefix to a button
+- Add Parser.set_factb and Parser.set_facti
+- Add LineReader.put_prefixes_after_prepends
+- display fixes to ingestion actor window
+- add mass prettification window
 
 
 0.9

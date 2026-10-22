@@ -20,7 +20,7 @@ enum ChoiceBehaviorAfterSelection {
 }
 
 
-const CONTROL_SEQUENCES := ["advance", "ap", "call", "clname", "comment", "fact", "fbrf", "func", "lc", "mp", "name", "ruby", "strpos", "ts_abs", "ts_rel", "ts_reset", "var", ]
+const CONTROL_SEQUENCES := ["advance", "ap", "call", "clname", "comment", "fact", "fail", "fbrf", "func", "lc", "mp", "name", "ruby", "skillcheck", "strpos", "ts_abs", "ts_rel", "ts_reset", "var", ]
 const CONTROL_SEQUENCES_WITH_COLON := [
 	"call",
 	"clname",
@@ -30,11 +30,12 @@ const CONTROL_SEQUENCES_WITH_COLON := [
 	"func",
 	"name",
 	"ruby",
+	"skillcheck",
 	"ts_rel",
 	"ts_abs",
 	"var",
 ]
-const CONTROL_SEQUENCES_WITH_CLOSING_TAG := ["ruby"]
+const CONTROL_SEQUENCES_WITH_CLOSING_TAG := ["ruby", "skillcheck"]
 
 
 const HTML_ENTITIES := {
@@ -68,6 +69,7 @@ func type_to_str(type:int) -> String:
 			return "bool"
 	return "String"
 
+
 func trim_bilateral_spaces(text:String) -> String:
 	var trimmable_space := text.begins_with(" ")
 	while trimmable_space:
@@ -77,4 +79,16 @@ func trim_bilateral_spaces(text:String) -> String:
 	while trimmable_space:
 		text = text.trim_suffix(" ")
 		trimmable_space = text.ends_with(" ")
+	return text
+
+
+func remove_leading_tabs(text : String):
+	if not "	" in text:
+		return text
+	
+	var has_indent := text.contains("	[]>")
+	while has_indent:
+		text = text.replace("	[]>", "[]>")
+		has_indent = text.contains("	[]>")
+	
 	return text

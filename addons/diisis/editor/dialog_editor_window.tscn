@@ -5,6 +5,7 @@
 [ext_resource type="Theme" uid="uid://jddhsc4auo55" path="res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres" id="3_efdl4"]
 
 [node name="DialogEditorWindow" type="Window" unique_id=1217661294]
+canvas_item_default_texture_filter = 3
 oversampling_override = 1.0
 title = "DIISIS"
 initial_position = 4
@@ -25,7 +26,7 @@ offset_bottom = 229.0
 size_flags_horizontal = 3
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1345108639]
-position = Vector2(292, 179)
+position = Vector2(805.5, 482.5)
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]

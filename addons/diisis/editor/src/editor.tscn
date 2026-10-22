@@ -187,7 +187,7 @@ auto_translate_mode = 1
 size = Vector2i(209, 100)
 theme_override_font_sizes/font_size = 16
 theme_override_font_sizes/font_separator_size = 16
-item_count = 7
+item_count = 8
 item_0/text = "Search"
 item_0/id = 6
 item_0/separator = true
@@ -204,6 +204,8 @@ item_5/text = "Ingestion Actors    (I)"
 item_5/id = 2
 item_6/text = "Step through pages"
 item_6/id = 3
+item_7/text = "Mass Text Prettification..."
+item_7/id = 7
 
 [node name="LibraryOfBabel" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Utility" unique_id=549865233]
 unique_name_in_owner = true
@@ -616,6 +618,11 @@ offset_bottom = 10.0
 
 [node name="Popups" type="Node" parent="." unique_id=864969664]
 
+[node name="MassTextPrettificationWindow" parent="Popups" unique_id=511013998 instance=ExtResource("34_ajvyk")]
+title = "Mass Text Prettification"
+visible = false
+container_path = "uid://c7iym85dftjoi"
+
 [node name="FDSave" type="FileDialog" parent="Popups" unique_id=719783803]
 transparent_bg = true
 gui_embed_subwindows = true
@@ -750,7 +757,7 @@ visible = false
 theme_override_font_sizes/title_font_size = 16
 container_path = "uid://cqfaywphjr2k2"
 
-[node name="RegionConfigWindow" parent="Popups" unique_id=511013998 instance=ExtResource("34_ajvyk")]
+[node name="RegionConfigWindow" parent="Popups" unique_id=1959565343 instance=ExtResource("34_ajvyk")]
 title = "Configure Regions"
 visible = false
 container_path = "uid://rqflj6uhel4l"

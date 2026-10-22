@@ -9,13 +9,7 @@ class_name DiisisParserEvents
 
 ## Emitted when a choice button has been pressed.
 signal choice_pressed(
-	do_jump_page:bool,
-	target_page:int,
-	target_line:int,
-	set_loopback:bool,
-	loopback_trigger_page:int,
-	loopback_trigger_line:int,
-	choice_text:String
+	choice_data : Dictionary,
 )
 
 ## [param choices] is an [Array] where every item is
@@ -212,3 +206,10 @@ signal rubies_built(
 
 
 signal region_changed()
+
+
+signal option_button_was_prepended_skillcheck(
+	new_option : ChoiceButton,
+	skillcheck_name : String,
+	skillcheck_value : int
+)

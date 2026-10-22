@@ -22,6 +22,8 @@ func _on_about_to_popup() -> void:
 	
 	await get_tree().process_frame
 	_on_save_path_set(file_path)
+	
+	content_scale_factor = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
 
 
 func _on_quit_dialog_canceled() -> void:

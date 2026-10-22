@@ -37,15 +37,18 @@ func on_pressed() -> void:
 		Parser.loopback_target_line = Parser.line_index
 		Parser.loopback_trigger_page = loopback_target_page
 		Parser.loopback_trigger_line = loopback_target_line
-		
+	
+	var choice_data := {
+		"do_jump_page" : do_jump_page,
+		"target_page" : target_page,
+		"target_line" : target_line,
+		"loopback" : loopback,
+		"loopback_target_page" : loopback_target_page,
+		"loopback_target_line" : loopback_target_line,
+		"text" : text,
+	}
 	ParserEvents.choice_pressed.emit(
-		do_jump_page,
-		target_page,
-		target_line,
-		loopback,
-		loopback_target_page,
-		loopback_target_line,
-		text,
+		choice_data
 	)
 	emit_signal("choice_pressed", do_jump_page, target_page, target_line)
 	visible = false

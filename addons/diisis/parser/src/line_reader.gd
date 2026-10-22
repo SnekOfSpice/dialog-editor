@@ -144,7 +144,7 @@ var name_container: Control:
 @export var choice_title_label: Label
 ## The Control holding [member choice_list].[br][br]
 ## I like setting using [code]mouse_filter[/code] [code]Stop[/code] and [b]FullRect Layout[/b].
-@export var choice_container:PanelContainer:
+@export var choice_container:Container:
 	get:
 		return choice_container
 	set(value):
@@ -185,6 +185,12 @@ var name_container: Control:
 @export var name_prefix : String
 ## Suffix after the name.
 @export var name_suffix : String
+## if true, body_label_prefix (from actor configs and linereader) will
+## be put after preüends, e.g. name style or skill check result.
+## useful for quotation marks
+## if false, they#ll be put before all of that. useful
+## for global bbcode wrappers.
+@export var put_prefixes_after_prepends := true
 ## List of functions that get called with [method callv_custom] with the text of the [member body_label] as argument whenever that text gets set. (So referencing autoloads is also valid)
 ## Each call will replace the text as it gets passed along the array.
 ## This can be used to mangle the text in arbitrary ways before adding it to [member body_label], such as adding or replacing contents with your own custom text.
@@ -297,13 +303,32 @@ var _built_virtual_choices := []
 ## If left unassigned, will use a default button.[br]
 ## If overridden, it must inherit from [ChoiceButton].
 @export var button_scene:PackedScene
-@export_subgroup("Skill Rolls")
+@export_subgroup("Skillchecks")
 enum SkillRollResultStyle {
+	## [code]<skillcheck:>[/code] tags are erased from the dialogue lines.
 	HIDE,
+	## [code]<skillcheck:>[/code] tags are prepended to the next dialogue line,
+	## using [method _get_skill_roll_last_result_string] and
+	## [method _get_skill_roll_prepend_separator_string].
 	PREPEND,
+	## [code]<skillcheck:>[/code] tags are converted a dialogue line using
+	## [method _get_skill_roll_last_result_string].
 	EXTRA_LINE,
 }
+## Determines how the results of calls to [method _skill_roll] are displayed.
 @export var skill_roll_result_style := SkillRollResultStyle.PREPEND
+## For DIISIS Choices: If the next natural Line* of the choice is a Text Line,
+## and the first dialog line is a [code]<skillcheck:>[/code] tag, that skillcheck
+## will be prepended to the choice button pointing there using
+## [method _get_skillcheck_prepend_text].
+##[br][br]
+##* "Natural" meaning for jump choices: the target address. And for non-jump choices,
+## the next line. (The latter cannot wrap around pages atm)
+@export var prepend_upcoming_skillchecks := true
+## Internal delay after a skillcheck is begun. Can be used to delay further dialogue parsing
+## after hitting a [code]<skillcheck>[/code] tag.
+## [b]Note:[/b] Should be accessed by writing your own [method _skill_roll] implementation.
+var skillcheck_delay := 0.0
 
 @export_subgroup("Input Prompt")
 ## If [code]true[/code], [LineReader] will fade in either [member prompt_unfinished] or [member prompt_finished] whenever the player can give input to advance.
@@ -694,7 +719,7 @@ func _ready() -> void:
 		body_label.bbcode_enabled = true
 		set_body_label(body_label)
 	if name_label:
-		name_label.text = ""
+		_set_name_label_text("")
 	
 	if not show_input_prompt and prompt_unfinished:
 		prompt_unfinished.modulate.a = 0
@@ -746,10 +771,14 @@ var _yield_instruction_to_advance := false
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
 	if Engine.is_editor_hint():
 		return false
+	if skillcheck_delay > 0:
+		if include_warnings:
+			push_warning("Cannot advance because skillcheck_delay > 0.")
+		return true
 	if _lead_time > 0:
 		if include_warnings:
 			push_warning("Cannot advance because _lead_time > 0.")
-		return false
+		return true
 	if Parser.paused:
 		if warn_advance_on_parser_paused and include_warnings:
 			push_warning("Cannot advance because Parser.paused is true.")
@@ -1023,6 +1052,9 @@ func reparse_text(dialine := 0):
 		emit_signal("line_finished", line_index)
 		return
 	
+	
+	content = DIISIS.remove_leading_tabs(content)
+	
 	if Parser.use_dialog_syntax:
 		content = _replace_lc_tags(content)
 	
@@ -1139,6 +1171,11 @@ func _find_next_speaking_line_index(text : String, from : int) -> Array:
 	
 	return [next_break_index, next_break_string]
 
+
+
+
+
+## Goes to each <lc> tag and replaces it with []> syntax appropriate to the preceeding actor
 func _replace_lc_tags(full_line_text:String) -> String:
 	var r := _find_next_speaking_line_index(full_line_text, 0)
 	var next_break_index : int = r[0]
@@ -1647,6 +1684,7 @@ func _get_contextual_actor_body_wrapper(wrapper:String) -> String:
 	return ""
 
 
+
 func _insert_strings_in_current_dialine():
 	var new_text : String = _dialog_lines[_dialog_line_index]
 	new_text = _trim_trimmables(new_text)
@@ -1669,17 +1707,33 @@ func _insert_strings_in_current_dialine():
 	for entity in DIISIS.HTML_ENTITIES.keys():
 		new_text = new_text.replace(entity, DIISIS.HTML_ENTITIES.get(entity))
 	
+	var contextual_prefix := _get_contextual_actor_body_wrapper("prefix")
+	var contextual_suffix := _get_contextual_actor_body_wrapper("suffix")
+	
+	var body_prefix_to_use := body_label_prefix
+	var body_suffix_to_use := body_label_suffix
+	
 	_prepend_length = 0
 	# prepend name
-	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and not chatlog_enabled:
+	if name_style == NameStyle.Prepend and (not current_raw_name in blank_names) and (not chatlog_enabled) and (not _is_skillcheck_line(new_text)):
 		new_text = new_text.trim_prefix(_full_prefix) # when calling set_actor_config_property mid line, the previous prefix is still here so we need to clean it up
 		
 		_full_prefix = _get_full_prefix(current_raw_name)
 		
-		new_text = str(
-			_full_prefix,
-			new_text
+		if put_prefixes_after_prepends:
+			new_text = str(
+				_full_prefix,
+				body_prefix_to_use,
+				contextual_prefix,
+				new_text
 			)
+			body_prefix_to_use = "" # prevent getting used a few lines down
+			contextual_prefix = ""
+		else:
+			new_text = str(
+				_full_prefix,
+				new_text
+				)
 		
 		var label := RichTextLabel.new()
 		label.bbcode_enabled = true
@@ -1689,12 +1743,17 @@ func _insert_strings_in_current_dialine():
 		label.queue_free()
 	
 	
+	
+	if _is_skillcheck_line(new_text) and put_prefixes_after_prepends:
+		body_prefix_to_use = ""
+		contextual_prefix = ""
+	
 	new_text = str(
-		body_label_prefix,
-		_get_contextual_actor_body_wrapper("prefix"),
+		body_prefix_to_use,
+		contextual_prefix,
 		new_text,
-		_get_contextual_actor_body_wrapper("suffix"),
-		body_label_suffix,
+		contextual_suffix,
+		body_suffix_to_use,
 		)
 	
 	for word in body_label_word_wrappers.keys():
@@ -1708,6 +1767,14 @@ func _insert_strings_in_current_dialine():
 		new_text = str(new_text, "<advance>")
 	
 	_dialog_lines[_dialog_line_index] = new_text
+
+
+
+func _is_skillcheck_line(line_text : String) -> bool:
+	return (line_text.begins_with("<skillcheck") or
+		line_text.begins_with("<fail") or
+		line_text.begins_with("</skillcheck") or 
+		line_text.begins_with(_get_skill_roll_last_result_string()))
 
 ## Returns true if successful and the success block is to be read. If this returns false,
 ## the <fail> fallback block is used. Note that you cannot implement additional
@@ -1723,7 +1790,7 @@ func _skill_roll(skill : String, threshold : int) -> bool:
 var _last_skill : String
 var _last_skill_success : bool
 
-func _get_last_skill_roll_result_string() -> String:
+func _get_skill_roll_last_result_string() -> String:
 	return str(_last_skill, " : ", "success" if _last_skill_success else "failed")
 
 
@@ -1731,14 +1798,13 @@ func _get_skill_roll_prepend_separator_string() -> String:
 	return " - "
 
 
+func _get_skillcheck_prepend_text(skillcheck_name, skillcheck_value) -> String:
+	return "%s[%s] - " % [skillcheck_name, skillcheck_value]
 
-var skillcheck_delay := 0.0
 
 var _ruby_strings := []
 var _ruby_indices := []
 var _ruby_labels := []
-#var _skillchecks_closing_handled := []
-#var _skillchecks_fails_handled := []
 func _handle_tags_and_start_reading():
 	_remaining_prompt_delay = input_prompt_delay
 	if text_speed == MAX_TEXT_SPEED:
@@ -1754,16 +1820,23 @@ func _handle_tags_and_start_reading():
 	_handled_comments.clear()
 	_ruby_strings.clear()
 	_ruby_indices.clear()
-	#_skillchecks_fails_handled.clear()
-	#_skillchecks_closing_handled.clear()
 	var text_speed_override := -1.0
 	_text_speed_by_character_index.clear()
 	
 	var new_text : String = _dialog_lines[_dialog_line_index]
 	
-	var skillcheck_regex := RegEx.create_from_string("<skillcheck:\\w+,\\d+>")
+	
+	
+	var skillcheck_regex := RegEx.create_from_string("<skillcheck:\\s*\\w+,\\s*\\d+>")
 	if skillcheck_regex.search(new_text) != null: # we have a skillcheck, time to recompile the dialines
-		var raw_name_threshold_pair := new_text.trim_prefix("<skillcheck:").trim_suffix(">")
+		# body label prefixes can cause the text to not exactly *start*
+		# with these tags so we have to do some extra steps
+		var skill_start := new_text.find("<skillcheck:")
+		var tag_length := "<skillcheck:".length()
+		var raw_name_threshold_pair := new_text.substr(
+			skill_start + tag_length,
+			new_text.find(">") - (skill_start + tag_length)
+		)#new_text.trim_prefix("<skillcheck:").trim_suffix(">")
 		var split := raw_name_threshold_pair.split(",")
 		var skill_name : String = split[0]
 		var skill_threshold : int = int(split[1])
@@ -1781,12 +1854,12 @@ func _handle_tags_and_start_reading():
 		var fail_searcher_index := _dialog_lines.size() - 1
 		var found_fail := false
 		while fail_searcher_index > _dialog_line_index:
-			if _dialog_lines[fail_searcher_index] == "<fail>":
+			if _dialog_lines[fail_searcher_index].contains("<fail>"):
 				found_fail = true
 				break
 			fail_searcher_index -= 1
 		
-		#printt("we are doing a skillcheck, ", found_closing, found_fail, closing_searcher_index, fail_searcher_index)
+		printt("we are doing a skillcheck, ", found_closing, found_fail, closing_searcher_index, fail_searcher_index)
 		
 		if found_closing:
 			_erase_dialog_line(closing_searcher_index)
@@ -1809,11 +1882,35 @@ func _handle_tags_and_start_reading():
 				SkillRollResultStyle.PREPEND:
 					_erase_dialog_line(_dialog_line_index)
 					var next_text : String = _dialog_lines[_dialog_line_index]
-					next_text = "%s%s%s" % [_get_last_skill_roll_result_string(), _get_skill_roll_prepend_separator_string(), next_text]
+					next_text = next_text.trim_prefix(body_label_prefix)
+					var contextual_prefix := _get_contextual_actor_body_wrapper("prefix")
+					next_text = next_text.trim_prefix(contextual_prefix)
+					# holy shit
+					var name_thing : String = ""
+					if name_style == NameStyle.Prepend and not current_raw_name in blank_names:
+						name_thing = _get_full_prefix(current_raw_name, true)
+					if put_prefixes_after_prepends:
+						next_text = str(
+							_get_skill_roll_last_result_string(),
+							_get_skill_roll_prepend_separator_string(),
+							name_thing,
+							body_label_prefix,
+							contextual_prefix,
+							next_text
+						)
+					else:
+						next_text = str(
+							#body_label_prefix,
+							#contextual_prefix,
+							_get_skill_roll_last_result_string(),
+							_get_skill_roll_prepend_separator_string(),
+							name_thing,
+							next_text
+						)
 					_dialog_lines[_dialog_line_index] = next_text
 				SkillRollResultStyle.EXTRA_LINE:
-					_dialog_lines[_dialog_line_index] = _get_last_skill_roll_result_string()
-			_set_dialog_line_index(_dialog_line_index)
+					_dialog_lines[_dialog_line_index] = _get_skill_roll_last_result_string()
+			_set_dialog_line_index(_dialog_line_index, true)
 			return
 		else:
 			push_warning("Skillcheck doesn't have a closing counterpart.")
@@ -2376,7 +2473,10 @@ func _preserve_into_past_line_container():
 	
 	var body_label_to_save = body_label.text
 	
+	
 	past_text += body_label_to_save
+	if past_text.is_empty():
+		return
 	past_line.text = past_text
 	past_line.clip_contents = false
 	past_line.clip_children = CanvasItem.CLIP_CHILDREN_DISABLED
@@ -2392,9 +2492,10 @@ func _preserve_into_past_line_container():
 		indices = a
 	
 	_build_rubies(past_line, indices)
+	_set_body_label_text("", true)
 
-func _set_body_label_text(text: String, is_deserializing := false):
-	if text.is_empty() and not is_deserializing:
+func _set_body_label_text(text: String, internal := false):
+	if text.is_empty() and not internal:
 		push_warning("Dialog at subaddress %s is an empty String" % get_subaddress())
 		advance()
 		advance()
@@ -2492,13 +2593,13 @@ func set_name_controls(label, container:=name_container, keep_text:=true):
 	name_container = container
 	var old_text : String
 	if name_label:
-		old_text = name_label.text
+		old_text = _get_name_label_text()
 	else:
 		old_text = ""
 	name_label = label
 	if keep_text:
-		name_label.text = old_text
-	
+		_set_name_label_text(old_text)
+
 
 ## Helper function that you can use to switch [param keep_past_lines] to true and transfer all data to the [param new_label].
 ## [br]You can override set a new [param body_label] by passing in the [param new_label] parameter.
@@ -2560,7 +2661,10 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 	else:
 		if name_style == NameStyle.None and not name_label:
 			return body_label.get_theme_color("default_color", "RichTextLabel")
-		return name_label.get_theme_color("font_%s" % base_property, "Label")
+		
+		if name_label:
+			return name_label.get_theme_color("font_%s" % base_property, "Label")
+		return Color.WHITE
 	
 
 ## returns array of size 2: prefix and suffix
@@ -2636,6 +2740,7 @@ func get_actor_config_property(config_property:String, actor_key:String, default
 		return default
 	return (actor_config.get(actor_key) as LineReaderActorConfig).get(config_property)
 
+@export var preserve_past_line_on_choice_presented := true
 func _build_choices(choices, auto_switch:bool):
 	if not auto_switch:
 		if not choice_container:
@@ -2644,6 +2749,10 @@ func _build_choices(choices, auto_switch:bool):
 		if not choice_list:
 			push_error("Tried to build choices when choice_list is null")
 			return
+	
+	if preserve_past_line_on_choice_presented:
+		_preserve_into_past_line_container()
+	
 	if choice_list:
 		for c in choice_list.get_children():
 			c.queue_free()
@@ -2663,9 +2772,10 @@ func _build_choices(choices, auto_switch:bool):
 		
 		var enable_option := true
 		var option_text := ""
+		var option_address : String = option.get("address", "")
 		
 		if (cond_true and cond_behavior == "Hide") or (not cond_true and cond_behavior == "Show"):
-			if Parser.selected_choices.has(option.get("address", "")):
+			if Parser.selected_choices.has(option_address):
 				if option.get("behavior_after_first_selection") == DIISIS.ChoiceBehaviorAfterSelection.Default:
 					continue
 			else:
@@ -2682,7 +2792,7 @@ func _build_choices(choices, auto_switch:bool):
 		
 		if (
 			option.get("behavior_after_first_selection") != DIISIS.ChoiceBehaviorAfterSelection.Default and
-			Parser.selected_choices.has(option.get("address", ""))
+			Parser.selected_choices.has(option_address)
 			):
 			match int(option.get("behavior_after_first_selection")):
 				DIISIS.ChoiceBehaviorAfterSelection.Enabled:
@@ -2692,10 +2802,15 @@ func _build_choices(choices, auto_switch:bool):
 				DIISIS.ChoiceBehaviorAfterSelection.Hidden:
 					continue
 		
+		if not Parser.presented_choices.has(option_address):
+			Parser.presented_choices.append(option_address)
+			
+		
 		if enable_option:
 			option_text = Parser.get_text(option.get("text_id_enabled"), not virtual_choices)
 		else:
 			option_text = Parser.get_text(option.get("text_id_disabled"), not virtual_choices)
+		
 		
 		# give to option to signal
 		var do_jump_page = option.get("do_jump_page", false)
@@ -2704,8 +2819,6 @@ func _build_choices(choices, auto_switch:bool):
 		var loopback = option.get("loopback", false)
 		var loopback_target_page = option.get("loopback_target_page", -1)
 		var loopback_target_line = option.get("loopback_target_line", -1)
-		
-		
 		
 		var new_option:ChoiceButton
 		if button_scene:
@@ -2716,6 +2829,42 @@ func _build_choices(choices, auto_switch:bool):
 				push_warning("button_scene is not a ChoiceButton. Falling back to default.")
 		if not new_option:
 			new_option = preload("res://addons/diisis/parser/src/choice_option.tscn").instantiate()
+		
+		if prepend_upcoming_skillchecks:
+			var next_line : int
+			var next_page : int
+			if do_jump_page:
+				next_line = target_line
+				next_page = target_page
+			else:
+				# should use better code
+				next_page = Parser.page_index
+				next_line = line_index + 1
+			var line_data : Dictionary = Parser.get_line_data("%s.%s" % [next_page, next_line])
+			
+				
+			var raw_content = line_data.get("content")
+			#var content = _line_data.get("content").get("content")
+			var content_address
+			if int(float(line_data.get("line_type"))) as DIISIS.LineType == DIISIS.LineType.Text:
+				var text_id = raw_content.get("text_id")
+				var content : String = Parser.get_text(text_id)
+				
+				if Parser.use_dialog_syntax:
+					content = content.split(":", false, 1)[1]
+				
+				content = content.trim_prefix(" ")
+				if content.begins_with("<skillcheck:"):
+					content = content.split(">", false, 1)[0]
+					content = content.trim_prefix("<skillcheck:")
+					var skillcheck_name := content.split(",")[0]
+					var skillcheck_value := int(content.split(",")[1])
+					
+					option_text = "%s%s" % [_get_skillcheck_prepend_text(skillcheck_name, skillcheck_value), option_text]
+					ParserEvents.option_button_was_prepended_skillcheck.emit(new_option, skillcheck_name, skillcheck_value)
+			
+		
+		
 		new_option.disabled = not enable_option
 		new_option.text = option_text
 		
@@ -2857,10 +3006,11 @@ func _evaluate_conditionals(conditionals, enabled_as_default := true) -> Array:
 	return [conditional_is_true, behavior]
 
 
-func _set_dialog_line_index(value: int):
+func _set_dialog_line_index(value: int, skip_preserving := false):
 	_dialog_line_index = value
 	
-	_preserve_into_past_line_container()
+	if not skip_preserving:
+		_preserve_into_past_line_container()
 	
 	if _dialog_actors.is_empty():
 		return
@@ -2894,6 +3044,29 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 		ParserEvents.dialog_line_args_passed.emit(actor_name, dialog_line_arg_dict)
 	return actor_name
 
+
+## Controls if properties from any given actor config apply to [member name_label]. 
+## (This uses theme overrides.)
+## [br][br]
+## Only works when [member name_style] is [enum NameStyle.NameLabel].
+## [br][br]
+## For more granular control over text display, see [method _set_name_label_text].
+@export var name_label_use_default_overrides := true
+
+## Override this to set custom name label behavior beyond writing the text to [member name_label].
+## [br][b]Note:[/b] If you override this, you should probably also consider overriding [method _get_name_label_text()].
+func _set_name_label_text(display_name : String, prefix := "", suffix := ""):
+	name_label.text = str(
+		name_prefix,
+		display_name,
+		name_suffix
+	)
+
+
+func _get_name_label_text() -> String:
+	return name_label.text
+
+
 ## Updates the [member name_label] for [param actor_name], including [member name_style],
 ## name color, name fetched from [member name_map], etc. Or hides it if [param actor_name]
 ## is part of [member blank_names]. [br]
@@ -2910,14 +3083,16 @@ func update_name_label(actor_name: String):
 	var name_outline_size : int = _get_actor_outline_size(actor_name)
 	
 	if name_style == NameStyle.NameLabel:
-		name_label.text = str(
+		_set_name_label_text(
 			name_prefix,
 			display_name,
 			name_suffix
 		)
-		name_label.add_theme_color_override("font_color", name_color)
-		name_label.add_theme_color_override("font_outline_color", name_outline_color)
-		name_label.add_theme_color_override("outline_size", name_outline_size)
+		
+		if name_label_use_default_overrides:
+			name_label.add_theme_color_override("font_color", name_color)
+			name_label.add_theme_color_override("font_outline_color", name_outline_color)
+			name_label.add_theme_color_override("outline_size", name_outline_size)
 		
 		if actor_name in blank_names or chatlog_enabled:
 			name_container.modulate.a = 0.0
@@ -2928,7 +3103,7 @@ func update_name_label(actor_name: String):
 	if name_style == NameStyle.NameLabel:
 		name_visible = name_container.modulate.a > 0.0
 	elif name_style == NameStyle.Prepend:
-		name_visible = current_raw_name in blank_names
+		name_visible = not blank_names.has(current_raw_name)
 	elif name_style == NameStyle.None:
 		name_visible = false
 	

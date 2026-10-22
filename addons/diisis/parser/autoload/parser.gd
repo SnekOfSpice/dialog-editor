@@ -52,6 +52,10 @@ var paused := true
 var page_index := 0
 var line_index := 0
 var lines := []
+var page_id : String
+var line_id : String
+var terminated_line_index := -1
+var terminated_page_index := -1
 
 var facts := {}
 var starting_facts := {}
@@ -138,6 +142,7 @@ func full_initialize(path : String):
 	last_modified_time = FileAccess.get_modified_time(_get_current_path())
 	
 	_initialize(data)
+	_apply_debug_fact_payload()
 	
 	if localization_file:
 		var file := FileAccess.open(localization_file, FileAccess.READ)
@@ -245,23 +250,29 @@ func _get_hot_reload_position(current_id : String) -> Vector2:
 	
 	return Vector2(page, line)
 
-## Call this one for a blank, new game.
-func reset_and_start(start_page_index := 0, start_line_index := 0):
-	line_reader.terminated = false
-	set_paused(false)
-	reset_facts()
-	
-	# ok so this is a horrible artifact from xxu
+
+func _apply_debug_fact_payload():
+# ok so this is a horrible artifact from xxu
 	# i couldnt get gradle to run without a debug export
 	# but i dont want this to do shit on the android distributable
 	# so here we are
 	if OS.has_feature("debug") and (OS.has_feature("editor_hint") or OS.has_feature("editor_runtime")):
 		for change : ParserFactChange in startup_fact_payload:
 			change_fact_through_res(change)
+
+
+## Call this one for a blank, new game.
+func reset_and_start(start_page_index := 0, start_line_index := 0):
+	line_reader.terminated = false
+	set_paused(false)
+	reset_facts()
+	
+	_apply_debug_fact_payload()
 	
 	read_page(start_page_index, start_line_index)
 	history = []
 	selected_choices = []
+	presented_choices = []
 
 ## Pauses the Parser. If [param suppress_event] is true, [signal ParserEvents.pause_change]
 ## won't be emitted.
@@ -296,12 +307,28 @@ func get_facti(fact: String) -> int:
 		push_warning("Fact %s is not an int or doesn't exist. Returning 0.")
 		return 0
 
-func get_facts_of_value(b: bool) -> Array:
+func get_facts_of_value(b: Variant) -> Array:
 	var result := []
 	for fact in facts:
 		if facts.get(fact) == b:
 			result.append(fact)
 	return result
+
+
+func set_factb(fact_name : String, value : bool, suppress_event := false) -> void:
+	var change := ParserFactChange.new(
+		fact_name,
+		ParserFactChange.DataType.Bool,
+		value
+	)
+	change_fact_through_res(change, suppress_event)
+func set_facti(fact_name : String, value : int, suppress_event := false) -> void:
+	var change := ParserFactChange.new(
+		fact_name,
+		ParserFactChange.DataType.Int,
+		value
+	)
+	change_fact_through_res(change, suppress_event)
 
 func get_address() -> String:
 	return str(page_index, ".", line_index)
@@ -330,16 +357,12 @@ var loopback_trigger_page:=-1
 var loopback_trigger_line:=-1
 
 var selected_choices := []
+var presented_choices := []
 
 func _on_choice_pressed(
-	do_jump_page:bool,
-	target_page:int,
-	target_line:int,
-	set_loopback:bool,
-	loopback_target_page:int,
-	loopback_target_line:int,
-	choice_text:String
+	choice_data : Dictionary
 ):
+	var choice_text : String = choice_data.get("text")
 	if append_choices_to_history:
 		var prefix:String
 		if not choice_appendation_string.is_empty():
@@ -653,8 +676,6 @@ func rollback():
 	address_trail_index = address_trail.size() - 1
 	address_trail.resize(address_trail_index + 1)
 
-var page_id : String
-var line_id : String
 
 func read_line(index: int):
 	if lines.size() == 0:
@@ -668,6 +689,9 @@ func read_line(index: int):
 	
 	line_index = index
 	address_trail_index += 1
+	
+	terminated_line_index = -1
+	terminated_page_index = -1
 
 		
 	var new_address := str(page_index, ".", line_index)
@@ -685,6 +709,9 @@ func read_line(index: int):
 	
 
 func read_next_line(finished_line_index: int):
+	if page_index == terminated_page_index and finished_line_index == terminated_line_index:
+		return
+	
 	if loopback_trigger_page == page_index and loopback_trigger_line == finished_line_index:
 		loopback_trigger_line = -1
 		loopback_trigger_page = -1
@@ -698,9 +725,7 @@ func read_next_line(finished_line_index: int):
 		
 	if finished_line_index >= max_line_index_on_page:
 		if is_terminating(page_index):
-			ParserEvents.page_finished.emit(page_index)
-			ParserEvents.page_terminated.emit(page_index)
-			emit_signal("page_terminated", page_index)
+			terminate()
 		else:
 			var next = int(page_data.get(page_index).get("next"))
 			if page_data.keys().has(next):
@@ -708,16 +733,27 @@ func read_next_line(finished_line_index: int):
 				ParserEvents.page_finished.emit(page_index)
 				read_page(next)
 			else:
-				emit_signal("page_terminated", page_index)
-				ParserEvents.page_finished.emit(page_index)
-				ParserEvents.page_terminated.emit(page_index)
+				terminate()
 				push_warning(str("tried to read non-existent page ", next, " after non-terminating page ", page_index))
 		return
 	
 	read_line(finished_line_index + 1)
 
+
+## Call this to terminate early before the end of a page.
+func terminate():
+	if not is_active():
+		return
+	terminated_line_index = line_index
+	terminated_page_index = page_index
+	emit_signal("page_terminated", page_index)
+	ParserEvents.page_finished.emit(page_index)
+	ParserEvents.page_terminated.emit(page_index)
+
+
 func is_terminating(page_index:int) -> bool:
 	return bool(page_data.get(page_index).get("terminate"))
+
 
 func get_next(page_index:int) -> int:
 	if is_terminating(page_index):
@@ -787,10 +823,13 @@ func serialize() -> Dictionary:
 	result["Parser.max_line_index_on_page"] = max_line_index_on_page
 	result["Parser.page_index"] = page_index
 	result["Parser.line_index"] = line_index
+	result["Parser.terminated_page_index"] = terminated_page_index
+	result["Parser.terminated_line_index"] = terminated_line_index
 	result["Parser.history"] = history
 	result["Parser.line_reader"] = line_reader._serialize()
 	result["Parser.game_progress"] = _get_game_progress()
 	result["Parser.selected_choices"] = selected_choices
+	result["Parser.presented_choices"] = presented_choices
 	result["address_trail"] = address_trail
 	result["address_trail_index"] = address_trail_index
 	
@@ -799,6 +838,7 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	lines = data.get("Parser.lines")
 	selected_choices = data.get("Parser.selected_choices")
+	presented_choices = data.get("Parser.presented_choices")
 	max_line_index_on_page = int(data.get("Parser.max_line_index_on_page"))
 	
 	address_trail_index = data.get("address_trail_index")
@@ -806,6 +846,8 @@ func deserialize(data: Dictionary):
 	
 	page_index = int(data.get("Parser.page_index", 0))
 	line_index = int(data.get("Parser.line_index", 0))
+	terminated_page_index = int(data.get("Parser.terminated_page_index", terminated_page_index))
+	terminated_line_index = int(data.get("Parser.terminated_line_index", terminated_line_index))
 	apply_facts(data.get("Parser.facts", {}))
 	history = data.get("Parser.history", [])
 	var line_reader_data : Dictionary = data.get("Parser.line_reader", {})
@@ -889,6 +931,8 @@ func function_acceded():
 func get_next_line_data() -> Dictionary:
 	return _get_next_line_data_custom(line_index, page_data.get(page_index, {}))
 
+
+
 func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Dictionary:
 	var page_lines : Array = local_page_data.get("lines", [])
 	if local_page_data.is_empty():
@@ -948,3 +992,18 @@ func _load_actor_config(dir:String):
 		var res_path := str(dir, "/actors/", actor, ".tres")
 		var res = ResourceLoader.load(res_path)
 		line_reader.actor_config[actor] = res
+
+
+func is_active() -> bool:
+	if paused:
+		return false
+	if line_reader:
+		if line_reader.terminated:
+			return false
+	if not line_reader:
+		return false
+	return true
+
+
+func has_fact(fact_name : String) -> bool:
+	return facts.has(fact_name)

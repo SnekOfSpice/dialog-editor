@@ -1,28 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://dt4yhnj3n5k5m"]
+[gd_scene format=3 uid="uid://dt4yhnj3n5k5m"]
 
 [ext_resource type="Script" uid="uid://cqago1v65gquo" path="res://addons/diisis/editor/src/folder_container.gd" id="1_k5xft"]
 [ext_resource type="Script" uid="uid://b1jpwk3skthlu" path="res://addons/diisis/editor/src/tooltip_maker.gd" id="2_8pxhq"]
 
-[node name="FolderContainer" type="HBoxContainer" groups=["diisis_page_view_sensitive"]]
+[node name="FolderContainer" type="HBoxContainer" unique_id=464653505 groups=["diisis_page_view_sensitive"]]
 script = ExtResource("1_k5xft")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1373875422]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1701933795]
 layout_mode = 2
 
-[node name="FolderVisibilityCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer"]
+[node name="FolderVisibilityCheckBox" type="CheckBox" parent="PanelContainer/HBoxContainer" unique_id=1958515136]
 layout_mode = 2
 tooltip_text = "Toggle folder visibility. This only affects the editor and the lines will still be read at runtime. To skip all folder contents at runtime, use the [img]uid://cmdgrenadfgy7[/img]Skip toggle."
 button_pressed = true
 text = "show contents"
 script = ExtResource("2_8pxhq")
 
-[node name="FolderRangeSpinContainer" type="SpinBox" parent="PanelContainer/HBoxContainer"]
+[node name="FolderRangeSpinContainer" type="SpinBox" parent="PanelContainer/HBoxContainer" unique_id=669548614]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer" unique_id=359928712]
 layout_mode = 2
 
 [connection signal="pressed" from="PanelContainer/HBoxContainer/FolderVisibilityCheckBox" to="." method="_on_folder_visibility_check_box_pressed"]

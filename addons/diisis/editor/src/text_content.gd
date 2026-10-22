@@ -83,7 +83,9 @@ func init() -> void:
 	text_actions.add_item("Neaten Whitespace", ID_WHITESPACE)
 	text_actions.set_item_tooltip(ID_WHITESPACE + submenu_offset + 1, Pages.TOOLTIP_NEATEN_WHITESPACE)
 	text_actions.add_item("Fix Punctuation", ID_PUNCTUATION)
-	text_actions.set_item_tooltip(ID_PUNCTUATION + submenu_offset + 1, Pages.TOOLTIP_NEATEN_WHITESPACE)
+	text_actions.set_item_tooltip(ID_PUNCTUATION + submenu_offset + 1, Pages.TOOLTIP_FIX_PUNCTUATION)
+	text_actions.add_item("Indent Skillchecks", ID_SKILLCHECK_INDENT)
+	text_actions.set_item_tooltip(ID_SKILLCHECK_INDENT + submenu_offset + 1, Pages.TOOLTIP_FIX_SKILLCHECK_INDENTATION)
 	text_actions.add_separator("Meta")
 	text_actions.add_item("Set Text ID...", ID_TEXT_ID)
 	text_actions.add_item("Lock", ID_LOCK)
@@ -101,8 +103,9 @@ func _populate_prepend_actors():
 const ID_CAPITALIZE := 0
 const ID_WHITESPACE := 1
 const ID_PUNCTUATION := 2
-const ID_TEXT_ID := 4
-const ID_LOCK := 6
+const ID_SKILLCHECK_INDENT := 3
+const ID_TEXT_ID := 5
+const ID_LOCK := 7
 var submenu_offset := 0
 	
 func serialize() -> Dictionary:
@@ -123,6 +126,7 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	text_id = data.get("text_id", Pages.get_new_id())
 	text_box.text = Pages.get_text(text_id)
+	text_box.size.y = 0
 	if text_box.text.is_empty(): # compat
 		text_box.text = data.get("content", "")
 	active_actors = data.get("active_actors", [])
@@ -367,7 +371,7 @@ func _on_text_box_caret_changed() -> void:
 func update_tag_hint():
 	index_all_tags()
 	update_inline_tag_prompt()
-	update_compliance_prompt()
+	#update_compliance_prompt()
 
 func update():
 	fill_active_actors()
@@ -514,6 +518,8 @@ func _on_text_actions_id_pressed(id: int) -> void:
 			text_box.text = Pages.neaten_whitespace(text_box.text)
 		ID_PUNCTUATION:
 			text_box.text = Pages.fix_punctuation(text_box.text)
+		ID_SKILLCHECK_INDENT:
+			text_box.text = Pages.fix_skillcheck_indentation(text_box.text).text
 		ID_TEXT_ID:
 			if not text_id:
 				text_id = Pages.get_new_id()
@@ -523,6 +529,7 @@ func _on_text_actions_id_pressed(id: int) -> void:
 			var text_actions : PopupMenu = find_child("Text Actions")
 			text_actions.set_item_checked(ID_LOCK+submenu_offset, not is_locked)
 			text_box.editable = is_locked
+
 
 func get_overall_compliance() -> String:
 	for compliance : String in get_compliances().values():
@@ -637,6 +644,21 @@ func get_compliances() -> Dictionary:
 		if not text_box.text.ends_with(">"):
 			compliances["Full Body Replacement Function"] = "text cannot end with anything other than >"
 	
+	
+	for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
+		var closing_count : int = text_box.text.count("</%s>" % tag)
+		var opening_count : int = text_box.text.count("<%s" % tag)
+		#printt(tag, opening_count, closing_count)
+		if closing_count < opening_count:
+			compliances["Tag balance"] = "More open <%s> tags than closed tags." % tag
+		if closing_count > opening_count:
+			compliances["Tag balance"] = "More closed </%s> tags than opened tags." % tag
+	
+	var indent_error : Pages.IndentResult = Pages.fix_skillcheck_indentation(text_box.text)
+	compliances["Skillcheck nesting"] = indent_error.fail_string
+	
+	
+	
 	return compliances
 
 func index_all_tags():
@@ -718,6 +740,14 @@ func _on_text_box_gui_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed and event.keycode == KEY_V and event.is_command_or_control_pressed() and event.shift_pressed:
 			_on_import_ingest_from_clipboard()
+		if event.pressed and event.keycode == KEY_T and event.is_command_or_control_pressed() and event.shift_pressed:
+			if event.alt_pressed:
+				print("a")
+				text_box.text = DIISIS.remove_leading_tabs(text_box.text)
+			else:
+				print("b")
+				_on_text_actions_id_pressed(ID_SKILLCHECK_INDENT)
+			
 	if event is InputEventMouseButton:
 		if event.is_command_or_control_pressed() and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			await get_tree().process_frame

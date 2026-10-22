@@ -205,20 +205,20 @@ func update():
 	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.Objectt
 	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
 	var target_page := int(find_child("PageSelect").value)
-	if is_jump_obj:
-		target_page = min(target_page, max_page_index)
+	#if is_jump_obj:
+		#target_page = min(target_page, max_page_index)
 	var target_line := int(find_child("LineSelect").value)
 	var max_line_index : int = max(Pages.get_line_count(target_page) - 1, deserialized_loopback_page)
 	
-	if is_jump_obj:
-		find_child("PageSelect").max_value = max_page_index
-		find_child("LineSelect").max_value = max_line_index
-		find_child("PageSelect").value = target_page
+	#if is_jump_obj:
+		#find_child("PageSelect").max_value = max_page_index
+		#find_child("LineSelect").max_value = max_line_index
+		#find_child("PageSelect").value = target_page
 	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
 	
-	if is_loop_obj:
-		find_child("LoopbackPageSelect").max_value = max_page_index
-		find_child("LoopbackLineSelect").max_value = max_line_index
+	#if is_loop_obj:
+		#find_child("LoopbackPageSelect").max_value = max_page_index
+		#find_child("LoopbackLineSelect").max_value = max_line_index
 	var loopback_page := int(find_child("LoopbackPageSelect").value)
 	var loopback_line := int(find_child("LoopbackLineSelect").value)
 	

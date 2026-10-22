@@ -105,6 +105,7 @@ var evaluator_paths := []
 const TOOLTIP_CAPITALIZE := "Capitalizes words around sentence beginnings and punctuation."
 const TOOLTIP_NEATEN_WHITESPACE := "Cleans up spaces around punctuation marks, tags, brackets. Successive spaces get collapsed into one."
 const TOOLTIP_FIX_PUNCTUATION := "Add periods. (maybe do other stuff in the future)"
+const TOOLTIP_FIX_SKILLCHECK_INDENTATION := "Indent skillchecks. Is only a visual aid to help with nested skillchecks.\nShortcut: Ctrl+Shift+T\nUndo: Ctrl+Shift+Alt+T"
 
 #region toggle settings
 const TOGGLE_SETTINGS := {
@@ -2006,8 +2007,8 @@ func capitalize_sentence_beginnings(text:String) -> String:
 					letter_indices_after_elipses[elipse_position + elipse_length + 2] = text[elipse_position + elipse_length + 2]
 					elipse_position = text.find("...", elipse_position + elipse_length + 1)
 					continue
+		
 		elipse_position = text.find("...", elipse_position + elipse_length + 1)
-		print(elipse_position)
 
 	var tags_in_text := []
 	var scan_index := 0
@@ -2158,7 +2159,10 @@ func neaten_whitespace(text:String) -> String:
 	
 	return text
 
+
 func fix_punctuation(text:String) -> String:
+	if text.is_empty():
+		return text
 	var lines = text.split("\n")
 	var result := []
 	var punctuation_marks := PUNCTUATION_MARKS.duplicate(true)
@@ -2192,9 +2196,11 @@ func fix_punctuation(text:String) -> String:
 			result.append(line + ".")
 	
 	var apostrophe_pairs := [
+		["aint", "ain't"],
 		["arent", "aren't"],
 		["cant", "can't"],
 		["couldnt", "couldn’t"],
+		["couldve", "could've"],
 		["didnt", "didn't"],
 		["dont", "don't"],
 		["hadnt", "hadn't"],
@@ -2203,7 +2209,10 @@ func fix_punctuation(text:String) -> String:
 		["hed", "he'd"],
 		["hes", "he's"],
 		["ive", "I've"],
+		["im", "I'm"],
 		["isnt", "isn't"],
+		["itd", "it'd"],
+		["itll", "it'll"],
 		["mightnt", "mightn't"],
 		["mustnt", "mustn't"],
 		["shant", "shan't"],
@@ -2237,24 +2246,42 @@ func fix_punctuation(text:String) -> String:
 	var suffixes := PUNCTUATION_MARKS.duplicate(true)
 	suffixes.append(" ")
 	
+	
+	var things_that_get_fucked_by_capitalize := [
+		" ",
+		"_",
+		"-"
+	]
+	
 	if fix_apostrophes:
 		for i in result.size():
 			var line : String = result[i]
 			for pair : Array in apostrophe_pairs:
+				var typo : String = pair[0]
+				#var beginning_sequence : int = 
+				
 				for j in 3:
-					for suffix1 in suffixes:
-						for suffix2 in suffixes:
-							var what : String = suffix1 + pair[0] + suffix2
-							var forwhat : String = suffix1 + pair[1] + suffix2
+					for prefix in suffixes:
+						for suffix in suffixes:
+							var what : String = prefix + pair[0] + suffix
+							var forwhat : String = prefix + pair[1] + suffix
 							
 							if j == 0:
 								what = what.capitalize()
 								forwhat = forwhat.capitalize()
+								for thing : String in things_that_get_fucked_by_capitalize:
+									if suffix == thing:
+										what += thing
+										forwhat += thing
+									if prefix == thing:
+										what = str(thing, what)
+										forwhat = str(thing, forwhat)
 							elif j == 1:
 								what = what.to_upper()
 								forwhat = forwhat.to_upper()
+							
 							line = line.replace(what, forwhat)
-						
+
 			result[i] = line
 	
 	for rule : Dictionary in replacement_rules:
@@ -2269,6 +2296,68 @@ func fix_punctuation(text:String) -> String:
 	
 	
 	return "\n".join(result)
+
+
+func fix_skillcheck_indentation(text : String) -> IndentResult:
+	var indent_level := 0
+	var lines := text.split("\n", false)
+	
+	var last_closing_tag_index := lines.size() - 1
+	var line_index := 0
+	var indent_level_by_index := {}
+	var fail_count_by_indent_level := {}
+	while line_index < lines.size():
+		var line : String = lines[line_index]
+		
+		if not line.contains("[]>"):
+			line_index += 1
+			continue
+		
+		var begins_with_control := line.begins_with("[]>")
+		while not begins_with_control:
+			line = line.erase(0)
+			begins_with_control = line.begins_with("[]>")
+		
+		lines[line_index] = line
+		
+		if "<skillcheck:" in line:
+			while last_closing_tag_index >= 0:
+				var line_text := lines[last_closing_tag_index]
+				var is_closing := "</skillcheck>" in line_text
+				if is_closing:
+					#print("closing skillcheck in ", last_closing_tag_index, line_text)
+					for line_index_to_indent in range(line_index, last_closing_tag_index + 1):
+						indent_level_by_index[line_index_to_indent] = indent_level
+					indent_level += 1
+					last_closing_tag_index -= 1
+					break
+				last_closing_tag_index -= 1
+		line_index += 1
+	
+	line_index = 0
+	var fail_strings := []
+	while line_index < lines.size():
+		var indent_amount : int = indent_level_by_index.get(line_index, 0)
+		var line_text := lines[line_index]
+		if "<fail>" in line_text:
+			var fail_count := fail_count_by_indent_level.get(indent_amount, 0)
+			fail_count_by_indent_level[indent_amount] = fail_count + 1
+			if fail_count_by_indent_level[indent_amount] > 1:
+				var fail_string = "More than one <fail> tag present in line %s. Order of skillcheck tags is probably wrong." % line_index
+				fail_strings.append(fail_string)
+		var indent_string := ""
+		for i in indent_amount:
+			indent_string += "	"
+		
+		lines[line_index] = "%s%s" % [indent_string, line_text]
+		line_index += 1
+	
+	var result := IndentResult.new()
+	result.text = "\n".join(lines)
+	if not fail_strings.is_empty():
+		result.fail_string = "\n".join(fail_strings)
+	return result
+
 
 func save_text(id:String, text:String) -> void:
 	text_data[id] = text
@@ -2684,3 +2773,9 @@ func save_csv(path : String, locales := []):
 		file.store_csv_line(line)
 	
 	file.close()
+
+
+class IndentResult:
+	var fail_string : String = "OK"
+	var text : String
+	

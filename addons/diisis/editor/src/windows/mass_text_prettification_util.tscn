@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://c7iym85dftjoi"]
+
+[ext_resource type="Script" uid="uid://cdwugjk8ahume" path="res://addons/diisis/editor/src/windows/mass_text_prettification_util.gd" id="1_w0hhc"]
+
+[node name="MassTextPrettificationUtil" type="PanelContainer" unique_id=179468811]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+script = ExtResource("1_w0hhc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1794716062]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ToggleSelectionButton" type="Button" parent="VBoxContainer" unique_id=896437641]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "De/Select All"
+
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=525466068]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Choose any of the following operations to apply to all text items in the DIISIS file."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1693377460]
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=502756874]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CapitalizeCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=283965181]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Capitalize"
+
+[node name="WhitespaceCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=606989182]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Neaten Whitespace"
+
+[node name="PunctuationCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=1758385617]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fix Punctuation"
+
+[node name="SkillcheckCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=1015127095]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Indent Skillchecks"
+
+[node name="PuppyLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1228566281]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer" unique_id=1361722526]
+layout_mode = 2
+text = "Confirm"
+
+[node name="ProgressLabel" type="Label" parent="VBoxContainer" unique_id=907616747]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/ToggleSelectionButton" to="." method="_on_toggle_selection_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

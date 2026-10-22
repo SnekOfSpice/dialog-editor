@@ -13,7 +13,7 @@ const PREFERENCE_PATH := "user://editor_preferences.cfg"
 
 var _embedded : bool:
 	get():
-		return ProjectSettings.get_setting("diisis/plugin/view/embedded")
+		return ProjectSettings.get_setting("diisis/plugin/view/embedded", false)
 
 
 const AUTOLOAD_PARSER = "Parser"
@@ -37,29 +37,49 @@ const TEMPLATE_VN_AUTOLOAD_SCENE_LOADER = "SceneLoader"
 
 func _enter_tree():
 	Engine.set_meta("DIISISPlugin", self)
-	if not ProjectSettings.has_setting("diisis/plugin/view/embedded"):
-		ProjectSettings.set_setting("diisis/plugin/view/embedded", false)
-		ProjectSettings.save()
-	ProjectSettings.set_restart_if_changed("diisis/plugin/view/embedded", true)
-	ProjectSettings.save()
+	
 	# property info doesnt work
 	# but in case you get it to work, here's the descriptions
-	if not ProjectSettings.has_setting("diisis/project/file/path"):
-		# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
-		ProjectSettings.set_setting("diisis/project/file/path", "")
-		ProjectSettings.save()
-		
+	# "Path to the latest edited file, uses by DIISIS internally. If you want to change / override which file gets read, use [member Parser.source_path_override] instead."
+	# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
 	
-	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_updates"):
-		# "Sends a HTTP request to GitHub on opening DIISIS to check for new version tags."
-		ProjectSettings.set_setting("diisis/plugin/checks/check_for_updates", true)
-		ProjectSettings.save()
-	if not ProjectSettings.has_setting("diisis/plugin/checks/check_for_linux_input"):
-		ProjectSettings.set_setting("diisis/plugin/checks/check_for_linux_input", true)
-		ProjectSettings.save()
-	if not ProjectSettings.has_setting("diisis/runtime/hot_reload/lookaround"):
-		ProjectSettings.set_setting("diisis/runtime/hot_reload/lookaround", 3)
-		ProjectSettings.save()
+	
+	for setting_pair in [
+		["diisis/plugin/view/embedded", false], # this needs to be a project setting and the first to be applied
+		["diisis/project/file/path", ""],
+		["diisis/runtime/hot_reload/lookaround", 3],
+		["diisis/plugin/checks/check_for_updates", true],
+		["diisis/plugin/checks/check_for_linux_input", true],
+	]:
+		if not ProjectSettings.has_setting(setting_pair[0]):
+			ProjectSettings.set_setting(setting_pair[0], setting_pair[1])
+			ProjectSettings.save()
+		ProjectSettings.set_initial_value(setting_pair[0], setting_pair[1])
+	
+	for setting_pair in [
+		["diisis/plugin/view/editor_scale", 1.0],
+	]:
+		var settings = EditorInterface.get_editor_settings()
+		if not settings.has_setting(setting_pair[0]):
+			settings.set_setting(setting_pair[0], setting_pair[1])
+			#settings.save()
+		settings.set_initial_value(setting_pair[0], setting_pair[1], false)
+	
+	
+	
+	ProjectSettings.set_restart_if_changed("diisis/plugin/view/embedded", true)
+	ProjectSettings.save()
+	#if DiisisEditorUtil.embedded:
+		#EditorInterface.get_editor_settings().set_restart_if_changed("diisis/plugin/view/editor_scale", true)
+	
+	EditorInterface.get_editor_settings().add_property_info({
+		"name" : "diisis/plugin/view/editor_scale",
+		"type" : TYPE_FLOAT,
+		"hint" : PROPERTY_HINT_RANGE,
+		"hint_string" : "0.5,2.5,0.1"
+	})
+	ProjectSettings.save()
+	
 	add_autoload_singleton(AUTOLOAD_SHARED_DIISIS, "res://addons/diisis/shared/autoload/Diisis.tscn")
 	add_editor_singletons()
 	add_parser_singletons()

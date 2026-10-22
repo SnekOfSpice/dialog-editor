@@ -10,9 +10,8 @@ func update(line_index:int, max_reach):
 	spinner.max_value = max_reach
 	
 	if deserialized_range > -1:
-		spinner.max_value
+		spinner.max_value = deserialized_range
 		spinner.set_value_no_signal(deserialized_range)
-		deserialized_range = -1
 	
 	find_child("Label").text = str(
 		"spans: (", line_index, " - ", int(line_index + spinner.value),")", "\n",

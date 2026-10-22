@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Container
 
 var text_edit : TextEdit
 
@@ -14,6 +14,11 @@ func init():
 	text_edit.visible = speakers_exist
 	find_child("NoTitleWarning").visible = not speakers_exist
 	find_child("Buttons").visible = speakers_exist
+	
+	# resizing bullshit idk
+	_on_help_button_pressed()
+	await get_tree().process_frame
+	_on_help_button_pressed()
 
 func _on_text_edit_text_changed() -> void:
 	var save_button : Button = find_child("SaveButton")
