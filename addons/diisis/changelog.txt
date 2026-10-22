@@ -13,7 +13,7 @@
 - display fixes to ingestion actor window
 - add mass prettification window
 - Add tooltips to the checkboxes in the stringkit save options
-
+- put "ctrl+" next to all the shortcut texts
 
 0.9
 post TDOHN update (Or: The hot reload fixes update, apparently)

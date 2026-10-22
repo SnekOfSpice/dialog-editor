@@ -200,16 +200,14 @@ func init(active_file_path:="") -> void:
 	file_item.add_submenu_node_item("Recent", recents_item)
 	update_recents_item()
 	file_item.add_separator()
-	file_item.add_item("Import    (Shift+I)", 6)
-	file_item.add_item("Export    (Shift+E)", 5)
+	file_item.add_item("Import    (Ctrl+Shift+I)", 6)
+	file_item.add_item("Export    (Ctrl+Shift+E)", 5)
 	file_item.add_item("Configure Regions...")
 	file_item.add_separator()
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	
 	
 	file_item.add_item("Localization")
-	file_item.add_item("Open with Ctrl + ...")
-	file_item.set_item_disabled(file_item.item_count - 1, true)
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
 	%TextSizeButton.visible = not DiisisEditorUtil.embedded
@@ -219,14 +217,10 @@ func init(active_file_path:="") -> void:
 	if Pages.silly:
 		utility_item.add_separator("Silly")
 		utility_item.add_submenu_node_item("Find in Library of Babel", %LibraryOfBabel)
-	utility_item.add_item("Open with Ctrl + ...")
-	utility_item.set_item_disabled(utility_item.item_count - 1, true)
 	
 	if DiisisEditorUtil.embedded:
 		%Setup.add_separator("Project")
 		%Setup.add_submenu_node_item("Templates", %TemplatesMenu)
-	%Setup.add_item("Open with Ctrl + ...")
-	%Setup.set_item_disabled(%Setup.item_count - 1, true)
 	
 	open_from_path(active_file_path)
 	
