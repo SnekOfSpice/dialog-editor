@@ -41,6 +41,7 @@ const PREFERENCE_PROPS := [
 	"require_colons_on_actor_ingestion",
 	"save_on_play",
 	"shader",
+	"theme",
 	"show_facts_buttons",
 	"silly",
 	"validate_function_calls_on_focus",
@@ -124,7 +125,8 @@ var jump_page_references_by_page := {}
 #endregion
 
 const STRING_SETTINGS := {
-	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3"
+	"shader" : "Applies a shader to the editor. Restart to apply. Accepts res:// and uid:// paths :3",
+	"theme" : "asf",
 }
 
 
@@ -148,6 +150,7 @@ var replacement_rules := []
 var require_colons_on_actor_ingestion := true
 var save_on_play := true
 var shader := ""
+var theme : String = DiisisEditor.DEFAULT_THEME
 var show_facts_buttons := true
 var silly := true
 var validate_function_calls_on_focus := false

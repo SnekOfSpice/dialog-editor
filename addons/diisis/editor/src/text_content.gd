@@ -434,6 +434,8 @@ func _on_text_box_focus_entered() -> void:
 	fill_active_actors()
 	if text_box.text.is_empty() and Pages.use_dialog_syntax:
 		prepare_line_for_text_insertion()
+	
+	update_inline_tag_prompt()
 
 
 func _on_text_box_text_changed() -> void:

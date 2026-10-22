@@ -85,6 +85,7 @@ func on_settings_changed():
 	auto_continue = Options.auto_continue
 	auto_continue_delay = Options.auto_continue_delay
 
+
 func on_tree_exit():
 	Game.game_stage = null
 

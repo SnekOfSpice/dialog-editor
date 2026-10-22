@@ -31,7 +31,7 @@ func init(n : int = number):
 	find_child("Facts").init()
 	deserialize(data)
 	page_key_line_edit.placeholder_text = "Page " + str(n)
-	%BottomMargin.visible = not DiisisEditorUtil.embedded
+	
 	if n > 0:
 		DiisisEditorUtil.set_up_delete_modulate(find_child("Lines"), find_child("DeleteButton"))
 		DiisisEditorUtil.set_up_delete_modulate(find_child("Info"), find_child("DeleteButton"))
@@ -707,6 +707,12 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
+
+func get_scroll_value() -> Vector2:
+	return Vector2(
+		%ScrollContainer.get_h_scroll_bar().value,
+		%ScrollContainer.get_v_scroll_bar().value,
+	)# + %ScrollContainer.global_position
 
 
 func on_scroll_changed(new_value:int) -> void:

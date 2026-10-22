@@ -10,6 +10,12 @@ size_flags_vertical = 0
 script = ExtResource("1_51yrh")
 
 [node name="ArgHint" parent="." unique_id=238797069 instance=ExtResource("2_a5ryj")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 0.0
 
 [connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]

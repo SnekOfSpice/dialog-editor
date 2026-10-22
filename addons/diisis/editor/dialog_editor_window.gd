@@ -3,13 +3,8 @@ extends Window
 class_name DiisisEditorWindow
 
 var editor : DiisisEditor
-var editor_window : Window
-var window_factor_window : Window
-var editor_start_size:Vector2
-var editor_content_scale:=1.0
 
 var file_path := ""
-#var last_quit_header := ""
 
 signal open_new_file()
 signal closing_editor()
@@ -17,27 +12,16 @@ signal closing_editor()
 
 func _on_about_to_popup() -> void:
 	await get_tree().process_frame
-	editor = find_child("Editor")
-	editor_window = find_child("Window")
-	window_factor_window = find_child("WindowFactorWindow")
-	editor_start_size = editor.size
+	editor = %Editor
 	editor.init(file_path)
 	
 	editor.close_window_request.connect(close_window)
-	
-	editor_window.visible = true
-	window_factor_window.visible = true
 	
 	if not DiisisEditorEventBus.active_path_set.is_connected(_on_save_path_set):
 		DiisisEditorEventBus.active_path_set.connect(_on_save_path_set)
 	
 	await get_tree().process_frame
-	update_content_scale(1.0)
-	
-	await get_tree().process_frame
-	%UpdateAvailable.check_for_updates()
 	_on_save_path_set(file_path)
-
 
 
 func _on_quit_dialog_canceled() -> void:
@@ -59,89 +43,22 @@ func close_window():
 	
 	queue_free()
 
+
 func close_window_and_open_new_file():
 	DiisisEditorEventBus.quit.new_file.emit()
 	close_window()
+
 
 func reload_editor():
 	DiisisEditorEventBus.quit.window_reload.emit()
 	close_window()
 
-func update_content_scale(scale_factor:float):
-	if not editor_window or not editor:
-		return
+
 	
-	editor_window.content_scale_factor = scale_factor
-	
-	editor.size.x = max(size.x, editor_start_size.x) / scale_factor
-	editor.size.y = max(size.y, editor_start_size.y) / scale_factor
-	
-	editor_window.size = size
-	editor_window.size *= 2
-	editor_window.size.y -= find_child("WindowFactorContainer").size.y*2
-	editor_window.position = -size
-	editor_window.position.y += find_child("WindowFactorContainer").size.y
-	
-	find_child("WindowFactorLabel").text = str(scale_factor * 100, "%")
-	window_factor_window.position.y = size.y - find_child("WindowFactorContainer").size.y
-	window_factor_window.size.x = size.x
-	find_child("WindowFactorContainer").size.x = size.x
-	
-	if editor:
-		editor.set_content_scale(scale_factor)
+	#if editor:
+		#editor.set_content_scale(scale_factor)
 
 
-func _on_size_changed() -> void:
-	if is_inside_tree():
-		await get_tree().process_frame
-	update_content_scale(editor_content_scale)
-
-func _on_window_factor_scale_value_changed(value):
-	editor_content_scale = value
-	update_content_scale(editor_content_scale)
-	for window : Window in get_tree().get_nodes_in_group("diisis_scalable_popup"):
-		window.content_scale_factor = value
-
-
-func _on_window_mouse_entered():
-	return
-	if not has_focus():
-		return
-	if $QuitDialog.visible:
-		return
-	if editor.has_open_popup():
-		return
-	editor_window.grab_focus()
-
-
-func _on_window_mouse_exited():
-	return
-	grab_focus()
-
-func _on_window_factor_window_mouse_entered():
-	return
-	if not has_focus():
-		return
-	if $QuitDialog.visible:
-		return
-	if not window_factor_window:
-		return
-	window_factor_window = find_child("WindowFactorWindow")
-	if not window_factor_window:
-		return
-	window_factor_window.grab_focus()
-
-
-func _on_window_factor_window_mouse_exited():
-	grab_focus()
-
-
-func _on_editor_scale_editor_down():
-	find_child("WindowFactorScale").value -= 0.05
-
-
-func _on_editor_scale_editor_up():
-	find_child("WindowFactorScale").value += 0.05
 
 
 func _on_editor_open_new_file() -> void:
@@ -163,14 +80,6 @@ func _on_save_path_set(path : String) -> void:
 	var parts := path.split("/")
 	var file_name := parts[parts.size() - 1]
 	title = str(file_name.trim_suffix(".json"), " - DIISIS - (", path, ")")
-
-
-func _on_reset_scale_button_pressed() -> void:
-	find_child("WindowFactorScale").set_value(1.0)
-
-
-func _on_help_button_pressed() -> void:
-	OS.shell_open("https://snekofspice.github.io/diisis-docs/")
 
 
 func _on_editor_history_altered(is_altered: bool) -> void:
@@ -205,3 +114,13 @@ func _on_editor_close_window_request() -> void:
 
 func _on_editor_reload_window_request() -> void:
 	reload_editor()
+
+
+func _on_size_changed() -> void:
+	await get_tree().process_frame
+	var a : Vector2= %Editor.position + (%Editor.size * 0.5)
+	$Camera2D.set_deferred("position", a)
+	#%Editor.size = size
+	#%Editor.set_deferred("size",-size)
+	#%Editor.set_deferred("position", -size)
+	#%Editor.set_anchors_and_offsets_preset.bind(Control.PRESET_FULL_RECT).call_deferred()

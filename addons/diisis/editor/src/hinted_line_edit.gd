@@ -54,19 +54,20 @@ func update_hint(new_text: String):
 	
 	option_list_string = option_list_string.trim_suffix("\n")
 	if not just_submitted:
-		$ArgHint.popup()
+		$ArgHint.show()
 		just_submitted = false
 	
-	var caret_pos = Vector2i(global_position)
+	var caret_pos = Vector2.ZERO#(global_position)
 	
-	if DiisisEditorUtil.embedded:
-		caret_pos += Vector2i(EditorInterface.get_base_control().get_screen_position())
+	#if DiisisEditorUtil.embedded:
+		#caret_pos += Vector2(EditorInterface.get_base_control().get_screen_position())
 	
 	caret_pos.x += int(get_caret_draw_pos().x)
-	caret_pos *= Pages.editor.content_scale
+	#caret_pos *= Pages.editor.content_scale
 	caret_pos.y += size.y
 	$ArgHint.build_str(option_list_string)
 	$ArgHint.position = caret_pos
+
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventKey:

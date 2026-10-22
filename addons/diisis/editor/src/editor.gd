@@ -11,8 +11,6 @@ enum PageView {
 
 signal request_template_setup(template_id : int)
 
-signal scale_editor_up()
-signal scale_editor_down()
 signal open_new_file()
 #signal save_path_set(active_dir:String, active_file_name:String)
 signal save_path_set(path:String)
@@ -121,7 +119,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	if goto_has_focus:
 		find_child("GoTo")._address_bar_grab_focus()
 
-
+const DEFAULT_THEME := "res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres"
 
 func init(active_file_path:="") -> void:
 	Pages.editor = self
@@ -147,12 +145,28 @@ func init(active_file_path:="") -> void:
 	
 	%GoTo.init()
 	
-	var text_size_button : OptionButton = %TextSizeButton
-	text_size_button.clear()
+	arg_hint = %ArgHint
+	if DiisisEditorUtil.embedded:
+		arg_hint_window = Window.new()
+		arg_hint_window.visible = false
+		arg_hint_window.wrap_controls = true
+		arg_hint_window.borderless = true
+		#arg_hint_window.transient = false
+		arg_hint_window.always_on_top = false
+		arg_hint_window.unfocusable = true
+		#arg_hint_window.transparent = true
+		add_child(arg_hint_window)
+		
+		arg_hint.reparent(arg_hint_window, false)
+		
+		
 	
-	for s in Pages.FONT_SIZES:
-		text_size_button.add_item(str(s))
-	text_size_button.select(2)
+	#var text_size_button : OptionButton = %TextSizeButton
+	#text_size_button.clear()
+	#
+	#for s in Pages.FONT_SIZES:
+		#text_size_button.add_item(str(s))
+	#text_size_button.select(2)
 	
 	tree_entered.connect(on_tree_entered)
 	
@@ -162,9 +176,10 @@ func init(active_file_path:="") -> void:
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
 		popup.exclusive = DiisisEditorUtil.embedded
-		popup.always_on_top = not DiisisEditorUtil.embedded
+		popup.always_on_top = false#not DiisisEditorUtil.embedded
 		popup.wrap_controls = true
-		popup.transient = DiisisEditorUtil.embedded
+		popup.minimize_disabled = true
+		popup.transient = true#DiisisEditorUtil.embedded
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
@@ -197,6 +212,7 @@ func init(active_file_path:="") -> void:
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
 	%TextSizeButton.visible = not DiisisEditorUtil.embedded
+	hide_arg_hint()
 	
 	var utility_item : PopupMenu = %Utility
 	if Pages.silly:
@@ -214,6 +230,14 @@ func init(active_file_path:="") -> void:
 	open_from_path(active_file_path)
 	
 	undo_redo.version_changed.connect(set.bind("altered_history", true))
+	
+	
+	if Pages.theme != DEFAULT_THEME:
+		if Pages.theme.is_empty():
+			theme = null
+		else:
+			theme = load(Pages.theme)
+	
 	
 	if not Pages.shader.is_empty():
 		var layer = CanvasLayer.new()
@@ -248,10 +272,10 @@ func init(active_file_path:="") -> void:
 		opening = false
 		Pages.ensure_line_reader_scripts()
 	
-	%EmbedHint.visible = DiisisEditorUtil.embedded
+	%FilePathLabel.visible = DiisisEditorUtil.embedded
 	if DiisisEditorUtil.embedded:
 		%UpdateAvailable.check_for_updates()
-		%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+		_update_silly_companion()
 		if active_file_path.is_empty():
 			%FilePathLabel.text = DIISIS.UNSAVED_FILE_PATH
 	if not DiisisEditorUtil.embedded:
@@ -266,12 +290,19 @@ func init(active_file_path:="") -> void:
 		DiisisEditorEventBus.quit.new_file.connect(plugin.on_new_file_requested)
 	
 	save_to_recent_files(active_file_path)
+	
+	await get_tree().process_frame
+	%UpdateAvailable.check_for_updates()
 
 
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
 
+
+func _update_silly_companion() -> void:
+	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+	%SillyCompanionEmbedLabel.visible = Pages.silly
 
 func set_content_scale(factor:float):
 	content_scale = factor
@@ -282,6 +313,9 @@ func set_content_scale(factor:float):
 	
 	for window : Window in $Popups.get_children():
 		window.content_scale_factor = content_scale
+
+
+var arg_hint : DIISISArgHint
 
 func update_page_view(view:PageView):
 	Pages.editor_page_view = view
@@ -487,10 +521,6 @@ func _shortcut_input(event):
 					select_line_type(DIISIS.LineType.Instruction)
 				KEY_4:
 					select_line_type(DIISIS.LineType.Folder)
-				KEY_MINUS:
-					emit_signal("scale_editor_down")
-				KEY_PLUS:
-					emit_signal("scale_editor_up")
 		if event.is_alt_pressed():
 			match event.key_label:
 				KEY_LEFT, KEY_A:
@@ -834,8 +864,8 @@ func open_from_path(path:String):
 			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	set_text_size(Pages.editor_text_size_id)
-	%TextSizeButton.select(Pages.editor_text_size_id)
+	#set_text_size(Pages.editor_text_size_id)
+	#%TextSizeButton.select(Pages.editor_text_size_id)
 	update_page_view(Pages.editor_page_view)
 	
 	await get_tree().process_frame
@@ -1096,41 +1126,62 @@ func _on_setup_id_pressed(id: int) -> void:
 
 #endregion
 
-
 func request_arg_hint(text_box:Control):
 	if not (text_box is LineEdit or text_box is TextEdit):
 		push_error(str("Tried calling request_arg_hint with object of type ", text_box.get_class()))
 		return
 	
-	var caret_pos = Vector2i.ZERO
-	#if text_box is TextEdit:
-	caret_pos += Vector2i(text_box.get_caret_draw_pos())
+	var caret_pos : Vector2 = text_box.global_position
+	
+	if DiisisEditorUtil.embedded:
+		caret_pos += EditorInterface.get_base_control().get_screen_position()
+		#caret_pos = global_position.direction_to(text_box.global_position)
+		#caret_pos += get_current_page().get_scroll_value()
+		#caret_pos -= text_box.position
+		#caret_pos += text_box.position
+		#caret_pos -= text_box.global_position.direction_to(global_position)
 	
 	
+	if text_box is TextEdit:
+		caret_pos += Vector2(text_box.get_caret_draw_pos())# - caret_pos
+	#
+	#
 	if text_box is LineEdit:
+		#caret_pos = get_current_page().get_scroll_value()
 		caret_pos.x -= 50
-		caret_pos.x = text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
-		#caret_pos.y += text_box.size.y
-		caret_pos.y += Vector2i(text_box.global_position).y
-	elif text_box is TextEdit:
-		caret_pos += Vector2i(text_box.global_position)
-	caret_pos *= content_scale
-	caret_pos += Vector2(0, 10) * content_scale
+		caret_pos.x += text_box.get_theme_font("font").get_string_size(text_box.text.substr(0, text_box.get_caret_column())).x
+		caret_pos.y += text_box.size.y
+	
+	
 	
 	_place_arg_hint(caret_pos)
 	
 	text_box.set_caret_column(text_box.get_caret_column())
 	text_box.call_deferred("grab_focus")
 
+var arg_hint_window : Window
+
 func _place_arg_hint(at:Vector2):
-	(find_child("ArgHint") as DIISISArgHint).position = Vector2i(at)
+	if DiisisEditorUtil.embedded:
+		arg_hint_window.popup()
+		arg_hint_window.position = Vector2i(at)
+	else:
+		arg_hint.global_position = Vector2i(at)
+
 
 func build_arg_hint(instruction_name:String, full_arg_text:String, caret_column:int, on_node : Control = null):
-	(find_child("ArgHint") as DIISISArgHint).build(instruction_name, full_arg_text, caret_column, on_node)
-	(find_child("ArgHint") as DIISISArgHint).popup()
+	arg_hint.build(instruction_name, full_arg_text, caret_column, on_node)
+	arg_hint.show()
+	if DiisisEditorUtil.embedded:
+		arg_hint_window.size = arg_hint.size
+		arg_hint.position = Vector2.ZERO
+		arg_hint_window.popup()
 
 func hide_arg_hint():
-	find_child("ArgHint").hide()
+	if DiisisEditorUtil.embedded:
+		arg_hint_window.hide()
+	else:
+		arg_hint.hide()
 
 func step_through_pages():
 	var next_page = get_current_page_number() + 1
@@ -1275,12 +1326,13 @@ func _on_show_errors_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_text_size_button_item_selected(index: int) -> void:
-	set_text_size(index)
+	return
+	#set_text_size(index)
 	
-func set_text_size(size_index:int):
-	Pages.editor_text_size_id = size_index
-	var label_size = Pages.FONT_SIZES[size_index]
-	Pages.set_size_override(Pages.get_editor_window(), label_size)
+#func set_text_size(size_index:int):
+	#Pages.editor_text_size_id = size_index
+	#var label_size = Pages.FONT_SIZES[size_index]
+	#Pages.set_size_override(Pages.get_editor_window(), label_size)
 
 
 func popup_ingest_file_dialog(context:Array):
@@ -1494,7 +1546,7 @@ func _on_templates_menu_id_pressed(id: int) -> void:
 
 func _on_active_path_set(path : String):
 	%FilePathLabel.text = path
-	%SillyCompanionEmbedLabel.text = Pages.make_puppy() if Pages.silly else ""
+	_update_silly_companion()
 
 
 func update_recents_item():
@@ -1518,8 +1570,8 @@ func save_preferences():
 	var plugin := Engine.get_meta("DIISISPlugin")
 	if not plugin._embedded:
 		if is_instance_valid(plugin.dia_editor_window):
-			if is_instance_valid(plugin.dia_editor_window.editor_window):
-				config.set_value("editor", "content_scale", plugin.dia_editor_window.editor_window.content_scale_factor)
+			#if is_instance_valid(plugin.dia_editor_window.editor_window):
+				#config.set_value("editor", "content_scale", plugin.dia_editor_window.editor_window.content_scale_factor)
 			config.set_value("editor", "size", plugin.dia_editor_window.size)
 			config.set_value("editor", "position", plugin.dia_editor_window.position)
 			config.set_value("editor", "mode", plugin.dia_editor_window.mode)
@@ -1547,5 +1599,5 @@ func _load_preferences():
 		dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
 		dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
 		
-		await get_tree().process_frame
-		dia_editor_window.update_content_scale(scale)
+		#await get_tree().process_frame
+		#dia_editor_window.update_content_scale(scale)

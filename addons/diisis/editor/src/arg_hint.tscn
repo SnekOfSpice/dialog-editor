@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://c8x0g5j6sofbe" path="res://addons/diisis/editor/src/arg_hint.gd" id="1_3il64"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wtkdm"]
+bg_color = Color(0.10980392, 0.06666667, 0.12941177, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qyxl3"]
 content_margin_left = 6.0
 content_margin_top = 4.0
@@ -9,23 +12,19 @@ content_margin_right = 6.0
 content_margin_bottom = 4.0
 bg_color = Color(0.109828, 0.0663, 0.13, 1)
 
-[node name="ArgHint" type="Window" unique_id=1246299580]
-gui_disable_input = true
-oversampling_override = 1.0
-size = Vector2i(12, 8)
-wrap_controls = true
-borderless = true
-unfocusable = true
-mouse_passthrough = true
+[node name="ArgHint" type="PanelContainer" unique_id=1940690334]
+anchors_preset = -1
+anchor_right = 0.165
+anchor_bottom = 0.094000004
+offset_right = -0.08000183
+offset_bottom = 0.08799744
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wtkdm")
 script = ExtResource("1_3il64")
 
 [node name="TextLabel" type="RichTextLabel" parent="." unique_id=954907409]
 unique_name_in_owner = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 0
 mouse_filter = 2
@@ -34,5 +33,3 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_qyxl3")
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
-
-[connection signal="close_requested" from="." to="." method="_on_close_requested"]
