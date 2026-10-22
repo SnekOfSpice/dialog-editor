@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bq1w46mgmwxy" path="res://addons/diisis/editor/src/stringkit_item.gd" id="1_sgb4l"]
 [ext_resource type="FontFile" uid="uid://cr070goc8cxgh" path="res://addons/diisis/editor/visuals/theme/fonts/DIISISUI.ttf" id="2_210d5"]
+[ext_resource type="Script" uid="uid://bocur4gr4xvq4" path="res://addons/diisis/editor/src/richtext_tooltip_haver.gd" id="3_hnkdv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_or1s3"]
 content_margin_left = 4.0
@@ -178,16 +179,21 @@ layout_mode = 2
 
 [node name="ReplaceInTextCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters" unique_id=1963699196]
 layout_mode = 2
+tooltip_text = "Dialog arguments and ingestion actors will be adjusted."
 focus_mode = 0
 button_pressed = true
 text = "Adjust Text"
+script = ExtResource("3_hnkdv")
 
 [node name="ReplaceSpeakersCheckBox" type="CheckBox" parent="OptionsContainer/HBoxContainer/PanelContainer/VBoxContainer/Parameters" unique_id=825612418]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "This stringkit is declared as Speaker.
+Each entry will be updated in the actor tags ([code][]>oldvalue:[/code] becomes [code][]>newvalue:[/code])"
 focus_mode = 0
 button_pressed = true
 text = "Replace in Speakers"
+script = ExtResource("3_hnkdv")
 
 [node name="DiscardOptionsButton" type="Button" parent="OptionsContainer/HBoxContainer" unique_id=336660342]
 auto_translate_mode = 1

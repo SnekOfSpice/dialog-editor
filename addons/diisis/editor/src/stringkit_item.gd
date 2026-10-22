@@ -180,8 +180,14 @@ func set_list_size(s: Vector2):
 	_on_stringkit_options_text_resized()
 
 
+var replace_state_before_disable := false # not a replacing flag but a descriptor of the state of the replacing flag
 func _on_replace_in_text_check_box_toggled(toggled_on: bool) -> void:
 	%ReplaceSpeakersCheckBox.disabled = not toggled_on
+	if %ReplaceSpeakersCheckBox.disabled:
+		replace_state_before_disable = %ReplaceSpeakersCheckBox.button_pressed
+		%ReplaceSpeakersCheckBox.set_pressed_no_signal(false)
+	else:
+		%ReplaceSpeakersCheckBox.set_pressed_no_signal(replace_state_before_disable)
 
 
 func _on_save_parameters_button_pressed() -> void:

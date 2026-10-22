@@ -12,6 +12,7 @@
 - Add LineReader.put_prefixes_after_prepends
 - display fixes to ingestion actor window
 - add mass prettification window
+- Add tooltips to the checkboxes in the stringkit save options
 
 
 0.9
