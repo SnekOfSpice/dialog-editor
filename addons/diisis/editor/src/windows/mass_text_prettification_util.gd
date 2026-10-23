@@ -53,8 +53,20 @@ func _on_confirm_button_pressed() -> void:
 	%ProgressLabel.text = ""
 
 
+#var _buttons : Array[CheckBox] = [
+	#%CapitalizeCheckBox, %WhitespaceCheckBox, %PunctuationCheckBox, %SkillcheckCheckBox
+#]
+
+
 func _on_toggle_selection_button_pressed() -> void:
 	var goal : bool = not %CapitalizeCheckBox.button_pressed
 	
-	for button : CheckBox in %Buttons.get_children():
+	for button : CheckBox in [
+	%CapitalizeCheckBox, %WhitespaceCheckBox, %PunctuationCheckBox, %SkillcheckCheckBox
+]:
 		button.set_pressed_no_signal(goal)
+
+
+func _on_punctuation_settings_button_pressed() -> void:
+	var window : Window = Pages.editor.open_window_by_string("PunctuationRulesWindow")
+	window.close_requested.connect(get_parent().grab_focus.call_deferred, CONNECT_ONE_SHOT)

@@ -1048,10 +1048,9 @@ var has_unsaved_changes:bool:
 func _on_editor_id_pressed(id: int) -> void:
 	match id:
 		0:
-			
 			try_reload_editor_window()
 		1:
-			open_window_by_string("PunctuationRulesWindow")
+			step_through_pages()
 		3:
 			# config
 			open_window_by_string("FileConfigPopup")
@@ -1101,10 +1100,8 @@ func _on_utility_id_pressed(id: int) -> void:
 			popup_accept_dialogue(dialog_text, "Word & Character Count")
 		1: 
 			open_window_by_string("TextSearchPopup")
-		2:
-			open_window_by_string("IngestionActorSetupWindow")
 		3:
-			step_through_pages()
+			open_window_by_string("PunctuationRulesWindow")
 		4:
 			open_window_by_string("ActorSearchWindow")
 		7:
@@ -1128,6 +1125,8 @@ func _on_setup_id_pressed(id: int) -> void:
 			open_popup($Popups.get_node("MovePagePopup"))
 		8:
 			open_window_by_string("DialogConfigWindow")
+		7:
+			open_window_by_string("IngestionActorSetupWindow")
 
 #endregion
 

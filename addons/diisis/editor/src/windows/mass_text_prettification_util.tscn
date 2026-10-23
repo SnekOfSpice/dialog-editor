@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c7iym85dftjoi"]
 
 [ext_resource type="Script" uid="uid://cdwugjk8ahume" path="res://addons/diisis/editor/src/windows/mass_text_prettification_util.gd" id="1_w0hhc"]
+[ext_resource type="Texture2D" uid="uid://dr14yjk3qv5ph" path="res://addons/diisis/editor/visuals/theme/buttons_ui/settings_generic.png" id="2_qps8d"]
 
 [node name="MassTextPrettificationUtil" type="PanelContainer" unique_id=179468811]
 anchors_preset = 15
@@ -29,7 +30,6 @@ text = "Choose any of the following operations to apply to all text items in the
 layout_mode = 2
 
 [node name="Buttons" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=502756874]
-unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -43,10 +43,19 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Neaten Whitespace"
 
-[node name="PunctuationCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=1758385617]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=1630999034]
+layout_mode = 2
+
+[node name="PunctuationCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons/HBoxContainer" unique_id=1758385617]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Fix Punctuation"
+
+[node name="PunctuationSettingsButton" type="Button" parent="VBoxContainer/HBoxContainer/Buttons/HBoxContainer" unique_id=2113171291]
+layout_mode = 2
+tooltip_text = "Open punctuation settings"
+icon = ExtResource("2_qps8d")
 
 [node name="SkillcheckCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer/Buttons" unique_id=1015127095]
 unique_name_in_owner = true
@@ -68,4 +77,5 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="pressed" from="VBoxContainer/ToggleSelectionButton" to="." method="_on_toggle_selection_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Buttons/HBoxContainer/PunctuationSettingsButton" to="." method="_on_punctuation_settings_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

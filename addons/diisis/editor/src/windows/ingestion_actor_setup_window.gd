@@ -8,9 +8,8 @@ func _on_about_to_popup() -> void:
 	await get_tree().process_frame
 	size = Vector2i.ZERO
 	
-	position = get_mouse_position()
-	#var rect : Rect2i = DisplayServer.screen_get_usable_rect(DisplayServer.SCREEN_WITH_MOUSE_FOCUS)
-	#position.y += 25
+	await RenderingServer.frame_post_draw
+	position = Pages.editor.size * 0.5 - size * 0.5
 
 
 func _on_close_requested() -> void:
