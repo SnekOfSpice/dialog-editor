@@ -661,6 +661,12 @@ func get_compliances() -> Dictionary:
 		if not text_box.text.ends_with(">"):
 			compliances["Full Body Replacement Function"] = "text cannot end with anything other than >"
 	
+	if text_box.text.contains("<skillcheck:"):
+		var skillcheck_regex := RegEx.create_from_string("<skillcheck:\\s*\\w+,\\s*\\d+>")
+		var correct_skillcheck_count :int = skillcheck_regex.search_all(text_box.text).size()
+		var attempted_skillcheck_count : int = text_box.text.count("<skillcheck:")
+		if correct_skillcheck_count < attempted_skillcheck_count:
+			compliances["%s Malformatted Skillcheck(s)" % (attempted_skillcheck_count - correct_skillcheck_count)] = "Skillcheck should contain skill name and threshold value"
 	
 	for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 		var closing_count : int = text_box.text.count("</%s>" % tag)

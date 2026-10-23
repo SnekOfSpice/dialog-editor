@@ -15,6 +15,7 @@
 - Add tooltips to the checkboxes in the stringkit save options
 - put "ctrl+" next to all the shortcut texts
 - bring enum names in line with godot conventions
+- on completing skillcheck, insert newline and []> stuff with the current line's actor
 
 0.9
 post TDOHN update (Or: The hot reload fixes update, apparently)
