@@ -22,11 +22,9 @@ func init():
 	if not gui_input.is_connected(_on_gui_input):
 		gui_input.connect(_on_gui_input)
 	
-	_get_visibility_toggle_button().tooltip_text = "Toggle " + ("conditionals" if self is Conditionals else "facts")
+	_get_visibility_toggle_button().tooltip_text = "Open/Close " + ("conditionals" if self is Conditionals else "facts")
 	_get_visibility_toggle_button().add_theme_font_override("font", load("uid://b1go3dnopnsup"))
-	_get_visibility_toggle_button().add_theme_font_size_override("font_size", 20)
 	_get_visibility_toggle_button().visible = Pages.show_facts_buttons
-	#visible = Pages.show_facts_buttons
 	update()
 
 func _get_visibility_toggle_button() -> CheckButton:
@@ -44,11 +42,13 @@ func set_visibility(value:bool):
 		find_child("Controls").visible = value
 		facts_container.visible = value
 
+
 func toggle_visibility():
 	if visibility_toggle_button:
 		set_visibility(not visible)
 	else:
 		set_visibility(not find_child("Controls").visible)
+
 
 func serialize() -> Dictionary:
 	var result := {}
@@ -61,6 +61,7 @@ func serialize() -> Dictionary:
 	else:
 		result["meta.visible"] = find_child("Controls").visible
 	return result
+
 
 func deserialize(data: Dictionary):
 	for fact in facts_container.get_children():
@@ -76,6 +77,7 @@ func deserialize(data: Dictionary):
 		find_child("PuppyLabel").text = Pages.make_puppy() if Pages.silly else ""
 	update()
 
+
 func add_fact_from_serialized(fact_data:Dictionary):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
 	facts_container.add_child(f)
@@ -83,6 +85,7 @@ func add_fact_from_serialized(fact_data:Dictionary):
 	f.deserialize(fact_data)
 	f.request_delete_fact.connect(request_delete_fact)
 	update()
+
 
 func add_fact(fact_name: String, fact_value, conditional:=false):
 	var f = preload("res://addons/diisis/editor/src/fact_item.tscn").instantiate()
@@ -123,6 +126,7 @@ func request_delete_fact(fact_name:String):
 	undo_redo.add_undo_method(DiisisEditorActions.add_fact.bind(address, address_depth, fact_name, fact_value))
 	undo_redo.commit_action()
 
+
 func delete_fact(fact_name:String):
 	for c : FactItem in facts_container.get_children():
 		if c.get_fact_name() == fact_name:
@@ -131,6 +135,7 @@ func delete_fact(fact_name:String):
 			break
 	await get_tree().process_frame
 	update()
+
 
 func get_address_suffixed() -> String:
 	var address = DiisisEditorUtil.get_address(self, address_depth)
@@ -141,6 +146,7 @@ func get_address_suffixed() -> String:
 		address += "f"
 	
 	return address
+
 
 func request_add_fact():
 	var fact_name = ""
