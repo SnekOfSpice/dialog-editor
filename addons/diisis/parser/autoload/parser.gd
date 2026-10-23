@@ -4,6 +4,14 @@ extends Node
 ## uwu
 
 
+const MAX_LINE_LENGTH := 10
+
+
+signal line_started(line)
+signal page_terminated(page_index: int)
+signal page_finished(page_index: int)
+
+
 enum RollbackDeclineReason {
 	HIT_CHOICE = 1,
 	HIT_FOLDER = 3,
@@ -70,20 +78,14 @@ var full_custom_method_defaults := {}
 
 var max_line_index_on_page := 0
 
-const MAX_LINE_LENGTH := 10
-
-
-signal read_new_line(line)
-signal page_terminated(page_index: int)
-signal page_finished(page_index: int)
-signal read_new_page(page_index: int)
 
 var history := []
 
 var address_trail_index := -1
 var address_trail := []
 
-var last_modified_time = 0
+var _last_modified_time = 0
+var _region_end : String
 
 ## dynamically built helper array to speed up some function calls
 var page_keys := []
@@ -140,7 +142,7 @@ func _on_rollback_declined(reason : RollbackDeclineReason):
 func full_initialize(path : String):
 	var data = _get_data(path)
 	
-	last_modified_time = FileAccess.get_modified_time(_get_current_path())
+	_last_modified_time = FileAccess.get_modified_time(_get_current_path())
 	
 	_initialize(data)
 	_apply_debug_fact_payload()
@@ -194,7 +196,7 @@ func _process(delta: float) -> void:
 	# hot reload support
 	var source_path := _get_current_path(true)
 	var modified_time = FileAccess.get_modified_time(source_path)
-	if modified_time != last_modified_time:
+	if modified_time != _last_modified_time:
 		var current_address : String = address_trail[address_trail_index]
 		var current_id : String = get_line_data(current_address).get("id")
 		while not FileAccess.file_exists(source_path):
@@ -206,7 +208,7 @@ func _process(delta: float) -> void:
 		var target_indices := _get_hot_reload_position(current_id)
 		
 		read_page(target_indices.x, target_indices.y)
-	last_modified_time = FileAccess.get_modified_time(source_path)
+	_last_modified_time = FileAccess.get_modified_time(source_path)
 
 # This is an internal function that implements project lookback
 # returns the target page in x and target line in y
@@ -397,12 +399,14 @@ func build_history_string(separator_string:="\n", from:=0, to:=-1) -> String:
 func get_page_number(key:String) -> int:
 	return page_keys.find(key)
 
+
 func read_page_by_key(key:String, starting_line_index := 0):
 	var number = get_page_number(key)
 	if number == -1:
 		push_error(str("Couldn't find page with key \"", key, "\"."))
 		return
 	read_page(number, starting_line_index)
+
 
 func read_page(starting_page_index: int, starting_line_index := 0):
 	if not page_data.keys().has(starting_page_index):
@@ -411,13 +415,13 @@ func read_page(starting_page_index: int, starting_line_index := 0):
 	
 	if page_data.get(starting_page_index).get("skip", false):
 		if is_terminating(starting_page_index):
-			emit_signal("page_terminated", starting_page_index)
+			page_terminated.emit(starting_page_index)
 			return
 		read_page(get_next(starting_page_index), starting_line_index)
 		return
 	
 	set_paused(false)
-	ParserEvents.read_new_page.emit(starting_page_index)
+	ParserEvents.page_started.emit(starting_page_index)
 	page_index = starting_page_index
 	lines = page_data.get(page_index).get("lines")
 	max_line_index_on_page = lines.size() - 1
@@ -553,8 +557,6 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	
 	return get_line_type(previous_address)
 
-
-var region_end : String
 
 ## Returns a dictionary with the following keys:
 ## [br] - [code]actors[/code]: An [Array] containing the keys of all speakers within this region.
@@ -700,13 +702,13 @@ func read_line(index: int):
 	address_trail.append(new_address)
 	
 	var new_region_end = get_region_end()
-	if new_region_end != region_end:
+	if new_region_end != _region_end:
 		ParserEvents.region_changed.emit()
-	region_end = new_region_end
+	_region_end = new_region_end
 	
 	var line_data : Dictionary = lines[index]
 	line_id = line_data.get("id", "")
-	emit_signal("read_new_line", line_data)
+	emit_signal("line_started", line_data)
 	
 
 func read_next_line(finished_line_index: int):
@@ -747,7 +749,7 @@ func terminate():
 		return
 	terminated_line_index = line_index
 	terminated_page_index = page_index
-	emit_signal("page_terminated", page_index)
+	page_terminated.emit(page_index)
 	ParserEvents.page_finished.emit(page_index)
 	ParserEvents.page_terminated.emit(page_index)
 
@@ -905,16 +907,6 @@ func load_parser_state(save_dir_name: String, pause_after_load:=false) -> Dictio
 	
 	return data.get("Custom", {})
 
-func _str_to_typed(value:String, type:int):
-	match type:
-		TYPE_FLOAT:
-			return float(value)
-		TYPE_INT:
-			return int(value)
-		TYPE_BOOL:
-			var cast : bool = true if value == "true" else false
-			return cast
-	return String(value)
 
 ## After you call a function from LineReader that returns [code]true[/code], [Parser] and [LineReader] will be in a suspended state, waiting to continue until this function is called.
 ## Call this from anywhere to continue reading the script when such a function is done.
@@ -931,7 +923,6 @@ func function_acceded():
 
 func get_next_line_data() -> Dictionary:
 	return _get_next_line_data_custom(line_index, page_data.get(page_index, {}))
-
 
 
 func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Dictionary:
@@ -974,6 +965,7 @@ func _get_next_line_data_custom(from_line:int, local_page_data:Dictionary) -> Di
 	
 	return _get_next_line_data_custom(0, page_data_to_visit_next)
 
+
 func _ensure_actor_dir_exists(parent_dir : String):
 	var access = DirAccess.open(parent_dir)
 	var actor_dir := str(parent_dir, "/actors")
@@ -986,6 +978,7 @@ func _save_actor_config(dir : String):
 	for actor in line_reader.actor_config.keys():
 		var res_path := str(dir, "/actors/", actor, ".tres")
 		ResourceSaver.save(line_reader.actor_config.get(actor), res_path)
+
 
 func _load_actor_config(dir:String):
 	_ensure_actor_dir_exists(dir)

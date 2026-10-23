@@ -16,6 +16,7 @@
 - put "ctrl+" next to all the shortcut texts
 - bring enum names in line with godot conventions
 - on completing skillcheck, insert newline and []> stuff with the current line's actor
+- rename ParserEvents.read_new_page/read_new_line to page_started/line_started to bring it in line with page_terminated and page_finished
 
 0.9
 post TDOHN update (Or: The hot reload fixes update, apparently)

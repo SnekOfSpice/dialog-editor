@@ -696,8 +696,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	Parser.connect("read_new_line", _read_new_line)
-	Parser.connect("page_terminated", _close)
+	Parser.line_started.connect(_read_line)
+	Parser.page_terminated.connect(_close)
 	ParserEvents.comment.connect(_on_comment)
 	ParserEvents.rollback_accepted.connect(_on_rollback_accepted)
 	
@@ -920,14 +920,14 @@ func _close(_terminating_page):
 	terminated = true
 
 var _last_text_line_id : String
-func _read_new_line(new_line: Dictionary):
+func _read_line(new_line: Dictionary):
 	_line_data = new_line
 	var skip : bool = _line_data.get("skip", false)
 	line_index = new_line.get("meta.line_index")
 	line_type = int(_line_data.get("line_type"))
 	terminated = false
 	if not skip:
-		ParserEvents.read_new_line.emit(line_index)
+		ParserEvents.line_started.emit(line_index)
 	
 	var eval = _evaluate_conditionals(_line_data.get("conditionals"))
 	var conditional_is_true : bool = eval[0]
@@ -3315,7 +3315,7 @@ func call_from_string(text:String, call_mode := CallMode.CALL, call_position := 
 		var default = Parser.get_custom_method_defaults(func_name).get(arg_names[i])
 		if arg_string == "*" and default != null:
 			arg_string = str(default)
-		args.append(Parser._str_to_typed(arg_string, type))
+		args.append(_str_to_typed(arg_string, type))
 		
 		i += 1
 	
@@ -3475,3 +3475,15 @@ func is_at_end_of_line(non_text_return_value:=true) -> bool:
 ## [br]Useful for text speed previews in options menus
 static func get_body_label_progress_step(text_speed : float, parsed_text : String, delta) -> float:
 	return (text_speed / parsed_text.length()) * delta
+
+
+func _str_to_typed(value:String, type:int):
+	match type:
+		TYPE_FLOAT:
+			return float(value)
+		TYPE_INT:
+			return int(value)
+		TYPE_BOOL:
+			var cast : bool = true if value == "true" else false
+			return cast
+	return String(value)

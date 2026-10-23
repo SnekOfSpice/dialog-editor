@@ -5,9 +5,9 @@ var states_by_page := {}
 
 func _ready() -> void:
 	ParserEvents.rollback_accepted.connect(on_rollback_accepted)
-	ParserEvents.read_new_line.connect(on_read_new_line)
+	ParserEvents.line_started.connect(on_line_started)
 
-func on_read_new_line(line:int):
+func on_line_started(line:int):
 	await get_tree().process_frame
 	#line -= 1
 	# save the state

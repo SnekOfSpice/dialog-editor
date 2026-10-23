@@ -65,7 +65,7 @@ signal page_finished(
 )
 
 ## Emitted when a new page is read.
-signal read_new_page(
+signal page_started(
 	number:int
 )
 
@@ -179,7 +179,7 @@ signal rollback_declined(reason:Parser.RollbackDeclineReason)
 ## Emitted when a new line is read because of a successful [method LineReader.request_rollback] call. [param page] and [param line] are the indices of the new line.[br]
 signal rollback_accepted(page:int, line:int, dialine_about_to_read:int)
 
-signal read_new_line(line_index:int)
+signal line_started(line_index:int)
 
 ## Emitted when [LineReader] skips a line. A line is skipped when it's toggled off with the eye icon in the top left corner in DIISIS.
 signal line_skipped()
