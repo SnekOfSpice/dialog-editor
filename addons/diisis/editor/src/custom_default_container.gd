@@ -116,7 +116,6 @@ func fill_values_container(method_name:String):#, defaults:Dictionary, limiters:
 		else:
 			var spacer = stringkit_container.add_spacer(false)
 			spacer.custom_minimum_size.y = StringkitTypeSelector.HEIGHT
-	Pages.apply_font_size_overrides(self)
 	await get_tree().process_frame
 	
 	if arg_container.get_child_count() == 0:

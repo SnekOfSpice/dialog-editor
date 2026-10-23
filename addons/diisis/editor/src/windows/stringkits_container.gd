@@ -20,7 +20,6 @@ func init():
 		%StringkitsContainer.add_child(item)
 		item.set_list_size(Pages.editor.get_window().size * 0.25)
 	_on_clear_search_button_pressed()
-	Pages.apply_font_size_overrides(self)
 	
 	var size_before = (get_parent() as Window).size
 	await RenderingServer.frame_post_draw
@@ -48,7 +47,6 @@ func fill_dialog_argument_checkboxes():
 	
 	for item in items:
 		item.set_syntax_button_group(load("res://addons/diisis/editor/src/dialog_argument_syntax_button_group.tres"))
-	Pages.apply_font_size_overrides(self)
 
 
 func toggle_stringkit_dialog_argument(stringkit_title: String, value: bool):
@@ -110,7 +108,6 @@ func create_new_stringkit() -> void:
 	%StringkitsContainer.add_child(item)
 	item.set_list_size(Pages.editor.get_window().size * 0.25)
 	%StringkitNameEdit.text = ""
-	Pages.apply_font_size_overrides(self)
 
 
 func _on_stringkits_container_resized() -> void:

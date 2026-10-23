@@ -517,14 +517,6 @@ icon_alignment = 1
 script = ExtResource("7_7syci")
 page_view = 2
 
-[node name="TextSizeButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer" unique_id=1515539244]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Font Size"
-focus_mode = 0
-theme_override_font_sizes/font_size = 14
-allow_reselect = true
-
 [node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes" unique_id=2127840181]
 auto_translate_mode = 1
 layout_mode = 2
@@ -866,7 +858,6 @@ horizontal_alignment = 1
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddAfter" to="." method="_on_add_after_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/JumpContainer2/HBoxContainer/AddLast" to="." method="_on_add_last_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/VBoxContainer/HBoxContainer/AddLineButton" to="." method="_on_add_line_button_pressed"]
-[connection signal="item_selected" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/PageControl/PageNav/ViewTypes/HBoxContainer/TextSizeButton" to="." method="_on_text_size_button_item_selected"]
 [connection signal="timeout" from="InstructionDefinitionTimer" to="." method="_on_instruction_definition_timer_timeout"]
 [connection signal="file_selected" from="Popups/FDSave" to="." method="_on_fd_save_file_selected"]
 [connection signal="file_selected" from="Popups/FDExportLocales" to="." method="_on_fd_export_locales_file_selected"]

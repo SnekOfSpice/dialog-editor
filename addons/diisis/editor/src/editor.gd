@@ -150,7 +150,7 @@ func init(active_file_path:="") -> void:
 	if DiisisEditorUtil.embedded:
 		arg_hint_window = Window.new()
 		arg_hint_window.visible = false
-		arg_hint_window.wrap_controls = true
+		#arg_hint_window.wrap_controls = true
 		arg_hint_window.borderless = true
 		#arg_hint_window.transient = false
 		arg_hint_window.always_on_top = false
@@ -159,15 +159,7 @@ func init(active_file_path:="") -> void:
 		add_child(arg_hint_window)
 		
 		arg_hint.reparent(arg_hint_window, false)
-		
-		
 	
-	#var text_size_button : OptionButton = %TextSizeButton
-	#text_size_button.clear()
-	#
-	#for s in Pages.FONT_SIZES:
-		#text_size_button.add_item(str(s))
-	#text_size_button.select(2)
 	
 	tree_entered.connect(on_tree_entered)
 	
@@ -185,7 +177,23 @@ func init(active_file_path:="") -> void:
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
 		popup.close_requested.connect(save_preferences)
-		popup.add_to_group("diisis_scalable_popup")
+		popup.about_to_popup.connect(_scale_popup_children.bind(popup))
+		popup.size_changed.connect(_scale_popup_children.bind(popup))
+			
+			#popup.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+			#if not cams_by_popup.has(popup):
+				#var vp := SubViewport.new()
+				#popup.add_child(vp)
+				#var cam := Camera2D.new()
+				#popup.add_child(cam)
+				#cams_by_popup[popup] = cam
+				#cam.position = popup.size * 0.5
+				#popup.size_changed.connect(func():
+					#cam.position = popup.size * 0.5
+					#vp.size = popup.size
+					#)
+			#popup.content_scale_factor = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
+		#)
 	
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = %File
@@ -210,7 +218,6 @@ func init(active_file_path:="") -> void:
 	file_item.add_item("Localization")
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
-	%TextSizeButton.visible = not DiisisEditorUtil.embedded
 	hide_arg_hint()
 	
 	var utility_item : PopupMenu = %Utility
@@ -290,6 +297,29 @@ func init(active_file_path:="") -> void:
 	%UpdateAvailable.check_for_updates()
 
 
+func _scale_popup_children(popup : Window) -> void:
+	var editor_scale : float = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
+	if editor_scale == 1.0:
+		return
+	for child in popup.get_children():
+		if child is Control:
+			child.pivot_offset_ratio = Vector2.ZERO
+			child.position = popup.size * 0.25
+			child.scale = Vector2.ONE * editor_scale
+			child.set_deferred("size", popup.size * (1.0 / editor_scale))
+			child.position = Vector2.ZERO
+			
+			# ok so fun story time
+			# - > child.custom_maximum_size = popup.size * (1.0 / editor_scale)
+			# the above line + a copy with child.custom_minimum_size possibly
+			# deep-killed windows once / or at least some really deep process
+			# that made everything super unresponsive
+			# like 6 minute shutdown sequence
+			# can't reload firefox tabs anymore deep
+			# so note to self: maybe be careful with doing shit with windows directly?
+			# maybe this didn't mesh well with wrap_controls?
+
+
 func on_tree_entered():
 	for c in get_tree().get_nodes_in_group("editor_popup_button"):
 		c.init()
@@ -329,7 +359,6 @@ func load_page(number: int, discard_without_saving:=false):
 	if page_container.get_child_count() == 0:
 		page_instance = preload("res://addons/diisis/editor/src/page.tscn").instantiate()
 		page_container.add_child(page_instance)
-		Pages.apply_font_size_overrides(page_instance)
 	else:
 		page_instance = page_container.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
@@ -859,8 +888,6 @@ func open_from_path(path:String):
 			button.pressed.connect(update_page_view.bind(button.page_view))
 	
 	await get_tree().process_frame
-	#set_text_size(Pages.editor_text_size_id)
-	#%TextSizeButton.select(Pages.editor_text_size_id)
 	update_page_view(Pages.editor_page_view)
 	
 	await get_tree().process_frame
@@ -890,10 +917,11 @@ func notify(message:String, duration:=5.0):
 	%NotificationContainer.add_child(notification)
 	%NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
-	Pages.apply_font_size_overrides(notification)
+
 
 func _on_add_line_button_pressed() -> void:
 	add_line_to_end_of_page()
+
 
 func add_line_to_end_of_page(data:={}):
 	undo_redo.create_action("Add Line")
@@ -1322,15 +1350,6 @@ func _on_show_errors_button_toggled(toggled_on: bool) -> void:
 		
 
 
-func _on_text_size_button_item_selected(index: int) -> void:
-	return
-	#set_text_size(index)
-	
-#func set_text_size(size_index:int):
-	#Pages.editor_text_size_id = size_index
-	#var label_size = Pages.FONT_SIZES[size_index]
-	#Pages.set_size_override(Pages.get_editor_window(), label_size)
-
 
 func popup_ingest_file_dialog(context:Array):
 	ingest_context = context
@@ -1373,8 +1392,9 @@ func popup_confirm_dialogue(rich_text:="", title:="", confirm_callable:=Callable
 	dialog.content_scale_factor = content_scale
 	if not title.is_empty():
 		dialog.title = title
-	Pages.apply_font_size_overrides(dialog)
 	return dialog
+
+
 func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTextAcceptDialog:
 	var dialog = preload("res://addons/diisis/editor/src/rich_text_accept_dialog.tscn").instantiate()
 	$Popups.add_child(dialog)
@@ -1388,7 +1408,6 @@ func popup_accept_dialogue(rich_text:="", title:="", at:=Vector2.ZERO) -> RichTe
 		dialog.position = at
 	if Pages.silly:
 		dialog.ok_button_text = Pages.make_puppy()
-	Pages.apply_font_size_overrides(dialog)
 	return dialog
 
 # returns true if the prompt got opened

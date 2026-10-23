@@ -55,7 +55,6 @@ func _fill():
 	%FilterLineEdit.grab_focus()
 	%UnsubmittedFiltersWarning.hide()
 	set_items_visible_name("")
-	Pages.apply_font_size_overrides(self)
 
 
 func direct_swap(page_clicked: int):
