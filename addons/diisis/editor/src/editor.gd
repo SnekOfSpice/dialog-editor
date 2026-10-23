@@ -150,7 +150,7 @@ func init(active_file_path:="") -> void:
 	if DiisisEditorUtil.embedded:
 		arg_hint_window = Window.new()
 		arg_hint_window.visible = false
-		#arg_hint_window.wrap_controls = true
+		arg_hint_window.wrap_controls = true
 		arg_hint_window.borderless = true
 		#arg_hint_window.transient = false
 		arg_hint_window.always_on_top = false
@@ -169,31 +169,16 @@ func init(active_file_path:="") -> void:
 	for popup : Window in $Popups.get_children():
 		popup.visible = false
 		popup.exclusive = DiisisEditorUtil.embedded
-		popup.always_on_top = false#not DiisisEditorUtil.embedded
+		popup.always_on_top = false
 		popup.wrap_controls = true
 		popup.minimize_disabled = true
-		popup.transient = true#DiisisEditorUtil.embedded
+		popup.transient = true
 		popup.popup_window = false
 		popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
 		popup.theme = theme
 		popup.close_requested.connect(save_preferences)
 		popup.about_to_popup.connect(_scale_popup_children.bind(popup))
 		popup.size_changed.connect(_scale_popup_children.bind(popup))
-			
-			#popup.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-			#if not cams_by_popup.has(popup):
-				#var vp := SubViewport.new()
-				#popup.add_child(vp)
-				#var cam := Camera2D.new()
-				#popup.add_child(cam)
-				#cams_by_popup[popup] = cam
-				#cam.position = popup.size * 0.5
-				#popup.size_changed.connect(func():
-					#cam.position = popup.size * 0.5
-					#vp.size = popup.size
-					#)
-			#popup.content_scale_factor = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
-		#)
 	
 	find_child("ShowErrorsButton").button_pressed = false
 	var file_item : PopupMenu = %File

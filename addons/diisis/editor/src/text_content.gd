@@ -4,17 +4,26 @@ class_name TextContent
 
 signal drop_focus()
 
+const ID_CAPITALIZE := 0
+const ID_WHITESPACE := 1
+const ID_PUNCTUATION := 2
+const ID_SKILLCHECK_INDENT := 3
+const ID_TEXT_ID := 5
+const ID_LOCK := 7
+var submenu_offset := 0
+
+
 const WORD_SEPARATORS :=  ["[", "]", "{", "}", ">", "<", ".", ",", "|", " ", ":", ";", "#", "*", "+", "~", "'"]
 const BBCODE_TAGS := ["b", "i", "u", "s", "img", "url", "font_size", "font", "rainbow", "pulse", "wave", "tornado", "shake", "fade", "code", "char", "center", "left", "right", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
 const BBCODE_TAGS_WITH_EQUALS_PARAMETER := ["url", "font_size", "font","char", "color", "bgcolor", "fgcolor", "outline_size", "outline_color"]
 const BBCODE_TAGS_WITH_ARGUMENTS := [
-
-"rainbow",
-"pulse",
-"wave",
-"tornado",
-"shake",
-"fade",]
+	"rainbow",
+	"pulse",
+	"wave",
+	"tornado",
+	"shake",
+	"fade",
+]
 
 var active_actors := [] # list of character names
 
@@ -100,13 +109,6 @@ func _populate_prepend_actors():
 	for actor in Pages.get_speakers():
 		actor_prepend_popup_menu.add_item(actor)
 
-const ID_CAPITALIZE := 0
-const ID_WHITESPACE := 1
-const ID_PUNCTUATION := 2
-const ID_SKILLCHECK_INDENT := 3
-const ID_TEXT_ID := 5
-const ID_LOCK := 7
-var submenu_offset := 0
 	
 func serialize() -> Dictionary:
 	if not text_id:
@@ -233,6 +235,16 @@ func is_current_line_empty():
 	return text_box.get_line(text_box.get_caret_line()).is_empty()
 
 
+func _get_actor_in_current_dialine() -> String:
+	var text := text_box.get_line(text_box.get_caret_line())
+	text = text.trim_prefix("[]>")
+	text = text.split("{")[0]
+	text = text.split(":")[0]
+	if text in active_actors:
+		return text
+	return ""
+
+
 # CRITICAL
 # DON'T FORGET
 # to make this work, also give the correct things to text_box.code_completion_prefixes on startup!
@@ -274,6 +286,11 @@ func _on_text_box_caret_changed() -> void:
 			if a in DIISIS.CONTROL_SEQUENCES_WITH_COLON:
 				full_tag += ":"
 			full_tag += ">"
+			
+			if a == "skillcheck": # add newlines for this skillcheck
+				var current_actor = _get_actor_in_current_dialine()
+				full_tag += "\n[]>%s:\n[]>%s: " % [current_actor, current_actor]
+			
 			if a in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 				full_tag += "</%s>" % a
 			text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, a, full_tag)
