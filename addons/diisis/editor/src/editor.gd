@@ -31,8 +31,6 @@ var undo_redo_count_at_last_save := 0
 var no_refresh_after_save := false
 
 var undo_redo = UndoRedo.new()
-var core:Control
-var page_container:Control
 var arg_hint : DIISISArgHint
 
 var content_scale := 1.0
@@ -75,9 +73,9 @@ var was_playing_scene := false
 
 
 func get_current_page() -> Page:
-	if page_container.get_child_count() > 0:
-		if page_container.get_child(0) is Page:
-			return page_container.get_child(0)
+	if %PageContainer.get_child_count() > 0:
+		if %PageContainer.get_child(0) is Page:
+			return %PageContainer.get_child(0)
 	return null
 
 
@@ -122,6 +120,11 @@ func refresh(serialize_before_load:=true, fragile:=false):
 
 const DEFAULT_THEME := "res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres"
 
+
+func _ready() -> void:
+	if get_parent() == get_tree().root:
+		init(ProjectSettings.get_setting("diisis/project/file/path"))
+
 func init(active_file_path:="") -> void:
 	Pages.editor = self
 	_load_preferences()
@@ -132,8 +135,6 @@ func init(active_file_path:="") -> void:
 	Pages.clear()
 	DiisisEditorActions.clear()
 	opening = true
-	core = find_child("Core")
-	page_container = core.find_child("PageContainer")
 	
 	Pages.connect("pages_modified", update_controls)
 	
@@ -162,8 +163,6 @@ func init(active_file_path:="") -> void:
 	
 	
 	tree_entered.connect(on_tree_entered)
-	
-	core.visible = true
 	undo_redo.version_changed.connect(update_undo_redo_buttons)
 	
 	for popup : Window in $Popups.get_children():
@@ -332,16 +331,16 @@ func load_page(number: int, discard_without_saving:=false):
 		return
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
-	for page in page_container.get_children():
+	for page in %PageContainer.get_children():
 		if not discard_without_saving:
 			page.save()
 	
 	var page_instance:Page
-	if page_container.get_child_count() == 0:
+	if %PageContainer.get_child_count() == 0:
 		page_instance = preload("res://addons/diisis/editor/src/page.tscn").instantiate()
-		page_container.add_child(page_instance)
+		%PageContainer.add_child(page_instance)
 	else:
-		page_instance = page_container.get_child(0)
+		page_instance = %PageContainer.get_child(0)
 	if not page_instance.is_connected("request_delete", request_delete_current_page):
 		page_instance.request_delete.connect(request_delete_current_page)
 	
@@ -551,9 +550,9 @@ func update_controls():
 		await get_tree().process_frame
 		if not current_page:
 			#var page_instance:Page
-			#if page_container.get_child_count() == 0:
+			#if %PageContainer.get_child_count() == 0:
 				#page_instance = _page.instantiate()
-				#page_container.add_child(page_instance)
+				#%PageContainer.add_child(page_instance)
 #
 			#if not page_instance.is_connected("request_delete", request_delete_current_page):
 					#page_instance.request_delete.connect(request_delete_current_page)

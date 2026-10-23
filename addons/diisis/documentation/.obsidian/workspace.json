@@ -63,23 +63,9 @@
               "icon": "lucide-file",
               "title": "Instruction"
             }
-          },
-          {
-            "id": "d36e7e5a4bf3af12",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "quartz/content/Interactivity/Rollback.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Rollback"
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       },
       {
         "id": "26563639c7d0bc11",
@@ -261,11 +247,12 @@
       "bases:Create new base": false
     }
   },
-  "active": "d36e7e5a4bf3af12",
+  "active": "8149aa1ccafb8882",
   "lastOpenFiles": [
+    "quartz/content/Interactivity/Skillchecks.md",
+    "quartz/content/Interactivity/Rollback.md",
     "quartz/content/Getting Started/LineReader & Parser.md",
     "quartz/content/Getting Started/Line Types/Instruction.md",
-    "quartz/content/Interactivity/Rollback.md",
     "quartz/content/index.md",
     "quartz/docs/advanced/index.md",
     "quartz/docs/features/index.md",
@@ -295,7 +282,6 @@
     "quartz/content/More Knowledge/Adding BBCode to Rubies.md",
     "quartz/content/More Knowledge/Adding argument restrictions to functions.md",
     "quartz/content/Interactivity/Using Event Signals.md",
-    "quartz/content/Interactivity/Facts & Conditionals.md",
     "quartz/content/Assets/Pasted image 20260314131924.png",
     "quartz/content/Assets/Pasted image 20260314131629.png",
     "quartz/content/Assets/Pasted image 20260314131223.png",

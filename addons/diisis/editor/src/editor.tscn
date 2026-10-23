@@ -525,6 +525,7 @@ text = "view"
 horizontal_alignment = 1
 
 [node name="PageContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/Core" unique_id=18877755]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 2
