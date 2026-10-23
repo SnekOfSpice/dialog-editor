@@ -280,10 +280,6 @@ func init(active_file_path:="") -> void:
 		_update_silly_companion()
 		if active_file_path.is_empty():
 			%FilePathLabel.text = DIISIS.UNSAVED_FILE_PATH
-	if not DiisisEditorUtil.embedded:
-		# CRITICAL do not touch this camera. i can't remember why we need it but the editor won't be visible without it lmao
-		var cam := Camera2D.new()
-		add_child(cam)
 	
 	var plugin := Engine.get_meta("DIISISPlugin")
 	if not DiisisEditorEventBus.quit.window_reload.is_connected(plugin.on_editor_window_reload_requested):
