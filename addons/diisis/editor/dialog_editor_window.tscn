@@ -6,7 +6,6 @@
 
 [node name="DialogEditorWindow" type="Window" unique_id=1217661294]
 canvas_item_default_texture_filter = 3
-oversampling_override = 1.0
 title = "DIISIS"
 initial_position = 4
 size = Vector2i(895, 507)
