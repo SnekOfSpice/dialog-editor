@@ -32,6 +32,8 @@ func init() -> void:
 	find_child("RegisterContainer").visible = false
 	find_child("RegisterButton").visible = false
 	
+	%Hint.hide()
+	
 	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
 
 func serialize() -> Dictionary:
@@ -148,11 +150,11 @@ func _input(event: InputEvent) -> void:
 		return
 	if get_rect().has_point(get_local_mouse_position()):
 		return
-	$Hint.hide()
+	%Hint.hide()
 
 func update_hint(new_text: String):
+	%Hint.hide()
 	if new_text.is_empty() or not find_child("FactName").has_focus():
-		$Hint.hide()
 		return
 	var facts := ""
 	var valid_facts := []
@@ -162,7 +164,7 @@ func update_hint(new_text: String):
 	
 	if valid_facts.is_empty():
 		virtual_hint_line == 0
-		$Hint.hide()
+		%Hint.hide()
 		return
 	if virtual_hint_line >= valid_facts.size():
 		virtual_hint_line = max(valid_facts.size() - 1, 0)
@@ -179,15 +181,15 @@ func update_hint(new_text: String):
 		i += 1
 	
 	facts = facts.trim_suffix("\n")
-	$Hint.popup()
-	$Hint.build_str(facts)
+	%Hint.popup()
+	%Hint.build_str(facts)
 	
 	var caret_pos = (
 			#get_window().position +
 			Vector2i(global_position)
 			)
 	caret_pos.y -= 140
-	$Hint.position = caret_pos
+	%Hint.position = caret_pos
 
 
 
@@ -204,7 +206,7 @@ func _on_register_button_pressed() -> void:
 				Pages.facts.get(entered_text)
 			)
 	
-	$Hint.hide()
+	%Hint.hide()
 
 
 func _on_delete_button_pressed() -> void:
@@ -233,7 +235,7 @@ func _on_fact_name_text_entered(new_text: String) -> void:
 
 
 func _on_fact_name_text_submitted(new_text: String) -> void:
-	if not $Hint.visible:
+	if not %Hint.visible:
 		_on_register_button_pressed()
 		_on_fact_name_text_changed(new_text)
 		find_child("FactName").text = new_text

@@ -115,6 +115,7 @@ size_flags_vertical = 4
 text = "register"
 
 [node name="Hint" parent="." unique_id=872857279 instance=ExtResource("3_i2pc6")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="item_selected" from="FactItem/HBoxContainer/FactValueContainer/DataTypeButton" to="." method="set_data_type"]

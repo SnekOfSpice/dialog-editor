@@ -13,6 +13,7 @@ content_margin_bottom = 4.0
 bg_color = Color(0.109828, 0.0663, 0.13, 1)
 
 [node name="ArgHint" type="PanelContainer" unique_id=1940690334]
+z_index = 2
 anchors_preset = -1
 anchor_right = 0.165
 anchor_bottom = 0.094000004
