@@ -675,6 +675,21 @@ func get_compliances() -> Dictionary:
 		var attempted_skillcheck_count : int = text_box.text.count("<skillcheck:")
 		if correct_skillcheck_count < attempted_skillcheck_count:
 			compliances["%s Malformatted Skillcheck(s)" % (attempted_skillcheck_count - correct_skillcheck_count)] = "Skillcheck should contain skill name and threshold value"
+		
+		if not Pages.stringkit_title_for_skillchecks.is_empty():
+			var invalid_skillcheck_names := []
+			var skillcheck_stringkit_regex := RegEx.create_from_string("<skillcheck:\\s*\\w+,")
+			for m : RegExMatch in skillcheck_stringkit_regex.search_all(text_box.text):
+				var entity_match : String  = m.strings[0]
+				var skillcheck_name := entity_match.trim_prefix("<skillcheck:").trim_suffix(",")
+				if not skillcheck_name in Pages.stringkits.get(Pages.stringkit_title_for_skillchecks):
+					invalid_skillcheck_names.append(skillcheck_name)
+			if invalid_skillcheck_names.size() > 0:
+				compliances["Invalid skillcheck arguments"] = "Skillcheck names %s are not valid under stringkit %s" %[
+					" ,".join(invalid_skillcheck_names),
+					Pages.stringkit_title_for_skillchecks,
+				]
+				
 	
 	for tag : String in DIISIS.CONTROL_SEQUENCES_WITH_CLOSING_TAG:
 		var closing_count : int = text_box.text.count("</%s>" % tag)
