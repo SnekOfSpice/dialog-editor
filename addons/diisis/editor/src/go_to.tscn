@@ -54,6 +54,7 @@ text = "200"
 
 [node name="ErrorLabelWindow" type="Control" parent="." unique_id=1873729644]
 unique_name_in_owner = true
+z_index = 3
 layout_mode = 2
 
 [node name="ErrorLabel" type="Label" parent="ErrorLabelWindow" unique_id=164009689]

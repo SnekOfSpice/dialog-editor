@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://c1ra21dwh2wsd"]
+
+[ext_resource type="Script" uid="uid://c6xfebcuy3i72" path="res://addons/diisis/editor/src/windows/skillcheck_setup_container.gd" id="1_ndk7a"]
+
+[node name="SkillcheckSetupContainer" type="Control" unique_id=923460403]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ndk7a")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1879010514]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" unique_id=420517742]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StringkitOptionButton" type="OptionButton" parent="HBoxContainer/VBoxContainer2" unique_id=885570189]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Label" type="RichTextLabel" parent="HBoxContainer/VBoxContainer2" unique_id=93762239]
+layout_mode = 2
+text = "Select a stringkit to have diisis validate your skillcheck tags to match any of the values set there."
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=864377214]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=747889457]
+layout_mode = 2
+text = "Options:"
+
+[node name="OptionList" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=1620610887]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer2/StringkitOptionButton" to="." method="_on_stringkit_option_button_item_selected"]

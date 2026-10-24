@@ -315,6 +315,14 @@ func _on_text_box_caret_changed() -> void:
 		elif is_text_before_caret("name:") or is_text_before_caret("clname:"):
 			for fact in active_actors:
 				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, fact, fact)
+		elif is_text_before_caret("skillcheck:"):
+			var skillcheck_options = []
+			if not Pages.stringkit_title_for_skillchecks.is_empty():
+				skillcheck_options = Pages.stringkits.get(
+					Pages.stringkit_title_for_skillchecks
+				)
+			for option : String in skillcheck_options:
+				text_box.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, option, "%s," % option)
 		text_box.update_code_completion_options(true)
 	elif is_text_before_caret("&"):
 			for key : String in DIISIS.HTML_ENTITIES.keys():

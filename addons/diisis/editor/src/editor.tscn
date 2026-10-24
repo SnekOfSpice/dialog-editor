@@ -211,7 +211,7 @@ item_1/id = 1
 unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(113, 197)
-item_count = 8
+item_count = 9
 item_0/text = "Writing"
 item_0/id = 23
 item_0/separator = true
@@ -221,15 +221,17 @@ item_2/text = "Stringkits    (Ctrl+D)"
 item_2/id = 2
 item_3/text = "Ingestion Actors    (Ctrl+I)"
 item_3/id = 7
-item_4/text = "Runtime Interaction"
-item_4/id = 35
-item_4/separator = true
-item_5/text = "Facts    (Ctrl+Shift+F)"
-item_5/id = 5
-item_6/text = "Functions & Variables    (Ctrl+R)"
-item_6/id = 3
-item_7/text = "Dialog Config    (Ctrl+H)"
-item_7/id = 8
+item_4/text = "Skillcheck Completion"
+item_4/id = 9
+item_5/text = "Runtime Interaction"
+item_5/id = 35
+item_5/separator = true
+item_6/text = "Facts    (Ctrl+Shift+F)"
+item_6/id = 5
+item_7/text = "Functions & Variables    (Ctrl+R)"
+item_7/id = 3
+item_8/text = "Dialog Config    (Ctrl+H)"
+item_8/id = 8
 
 [node name="TemplatesMenu" type="PopupMenu" parent="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/MenuBar/Setup" unique_id=429030119]
 unique_name_in_owner = true
@@ -745,6 +747,11 @@ container_path = "uid://rqflj6uhel4l"
 
 [node name="LocalizationWindow" parent="Popups" unique_id=1380706662 instance=ExtResource("33_m63dd")]
 visible = false
+
+[node name="SkillcheckSetupWindow" parent="Popups" unique_id=502601679 instance=ExtResource("34_ajvyk")]
+title = "Skillcheck Completion"
+visible = false
+container_path = "uid://c1ra21dwh2wsd"
 
 [node name="OpeningCover" type="ColorRect" parent="." unique_id=1500427879]
 unique_name_in_owner = true

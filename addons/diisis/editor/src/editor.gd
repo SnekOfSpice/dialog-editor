@@ -1124,10 +1124,12 @@ func _on_setup_id_pressed(id: int) -> void:
 				notify("No pages in file.") # popup relies on there being pages
 				return
 			open_popup($Popups.get_node("MovePagePopup"))
-		8:
-			open_window_by_string("DialogConfigWindow")
 		7:
 			open_window_by_string("IngestionActorSetupWindow")
+		8:
+			open_window_by_string("DialogConfigWindow")
+		9:
+			open_window_by_string("SkillcheckSetupWindow")
 
 #endregion
 

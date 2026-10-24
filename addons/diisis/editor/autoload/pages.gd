@@ -21,6 +21,7 @@ var stringkits := {"character": ["narrator", "amber"], "amber-emotion" : ["neutr
 var stringkit_titles := ["character", "amber-emotion"]
 var stringkit_dialog_arguments := ["amber-emotion"]
 var stringkit_title_for_dialog_syntax := "character"
+var stringkit_title_for_skillchecks := "character"
 var use_dialog_syntax := true
 var text_lead_time_same_actor := 0.0
 var text_lead_time_other_actor := 0.0
@@ -257,6 +258,7 @@ func serialize() -> Dictionary:
 		"stringkit_titles": stringkit_titles,
 		"stringkit_dialog_arguments": stringkit_dialog_arguments,
 		"stringkit_title_for_dialog_syntax": stringkit_title_for_dialog_syntax,
+		"stringkit_title_for_skillchecks": stringkit_title_for_skillchecks,
 		"empty_strings_for_l10n": empty_strings_for_l10n,
 		"evaluator_modified_times": evaluator_modified_times,
 		"facts": facts,
@@ -312,6 +314,7 @@ func deserialize(data:Dictionary):
 	stringkit_titles = data.get("stringkit_titles", data.get("dropdown_titles", []))
 	stringkit_dialog_arguments = data.get("stringkit_dialog_arguments", data.get("dropdown_dialog_arguments", []))
 	stringkit_title_for_dialog_syntax = data.get("stringkit_title_for_dialog_syntax", data.get("dropdown_title_for_dialog_syntax", ""))
+	stringkit_title_for_skillchecks = data.get("stringkit_title_for_skillchecks", "")
 	locales_to_export = data.get("locales_to_export", DOMINANT_LOCALES)
 	default_locale = data.get("default_locale", "en_US")
 	empty_strings_for_l10n = data.get("empty_strings_for_l10n", false)
@@ -1110,6 +1113,8 @@ func rename_stringkit_title(from:String, to:String):
 			stringkit_dialog_arguments.erase(from)
 		if stringkit_title_for_dialog_syntax == from:
 			stringkit_title_for_dialog_syntax = to
+		if stringkit_title_for_skillchecks == from:
+			stringkit_title_for_skillchecks = to
 	
 	# change in line data
 	for page in page_data.values():
