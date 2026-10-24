@@ -8,6 +8,8 @@ extends Window
 
 func _on_about_to_popup() -> void:
 	if container_path:
+		for child in get_children():
+			child.queue_free()
 		var container = load(container_path).instantiate()
 		add_child(container)
 		if container.has_method("init"):

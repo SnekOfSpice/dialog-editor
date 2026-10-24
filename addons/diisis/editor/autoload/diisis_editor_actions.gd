@@ -443,32 +443,26 @@ func replace_choice_content_texts(choice_item_addresses:Array, what:String, with
 				for index in choice_indices_to_operate_on:
 					var choice : Dictionary = choices[index]
 					var choice_address := str(n, ".", line_index, ".", index)
+					
 					var text_id_enabled : String = choice.get("text_id_enabled", "")
 					var text_id_disabled : String = choice.get("text_id_disabled", "")
 					if enabled_addresses.has(choice_address):
+						var new_text : String
 						if case_insensitive:
-							if text_id_enabled.is_empty:
-								choice["choice_text.enabled"] = choice["choice_text.enabled"].replacen(what, with)
-							else:
-								Pages.save_text(text_id_enabled, Pages.get_text(text_id_enabled).replacen(what, with))
+							new_text = Pages.get_text(text_id_enabled).replacen(what, with)
 						else:
-							if text_id_enabled.is_empty:
-								choice["choice_text.enabled"] = choice["choice_text.enabled"].replace(what, with)
-							else:
-								Pages.save_text(text_id_enabled, Pages.get_text(text_id_enabled).replace(what, with))
+							new_text = Pages.get_text(text_id_enabled).replace(what, with)
+						Pages.save_text(text_id_enabled, new_text)
+						Pages.text_hacks_by_id.set(text_id_enabled, new_text)
 					if disabled_addresses.has(choice_address):
+						var new_text : String
 						if case_insensitive:
-							if text_id_disabled.is_empty:
-								choice["choice_text.disabled"] = choice["choice_text.disabled"].replacen(what, with)
-							else:
-								Pages.save_text(text_id_disabled, Pages.get_text(text_id_disabled).replacen(what, with))
+							new_text = Pages.get_text(text_id_disabled).replacen(what, with)
 						else:
-							if text_id_disabled.is_empty:
-								choice["choice_text.disabled"] = choice["choice_text.disabled"].replace(what, with)
-							else:
-								Pages.save_text(text_id_disabled, Pages.get_text(text_id_disabled).replace(what, with))
+							new_text = Pages.get_text(text_id_disabled).replace(what, with)
+						Pages.save_text(text_id_disabled, new_text)
+						Pages.text_hacks_by_id.set(text_id_disabled, new_text)
 				
-				line["content"]["choices"] = choices
 	
 	await get_tree().process_frame
 	
