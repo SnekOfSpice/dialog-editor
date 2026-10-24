@@ -278,6 +278,7 @@ func init(active_file_path:="") -> void:
 
 
 func _scale_popup_children(popup : Window) -> void:
+	popup.oversampling_override = 0.0
 	var editor_scale : float = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
 	if editor_scale == 1.0:
 		return

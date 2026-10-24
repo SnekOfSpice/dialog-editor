@@ -24,6 +24,11 @@ func _on_about_to_popup() -> void:
 	_on_save_path_set(file_path)
 	
 	content_scale_factor = (EditorInterface.get_editor_settings().get_setting("diisis/plugin/view/editor_scale"))
+	oversampling_override = 0.0
+
+
+func _ready() -> void:
+	oversampling_override = 0.0
 
 
 func _on_quit_dialog_canceled() -> void:
