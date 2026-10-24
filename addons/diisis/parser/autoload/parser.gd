@@ -447,24 +447,24 @@ func get_game_progress(dir:String) -> float:
 	data = data.get("Parser", {})
 	return data.get("Parser.game_progress", 0.0)
 
-
-## Best used for kinetic VNs in combination with DIISIS' linearize option.
-## [br]Nonlinear VNs get kinda nonsense values
-func _get_game_progress() -> float:
+## [param containing] is the page index that has to be present in the trail
+func get_page_trail(from_page : int, containing := -1) -> Array:
 	var index_trails := []
 	var handled_page_indices := []
 	var page_count : int = max(page_data.size(), 1)
 	var current_trail := []
-	var current_handled_page := 0
+	var current_handled_page := from_page
 	while handled_page_indices.size() < page_count:
 		current_trail.append(current_handled_page)
 		handled_page_indices.append(current_handled_page)
-		var terminate : bool = page_data.get(current_handled_page).get("terminate", false)
-		if terminate:
+		var page_terminates : bool = page_data.get(current_handled_page).get("terminate", false)
+		if page_terminates:
 			index_trails.append(current_trail.duplicate(true))
 			current_trail.clear()
 			if handled_page_indices.size() >= page_count:
 				break
+			
+			# set current_handled_page to a new index we haven't started from yet.
 			for i in page_count:
 				if not i in handled_page_indices:
 					current_handled_page = i
@@ -472,16 +472,35 @@ func _get_game_progress() -> float:
 		else:
 			current_handled_page = page_data.get(current_handled_page).get("next")
 	
+	var required_page : int
+	if containing == -1:
+		required_page = from_page
+	else:
+		required_page = containing
 	var trail : Array
 	for t : Array in index_trails:
-		if page_index in t:
+		if required_page in t:
 			trail = t
 			break
 	
 	if trail.is_empty() and not current_trail.is_empty():
-		trail = current_trail
+		if containing == -1 or (containing != -1 and containing in current_trail):
+			trail = current_trail
 	
 	if not trail:
+		push_warning("Trail could not be built. Returning an empty array.")
+		return []
+	
+	return trail
+
+
+
+## Best used for kinetic VNs in combination with DIISIS' linearize option.
+## [br]Nonlinear VNs get kinda nonsense values
+func _get_game_progress() -> float:
+	var trail : Array = get_page_trail(0, page_index)
+	
+	if trail.is_empty():
 		return 0.0
 	
 	var calc_lines = page_data.get(page_index).get("lines")
@@ -506,7 +525,12 @@ func _get_game_progress() -> float:
 	return page_progress + (line_progress / float(trail_size)) + ((dialine_progress / float(line_count_on_page)) / float(trail_size))
 
 
-func get_line_type(address:String) -> DIISIS.LineType:
+func get_line_type(page : int, line : int) -> DIISIS.LineType:
+	return get_line_type_by_address(str(page, ".", line))
+	
+
+
+func get_line_type_by_address(address:String) -> DIISIS.LineType:
 	return int(get_line_data(address).get("line_type")) as DIISIS.LineType
 
 
@@ -555,7 +579,7 @@ func get_previous_address_line_type() -> DIISIS.LineType:
 	var prev_page = parts[0]
 	var prev_line = parts[1]
 	
-	return get_line_type(previous_address)
+	return get_line_type_by_address(previous_address)
 
 
 ## Returns a dictionary with the following keys:
@@ -584,13 +608,6 @@ func get_region_end() -> String:
 	return get_region().get("region_end", "")
 
 
-func get_line_type_by_address(address:String) -> DIISIS.LineType:
-	var parts = DiisisEditorUtil.get_split_address(address)
-	var prev_page = parts[0]
-	var prev_line = parts[1]
-	
-	return int(page_data.get(prev_page).get("lines")[prev_line].get("line_type"))
-
 
 
 
@@ -601,7 +618,7 @@ func _get_rollback() -> int:
 	var lookback := 1
 	var max_lookback := address_trail_index
 	while lookback <= max_lookback:
-		var line_type : DIISIS.LineType = get_line_type(address_trail[address_trail_index - lookback])
+		var line_type : DIISIS.LineType = get_line_type_by_address(address_trail[address_trail_index - lookback])
 		
 		if line_type == DIISIS.LineType.CHOICE and block_rollback_on_choices:
 			ParserEvents.rollback_declined.emit(RollbackDeclineReason.HIT_CHOICE)
@@ -1001,3 +1018,25 @@ func is_active() -> bool:
 
 func has_fact(fact_name : String) -> bool:
 	return facts.has(fact_name)
+
+
+func get_next_natural_line_address(
+	from_page : int,
+	from_line : int,
+	for_type : DIISISGlobal.LineType = DIISISGlobal.LineType.TEXT) -> String:
+	var trail := get_page_trail(from_page)
+	for page : int in trail:
+		for line in range(
+			(from_line if page == from_page else 0),
+			get_line_count(page)
+		):
+			var line_type : DIISIS.LineType = get_line_type(page, line)
+			if line_type == for_type:
+				return str(page, ".", line)
+	
+	push_warning("Couldn't find next natural line address from %s.%s" % [from_page, from_line])
+	return str(from_page, ".", from_line)
+
+
+func get_line_count(page : int) -> int:
+	return page_data.get(page, {}).get("lines", []).size()

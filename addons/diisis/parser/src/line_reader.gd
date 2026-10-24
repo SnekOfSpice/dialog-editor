@@ -2853,9 +2853,10 @@ func _build_choices(choices, auto_switch:bool):
 				next_line = target_line
 				next_page = target_page
 			else:
-				# should use better code
-				next_page = Parser.page_index
-				next_line = line_index + 1
+				var next_address : String = _get_next_natural_line()
+				next_page = int(next_address.split(".")[0])
+				next_line = int(next_address.split(".")[1])
+				
 			var line_data : Dictionary = Parser.get_line_data("%s.%s" % [next_page, next_line])
 			
 				
@@ -3487,3 +3488,7 @@ func _str_to_typed(value:String, type:int):
 			var cast : bool = true if value == "true" else false
 			return cast
 	return String(value)
+
+
+func _get_next_natural_line(for_type : DIISISGlobal.LineType = DIISISGlobal.LineType.TEXT):
+	return Parser.get_next_natural_line_address(Parser.page_index, line_index, for_type)

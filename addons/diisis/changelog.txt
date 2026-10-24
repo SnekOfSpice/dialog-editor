@@ -20,6 +20,9 @@ The Sunless Horizon 1.5 Update (*associated post-jam additions!)
 - on completing skillcheck, insert newline and []> stuff with the current line's actor
 - rename ParserEvents.read_new_page/read_new_line to page_started/line_started to bring it in line with page_terminated and page_finished
 - fix fact typing hint being underneath UI
+- fix text replacing not working for choices
+- internally: add Parser.get_next_natural_line_address (very good and useful for finding the next thing we want to go to from the pov of the reader!)
+	--> make getting the next skillcheck index more stable for non-jump options
 
 DIISIS 0.9 2026-08-19
 post TDOHN update (Or: The hot reload fixes update, apparently)
