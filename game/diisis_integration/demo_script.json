@@ -20,6 +20,9 @@
 				"new_background": [],
 				"new_bgm": []
 			},
+			"get_actor_config": {
+				"actor": []
+			},
 			"get_actor_config_property": {
 				"actor_key": [],
 				"config_property": []
@@ -29,6 +32,9 @@
 			},
 			"get_character": {
 				"character_name": []
+			},
+			"get_label_settings": {
+				"actor": []
 			},
 			"get_past_line_rich_text_label": {
 				"text": []
@@ -164,6 +170,7 @@
 				"new_name_style": null
 			},
 			"finish_waiting_for_instruction": {},
+			"get_actor_config": {},
 			"get_actor_config_property": {
 				"default": null
 			},
@@ -177,6 +184,9 @@
 			"get_character": {},
 			"get_default_targets": {},
 			"get_dialine": {},
+			"get_label_settings": {
+				"access_mode": 0
+			},
 			"get_past_line_rich_text_label": {
 				"text": ""
 			},
@@ -218,10 +228,12 @@
 			"roll_credits": {},
 			"serialize": {},
 			"serialize_text_content": {},
-			"set_actor_color": {},
-			"set_actor_config_property": {},
-			"set_actor_config_property_color": {},
-			"set_actor_name": {},
+			"set_actor_color": {
+				"access_mode": 1
+			},
+			"set_actor_name": {
+				"access_mode": 0
+			},
 			"set_background": {
 				"fade_time": 0.0
 			},
@@ -264,7 +276,7 @@
 			"use_ui": {},
 			"zoom_to": {}
 		},
-		"id_counter": -9223372036854761396,
+		"id_counter": -9223372036854761434,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -1148,6 +1160,7 @@
 			"amber-emotion"
 		],
 		"stringkit_title_for_dialog_syntax": "character",
+		"stringkit_title_for_skillchecks": "",
 		"stringkit_titles": [
 			"amber-emotion",
 			"character"

@@ -1674,7 +1674,7 @@ func _attempt_read_previous_dialine() -> bool:
 	if _dialog_line_index <= 0:
 		dialog_line_failure = true
 	else:
-		_set_dialog_line_index(_dialog_line_index - 1)
+		_set_dialog_line_index(_dialog_line_index - 1, true)
 		return true
 	
 	if dialog_line_failure:

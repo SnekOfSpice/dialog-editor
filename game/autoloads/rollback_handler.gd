@@ -23,10 +23,14 @@ func on_line_started(line:int):
 	else:
 		states_by_page[Parser.page_index] = {line : state}
 
-func on_rollback_accepted(page:int, line:int, _a):
+func on_rollback_accepted(page:int, line:int, dialine : int):
 	if not states_by_page.has(page):
 		return
 	if not states_by_page[page].has(line):
+		return
+	
+	# most significant changes only happen on new lines, so anything else is handled elsewhere
+	if dialine != 0:
 		return
 	
 	# handle payload
