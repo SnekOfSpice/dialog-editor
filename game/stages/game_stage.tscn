@@ -8,10 +8,13 @@
 [ext_resource type="PackedScene" uid="uid://cg68f27bymn00" path="res://game/stages/rolling_credits.tscn" id="11_o4gqq"]
 [ext_resource type="Script" uid="uid://byyv78vc44g4u" path="res://game/stages/start_cover.gd" id="13_qfsh6"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_lodsv"]
+font_color = Color(0.8862745, 0.5803922, 0.9254902, 1)
+
 [sub_resource type="Resource" id="Resource_8g0u3"]
 script = ExtResource("2_e6caa")
 name_display = "Amber"
-color = Color(0.885667, 0.58174, 0.925573, 1)
+default_settings = SubResource("LabelSettings_lodsv")
 metadata/_custom_type_script = "uid://dycysb8joq17f"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4gqq"]
@@ -24,6 +27,7 @@ actor_config = Dictionary[String, ExtResource("2_e6caa")]({
 "amber": SubResource("Resource_8g0u3")
 })
 blank_names = Array[String](["narrator"])
+name_style = 1
 name_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/NameContainer/PanelContainer/NameLabel")
 body_label = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/VBoxContainer/BodyLabel")
 text_container = NodePath("Camera2D/VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer")

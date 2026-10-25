@@ -730,6 +730,10 @@ func _ready() -> void:
 	if not show_input_prompt and prompt_finished:
 		prompt_finished.modulate.a = 0
 	
+	for config : LineReaderActorConfig in actor_config.values():
+		if config:
+			config.changed.connect(update_body_label)
+	
 	emit_signal("line_reader_ready")
 
 func _on_rollback_accepted(_page_index:int, _line_index:int, _dialine:int):
@@ -2097,9 +2101,9 @@ func _handle_tags_and_start_reading():
 	
 	if name_container:
 		if name_style == NameStyle.NONE:
-			name_container.modulate.a = 0.0
+			name_container.hide()
 		elif name_style == NameStyle.PREPEND:
-			name_container.modulate.a = 0.0
+			name_container.hide()
 		
 	
 	if body_label_tint_lines and not chatlog_enabled:
@@ -2640,25 +2644,25 @@ func _get_actor_name(actor_key:String) -> String:
 
 
 func _get_actor_color(actor:String) -> Color:
-	return _get_actor_color_config("color", actor)
+	return _get_actor_config_color_setting("color", actor)
 func _get_actor_outline_color(actor:String) -> Color:
-	return _get_actor_color_config("outline_color", actor)
+	return _get_actor_config_color_setting("outline_color", actor)
 func _get_actor_outline_size(actor:String) -> int:
-	return get_actor_config_property("outline_size", actor, 0)
+	var setting := get_label_settings(actor)
+	if setting:
+		return setting.outline_size
+	return 0
 
 ## Sensitive to chatlog_enabled. If blank, returns label or richtextlabel default color depending on name style
 ## base_property is either color or outline_color
-func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
-	if actor_config.keys().has(actor_key):
-		var color : Color = (actor_config.get(actor_key) as LineReaderActorConfig).get(str("chatlog_" if chatlog_enabled else "", base_property))
-		if color == Color.TRANSPARENT:
-			color = (actor_config.get(actor_key) as LineReaderActorConfig).get(base_property)
-		
-		if base_property == "outline_color":
-			return color
-		
-		if color != Color.TRANSPARENT:
-			return color
+func _get_actor_config_color_setting(property:String, actor:String) -> Color:
+	if actor_config.has(actor):
+		var settings := get_label_settings(actor)
+		if settings:
+			if property == "color":
+				return settings.font_color
+			elif property == "outline_color":
+				return settings.outline_color
 		
 	if name_style == NameStyle.PREPEND or chatlog_enabled: # prepend goes in body_label
 		return body_label.get_theme_color("default_color", "RichTextLabel")
@@ -2667,15 +2671,15 @@ func _get_actor_color_config(base_property:String, actor_key:String) -> Color:
 			return body_label.get_theme_color("default_color", "RichTextLabel")
 		
 		if name_label:
-			return name_label.get_theme_color("font_%s" % base_property, "Label")
+			return name_label.get_theme_color("font_%s" % property, "Label")
 		return Color.WHITE
 	
 
 ## returns array of size 2: prefix and suffix
 func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
-	var color : Color = _get_actor_color_config("color", actor)
-	var outline_color : Color = _get_actor_color_config("outline_color", actor)
-	var outline_size : int = get_actor_config_property(str("chatlog_" if chatlog_enabled else "", "outline_size"), actor, 0)
+	var color : Color = _get_actor_config_color_setting("color", actor)
+	var outline_color : Color = _get_actor_config_color_setting("outline_color", actor)
+	var outline_size : int = _get_actor_outline_size(actor)
 	
 	var prefix := str("[color=", color.to_html(), "]")
 	if outline_size > 0:
@@ -2693,32 +2697,83 @@ func _get_actor_color_prepend_tag_pair(actor: String) -> Array:
 	
 	return [prefix, suffix]
 
-## Helper function derived from [method set_actor_config_property].
-func set_actor_name(actor_key:String, actor_name:String):
-	set_actor_config_property("name_display", actor_key, actor_name)
-## Helper function derived from [method set_actor_config_property].
-func set_actor_color(actor_key:String, color:Color):
-	set_actor_config_property("color", actor_key, color)
 
-## Helper function to set a color-based actor config with float values for RGB. See [method set_actor_config_property].
-func set_actor_config_property_color(config_property:String, actor_key:String, r:float, g:float, b:float):
-	var color = Color(r,g,b)
-	set_actor_config_property(config_property, actor_key, color)
+enum LabelSettingsAccessMode {
+	INHERIT,
+	BOTH,
+	DEFAULT,
+	CHATLOG,
+}
 
-## Sets the passed property and updates the dialog line accordingly. See [LineReaderActorConfig].[br][br]
-## [b]Note:[/b] Updating this mid-dialog line will have no effect if [member chatlog_enabled] is true.
-func set_actor_config_property(config_property:String, actor_key:String, value):
-	var previous_value
-	if not actor_config.keys().has(actor_key):
-		push_warning("No config exists for actor %s. Nothing has been changed. Maybe create one first?" % actor_key)
-		return
+
+
+func _get_accessed_label_settings(actor : String, access_mode : LabelSettingsAccessMode) -> Array[LabelSettings]:
+	var settings : Array[LabelSettings] = []
 	
-	previous_value = get_actor_config_property(config_property, actor_key)
-	(actor_config.get(actor_key) as LineReaderActorConfig).set(config_property, value)
+	var default_settings := get_label_settings(actor, LabelSettingsAccessMode.DEFAULT)
+	var chatlog_settings := get_label_settings(actor, LabelSettingsAccessMode.CHATLOG)
 	
-	# update display string
-	if previous_value != value:
-		update_body_label()
+	if access_mode == LabelSettingsAccessMode.BOTH:
+		settings.append(default_settings)
+		settings.append(chatlog_settings)
+	
+	if (not chatlog_enabled and access_mode == LabelSettingsAccessMode.INHERIT) or \
+		access_mode == LabelSettingsAccessMode.DEFAULT:
+		settings.append(default_settings)
+	
+	if (chatlog_enabled and access_mode == LabelSettingsAccessMode.INHERIT) or \
+		access_mode == LabelSettingsAccessMode.CHATLOG:
+		settings.append(chatlog_settings)
+	
+	var handled_resources := [] # small efficiency
+	var result : Array[LabelSettings] = []
+	for setting : LabelSettings in settings:
+		if not setting:
+			continue
+		if setting in handled_resources:
+			continue
+		result.append(setting)
+		handled_resources.append(setting)
+	return result
+
+
+func set_actor_color(
+	actor : String,
+	color : Color,
+	access_mode := LabelSettingsAccessMode.BOTH
+):
+	var settings : Array[LabelSettings] = _get_accessed_label_settings(actor, access_mode)
+	for setting : LabelSettings in settings:
+		setting.font_color = color
+
+
+func set_actor_name(
+	actor : String,
+	display_name : String,
+	access_mode := LabelSettingsAccessMode.INHERIT,
+):
+	var config : LineReaderActorConfig = get_actor_config(actor)
+	if access_mode == LabelSettingsAccessMode.INHERIT:
+		if chatlog_enabled:
+			config.chatlog_name_display = display_name
+		else:
+			config.name_display = display_name
+	
+	if access_mode == LabelSettingsAccessMode.BOTH:
+		config.chatlog_name_display = display_name
+		config.name_display = display_name
+	
+	if access_mode == LabelSettingsAccessMode.DEFAULT:
+		config.name_display = display_name
+	
+	if access_mode == LabelSettingsAccessMode.CHATLOG:
+		config.chatlog_name_display = display_name
+	
+
+
+func get_actor_config(actor : String) -> LineReaderActorConfig:
+	return actor_config.get(actor)
+
 
 func set_name_prefix(prefix : String, update := true):
 	var old_prefix = name_prefix
@@ -3061,14 +3116,6 @@ func _trim_syntax_and_emit_dialog_line_args(raw_name:String) -> String:
 	return actor_name
 
 
-## Controls if properties from any given actor config apply to [member name_label]. 
-## (This uses theme overrides.)
-## [br][br]
-## Only works when [member name_style] is [enum NameStyle.NAME_LABEL].
-## [br][br]
-## For more granular control over text display, see [method _set_name_label_text].
-@export var name_label_use_default_overrides := true
-
 ## Override this to set custom name label behavior beyond writing the text to [member name_label].
 ## [br][b]Note:[/b] If you override this, you should probably also consider overriding [method _get_name_label_text()].
 func _set_name_label_text(display_name : String, prefix := "", suffix := ""):
@@ -3105,19 +3152,20 @@ func update_name_label(actor_name: String):
 			name_suffix
 		)
 		
-		if name_label_use_default_overrides:
-			name_label.add_theme_color_override("font_color", name_color)
-			name_label.add_theme_color_override("font_outline_color", name_outline_color)
-			name_label.add_theme_color_override("outline_size", name_outline_size)
+		var label_settings : LabelSettings = get_label_settings(actor_name)
+		if name_label is Label:
+			name_label.label_settings = label_settings
+		elif name_label is RichTextLabel:
+			_apply_label_settings_to_rtl(label_settings, name_label)
 		
 		if actor_name in blank_names or chatlog_enabled:
-			name_container.modulate.a = 0.0
+			name_container.hide()
 		else:
-			name_container.modulate.a = 1.0
+			name_container.show()
 	
 	var name_visible:bool
 	if name_style == NameStyle.NAME_LABEL:
-		name_visible = name_container.modulate.a > 0.0
+		name_visible = name_container.visible
 	elif name_style == NameStyle.PREPEND:
 		name_visible = not blank_names.has(current_raw_name)
 	elif name_style == NameStyle.NONE:
@@ -3125,6 +3173,53 @@ func update_name_label(actor_name: String):
 	
 	ParserEvents.display_name_changed.emit(display_name, name_visible)
 	ParserEvents.actor_name_changed.emit(actor_name, name_visible)
+
+
+func _apply_label_settings_to_rtl(settings : LabelSettings, label : RichTextLabel) -> void:
+	if not settings:
+		return
+	var text := label.text
+	
+	text = str(
+		"[color=%s]" % settings.font_color.to_html(),
+		"[outline_color=%s]" % settings.outline_color.to_html(),
+		"[outline_size=%s]" % settings.outline_size,
+		"[font_size=%s]" % settings.font_size,
+		text,
+		"[/font_size]",
+		"[/outline_size]",
+		"[/outline_color]",
+		"[/color]",
+	)
+	
+	label.bbcode_enabled = true
+	label.text = text
+
+
+func get_label_settings(
+	actor : String,
+	access_mode := LabelSettingsAccessMode.INHERIT
+) -> LabelSettings:
+	var config : LineReaderActorConfig = actor_config.get(actor)
+	if not config:
+		return null
+	
+	if access_mode == LabelSettingsAccessMode.BOTH:
+		push_warning("Function does not support BOTH access mode, defaulting to INHERIT")
+		access_mode = LabelSettingsAccessMode.INHERIT
+	
+	if (access_mode == LabelSettingsAccessMode.INHERIT and not chatlog_enabled) or\
+		(access_mode == LabelSettingsAccessMode.DEFAULT):
+		return config.default_settings
+	
+	if (access_mode == LabelSettingsAccessMode.INHERIT and chatlog_enabled) or\
+		(access_mode == LabelSettingsAccessMode.CHATLOG):
+		if config.chatlog_settings:
+			return config.chatlog_settings
+	
+		return config.default_settings
+	
+	return config.default_settings
 
 
 func _can_text_container_be_visible() -> bool:
