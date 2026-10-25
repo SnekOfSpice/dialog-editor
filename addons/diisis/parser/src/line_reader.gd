@@ -826,7 +826,6 @@ func request_advance():
 
 ## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
 func advance():
-	#_full_prefix = ""
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
