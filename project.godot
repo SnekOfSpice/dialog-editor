@@ -149,7 +149,6 @@ history={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://german_dialines.de.translation")
 locale/test="de"
 
 [rendering]
