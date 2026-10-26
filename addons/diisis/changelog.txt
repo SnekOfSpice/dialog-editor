@@ -27,6 +27,7 @@ The Sunless Horizon 1.5 Update (+associated post-jam additions!)
 - add validation to check if an entered stringkit value in a skillcheck is in stringkit_title_for_skillchecks
 - remove custom implementations of actor colors etc and replace them with LabelSettings in LineReaderActorConfig
 - remove obsolete Parser.localization_file
+- Make VN template scripts and scenes slimmer and cleaner
 - add option to generate several l10n files, one for each locale
 - add option to split text from Text Lines into dialines in l10n files (Parser stitches them back together automatically at runtime)
 
