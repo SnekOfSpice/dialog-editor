@@ -17,6 +17,17 @@ enum RollbackDeclineReason {
 	HIT_FOLDER = 3,
 	BEGINNING = 0,
 }
+enum DialineSplitDetection {
+	## Enables dialine split detection. See the tooltip in DIISIS > File > Localization
+	## for more information.
+	ENABLED,
+	## Disables split detection from imported csv l10n files.
+	## [Parser] will assume all l10n keys that end with [code]:0[/code] to denote
+	## the start of a set of l10n keys that should be fused together.
+	## If this is undesirable to you, e.g. because of a bespoke
+	## text key naming convention, you can disable this behavior here.
+	DISABLED,
+}
 
 ## Set this to manually set any DIISIS-generated file to be used as source, irregardless of project.
 @export_file("*.json") var source_file_override: String
@@ -24,6 +35,7 @@ enum RollbackDeclineReason {
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
 @export var max_history_length := -1
+@export var dialine_split_detection := DialineSplitDetection.ENABLED
 
 @export_group("Choices")
 ## If [code]true[/code], will append the text of choice buttons to the history.
@@ -555,6 +567,25 @@ func get_line_data(address:String) -> Dictionary:
 
 func get_text(id:String, keep_as_l10n_key := false) -> String:
 	var translated := tr(id)
+	var dialine_translation := tr(id + ":0")
+	var has_dialine_split = dialine_translation != (id + ":0")
+	if dialine_split_detection == DialineSplitDetection.DISABLED:
+		has_dialine_split = false
+	if has_dialine_split:
+		var parts := []
+		var i := 0
+		while has_dialine_split:
+			var dialine_key := (id + ":%s" % i)
+			dialine_translation = tr(id + ":%s" % i)
+			has_dialine_split = dialine_translation != dialine_key
+			if not has_dialine_split or dialine_translation.is_empty():
+				break
+			i += 1
+			parts.append(dialine_translation)
+			
+		translated = "[]>".join(parts)
+		translated = str("[]>", translated)
+		
 	if translated == id: # means we don't have a translation set up
 		return text_data.get(id, "")
 	if keep_as_l10n_key: # useful for choice labels etc

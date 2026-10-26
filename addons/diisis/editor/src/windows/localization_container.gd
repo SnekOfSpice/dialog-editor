@@ -2,12 +2,14 @@
 extends Control
 
 
-signal fd_opened
-signal fd_closed
+signal fd_opened()
+signal fd_closed()
 
 
 func init():
 	%LocalesLineEdit.text = Pages.preferences_l10n.get("locales", "")
+	
+	%CurrentFallbackLocaleLabel.text = "The current fallback locale is: [color=edc13eff]%s[/color]" % ProjectSettings.get_setting("internationalization/locale/fallback")
 
 
 func get_preferences() -> Dictionary:
@@ -21,7 +23,12 @@ func get_locales_from_line_edit() -> Array:
 
 
 func _on_file_dialog_file_selected(path: String) -> void:
-	Pages.save_csv(path, get_locales_from_line_edit())
+	Pages.save_csv(
+		path,
+		get_locales_from_line_edit(),
+		%SeparateFilesCheckBox.button_pressed,
+		%SplitDialinesCheckBox.button_pressed
+	)
 	var dir_path : String = path.substr(0, path.rfind("/"))
 	Pages.editor.notify("Exported to [url=%s]%s[/url]!" % [dir_path, path])
 

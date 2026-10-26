@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dsxsfioyfeltm"]
 
 [ext_resource type="Script" uid="uid://d2umixc73xu7e" path="res://addons/diisis/editor/src/windows/localization_container.gd" id="1_58vy7"]
+[ext_resource type="Script" uid="uid://bocur4gr4xvq4" path="res://addons/diisis/editor/src/richtext_tooltip_haver.gd" id="2_ykhqr"]
 
 [node name="LocalizationContainer" type="Control" unique_id=354396957]
 custom_minimum_size = Vector2(0, 100)
@@ -41,8 +42,50 @@ So if you leave it empty with english as your fallback, you'd get [code]key,en[/
 fit_content = true
 scroll_active = false
 
+[node name="CurrentFallbackLocaleLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=647324317]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1782586296]
 layout_mode = 2
+
+[node name="SeparateFilesCheckBox" type="CheckBox" parent="VBoxContainer" unique_id=698058855]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "If checked, the path you set when exporting the csv file will be suffixed with the non-fallback locale.
+
+e.g.: With fallback \"en\", and locales \"de,es\", the file path [code]user://your_l10n.csv[/code] creates files [code]user://your_l10n_de.csv[/code] and [code]user://your_l10n_es.csv[/code], with columns [code]key,en,de[/code] and [code]key,en,es[/code] respectively.
+
+If unchecked, only one file is created, with one column for each locale, e.g. [code]key,en,de,es[/code]."
+text = "Separate files"
+script = ExtResource("2_ykhqr")
+
+[node name="SplitDialinesCheckBox" type="CheckBox" parent="VBoxContainer" unique_id=1950924154]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "If checked, the exported csv will do the following to any [img]res://addons/diisis/editor/visuals/theme/buttons_ui/icon_text.png[/img]Text Lines: It splits the entire text box along the actor separators ([code][]>[/code]), and suffixes each with [code]:<dialine index>[/code].
+
+At runtime, DIISIS will detect the split dialines, and fuse them back together. (This auto-detect behavior can be toggled in Parser's exports.)
+
+This behavior might be more suited to more conventional l10n pipelines.
+
+e.g.:
+[code]
+[]>narrator: This is some text.
+[]>amber: Indeed it is.
+[/code]
+
+will become
+[code]
+key,en
+linekey:0,\"[]>narrator: This is some text.\"
+linekey:1,\"[]>amber: Indeed it is.\"
+[/code]"
+text = "Split dialines"
+script = ExtResource("2_ykhqr")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1734813262]
 layout_mode = 1

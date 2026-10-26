@@ -2670,28 +2670,66 @@ func ensure_line_reader_scripts():
 
 
 
-func save_csv(path : String, locales := []):
-	locales.push_front(ProjectSettings.get_setting("internationalization/locale/fallback"))
+func save_csv(
+	path : String,
+	locales := [],
+	separate_files := false,
+	split_dialines := false
+):
+	var key_lists := []
+	if separate_files:
+		for extra_locale in locales:
+			var keys := [
+				"key",
+				ProjectSettings.get_setting("internationalization/locale/fallback"),
+				extra_locale
+			]
+			key_lists.append(keys)
+	else:
+		locales.push_front(ProjectSettings.get_setting("internationalization/locale/fallback"))
+		var keys := ["key"]
+		keys.append_array(locales)
+		key_lists.append(keys)
 	
-	var file:FileAccess
-	
-	file = FileAccess.open(path, FileAccess.WRITE)
-	var keys := ["key"]
-	keys.append_array(locales)
-	file.store_csv_line(keys)
-	
-	file.seek_end()
-	
-	var extra_locales := []
-	for i in locales.size() - 1:
-		extra_locales.append("")
-	
-	for key in text_data.keys():
-		var line := [key, text_data.get(key)]
-		line.append_array(extra_locales)
-		file.store_csv_line(line)
-	
-	file.close()
+	var base_path := path
+	for keys : Array in key_lists:
+		var file:FileAccess
+		
+		if key_lists.size() > 1:
+			var actual_locale : String = keys[2]
+			var parts := base_path.rsplit(".", true, 1)
+			path = str(parts[0], "_", actual_locale, ".", parts[1])
+		
+		file = FileAccess.open(path, FileAccess.WRITE)
+		file.store_csv_line(keys)
+		
+		file.seek_end()
+		
+		var extra_locales := []
+		for i in keys.size() - 2: # -1 for "keys" and -1 for "fallback"
+			extra_locales.append("")
+		
+		for key in text_data.keys():
+			var text : String = text_data.get(key)
+			if text.begins_with("[]>") and split_dialines:
+				var dialines := text.split("[]>")
+				var i := 0
+				for dialine : String in dialines:
+					if dialine.ends_with("\n"):
+						dialine = dialine.trim_suffix("\n")
+					if dialine.is_empty():
+						continue
+					var subkey := "%s:%s" % [key, i]
+					var line := [subkey, dialine]
+					line.append_array(extra_locales) # pad with empty strings to be filled with l10n
+					file.store_csv_line(line)
+					i += 1
+			else:
+				var line := [key, text]
+				line.append_array(extra_locales) # pad with empty strings to be filled with l10n
+				file.store_csv_line(line)
+		
+		file.close()
 
 
 class IndentResult:

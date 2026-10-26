@@ -1,0 +1,58 @@
+key,en,de,es
+key:0,"narrator: Thank you for downloading DIISIS. You seem to have set it up so it doesn't explode your project. <mp>Good job!
+",,
+key:1,"narrator: In this demo, you will find the fundamentals of DIISIS' functionalities included in the script [b]""demo_script.json""[/b] so you can get accustomed to how things work. <mp>Read along by opening the [img]res://addons/diisis/logos/icon_buttonbw smooth.png[/img] DIISIS tab in Godot! (or the button in the top right corner of Godot if you aren't embedding DIISIS)! <mp>Click there now to follow along to the tour :3
+",,
+key:2,"amber{amber-emotion|neutral}: Hi! I'm Amber, one of the robotgirls created to anthropomorphize DIISIS.
+",,
+key:3,"narrator: Imagine her, gently watching over you as you work. Like a little guardian robotangel, just for you.
+",,
+key:4,"amber: That I am!
+",,
+key:5,"narrator: What you will see next is a basic demo of choices in DIISIS. You can give any number of options to the player. <mp>For each option, you can attach so-called [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]""Facts"" to the option.
+",,
+key:6,"narrator: [img]res://addons/diisis/editor/visuals/theme/buttons_ui/fact.png[/img]Facts can either be boolean (true or false) or integers (whole numbers). Then you can check against them having some value at a later point. <mp>In this example, we have a fact called ""liked amber"". It is boolean and starts out as <fact:liked amber>. If you press the first button, it gets set to true.
+",,
+key:7,"narrator: Isn't she cool?<comment:Note: To support rollback, we make it explicit to set a fact to true or false in either of the options below.>",,
+1744987729.539--9223372036854775796,Opinion on Amber?,,
+1744987729.575--9223372036854775792,,,
+1744987729.575--9223372036854775793,Yes I love her,,
+1744987729.626--9223372036854775788,,,
+1744987729.626--9223372036854775789,"No actually, robots are scary",,
+key:0,amber{amber-emotion|sad}: I promise I'm not scary!,,
+key:0,"narrator: And then we only show the appropriate line.
+",,
+key:1,"narrator{amber-emotion|neutral}: Choices can also jump to any point in the document upon being picked and have other behavior for more advanced use cases.
+",,
+key:2,narrator: You can find all of that in the [url=https://snekofspice.github.io/diisis-docs/Getting-Started/Line-Types/Choice]wiki[/url].,,
+key:0,"narrator: DIISIS' [img]res://addons/diisis/parser/style/icon_line_reader.svg[/img] LineReader can call functions in Godot for more complex behavior. <mp>You can find more info on [url=https://snekofspice.github.io/diisis-docs/Getting-Started/Line-Types/Instruction]GitHub[/url]. <lc>Calling custom functions is as simple as creating a node that extends LineReader in its script and giving it custom functions. From there, you make calls to the rest of the game architecture. <mp>The template comes with a bunch of functions typical for visual novels, such as the setting of backgrounds, background music, fades to black, etc.
+",,
+key:1,"narrator: To call a function, there are two approaches: Lines and inline. You can dedicate an entire [url=https://github.com/SnekOfSpice/dialog-editor/wiki/Line-Type:-Instruction]Line[/url] to a function, or use an appropriate [url=https://github.com/SnekOfSpice/dialog-editor/wiki/InlineEvaluator#evaluated-tags]Tag[/url] to call them from inside the text.",,
+key:0,"narrator: You can jump to the script an instruction is referenced in with ctrl/cmd+left click!
+",,
+key:1,narrator: This template also comes with CG support. <lc>I will use this to tell you about where I got the music for this demo.,,
+key:0,"narrator: Like so.
+",,
+key:1,"amber: Or <call:shake_camera(40)>so :3
+",,
+key:2,narrator: Both approaches are largely equivalent. The most notable difference is that Lines allow you to define custom behavior on rollback and they can implement delays before and after their execution.,,
+key:0,"narrator: Loyalty Freak Music is anticapitalist and antifascist. <mp>[b]Those are good things.[/b] <ap>...And the music rocks too.
+",,
+key:1,narrator: CGs are fullscreen illustrations that you use to highlight cool scenes in your visual novel. <mp>They are absolutely not [i]necessary[/i] - but can add some nice polish.,,
+key:0,"narrator: When this line ends with the next click, the CG will disappear again. <mp>Tada! <call:hide_cg(2)>",,
+key:0,"narrator: With that, we can start to wrap up.
+",,
+key:1,amber: Change of scenery please!,,
+key:0,"narrator: How can you leave this place again? Well, you can just terminate the page by not having it point to a page again :3 <mp>(That's the [img]res://addons/diisis/editor/visuals/theme/buttons_ui/ticked_terminate.png[/img] symbol in the top left in DIISIS).
+",,
+key:1,"narrator: This demo and DIISIS entirely was made by [url=https://snekofspice.itch.io/]Snek[/url].
+",,
+key:2,"narrator: Music by [url=https://chezmonplaisir.bandcamp.com/album/chill-for-real]Loyalty Freak Music[/url] and [url=https://lmnlrecords.bandcamp.com/track/its-not-pretty-here]Modela[/url].
+",,
+key:3,"narrator: <call:control_camera(1, 0, 0, 4)>Amber art by [url=https://x.com/_10qi]10qi[/url].
+",,
+key:4,narrator: [rainbow freq=1.0 sat=0.8 val=0.8]Go out there and create![/rainbow],,
+key:0,"narrator: There you go <3
+",,
+key:1,"narrator: Dear reader; This template comes with all the simple things you need to make your own visual novel. There's a guide for the setup [url=https://snekofspice.github.io/diisis-docs/VN-Template-Guide/Getting-Started]here[/url]. I would recommend you still know the very basics of Godot, maybe look into how to use themes.",,
+key:0,amber{amber-emotion|happy}: I'm really happy to hear that! <mp>I think you're cool too!,,
