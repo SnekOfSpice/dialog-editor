@@ -774,6 +774,10 @@ func _set_custom_blockers(new_value:int):
 	_is_advance_blocked = is_advance_blocked(false, false)
 	_update_input_prompt(0)
 
+
+func can_advance(include_warnings:=false, include_auto_continue:=true) -> bool:
+	return not is_advance_blocked(include_warnings, include_auto_continue)
+
 var _yield_instruction_to_advance := false
 ## you can use this to poll the internal state
 func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
@@ -1038,6 +1042,13 @@ func _read_line(new_line: Dictionary):
 	_remaining_prompt_delay = input_prompt_delay
 	
 	_reverse_next_instruction = false
+	
+	# only add addresses to the trail if we actually visit them from a player's perspective
+	# if we skip them through conditionals, they shouldn't be added
+	var new_address := str(Parser.page_index, ".", line_index)
+	Parser.address_trail.append(new_address)
+	if Parser.address_trail_index >= Parser.address_trail.size():
+		Parser.address_trail_index = Parser.address_trail.size() - 1
 
 
 ## Returns the current dialog line index. See [method reparse_text].

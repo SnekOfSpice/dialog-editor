@@ -355,6 +355,10 @@ func attempt_advance(event:InputEvent):
 			return
 	if not %VNUI.visible:
 		return
+	
+	if Parser.line_reader.can_advance():
+		for character : Character in %Characters.get_children():
+			character.cache_emotion_at_subaddress(Parser.line_reader.get_subaddress())
 	Parser.line_reader.request_advance()
 
 

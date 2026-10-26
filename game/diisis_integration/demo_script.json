@@ -148,6 +148,10 @@
 				"call_position": -1
 			},
 			"callv_custom": {},
+			"can_advance": {
+				"include_auto_continue": true,
+				"include_warnings": false
+			},
 			"chapter_break": {
 				"transition_time": 0.0
 			},
@@ -220,6 +224,9 @@
 			"set_actor_name": {
 				"access_mode": 0
 			},
+			"set_background": {
+				"fade_time": 0.0
+			},
 			"set_bgm": {},
 			"set_body_label": {
 				"clear_previous": false,
@@ -250,7 +257,7 @@
 			"update_name_label": {},
 			"zoom_to": {}
 		},
-		"id_counter": -9223372036854761415,
+		"id_counter": -9223372036854761339,
 		"import_modified_times_by_path": {
 			"D:/100_godot/dialog-editor/export3.txt": 1755780507.0,
 			"D:/100_godot/dialog-editor/export6.txt": 1755861153.0
@@ -393,7 +400,7 @@
 												"is_conditional": false
 											}
 										},
-										"meta.visible": false
+										"meta.visible": true
 									},
 									"id": "1755512415.997--9223372036854761465",
 									"jump_address_mode": 0,
@@ -431,8 +438,17 @@
 									},
 									"do_jump_page": false,
 									"facts": {
-										"fact_data_by_name": {},
-										"meta.visible": false
+										"fact_data_by_name": {
+											"liked amber": {
+												"data_type": 0,
+												"fact_name": "liked amber",
+												"fact_value": false,
+												"int_comparator": 0,
+												"int_operator": 0,
+												"is_conditional": false
+											}
+										},
+										"meta.visible": true
 									},
 									"id": "1755512416.338--9223372036854761461",
 									"jump_address_mode": 0,

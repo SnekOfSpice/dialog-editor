@@ -51,9 +51,10 @@ func _ready():
 		
 		group.visible = false
 	
-	set_emotion("neutral")
-	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
 	add_to_group("character")
+	set_emotion("invisible")
+	ParserEvents.dialog_line_args_passed.connect(on_dialog_line_args_passed)
+	ParserEvents.rollback_accepted.connect(on_rollback_accepted)
 	target_x = position.x
 	
 	visibility_changed.connect(on_visibility_changed)
@@ -167,3 +168,19 @@ func on_visibility_changed():
 ## circumvents fade_out.
 func set_invisible():
 	visible = false
+
+
+var emotions_by_subaddress := {}
+func cache_emotion_at_subaddress(subaddress : String) -> void:
+	emotions_by_subaddress[subaddress] = emotion
+
+
+func on_rollback_accepted(page:int, line:int, dialine_about_to_read:int):
+	var subaddress := str(
+		page, ".",
+		line, ".",
+		dialine_about_to_read
+	)
+	
+	if emotions_by_subaddress.has(subaddress):
+		set_emotion(emotions_by_subaddress.get(subaddress))

@@ -29,7 +29,7 @@ func on_rollback_accepted(page:int, line:int, dialine : int):
 	if not states_by_page[page].has(line):
 		return
 	
-	# most significant changes only happen on new lines, so anything else is handled elsewhere
+	## most significant changes only happen on new lines, so anything else is handled elsewhere
 	if dialine != 0:
 		return
 	

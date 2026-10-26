@@ -641,6 +641,8 @@ func rollback():
 	var instruction_stack := []
 	var instruction_finder := 0
 	while instruction_finder > trail_shift:
+		if address_trail_index + instruction_finder >= address_trail.size():
+			break
 		# build instruction stack
 		var address_type = get_line_type_by_address(address_trail[address_trail_index + instruction_finder])
 		if address_type == DIISIS.LineType.INSTRUCTION:
@@ -704,11 +706,6 @@ func read_line(index: int):
 	
 	terminated_line_index = -1
 	terminated_page_index = -1
-
-		
-	var new_address := str(page_index, ".", line_index)
-
-	address_trail.append(new_address)
 	
 	var new_region_end = get_region_end()
 	if new_region_end != _region_end:
