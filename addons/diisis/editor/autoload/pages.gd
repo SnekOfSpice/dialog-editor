@@ -1331,8 +1331,10 @@ func does_address_exist(address:String) -> bool:
 	
 	return false
 
+
 func delete_fact(fact:String):
 	alter_fact(fact)
+
 
 func get_list_of_evaluator_scripts() -> Array[Script]:
 	var result : Array[Script] = []
@@ -1340,7 +1342,7 @@ func get_list_of_evaluator_scripts() -> Array[Script]:
 		if evaluator.ends_with(".gd"):
 			var n = load(evaluator)
 			if not n:
-				push_warning(str("Couldn't load", evaluator))
+				push_warning(str("Couldn't load ", evaluator))
 				continue
 			result.append(n)
 		else:

@@ -1,9 +1,16 @@
 @tool
 extends LineReader
 
+# Extend a script from LineReader to have diisis be able to make
+# function calls to this node.
+# NOTE: Only one LineReader can be active at any given time.
+
+# CRITICAL: When you rename this script, remember to also edit the path
+# saved in DIISIS > Setup > Functions & Variables
 
 @export var camera : GameCamera
 @export var credits : RollingCredits
+
 
 #region setting up
 func _ready():
