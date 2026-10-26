@@ -91,12 +91,6 @@ var _auto_continue_duration:= auto_continue_delay
 @export var actor_config : Dictionary[String, LineReaderActorConfig]
 ## If the newly speaking actor name is in this array, the name label will be hidden altogether.
 @export var blank_names : Array[String] = []
-## A String:String Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
-## The respective value is the name to be displayed in the [member name_label] or [member body_label], depending on [member name_style].
-#@export var name_map : Dictionary[String, String] = {}
-## A String:Color Dictionary. The keys are the actor names set in the options of the Speaker Stringkit in DIISIS.
-## The respective value is the color modulation applied to [member name_label] or bbcode color tag inserted around the name in [member body_label], depending on [member name_style].
-#@export var color_map : Dictionary[String, Color] = {}
 ## Style in which names get displayed. See [enum LineReader.NameStyle].
 @export var name_style : NameStyle = NameStyle.NAME_LABEL
 var _prepend_length := 0
@@ -435,7 +429,7 @@ signal line_finished(line_index: int)
 signal jump_to_page(page_index: int, target_line: int)
 signal start_accepting_advance()
 signal stop_accepting_advance()
-@onready var _is_advance_blocked := is_advance_blocked()
+@onready var _was_advance_blocked := _is_advance_blocked()
 
 var _line_data := {}
 ## [enum DIISISGlobal.LineType] that's currently being read.
@@ -715,7 +709,7 @@ func _ready() -> void:
 	_body_duplicate.focus_mode = Control.FOCUS_NONE
 	_body_duplicate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_body_duplicate.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	add_child(_body_duplicate)
+	add_child(_body_duplicate, false, Node.INTERNAL_MODE_FRONT)
 	
 	if body_label:
 		body_label.visible_ratio = 0
@@ -771,16 +765,19 @@ func remove_custom_blocker():
 
 func _set_custom_blockers(new_value:int):
 	custom_blockers = new_value
-	_is_advance_blocked = is_advance_blocked(false, false)
+	_was_advance_blocked = _is_advance_blocked(false, false)
 	_update_input_prompt(0)
 
 
+## Polls the internal state of this [LineReader].
+## Call this function before calling [method request_advance] to know if the
+## internal call of [method _advance] will succeed, for instance if you
+## need to cache something beforehand.
 func can_advance(include_warnings:=false, include_auto_continue:=true) -> bool:
-	return not is_advance_blocked(include_warnings, include_auto_continue)
+	return not _is_advance_blocked(include_warnings, include_auto_continue)
 
 var _yield_instruction_to_advance := false
-## you can use this to poll the internal state
-func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
+func _is_advance_blocked(include_warnings:=false, include_auto_continue:=true) -> bool:
 	if Engine.is_editor_hint():
 		return false
 	if skillcheck_delay > 0:
@@ -823,13 +820,13 @@ func is_advance_blocked(include_warnings:=false, include_auto_continue:=true) ->
 
 ## Advances the interpreting of lines from the input file if possible. Will push an appropriate warning if not possible.
 func request_advance():
-	if is_advance_blocked(true):
+	if _is_advance_blocked(true):
 		return
 	
-	advance()
+	_advance()
 
-## Advances the reading of lines directly. Do not call this directly. Use [code]request_advance()[/code] instead.
-func advance():
+## Advances the reading of lines directly. Do not call this directly. Use [method request_advance] instead.
+func _advance():
 	_last_visible_characters = 0
 	_last_visible_ratio = 0
 	_text_delay = 0
@@ -857,7 +854,7 @@ func advance():
 					_find_next_pause()
 				elif _auto_advance:
 					_auto_advance = false
-					advance()
+					_advance()
 				_remaining_prompt_delay = input_prompt_delay
 	else:
 		emit_signal("line_finished", line_index)
@@ -1260,13 +1257,13 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 	if Parser.paused:
 		return
 	
-	var new_block := is_advance_blocked(false, include_auto_continue_in_accept_advance_signal)
-	if _is_advance_blocked != new_block:
+	var new_block := _is_advance_blocked(false, include_auto_continue_in_accept_advance_signal)
+	if _was_advance_blocked != new_block:
 		if new_block:
 			emit_signal("stop_accepting_advance")
 		else:
 			emit_signal("start_accepting_advance")
-	_is_advance_blocked = new_block
+	_was_advance_blocked = new_block
 	_update_input_prompt(delta)
 	
 	if is_executing:
@@ -1415,11 +1412,11 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 		_last_visible_characters = -1
 		_last_visible_ratio = 0
 	
-	if is_advance_blocked(false, false):
+	if _is_advance_blocked(false, false):
 		return
 	
 	if _last_visible_characters == -1 and _auto_advance:
-		advance()
+		_advance()
 		_auto_advance = false
 		return
 	
@@ -1433,7 +1430,8 @@ func _physics_process(delta: float) -> void:#(delta: float) -> void:
 		if body_label.visible_characters >= _pause_positions[_next_pause_position_index] - 4 * _next_pause_position_index or body_label.visible_characters == -1:
 			_auto_continue_duration -= delta
 			if _auto_continue_duration <= 0.0:
-				advance()
+				_advance()
+
 
 func _can_handle_text_position(pos: int, tracker_array:StringName) -> bool:
 	return (
@@ -1442,9 +1440,11 @@ func _can_handle_text_position(pos: int, tracker_array:StringName) -> bool:
 			body_label.visible_characters == -1
 		)
 
+
 func _remove_spaces_and_send_word_read_event(word: String):
 	word = word.replace(" ", "")
 	ParserEvents.word_read.emit(word)
+
 
 func _remove_symbols(from: String, symbols:=non_word_characters) -> String:
 	var s = from
@@ -1454,8 +1454,9 @@ func _remove_symbols(from: String, symbols:=non_word_characters) -> String:
 	
 	return s
 
+
 func _update_input_prompt(delta:float):
-	if (not show_input_prompt) or _is_advance_blocked:
+	if (not show_input_prompt) or _is_advance_blocked():
 		if prompt_finished:
 			prompt_finished.visible = false
 		if prompt_unfinished:
@@ -1755,7 +1756,7 @@ func _insert_strings_in_current_dialine():
 		
 		var label := RichTextLabel.new()
 		label.bbcode_enabled = true
-		add_child(label)
+		add_child(label, false, Node.INTERNAL_MODE_BACK)
 		label.text = _full_prefix
 		_prepend_length = label.get_parsed_text().length()
 		label.queue_free()
@@ -2145,12 +2146,12 @@ func _ensure_ruby_container(on_label:=body_label):
 		ruby_container.custom_minimum_size = on_label.size
 		_ruby_containers_by_label[on_label] = ruby_container
 		
-		ruby_root.add_child(ruby_container)
+		ruby_root.add_child(ruby_container, true, Node.INTERNAL_MODE_BACK)
 		#vbox.add_child(ruby_container)
 		#var spacer := vbox.add_spacer(false)
 		#spacer.custom_minimum_size.y = 1000
 		
-		on_label.add_child(ruby_root)
+		on_label.add_child(ruby_root, false, Node.INTERNAL_MODE_BACK)
 
 func set_ruby_enabled(value:bool):
 	ruby_enabled = value
@@ -2298,7 +2299,7 @@ func _build_ruby(on_label := body_label, indices:=Vector2i.ZERO, text := "") -> 
 		ruby_label.set_font(ruby_font_override)
 	ruby_label.set_font_size(float(body_label.get_theme_font_size("normal_font_size", "RichTextLabel")) * ruby_scale)
 	_ruby_containers_by_label.get(on_label).size = Vector2.ZERO
-	_ruby_containers_by_label.get(on_label).add_child(ruby_label)
+	_ruby_containers_by_label.get(on_label).add_child(ruby_label, false, INTERNAL_MODE_FRONT)
 	if on_label == body_label:
 		_ruby_labels.append(ruby_label)
 	
@@ -2371,10 +2372,9 @@ func _ensure_terminator_node(for_complete : bool, on_label:RichTextLabel=body_la
 			terminator_node = terminator_data.terminator_scene.instantiate()
 			terminator_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			terminator_node.focus_mode = Control.FOCUS_NONE
-			#terminator_node.add_child(terminator_data.terminator_scene.instantiate())
 	
 	set(node_property, terminator_node)
-	on_label.add_child(terminator_node)
+	on_label.add_child(terminator_node, false, Node.INTERNAL_MODE_BACK)
 
 func _trim_trimmables(text:String) -> String:
 	var begins_trimmable := _begins_with_trimmable(text)
@@ -2515,8 +2515,8 @@ func _preserve_into_past_line_container():
 func _set_body_label_text(text: String, internal := false):
 	if text.is_empty() and not internal:
 		push_warning("Dialog at subaddress %s is an empty String" % get_subaddress())
-		advance()
-		advance()
+		_advance()
+		_advance()
 		return
 	if body_label:
 		body_label.text = text
@@ -3475,10 +3475,10 @@ func get_actor_names_in_line(empty_if_not_text:=true) -> Array:
 			result.append(actor)
 	return result
 
-func set_chatlog_enabled(value:bool):
+func set_chatlog_enabled(value:bool) -> void:
 	chatlog_enabled = value
 
-func set_custom_text_speed_override(value:int):
+func set_custom_text_speed_override(value:int) -> void:
 	custom_text_speed_override = value
 
 #func _fit_to_max_line_count(lines: Array):
