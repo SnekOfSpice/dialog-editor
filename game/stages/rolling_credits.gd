@@ -1,4 +1,5 @@
 extends Control
+class_name RollingCredits
 
 
 func _ready() -> void:

@@ -2,7 +2,8 @@
 extends LineReader
 
 
-@export var camera : Camera2D
+@export var camera : GameCamera
+@export var credits : RollingCredits
 
 #region setting up
 func _ready():
@@ -122,7 +123,7 @@ func zoom_to(value : float, duration : float) -> bool:
 
 #region dramatics
 func roll_credits() -> bool:
-	%RollingCredits.start()
+	credits.start()
 	return true
 
 

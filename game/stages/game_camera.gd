@@ -5,48 +5,19 @@ class_name GameCamera
 @export var move_cg_with_camera := false
 @onready var cg_bottom_container : Control = find_child("CGBottomContainer")
 
-var rng = RandomNumberGenerator.new()
-
 var shake_strength := 0.0
-
 var zoom_tween:Tween
 var move_tween:Tween
 
 var sway_intensity := 0.0
 var sway_speed := 1.0
 var sway_intensity_lerp_strength := 0.02
-
-var screen_shake_hard := false
-
 var flat_offset := Vector2.ZERO
+
 
 func _ready() -> void:
 	Game.camera = self
 
-func serialize() -> Dictionary:
-	var result := {}
-	
-	result["sway_intensity"] = sway_intensity
-	result["sway_intensity_lerp_strength"] = sway_intensity_lerp_strength
-	result["position"] = position
-	result["zoom"] = zoom
-	result["flat_offset"] = flat_offset
-	
-	return result
-
-
-func deserialize(data:Dictionary):
-	zoom = Game.str_to_vec2(data.get("zoom", zoom))
-	position = Game.str_to_vec2(data.get("position", position))
-	flat_offset = Game.str_to_vec2(data.get("flat_offset", flat_offset))
-	
-
-	
-	sway_intensity_lerp_strength = data.get("sway_intensity_lerp_strength", sway_intensity_lerp_strength)
-	sway_intensity = data.get("sway_intensity", sway_intensity)
-
-func set_sway_intensity(value:float):
-	sway_intensity = value
 
 func _process(delta: float) -> void:
 	if shake_strength > 0:
@@ -80,6 +51,32 @@ func _process(delta: float) -> void:
 		# but that also requires all CG assets to have extra margins and stuff
 		# and we're not doing that as the base case
 		Game.game_stage.set_cg_offset(Vector2.ZERO)
+
+
+func serialize() -> Dictionary:
+	var result := {}
+	
+	result["sway_intensity"] = sway_intensity
+	result["sway_intensity_lerp_strength"] = sway_intensity_lerp_strength
+	result["position"] = position
+	result["zoom"] = zoom
+	result["flat_offset"] = flat_offset
+	
+	return result
+
+
+func deserialize(data:Dictionary):
+	zoom = Game.str_to_vec2(data.get("zoom", zoom))
+	position = Game.str_to_vec2(data.get("position", position))
+	flat_offset = Game.str_to_vec2(data.get("flat_offset", flat_offset))
+	
+	sway_intensity_lerp_strength = data.get("sway_intensity_lerp_strength", sway_intensity_lerp_strength)
+	sway_intensity = data.get("sway_intensity", sway_intensity)
+
+
+func set_sway_intensity(value:float):
+	sway_intensity = value
+
 
 func apply_shake(strength:float):
 	shake_strength = strength

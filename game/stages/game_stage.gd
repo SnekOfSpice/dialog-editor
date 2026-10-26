@@ -28,30 +28,37 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	
+	Game.game_stage = self
+	
+	# often indev mode, it's needed to jump into the middle of a script.
+	# this is some basic visual fluff to have some background
+	# so that the game becomes less depressing to playtest!
 	if devmode_enabled:
 		set_background("void")
 	
-	find_child("DevModeLabel").visible = devmode_enabled
 	
-	%StartCover.visible = true
 	ParserEvents.page_terminated.connect(go_to_main_menu)
 	ParserEvents.instruction_started.connect(on_instruction_started)
 	
 	tree_exiting.connect(_on_tree_exit)
 	
-	Game.game_stage = self
-	
 	for character in %Characters.get_children():
 		character.visible = false
-	
+	%DevModeLabel.visible = devmode_enabled
 	hide_cg()
 	
 	await get_tree().process_frame
-	if Game.start_data:
+	if devmode_enabled and OS.is_debug_build():
+		Parser.reset_and_start(
+			devmode_start_page,
+			devmode_start_line
+		)
+	elif Game.start_data:
 		Game.start_data.game_start_callable.call()
 	else:
 		push_error("No start data defined!")
 	
+	# now that the rest of this function has happened, we can lift the curtain!
 	await get_tree().process_frame
 	%StartCover.visible = false
 
@@ -128,7 +135,7 @@ func serialize() -> Dictionary:
 	
 	result["start_cover_visible"] = %StartCover.visible
 
-	result["camera"] = %Camera2D.serialize()
+	result["camera"] = %GameCamera.serialize()
 
 	result["text_content_default"] = serialize_text_content(%DefaultTextContainer)
 	
@@ -158,7 +165,7 @@ func deserialize(data:Dictionary):
 	for character : Character in %Characters.get_children():
 		character.deserialize(character_data.get(character.character_name, {}))
 	
-	%Camera2D.deserialize(data.get("camera", {}))
+	%GameCamera.deserialize(data.get("camera", {}))
 	
 	var cg_name : String = data.get("cg", "")
 	if cg_name.is_empty():

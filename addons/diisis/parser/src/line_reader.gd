@@ -27,7 +27,7 @@ enum NameStyle {
 enum TextFlow{
 	## The text will smoothly grow across [member body_label].
 	SMOOTH,
-	## Each word will be read one word at a time instead of character by character.
+	## Each line will be read one word at a time instead of character by character.
 	## [br]Spaces will be preserved and trigger a pause. The length of the pause will be [constant MAX_TEXT_SPEED] / [member text_speed] seconds.
 	FULL_WORDS,
 	## The text will be broken up along spaces.
