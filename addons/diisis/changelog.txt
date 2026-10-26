@@ -26,7 +26,7 @@ The Sunless Horizon 1.5 Update (*associated post-jam additions!)
 - add ability to declare a stringkit for skillchecks analogous to speakers
 - add validation to check if an entered stringkit value in a skillcheck is in stringkit_title_for_skillchecks
 - remove custom implementations of actor colors etc and replace them with LabelSettings in LineReaderActorConfig
-
+- remove obsolete Parser.localization_file
 
 DIISIS 0.9 2026-08-19
 post TDOHN update (Or: The hot reload fixes update, apparently)

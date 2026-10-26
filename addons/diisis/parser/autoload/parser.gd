@@ -24,9 +24,6 @@ enum RollbackDeclineReason {
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
 @export var max_history_length := -1
-## Folder containing all l10n files (starting with "diisis_l10n_").
-## [br]Leave empty to forego l10n.
-@export_file("*.json") var localization_file
 
 @export_group("Choices")
 ## If [code]true[/code], will append the text of choice buttons to the history.
@@ -146,11 +143,6 @@ func full_initialize(path : String):
 	
 	_initialize(data)
 	_apply_debug_fact_payload()
-	
-	if localization_file:
-		var file := FileAccess.open(localization_file, FileAccess.READ)
-		l10n = JSON.parse_string(file.get_as_text())
-		file.close()
 
 
 func _initialize(data:Dictionary):
