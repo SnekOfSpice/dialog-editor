@@ -894,7 +894,7 @@ func request_load_page(number:int, action_message:=""):
 	request_go_to_address(str(number), action_message)
 
 func notify(message:String, duration:=5.0):
-	var notification = load("res://addons/diisis/editor/src/editor_notification.tscn").instantiate()
+	var notification : DIISISEditorNotification = load("res://addons/diisis/editor/src/editor_notification.tscn").instantiate()
 	%NotificationContainer.add_child(notification)
 	%NotificationContainer.move_child(notification, 0)
 	notification.init(message, duration)
@@ -1209,7 +1209,8 @@ func step_through_pages():
 
 
 func _on_funny_debug_button_pressed() -> void:
-	print(Pages.custom_method_stringkit_limiters)
+	notify("uwu")
+	#print(Pages.custom_method_stringkit_limiters)
 
 func _on_fd_export_locales_file_selected(path: String) -> void:
 	var l10n := {}

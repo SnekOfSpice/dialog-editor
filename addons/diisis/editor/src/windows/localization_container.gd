@@ -38,7 +38,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		%SplitDialinesCheckBox.button_pressed
 	)
 	var dir_path : String = path.substr(0, path.rfind("/"))
-	Pages.editor.notify("Exported to [url=%s]%s[/url]!" % [dir_path, path])
+	Pages.editor.notify("Exported to [url=%s]%s[/url]!" % [dir_path, path], 10)
 
 
 func _on_file_dialog_close_requested() -> void:
