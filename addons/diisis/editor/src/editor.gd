@@ -146,6 +146,7 @@ func init(active_file_path:="") -> void:
 	update_controls()
 	
 	%GoTo.init()
+	%UpdatingAnchor.hide()
 	
 	arg_hint = %ArgHint
 	if DiisisEditorUtil.embedded:
@@ -330,6 +331,9 @@ func update_page_view(view:PageView):
 func load_page(number: int, discard_without_saving:=false):
 	if opening:
 		return
+	%UpdatingAnchor.show()
+	await RenderingServer.frame_post_draw
+	
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
 	for page in %PageContainer.get_children():
@@ -546,6 +550,8 @@ func _shortcut_input(event):
 				
 	
 func update_controls():
+	%UpdatingAnchor.show()
+	#await RenderingServer.frame_post_draw
 	var current_page := get_current_page()
 	if not current_page:
 		await get_tree().process_frame
@@ -567,6 +573,9 @@ func update_controls():
 	
 	await get_tree().process_frame
 	current_page.update()
+	#await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	%UpdatingAnchor.hide()
 
 func get_current_page_number() -> int:
 	if not get_current_page():
@@ -1597,6 +1606,10 @@ func _load_preferences():
 		dia_editor_window.size = config.get_value("editor", "size", dia_editor_window.size)
 		dia_editor_window.position = config.get_value("editor", "position", dia_editor_window.position)
 		dia_editor_window.mode = config.get_value("editor", "mode", dia_editor_window.mode)
-		
-		#await get_tree().process_frame
-		#dia_editor_window.update_content_scale(scale)
+
+
+func _on_updating_anchor_visibility_changed() -> void:
+	if Pages.silly:
+		%UpdatingPuppyLabel.text = Pages.make_puppy()
+	else:
+		%UpdatingPuppyLabel.text = ""

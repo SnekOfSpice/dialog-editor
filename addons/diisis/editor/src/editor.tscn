@@ -842,6 +842,40 @@ theme_override_font_sizes/font_size = 14
 text = "Booting up import..."
 horizontal_alignment = 1
 
+[node name="UpdatingAnchor" type="Control" parent="." unique_id=1371958186]
+unique_name_in_owner = true
+modulate = Color(0.7490196, 0.7490196, 0.7490196, 0.3254902)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpdatingAnchor" unique_id=997434708]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -156.0
+offset_top = -76.0
+offset_right = -67.0
+offset_bottom = -36.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="UpdatingLabel" type="Label" parent="UpdatingAnchor/HBoxContainer" unique_id=1614043694]
+layout_mode = 2
+text = "thinking..."
+
+[node name="UpdatingPuppyLabel" type="Label" parent="UpdatingAnchor/HBoxContainer" unique_id=1161430210]
+unique_name_in_owner = true
+layout_mode = 2
+text = "dfg"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/MarginContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FileControl/MarginContainer/HBoxContainer/ToolbarContainer/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
@@ -874,3 +908,4 @@ horizontal_alignment = 1
 [connection signal="file_selected" from="Popups/FDIngest" to="." method="_on_fd_ingest_file_selected"]
 [connection signal="close_requested" from="Popups/FileConfigPopup" to="." method="_on_file_config_popup_close_requested"]
 [connection signal="close_requested" from="Popups/HandlerWindow" to="." method="_on_handler_window_close_requested"]
+[connection signal="visibility_changed" from="UpdatingAnchor" to="." method="_on_updating_anchor_visibility_changed"]

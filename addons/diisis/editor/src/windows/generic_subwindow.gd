@@ -15,7 +15,7 @@ func _on_about_to_popup() -> void:
 		if container.has_method("init"):
 			container.init()
 		else:
-			push_warning("LMAO")
+			push_warning("container %s doesn't have init() function" % container_path)
 
 
 func _on_close_requested() -> void:
