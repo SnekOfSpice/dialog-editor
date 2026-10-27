@@ -17,10 +17,16 @@ enum RollbackDeclineReason {
 	HIT_FOLDER = 3,
 	BEGINNING = 0,
 }
+## Enables dialine split detection. See the tooltip in DIISIS > File > Localization
+## for more information.
 enum DialineSplitDetection {
-	## Enables dialine split detection. See the tooltip in DIISIS > File > Localization
-	## for more information.
-	ENABLED,
+	## Parsed once iat [method full_initialize].
+	## Makes it necessary to call [method full_initialize] again to apply
+	## locale changes, and adds a bit of extra bake time to Parser startup.
+	BAKED,
+	## At runtime. Every call to [method get_text] dynamically fetches the correct text.
+	## This makes locale changes (mostly) real-time, possibly leading to slight slowdowns at runtime.
+	DYNAMIC,
 	## Disables split detection from imported csv l10n files.
 	## [Parser] will assume all l10n keys that end with [code]:0[/code] to denote
 	## the start of a set of l10n keys that should be fused together.
@@ -35,14 +41,15 @@ enum DialineSplitDetection {
 ## the history is not limited. Otherwise, the latest history entry will be erased when 
 ## a new one is entered while at max length.
 @export var max_history_length := -1
-@export var dialine_split_detection := DialineSplitDetection.ENABLED
+@export var dialine_split_detection := DialineSplitDetection.DYNAMIC
 
-@export_group("Choices")
+@export_group("Choices in History", "history_choices_")
 ## If [code]true[/code], will append the text of choice buttons to the history.
-@export var append_choices_to_history := true
-##A space will be inserted between this String and the text of the choice made.[br]
+@export var history_choices_enabled := true
+##When logging a choice to the history, a space will be inserted between this
+## String and the text of the choice made.[br]
 ## If this is an empty string, no space will be inserted.
-@export var choice_appendation_string := "Choice made:"
+@export var history_choices_prefix := "Choice made:"
 
 @export_group("Progress")
 ## When calling [method _get_game_progress], the Parser will assume that any terminating page means full progress (1.0).
@@ -189,6 +196,17 @@ func _initialize(data:Dictionary):
 	page_keys.clear()
 	for pdata in page_data.values():
 		page_keys.append(pdata.get("page_key", ""))
+	
+	# stitch text together
+	if dialine_split_detection == DialineSplitDetection.BAKED:
+		for id : String in text_data.keys():
+			var translated : String = _get_stitched_dialines(id)
+			if translated.is_empty():
+				continue
+			var translation := Translation.new()
+			translation.add_message(id, translated)
+			translation.locale = TranslationServer.get_locale()
+			TranslationServer.add_translation(translation)
 
 func get_custom_method_defaults(method_name:String) -> Dictionary:
 	return full_custom_method_defaults.get(method_name, {})
@@ -370,12 +388,12 @@ func _on_choice_pressed(
 	choice_data : Dictionary
 ):
 	var choice_text : String = choice_data.get("text")
-	if append_choices_to_history:
+	if history_choices_enabled:
 		var prefix:String
-		if not choice_appendation_string.is_empty():
+		if not history_choices_prefix.is_empty():
 			prefix = ""
 		else:
-			prefix = str(choice_appendation_string, " ")
+			prefix = str(history_choices_prefix, " ")
 		call_deferred("append_to_history", str(prefix, choice_text))
 
 
@@ -565,8 +583,8 @@ func get_line_data(address:String) -> Dictionary:
 	return page_data.get(prev_page).get("lines")[prev_line]
 
 
-func get_text(id:String, keep_as_l10n_key := false) -> String:
-	var translated := tr(id)
+func _get_stitched_dialines(id : String) -> String:
+	var translated := ""
 	var dialine_translation := tr(id + ":0")
 	var has_dialine_split = dialine_translation != (id + ":0")
 	if dialine_split_detection == DialineSplitDetection.DISABLED:
@@ -585,7 +603,14 @@ func get_text(id:String, keep_as_l10n_key := false) -> String:
 			
 		translated = "[]>".join(parts)
 		translated = str("[]>", translated)
-		
+	return translated
+
+
+func get_text(id:String, keep_as_l10n_key := false) -> String:
+	var translated := tr(id)
+	if not _get_stitched_dialines(id).is_empty() and dialine_split_detection == DialineSplitDetection.DYNAMIC:
+		translated = _get_stitched_dialines(id)
+	
 	if translated == id: # means we don't have a translation set up
 		return text_data.get(id, "")
 	if keep_as_l10n_key: # useful for choice labels etc

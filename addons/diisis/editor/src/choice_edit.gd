@@ -66,8 +66,6 @@ func deserialize(data:Dictionary):
 	%LineEditEnabled.text =  Pages.get_text(text_id_enabled, data.get("choice_text.enabled", ""))
 	%LineEditDisabled.text = Pages.get_text(text_id_disabled, data.get("choice_text.disabled", ""))
 	
-	
-
 	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.CHOICE_ITEM))[1]
 	deserialized_loopback_page = loopback_target_page
 	deserialized_loopback_line = loopback_target_line

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dn4bolqa85tvr"
+
+[deps]
+
+files=["res://german_dialines.en.translation", "res://german_dialines.de.translation"]
+
+source_file="res://german_dialines.csv"
+dest_files=["res://german_dialines.en.translation", "res://german_dialines.de.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
