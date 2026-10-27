@@ -27,7 +27,9 @@ func get_preferences() -> Dictionary:
 
 
 func get_locales_from_line_edit() -> Array:
-	return %LocalesLineEdit.text.split(",")
+	var text : String = %LocalesLineEdit.text
+	text = text.replace(" ", "")
+	return text.split(",", false)
 
 
 func _on_file_dialog_file_selected(path: String) -> void:

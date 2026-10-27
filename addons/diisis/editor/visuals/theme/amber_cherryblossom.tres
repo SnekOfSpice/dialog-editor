@@ -342,8 +342,6 @@ border_width_bottom = 1
 border_color = Color(0.18, 0.14688, 0.1368, 1)
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glsm0"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_diu3x"]
 bg_color = Color(0.537255, 0.988235, 0.85098, 0.0745098)
 border_width_left = 4
@@ -603,7 +601,6 @@ MenuBar/styles/disabled = SubResource("StyleBoxFlat_56akw")
 MenuBar/styles/hover = SubResource("StyleBoxFlat_u7po2")
 MenuBar/styles/normal = SubResource("StyleBoxFlat_o40hd")
 MenuBar/styles/pressed = SubResource("StyleBoxFlat_4ktqa")
-MenuButton/styles/normal = SubResource("StyleBoxFlat_glsm0")
 Panel/styles/panel = SubResource("StyleBoxFlat_diu3x")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_k82dx")
 PopupMenu/colors/font_color = Color(0.875, 0.875, 0.875, 1)
