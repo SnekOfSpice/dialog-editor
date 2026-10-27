@@ -1340,19 +1340,27 @@ func delete_fact(fact:String):
 	alter_fact(fact)
 
 
+var _invalid_scripts := []
 func get_list_of_evaluator_scripts() -> Array[Script]:
 	var result : Array[Script] = []
 	for evaluator : String in evaluator_paths:
 		if evaluator.ends_with(".gd"):
-			var n = load(evaluator)
-			if not n:
-				push_warning(str("Couldn't load ", evaluator))
+			if not ResourceLoader.exists(evaluator):
+				# only error every 15 seconds to not
+				# clog up the console
+				if not _invalid_scripts.has(evaluator):
+					push_warning(str("Couldn't find ", evaluator, ". Please check path in Setup > Functions & Variables > Paths. Perhaps it has been renamed or deleted?"))
+					_invalid_scripts.append(evaluator)
+					var t := get_tree().create_timer(15)
+					t.timeout.connect(_invalid_scripts.erase.bind(evaluator))
 				continue
+			var n = load(evaluator)
 			result.append(n)
 		else:
-			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .tscn or .gd"))
+			push_warning(str("Couldn't resolve", evaluator, "because it doesn't end with .gd"))
 			continue
 	return result
+
 
 func get_instruction_handler_methods() -> Array:
 	var methods := []
@@ -1364,6 +1372,7 @@ func get_instruction_handler_methods() -> Array:
 	methods = add_usable_line_reader_parts(false, methods)
 	methods.sort()
 	return methods
+
 
 func get_custom_properties() -> Array:
 	var methods := []
@@ -1379,6 +1388,7 @@ func get_custom_properties() -> Array:
 			methods.erase(method)
 	
 	return methods
+
 
 ## calls get_property_list if [member properties] else get_method_list
 func add_usable_line_reader_parts(properties:bool, custom_array:Array) -> Array:
@@ -1416,6 +1426,7 @@ func add_usable_line_reader_parts(properties:bool, custom_array:Array) -> Array:
 	base.queue_free()
 	base_node.queue_free()
 	return custom_array
+
 
 func search_string(substr:String, case_insensitive:=false, include_tags:=false) -> Dictionary:
 	var found_facts := {}
