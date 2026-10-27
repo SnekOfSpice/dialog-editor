@@ -844,25 +844,21 @@ horizontal_alignment = 1
 
 [node name="UpdatingAnchor" type="Control" parent="." unique_id=1371958186]
 unique_name_in_owner = true
-modulate = Color(0.7490196, 0.7490196, 0.7490196, 0.3254902)
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 0
-grow_vertical = 0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpdatingAnchor" unique_id=997434708]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -156.0
-offset_top = -76.0
-offset_right = -67.0
-offset_bottom = -36.0
+offset_left = -58.5
+offset_top = 22.0
+offset_right = 58.5
+offset_bottom = 62.0
 grow_horizontal = 2
 alignment = 1
 
@@ -873,7 +869,7 @@ text = "thinking..."
 [node name="UpdatingPuppyLabel" type="Label" parent="UpdatingAnchor/HBoxContainer" unique_id=1161430210]
 unique_name_in_owner = true
 layout_mode = 2
-text = "dfg"
+text = "-w-"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]

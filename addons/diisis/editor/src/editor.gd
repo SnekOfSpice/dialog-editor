@@ -331,8 +331,9 @@ func update_page_view(view:PageView):
 func load_page(number: int, discard_without_saving:=false):
 	if opening:
 		return
-	%UpdatingAnchor.show()
-	await RenderingServer.frame_post_draw
+	if Pages.show_updating_status:
+		%UpdatingAnchor.show()
+		await RenderingServer.frame_post_draw
 	
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
@@ -550,8 +551,10 @@ func _shortcut_input(event):
 				
 	
 func update_controls():
-	%UpdatingAnchor.show()
-	#await RenderingServer.frame_post_draw
+	if Pages.show_updating_status:
+		%UpdatingAnchor.show()
+		await RenderingServer.frame_post_draw
+	
 	var current_page := get_current_page()
 	if not current_page:
 		await get_tree().process_frame

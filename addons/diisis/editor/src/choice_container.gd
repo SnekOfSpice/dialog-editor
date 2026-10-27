@@ -40,7 +40,14 @@ func serialize() -> Dictionary:
 	
 	return result
 
-func deserialize(data):
+var last_data : Dictionary = {}
+func deserialize(data : Dictionary) -> void:
+	# sometimes we'll update the page but not have any data changes,
+	# e.g. when opening a window or using go_to while already on this page
+	# this is a slight performance increase then
+	if DiisisEditorUtil.dictionary_equals(data, last_data):
+		return
+	last_data = data
 	for c in $ChoiceList.get_children():
 		c.queue_free()
 	
@@ -51,7 +58,7 @@ func deserialize(data):
 	choice_order = data.get("choice_order", [])
 	find_child("ChoiceTitleLineEdit").text = Pages.get_text(title_id)
 	for d in choices:
-		add_choice(-1, d)
+		add_choice(-1, d, true)
 	
 	set_auto_switch(auto_switch)
 	
@@ -60,7 +67,7 @@ func deserialize(data):
 	call_deferred_thread_group("set_editing_view", data.get("meta.editing_view", 0))
 	
 
-func add_choice(at_index:=-1, choice_data:={}):
+func add_choice(at_index:=-1, choice_data:={}, ignore_update := false):
 	var choice = preload("res://addons/diisis/editor/src/choice_edit.tscn").instantiate()
 	$ChoiceList.add_child(choice)
 	choice.init()
@@ -69,8 +76,10 @@ func add_choice(at_index:=-1, choice_data:={}):
 	choice.deserialize(choice_data)
 	choice.set_editing_view(editing_view)
 	choice.connect("move_choice_edit", request_move_choice_edit)
-	choice.grab_focus()
-	update()
+	
+	if not ignore_update:
+		choice.grab_focus()
+		update()
 
 
 func request_add_choice():

@@ -198,7 +198,7 @@ func actual_search(what:String):
 func flash_highlight(highlight:ColorRect):
 	highlight.self_modulate.a = 0.4
 	var t = create_tween()
-	t.tween_property(highlight, "self_modulate:a", 0, 4).set_ease(Tween.EASE_IN_OUT)
+	t.tween_property(highlight, "self_modulate:a", 0, 4).set_ease(Tween.EASE_IN_OUT).from(0.4)
 
 
 func array_equals(a:Array, b:Array) -> bool:

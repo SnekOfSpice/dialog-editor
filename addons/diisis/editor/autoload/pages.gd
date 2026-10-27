@@ -55,6 +55,7 @@ const PREFERENCE_PROPS := [
 	"shader",
 	"theme",
 	"show_facts_buttons",
+	"show_updating_status",
 	"silly",
 	"validate_function_calls_on_focus",
 	"warn_on_fact_deletion",
@@ -115,6 +116,7 @@ const TOGGLE_SETTINGS := {
 	"show_facts_buttons" : "Shows toggle buttons to open and close facts & conditionals. (Hide if you write kinetic novels or whatever)",
 	"collapse_conditional_controls_by_default" : "Determines if Conditionals have their combine mode and resulting behavior hidden by default.",
 	"silly" : "Adds a bit of visual fluff to the editor :3",
+	"show_updating_status" : "Shows an indicator when diisis is working (may appear unresponsive at times.)",
 	"confirm_linearize" : "Adds a confirm dialogue to the \"Linearize\" option in the Pages window.",
 	"first_index_as_page_reference_only" : "If enabled, Pages will only consider being referenced by choices when those choices target line index 0. If disabled, the page indexes all choices that point to any line on it.",
 	"validate_function_calls_on_focus" : "Checks if all functions match the source scripts when refocusing the editor window. Might cause a few frames of stutters.",
@@ -154,6 +156,7 @@ var save_on_play := true
 var shader := ""
 var theme : String = DiisisEditor.DEFAULT_THEME
 var show_facts_buttons := true
+var show_updating_status := true
 var silly := true
 var validate_function_calls_on_focus := false
 var warn_on_fact_deletion := true
@@ -586,8 +589,8 @@ func get_choice_text_adr(address:String, length:=-1):
 func get_choice_text(page_index:int, line_index:int, choice_index:int, length := -1) -> String:
 	var page = page_data.get(page_index, {})
 	var lines : Array = page.get("lines", [])
-	if lines.size() >= line_index:
-		return "FETCH ERROR"
+	if line_index >= lines.size():
+		return "FETCH ERROR (%s, %s)" % [lines.size(), line_index]
 	var line = lines[line_index]
 	var choice = line.get("content").get("choices")[choice_index]
 	var choice_text:String
