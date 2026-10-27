@@ -21,12 +21,12 @@ enum EditingView{
 
 func init() -> void:
 	%GoToHighlight.self_modulate.a = 0
-	find_child("Conditionals").init()
-	find_child("Facts").init()
-	find_child("Conditionals").init()
-	find_child("PageSelect").max_value = Pages.get_page_count() - 1
+	%Conditionals.init()
+	%Facts.init()
+	%Conditionals.init()
+	%PageSelect.max_value = Pages.get_page_count() - 1
 	
-	var behavior_options_button : OptionButton = find_child("BehaviorAfterFirstSelectionButton")
+	var behavior_options_button : OptionButton = %BehaviorAfterFirstSelectionButton
 	for option : String in DIISIS.ChoiceBehaviorAfterSelection.keys():
 		behavior_options_button.add_item(option.capitalize())
 	
@@ -34,9 +34,9 @@ func init() -> void:
 	set_loopback(false)
 	set_page_view(Pages.editor.get_selected_page_view())
 	
-	find_child("TextLinesDisabled").visible = false
+	%TextLinesDisabled.visible = false
 	
-	DiisisEditorUtil.set_up_delete_modulate(self, find_child("DeleteButton"))
+	DiisisEditorUtil.set_up_delete_modulate(self, %DeleteButton)
 
 func deserialize(data:Dictionary):
 	id = data.get("id", Pages.get_new_id())
@@ -49,41 +49,41 @@ func deserialize(data:Dictionary):
 	
 	var jump_address_mode := data.get("jump_address_mode", AddressModeButton.Mode.OBJECT)
 	var loop_address_mode := data.get("loop_address_mode", AddressModeButton.Mode.OBJECT)
-	find_child("JumpPageContainer").find_child("AddressModeButton").set_mode(jump_address_mode)
-	find_child("LoopbackContainer").find_child("AddressModeButton").set_mode(loop_address_mode)
-	find_child("TextLinesDisabled").visible = data.get("meta.disabled_visible", false)
-	find_child("TextLinesEnabled").visible = data.get("meta.enabled_visible", false)
+	%JumpAddressModeButton.set_mode(jump_address_mode)
+	%LoopAddressModeButton.set_mode(loop_address_mode)
+	%TextLinesDisabled.visible = data.get("meta.disabled_visible", false)
+	%TextLinesEnabled.visible = data.get("meta.enabled_visible", false)
 	
-	if find_child("PageSelect").max_value < jump_target_page:
-		find_child("PageSelect").max_value = jump_target_page
-	if find_child("LineSelect").max_value < jump_target_line:
-		find_child("LineSelect").max_value = jump_target_line
-	if find_child("LoopbackPageSelect").max_value < loopback_target_page:
-		find_child("LoopbackPageSelect").max_value = loopback_target_page
-	if find_child("LoopbackLineSelect").max_value < loopback_target_line:
-		find_child("LoopbackLineSelect").max_value = loopback_target_line
+	if %PageSelect.max_value < jump_target_page:
+		%PageSelect.max_value = jump_target_page
+	if %LineSelect.max_value < jump_target_line:
+		%LineSelect.max_value = jump_target_line
+	if %LoopbackPageSelect.max_value < loopback_target_page:
+		%LoopbackPageSelect.max_value = loopback_target_page
+	if %LoopbackLineSelect.max_value < loopback_target_line:
+		%LoopbackLineSelect.max_value = loopback_target_line
 	
-	find_child("LineEditEnabled").text =  Pages.get_text(text_id_enabled, data.get("choice_text.enabled", ""))
-	find_child("LineEditDisabled").text = Pages.get_text(text_id_disabled, data.get("choice_text.disabled", ""))
+	%LineEditEnabled.text =  Pages.get_text(text_id_enabled, data.get("choice_text.enabled", ""))
+	%LineEditDisabled.text = Pages.get_text(text_id_disabled, data.get("choice_text.disabled", ""))
 	
 	
 
 	deserialized_line_index = DiisisEditorUtil.get_split_address(DiisisEditorUtil.get_address(self, DiisisEditorUtil.AddressDepth.CHOICE_ITEM))[1]
 	deserialized_loopback_page = loopback_target_page
 	deserialized_loopback_line = loopback_target_line
-	find_child("PageSelect").value = jump_target_page
-	find_child("LineSelect").value = jump_target_line
-	find_child("LoopbackPageSelect").value = loopback_target_page
-	find_child("LoopbackLineSelect").value = loopback_target_line
+	%PageSelect.set_value_no_signal(jump_target_page)
+	%LineSelect.set_value_no_signal(jump_target_line)
+	%LoopbackPageSelect.set_value_no_signal(loopback_target_page)
+	%LoopbackLineSelect.set_value_no_signal(loopback_target_line)
 	
-	find_child("Facts").deserialize(data.get("facts", {}))
-	find_child("Conditionals").deserialize(data.get("conditionals", {}))
-	find_child("DefaultApparenceSelectionButton").button_pressed = data.get("choice_text.enabled_as_default", true)
+	%Facts.deserialize(data.get("facts", {}))
+	%Conditionals.deserialize(data.get("conditionals", {}))
+	%DefaultApparenceSelectionButton.button_pressed = data.get("choice_text.enabled_as_default", true)
 	update_default_appearance()
-	find_child("AddressSelectActionContainer").deserialize(data.get("meta.selector", {}))
+	%AddressSelectActionContainer.deserialize(data.get("meta.selector", {}))
 	jump_page_before_auto_switch = data.get("meta.jump_page_before_auto_switch", false)
 	
-	find_child("BehaviorAfterFirstSelectionButton").select(data.get("behavior_after_first_selection", 0))
+	%BehaviorAfterFirstSelectionButton.select(data.get("behavior_after_first_selection", 0))
 	
 	if jump_page_before_auto_switch:
 		set_do_jump_page(data.get("do_jump_page", false))
@@ -94,7 +94,7 @@ func deserialize(data:Dictionary):
 	update()
 
 func update_default_appearance():
-	_on_default_apparence_selection_button_toggled(find_child("DefaultApparenceSelectionButton").button_pressed)
+	_on_default_apparence_selection_button_toggled(%DefaultApparenceSelectionButton.button_pressed)
 
 func serialize() -> Dictionary:
 	if not id:
@@ -104,35 +104,35 @@ func serialize() -> Dictionary:
 	if not text_id_disabled:
 		text_id_disabled = Pages.get_new_id()
 	
-	var loopback : bool = find_child("LoopbackToggle").button_pressed
-	var jump_page : bool = find_child("JumpPageToggle").button_pressed
+	var loopback : bool = %LoopbackToggle.button_pressed
+	var jump_page : bool = %JumpPageToggle.button_pressed
 	
-	var jump_page_target_page : int = find_child("PageSelect").value
-	var jump_page_target_line : int = find_child("LineSelect").value
-	Pages.save_text(text_id_enabled, find_child("LineEditEnabled").text)
-	Pages.save_text(text_id_disabled, find_child("LineEditDisabled").text)
+	var jump_page_target_page : int = %PageSelect.value
+	var jump_page_target_line : int = %LineSelect.value
+	Pages.save_text(text_id_enabled, %LineEditEnabled.text)
+	Pages.save_text(text_id_disabled, %LineEditDisabled.text)
 	
 	return {
 		"id" : id,
 		"text_id_enabled" : text_id_enabled,
 		"text_id_disabled" : text_id_disabled,
-		"meta.disabled_visible" : find_child("TextLinesDisabled").visible,
-		"meta.enabled_visible" : find_child("TextLinesEnabled").visible,
-		"choice_text.enabled_as_default": find_child("DefaultApparenceSelectionButton").button_pressed,
+		"meta.disabled_visible" : %TextLinesDisabled.visible,
+		"meta.enabled_visible" : %TextLinesEnabled.visible,
+		"choice_text.enabled_as_default": %DefaultApparenceSelectionButton.button_pressed,
 		"target_page": int(jump_page_target_page),
 		"target_line": int(jump_page_target_line),
-		"loopback_target_page": int(find_child("LoopbackPageSelect").value),
-		"loopback_target_line": int(find_child("LoopbackLineSelect").value),
-		"facts": find_child("Facts").serialize(),
-		"conditionals": find_child("Conditionals").serialize(),
+		"loopback_target_page": int(%LoopbackPageSelect.value),
+		"loopback_target_line": int(%LoopbackLineSelect.value),
+		"facts": %Facts.serialize(),
+		"conditionals": %Conditionals.serialize(),
 		"do_jump_page": jump_page,
 		"loopback": loopback,
-		"meta.selector" : find_child("AddressSelectActionContainer").serialize(),
+		"meta.selector" : %AddressSelectActionContainer.serialize(),
 		"meta.jump_page_before_auto_switch" : jump_page_before_auto_switch,
 		"address" : get_address(),
-		"behavior_after_first_selection": int(find_child("BehaviorAfterFirstSelectionButton").get_selected_id()),
-		"jump_address_mode": int(find_child("JumpPageContainer").find_child("AddressModeButton").get_mode()),
-		"loop_address_mode": int(find_child("LoopbackContainer").find_child("AddressModeButton").get_mode()),
+		"behavior_after_first_selection": int(%BehaviorAfterFirstSelectionButton.get_selected_id()),
+		"jump_address_mode": int(%JumpAddressModeButton.get_mode()),
+		"loop_address_mode": int(%LoopAddressModeButton.get_mode()),
 	}
 
 func update_fragile():
@@ -172,27 +172,25 @@ func get_address() -> String:
 
 func set_page_view(view:DiisisEditor.PageView):
 	var default_container : Control = get_default_line_container()
-	var default_stringkit : CheckBox = find_child("DefaultApparenceSelectionButton")
-	var buttons : GridContainer = find_child("ItemMoveButtons")
+	var buttons : GridContainer = %ItemMoveButtons
 	
-	find_child("BehaviorContainer").visible = view != DiisisEditor.PageView.MINIMAL
-	find_child("BehaviorAfterFirstLabel").visible = view == DiisisEditor.PageView.FULL
-	find_child("BehaviorAfterFirstSelectionButton").visible = view == DiisisEditor.PageView.FULL
-	find_child("LoopbackPanelContainer").visible = view != DiisisEditor.PageView.MINIMAL
+	%BehaviorContainer.visible = view != DiisisEditor.PageView.MINIMAL
+	%BehaviorAfterFirstLabel.visible = view == DiisisEditor.PageView.FULL
+	%BehaviorAfterFirstSelectionButton.visible = view == DiisisEditor.PageView.FULL
+	%LoopbackPanelContainer.visible = view != DiisisEditor.PageView.MINIMAL
 	
 	if view == DiisisEditor.PageView.FULL:
-		default_stringkit.visible = true
 		buttons.columns = 1
-		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		find_child("Movement").reparent(find_child("OptionContainer"))
+		%UpButton.size_flags_horizontal = Button.SIZE_EXPAND_FILL
+		%DownButton.size_flags_horizontal = Button.SIZE_EXPAND_FILL
+		%Movement.reparent(%OptionContainer)
 	else:
 		default_container.visible = false
 		buttons.columns = 3
-		buttons.find_child("UpButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
-		buttons.find_child("DownButton").size_flags_horizontal = Button.SIZE_SHRINK_CENTER
-		find_child("Movement").reparent(find_child("BehaviorContainer"))
-	find_child("MoveChoiceItemContainer").visible = view != DiisisEditor.PageView.MINIMAL
+		%UpButton.size_flags_horizontal = Button.SIZE_SHRINK_CENTER
+		%DownButton.size_flags_horizontal = Button.SIZE_SHRINK_CENTER
+		%Movement.reparent(%BehaviorContainer)
+	%MoveChoiceItemContainer.visible = view != DiisisEditor.PageView.MINIMAL
 	update_default_appearance()
 	
 
@@ -200,48 +198,42 @@ func _on_target_value_changed(value:float) -> void:
 	await get_tree().process_frame
 	update()
 
+
 func update():
-	var is_loop_obj : bool = find_child("LoopbackContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.OBJECT
-	var is_jump_obj : bool = find_child("JumpPageContainer").find_child("AddressModeButton").get_mode() == AddressModeButton.Mode.OBJECT
+	var is_loop_obj : bool = %LoopAddressModeButton.get_mode() == AddressModeButton.Mode.OBJECT
+	var is_jump_obj : bool = %JumpAddressModeButton.get_mode() == AddressModeButton.Mode.OBJECT
 	var max_page_index : int = max(Pages.get_page_count() - 1, deserialized_loopback_page)
-	var target_page := int(find_child("PageSelect").value)
+	var target_page := int(%PageSelect.value)
 	#if is_jump_obj:
 		#target_page = min(target_page, max_page_index)
-	var target_line := int(find_child("LineSelect").value)
+	var target_line := int(%LineSelect.value)
 	var max_line_index : int = max(Pages.get_line_count(target_page) - 1, deserialized_loopback_page)
+
+	%TargetStringLabel.text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
 	
-	#if is_jump_obj:
-		#find_child("PageSelect").max_value = max_page_index
-		#find_child("LineSelect").max_value = max_line_index
-		#find_child("PageSelect").value = target_page
-	find_child("TargetStringLabel").text = DiisisEditorUtil.humanize_address(str(target_page, ".", target_line))
+	var loopback_page := int(%LoopbackPageSelect.value)
+	var loopback_line := int(%LoopbackLineSelect.value)
 	
-	#if is_loop_obj:
-		#find_child("LoopbackPageSelect").max_value = max_page_index
-		#find_child("LoopbackLineSelect").max_value = max_line_index
-	var loopback_page := int(find_child("LoopbackPageSelect").value)
-	var loopback_line := int(find_child("LoopbackLineSelect").value)
+	%LoopbackTargetStringLabel.text = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
 	
-	find_child("LoopbackTargetStringLabel").text = DiisisEditorUtil.humanize_address(str(loopback_page, ".", loopback_line))
-	
-	find_child("IndexLabel").text = str(get_index())
-	find_child("UpButton").disabled = get_index() <= 0
-	find_child("DownButton").disabled = get_index() >= get_parent().get_child_count() - 1
+	%IndexLabel.text = str(get_index())
+	%UpButton.disabled = get_index() <= 0
+	%DownButton.disabled = get_index() >= get_parent().get_child_count() - 1
 	
 	update_default_text_warning()
 	
-	if deserialized_loopback_line > find_child("LoopbackLineSelect").value:
-		find_child("LoopbackLineSelect").value = deserialized_loopback_page
-	if deserialized_loopback_page > find_child("LoopbackPageSelect").value:
-		find_child("LoopbackPageSelect").value = deserialized_loopback_page
+	if deserialized_loopback_line > %LoopbackLineSelect.value:
+		%LoopbackLineSelect.set_value_no_signal(deserialized_loopback_page)
+	if deserialized_loopback_page > %LoopbackPageSelect.value:
+		%LoopbackPageSelect.set_value_no_signal(deserialized_loopback_page)
 	if Pages.text_hacks_by_id.has(text_id_enabled):
 		var new_text : String = Pages.text_hacks_by_id.get(text_id_enabled)
-		find_child("LineEditEnabled").text = new_text
+		%LineEditEnabled.text = new_text
 		Pages.text_hacks_by_id.erase(text_id_enabled)
 		Pages.save_text(text_id_enabled, new_text)
 	if Pages.text_hacks_by_id.has(text_id_disabled):
 		var new_text : String = Pages.text_hacks_by_id.get(text_id_disabled)
-		find_child("LineEditDisabled").text = Pages.text_hacks_by_id.get(text_id_disabled)
+		%LineEditDisabled.text = Pages.text_hacks_by_id.get(text_id_disabled)
 		Pages.text_hacks_by_id.erase(text_id_disabled)
 		Pages.save_text(text_id_disabled, new_text)
 	
@@ -251,32 +243,32 @@ func update_incoming_references():
 	Pages.editor.get_current_page().update_incoming_references()
 
 func set_selected(value:bool):
-	find_child("AddressSelectActionContainer").set_selected(value)
+	%AddressSelectActionContainer.set_selected(value)
 
 func add_fact(fact_name: String, fact_value):
-	find_child("Facts").add_fact(fact_name, fact_value)
+	%Facts.add_fact(fact_name, fact_value)
 
 func add_conditional(fact_name: String, fact_value: bool):
-	find_child("Conditionals").add_fact(fact_name, fact_value, true)
+	%Conditionals.add_fact(fact_name, fact_value, true)
 
 func delete_fact(fact_name:String):
-	find_child("Facts").delete_fact(fact_name)
+	%Facts.delete_fact(fact_name)
 
 func delete_conditional(fact_name:String):
-	find_child("Conditionals").delete_fact(fact_name)
+	%Conditionals.delete_fact(fact_name)
 
 func set_text_lines_visible(value:bool):
-	find_child("TextLines").visible = value
+	%TextLines.visible = value
 
 var _auto_switch := false
 func set_auto_switch(value:bool):
 	_auto_switch = value
 	set_text_lines_visible(not value)
-	find_child("JumpPageToggle").visible = not value
-	find_child("BehaviorContainer").visible = not value
-	find_child("Conditionals").set_behavior_container_visible(not value)
+	%JumpPageToggle.visible = not value
+	%BehaviorContainer.visible = not value
+	%Conditionals.set_behavior_container_visible(not value)
 	if value:
-		jump_page_before_auto_switch = find_child("JumpPageToggle").button_pressed
+		jump_page_before_auto_switch = %JumpPageToggle.button_pressed
 		set_do_jump_page(true)
 	else:
 		set_do_jump_page(jump_page_before_auto_switch)
@@ -301,29 +293,29 @@ func delete_with_action():
 	undo_redo.commit_action()
 
 func set_do_jump_page(do: bool):
-	find_child("JumpPageContainer").visible = do
-	find_child("JumpPageToggle").button_pressed = do
-	find_child("TargetStringLabel").modulate.a = 1 if do else 0
+	%JumpPageContainer.visible = do
+	%JumpPageToggle.button_pressed = do
+	%TargetStringLabel.modulate.a = 1 if do else 0
 	if not _auto_switch:
 		jump_page_before_auto_switch = do
 
 func set_loopback(do:bool):
-	find_child("LoopbackContainer").visible = do
-	find_child("LoopbackToggle").button_pressed = do
-	find_child("LoopbackTargetStringLabel").modulate.a = 1 if do else 0
+	%LoopbackContainer.visible = do
+	%LoopbackToggle.button_pressed = do
+	%LoopbackTargetStringLabel.modulate.a = 1 if do else 0
 
 func get_loopback_target_address() -> String:
 	return str(
-		int(find_child("LoopbackPageSelect").value),
+		int(%LoopbackPageSelect.value),
 		".",
-		int(find_child("LoopbackLineSelect").value)
+		int(%LoopbackLineSelect.value)
 	)
 
 func get_jump_target_address() -> String:
 	return str(
-		int(find_child("PageSelect").value),
+		int(%PageSelect.value),
 		".",
-		int(find_child("LineSelect").value)
+		int(%LineSelect.value)
 	)
 
 
@@ -359,10 +351,10 @@ func _on_jump_page_toggle_toggled(toggled_on: bool) -> void:
 
 
 func update_default_text_warning():
-	var label : Label = find_child("DefaultTextEmptyWarningLabel")
-	if find_child("LineEditEnabled").text.is_empty() and find_child("DefaultApparenceSelectionButton").button_pressed:
+	var label : Label = %DefaultTextEmptyWarningLabel
+	if %LineEditEnabled.text.is_empty() and %DefaultApparenceSelectionButton.button_pressed:
 		label.visible = true
-	elif find_child("LineEditDisabled").text.is_empty() and not find_child("DefaultApparenceSelectionButton").button_pressed:
+	elif %LineEditDisabled.text.is_empty() and not %DefaultApparenceSelectionButton.button_pressed:
 		label.visible = true
 	else:
 		label.visible = false
@@ -388,9 +380,9 @@ func _on_edit_disabled_id_button_pressed() -> void:
 	Pages.editor.prompt_change_text_id(text_id_disabled)
 
 func _update_text_line_visibilities(event: InputEvent):
-	var enabled : bool = find_child("DefaultApparenceSelectionButton").button_pressed
-	var lines_disabled : Control = find_child("TextLinesDisabled")
-	var lines_enabled : Control = find_child("TextLinesEnabled")
+	var enabled : bool = %DefaultApparenceSelectionButton.button_pressed
+	var lines_disabled : Control = %TextLinesDisabled
+	var lines_enabled : Control = %TextLinesEnabled
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 		if enabled:
 			lines_disabled.visible = not lines_disabled.visible
@@ -404,38 +396,38 @@ func _on_text_lines_disabled_gui_input(event: InputEvent) -> void:
 	_update_text_line_visibilities(event)
 
 func _on_default_apparence_selection_button_toggled(toggled_on: bool) -> void:
-	var both_visible = find_child("TextLinesEnabled").visible and find_child("TextLinesDisabled").visible
+	var both_visible = %TextLinesEnabled.visible and %TextLinesDisabled.visible
 	update_default_text_warning()
-	find_child("DefaultApparenceSelectionButton").text = "enabled" if toggled_on else "disabled"
+	%DefaultApparenceSelectionButton.text = "enabled" if toggled_on else "disabled"
 	if not both_visible:
-		find_child("TextLinesEnabled").visible = toggled_on
-		find_child("TextLinesDisabled").visible = not toggled_on
+		%TextLinesEnabled.visible = toggled_on
+		%TextLinesDisabled.visible = not toggled_on
 	
-	var text_lines : VBoxContainer = find_child("TextLines")
+	var text_lines : VBoxContainer = %TextLines
 	if toggled_on:
-		text_lines.move_child(text_lines.find_child("TextLinesEnabled"), 0)
+		text_lines.move_child(%TextLinesEnabled, 0)
 	else:
-		text_lines.move_child(text_lines.find_child("TextLinesDisabled"), 0)
+		text_lines.move_child(%TextLinesDisabled, 0)
 
 func get_default_line_container() -> Control:
-	if find_child("DefaultApparenceSelectionButton").button_pressed:
-		return find_child("TextLinesEnabled")
+	if %DefaultApparenceSelectionButton.button_pressed:
+		return %TextLinesEnabled
 	else:
-		return find_child("TextLinesDisabled")
+		return %TextLinesDisabled
 
 # called by choice container
 func set_editing_view(value:int):
 	match value:
 		EditingView.EDITABLE:
-			find_child("ChoiceEdit").visible = true
-			find_child("ChoiceLabel").visible = false
+			%ChoiceEditContainer.visible = true
+			%ChoiceLabel.visible = false
 		EditingView.TEXT_LABEL:
-			find_child("ChoiceEdit").visible = false
-			var label : RichTextLabel = find_child("ChoiceLabel")
+			%ChoiceEditContainer.visible = false
+			var label : RichTextLabel = %ChoiceLabel
 			label.visible = true
-			var text_enabled : String = find_child("LineEditEnabled").text
-			var text_disabled : String = find_child("LineEditDisabled").text
-			var enabled_first : bool = find_child("DefaultApparenceSelectionButton").button_pressed
+			var text_enabled : String = %LineEditEnabled.text
+			var text_disabled : String = %LineEditDisabled.text
+			var enabled_first : bool = %DefaultApparenceSelectionButton.button_pressed
 			if enabled_first:
 				label.text = DiisisEditorUtil.BBCODE_TRUE
 				label.text += text_enabled if not text_enabled.is_empty() else "EMPTY DEFAULT"
@@ -447,8 +439,8 @@ func set_editing_view(value:int):
 				if not text_enabled.is_empty():
 					label.text += str("\n[color=#ffffffbb]", DiisisEditorUtil.BBCODE_TRUE, text_enabled, "[/color]")
 		EditingView.INVISIBLE:
-			find_child("ChoiceEdit").visible = false
-			find_child("ChoiceLabel").visible = false
+			%ChoiceEditContainer.visible = false
+			%ChoiceLabel.visible = false
 
 
 func flash_highlight():

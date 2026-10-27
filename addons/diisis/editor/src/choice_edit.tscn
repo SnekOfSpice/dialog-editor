@@ -60,73 +60,83 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="ChoiceLabel" type="RichTextLabel" parent="." unique_id=1381164757]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wwxx7")
 bbcode_enabled = true
 fit_content = true
 
-[node name="ChoiceEdit" type="HBoxContainer" parent="." unique_id=606283773]
+[node name="ChoiceEditContainer" type="HBoxContainer" parent="." unique_id=606283773]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AddressSelectActionContainer" parent="ChoiceEdit" unique_id=1085073939 node_paths=PackedStringArray("status_panels") instance=ExtResource("2_616tk")]
+[node name="AddressSelectActionContainer" parent="ChoiceEditContainer" unique_id=1085073939 node_paths=PackedStringArray("status_panels") instance=ExtResource("2_616tk")]
+unique_name_in_owner = true
 layout_mode = 2
 address_depth = 2
 status_panels = [NodePath("../..")]
 
-[node name="MoveChoiceItemContainer" type="MarginContainer" parent="ChoiceEdit" unique_id=646673110]
+[node name="MoveChoiceItemContainer" type="MarginContainer" parent="ChoiceEditContainer" unique_id=646673110]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32.665, 0)
 layout_mode = 2
 
-[node name="ItemMoveButtons" type="GridContainer" parent="ChoiceEdit/MoveChoiceItemContainer" unique_id=1417747165]
+[node name="ItemMoveButtons" type="GridContainer" parent="ChoiceEditContainer/MoveChoiceItemContainer" unique_id=1417747165]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="UpButton" type="Button" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons" unique_id=597259103]
+[node name="UpButton" type="Button" parent="ChoiceEditContainer/MoveChoiceItemContainer/ItemMoveButtons" unique_id=597259103]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Move option up"
 focus_mode = 0
 icon = ExtResource("5_s3d4i")
 
-[node name="IndexLabel" type="Label" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons" unique_id=496048916]
+[node name="IndexLabel" type="Label" parent="ChoiceEditContainer/MoveChoiceItemContainer/ItemMoveButtons" unique_id=496048916]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Choice index (address[2])"
 mouse_filter = 1
 text = "0"
 horizontal_alignment = 1
 
-[node name="DownButton" type="Button" parent="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons" unique_id=1741497769]
+[node name="DownButton" type="Button" parent="ChoiceEditContainer/MoveChoiceItemContainer/ItemMoveButtons" unique_id=1741497769]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Move option down"
 focus_mode = 0
 icon = ExtResource("6_0x8br")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEdit" unique_id=1164185817]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ChoiceEditContainer" unique_id=1164185817]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2" unique_id=665573453]
+[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2" unique_id=665573453]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ConditionalVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer" unique_id=913408386]
+[node name="ConditionalVisibilityToggle" type="CheckButton" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer" unique_id=913408386]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 focus_mode = 0
 icon = ExtResource("4_x4tpw")
 
-[node name="BehaviorContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/VBoxContainer" unique_id=557091964]
+[node name="BehaviorContainer" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer" unique_id=557091964]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1675802579]
+[node name="Label" type="Label" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1675802579]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "default"
 horizontal_alignment = 1
 
-[node name="DefaultApparenceSelectionButton" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1259262257]
+[node name="DefaultApparenceSelectionButton" type="CheckBox" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1259262257]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 4
@@ -138,49 +148,56 @@ theme_override_icons/unchecked = ExtResource("8_ykt7a")
 button_pressed = true
 text = "enabled"
 
-[node name="BehaviorAfterFirstLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1076995797]
+[node name="BehaviorAfterFirstLabel" type="Label" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1076995797]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "after pressed"
 horizontal_alignment = 1
 
-[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1751872523]
+[node name="BehaviorAfterFirstSelectionButton" type="OptionButton" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer/BehaviorContainer" unique_id=1751872523]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Behavior Override.
-When this option gets presented again beyond the first time (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
+When this option gets presented again after it has been pressed (either through loopback or other means), this overrides the conditional and default behaviors, unless Default is set."
 script = ExtResource("9_wwxx7")
 
-[node name="FactsVisibilityToggle" type="CheckButton" parent="ChoiceEdit/VBoxContainer2/VBoxContainer" unique_id=27318071]
+[node name="FactsVisibilityToggle" type="CheckButton" parent="ChoiceEditContainer/VBoxContainer2/VBoxContainer" unique_id=27318071]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
 focus_mode = 0
 icon = ExtResource("5_jhtck")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2" unique_id=862467148]
+[node name="HBoxContainer" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2" unique_id=862467148]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Conditionals" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" unique_id=310760908 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_6aqyr")]
+[node name="Conditionals" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer" unique_id=310760908 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_6aqyr")]
+unique_name_in_owner = true
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/ConditionalVisibilityToggle")
 address_depth = 2
 
-[node name="OptionContainer" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" unique_id=1732918612]
+[node name="OptionContainer" type="VBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer" unique_id=1732918612]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
-[node name="TextLines" type="VBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer" unique_id=1296896990]
+[node name="TextLines" type="VBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer" unique_id=1296896990]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Click on the true/false to toggle non-default line"
 
-[node name="TextLinesEnabled" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=354999322]
+[node name="TextLinesEnabled" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=354999322]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="DefaultEnabledTexture" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1512487401]
+[node name="DefaultEnabledTexture" type="Button" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1512487401]
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Click on the true/false to toggle non-default line"
@@ -191,7 +208,8 @@ theme_override_styles/hover = ExtResource("12_0x8br")
 theme_override_styles/hover_pressed = ExtResource("12_0x8br")
 icon = ExtResource("7_qdd2f")
 
-[node name="LineEditEnabled" type="LineEdit" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1972070833]
+[node name="LineEditEnabled" type="LineEdit" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1972070833]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -199,13 +217,14 @@ placeholder_text = "[EMPTY] Text when enabled"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="EditEnabledIDButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1898705602 instance=ExtResource("12_av1qi")]
+[node name="EditEnabledIDButton" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" unique_id=1898705602 instance=ExtResource("12_av1qi")]
 layout_mode = 2
 
-[node name="TextLinesDisabled" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=130049134]
+[node name="TextLinesDisabled" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=130049134]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="DefaultDisabledTexture" type="Button" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=260735194]
+[node name="DefaultDisabledTexture" type="Button" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=260735194]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 4
@@ -217,7 +236,8 @@ theme_override_styles/hover = ExtResource("12_0x8br")
 theme_override_styles/hover_pressed = ExtResource("12_0x8br")
 icon = ExtResource("8_ykt7a")
 
-[node name="LineEditDisabled" type="LineEdit" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=1472546712]
+[node name="LineEditDisabled" type="LineEdit" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=1472546712]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -225,10 +245,11 @@ placeholder_text = "[EMPTY] Text when disabled"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="EditDisabledIDButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=68737414 instance=ExtResource("12_av1qi")]
+[node name="EditDisabledIDButton" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" unique_id=68737414 instance=ExtResource("12_av1qi")]
 layout_mode = 2
 
-[node name="DefaultTextEmptyWarningLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=669607261]
+[node name="DefaultTextEmptyWarningLabel" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines" unique_id=669607261]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -236,70 +257,79 @@ theme_override_fonts/font = ExtResource("14_mqye1")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wwxx7")
 text = "Default text is empty!"
 
-[node name="Movement" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer" unique_id=171569152]
+[node name="Movement" type="MarginContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer" unique_id=171569152]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement" unique_id=1915041901]
+[node name="VBoxContainer" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement" unique_id=1915041901]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer" unique_id=847106464]
+[node name="PanelContainer" type="PanelContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer" unique_id=847106464]
 layout_mode = 2
 
-[node name="JumpPage" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer" unique_id=425759842]
+[node name="JumpPage" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer" unique_id=425759842]
 layout_mode = 2
 
-[node name="JumpPageToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage" unique_id=1673271670]
+[node name="JumpPageToggle" type="CheckBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage" unique_id=1673271670]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Jumps to a different part of the file."
 focus_mode = 0
 text = "jump"
 
-[node name="JumpPageContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage" unique_id=1408360201]
+[node name="JumpPageContainer" type="MarginContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage" unique_id=1408360201]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_right = 15
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer" unique_id=1435045899]
+[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer" unique_id=1435045899]
 layout_mode = 2
 
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=2125004688 node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+[node name="JumpAddressModeButton" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=2125004688 node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+unique_name_in_owner = true
 layout_mode = 2
 address_source = NodePath("../../../../../../../../../../..")
 address_function = "get_jump_target_address"
 
-[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1324994857]
+[node name="Label2" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1324994857]
 layout_mode = 2
 text = "P"
 
-[node name="PageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1961442021]
+[node name="PageSelect" type="SpinBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1961442021]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 2
 max_value = 10000000.0
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1142337008]
+[node name="Label" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1142337008]
 layout_mode = 2
 text = "L"
 
-[node name="LineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=809232161]
+[node name="LineSelect" type="SpinBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=809232161]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 2
 max_value = 10000000.0
 
-[node name="TargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1388679445]
+[node name="TargetStringLabel" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2" unique_id=1388679445]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 
-[node name="LoopbackPanelContainer" type="PanelContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer" unique_id=1093749490]
+[node name="LoopbackPanelContainer" type="PanelContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer" unique_id=1093749490]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Loopback" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer" unique_id=1040507544]
+[node name="Loopback" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer" unique_id=1040507544]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="LoopbackToggle" type="CheckBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback" unique_id=2134273932]
+[node name="LoopbackToggle" type="CheckBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback" unique_id=2134273932]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -307,83 +337,90 @@ tooltip_text = "When hitting the loopback point after picking this option, the P
 focus_mode = 0
 text = "loopback"
 
-[node name="LoopbackContainer" type="MarginContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback" unique_id=1121221015]
+[node name="LoopbackContainer" type="MarginContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback" unique_id=1121221015]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer" unique_id=1500412887]
+[node name="VBoxContainer2" type="HBoxContainer" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer" unique_id=1500412887]
 layout_mode = 2
 
-[node name="AddressModeButton" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1499250054 node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+[node name="LoopAddressModeButton" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1499250054 node_paths=PackedStringArray("address_source") instance=ExtResource("7_id204")]
+unique_name_in_owner = true
 layout_mode = 2
 address_source = NodePath("../../../../../../../../../../..")
 address_function = "get_loopback_target_address"
 
-[node name="Label2" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1677643787]
+[node name="Label2" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1677643787]
 auto_translate_mode = 1
 layout_mode = 2
 text = "P"
 
-[node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1938461048]
+[node name="LoopbackPageSelect" type="SpinBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1938461048]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 2
 max_value = 10000000.0
 
-[node name="Label" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=437627663]
+[node name="Label" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=437627663]
 auto_translate_mode = 1
 layout_mode = 2
 text = "L"
 
-[node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=96013781]
+[node name="LoopbackLineSelect" type="SpinBox" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=96013781]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 focus_mode = 2
 max_value = 10000000.0
 
-[node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1839182050]
+[node name="LoopbackTargetStringLabel" type="Label" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2" unique_id=1839182050]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 
-[node name="Facts" parent="ChoiceEdit/VBoxContainer2/HBoxContainer" unique_id=593301422 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_bcn4k")]
+[node name="Facts" parent="ChoiceEditContainer/VBoxContainer2/HBoxContainer" unique_id=593301422 node_paths=PackedStringArray("visibility_toggle_button") instance=ExtResource("2_bcn4k")]
+unique_name_in_owner = true
 layout_mode = 2
 visibility_toggle_button = NodePath("../../VBoxContainer/FactsVisibilityToggle")
 address_depth = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="ChoiceEdit" unique_id=192484574]
+[node name="MarginContainer" type="MarginContainer" parent="ChoiceEditContainer" unique_id=192484574]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="DeleteButton" type="Button" parent="ChoiceEdit/MarginContainer" unique_id=1896746330]
+[node name="DeleteButton" type="Button" parent="ChoiceEditContainer/MarginContainer" unique_id=1896746330]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Delete option"
 icon = ExtResource("15_av1qi")
 
-[connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
-[connection signal="pressed" from="ChoiceEdit/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
-[connection signal="toggled" from="ChoiceEdit/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_toggled"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" to="." method="_on_text_lines_enabled_gui_input"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/DefaultEnabledTexture" to="." method="_update_text_line_visibilities"]
-[connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/LineEditEnabled" to="." method="_on_line_edit_enabled_text_changed"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/EditEnabledIDButton" to="." method="_on_edit_enabled_id_button_pressed"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" to="." method="_on_text_lines_disabled_gui_input"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/DefaultDisabledTexture" to="." method="_update_text_line_visibilities"]
-[connection signal="text_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/LineEditDisabled" to="." method="_on_line_edit_disabled_text_changed"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/EditDisabledIDButton" to="." method="_on_edit_disabled_id_button_pressed"]
-[connection signal="toggled" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
-[connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="update_incoming_references"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="_on_target_value_changed"]
-[connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="update_incoming_references"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="_on_target_value_changed"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/TargetStringLabel" to="." method="_on_target_string_label_gui_input"]
-[connection signal="toggled" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
-[connection signal="pressed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/AddressModeButton" to="." method="update"]
-[connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="update_incoming_references"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="_on_target_value_changed"]
-[connection signal="focus_exited" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="update_incoming_references"]
-[connection signal="value_changed" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="_on_target_value_changed"]
-[connection signal="gui_input" from="ChoiceEdit/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackTargetStringLabel" to="." method="_on_loopback_target_string_label_gui_input"]
-[connection signal="pressed" from="ChoiceEdit/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="ChoiceEditContainer/MoveChoiceItemContainer/ItemMoveButtons/UpButton" to="." method="_on_up_button_pressed"]
+[connection signal="pressed" from="ChoiceEditContainer/MoveChoiceItemContainer/ItemMoveButtons/DownButton" to="." method="_on_down_button_pressed"]
+[connection signal="toggled" from="ChoiceEditContainer/VBoxContainer2/VBoxContainer/BehaviorContainer/DefaultApparenceSelectionButton" to="." method="_on_default_apparence_selection_button_toggled"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled" to="." method="_on_text_lines_enabled_gui_input"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/DefaultEnabledTexture" to="." method="_update_text_line_visibilities"]
+[connection signal="text_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/LineEditEnabled" to="." method="_on_line_edit_enabled_text_changed"]
+[connection signal="pressed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesEnabled/EditEnabledIDButton" to="." method="_on_edit_enabled_id_button_pressed"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled" to="." method="_on_text_lines_disabled_gui_input"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/DefaultDisabledTexture" to="." method="_update_text_line_visibilities"]
+[connection signal="text_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/LineEditDisabled" to="." method="_on_line_edit_disabled_text_changed"]
+[connection signal="pressed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/TextLines/TextLinesDisabled/EditDisabledIDButton" to="." method="_on_edit_disabled_id_button_pressed"]
+[connection signal="toggled" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageToggle" to="." method="_on_jump_page_toggle_toggled"]
+[connection signal="pressed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/JumpAddressModeButton" to="." method="update"]
+[connection signal="focus_exited" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="update_incoming_references"]
+[connection signal="value_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/PageSelect" to="." method="_on_target_value_changed"]
+[connection signal="focus_exited" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="update_incoming_references"]
+[connection signal="value_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/LineSelect" to="." method="_on_target_value_changed"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/PanelContainer/JumpPage/JumpPageContainer/VBoxContainer2/TargetStringLabel" to="." method="_on_target_string_label_gui_input"]
+[connection signal="toggled" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackToggle" to="." method="_on_loopback_toggle_toggled"]
+[connection signal="pressed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopAddressModeButton" to="." method="update"]
+[connection signal="focus_exited" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="update_incoming_references"]
+[connection signal="value_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackPageSelect" to="." method="_on_target_value_changed"]
+[connection signal="focus_exited" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="update_incoming_references"]
+[connection signal="value_changed" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackLineSelect" to="." method="_on_target_value_changed"]
+[connection signal="gui_input" from="ChoiceEditContainer/VBoxContainer2/HBoxContainer/OptionContainer/Movement/VBoxContainer/LoopbackPanelContainer/Loopback/LoopbackContainer/VBoxContainer2/LoopbackTargetStringLabel" to="." method="_on_loopback_target_string_label_gui_input"]
+[connection signal="pressed" from="ChoiceEditContainer/MarginContainer/DeleteButton" to="." method="_on_delete_pressed"]
