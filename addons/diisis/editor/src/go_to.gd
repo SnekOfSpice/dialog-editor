@@ -7,33 +7,33 @@ signal request_refresh()
 var error_window_offset := Vector2(50, -32)
 
 func set_current_page_count(value):
-	find_child("CurrentPageLabel").text = str(value)
+	%CurrentPageLabel.text = str(value)
 
 func set_page_count(value):
-	find_child("PageCountLabel").text = str(value)
+	%PageCountLabel.text = str(value)
 
 func _on_address_bar_text_changed(new_text: String) -> void:
 	update(new_text)
 
 func address_bar_has_focus() -> bool:
-	return find_child("AddressBar").has_focus()
+	return %AddressBar.has_focus()
 
 func update(address:String):
 	var address_exists:bool = Pages.does_address_exist(address)
 	if address_exists:
-		if find_child("AddressBar").visible:
-			find_child("ErrorLabelWindow").show()
-			find_child("ErrorLabel").text = DiisisEditorUtil.humanize_address(address)
+		if %AddressBar.visible:
+			%ErrorLabelWindow.show()
+			%ErrorLabel.text = DiisisEditorUtil.humanize_address(address)
 		else:
-			find_child("ErrorLabelWindow").hide()
+			%ErrorLabelWindow.hide()
 	else:
-		find_child("ErrorLabel").text = "Address does not exist."
-		find_child("ErrorLabelWindow").show()
-	find_child("GoToButton").disabled = not address_exists
+		%ErrorLabel.text = "Address does not exist."
+		%ErrorLabelWindow.show()
+	%GoToButton.disabled = not address_exists
 
 
 func init():
-	find_child("ErrorLabelWindow").hide()
+	%ErrorLabelWindow.hide()
 	
 
 func _on_address_bar_text_submitted(new_text: String) -> void:
@@ -41,51 +41,54 @@ func _on_address_bar_text_submitted(new_text: String) -> void:
 		push_warning("Address does not exist.")
 		return
 	emit_signal("go_to", new_text)
-	find_child("AddressBar").visible = false
-	find_child("CancelGoTo").visible = false
+	%AddressBar.visible = false
+	%CancelGoTo.visible = false
 
 # used by editor shortcut
 func toggle_active():
-	if find_child("AddressBar").visible:
+	if %AddressBar.visible:
 		_on_cancel_go_to_pressed()
 		await get_tree().process_frame
-		find_child("ErrorLabelWindow").hide()
+		%ErrorLabelWindow.hide()
 	else:
 		_on_go_to_button_pressed()
 		await get_tree().process_frame
-		find_child("AddressBar").grab_focus()
+		%AddressBar.grab_focus()
 		
 
 func _on_go_to_button_pressed() -> void:
-	if find_child("AddressBar").visible:
-		emit_signal("go_to", find_child("AddressBar").text)
+	if %AddressBar.visible:
+		go_to.emit(%AddressBar.text)
 	else:
-		find_child("AddressBar").visible = true
-		find_child("AddressBar").text = str(Pages.editor.get_current_page_number())
-		find_child("AddressBar").caret_column = 1
+		%AddressBar.visible = true
+		%AddressBar.text = str(Pages.editor.get_current_page_number())
+		%AddressBar.caret_column = 1
 		
-		update(find_child("AddressBar").text)
-		find_child("AddressBar").grab_focus()
-		find_child("CancelGoTo").visible = true
-		emit_signal("request_refresh")
+		update(%AddressBar.text)
+		%AddressBar.grab_focus()
+		%CancelGoTo.visible = true
+		await get_tree().process_frame # we need to wait a frame to ensure the bar has focus
+		# so that the editor can give focus back after refreshing
+		request_refresh.emit()
 		
 
-func _address_bar_grab_focus():
-	find_child("AddressBar").grab_focus()
+func address_bar_grab_focus():
+	%AddressBar.grab_focus.call_deferred()
+
 
 func _on_cancel_go_to_pressed() -> void:
-	find_child("AddressBar").visible = false
-	find_child("CancelGoTo").visible = false
-	find_child("GoToButton").disabled = false
-	find_child("ErrorLabelWindow").hide()
+	%AddressBar.visible = false
+	%CancelGoTo.visible = false
+	%GoToButton.disabled = false
+	%ErrorLabelWindow.hide()
 
 
 func _on_address_bar_focus_exited() -> void:
-	find_child("ErrorLabelWindow").hide()
+	%ErrorLabelWindow.hide()
 
 
 func _on_address_bar_focus_entered() -> void:
-	find_child("ErrorLabelWindow").show()
+	%ErrorLabelWindow.show()
 
 
 func _on_address_bar_gui_input(event: InputEvent) -> void:

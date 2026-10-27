@@ -1,5 +1,5 @@
 @tool
-extends CheckBox
+extends Control
 
 
 

@@ -869,7 +869,7 @@ text = "thinking..."
 [node name="UpdatingPuppyLabel" type="Label" parent="UpdatingAnchor/HBoxContainer" unique_id=1161430210]
 unique_name_in_owner = true
 layout_mode = 2
-text = "-w-"
+text = "=,;,﹏,;,="
 horizontal_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/Core/FunnyDebugButton" to="." method="_on_funny_debug_button_pressed"]

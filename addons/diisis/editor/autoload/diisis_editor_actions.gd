@@ -102,6 +102,7 @@ func go_to(address:String, discard_without_saving:=false):
 	if parts.size() >= 2:
 		await get_tree().process_frame
 		Pages.editor.get_current_page().ensure_control_at_address_is_visible(address)
+	await get_tree().process_frame
 	Pages.editor.get_current_page().flash_highlight(address)
 
 func load_page(at:int):

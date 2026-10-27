@@ -265,11 +265,14 @@ func add_fact(fact_name: String, fact_value):
 func add_conditional(fact_name: String, fact_value):
 	find_child("Conditionals").add_fact(fact_name, fact_value, true)
 
+
 func delete_fact(fact_name:String):
 	find_child("Facts").delete_fact(fact_name)
 
+
 func delete_conditional(fact_name:String):
 	find_child("Conditionals").delete_fact(fact_name)
+
 
 func add_choice_item(at_index:int, choice_data:={}):
 	if line_type != DIISIS.LineType.CHOICE:
@@ -277,11 +280,13 @@ func add_choice_item(at_index:int, choice_data:={}):
 		return
 	find_child("ChoiceContainer").add_choice(at_index, choice_data)
 
-func get_choice_item(at_index:int) -> ChoiceEdit:
-	if line_type != DIISIS.LineType.CHOICE:
-		push_warning("Trying to get choice item from non-choice line.")
+
+func get_choice_item(at_index:int, force_even_if_mismatch := false) -> ChoiceEdit:
+	if line_type != DIISIS.LineType.CHOICE and not force_even_if_mismatch:
+		push_warning("Trying to get choice item from non-choice line at address %s.%s." % [get_index(), at_index])
 		return null
 	return find_child("ChoiceContainer").get_item(at_index)
+
 
 func delete_choice_item(at_index:int):
 	find_child("ChoiceContainer").get_child(at_index).queue_free()

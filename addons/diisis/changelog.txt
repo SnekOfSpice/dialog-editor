@@ -31,6 +31,8 @@ The Sunless Horizon 1.5 Update (+associated post-jam additions!)
 - add option to generate several l10n files, one for each locale
 - add option to split text from Text Lines into dialines in l10n files (Parser stitches them back together automatically at runtime)
 - Editor: various performance boosts
+- Editor: Fix choice options sometimes not getting highlighted when using go_to
+- fix GoTo focus grabbing
 
 DIISIS 0.9 2026-08-19
 post TDOHN update (Or: The hot reload fixes update, apparently)

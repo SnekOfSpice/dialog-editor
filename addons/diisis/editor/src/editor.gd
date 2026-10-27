@@ -80,7 +80,7 @@ func get_current_page() -> Page:
 
 
 func refresh_text():
-	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
+	var goto_has_focus : bool = %GoTo.address_bar_has_focus()
 	
 	var page := get_current_page()
 	if not page:
@@ -95,11 +95,11 @@ func refresh_text():
 	
 	await get_tree().process_frame
 	if goto_has_focus:
-		find_child("GoTo")._address_bar_grab_focus()
+		%GoTo.address_bar_grab_focus()
 
 
 func refresh(serialize_before_load:=true, fragile:=false):
-	var goto_has_focus : bool = find_child("GoTo").address_bar_has_focus()
+	var goto_has_focus : bool = %GoTo.address_bar_has_focus()
 	var cpn:int
 	if get_current_page():
 		cpn = get_current_page().number
@@ -116,7 +116,7 @@ func refresh(serialize_before_load:=true, fragile:=false):
 	
 	await get_tree().process_frame
 	if goto_has_focus:
-		find_child("GoTo")._address_bar_grab_focus()
+		%GoTo.address_bar_grab_focus()
 
 const DEFAULT_THEME := "res://addons/diisis/editor/visuals/theme/amber_cherryblossom.tres"
 
@@ -483,7 +483,7 @@ func _shortcut_input(event):
 					else:
 						get_current_page().set_editing_page_key(true)
 				KEY_G:
-					find_child("GoTo").toggle_active()
+					%GoTo.toggle_active()
 				KEY_N:
 					try_new_file()
 				KEY_S:
@@ -571,8 +571,8 @@ func update_controls():
 	find_child("Prev").disabled = current_page.number <= 0
 	find_child("Next").disabled = current_page.number >= Pages.get_page_count() - 1
 	find_child("Last").disabled = current_page.number >= Pages.get_page_count() - 1
-	find_child("GoTo").set_current_page_count(str(current_page.number))
-	find_child("GoTo").set_page_count(str(Pages.get_page_count() - 1))
+	%GoTo.set_current_page_count(str(current_page.number))
+	%GoTo.set_page_count(str(Pages.get_page_count() - 1))
 	
 	await get_tree().process_frame
 	current_page.update()

@@ -709,8 +709,8 @@ func flash_highlight(address:String):
 			get_line(parts[1]).flash_highlight()
 		3:
 			if get_line(parts[1]):
-				if get_line(parts[1]).get_choice_item(parts[2]):
-					get_line(parts[1]).get_choice_item(parts[2]).flash_highlight()
+				if get_line(parts[1]).get_choice_item(parts[2], true):
+					get_line(parts[1]).get_choice_item(parts[2], true).flash_highlight()
 
 
 func get_scroll_value() -> Vector2:
