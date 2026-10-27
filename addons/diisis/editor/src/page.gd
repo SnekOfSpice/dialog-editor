@@ -91,6 +91,7 @@ func serialize() -> Dictionary:
 	
 	return data
 
+
 func deserialize(data: Dictionary):
 	var save_path : String = Pages.editor.get_save_path()
 	var scroll_vertical : int
