@@ -681,6 +681,12 @@ func get_data_from_address(address:String) -> Dictionary:
 	push_warning("This shouldn't happen.")
 	return {}
 
+
+# Godot sometimes starts throwing errors "member request_delete is not a function"
+# this circumvents that
+func _dumb_error_workaround(target):
+	target.request_delete()
+
 func delete_data_from_address(address:String):
 	var cpn = editor.get_current_page_number()
 	var address_page = DiisisEditorUtil.get_split_address(address)[0]
@@ -690,15 +696,13 @@ func delete_data_from_address(address:String):
 	if cpn == address_page:
 		var target = DiisisEditorUtil.get_node_at_address(address)
 		if depth == DiisisEditorUtil.AddressDepth.LINE:
-			target.request_delete()
+			_dumb_error_workaround(target)
 			return
 		elif depth == DiisisEditorUtil.AddressDepth.CHOICE_ITEM:
-			target.request_delete()
+			_dumb_error_workaround(target)
 			return
 	
 	# get from internal data
-	
-	
 	if depth == DiisisEditorUtil.AddressDepth.PAGE:
 		delete_page_data(parts[0])
 	elif depth == DiisisEditorUtil.AddressDepth.LINE:

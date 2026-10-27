@@ -271,6 +271,7 @@ func delete_lines(indices:Array):
 		
 		lines.get_child(i).queue_free()
 
+
 func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 	if not consider_folder:
 		return [start_index]
@@ -284,6 +285,7 @@ func get_indices_to_delete(start_index:int, consider_folder:=false) -> Array:
 			result.append(i)
 	
 	return result
+
 
 func ensure_control_at_address_is_visible(address:String):
 	find_child("ScrollContainer").scroll_vertical = 0
