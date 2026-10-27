@@ -2640,7 +2640,7 @@ func get_editor_window() -> Node:
 		return editor
 
 
-func purge_unused_text_ids():
+func purge_unused_text_ids() -> void:
 	var used_text_ids := []
 	
 	for i in get_page_count():
@@ -2664,7 +2664,7 @@ func purge_unused_text_ids():
 
 
 
-func ensure_line_reader_scripts():
+func ensure_line_reader_scripts() -> void:
 	if evaluator_paths.is_empty() and editor:
 		evaluator_paths = editor.get_line_reader_scripts()
 
@@ -2675,7 +2675,9 @@ func save_csv(
 	locales := [],
 	separate_files := false,
 	split_dialines := false
-):
+) -> void:
+	await purge_unused_text_ids()
+	
 	var key_lists := []
 	if separate_files:
 		for extra_locale in locales:

@@ -24,7 +24,12 @@ text = "De/Select All"
 [node name="Label2" type="Label" parent="VBoxContainer" unique_id=525466068]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Choose any of the following operations to apply to all text items in the DIISIS file."
+text = "Choose any of the following operations to apply to all text items in the DIISIS file.
+
+Text items are:
+Text Lines
+Choice options
+Choice titles"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1693377460]
 layout_mode = 2

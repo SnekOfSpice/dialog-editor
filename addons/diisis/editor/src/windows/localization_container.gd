@@ -7,14 +7,22 @@ signal fd_closed()
 
 
 func init():
-	%LocalesLineEdit.text = Pages.preferences_l10n.get("locales", "")
+	_apply_preferences()
 	
 	%CurrentFallbackLocaleLabel.text = "The current fallback locale is: [color=edc13eff]%s[/color]" % ProjectSettings.get_setting("internationalization/locale/fallback")
 
 
+func _apply_preferences():
+	var preferences : Dictionary = Pages.preferences_l10n
+	%LocalesLineEdit.text = preferences.get("locales", "")
+	%SeparateFilesCheckBox.set_pressed_no_signal(preferences.get("separate_files", %SeparateFilesCheckBox.button_pressed))
+	%SplitDialinesCheckBox.set_pressed_no_signal(preferences.get("split_dialines", %SplitDialinesCheckBox.button_pressed))
+
 func get_preferences() -> Dictionary:
 	return {
-		"locales" : %LocalesLineEdit.text
+		"locales" : %LocalesLineEdit.text,
+		"separate_files" : %SeparateFilesCheckBox.button_pressed,
+		"split_dialines" : %SplitDialinesCheckBox.button_pressed,
 	}
 
 

@@ -40,6 +40,10 @@ text = "Append periods"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+tooltip_text = "Replaces all instances of contractions with missing apostrophes with their correct counterparts, such as \"couldnt\" -> \"couldn't\".
+Does not affect ambiguous words, such as \"were\"/\"we're\".
+
+Only sensible with English text."
 button_pressed = true
 text = "Fix common apostrophes"
 

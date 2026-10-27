@@ -199,7 +199,7 @@ func init(active_file_path:="") -> void:
 	# nts those submenus have to be invisible otherwise they break for the first hover
 	
 	
-	file_item.add_item("Localization")
+	file_item.add_item("Localization...")
 	
 	%Editor.set_item_disabled(0, DiisisEditorUtil.embedded)
 	hide_arg_hint()
