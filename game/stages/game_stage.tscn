@@ -33,7 +33,6 @@ actor_config = Dictionary[String, ExtResource("2_e6caa")]({
 "amber": SubResource("Resource_8g0u3")
 })
 blank_names = Array[String](["narrator"])
-name_style = 1
 name_label = NodePath("../VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/NameContainer/PanelContainer/NameLabel")
 body_label = NodePath("../VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer/BodyLabel")
 text_container = NodePath("../VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer")
@@ -140,6 +139,7 @@ alignment = 2
 
 [node name="NameContainer" type="MarginContainer" parent="VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer" unique_id=546753370]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 1
 theme_override_constants/margin_right = 7
@@ -148,6 +148,7 @@ theme_override_constants/margin_bottom = 1
 [node name="PanelContainer" type="PanelContainer" parent="VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/NameContainer" unique_id=745846338]
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_filter = 2
 
 [node name="NameLabel" type="Label" parent="VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/NameContainer/PanelContainer" unique_id=1199818927]
 layout_mode = 2
@@ -161,7 +162,6 @@ mouse_filter = 2
 theme_type_variation = &"DefaultText"
 
 [node name="BodyLabel" type="RichTextLabel" parent="VNUICanvasLayer/VNUIRoot/VNUI/DefaultTextContainer/HBoxContainer/PanelContainer" unique_id=4970062]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(670, 121)
 layout_mode = 2
 size_flags_horizontal = 0

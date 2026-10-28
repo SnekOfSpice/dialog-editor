@@ -717,7 +717,7 @@ func rollback():
 	await get_tree().process_frame
 	address_trail_index += trail_shift
 	if address_trail_index >= address_trail.size():
-		address_trail_index = address_trail.size() - 1
+		address_trail_index = max(address_trail.size() - 1, 0)
 	var previous_address = address_trail[address_trail_index]
 	var parts = DiisisEditorUtil.get_split_address(previous_address)
 	var prev_page = parts[0]
@@ -743,7 +743,7 @@ func rollback():
 		line_reader._go_to_start_of_dialog_line()
 	elif trail_shift != 0:
 		line_reader._go_to_end_of_dialog_line()
-	address_trail_index = address_trail.size() - 1
+	address_trail_index = max(address_trail.size() - 1, 0)
 	address_trail.resize(address_trail_index + 1)
 
 
