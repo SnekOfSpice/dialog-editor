@@ -283,7 +283,7 @@ func setup_vn_template():
 		}
 	)
 	
-	for file_name :String in ["scene_loader","event_bus", "const", "rollback_handler", "options", "sound", "style", "game"]:
+	for file_name :String in ["scene_loader","event_bus", "const", "rollback_handler", "options", "sound", "game"]:
 		var path_game := str("res://game/autoloads/", file_name, ".tscn")
 		var path_plugin := str("res://addons/diisis/templates/visual_novel/autoloads/", file_name, ".tscn")
 		var autoload_name : String = get(str("TEMPLATE_VN_AUTOLOAD_", file_name.to_upper()))
