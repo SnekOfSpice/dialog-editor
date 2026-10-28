@@ -333,7 +333,6 @@ func load_page(number: int, discard_without_saving:=false):
 		return
 	if Pages.show_updating_status:
 		%UpdatingAnchor.show()
-		await RenderingServer.frame_post_draw
 	
 	await get_tree().process_frame
 	number = clamp(number, 0, Pages.get_page_count() - 1)
